@@ -164,6 +164,10 @@ namespace rw {
 
 			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
 
+			for (int i = 0;i<10;i++) {
+				this->infer();
+			}
+			cudaDeviceSynchronize();
 		}
 
 	}
