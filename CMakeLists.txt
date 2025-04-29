@@ -20,3 +20,4 @@ find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(ime)
 add_subdirectory(oso)
+add_subdirectory(hoe)
