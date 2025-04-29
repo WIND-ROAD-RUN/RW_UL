@@ -1,4 +1,4 @@
-#include"opencv2/opencv.hpp"
+﻿#include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
 
@@ -15,9 +15,9 @@ class Logger : public nvinfer1::ILogger {
 }logger;
 
 int main() {
-	rw::imet::ModelEngine_yolov11_obb model_engine(R"(C:\Users\zfkj\Desktop\yolo11_trt\build\yolo11s.engine)", logger);
+	rw::imet::ModelEngine_yolov11_obb model_engine(R"(C:\Users\zfkj\Desktop\best.engine)", logger);
 
-	const string path{ R"(C:\Users\zfkj\Desktop\yolo11_trt\build\bus.jpg)"};
+	const string path{ R"(C:\Users\zfkj\Desktop\20250411poyan\images\100828324793.jpg)"};
 
 	Mat image = imread(path);
 	if (image.empty())

@@ -29,16 +29,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${TensorRT_libs})
 
-# 添加自定义命令，复制 .dll 文件到运行时目录
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${TensorRT_dlls}
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>
-)
-
-# 暴露 .dll 文件路径给依赖模块
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    INTERFACE_RUNTIME_DLLS "${TensorRT_dlls}"
-)
-
 add_subdirectory(test)
