@@ -3,12 +3,24 @@
 #include"NvInfer.h"
 #include<string>
 
+struct Detection
+{
+    float conf;
+    int class_id;
+    cv::Rect bbox;
+};
+
 namespace rw {
 	namespace imet {
 		class ModelEngine_yolov11_obb {
 		public:
 			ModelEngine_yolov11_obb(std::string model_path, nvinfer1::ILogger& logger);
 			~ModelEngine_yolov11_obb();
+        public:
+            void preprocess(cv::Mat& image);
+            void infer();
+            void postprocess(std::vector<Detection>& output);
+            void draw(cv::Mat& image, const std::vector<Detection>& output);
 		private:
 			void init(std::string engine_path, nvinfer1::ILogger& logger);
 		private:
