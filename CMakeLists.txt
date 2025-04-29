@@ -19,3 +19,4 @@ project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
 find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(ime)
+add_subdirectory(oso)
