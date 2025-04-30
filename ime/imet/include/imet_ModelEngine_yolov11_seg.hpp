@@ -27,8 +27,9 @@ namespace rw {
             void postprocess(std::vector<DetectionSeg>& output);
             void draw(cv::Mat& image, const std::vector<DetectionSeg>& output);
         private:
-            float* gpu_buffers[2];               //!< The vector of device buffers needed for engine execution
+            float* gpu_buffers[3];               //!< The vector of device buffers needed for engine execution
             float* cpu_output_buffer;
+            float* cpu_output_buffer2;
             nvinfer1::IRuntime* runtime;                 //!< The TensorRT runtime used to deserialize the engine
             nvinfer1::ICudaEngine* engine;               //!< The TensorRT engine used to run the network
             nvinfer1::IExecutionContext* context;        //!< The context for executing inference using an ICudaEngine

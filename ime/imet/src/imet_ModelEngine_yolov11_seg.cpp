@@ -14,6 +14,13 @@ namespace rw {
 
 		ModelEngine_yolov11_seg::~ModelEngine_yolov11_seg()
 		{
+			for (int i = 0; i < 2; i++)
+				(cudaFree(gpu_buffers[i]));
+			delete[] cpu_output_buffer;
+			delete[] cpu_output_buffer2;
+			delete context;
+			delete engine;
+			delete runtime;
 		}
 
 		void ModelEngine_yolov11_seg::init(std::string engine_path, nvinfer1::ILogger& logger)
@@ -36,13 +43,20 @@ namespace rw {
 			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
 			num_classes = detection_attribute_size - 4;
 
+			auto thirdOutputSize = engine->getTensorShape(engine->getIOTensorName(2)).d[1];
+			auto thirdOutputSize2 = engine->getTensorShape(engine->getIOTensorName(2)).d[2];
+			auto thirdOutputSize3 = engine->getTensorShape(engine->getIOTensorName(2)).d[3];
+
 			cpu_output_buffer = new float[num_detections * detection_attribute_size];
 			(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
 
 			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
 
+			cpu_output_buffer2 = new float[thirdOutputSize * thirdOutputSize2 * thirdOutputSize3];
+			(cudaMalloc((void**)&gpu_buffers[2], thirdOutputSize * thirdOutputSize2 * thirdOutputSize3 * sizeof(float)));
+
 			for (int i = 0;i < 10;i++) {
-				//this->infer();
+				this->infer();
 			}
 			cudaDeviceSynchronize();
 		}
@@ -57,12 +71,14 @@ namespace rw {
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
+			this->context->setOutputTensorAddress(engine->getIOTensorName(2),gpu_buffers[2]);
 			this->context->enqueueV3(NULL);
 		}
 
 		void ModelEngine_yolov11_seg::postprocess(std::vector<DetectionSeg>& output)
 		{
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
+			(cudaMemcpy(cpu_output_buffer2, gpu_buffers[2], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
