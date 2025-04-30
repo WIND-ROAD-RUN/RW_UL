@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(OpenCV REQUIRED)
 find_package(CUDAToolkit REQUIRED)
 
-add_library(${PROJECT_NAME} "include/imet_ModelEngine.h" "src/imet_ModelEngine.cpp")
+add_library(${PROJECT_NAME} "include/imet_ModelEngine_yolov11_obb.hpp" 
+"src/imet_ModelEngine_yolov11_obb.cpp" 
+"include/imet_ModelEngine_yolov11_seg.hpp" 
+"src/imet_ModelEngine_yolov11_seg.cpp")
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

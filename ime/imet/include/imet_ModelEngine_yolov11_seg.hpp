@@ -1,9 +1,11 @@
+#pragma once
+
 #include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
 #include<string>
 
-struct Detection
+struct DetectionSeg
 {
     float conf;
     int class_id;
@@ -12,18 +14,19 @@ struct Detection
 
 namespace rw {
 	namespace imet {
-		class ModelEngine_yolov11_obb {
+
+
+		class ModelEngine_yolov11_seg {
 		public:
-			ModelEngine_yolov11_obb(std::string model_path, nvinfer1::ILogger& logger);
-			~ModelEngine_yolov11_obb();
+			ModelEngine_yolov11_seg(std::string model_path, nvinfer1::ILogger& logger);
+			~ModelEngine_yolov11_seg();
         public:
+            void init(std::string engine_path, nvinfer1::ILogger& logger);
             void preprocess(cv::Mat& image);
             void infer();
-            void postprocess(std::vector<Detection>& output);
-            void draw(cv::Mat& image, const std::vector<Detection>& output);
-		private:
-			void init(std::string engine_path, nvinfer1::ILogger& logger);
-		private:
+            void postprocess(std::vector<DetectionSeg>& output);
+            void draw(cv::Mat& image, const std::vector<DetectionSeg>& output);
+        private:
             float* gpu_buffers[2];               //!< The vector of device buffers needed for engine execution
             float* cpu_output_buffer;
             nvinfer1::IRuntime* runtime;                 //!< The TensorRT runtime used to deserialize the engine
