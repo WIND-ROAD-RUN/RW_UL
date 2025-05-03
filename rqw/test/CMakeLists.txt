@@ -31,7 +31,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${QT_PATH}/windeployqt.exe --no-compiler-runtime --no-opengl-sw $<TARGET_FILE:${PROJECT_NAME}>
+    COMMAND ${QT_PATH}/bin/windeployqt.exe --no-compiler-runtime --no-opengl-sw $<TARGET_FILE:${PROJECT_NAME}>
     COMMENT "Running windeployqt to package Qt dependencies"
 )
 
