@@ -11,33 +11,6 @@ namespace rw
 {
 	namespace imet
 	{
-		ModelEngine_Yolov11_Obb::Detection::operator DetectionRectangleInfo() const
-		{
-			DetectionRectangleInfo result;
-			result.width = bbox.width;
-			result.height = bbox.height;
-
-			result.leftTop.first = bbox.x;
-			result.leftTop.second = bbox.y;
-
-			result.rightTop.first = bbox.x + bbox.width;
-			result.rightTop.second = bbox.y;
-
-			result.leftBottom.first = bbox.x;
-			result.leftBottom.second = bbox.y + bbox.height;
-
-			result.rightBottom.first = bbox.x + bbox.width;
-			result.rightBottom.second = bbox.y + bbox.height;
-
-			result.center_x = bbox.x + bbox.width / 2;
-			result.center_y = bbox.y + bbox.height / 2;
-
-			result.area = bbox.width * bbox.height;
-			result.classId = class_id;
-			result.score = conf;
-
-			return result;
-		}
 
 		ModelEngine_Yolov11_Obb::ModelEngine_Yolov11_Obb(const std::string& modelPath,
 		                                                                   nvinfer1::ILogger& logger)
@@ -142,12 +115,7 @@ namespace rw
 				return {};
 			}
 
-			std::vector<DetectionRectangleInfo> result;
-			result.reserve(size);
-			for (const auto & item:output)
-			{
-				result.emplace_back(item);
-			}
+			auto result = convertDetectionToDetectionRectangleInfo(output);
 
 			return result;
 
@@ -180,6 +148,36 @@ namespace rw
 			(cudaMemcpy(gpu_buffers[0],
 				infer_image.data, 
 				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::convertDetectionToDetectionRectangleInfo(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			auto scaleX = sourceWidth / static_cast<float>(input_w);
+			auto scaleY = sourceHeight / static_cast<float>(input_h);
+			result.reserve(detections.size());
+			for (const auto& item : detections)
+			{
+				DetectionRectangleInfo resultItem;
+				resultItem.width = item.bbox.width * scaleX;
+				resultItem.height = item.bbox.height * scaleY;
+				resultItem.leftTop.first = item.bbox.x * scaleX;
+				resultItem.leftTop.second = item.bbox.y * scaleY;
+				resultItem.rightTop.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
+				resultItem.rightTop.second = item.bbox.y * scaleY;
+				resultItem.leftBottom.first = item.bbox.x * scaleX;
+				resultItem.leftBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
+				resultItem.rightBottom.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
+				resultItem.rightBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
+				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
+				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
+				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
 		}
 	}
 }

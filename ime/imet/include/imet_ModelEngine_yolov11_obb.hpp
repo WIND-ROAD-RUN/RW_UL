@@ -20,8 +20,6 @@ namespace rw
 				float conf;
 				int class_id;
 				cv::Rect bbox;
-			public:
-				operator DetectionRectangleInfo() const;
 			};
 		public:
 			ModelEngine_Yolov11_Obb(const std::string & modelPath, nvinfer1::ILogger& logger);
@@ -51,6 +49,8 @@ namespace rw
 			float nms_threshold = 0.4f;
 
 			std::vector<cv::Scalar> colors;
+		private:
+			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
 		private:
 			int sourceWidth{};
 			int sourceHeight{};

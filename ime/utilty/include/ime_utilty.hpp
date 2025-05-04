@@ -5,7 +5,7 @@
 #include"opencv2/opencv.hpp"
 
 namespace rw {
-	using Point = std::pair<double, double>;
+	using Point = std::pair<int, int>;
 
     struct DetectionRectangleInfo
     {
@@ -36,7 +36,7 @@ namespace rw {
 
         struct PainterConfig
         {
-            ShapeType shapeType{ ShapeType ::Rectangle};
+            ShapeType shapeType{ ShapeType::Rectangle};
             int fontSize=5;
             int fontThickness = 1;
             int thickness=2;
@@ -57,14 +57,11 @@ namespace rw {
             PainterConfig config
         );
 
-
         static cv::Mat drawShapes(
             const cv::Mat& image,
             const DetectionRectangleInfo& rectInfo,
             PainterConfig config
         );
-
-
 
         static void drawShapesOnSourceImg(
             cv::Mat& image, 
