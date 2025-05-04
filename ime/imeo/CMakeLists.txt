@@ -6,10 +6,12 @@ find_package(OpenCV REQUIRED)
 find_package(CUDAToolkit REQUIRED)
 
 add_library(${PROJECT_NAME} "include/imeo_ModelEngine_yolov11_obb.hpp" 
-"src/imeo_ModelEngine_yolov11_obb.cpp" )
+"src/imeo_ModelEngine_yolov11_obb.cpp" ${UTILTY_SRC_LIST})
 
 target_include_directories(${PROJECT_NAME} 
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PUBLIC ${UTILTY_INCLUDES}
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC  ${OpenCV_LIBS})
 
@@ -28,6 +30,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     CUDA::cusparse             # cuSPARSE Library
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OnnxRuntime_dlls})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OnnxRuntime_libs})
 
 add_subdirectory(test)

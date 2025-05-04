@@ -8,10 +8,12 @@ find_package(CUDAToolkit REQUIRED)
 add_library(${PROJECT_NAME} "include/imet_ModelEngine_yolov11_obb.hpp" 
 "src/imet_ModelEngine_yolov11_obb.cpp" 
 "include/imet_ModelEngine_yolov11_seg.hpp" 
-"src/imet_ModelEngine_yolov11_seg.cpp")
+"src/imet_ModelEngine_yolov11_seg.cpp" ${UTILTY_SRC_LIST})
 
 target_include_directories(${PROJECT_NAME} 
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PUBLIC ${UTILTY_INCLUDES}
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC  ${OpenCV_LIBS})
 

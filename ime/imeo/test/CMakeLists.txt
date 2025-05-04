@@ -6,9 +6,18 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE imeo)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    CUDA::cudart               # CUDA Runtime Library
+    CUDA::cublas               # cuBLAS Library
+    CUDA::cufft                # cuFFT Library
+    CUDA::curand               # cuRAND Library
+    CUDA::cusolver             # cuSolver Library
+    CUDA::cusparse             # cuSPARSE Library
+)
+
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${TensorRT_dlls}
+    ${OnnxRuntime_dlls}
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )

@@ -6,6 +6,8 @@
 namespace rw {
     namespace imeo {
         class ModelEngine_yolov11_obb {
+        public:
+
         
         };
     }
