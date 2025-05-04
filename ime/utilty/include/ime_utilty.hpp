@@ -27,6 +27,27 @@ namespace rw {
         double score{ -1 };
     };
 
+	using PointScale = std::pair<double, double>;
+    struct DetectionRectangleScaleInfo
+    {
+    public:
+        PointScale leftTop{};
+        PointScale rightTop{};
+        PointScale leftBottom{};
+        PointScale rightBottom{};
+    public:
+        double center_x{ -1 };
+        double center_y{ -1 };
+    public:
+        int width{ -1 };
+        int height{ -1 };
+    public:
+        long area{ -1 };
+    public:
+        size_t classId{ 0 };
+        double score{ -1 };
+    };
+
 	struct ImagePainter
 	{
         enum class ShapeType {
