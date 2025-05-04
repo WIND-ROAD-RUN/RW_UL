@@ -13,6 +13,12 @@ set(TensorRT_include ${TensorRTPath}/include)
 find_all_libs(${TensorRTPath}/lib TensorRT_libs)
 find_all_dlls(${TensorRTPath}/lib TensorRT_dlls)
 
+set(OnnxRuntimePath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/onnxruntime-win-x64-gpu-1.21.0)
+set(OnnxRuntime_include ${OnnxRuntimePath}/include)
+
+find_all_libs(${OnnxRuntimePath}/lib OnnxRuntime_libs)
+find_all_dlls(${OnnxRuntimePath}/lib OnnxRuntime_dlls)
+
 enable_testing()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)

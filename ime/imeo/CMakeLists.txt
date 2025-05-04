@@ -15,7 +15,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC  ${OpenCV_LIBS})
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${OpenCV_INCLUDE_DIRS}
-	PUBLIC ${TensorRT_include}
+	PUBLIC ${OnnxRuntime_include}
     PUBLIC ${CUDAToolkit_INCLUDE_DIRS}
 )
 
@@ -28,6 +28,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     CUDA::cusparse             # cuSPARSE Library
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${TensorRT_libs})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OnnxRuntime_dlls})
 
 add_subdirectory(test)
