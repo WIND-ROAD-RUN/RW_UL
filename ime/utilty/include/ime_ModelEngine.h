@@ -4,6 +4,8 @@
 
 #include"opencv2/opencv.hpp"
 
+#include<vector>
+
 namespace rw
 {
 	class ModelEngine
@@ -21,11 +23,11 @@ namespace rw
 	private:
 		virtual void preprocess(const cv::Mat& mat)=0;
 		virtual void infer() = 0;
-		virtual DetectionRectangleInfo postProcess() = 0;
-		virtual cv::Mat draw(const cv::Mat& mat);
+		virtual std::vector<DetectionRectangleInfo> postProcess() = 0;
+		virtual cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo> & infoList);
 	public:
-		DetectionRectangleInfo processImg(const cv::Mat & mat);
-		cv::Mat processImg(const cv::Mat& mat, DetectionRectangleInfo & detection);
+		std::vector<DetectionRectangleInfo> processImg(const cv::Mat & mat);
+		cv::Mat processImg(const cv::Mat& mat, std::vector<DetectionRectangleInfo>& detection);
 		void setDrawStatus(bool status);
 	};
 

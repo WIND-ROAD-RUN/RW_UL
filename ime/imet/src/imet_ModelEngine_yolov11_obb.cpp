@@ -1,43 +1,101 @@
-#include "imet_ModelEngine_yolov11_obb.hpp"
+#include"imet_ModelEngine_yolov11_obb.hpp"
 
 #include"cuda_device_runtime_api.h"
 
 #include<fstream>
 #include<memory>
+#include <iomanip> 
+#include <sstream> 
 
-namespace rw {
-	namespace imet {
-		ModelEngine_yolov11_obb::ModelEngine_yolov11_obb(std::string model_path, nvinfer1::ILogger& logger)
+namespace rw
+{
+	namespace imet
+	{
+		ModelEngine_Yolov11_Obb::Detection::operator DetectionRectangleInfo() const
 		{
-			init(model_path, logger);
+			DetectionRectangleInfo result;
+			result.width = bbox.width;
+			result.height = bbox.height;
+
+			result.leftTop.first = bbox.x;
+			result.leftTop.second = bbox.y;
+
+			result.rightTop.first = bbox.x + bbox.width;
+			result.rightTop.second = bbox.y;
+
+			result.leftBottom.first = bbox.x;
+			result.leftBottom.second = bbox.y + bbox.height;
+
+			result.rightBottom.first = bbox.x + bbox.width;
+			result.rightBottom.second = bbox.y + bbox.height;
+
+			result.center_x = bbox.x + bbox.width / 2;
+			result.center_y = bbox.y + bbox.height / 2;
+
+			result.area = bbox.width * bbox.height;
+			result.classId = class_id;
+			result.score = conf;
+
+			return result;
 		}
 
-		ModelEngine_yolov11_obb::~ModelEngine_yolov11_obb()
+		ModelEngine_Yolov11_Obb::ModelEngine_Yolov11_Obb(const std::string& modelPath,
+		                                                                   nvinfer1::ILogger& logger)
+		{
+			init(modelPath, logger);
+		}
+
+		ModelEngine_Yolov11_Obb::~ModelEngine_Yolov11_Obb()
 		{
 			for (int i = 0; i < 2; i++)
 				(cudaFree(gpu_buffers[i]));
 			delete[] cpu_output_buffer;
-
 			delete context;
 			delete engine;
 			delete runtime;
 		}
 
-		void ModelEngine_yolov11_obb::preprocess(cv::Mat& image)
+		void ModelEngine_Yolov11_Obb::init(std::string engine_path, nvinfer1::ILogger& logger)
 		{
-			auto infer_image = cv::dnn::blobFromImage(image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);//1、缩放cv::resize;2、系数变换；3、色域变换bgr->rgb；4、图像裁剪cv::crop;5、数据标准化(x-mean)/var
-			(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * image.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			std::ifstream engineStream(engine_path, std::ios::binary);
+			engineStream.seekg(0, std::ios::end);
+			const size_t modelSize = engineStream.tellg();
+			engineStream.seekg(0, std::ios::beg);
+			std::unique_ptr<char[]> engineData(new char[modelSize]);
+			engineStream.read(engineData.get(), modelSize);
+			engineStream.close();
+
+			runtime = nvinfer1::createInferRuntime(logger);
+			engine = runtime->deserializeCudaEngine(engineData.get(), modelSize);
+			context = engine->createExecutionContext();
+
+			input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
+			input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
+			detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
+			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
+			num_classes = detection_attribute_size - 4;
+
+			cpu_output_buffer = new float[num_detections * detection_attribute_size];
+			(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
+
+			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
+
+			for (int i = 0;i < 10;i++) {
+				this->infer();
+			}
+			cudaDeviceSynchronize();
 		}
 
-		void ModelEngine_yolov11_obb::infer()
+		void ModelEngine_Yolov11_Obb::infer()
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
 			this->context->enqueueV3(NULL);
 		}
 
-		void ModelEngine_yolov11_obb::postprocess(std::vector<Detection>& output)
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::postProcess()
 		{
+			std::vector<Detection> output;
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
@@ -79,65 +137,49 @@ namespace rw {
 				result.bbox = boxes[idx];
 				output.push_back(result);
 			}
-		}
+			auto size = output.size();
+			if (size==0){
+				return {};
+			}
 
-		void ModelEngine_yolov11_obb::draw(cv::Mat& image, const std::vector<Detection>& output)
-		{
-			auto ccc = cv::Mat::ones(cv::Size(10, 10), CV_8UC3);
-			std::cout << cv::sum(ccc)[0] << std::endl;
-			auto bb = cv::sum(ccc);
-			const float ratio_h = input_h / (float)image.rows;
-			const float ratio_w = input_w / (float)image.cols;
-			for (int i = 0; i < output.size(); i++)
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(size);
+			for (const auto & item:output)
 			{
-				auto detection = output[i];
-				auto box = detection.bbox;
-				auto class_id = detection.class_id;
-				auto conf = detection.conf;
-				box.x = box.x / ratio_w;
-				box.y = box.y / ratio_h;
-				box.width = box.width / ratio_w;
-				box.height = box.height / ratio_h;
-				rectangle(image, cv::Point(box.x, box.y), cv::Point(box.x + box.width, box.y + box.height), { 0, 114, 189 }, 3);
-				// Detection box text
-				std::string class_string = std::to_string(class_id) + ' ' + std::to_string(conf).substr(0, 4);
-				cv::Size text_size = cv::getTextSize(class_string, cv::FONT_HERSHEY_DUPLEX, 1, 2, 0);
-				cv::Rect text_rect(box.x, box.y - 40, text_size.width + 10, text_size.height + 20);
-				rectangle(image, text_rect, { 0, 114, 189 }, cv::FILLED);
-				putText(image, class_string, cv::Point(box.x + 5, box.y - 10), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 0), 2, 0);
+				result.emplace_back(item);
 			}
+
+			return result;
+
 		}
 
-		void ModelEngine_yolov11_obb::init(std::string engine_path, nvinfer1::ILogger& logger)
+		cv::Mat ModelEngine_Yolov11_Obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
-			std::ifstream engineStream(engine_path,std::ios::binary);
-			engineStream.seekg(0, std::ios::end);
-			const size_t modelSize = engineStream.tellg();
-			engineStream.seekg(0, std::ios::beg);
-			std::unique_ptr<char[]> engineData(new char[modelSize]);
-			engineStream.read(engineData.get(), modelSize);
-			engineStream.close();
-
-			runtime = nvinfer1::createInferRuntime(logger);
-			engine = runtime->deserializeCudaEngine(engineData.get(), modelSize);
-			context = engine->createExecutionContext();
-
-			input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
-			input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
-			detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
-			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
-			num_classes = detection_attribute_size - 4;
-
-			cpu_output_buffer = new float[num_detections * detection_attribute_size];
-			(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
-
-			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
-
-			for (int i = 0;i<10;i++) {
-				this->infer();
+			cv::Mat result = mat.clone();
+			ImagePainter::PainterConfig config;
+			for (const auto& item : infoList)
+			{
+				std::ostringstream oss;
+				oss << "classId:"<<item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
+				config.text = oss.str();
+				ImagePainter::drawShapesOnSourceImg(result, item, config);
 			}
-			cudaDeviceSynchronize();
+			return result;
 		}
 
+		void ModelEngine_Yolov11_Obb::preprocess(const cv::Mat& mat)
+		{
+			sourceWidth = mat.cols;
+			sourceHeight = mat.rows;
+			auto infer_image = 
+				cv::dnn::blobFromImage(mat, 
+					1.f / 255.f,
+					cv::Size(input_w, input_h),
+					cv::Scalar(0, 0, 0), true);//1、缩放cv::resize;2、系数变换；3、色域变换bgr->rgb；4、图像裁剪cv::crop;5、数据标准化(x-mean)/var
+
+			(cudaMemcpy(gpu_buffers[0],
+				infer_image.data, 
+				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+		}
 	}
 }

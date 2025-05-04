@@ -7,27 +7,27 @@ namespace rw
 		isDraw = status;
 	}
 
-	cv::Mat ModelEngine::draw(const cv::Mat& mat)
+	cv::Mat ModelEngine::draw(const cv::Mat& mat,const std::vector<DetectionRectangleInfo>& infoList)
 	{
 		return mat;
 	}
 
-	DetectionRectangleInfo ModelEngine::processImg(const cv::Mat& mat)
+	std::vector<DetectionRectangleInfo> ModelEngine::processImg(const cv::Mat& mat)
 	{
 		preprocess(mat);
 		infer();
-		DetectionRectangleInfo detection = postProcess();
+		std::vector<DetectionRectangleInfo> detection = postProcess();
 		return detection;
 	}
 
-	cv::Mat ModelEngine::processImg(const cv::Mat& mat, DetectionRectangleInfo& detection)
+	cv::Mat ModelEngine::processImg(const cv::Mat& mat, std::vector<DetectionRectangleInfo>& detection)
 	{
 		preprocess(mat);
 		infer();
 		detection = postProcess();
 		if (isDraw)
 		{
-			return draw(mat);
+			return draw(mat, detection);
 		}
 		return mat;
 	}
