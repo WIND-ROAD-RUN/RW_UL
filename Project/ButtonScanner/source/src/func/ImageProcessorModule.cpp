@@ -1176,9 +1176,9 @@ void ImageProcessor::run()
 		//	GlobalStructData::getInstance().imageSaveEngine->pushImage(image, "Mark", "Button");
 		//}
 
-		//QPixmap pixmap = QPixmap::fromImage(image);
-		// 显示到界面
-		/*emit imageReady(pixmap);*/
+		auto  image = cvMatToQImage(frame.image);
+		QPixmap pixmap = QPixmap::fromImage(image);
+		emit imageReady(pixmap);
 	}
 }
 
