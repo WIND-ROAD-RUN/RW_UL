@@ -6,6 +6,7 @@
 #include"imet_ModelEngine_yolov11_seg.hpp"
 #include"imet_ModelEngine_yolov11_obb.hpp"
 #include<string>
+
 using namespace std;
 using namespace cv;
 class Logger : public nvinfer1::ILogger {
@@ -29,7 +30,14 @@ int main()
 
 	std::vector<rw::DetectionRectangleInfo> detection;
 	model_engine.setDrawStatus(true);
+
+	auto start = std::chrono::system_clock::now();
 	auto result = model_engine.processImg(image, detection);
+	auto end = std::chrono::system_clock::now();
+
+	auto tc = (double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.;
+	printf("cost %2.4lf ms\n", tc);
+
 	cv::imshow("asd", result);
 	cv::waitKey(0);
 }
