@@ -5,23 +5,19 @@
 #include"imet_ModelEngine_yolov11_obb.hpp"
 #include"imet_ModelEngine_yolov11_seg.hpp"
 #include"imet_ModelEngine_yolov11_obb.hpp"
+#include"imet_ModelEngineFactory.hpp"
 #include<string>
-
 using namespace std;
 using namespace cv;
-class Logger : public nvinfer1::ILogger {
-	void log(Severity severity, const char* msg) noexcept override {
-		//// Only output logs with severity greater than warning
-		//if (severity <= Severity::kERROR)
-		//	std::cout << msg << std::endl;
-	}
-}logger;
 
 int main()
 {
-	rw::imet::ModelEngine_Yolov11_Obb model_engine(R"(C:\Users\rw\Desktop\model\best.engine)", logger);
 	const string path{ R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\work1\bad\20250426155302818.png)" };
 
+	rw::ModelEngineConfig config;
+	config.ModelPath = R"(C:\Users\rw\Desktop\model\best.engine)";
+
+	auto modelEngine = rw::imet::ModelEngineFactory::createModelEngine(config,rw::imet::TensorRTModelType::yolov11_obb);
 	Mat image = imread(path);
 	if (image.empty())
 	{
@@ -29,10 +25,10 @@ int main()
 	}
 
 	std::vector<rw::DetectionRectangleInfo> detection;
-	model_engine.setDrawStatus(true);
+	modelEngine->setDrawStatus(true);
 
 	auto start = std::chrono::system_clock::now();
-	auto result = model_engine.processImg(image, detection);
+	auto result = modelEngine->processImg(image, detection);
 	auto end = std::chrono::system_clock::now();
 
 	auto tc = (double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.;

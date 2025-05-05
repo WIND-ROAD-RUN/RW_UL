@@ -49,6 +49,14 @@ namespace rw
 			float nms_threshold = 0.4f;
 
 			std::vector<cv::Scalar> colors;
+		public:
+			void setConf_threshold(float num){
+				conf_threshold = num;
+			}
+
+			void setNms_threshold(float num) {
+				nms_threshold = num;
+			}
 		private:
 			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
 		private:
