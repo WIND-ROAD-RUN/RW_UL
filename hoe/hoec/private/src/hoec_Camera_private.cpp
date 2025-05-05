@@ -8,8 +8,7 @@
 #include<algorithm>
 #include<iostream>
 
-namespace rw{
-    namespace hoec {
-        
-    }
+namespace rw {
+	namespace hoec {
+	}
 }

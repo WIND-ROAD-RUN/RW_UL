@@ -5,10 +5,7 @@
 #include<vector>
 namespace rw
 {
-    namespace hoec
-    {
-
-       
-
-    }
+	namespace hoec
+	{
+	}
 }

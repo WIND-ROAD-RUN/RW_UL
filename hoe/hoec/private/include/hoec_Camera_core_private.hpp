@@ -7,19 +7,17 @@ struct _MV_FRAME_OUT_INFO_EX_;
 typedef struct _MV_FRAME_OUT_INFO_EX_ MV_FRAME_OUT_INFO_EX;
 
 namespace cv {
-    class Mat;
+	class Mat;
 }
 
 namespace rw {
-    namespace hoec {
-        struct ImageFrameConvert
-        {
-            static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT& frameInfo);
-            static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT_INFO_EX& frameInfo, unsigned char* pData);
-        };
-    } // namespace hoec
-
+	namespace hoec {
+		struct ImageFrameConvert
+		{
+			static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT& frameInfo);
+			static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT_INFO_EX& frameInfo, unsigned char* pData);
+		};
+	} // namespace hoec
 } // namespace rw
-
 
 #endif // !HOEC_CORE_PRIVATE_H_

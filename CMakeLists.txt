@@ -19,6 +19,13 @@ set(OnnxRuntime_include ${OnnxRuntimePath}/include)
 find_all_libs(${OnnxRuntimePath}/lib OnnxRuntime_libs)
 find_all_dlls(${OnnxRuntimePath}/lib OnnxRuntime_dlls)
 
+set(ZMotionRutimePath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/ZMotion)
+set(ZMotionRutime_include ${ZMotionRutimePath}/include)
+
+find_all_libs(${ZMotionRutimePath}/lib ZMotionRutime_libs)
+find_all_dlls(${ZMotionRutimePath}/dll ZMotionRutime_dlls)
+
+
 enable_testing()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
@@ -31,3 +38,4 @@ add_subdirectory(hoe)
 add_subdirectory(dsl)
 add_subdirectory(utilty)
 add_subdirectory(rqw)
+add_subdirectory(scc)

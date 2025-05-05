@@ -2,7 +2,7 @@
 
 namespace rw
 {
-    namespace hoec
-    {
-    } // namespace hoec
+	namespace hoec
+	{
+	} // namespace hoec
 } // namespace rw

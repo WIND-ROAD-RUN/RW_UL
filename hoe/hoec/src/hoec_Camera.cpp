@@ -3,228 +3,277 @@
 #include"hoec_Camera_private.hpp"
 
 namespace rw {
-    namespace hoec {
-        void ICamera::setIP(const std::string& ip)
-        {
-            _ip = ip;
-        }
+	namespace hoec {
+		void ICamera::setIP(const std::string& ip)
+		{
+			_ip = ip;
+		}
 
-        std::string ICamera::getIP() const
-        {
-            return _ip;
-        }
+		std::string ICamera::getIP() const
+		{
+			return _ip;
+		}
 
-        CameraInfo ICamera::getCameraInfo()
-        {
-            return _cameraInfo;
-        }
+		CameraInfo ICamera::getCameraInfo()
+		{
+			return _cameraInfo;
+		}
 
-        void ICamera::setCameraInfo(const CameraInfo& cameraInfo)
-        {
-            _cameraInfo = cameraInfo;
-        }
+		void ICamera::setCameraInfo(const CameraInfo& cameraInfo)
+		{
+			_cameraInfo = cameraInfo;
+		}
 
-        void CameraActive::connectCamera()
-        {
-            _camera->setIP(_ip);
-             _camera->connectCamera();
-             _cameraInfo = _camera->getCameraInfo();
-        }
+		void CameraActive::connectCamera()
+		{
+			_camera->setIP(_ip);
+			_camera->connectCamera();
+			_cameraInfo = _camera->getCameraInfo();
+		}
 
-        void CameraActive::startMonitor()
-        {
-             _camera->startMonitor();
-        }
+		bool CameraActive::getConnectState()
+		{
+			return _camera->getConnectState();
+		}
 
-        void CameraActive::stopMonitor()
-        {
-             _camera->stopMonitor();
-        }
+		void CameraActive::setFrameRate(float cameraFrameRate)
+		{
+			return _camera->setFrameRate(cameraFrameRate);
+		}
 
-        void CameraActive::setExposureTime(size_t value)
-        {
-             _camera->setExposureTime(value);
-        }
+		void CameraActive::setHeartbeatTime(size_t heartBeatTime)
+		{
+			return _camera->setHeartbeatTime(heartBeatTime);
+		}
 
-        void CameraActive::setGain(size_t value)
-        {
-             _camera->setGain(value);
-        }
+		float CameraActive::getHeartbeatTime()
+		{
+			return _camera->getHeartbeatTime();
+		}
 
-        void CameraActive::setIOTime(size_t value)
-        {
-             _camera->setIOTime(value);
-        }
+		float CameraActive::getFrameRate()
+		{
+			return _camera->getFrameRate();
+		}
 
-        void CameraActive::setTriggerMode(CameraTriggerMode mode)
-        {
-             _camera->setTriggerMode(mode);
-        }
+		void CameraActive::startMonitor()
+		{
+			_camera->startMonitor();
+		}
 
-        void CameraActive::setTriggerLine(size_t lineIndex)
-        {
-             _camera->setTriggerLine(lineIndex);
-        }
+		void CameraActive::stopMonitor()
+		{
+			_camera->stopMonitor();
+		}
 
-        size_t CameraActive::getExposureTime()
-        {
-            return _camera->getExposureTime();
-        }
+		void CameraActive::setExposureTime(size_t value)
+		{
+			_camera->setExposureTime(value);
+		}
 
-        size_t CameraActive::getGain()
-        {
-            return _camera->getGain();
-        }
+		void CameraActive::setGain(size_t value)
+		{
+			_camera->setGain(value);
+		}
 
-        size_t CameraActive::getIOTime()
-        {
-            return _camera->getIOTime();
-        }
+		void CameraActive::setIOTime(size_t value)
+		{
+			_camera->setIOTime(value);
+		}
 
-        CameraTriggerMode CameraActive::getMonitorMode()
-        {
-            return _camera->getMonitorMode();
-        }
+		void CameraActive::setTriggerMode(CameraTriggerMode mode)
+		{
+			_camera->setTriggerMode(mode);
+		}
 
-        size_t CameraActive::getTriggerLine()
-        {
-            return _camera->getTriggerLine();
-        }
+		void CameraActive::setTriggerLine(size_t lineIndex)
+		{
+			_camera->setTriggerLine(lineIndex);
+		}
 
-        cv::Mat CameraActive::getImage(bool& isGet)
-        {
-            return _cameraActive->getImage(isGet);
-        }
+		size_t CameraActive::getExposureTime()
+		{
+			return _camera->getExposureTime();
+		}
 
-        cv::Mat CameraActive::getImage()
-        {
-            return _cameraActive->getImage();
-        }
+		size_t CameraActive::getGain()
+		{
+			return _camera->getGain();
+		}
 
-        void CameraActive::setCameraProvider(CameraProvider provider)
-        {
-            _provider = provider;
-        }
+		size_t CameraActive::getIOTime()
+		{
+			return _camera->getIOTime();
+		}
 
-        CameraProvider CameraActive::getCameraProvider() const
-        {
-            return _provider;
-        }
+		CameraTriggerMode CameraActive::getMonitorMode()
+		{
+			return _camera->getMonitorMode();
+		}
 
-        CameraActive::CameraActive(ICamera* camera, ICameraActive* cameraActive)
-        {
-            _camera = camera;
-            _cameraActive = cameraActive;
-        }
+		size_t CameraActive::getTriggerLine()
+		{
+			return _camera->getTriggerLine();
+		}
 
-        CameraActive::~CameraActive()
-        {
-            if (_camera)
-            {
-                delete _camera;
-                _camera = nullptr;
-            }
-            _cameraActive = nullptr;
-        }
+		cv::Mat CameraActive::getImage(bool& isGet)
+		{
+			return _cameraActive->getImage(isGet);
+		}
 
-        void CameraPassive::connectCamera()
-        {
-            _camera->setIP(_ip);
-             _camera->connectCamera();
-             _cameraInfo = _camera->getCameraInfo();
-        }
+		cv::Mat CameraActive::getImage()
+		{
+			return _cameraActive->getImage();
+		}
 
-        void CameraPassive::startMonitor()
-        {
-             _camera->startMonitor();
-        }
+		void CameraActive::setCameraProvider(CameraProvider provider)
+		{
+			_provider = provider;
+		}
 
-        void CameraPassive::stopMonitor()
-        {
-             _camera->stopMonitor();
-        }
+		CameraProvider CameraActive::getCameraProvider() const
+		{
+			return _provider;
+		}
 
-        void CameraPassive::setExposureTime(size_t value)
-        {
-             _camera->setExposureTime(value);
-        }
+		CameraActive::CameraActive(ICamera* camera, ICameraActive* cameraActive)
+		{
+			_camera = camera;
+			_cameraActive = cameraActive;
+		}
 
-        void CameraPassive::setGain(size_t value)
-        {
-             _camera->setGain(value);
-        }
+		CameraActive::~CameraActive()
+		{
+			if (_camera)
+			{
+				delete _camera;
+				_camera = nullptr;
+			}
+			_cameraActive = nullptr;
+		}
 
-        void CameraPassive::setIOTime(size_t value)
-        {
-             _camera->setIOTime(value);
-        }
+		void CameraPassive::connectCamera()
+		{
+			_camera->setIP(_ip);
+			_camera->connectCamera();
+			_cameraInfo = _camera->getCameraInfo();
+		}
 
-        void CameraPassive::setTriggerMode(CameraTriggerMode mode)
-        {
-             _camera->setTriggerMode(mode);
-        }
+		bool CameraPassive::getConnectState()
+		{
+			return _camera->getConnectState();
+		}
 
-        void CameraPassive::setTriggerLine(size_t lineIndex)
-        {
-             _camera->setTriggerLine(lineIndex);
-        }
+		void CameraPassive::setFrameRate(float cameraFrameRate)
+		{
+			_camera->setFrameRate(cameraFrameRate);
+		}
 
-        size_t CameraPassive::getExposureTime()
-        {
-            return _camera->getExposureTime();
-        }
+		void CameraPassive::setHeartbeatTime(size_t heartBeatTime)
+		{
+			_camera->setHeartbeatTime(heartBeatTime);
+		}
 
-        size_t CameraPassive::getGain()
-        {
-            return _camera->getGain();
-        }
+		float CameraPassive::getHeartbeatTime()
+		{
+			return _camera->getHeartbeatTime();
+		}
 
-        size_t CameraPassive::getIOTime()
-        {
-            return _camera->getIOTime();
-        }
+		float CameraPassive::getFrameRate()
+		{
+			return _camera->getFrameRate();
+		}
 
-        CameraTriggerMode CameraPassive::getMonitorMode()
-        {
-            return _camera->getMonitorMode();
-        }
+		void CameraPassive::startMonitor()
+		{
+			_camera->startMonitor();
+		}
 
-        size_t CameraPassive::getTriggerLine()
-        {
-            return _camera->getTriggerLine();
-        }
+		void CameraPassive::stopMonitor()
+		{
+			_camera->stopMonitor();
+		}
 
-        void CameraPassive::RegisterCallBackFunc()
-        {
-             _cameraPassive->RegisterCallBackFunc();
-        }
+		void CameraPassive::setExposureTime(size_t value)
+		{
+			_camera->setExposureTime(value);
+		}
 
-        void CameraPassive::setCameraProvider(CameraProvider provider)
-        {
-            _provider = provider;
-        }
+		void CameraPassive::setGain(size_t value)
+		{
+			_camera->setGain(value);
+		}
 
-        CameraProvider CameraPassive::getCameraProvider() const
-        {
-            return _provider;
-        }
+		void CameraPassive::setIOTime(size_t value)
+		{
+			_camera->setIOTime(value);
+		}
 
-        CameraPassive::CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack)
-        {
-            _camera = camera;
-            _cameraPassive = cameraPassive;
-            _userToCallBack = userToCallBack;
+		void CameraPassive::setTriggerMode(CameraTriggerMode mode)
+		{
+			_camera->setTriggerMode(mode);
+		}
 
-        }
+		void CameraPassive::setTriggerLine(size_t lineIndex)
+		{
+			_camera->setTriggerLine(lineIndex);
+		}
 
-        CameraPassive::~CameraPassive()
-        {
-            if (_camera)
-            {
-                delete _camera;
-                _camera = nullptr;
-            }
-            _cameraPassive = nullptr;
-        }
-    }
+		size_t CameraPassive::getExposureTime()
+		{
+			return _camera->getExposureTime();
+		}
+
+		size_t CameraPassive::getGain()
+		{
+			return _camera->getGain();
+		}
+
+		size_t CameraPassive::getIOTime()
+		{
+			return _camera->getIOTime();
+		}
+
+		CameraTriggerMode CameraPassive::getMonitorMode()
+		{
+			return _camera->getMonitorMode();
+		}
+
+		size_t CameraPassive::getTriggerLine()
+		{
+			return _camera->getTriggerLine();
+		}
+
+		void CameraPassive::RegisterCallBackFunc()
+		{
+			_cameraPassive->RegisterCallBackFunc();
+		}
+
+		void CameraPassive::setCameraProvider(CameraProvider provider)
+		{
+			_provider = provider;
+		}
+
+		CameraProvider CameraPassive::getCameraProvider() const
+		{
+			return _provider;
+		}
+
+		CameraPassive::CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack)
+		{
+			_camera = camera;
+			_cameraPassive = cameraPassive;
+			_userToCallBack = userToCallBack;
+		}
+
+		CameraPassive::~CameraPassive()
+		{
+			if (_camera)
+			{
+				delete _camera;
+				_camera = nullptr;
+			}
+			_cameraPassive = nullptr;
+		}
+	}
 }
