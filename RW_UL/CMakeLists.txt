@@ -1,0 +1,7 @@
+add_subdirectory(ime)
+add_subdirectory(oso)
+add_subdirectory(hoe)
+add_subdirectory(dsl)
+add_subdirectory(utilty)
+add_subdirectory(rqw)
+add_subdirectory(scc)
