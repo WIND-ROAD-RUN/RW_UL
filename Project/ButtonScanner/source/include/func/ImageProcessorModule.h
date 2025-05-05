@@ -70,7 +70,6 @@ private:
 	void run_debug(MatInfo& frame);
 	void run_monitor(MatInfo& frame);
 	void run_OpenRemoveFunc(MatInfo& frame);
-
 signals:
 	void imageReady(QPixmap image);
 

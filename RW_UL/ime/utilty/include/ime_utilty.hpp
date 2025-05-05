@@ -75,19 +75,19 @@ namespace rw {
         static void drawShapesOnSourceImg(
 			cv::Mat& image,
             const std::vector<DetectionRectangleInfo>& rectInfo,
-            PainterConfig config
+            PainterConfig config={}
         );
 
         static cv::Mat drawShapes(
             const cv::Mat& image,
             const DetectionRectangleInfo& rectInfo,
-            PainterConfig config
+            PainterConfig config={}
         );
 
         static void drawShapesOnSourceImg(
             cv::Mat& image, 
             const DetectionRectangleInfo& rectInfo,
-            PainterConfig config
+            PainterConfig config={}
         );
 	};
 

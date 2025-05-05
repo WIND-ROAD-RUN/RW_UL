@@ -1,6 +1,8 @@
 #include"stdafx.h"
-#include "GlobalStruct.h"
 
+#include"ime_utilty.hpp"
+
+#include "GlobalStruct.h"
 #include"ImageProcessorModule.h"
 #include"ButtonUtilty.h"
 
@@ -9,6 +11,8 @@
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
+	config.conf_threshold = 0.75f;
+	config.nms_threshold = 0.75f;
 	config.ModelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 }
@@ -1199,9 +1203,48 @@ void ImageProcessor::run()
 	}
 }
 
+static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo> & info)
+{
+	std::vector<std::vector<size_t>> result;
+	result.resize(20);
+
+	for (int i=0;i< info.size();i++)
+	{
+		if (info[i].classId > result.size())
+		{
+			result.resize(info[i].classId + 1);
+		}
+
+		result[info[i].classId].emplace_back(i);
+	}
+
+	return result;
+
+}
+
 void ImageProcessor::run_debug(MatInfo& frame)
 {
+	auto processResult=_modelEngineOT->processImg(frame.image);
+	auto processResultIndex = getClassIndex(processResult);
+
+	rw::ImagePainter::PainterConfig config;
+	config.shapeType = rw::ImagePainter::ShapeType::Circle;
+	config.thickness = 5;
+
+	config.color = { 0, 165, 170 };
+	for (const auto & item: processResultIndex[0])
+	{
+		rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResult[item],config);
+	}
+
+	config.color = { 0, 165, 255 };
+	for (const auto& item : processResultIndex[1])
+	{
+		rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResult[item], config);
+	}
+
 	auto  image = cvMatToQImage(frame.image);
+
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }
