@@ -57,7 +57,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE dsl
 	PRIVATE hoec
 	PRIVATE oso
-	PRIVATE imet
+	PRIVATE ime
 	PRIVATE utilty
 	PRIVATE cdm
 )
