@@ -1,8 +1,7 @@
 #include"stdafx.h"
 #include "GlobalStruct.h"
+
 #include"ImageProcessorModule.h"
-#include"StatisticalInfoComputingThread.h"
-//#include"imeoo_ModelEngineOO.h"
 #include"ButtonUtilty.h"
 
 #include <QtConcurrent>
@@ -1190,8 +1189,6 @@ void ImageProcessingModule::BuildModule()
 		ImageProcessor* processor = new ImageProcessor(_queue, _mutex, _condition, workIndexCount, this);
 		workIndexCount++;
 		processor->buildModelEngine(modelEnginePath, modelNamePath);
-		processor->buildModelEngineOnnxOO(modelOnnxOOPath, modelNamePath);
-		processor->buildModelEngineOnnxSO(modelOnnxSOPath, modelNamePath);
 		processor->imageProcessingModuleIndex = index;
 		connect(processor, &ImageProcessor::imageReady, this, &ImageProcessingModule::imageReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
