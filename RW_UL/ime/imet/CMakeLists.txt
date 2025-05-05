@@ -8,12 +8,15 @@ find_package(CUDAToolkit REQUIRED)
 FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
 	${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/private/include 
+	${CMAKE_CURRENT_SOURCE_DIR}/private/src
 )
 
 add_library(${PROJECT_NAME}  ${SRC_LIST} ${UTILTY_SRC_LIST})
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/include
     PUBLIC ${UTILTY_INCLUDES}
 )
 

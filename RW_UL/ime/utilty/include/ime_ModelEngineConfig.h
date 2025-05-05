@@ -12,4 +12,16 @@ namespace rw {
 	public:
 		std::string ModelPath;
 	};
+
+	enum class ModelType
+	{
+		yolov11_obb,
+		yolov11_seg
+	};
+
+	enum class ModelEngineDeployType
+	{
+		TensorRT,
+		OnnxRuntime
+	};
 }

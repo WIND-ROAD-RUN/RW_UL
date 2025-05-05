@@ -1,4 +1,4 @@
-#include"imet_ModelEngineFactory.hpp"
+#include"imet_ModelEngineFactory_TensorRT.hpp"
 
 #include"imet_ModelEngine_yolov11_obb.hpp"
 
@@ -13,13 +13,13 @@ namespace rw {
 		static ModelEngine_Yolov11_Obb* createModelEngine_Yolov11_Obb(const ModelEngineConfig& config);
 
 		std::unique_ptr<ModelEngine>
-			ModelEngineFactory::createModelEngine
-			(const ModelEngineConfig& config, TensorRTModelType modelType)
+			ModelEngineFactory_TensorRT::createModelEngine
+			(const ModelEngineConfig& config, ModelType modelType)
 		{
 			std::unique_ptr<ModelEngine> modelEngine = nullptr;
 			switch (modelType)
 			{
-			case TensorRTModelType::yolov11_obb:
+			case ModelType::yolov11_obb:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_Obb(config));
 			default:
 				return nullptr;

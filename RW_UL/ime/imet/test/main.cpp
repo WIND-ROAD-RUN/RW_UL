@@ -1,11 +1,7 @@
 ﻿#include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
-
-#include"imet_ModelEngine_yolov11_obb.hpp"
-#include"imet_ModelEngine_yolov11_seg.hpp"
-#include"imet_ModelEngine_yolov11_obb.hpp"
-#include"imet_ModelEngineFactory.hpp"
+#include"imet_ModelEngineFactory_TensorRT.hpp"
 #include<string>
 using namespace std;
 using namespace cv;
@@ -17,7 +13,7 @@ int main()
 	rw::ModelEngineConfig config;
 	config.ModelPath = R"(C:\Users\rw\Desktop\model\best.engine)";
 
-	auto modelEngine = rw::imet::ModelEngineFactory::createModelEngine(config,rw::imet::TensorRTModelType::yolov11_obb);
+	auto modelEngine = rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config,rw::ModelType::yolov11_obb);
 	Mat image = imread(path);
 	if (image.empty())
 	{
