@@ -6,9 +6,6 @@
 #include"PicturesViewer.h"
 #include<QThread>
 #include<QtConcurrent>
-
-#include"imeot_ModelEngineOT.h"
-#include"imest_ModelEnginest.h"
 #include"rqw_CameraObjectThread.hpp"
 #include"rqw_CameraObject.hpp"
 

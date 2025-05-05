@@ -11,11 +11,11 @@
 #include <vector>
 #include <string>
 
-#include"imeoo_ModelEngineOO.h"
-#include"imest_ModelEngineST.h"
-#include"imeso_ModelEngineSO.h"
-#include"imeot_ModelEngineOT.h"
-#include "imeso_ModelEngineSO.h"
+//#include"imeoo_ModelEngineOO.h"
+//#include"imest_ModelEngineST.h"
+//#include"imeso_ModelEngineSO.h"
+//#include"imeot_ModelEngineOT.h"
+//#include "imeso_ModelEngineSO.h"
 
 struct ImagePainter
 {
@@ -34,7 +34,7 @@ struct ImagePainter
 
 	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
 
-	static void drawCirclesOnImage(cv::Mat& image, const std::vector<rw::imeot::ProcessRectanglesResultOT>& rectangles);
+	/*static void drawCirclesOnImage(cv::Mat& image, const std::vector<rw::imeot::ProcessRectanglesResultOT>& rectangles);*/
 };
 
 struct ImageProcessUtilty
@@ -73,9 +73,9 @@ signals:
 	void imageReady(QPixmap image);
 
 private:
-	std::unique_ptr<rw::imeot::ModelEngineOT> _modelEnginePtr;
-	std::unique_ptr<rw::imeoo::ModelEngineOO> _modelEnginePtrOnnxOO;
-	std::unique_ptr<rw::imeso::ModelEngineSO> _modelEnginePtrOnnxSO;
+	//std::unique_ptr<rw::imeot::ModelEngineOT> _modelEnginePtr;
+	//std::unique_ptr<rw::imeoo::ModelEngineOO> _modelEnginePtrOnnxOO;
+	//std::unique_ptr<rw::imeso::ModelEngineSO> _modelEnginePtrOnnxSO;
 
 public:
 	void buildModelEngine(const QString& enginePath, const QString& namePath);
@@ -85,10 +85,10 @@ public:
 
 private:
 	bool isInArea(int x);
-	std::vector<rw::imeot::ProcessRectanglesResultOT> getDefectInBody(rw::imeot::ProcessRectanglesResultOT body, const std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult);
+	//std::vector<rw::imeot::ProcessRectanglesResultOT> getDefectInBody(rw::imeot::ProcessRectanglesResultOT body, const std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult);
 
 private:
-	cv::Mat processAI(MatInfo& frame, QVector<QString>& errorInfo, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResultTarget);
+	/*cv::Mat processAI(MatInfo& frame, QVector<QString>& errorInfo, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResultTarget);
 
 	rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
 	rw::imeoo::ProcessRectanglesResultOO getBody(std::vector<rw::imeoo::ProcessRectanglesResultOO>& processRectanglesResult, bool& hasBody);
@@ -103,7 +103,7 @@ private:
 		std::vector<rw::imeoo::ProcessRectanglesResultOO>& processRectanglesResultOO,
 		std::vector<rw::imeso::ProcessRectanglesResultSO>& processRectanglesResultSO);
 
-	void drawErrorLocate(QImage& image, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, const QColor& drawColor);
+	void drawErrorLocate(QImage& image, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, const QColor& drawColor);*/
 
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);

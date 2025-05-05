@@ -6,7 +6,7 @@
 #include"ModelStorageManager.h"
 
 #include"scc_Motion.h"
-#include"imest_ModelEngineST.h"
+
 #include"rqw_CameraObjectThread.hpp"
 #include"cdm_ButtonScannerMainWindow.h"
 #include"cdm_ButtonScannerDlgProductSet.h"
@@ -25,6 +25,8 @@
 
 #include<atomic>
 #include <ButtonScanner.h>
+
+//#include"imest_ModelEngineST.h"
 
 namespace zwy {
 	namespace scc {

@@ -5,7 +5,7 @@
 
 AiTrainModule::AiTrainModule(QObject* parent)
 	: QThread(parent) {
-	auto enginePath = globalPath.modelRootPath + globalPath.engineFileName;
+	/*auto enginePath = globalPath.modelRootPath + globalPath.engineFileName;
 	auto namePath = globalPath.modelRootPath + globalPath.nameFileName;
 	labelEngine = std::make_unique<rw::imeot::ModelEngineOT>(enginePath.toStdString(), namePath.toStdString());
 	_processTrainModel = new QProcess();
@@ -16,7 +16,7 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	_processExportModel = new QProcess();
 	connect(_processExportModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleExportModelProcessOutput);
 	connect(_processExportModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleExportModelProcessError);
-	connect(_processExportModel, &QProcess::finished, this, &AiTrainModule::handleExportModelProcessFinished);
+	connect(_processExportModel, &QProcess::finished, this, &AiTrainModule::handleExportModelProcessFinished);*/
 }
 
 AiTrainModule::~AiTrainModule()
@@ -31,105 +31,105 @@ void AiTrainModule::startTrain()
 	start();
 }
 
-rw::imeot::ProcessRectanglesResultOT AiTrainModule::getBody(
-	std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody)
-{
-	hasBody = false;
-	rw::imeot::ProcessRectanglesResultOT result;
-	result.width = 0;
-	result.height = 0;
-	for (auto& i : processRectanglesResult)
-	{
-		if (i.classID == 0)
-		{
-			if ((i.width * i.height) > (result.width * result.height))
-			{
-				result = i;
-				hasBody = true;
-			}
-		}
-	}
-	return result;
-}
+//rw::imeot::ProcessRectanglesResultOT AiTrainModule::getBody(
+//	std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody)
+//{
+//	hasBody = false;
+//	rw::imeot::ProcessRectanglesResultOT result;
+//	result.width = 0;
+//	result.height = 0;
+//	for (auto& i : processRectanglesResult)
+//	{
+//		if (i.classID == 0)
+//		{
+//			if ((i.width * i.height) > (result.width * result.height))
+//			{
+//				result = i;
+//				hasBody = true;
+//			}
+//		}
+//	}
+//	return result;
+//}
 
-QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
-{
-	QVector<AiTrainModule::DataItem> result;
-	switch (type)
-	{
-	case ModelType::Segment:
-		result = getSegmentDataSet(annotationDataSet, classId);
-		break;
-	case ModelType::ObjectDetection:
-		result = getObjectDetectionDataSet(annotationDataSet, classId);
-		break;
-	default:
-		break;
-	}
-	return result;
-}
+//QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
+//{
+//	QVector<AiTrainModule::DataItem> result;
+//	switch (type)
+//	{
+//	case ModelType::Segment:
+//		result = getSegmentDataSet(annotationDataSet, classId);
+//		break;
+//	case ModelType::ObjectDetection:
+//		result = getObjectDetectionDataSet(annotationDataSet, classId);
+//		break;
+//	default:
+//		break;
+//	}
+//	return result;
+//}
 
-QVector<AiTrainModule::DataItem> AiTrainModule::getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
-{
-	QVector<AiTrainModule::DataItem> result;
+//QVector<AiTrainModule::DataItem> AiTrainModule::getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
+//{
+//	QVector<AiTrainModule::DataItem> result;
+//
+//	for (const auto& item : annotationDataSet)
+//	{
+//		std::string id = std::to_string(classId);
+//
+//		// 归一化中心点和宽高
+//		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
+//		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
+//		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
+//		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
+//
+//		// 计算椭圆上的 30 个点
+//		constexpr int numPoints = 30;
+//		std::string pointsStr;
+//		for (int i = 0; i < numPoints; ++i)
+//		{
+//			// 计算角度（均匀分布在 0 到 2π 之间）
+//			double angle = 2.0 * M_PI * i / numPoints;
+//
+//			// 椭圆公式：x = centerX + a * cos(angle), y = centerY + b * sin(angle)
+//			double x = norCenterX + (norWidth / 2.0) * std::cos(angle);
+//			double y = norCenterY + (norHeight / 2.0) * std::sin(angle);
+//
+//			// 将点添加到字符串中
+//			pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
+//		}
+//
+//		// 组合最终的标注字符串
+//		auto textStr = id + pointsStr;
+//
+//		// 添加到结果集
+//		result.append({ item.first, QString::fromStdString(textStr) });
+//	}
+//
+//	return result;
+//}
 
-	for (const auto& item : annotationDataSet)
-	{
-		std::string id = std::to_string(classId);
-
-		// 归一化中心点和宽高
-		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
-		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
-		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
-		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
-
-		// 计算椭圆上的 30 个点
-		constexpr int numPoints = 30;
-		std::string pointsStr;
-		for (int i = 0; i < numPoints; ++i)
-		{
-			// 计算角度（均匀分布在 0 到 2π 之间）
-			double angle = 2.0 * M_PI * i / numPoints;
-
-			// 椭圆公式：x = centerX + a * cos(angle), y = centerY + b * sin(angle)
-			double x = norCenterX + (norWidth / 2.0) * std::cos(angle);
-			double y = norCenterY + (norHeight / 2.0) * std::sin(angle);
-
-			// 将点添加到字符串中
-			pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
-		}
-
-		// 组合最终的标注字符串
-		auto textStr = id + pointsStr;
-
-		// 添加到结果集
-		result.append({ item.first, QString::fromStdString(textStr) });
-	}
-
-	return result;
-}
-
-QVector<AiTrainModule::DataItem> AiTrainModule::getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
-{
-	QVector<AiTrainModule::DataItem> result;
-	for (const auto& item : annotationDataSet)
-	{
-		std::string id = std::to_string(classId);
-		//normalization归一化
-
-		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
-		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
-		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
-		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
-
-		auto textStr = id + " " +
-			std::to_string(norCenterX) + " " + std::to_string(norCenterY) + " "
-			+ std::to_string(norWidth) + " " + std::to_string(norHeight);
-
-		result.append({ item.first, QString::fromStdString(textStr) });
-	}
-	return result;
-}
+//QVector<AiTrainModule::DataItem> AiTrainModule::getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
+//{
+//	QVector<AiTrainModule::DataItem> result;
+//	for (const auto& item : annotationDataSet)
+//	{
+//		std::string id = std::to_string(classId);
+//		//normalization归一化
+//
+//		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
+//		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
+//		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
+//		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
+//
+//		auto textStr = id + " " +
+//			std::to_string(norCenterX) + " " + std::to_string(norCenterY) + " "
+//			+ std::to_string(norWidth) + " " + std::to_string(norHeight);
+//
+//		result.append({ item.first, QString::fromStdString(textStr) });
+//	}
+//	return result;
+//}
 
 void AiTrainModule::clear_older_trainData()
 {
@@ -498,92 +498,92 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	auto& global = GlobalStructData::getInstance();
-	global.isTrainModel = true;
-	emit updateTrainState(true);
-	emit updateTrainTitle("正在训练");
-	emit appRunLog("训练启动....");
+	//auto& global = GlobalStructData::getInstance();
+	//global.isTrainModel = true;
+	//emit updateTrainState(true);
+	//emit updateTrainTitle("正在训练");
+	//emit appRunLog("训练启动....");
 
-	emit appRunLog("清理旧的训练数据....");
-	clear_older_trainData();
+	//emit appRunLog("清理旧的训练数据....");
+	//clear_older_trainData();
 
-	//获取图片的label
-	auto annotationGoodDataSet = annotation_data_set(false);
-	auto annotationBadDataSet = annotation_data_set(true);
-	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
-	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
-	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
-	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
-	emit appRunLog(GoodSetLog);
-	emit appRunLog(BadSetLog);
+	////获取图片的label
+	//auto annotationGoodDataSet = annotation_data_set(false);
+	//auto annotationBadDataSet = annotation_data_set(true);
+	//auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
+	//auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
+	//QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
+	//QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
+	//emit appRunLog(GoodSetLog);
+	//emit appRunLog(BadSetLog);
 
-	//拷贝训练数据
-	emit appRunLog("拷贝训练文件");
-	copyTrainData(dataSet);
-	copyTrainData(dataSetBad);
+	////拷贝训练数据
+	//emit appRunLog("拷贝训练文件");
+	//copyTrainData(dataSet);
+	//copyTrainData(dataSetBad);
 
-	if (_modelType == ModelType::Segment)
-	{
-		emit appRunLog("开始训练分割模型");
-		trainSegmentModel();
-	}
-	else if (_modelType == ModelType::ObjectDetection)
-	{
-		emit appRunLog("开始训练检测模型");
-		trainObbModel();
-	}
+	//if (_modelType == ModelType::Segment)
+	//{
+	//	emit appRunLog("开始训练分割模型");
+	//	trainSegmentModel();
+	//}
+	//else if (_modelType == ModelType::ObjectDetection)
+	//{
+	//	emit appRunLog("开始训练检测模型");
+	//	trainObbModel();
+	//}
 
-	exec();
+	//exec();
 }
 
-QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
-{
-	QVector<QString> imageList;
-	if (isBad)
-	{
-		emit appRunLog("正在标注要筛选的纽扣数据集");
-		imageList = GlobalStructData::getInstance().modelStorageManager->getBadImagePathList();
-	}
-	else
-	{
-		emit appRunLog("正在标注正确的纽扣的数据集");
-		imageList = GlobalStructData::getInstance().modelStorageManager->getGoodImagePathList();
-	}
-
-	int i = 0;
-
-	QVector<labelAndImg> dataSet;
-	dataSet.reserve(100);
-
-	//获取图片的label
-	for (const auto& imagePath : imageList) {
-		auto image = getMatFromPath(imagePath);
-		if (image.empty()) {
-			continue;
-		}
-		_frameWidth = image.cols;
-		_frameHeight = image.rows;
-		cv::Mat resultMat;
-		std::vector<rw::imeot::ProcessRectanglesResultOT> result;
-		labelEngine->ProcessMask(image, resultMat, result);
-		QString log = QString::number(i) + " ";
-
-		bool hasBody;
-		auto body = getBody(result, hasBody);
-		if (!hasBody)
-		{
-			continue;
-		}
-
-		dataSet.emplaceBack(imagePath, body);
-		log += "ClassId: " + QString::number(body.classID) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
-		emit appRunLog(log);
-		i++;
-	}
-	emit appRunLog("标注完" + QString::number(dataSet.size()) + "条数据");
-
-	return dataSet;
-}
+//QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
+//{
+//	QVector<QString> imageList;
+//	if (isBad)
+//	{
+//		emit appRunLog("正在标注要筛选的纽扣数据集");
+//		imageList = GlobalStructData::getInstance().modelStorageManager->getBadImagePathList();
+//	}
+//	else
+//	{
+//		emit appRunLog("正在标注正确的纽扣的数据集");
+//		imageList = GlobalStructData::getInstance().modelStorageManager->getGoodImagePathList();
+//	}
+//
+//	int i = 0;
+//
+//	QVector<labelAndImg> dataSet;
+//	dataSet.reserve(100);
+//
+//	//获取图片的label
+//	for (const auto& imagePath : imageList) {
+//		auto image = getMatFromPath(imagePath);
+//		if (image.empty()) {
+//			continue;
+//		}
+//		_frameWidth = image.cols;
+//		_frameHeight = image.rows;
+//		cv::Mat resultMat;
+//		std::vector<rw::imeot::ProcessRectanglesResultOT> result;
+//		labelEngine->ProcessMask(image, resultMat, result);
+//		QString log = QString::number(i) + " ";
+//
+//		bool hasBody;
+//		auto body = getBody(result, hasBody);
+//		if (!hasBody)
+//		{
+//			continue;
+//		}
+//
+//		dataSet.emplaceBack(imagePath, body);
+//		log += "ClassId: " + QString::number(body.classID) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
+//		emit appRunLog(log);
+//		i++;
+//	}
+//	emit appRunLog("标注完" + QString::number(dataSet.size()) + "条数据");
+//
+//	return dataSet;
+//}
 
 void AiTrainModule::handleTrainModelProcessOutput()
 {

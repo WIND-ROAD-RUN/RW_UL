@@ -6,6 +6,8 @@
 #include"cdm_AiModelConfigIndex.h"
 #include "ui_DlgModelManager.h"
 #include"LoadingDialog.h"
+#include<QStringListModel>
+#include<QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgModelManagerClass; };

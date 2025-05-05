@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <atomic>
 
-#include"imeot_ModelEngineOT.h"
+//#include"imeot_ModelEngineOT.h"
 
 #include"opencv2/opencv.hpp"
 #include<QProcess>
@@ -23,13 +23,13 @@ private:
 public:
 	void setModelType(ModelType type) { _modelType = type; }
 public:
-	QProcess* _processTrainModel;
-	QProcess* _processExportModel;
+	QProcess* _processTrainModel{nullptr};
+	QProcess* _processExportModel{ nullptr };
 private:
 	int _frameHeight;
 	int _frameWidth;
 public:
-	using labelAndImg = QPair<QString, rw::imeot::ProcessRectanglesResultOT>;
+	/*using labelAndImg = QPair<QString, rw::imeot::ProcessRectanglesResultOT>;*/
 	using DataItem = QPair<QString, QString>;
 	explicit AiTrainModule(QObject* parent = nullptr);
 
@@ -38,12 +38,12 @@ public:
 	void startTrain();
 
 private:
-	std::unique_ptr<rw::imeot::ModelEngineOT> labelEngine;
+	/*std::unique_ptr<rw::imeot::ModelEngineOT> labelEngine;*/
 private:
-	rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
+	/*rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
 	QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
 	QVector<DataItem> getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
-	QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
+	QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);*/
 private:
 	void clear_older_trainData();
 	void copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet);
@@ -62,7 +62,7 @@ public:
 protected:
 	void run() override;
 private:
-	QVector<labelAndImg> annotation_data_set(bool isBad);
+	/*QVector<labelAndImg> annotation_data_set(bool isBad);*/
 private:
 	int parseProgressOO(const QString& logText, int& totalTasks);
 	int parseProgressSO(const QString& logText, int& totalTasks);

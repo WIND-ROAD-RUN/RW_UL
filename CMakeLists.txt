@@ -26,6 +26,9 @@ find_all_libs(${ZMotionRutimePath}/lib ZMotionRutime_libs)
 find_all_dlls(${ZMotionRutimePath}/dll ZMotionRutime_dlls)
 
 
+set(INSTALL_PATH ${CMAKE_SOURCE_DIR}/install/${CMAKE_BUILD_TYPE})
+
+
 enable_testing()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
