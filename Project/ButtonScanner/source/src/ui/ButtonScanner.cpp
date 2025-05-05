@@ -716,26 +716,17 @@ void ButtonScanner::build_imageProcessorModule()
 
 	QDir dir;
 
-	QString enginePathFull = globalPath.modelRootPath + globalPath.engineFileName;
-	QString namePathFull = globalPath.modelRootPath + globalPath.nameFileName;
-	QString onnxEnginePathOOFull = globalPath.modelRootPath + globalPath.onnxFileNameOO;
-	QString onnxEnginePathSOFull = globalPath.modelRootPath + globalPath.onnxFileNameSO;
+	QString enginePathFull = globalPath.modelRootPath + globalPath.engineObb;
 
 	QFileInfo engineFile(enginePathFull);
-	QFileInfo nameFile(namePathFull);
-	QFileInfo onnxEngineOOFile(onnxEnginePathOOFull);
-	QFileInfo onnxEngineSOFile(onnxEnginePathSOFull);
 
-	if (!engineFile.exists() || !nameFile.exists() || !onnxEngineOOFile.exists() || !onnxEngineSOFile.exists()) {
+	if (!engineFile.exists()) {
 		QMessageBox::critical(this, "Error", "Engine file or Name file does not exist. The application will now exit.");
 		QApplication::quit();
 		return;
 	}
 
 	globalStruct.enginePath = enginePathFull;
-	globalStruct.namePath = namePathFull;
-	globalStruct.onnxEngineOOPath = onnxEnginePathOOFull;
-	globalStruct.onnxEngineSOPath = onnxEnginePathSOFull;
 
 	globalStruct.buildImageProcessingModule(2);
 
