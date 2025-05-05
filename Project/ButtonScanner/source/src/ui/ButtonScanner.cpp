@@ -43,15 +43,14 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
+		ui->rbtn_debug->setChecked(false);
 		auto& runningState = globalStructData.runningState;
+		runningState = RunningState::Monitor;
 		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 		_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 		_dlgExposureTimeSet->exec(); // 显示对话框
 		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
-		if (runningState == RunningState::Debug)
-		{
-			rbtn_debug_checked(true);
-		}
+		runningState = RunningState::Stop;
 	}
 }
 
@@ -1202,7 +1201,8 @@ void ButtonScanner::pbtn_set_clicked()
 void ButtonScanner::pbtn_newProduction_clicked()
 {
 	auto& globalStrut = GlobalStructData::getInstance();
-	if (globalStrut.isOpenRemoveFunc)
+	auto currentRunningState = globalStrut.runningState.load();
+	if (currentRunningState == RunningState::OpenRemoveFunc)
 	{
 		QMessageBox::warning(this, "错误", "请先停止生产线");
 		return;
@@ -1216,7 +1216,8 @@ void ButtonScanner::pbtn_newProduction_clicked()
 void ButtonScanner::pbtn_beltSpeed_clicked()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
-	if (globalStruct.isOpenRemoveFunc)
+	auto currentRunningState = globalStruct.runningState.load();
+	if (currentRunningState == RunningState::OpenRemoveFunc)
 	{
 		QMessageBox::warning(this, "错误", "请先停止生产线");
 	}
@@ -1351,7 +1352,8 @@ void ButtonScanner::labelClickable_title_clicked()
 		QMessageBox::warning(this, "警告", "正在训练模型，请稍后再试");
 		return;
 	}
-	if (global.isOpenRemoveFunc)
+	auto currentRunningState = global.runningState.load();
+	if (currentRunningState == RunningState::OpenRemoveFunc)
 	{
 		QMessageBox::warning(this, "警告", "正在运行剔废功能，请关闭后再试");
 		return;

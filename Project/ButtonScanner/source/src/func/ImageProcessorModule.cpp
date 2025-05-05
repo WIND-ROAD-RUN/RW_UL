@@ -6,22 +6,24 @@
 
 #include <QtConcurrent>
 
-void ImageProcessor::buildModelEngine(const QString& enginePath, const QString& namePath)
+void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
-	/*_modelEnginePtr = std::make_unique<rw::imeot::ModelEngineOT>(enginePath.toStdString(), namePath.toStdString());*/
+	rw::ModelEngineConfig config;
+	config.ModelPath = enginePath.toStdString();
+	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 }
 
-void ImageProcessor::buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath)
-{
-	///*_modelEnginePtrOnnxOO.reset();*/
-	//_modelEnginePtrOnnxOO = std::make_unique<rw::imeoo::ModelEngineOO>(enginePath.toStdString(), namePath.toStdString());
-}
-
-void ImageProcessor::buildModelEngineOnnxSO(const QString& enginePath, const QString& namePath)
-{
-	/*_modelEnginePtrOnnxSO.reset();
-	_modelEnginePtrOnnxSO = std::make_unique<rw::imeso::ModelEngineSO>(enginePath.toStdString(), namePath.toStdString());*/
-}
+//void ImageProcessor::buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath)
+//{
+//	///*_modelEnginePtrOnnxOO.reset();*/
+//	//_modelEnginePtrOnnxOO = std::make_unique<rw::imeoo::ModelEngineOO>(enginePath.toStdString(), namePath.toStdString());
+//}
+//
+//void ImageProcessor::buildModelEngineOnnxSO(const QString& enginePath, const QString& namePath)
+//{
+//	/*_modelEnginePtrOnnxSO.reset();
+//	_modelEnginePtrOnnxSO = std::make_unique<rw::imeso::ModelEngineSO>(enginePath.toStdString(), namePath.toStdString());*/
+//}
 
 bool ImageProcessor::isInArea(int x)
 {
@@ -1136,6 +1138,25 @@ void ImageProcessor::run()
 			continue; // 跳过空帧
 		}
 
+
+		auto & globalData = GlobalStructData::getInstance();
+
+		auto currentRunningState = globalData.runningState.load();
+		switch (currentRunningState)
+		{
+		case RunningState::Debug:
+			run_debug(frame);
+			break;
+		case RunningState::OpenRemoveFunc:
+			run_OpenRemoveFunc(frame);
+			break;
+		case RunningState::Monitor:
+			run_monitor(frame);
+			break;
+		default:
+			break;
+		}
+
 		//QVector<QString> processInfo;
 		//processInfo.reserve(20);
 
@@ -1175,11 +1196,28 @@ void ImageProcessor::run()
 		//if (GlobalStructData::getInstance().isTakePictures && _isbad) {
 		//	GlobalStructData::getInstance().imageSaveEngine->pushImage(image, "Mark", "Button");
 		//}
-
-		auto  image = cvMatToQImage(frame.image);
-		QPixmap pixmap = QPixmap::fromImage(image);
-		emit imageReady(pixmap);
 	}
+}
+
+void ImageProcessor::run_debug(MatInfo& frame)
+{
+	auto  image = cvMatToQImage(frame.image);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	emit imageReady(pixmap);
+}
+
+void ImageProcessor::run_monitor(MatInfo& frame)
+{
+	auto  image = cvMatToQImage(frame.image);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	emit imageReady(pixmap);
+}
+
+void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
+{
+	auto  image = cvMatToQImage(frame.image);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	emit imageReady(pixmap);
 }
 
 void ImageProcessingModule::BuildModule()
@@ -1188,7 +1226,7 @@ void ImageProcessingModule::BuildModule()
 		static size_t workIndexCount = 0;
 		ImageProcessor* processor = new ImageProcessor(_queue, _mutex, _condition, workIndexCount, this);
 		workIndexCount++;
-		processor->buildModelEngine(modelEnginePath, modelNamePath);
+		processor->buildModelEngineOT(modelEngineOTPath);
 		processor->imageProcessingModuleIndex = index;
 		connect(processor, &ImageProcessor::imageReady, this, &ImageProcessingModule::imageReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
@@ -1196,21 +1234,21 @@ void ImageProcessingModule::BuildModule()
 	}
 }
 
-void ImageProcessingModule::reloadOOModel()
-{
-	for (auto& item : _processors)
-	{
-		item->buildModelEngineOnnxOO(modelOnnxOOPath, modelNamePath);
-	}
-}
-
-void ImageProcessingModule::reloadSOModel()
-{
-	for (auto& item : _processors)
-	{
-		item->buildModelEngineOnnxSO(modelOnnxSOPath, modelNamePath);
-	}
-}
+//void ImageProcessingModule::reloadOOModel()
+//{
+//	for (auto& item : _processors)
+//	{
+//		item->buildModelEngineOnnxOO(modelOnnxOOPath, modelNamePath);
+//	}
+//}
+//
+//void ImageProcessingModule::reloadSOModel()
+//{
+//	for (auto& item : _processors)
+//	{
+//		item->buildModelEngineOnnxSO(modelOnnxSOPath, modelNamePath);
+//	}
+//}
 
 ImageProcessingModule::ImageProcessingModule(int numConsumers, QObject* parent)
 	: QObject(parent), _numConsumers(numConsumers) {

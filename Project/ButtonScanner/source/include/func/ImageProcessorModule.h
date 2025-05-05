@@ -1,15 +1,13 @@
 #pragma once
+
+#include"ime_ModelEngineFactory.h"
+
 #include <QObject>
 #include <QQueue>
 #include <QMutex>
 #include <QWaitCondition>
-#include <QImage>
 #include <opencv2/opencv.hpp>
-#include <QImage>
-#include <QPainter>
-#include <QFont>
 #include <vector>
-#include <string>
 
 //#include"imeoo_ModelEngineOO.h"
 //#include"imest_ModelEngineST.h"
@@ -68,6 +66,10 @@ public:
 		QObject* parent = nullptr);
 protected:
 	void run() override;
+private:
+	void run_debug(MatInfo& frame);
+	void run_monitor(MatInfo& frame);
+	void run_OpenRemoveFunc(MatInfo& frame);
 
 signals:
 	void imageReady(QPixmap image);
@@ -76,12 +78,12 @@ private:
 	//std::unique_ptr<rw::imeot::ModelEngineOT> _modelEnginePtr;
 	//std::unique_ptr<rw::imeoo::ModelEngineOO> _modelEnginePtrOnnxOO;
 	//std::unique_ptr<rw::imeso::ModelEngineSO> _modelEnginePtrOnnxSO;
-
+	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
 public:
-	void buildModelEngine(const QString& enginePath, const QString& namePath);
+	void buildModelEngineOT(const QString& enginePath);
 
-	void buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath);
-	void buildModelEngineOnnxSO(const QString& enginePath, const QString& namePath);
+	//void buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath);
+	//void buildModelEngineOnnxSO(const QString& enginePath, const QString& namePath);
 
 private:
 	bool isInArea(int x);
@@ -119,15 +121,15 @@ public:
 class ImageProcessingModule : public QObject {
 	Q_OBJECT
 public:
-	QString modelEnginePath;
+	QString modelEngineOTPath;
 	QString modelNamePath;
 	QString modelOnnxOOPath;
 	QString modelOnnxSOPath;
 public:
 	void BuildModule();
 
-	void reloadOOModel();
-	void reloadSOModel();
+	//void reloadOOModel();
+	//void reloadSOModel();
 public:
 	ImageProcessingModule(int numConsumers, QObject* parent = nullptr);
 
