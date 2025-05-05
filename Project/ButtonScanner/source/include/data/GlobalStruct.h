@@ -26,13 +26,19 @@
 #include<atomic>
 #include <ButtonScanner.h>
 
-//#include"imest_ModelEngineST.h"
-
 namespace zwy {
 	namespace scc {
 		class Motion;
 	}
 }
+
+enum class RunningState
+{
+	Debug,
+	Monitor,
+	OpenRemoveFunc,
+	Stop
+};
 
 class GlobalStructThread
 	:public QObject
@@ -65,6 +71,8 @@ class GlobalStructData
 {
 	Q_OBJECT
 public:
+	std::atomic<RunningState> runningState{ RunningState::Stop };
+public:
 	std::unique_ptr<ModelStorageManager> modelStorageManager;
 public:
 	struct StatisticalInfo
@@ -78,8 +86,6 @@ public:
 	ButtonScanner* mainWindow;
 public:
 	std::atomic_bool isTakePictures{ false };
-	std::atomic_bool isOpenRemoveFunc{ false };
-	std::atomic_bool isDebugMode{ false };
 	std::atomic_bool isOpenDefect{ false };
 	std::atomic_bool isTrainModel{ false };
 	std::atomic_bool isOpenColor{ false };
