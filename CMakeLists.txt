@@ -33,3 +33,4 @@ project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
 find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(RW_UL)
+add_subdirectory(Project)
