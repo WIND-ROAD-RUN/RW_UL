@@ -1113,6 +1113,42 @@ void ImageProcessor::drawLine_locate(QImage& image, size_t locate)
 	painter.end(); // 结束绘制
 }
 
+void ImageProcessor::drawVerticalBoundaryLine(cv::Mat& mat)
+{
+	auto& index = imageProcessingModuleIndex;
+	auto& dlgProduceLineSetConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	auto& checkConfig = GlobalStructData::getInstance().dlgProductSetConfig;
+	rw::ImagePainter::PainterConfig painterConfig;
+	if (index == 1)
+	{
+		auto limit1_1 = dlgProduceLineSetConfig.limit1;
+		auto limit1_2 = dlgProduceLineSetConfig.limit1 + (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent1);
+		rw::ImagePainter::drawVerticalLine(mat, limit1_1, painterConfig);
+		rw::ImagePainter::drawVerticalLine(mat, limit1_2, painterConfig);
+	}
+	else if (index == 2)
+	{
+		auto limit2_1 = dlgProduceLineSetConfig.limit2;
+		auto limit2_2 = dlgProduceLineSetConfig.limit2 - (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent2);
+		rw::ImagePainter::drawVerticalLine(mat, limit2_1, painterConfig);
+		rw::ImagePainter::drawVerticalLine(mat, limit2_2, painterConfig);
+	}
+	else if (index == 3)
+	{
+		auto limit3_1 = dlgProduceLineSetConfig.limit3;
+		auto limit3_2 = dlgProduceLineSetConfig.limit3 + (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent3);
+		rw::ImagePainter::drawVerticalLine(mat, limit3_1, painterConfig);
+		rw::ImagePainter::drawVerticalLine(mat, limit3_2, painterConfig);
+	}
+	else if (index == 4)
+	{
+		auto limit4_1 = dlgProduceLineSetConfig.limit4;
+		auto limit4_2 = dlgProduceLineSetConfig.limit4 - (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent4);
+		rw::ImagePainter::drawVerticalLine(mat, limit4_1, painterConfig);
+		rw::ImagePainter::drawVerticalLine(mat, limit4_2, painterConfig);
+	}
+}
+
 ImageProcessor::ImageProcessor(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
 }
@@ -1253,6 +1289,7 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	auto processResult=_modelEngineOT->processImg(frame.image);
 	auto processResultIndex = getClassIndex(processResult);
 
+	drawVerticalBoundaryLine(frame.image);
 	drawHole(frame.image, processResult, processResultIndex[0]);
 	drawBody(frame.image, processResult, processResultIndex[1]);
 

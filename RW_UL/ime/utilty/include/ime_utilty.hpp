@@ -89,6 +89,9 @@ namespace rw {
             const DetectionRectangleInfo& rectInfo,
             PainterConfig config={}
         );
+
+        static  void drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
+        static void drawHorizontalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
 	};
 
 	

@@ -70,4 +70,40 @@ namespace rw
             config.fontThickness
         );
     }
+
+    void ImagePainter::drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config)
+    {
+        if (image.empty()) {
+            return;
+        }
+
+        if (position < 0 || position >= image.cols) {
+            return;
+        }
+
+        cv::Scalar lineColor = config.color;
+        int thickness = config.thickness;
+
+        cv::line(image, cv::Point(position, 0), cv::Point(position, image.rows - 1), lineColor, thickness);
+    }
+
+    void ImagePainter::drawHorizontalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config)
+    {
+        // 检查图像是否为空
+        if (image.empty()) {
+            return;
+        }
+
+        // 检查位置是否在图像范围内
+        if (position < 0 || position >= image.rows) {
+            return;
+        }
+
+        // 设置线条颜色和粗细
+        cv::Scalar lineColor = config.color;
+        int thickness = config.thickness;
+
+        // 绘制水平线
+        cv::line(image, cv::Point(0, position), cv::Point(image.cols - 1, position), lineColor, thickness);
+    }
 }

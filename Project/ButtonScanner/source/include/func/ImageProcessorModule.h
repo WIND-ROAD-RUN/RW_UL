@@ -109,6 +109,8 @@ private:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
 
+	void drawVerticalBoundaryLine(cv::Mat & mat);
+
 	QQueue<MatInfo>& _queue;
 	QMutex& _mutex;
 	QWaitCondition& _condition;
