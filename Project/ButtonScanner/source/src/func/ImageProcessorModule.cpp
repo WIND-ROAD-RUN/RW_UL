@@ -1222,26 +1222,39 @@ static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::Dete
 
 }
 
-void ImageProcessor::run_debug(MatInfo& frame)
+static void drawHole(cv::Mat & mat, const std::vector<rw::DetectionRectangleInfo> & processResult,const std::vector<size_t> & index)
 {
-	auto processResult=_modelEngineOT->processImg(frame.image);
-	auto processResultIndex = getClassIndex(processResult);
-
 	rw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::ImagePainter::ShapeType::Circle;
 	config.thickness = 5;
 
 	config.color = { 0, 165, 170 };
-	for (const auto & item: processResultIndex[0])
+	for (const auto& item : index)
 	{
-		rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResult[item],config);
+		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
 	}
+}
+
+static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+{
+	rw::ImagePainter::PainterConfig config;
+	config.shapeType = rw::ImagePainter::ShapeType::Circle;
+	config.thickness = 5;
 
 	config.color = { 0, 165, 255 };
-	for (const auto& item : processResultIndex[1])
+	for (const auto& item : index)
 	{
-		rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResult[item], config);
+		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
 	}
+}
+
+void ImageProcessor::run_debug(MatInfo& frame)
+{
+	auto processResult=_modelEngineOT->processImg(frame.image);
+	auto processResultIndex = getClassIndex(processResult);
+
+	drawHole(frame.image, processResult, processResultIndex[0]);
+	drawBody(frame.image, processResult, processResultIndex[1]);
 
 	auto  image = cvMatToQImage(frame.image);
 
