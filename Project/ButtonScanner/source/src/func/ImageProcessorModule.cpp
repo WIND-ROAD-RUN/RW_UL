@@ -1486,13 +1486,14 @@ void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		info.aperture.emplace_back(aperture);
 	}
 
-	//计算孔心距
+	//计算孔心距 其他孔非标处理
 	if (processIndex.size()%2!=0)
 	{
 		//奇数孔忽略
 		return;
 	}
 
+	//两孔
 	if (processIndex.size()==2)
 	{
 		auto x = std::abs(processResult[0].center_x - processResult[1].center_x);
@@ -1501,6 +1502,7 @@ void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		info.holeCentreDistance.push_back(holeCentreDistance);
 	}
 
+	//四孔
 	if (processIndex.size() == 4)
 	{
 		// 存储 x 和 y 轴的最大差值及对应的孔对
