@@ -39,7 +39,9 @@ static void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>
 
 static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
-struct ImageProcessUtilty
+static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+
+struct ImageProcessUtilty 
 {
 	enum class CropMode {
 		Rectangle,       // 计算矩形区域的平均 RGB 值
@@ -61,7 +63,12 @@ class ImageProcessor : public QThread {
 
 private:
 	bool _isbad{ false };
+private:
+	std::vector<std::vector<size_t>>
+	getIndexInBoundary
+	(const std::vector<rw::DetectionRectangleInfo>& info,const std::vector<std::vector<size_t>> & index);
 
+	bool isInBoundary(const rw::DetectionRectangleInfo & info);
 public:
 	ImageProcessor(QQueue<MatInfo>& queue,
 		QMutex& mutex,

@@ -25,6 +25,11 @@ namespace rw {
     public:
         size_t classId{ 0 };
         double score{ -1 };
+    public:
+        static std::vector<rw::DetectionRectangleInfo>::const_iterator getMaxAreaRectangleIterator(
+            const std::vector<rw::DetectionRectangleInfo>& bodyIndexVector);
+        static std::vector<rw::DetectionRectangleInfo>::const_iterator getMaxAreaRectangleIterator(
+            const std::vector<rw::DetectionRectangleInfo>& bodyIndexVector,const std::vector<size_t> & index);
     };
 
 	using PointScale = std::pair<double, double>;
@@ -78,6 +83,9 @@ namespace rw {
             PainterConfig config={}
         );
 
+        static void drawShapesOnSourceImg(cv::Mat& image, const std::vector<std::vector<size_t>> index, const std::vector<DetectionRectangleInfo>& rectInfo,
+            PainterConfig config={});
+
         static cv::Mat drawShapes(
             const cv::Mat& image,
             const DetectionRectangleInfo& rectInfo,
@@ -94,5 +102,4 @@ namespace rw {
         static void drawHorizontalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
 	};
 
-	
 }

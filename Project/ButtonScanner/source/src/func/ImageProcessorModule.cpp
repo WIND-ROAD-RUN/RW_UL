@@ -11,8 +11,8 @@
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
-	config.conf_threshold = 0.75f;
-	config.nms_threshold = 0.75f;
+	//config.conf_threshold = 0.75f;
+	//config.nms_threshold = 0.75f;
 	config.ModelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 }
@@ -1149,6 +1149,68 @@ void ImageProcessor::drawVerticalBoundaryLine(cv::Mat& mat)
 	}
 }
 
+std::vector<std::vector<size_t>>
+ImageProcessor::getIndexInBoundary
+(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
+{
+	std::vector<std::vector<size_t>> result;
+	result.resize(index.size());
+	for (size_t i = 0; i < index.size(); i++)
+	{
+		for (size_t j = 0; j < index[i].size(); j++)
+		{
+			if (isInBoundary(info[index[i][j]]))
+			{
+				result[i].push_back(index[i][j]);
+			}
+		}
+	}
+	return result;
+}
+
+bool ImageProcessor::isInBoundary(const rw::DetectionRectangleInfo& info)
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto x = info.center_x;
+	if (imageProcessingModuleIndex == 1)
+	{
+		auto& lineLeft = globalStruct.dlgProduceLineSetConfig.limit1;
+		auto lineRight = lineLeft + (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent1);
+		if (lineLeft < x && x < lineRight)
+		{
+			return true;
+		}
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		auto& lineRight = globalStruct.dlgProduceLineSetConfig.limit2;
+		auto lineLeft = lineRight - (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent2);
+		if (lineLeft < x && x < lineRight)
+		{
+			return true;
+		}
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		auto& lineLeft = globalStruct.dlgProduceLineSetConfig.limit3;
+		auto lineRight = lineLeft + (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent3);
+		if (lineLeft < x && x < lineRight)
+		{
+			return true;
+		}
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		auto& lineRight = globalStruct.dlgProduceLineSetConfig.limit4;
+		auto lineLeft = lineRight - (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent4);
+		if (lineLeft < x && x < lineRight)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 ImageProcessor::ImageProcessor(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
 }
@@ -1284,14 +1346,55 @@ void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& proce
 	}
 }
 
+std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult,
+	const std::vector<std::vector<size_t>>& index)
+{
+	std::vector<std::vector<size_t>> result;
+	result.resize(index.size());
+
+	auto maxIndex = rw::DetectionRectangleInfo::getMaxAreaRectangleIterator(processResult, index[1]);
+	if (maxIndex == processResult.end())
+	{
+		return result;
+	}
+
+	auto bodyIndex=std::distance(processResult.begin(), maxIndex);
+	result[1].emplace_back(bodyIndex);
+
+	auto& bodyRec = processResult[bodyIndex];
+	for (int i = 0;i< index.size();i++)
+	{
+		if (i==1)
+		{
+			continue;
+		}
+		for (int j=0;j<index[i].size();j++)
+		{
+			auto & currentRec = processResult[index[i][j]];
+			if (bodyRec.leftTop.first<=currentRec.center_x && currentRec.center_x<= bodyRec.rightBottom.first)
+			{
+				if (bodyRec.leftTop.second <= currentRec.center_y && bodyRec.rightBottom.second >= currentRec.center_y)
+				{
+					result[i].emplace_back(index[i][j]);
+				}
+			}
+		}
+	}
+	return result;
+}
+
 void ImageProcessor::run_debug(MatInfo& frame)
 {
 	auto processResult=_modelEngineOT->processImg(frame.image);
 	auto processResultIndex = getClassIndex(processResult);
+	processResultIndex = getIndexInBoundary(processResult, processResultIndex);
+	processResultIndex = getAllIndexInMaxBody(processResult, processResultIndex);
 
 	drawVerticalBoundaryLine(frame.image);
 	drawHole(frame.image, processResult, processResultIndex[0]);
 	drawBody(frame.image, processResult, processResultIndex[1]);
+
+	rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResultIndex,processResult);
 
 	auto  image = cvMatToQImage(frame.image);
 
