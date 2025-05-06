@@ -50,7 +50,7 @@ static void drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo
 
 static void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
-static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
+static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, size_t deviationValue=10);
 
 struct ImageProcessUtilty 
 {

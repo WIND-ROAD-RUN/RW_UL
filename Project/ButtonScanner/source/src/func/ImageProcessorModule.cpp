@@ -1346,7 +1346,7 @@ void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& proc
 }
 
 std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult,
-	const std::vector<std::vector<size_t>>& index)
+                                                      const std::vector<std::vector<size_t>>& index, size_t deviationValue)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
@@ -1370,9 +1370,9 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 		for (int j = 0;j < index[i].size();j++)
 		{
 			auto& currentRec = processResult[index[i][j]];
-			if (bodyRec.leftTop.first <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first)
+			if (bodyRec.leftTop.first- deviationValue <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first+ deviationValue)
 			{
-				if (bodyRec.leftTop.second <= currentRec.center_y && bodyRec.rightBottom.second >= currentRec.center_y)
+				if (bodyRec.leftTop.second- deviationValue <= currentRec.center_y && bodyRec.rightBottom.second+ deviationValue >= currentRec.center_y)
 				{
 					result[i].emplace_back(index[i][j]);
 				}
