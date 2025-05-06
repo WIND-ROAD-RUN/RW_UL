@@ -21,9 +21,9 @@ public:
 	std::vector<float> aperture{};
 	std::vector<float> holeCentreDistance{};
 public:
-	float R{};
-	float G{};
-	float B{};
+	float special_R{};
+	float special_G{};
+	float special_B{};
 };
 
 struct ImagePainter
@@ -58,6 +58,13 @@ struct ImageProcessUtilty
 		Rectangle,       // 计算矩形区域的平均 RGB 值
 		InscribedCircle  // 计算矩形内接圆的平均 RGB 值
 	};
+
+	static cv::Vec3f calculateRegionRGB(const cv::Mat& image, 
+		const rw::DetectionRectangleInfo& total,
+		CropMode mode, 
+		const std::vector<size_t>& index,
+		const std::vector<rw::DetectionRectangleInfo>& processResult,
+		CropMode excludeMode = CropMode::Rectangle);
 
 	static cv::Vec3f calculateRegionRGB(const cv::Mat& image, const cv::Rect& rect, CropMode mode,
 		std::vector<cv::Rect> excludeRegions = {}, CropMode excludeMode = CropMode::Rectangle);
@@ -95,10 +102,11 @@ private:
 signals:
 	void imageReady(QPixmap image);
 private:
-	void getEliminationInfo(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
+	void getEliminationInfo(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);;
-
+	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
+	                               cv::Mat& mat);
 private:
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
 public:

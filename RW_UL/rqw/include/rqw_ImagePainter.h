@@ -4,6 +4,8 @@
 
 #include"ime_utilty.hpp"
 
+#include<QVector3D>
+
 namespace rw {
 	namespace rqw {
 		struct ImagePainter
@@ -44,7 +46,15 @@ namespace rw {
 			};
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.08);
+		public:
+			enum class CropMode {
+				Rectangle,       // 计算矩形区域的平均 RGB 值
+				InscribedCircle  // 计算矩形内接圆的平均 RGB 值
+			};
 
+			QVector3D calculateRegionRGB(const QImage& image, const DetectionRectangleInfo & total, CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode);
+			QVector3D calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode, const QVector<QRect>& excludeRegions, CropMode excludeMode);
+		public:
 			static QImage drawShapes(
 				const QImage& image,
 				const std::vector<DetectionRectangleInfo>& rectInfo,
@@ -71,7 +81,7 @@ namespace rw {
 				const DetectionRectangleInfo& rectInfo,
 				PainterConfig config = {}
 			);
-
+		public:
 			static void drawVerticalLine(QImage& image, int position, const ImagePainter::PainterConfig& config);
 			static void drawHorizontalLine(QImage& image, int position, const ImagePainter::PainterConfig& config);
 		};

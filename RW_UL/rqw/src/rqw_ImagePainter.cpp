@@ -81,6 +81,108 @@ namespace rw
 			painter.end();
 		}
 
+		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const DetectionRectangleInfo& total,
+			CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode)
+		{
+			QRect rect_total(
+				QPoint(total.leftTop.first, total.leftTop.second),
+				QSize(total.width, total.height) 
+			);
+
+			QVector<QRect> rect_exclude;
+			for (const auto& item : excludeRegions)
+			{
+				QRect rect_excludeItem(
+					QPoint(item.leftTop.first, item.leftTop.second),
+					QSize(item.width, item.height)
+				);
+				rect_exclude.push_back(rect_excludeItem);
+			}
+			return calculateRegionRGB(image, rect_total, mode, rect_exclude, excludeMode);
+
+		}
+
+		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode,
+		                                           const QVector<QRect>& excludeRegions, CropMode excludeMode)
+		{
+			// 检查图像是否为空
+			if (image.isNull()) {
+				throw std::invalid_argument("Input image is empty.");
+			}
+
+			// 检查图像是否为 RGB 格式
+			if (image.format() != QImage::Format_RGB32 && image.format() != QImage::Format_ARGB32) {
+				throw std::invalid_argument("Input image must be a 3-channel (RGB) image.");
+			}
+
+			// 确保矩形在图像范围内
+			QRect validRect = rect.intersected(image.rect());
+			if (validRect.isEmpty()) {
+				throw std::invalid_argument("The rectangle is outside the image bounds.");
+			}
+
+			// 创建掩码
+			QImage mask(image.size(), QImage::Format_Grayscale8);
+			mask.fill(0);
+
+			// 根据模式标记主区域
+			QPainter painter(&mask);
+			painter.setBrush(Qt::white);
+			if (mode == CropMode::Rectangle) {
+				painter.drawRect(validRect);
+			}
+			else if (mode == CropMode::InscribedCircle) {
+				int radius = std::min(validRect.width(), validRect.height()) / 2;
+				QPoint center(validRect.center());
+				painter.drawEllipse(center, radius, radius);
+			}
+			else {
+				throw std::invalid_argument("Invalid crop mode.");
+			}
+
+			// 处理需要排除的区域
+			painter.setBrush(Qt::black);
+			for (const auto& excludeRect : excludeRegions) {
+				QRect validExcludeRect = excludeRect.intersected(validRect);
+				if (validExcludeRect.isEmpty()) {
+					continue; // 跳过无效的排除区域
+				}
+
+				if (excludeMode == CropMode::Rectangle) {
+					painter.drawRect(validExcludeRect);
+				}
+				else if (excludeMode == CropMode::InscribedCircle) {
+					int radius = std::min(validExcludeRect.width(), validExcludeRect.height()) / 2;
+					QPoint center(validExcludeRect.center());
+					painter.drawEllipse(center, radius, radius);
+				}
+			}
+			painter.end();
+
+			// 计算平均 RGB 值
+			double totalR = 0, totalG = 0, totalB = 0;
+			int pixelCount = 0;
+
+			for (int y = 0; y < image.height(); ++y) {
+				for (int x = 0; x < image.width(); ++x) {
+					if (qGray(mask.pixel(x, y)) > 0) { // 检查掩码是否有效
+						QColor color(image.pixel(x, y));
+						totalR += color.red();
+						totalG += color.green();
+						totalB += color.blue();
+						++pixelCount;
+					}
+				}
+			}
+
+			if (pixelCount == 0) {
+				throw std::runtime_error("No valid pixels in the specified region.");
+			}
+
+			// 返回平均 RGB 值
+			return QVector3D(totalR / pixelCount, totalG / pixelCount, totalB / pixelCount);
+		}
+
 		QImage ImagePainter::drawShapes(const QImage& image, const std::vector<DetectionRectangleInfo>& rectInfo,
 		                                PainterConfig config)
 		{

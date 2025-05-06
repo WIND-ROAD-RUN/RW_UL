@@ -1155,16 +1155,17 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 		QString holeCentreDistanceText = QString("孔心距: %1").arg(info.holeCentreDistance[0], 0, 'f', 2);
 		for (size_t i = 1; i < info.holeCentreDistance.size(); i++)
 		{
-			holeCentreDistanceText.append(QString(", %1").arg(info.holeCentreDistance[i], 0, 'f', 2));
+			holeCentreDistanceText.append(QString(" %1").arg(info.holeCentreDistance[i], 0, 'f', 2));
 		}
 		holeCentreDistanceText.append(" mm");
 		textList.push_back(holeCentreDistanceText);
 	}
 
-
-
-
-
+	//rgb
+	QString rgbText = QString("R: %1").arg(info.special_R, 0, 'f', 2);
+	rgbText.append(QString(" G: %1").arg(info.special_G, 0, 'f', 2));
+	rgbText.append(QString(" B: %1").arg(info.special_B, 0, 'f', 2));
+	textList.push_back(rgbText);
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
@@ -1403,6 +1404,32 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 	return result;
 }
 
+cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const rw::DetectionRectangleInfo& total,
+	CropMode mode, const std::vector<size_t>& index, const std::vector<rw::DetectionRectangleInfo>& processResult,
+	CropMode excludeMode)
+{
+	if (image.empty()) {
+		return cv::Vec3f(0, 0, 0);
+	}
+	if (image.channels() != 3) {
+		return cv::Vec3f(0, 0, 0);
+	}
+	cv::Rect rect_total(
+		cv::Point(total.leftTop.first, total.leftTop.second),
+		cv::Size(total.width, total.height)
+	);
+	std::vector<cv::Rect> rect_exclude;
+	for (const auto& item : index) {
+		cv::Rect rect_excludeItem(
+			cv::Point(processResult[item].leftTop.first, processResult[item].leftTop.second),
+			cv::Size(processResult[item].width, processResult[item].height)
+		);
+		rect_exclude.push_back(rect_excludeItem);
+	}
+	return calculateRegionRGB(image, rect_total, mode, rect_exclude, excludeMode);
+}
+
+
 void ImageProcessor::run_debug(MatInfo& frame)
 {
 	//AI开始识别
@@ -1418,7 +1445,7 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	//过滤出有效索引
 	auto processResultIndex = filterEffectiveIndexes(processResult);
 	//获取到当前图像的缺陷信息
-	getEliminationInfo(defectInfo,processResult,processResultIndex);
+	getEliminationInfo(defectInfo,processResult,processResultIndex, frame.image);
 
 	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
@@ -1448,10 +1475,12 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	emit imageReady(pixmap);
 }
 
-void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>> & index)
+void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>> & index, const
+                                        cv::Mat& mat)
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
+	getSpecialColorDifference(info,processResult,index, mat);
 }
 
 void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
@@ -1588,6 +1617,23 @@ void ImageProcessor::getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		double outsideDiameter = processResult[item].width * currentPixelEquivalent;
 		info.outsideDiameter= outsideDiameter;
 	}
+}
+
+void ImageProcessor::getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat)
+{
+	if (index[ClassId::Body].empty())
+	{
+		return;
+	}
+	auto rgb = ImageProcessUtilty::calculateRegionRGB(mat,
+		processResult[index[ClassId::Body][0]],
+		ImageProcessUtilty::CropMode::InscribedCircle, 
+		index[ClassId::Hole] ,
+		processResult,
+		ImageProcessUtilty::CropMode::InscribedCircle);
+	info.special_R = rgb[0];
+	info.special_G = rgb[1];
+	info.special_B = rgb[2];
 }
 
 void ImageProcessingModule::BuildModule()
