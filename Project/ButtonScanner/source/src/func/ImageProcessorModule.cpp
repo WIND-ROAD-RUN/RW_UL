@@ -30,48 +30,6 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 //	_modelEnginePtrOnnxSO = std::make_unique<rw::imeso::ModelEngineSO>(enginePath.toStdString(), namePath.toStdString());*/
 //}
 
-bool ImageProcessor::isInArea(int x)
-{
-	auto& globalStruct = GlobalStructData::getInstance();
-	if (imageProcessingModuleIndex == 1)
-	{
-		auto& lineLeft = globalStruct.dlgProduceLineSetConfig.limit1;
-		auto lineRight = lineLeft + (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent1);
-		if (lineLeft < x && x < lineRight)
-		{
-			return true;
-		}
-	}
-	else if (imageProcessingModuleIndex == 2)
-	{
-		auto& lineRight = globalStruct.dlgProduceLineSetConfig.limit2;
-		auto lineLeft = lineRight - (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent2);
-		if (lineLeft < x && x < lineRight)
-		{
-			return true;
-		}
-	}
-	else if (imageProcessingModuleIndex == 3)
-	{
-		auto& lineLeft = globalStruct.dlgProduceLineSetConfig.limit3;
-		auto lineRight = lineLeft + (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent3);
-		if (lineLeft < x && x < lineRight)
-		{
-			return true;
-		}
-	}
-	else if (imageProcessingModuleIndex == 4)
-	{
-		auto& lineRight = globalStruct.dlgProduceLineSetConfig.limit4;
-		auto lineLeft = lineRight - (globalStruct.dlgProductSetConfig.outsideDiameterValue / globalStruct.dlgProduceLineSetConfig.pixelEquivalent4);
-		if (lineLeft < x && x < lineRight)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info)
 {
 	auto processResultIndex = getClassIndex(info);
@@ -1159,6 +1117,27 @@ void ImageProcessor::drawVerticalBoundaryLine(QImage& image)
 	}
 }
 
+void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info)
+{
+	QVector<QString> textList;
+	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
+	rw::rqw::ImagePainter::PainterConfig config;
+
+	//运行时间
+	configList.push_back(config);
+	textList.push_back(info.time);
+
+	//孔数
+	QString holeCountText = QString("孔数: %1").arg(info.holeCount);
+	textList.push_back(holeCountText);
+
+
+
+
+
+	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
+}
+
 std::vector<std::vector<size_t>>
 ImageProcessor::getIndexInBoundary
 (const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
@@ -1395,27 +1374,26 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 
 void ImageProcessor::run_debug(MatInfo& frame)
 {
-	//开始识别
+	//AI开始识别
 	ButtonDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto processResult = _modelEngineOT->processImg(frame.image);
-	auto processResultIndex = filterEffectiveIndexes(processResult);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	defectInfo.time= QString("处理时间: %1 ms").arg(duration);
-	//识别停止
+	//AI识别完成
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo(defectInfo,processResult,processResultIndex);
+
+	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
+	drawButtonDefectInfoText(image, defectInfo);
 
-	rw::rqw::ImagePainter::PainterConfig config;
-	QVector<QString> textList;
-	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
-	configList.push_back(config);
-	textList.push_back(defectInfo.time);
-
-	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
-
+	//绘制识别框
 	drawVerticalBoundaryLine(image);
 	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 	drawBody(image, processResult, processResultIndex[ClassId::Body]);
@@ -1437,6 +1415,25 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	auto  image = cvMatToQImage(frame.image);
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
+}
+
+void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>> & index)
+{
+	getHoleInfo(info, processResult, index[ClassId::Hole]);
+	getBodyInfo(info, processResult, index[ClassId::Body]);
+}
+
+void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+{
+	info.holeCount = index.size();
+	for (const auto & item: index)
+	{
+		
+	}
+}
+
+void ImageProcessor::getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+{
 }
 
 void ImageProcessingModule::BuildModule()

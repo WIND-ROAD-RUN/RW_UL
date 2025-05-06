@@ -14,13 +14,16 @@
 struct ButtonDefectInfo
 {
 public:
-	QString time;
-	float outsideDiameter;
-	std::vector<float> aperture1;
-	std::vector<float> holeCentreDistance;
-	float R;
-	float G;
-	float B;
+	QString time{};
+	float outsideDiameter{};
+public:
+	size_t holeCount{};
+	std::vector<float> aperture1{};
+	std::vector<float> holeCentreDistance{};
+public:
+	float R{};
+	float G{};
+	float B{};
 };
 
 struct ImagePainter
@@ -91,44 +94,22 @@ private:
 	void run_OpenRemoveFunc(MatInfo& frame);
 signals:
 	void imageReady(QPixmap image);
+private:
+	void getEliminationInfo(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
+	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);;
 
 private:
-	//std::unique_ptr<rw::imeot::ModelEngineOT> _modelEnginePtr;
-	//std::unique_ptr<rw::imeoo::ModelEngineOO> _modelEnginePtrOnnxOO;
-	//std::unique_ptr<rw::imeso::ModelEngineSO> _modelEnginePtrOnnxSO;
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
 public:
 	void buildModelEngineOT(const QString& enginePath);
-
-	//void buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath);
-	//void buildModelEngineOnnxSO(const QString& enginePath, const QString& namePath);
-
 private:
-	bool isInArea(int x);
-	//std::vector<rw::imeot::ProcessRectanglesResultOT> getDefectInBody(rw::imeot::ProcessRectanglesResultOT body, const std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult);
-
-private:
-	/*cv::Mat processAI(MatInfo& frame, QVector<QString>& errorInfo, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResultTarget);
-
-	rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
-	rw::imeoo::ProcessRectanglesResultOO getBody(std::vector<rw::imeoo::ProcessRectanglesResultOO>& processRectanglesResult, bool& hasBody);
-	rw::imeso::ProcessRectanglesResultSO getBody(std::vector<rw::imeso::ProcessRectanglesResultSO>& processRectanglesResult, bool& hasBody);
-
-	void eliminationLogic(
-		MatInfo& frame,
-		cv::Mat& resultImage,
-		QVector<QString>& errorInfo,
-		std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult,
-		std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResultTarget,
-		std::vector<rw::imeoo::ProcessRectanglesResultOO>& processRectanglesResultOO,
-		std::vector<rw::imeso::ProcessRectanglesResultSO>& processRectanglesResultSO);
-
-	void drawErrorLocate(QImage& image, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, const QColor& drawColor);*/
 	std::vector<std::vector<size_t>> filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info);
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
-
 	void drawVerticalBoundaryLine(QImage & image);
+	void drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info);
+private:
 
 	QQueue<MatInfo>& _queue;
 	QMutex& _mutex;
