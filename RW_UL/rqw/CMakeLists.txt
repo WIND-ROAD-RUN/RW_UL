@@ -28,6 +28,8 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} 
 	PRIVATE hoec
-	PUBLIC scc)
+	PUBLIC scc
+	PUBLIC ime
+)
 
 #add_subdirectory(test)

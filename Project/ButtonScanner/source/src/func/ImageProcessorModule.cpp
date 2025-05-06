@@ -5,6 +5,7 @@
 #include "GlobalStruct.h"
 #include"ImageProcessorModule.h"
 #include"ButtonUtilty.h"
+#include"rqw_ImagePainter.h"
 
 #include <QtConcurrent>
 
@@ -1121,40 +1122,40 @@ void ImageProcessor::drawLine_locate(QImage& image, size_t locate)
 	painter.end(); // 结束绘制
 }
 
-void ImageProcessor::drawVerticalBoundaryLine(cv::Mat& mat)
+void ImageProcessor::drawVerticalBoundaryLine(QImage& image)
 {
 	auto& index = imageProcessingModuleIndex;
 	auto& dlgProduceLineSetConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
 	auto& checkConfig = GlobalStructData::getInstance().dlgProductSetConfig;
-	rw::ImagePainter::PainterConfig painterConfig;
-	painterConfig.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::Orange);
+	rw::rqw::ImagePainter::PainterConfig painterConfig;
+	painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Orange);
 	if (index == 1)
 	{
 		auto limit1_1 = dlgProduceLineSetConfig.limit1;
 		auto limit1_2 = dlgProduceLineSetConfig.limit1 + (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent1);
-		rw::ImagePainter::drawVerticalLine(mat, limit1_1, painterConfig);
-		rw::ImagePainter::drawVerticalLine(mat, limit1_2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit1_1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit1_2, painterConfig);
 	}
 	else if (index == 2)
 	{
 		auto limit2_1 = dlgProduceLineSetConfig.limit2;
 		auto limit2_2 = dlgProduceLineSetConfig.limit2 - (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent2);
-		rw::ImagePainter::drawVerticalLine(mat, limit2_1, painterConfig);
-		rw::ImagePainter::drawVerticalLine(mat, limit2_2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit2_1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit2_2, painterConfig);
 	}
 	else if (index == 3)
 	{
 		auto limit3_1 = dlgProduceLineSetConfig.limit3;
 		auto limit3_2 = dlgProduceLineSetConfig.limit3 + (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent3);
-		rw::ImagePainter::drawVerticalLine(mat, limit3_1, painterConfig);
-		rw::ImagePainter::drawVerticalLine(mat, limit3_2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit3_1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit3_2, painterConfig);
 	}
 	else if (index == 4)
 	{
 		auto limit4_1 = dlgProduceLineSetConfig.limit4;
 		auto limit4_2 = dlgProduceLineSetConfig.limit4 - (checkConfig.outsideDiameterValue / dlgProduceLineSetConfig.pixelEquivalent4);
-		rw::ImagePainter::drawVerticalLine(mat, limit4_1, painterConfig);
-		rw::ImagePainter::drawVerticalLine(mat, limit4_2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit4_1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, limit4_2, painterConfig);
 	}
 }
 
@@ -1329,29 +1330,29 @@ std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRe
 
 }
 
-void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
-	rw::ImagePainter::PainterConfig config;
-	config.shapeType = rw::ImagePainter::ShapeType::Circle;
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
 	config.thickness = 5;
 
-	config.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::LightBrown);
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::LightBrown);
 	for (const auto& item : index)
 	{
-		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
+		rw::rqw::ImagePainter::drawShapesOnSourceImg(image, processResult[item], config);
 	}
 }
 
-void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
-	rw::ImagePainter::PainterConfig config;
-	config.shapeType = rw::ImagePainter::ShapeType::Circle;
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
 	config.thickness = 5;
 
-	config.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::Gray);
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Gray);
 	for (const auto& item : index)
 	{
-		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
+		rw::rqw::ImagePainter::drawShapesOnSourceImg(image, processResult[item], config);
 	}
 }
 
@@ -1394,6 +1395,7 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 
 void ImageProcessor::run_debug(MatInfo& frame)
 {
+	//开始识别
 	ButtonDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -1402,23 +1404,23 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time= QString("处理时间: %1 ms").arg(duration);
+	//识别停止
+	auto  image = cvMatToQImage(frame.image);
 
-	defectInfo.time= QString("处理时间: %1 ms").arg(duration).toStdString();
-
-	rw::ImagePainter::PainterConfig config;
-	std::vector<std::string> textList;
-	std::vector<rw::ImagePainter::PainterConfig> configList;
+	rw::rqw::ImagePainter::PainterConfig config;
+	QVector<QString> textList;
+	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
 	configList.push_back(config);
 	textList.push_back(defectInfo.time);
 
-	rw::ImagePainter::drawTextOnImage(frame.image, textList, configList);
+	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 
-	drawVerticalBoundaryLine(frame.image);
-	drawHole(frame.image, processResult, processResultIndex[ClassId::Hole]);
-	drawBody(frame.image, processResult, processResultIndex[ClassId::Body]);
-	rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResultIndex, processResult);
+	drawVerticalBoundaryLine(image);
+	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
+	drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, processResultIndex, processResult);
 
-	auto  image = cvMatToQImage(frame.image);
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }

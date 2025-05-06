@@ -14,7 +14,7 @@
 struct ButtonDefectInfo
 {
 public:
-	std::string time;
+	QString time;
 	float outsideDiameter;
 	std::vector<float> aperture1;
 	std::vector<float> holeCentreDistance;
@@ -43,9 +43,9 @@ struct ImagePainter
 
 static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
 
-static void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+static void drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
-static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+static void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
 static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 
@@ -128,7 +128,7 @@ private:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
 
-	void drawVerticalBoundaryLine(cv::Mat & mat);
+	void drawVerticalBoundaryLine(QImage & image);
 
 	QQueue<MatInfo>& _queue;
 	QMutex& _mutex;

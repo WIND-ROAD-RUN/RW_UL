@@ -3,7 +3,6 @@
 #include<string>
 
 #include"opencv2/opencv.hpp"
-#include"freetype.h"
 
 namespace rw {
 	using Point = std::pair<int, int>;
