@@ -2,8 +2,60 @@
 
 namespace rw
 {
+	cv::Scalar ImagePainter::toScalar(BasicColor color)
+	{
+		switch (color) {
+		case BasicColor::Red:        return cv::Scalar(0, 0, 255);   // BGR: Red
+		case BasicColor::Green:      return cv::Scalar(0, 255, 0);   // BGR: Green
+		case BasicColor::Blue:       return cv::Scalar(255, 0, 0);   // BGR: Blue
+		case BasicColor::Yellow:     return cv::Scalar(0, 255, 255); // BGR: Yellow
+		case BasicColor::Cyan:       return cv::Scalar(255, 255, 0); // BGR: Cyan
+		case BasicColor::Magenta:    return cv::Scalar(255, 0, 255); // BGR: Magenta
+		case BasicColor::White:      return cv::Scalar(255, 255, 255); // BGR: White
+		case BasicColor::Black:      return cv::Scalar(0, 0, 0);     // BGR: Black
+		case BasicColor::Orange:     return cv::Scalar(0, 165, 255); // BGR: Orange
+		case BasicColor::LightBlue:  return cv::Scalar(255, 182, 193); // BGR: Light Blue
+		case BasicColor::Gray:       return cv::Scalar(128, 128, 128); // BGR: Gray
+		case BasicColor::Purple:     return cv::Scalar(128, 0, 128);   // BGR: Purple
+		case BasicColor::Brown:      return cv::Scalar(42, 42, 165);   // BGR: Brown
+		case BasicColor::LightBrown: return cv::Scalar(181, 229, 255); // BGR: Light Brown
+		default:                     return cv::Scalar(0, 0, 0);     // Default to Black
+		}
+	}
+
+	void ImagePainter::drawTextOnImage(cv::Mat& mat, const std::vector<std::string>& texts, const std::vector<PainterConfig>& colorList, double proportion)
+	{
+	
+		if (texts.empty() || proportion <= 0.0 || proportion > 1.0 || mat.empty()) {
+			return; 
+		}
+
+		int imageHeight = mat.rows;
+		int fontSize = static_cast<int>(imageHeight * proportion); 
+
+		int x = 10; 
+		int y = fontSize; 
+
+		for (size_t i = 0; i < texts.size(); ++i) {
+			cv::Scalar textColor = (i < colorList.size()) ? colorList[i].textColor : colorList.back().textColor;
+
+			cv::putText(
+				mat,
+				texts[i], 
+				cv::Point(x, y), 
+				cv::FONT_HERSHEY_SIMPLEX, 
+				proportion, 
+				textColor, 
+				colorList[i].fontThickness, 
+				cv::LINE_AA 
+			);
+
+			y += fontSize + 5; 
+		}
+	}
+
 	cv::Mat ImagePainter::drawShapes(const cv::Mat& image, const std::vector<DetectionRectangleInfo>& rectInfo,
-		PainterConfig config)
+	                                 PainterConfig config)
 	{
 		cv::Mat resultImage = image.clone();
 		for (const auto& rect : rectInfo) {

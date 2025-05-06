@@ -2,6 +2,8 @@
 
 #include"ime_ModelEngineFactory.h"
 
+#include"ButtonUtilty.h"
+
 #include <QObject>
 #include <QQueue>
 #include <QMutex>
@@ -9,34 +11,16 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-//#include"imeoo_ModelEngineOO.h"
-//#include"imest_ModelEngineST.h"
-//#include"imeso_ModelEngineSO.h"
-//#include"imeot_ModelEngineOT.h"
-//#include "imeso_ModelEngineSO.h"
-
-struct ClassId
+struct ButtonDefectInfo
 {
-	static const int Body = 1;
-	static const int Hole = 0;
-	static const int pobian = 2;
-	static const int qikong = 3;
-	static const int duyan = 4;
-	static const int moshi = 5;
-	static const int liaotou = 6;
-	static const int zangwu = 7;
-	static const int pokong = 8;
-	static const int poyan = 9;
-	static const int xiaoqikong = 10;
-	static const int mofa = 11;
-	static const int xiaopobian = 12;
-	static const int baibian = 13;
-
-};
-
-struct ButtonInfo
-{
-
+public:
+	std::string time;
+	float outsideDiameter;
+	std::vector<float> aperture1;
+	std::vector<float> holeCentreDistance;
+	float R;
+	float G;
+	float B;
 };
 
 struct ImagePainter
@@ -63,7 +47,7 @@ static void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>
 
 static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
-static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+static std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 
 struct ImageProcessUtilty 
 {
@@ -140,7 +124,7 @@ private:
 		std::vector<rw::imeso::ProcessRectanglesResultSO>& processRectanglesResultSO);
 
 	void drawErrorLocate(QImage& image, std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult, const QColor& drawColor);*/
-
+	std::vector<std::vector<size_t>> filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info);
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
 

@@ -51,6 +51,10 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concurrent)
 target_link_libraries(${PROJECT_NAME} 
+	PRIVATE ${OpenCV_LIBS}
+)
+
+target_link_libraries(${PROJECT_NAME} 
 	PRIVATE hoec
 	PRIVATE scc
 	PRIVATE rqw

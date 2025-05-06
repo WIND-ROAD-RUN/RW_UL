@@ -71,6 +71,14 @@ bool ImageProcessor::isInArea(int x)
 	return false;
 }
 
+std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info)
+{
+	auto processResultIndex = getClassIndex(info);
+	processResultIndex = getIndexInBoundary(info, processResultIndex);
+	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
+	return processResultIndex;
+}
+
 //std::vector<rw::imeot::ProcessRectanglesResultOT> ImageProcessor::getDefectInBody(rw::imeot::ProcessRectanglesResultOT body, const std::vector<rw::imeot::ProcessRectanglesResultOT>& vecRecogResult)
 //{
 //	static int i = 0;
@@ -1119,6 +1127,7 @@ void ImageProcessor::drawVerticalBoundaryLine(cv::Mat& mat)
 	auto& dlgProduceLineSetConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
 	auto& checkConfig = GlobalStructData::getInstance().dlgProductSetConfig;
 	rw::ImagePainter::PainterConfig painterConfig;
+	painterConfig.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::Orange);
 	if (index == 1)
 	{
 		auto limit1_1 = dlgProduceLineSetConfig.limit1;
@@ -1241,7 +1250,7 @@ void ImageProcessor::run()
 		}
 
 
-		auto & globalData = GlobalStructData::getInstance();
+		auto& globalData = GlobalStructData::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
 		switch (currentRunningState)
@@ -1301,12 +1310,12 @@ void ImageProcessor::run()
 	}
 }
 
-std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo> & info)
+std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
 
-	for (int i=0;i< info.size();i++)
+	for (int i = 0;i < info.size();i++)
 	{
 		if (info[i].classId > result.size())
 		{
@@ -1320,13 +1329,13 @@ std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRe
 
 }
 
-void drawHole(cv::Mat & mat, const std::vector<rw::DetectionRectangleInfo> & processResult,const std::vector<size_t> & index)
+void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
 	rw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::ImagePainter::ShapeType::Circle;
 	config.thickness = 5;
 
-	config.color = { 0, 165, 170 };
+	config.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::LightBrown);
 	for (const auto& item : index)
 	{
 		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
@@ -1339,7 +1348,7 @@ void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& proce
 	config.shapeType = rw::ImagePainter::ShapeType::Circle;
 	config.thickness = 5;
 
-	config.color = { 0, 165, 255 };
+	config.color = rw::ImagePainter::toScalar(rw::ImagePainter::BasicColor::Gray);
 	for (const auto& item : index)
 	{
 		rw::ImagePainter::drawShapesOnSourceImg(mat, processResult[item], config);
@@ -1358,20 +1367,20 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 		return result;
 	}
 
-	auto bodyIndex=std::distance(processResult.begin(), maxIndex);
+	auto bodyIndex = std::distance(processResult.begin(), maxIndex);
 	result[ClassId::Body].emplace_back(bodyIndex);
 
 	auto& bodyRec = processResult[bodyIndex];
-	for (int i = 0;i< index.size();i++)
+	for (int i = 0;i < index.size();i++)
 	{
-		if (i==1)
+		if (i == 1)
 		{
 			continue;
 		}
-		for (int j=0;j<index[i].size();j++)
+		for (int j = 0;j < index[i].size();j++)
 		{
-			auto & currentRec = processResult[index[i][j]];
-			if (bodyRec.leftTop.first<=currentRec.center_x && currentRec.center_x<= bodyRec.rightBottom.first)
+			auto& currentRec = processResult[index[i][j]];
+			if (bodyRec.leftTop.first <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first)
 			{
 				if (bodyRec.leftTop.second <= currentRec.center_y && bodyRec.rightBottom.second >= currentRec.center_y)
 				{
@@ -1385,19 +1394,31 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 
 void ImageProcessor::run_debug(MatInfo& frame)
 {
-	auto processResult=_modelEngineOT->processImg(frame.image);
-	auto processResultIndex = getClassIndex(processResult);
-	processResultIndex = getIndexInBoundary(processResult, processResultIndex);
-	processResultIndex = getAllIndexInMaxBody(processResult, processResultIndex);
+	ButtonDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto processResult = _modelEngineOT->processImg(frame.image);
+	auto processResultIndex = filterEffectiveIndexes(processResult);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+	defectInfo.time= QString("处理时间: %1 ms").arg(duration).toStdString();
+
+	rw::ImagePainter::PainterConfig config;
+	std::vector<std::string> textList;
+	std::vector<rw::ImagePainter::PainterConfig> configList;
+	configList.push_back(config);
+	textList.push_back(defectInfo.time);
+
+	rw::ImagePainter::drawTextOnImage(frame.image, textList, configList);
 
 	drawVerticalBoundaryLine(frame.image);
 	drawHole(frame.image, processResult, processResultIndex[ClassId::Hole]);
 	drawBody(frame.image, processResult, processResultIndex[ClassId::Body]);
-
-	rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResultIndex,processResult);
+	rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResultIndex, processResult);
 
 	auto  image = cvMatToQImage(frame.image);
-
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }
