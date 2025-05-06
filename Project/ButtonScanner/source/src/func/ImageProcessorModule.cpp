@@ -11,8 +11,8 @@
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
-	//config.conf_threshold = 0.75f;
-	//config.nms_threshold = 0.75f;
+	config.conf_threshold = 0.5f;
+	config.nms_threshold = 0.5f;
 	config.ModelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 }
@@ -1352,14 +1352,14 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
 
-	auto maxIndex = rw::DetectionRectangleInfo::getMaxAreaRectangleIterator(processResult, index[1]);
+	auto maxIndex = rw::DetectionRectangleInfo::getMaxAreaRectangleIterator(processResult, index[ClassId::Body]);
 	if (maxIndex == processResult.end())
 	{
 		return result;
 	}
 
 	auto bodyIndex=std::distance(processResult.begin(), maxIndex);
-	result[1].emplace_back(bodyIndex);
+	result[ClassId::Body].emplace_back(bodyIndex);
 
 	auto& bodyRec = processResult[bodyIndex];
 	for (int i = 0;i< index.size();i++)
@@ -1391,8 +1391,8 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	processResultIndex = getAllIndexInMaxBody(processResult, processResultIndex);
 
 	drawVerticalBoundaryLine(frame.image);
-	drawHole(frame.image, processResult, processResultIndex[0]);
-	drawBody(frame.image, processResult, processResultIndex[1]);
+	drawHole(frame.image, processResult, processResultIndex[ClassId::Hole]);
+	drawBody(frame.image, processResult, processResultIndex[ClassId::Body]);
 
 	rw::ImagePainter::drawShapesOnSourceImg(frame.image, processResultIndex,processResult);
 

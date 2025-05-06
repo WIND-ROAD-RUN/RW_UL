@@ -15,6 +15,30 @@
 //#include"imeot_ModelEngineOT.h"
 //#include "imeso_ModelEngineSO.h"
 
+struct ClassId
+{
+	static const int Body = 1;
+	static const int Hole = 0;
+	static const int pobian = 2;
+	static const int qikong = 3;
+	static const int duyan = 4;
+	static const int moshi = 5;
+	static const int liaotou = 6;
+	static const int zangwu = 7;
+	static const int pokong = 8;
+	static const int poyan = 9;
+	static const int xiaoqikong = 10;
+	static const int mofa = 11;
+	static const int xiaopobian = 12;
+	static const int baibian = 13;
+
+};
+
+struct ButtonInfo
+{
+
+};
+
 struct ImagePainter
 {
 	enum Color {
