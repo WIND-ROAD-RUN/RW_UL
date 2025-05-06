@@ -45,7 +45,7 @@ namespace rw {
 				QColor textColor{ Qt::green };
 			};
 
-			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.08);
+			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.06);
 		public:
 			enum class CropMode {
 				Rectangle,       // 计算矩形区域的平均 RGB 值
