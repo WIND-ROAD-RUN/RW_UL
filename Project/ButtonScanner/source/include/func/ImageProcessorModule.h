@@ -31,9 +31,13 @@ struct ImagePainter
 	static QColor ColorToQColor(Color c);
 
 	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
-
-	/*static void drawCirclesOnImage(cv::Mat& image, const std::vector<rw::imeot::ProcessRectanglesResultOT>& rectangles);*/
 };
+
+static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
+
+static void drawHole(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+
+static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
 
 struct ImageProcessUtilty
 {

@@ -1239,7 +1239,7 @@ void ImageProcessor::run()
 	}
 }
 
-static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo> & info)
+std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo> & info)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
@@ -1258,7 +1258,7 @@ static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::Dete
 
 }
 
-static void drawHole(cv::Mat & mat, const std::vector<rw::DetectionRectangleInfo> & processResult,const std::vector<size_t> & index)
+void drawHole(cv::Mat & mat, const std::vector<rw::DetectionRectangleInfo> & processResult,const std::vector<size_t> & index)
 {
 	rw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::ImagePainter::ShapeType::Circle;
@@ -1271,7 +1271,7 @@ static void drawHole(cv::Mat & mat, const std::vector<rw::DetectionRectangleInfo
 	}
 }
 
-static void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void drawBody(cv::Mat& mat, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
 	rw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::ImagePainter::ShapeType::Circle;
@@ -1437,28 +1437,6 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 	painter.end();
 }
-
-//void ImagePainter::drawCirclesOnImage(cv::Mat& image, const std::vector<rw::imeot::ProcessRectanglesResultOT>& rectangles)
-//{
-//	for (const auto& rect : rectangles) {
-//		// 计算矩形中心点
-//		int centerX = (rect.left_top.first + rect.right_bottom.first) / 2;
-//		int centerY = (rect.left_top.second + rect.right_bottom.second) / 2;
-//
-//		// 计算矩形的宽度和高度
-//		int width = rect.right_bottom.first - rect.left_top.first;
-//		int height = rect.right_bottom.second - rect.left_top.second;
-//
-//		// 计算圆的半径（取宽度和高度的较小值的一半）
-//		int radius = std::min(width, height) / 2;
-//
-//		// 使用 mask_r, mask_g, mask_b 作为圆的颜色
-//		cv::Scalar color(0, 165, 255);
-//
-//		// 在图像上绘制圆
-//		cv::circle(image, cv::Point(centerX, centerY), radius, color, 5); // 2 表示线宽
-//	}
-//}
 
 cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const cv::Rect& rect, CropMode mode, std::vector<cv::Rect> excludeRegions, CropMode excludeMode)
 {
