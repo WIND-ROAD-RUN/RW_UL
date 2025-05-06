@@ -1145,6 +1145,22 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 	holeDiameterText.append(" mm");
 	textList.push_back(holeDiameterText);
 
+	//孔心距
+	if (info.holeCentreDistance.empty())
+	{
+		textList.push_back("孔心距: 非标纽扣 ");
+	}
+	else 
+	{
+		QString holeCentreDistanceText = QString("孔心距: %1").arg(info.holeCentreDistance[0], 0, 'f', 2);
+		for (size_t i = 1; i < info.holeCentreDistance.size(); i++)
+		{
+			holeCentreDistanceText.append(QString(", %1").arg(info.holeCentreDistance[i], 0, 'f', 2));
+		}
+		holeCentreDistanceText.append(" mm");
+		textList.push_back(holeCentreDistanceText);
+	}
+
 
 
 
@@ -1463,11 +1479,82 @@ void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent4;
 	}
 
+	//计算孔径
 	for (const auto & item: processIndex)
 	{
 		double aperture = processResult[item].width * currentPixelEquivalent;
 		info.aperture.emplace_back(aperture);
 	}
+
+	//计算孔心距
+	if (processIndex.size()%2!=0)
+	{
+		//奇数孔忽略
+		return;
+	}
+
+	if (processIndex.size()==2)
+	{
+		auto x = std::abs(processResult[0].center_x - processResult[1].center_x);
+		auto y = std::abs(processResult[0].center_y - processResult[1].center_y);
+		auto holeCentreDistance = std::sqrt(std::pow(x, 2) + std::pow(y, 2)) * currentPixelEquivalent;
+		info.holeCentreDistance.push_back(holeCentreDistance);
+	}
+
+	if (processIndex.size() == 4)
+	{
+		// 存储 x 和 y 轴的最大差值及对应的孔对
+		int maxXDiff = 0, maxYDiff = 0;
+		std::pair<size_t, size_t> maxXPair, maxYPair;
+
+		// 遍历所有可能的孔对
+		for (size_t i = 0; i < processIndex.size(); ++i)
+		{
+			for (size_t j = i + 1; j < processIndex.size(); ++j)
+			{
+				// 获取两个孔的中心坐标
+				const auto& hole1 = processResult[processIndex[i]];
+				const auto& hole2 = processResult[processIndex[j]];
+
+				int xDiff = std::abs(hole1.center_x - hole2.center_x);
+				int yDiff = std::abs(hole1.center_y - hole2.center_y);
+
+				// 更新 x 轴最大差值
+				if (xDiff > maxXDiff)
+				{
+					maxXDiff = xDiff;
+					maxXPair = { i, j };
+				}
+
+				// 更新 y 轴最大差值
+				if (yDiff > maxYDiff)
+				{
+					maxYDiff = yDiff;
+					maxYPair = { i, j };
+				}
+			}
+		}
+
+		// 计算 x 轴最大差值对应的孔心距
+		const auto& holeX1 = processResult[processIndex[maxXPair.first]];
+		const auto& holeX2 = processResult[processIndex[maxXPair.second]];
+		double xAxisDistance = std::sqrt(
+			std::pow(holeX1.center_x - holeX2.center_x, 2) +
+			std::pow(holeX1.center_y - holeX2.center_y, 2)) * currentPixelEquivalent;
+
+		// 计算 y 轴最大差值对应的孔心距
+		const auto& holeY1 = processResult[processIndex[maxYPair.first]];
+		const auto& holeY2 = processResult[processIndex[maxYPair.second]];
+		double yAxisDistance = std::sqrt(
+			std::pow(holeY1.center_x - holeY2.center_x, 2) +
+			std::pow(holeY1.center_y - holeY2.center_y, 2)) * currentPixelEquivalent;
+
+		// 将结果存储到 info.holeCentreDistance
+		info.holeCentreDistance.push_back(xAxisDistance);
+		info.holeCentreDistance.push_back(yAxisDistance);
+	}
+
+
 }
 
 void ImageProcessor::getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
