@@ -1131,6 +1131,16 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 	QString holeCountText = QString("孔数: %1").arg(info.holeCount);
 	textList.push_back(holeCountText);
 
+	QString holeDiameterText = QString("孔径:");
+	//孔径
+	for (const auto & item:info.aperture)
+	{
+		holeDiameterText.append(QString::number(item, 'f', 2) +" ");
+	}
+	holeDiameterText.append(" mm");
+	textList.push_back(holeDiameterText);
+
+
 
 
 
@@ -1423,12 +1433,35 @@ void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vecto
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 }
 
-void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
-	info.holeCount = index.size();
-	for (const auto & item: index)
+	if (processIndex.size()==0)
 	{
-		
+		return;
+	}
+	info.holeCount = processIndex.size();
+	double currentPixelEquivalent = 0;
+	if (imageProcessingModuleIndex==1)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent4;
+	}
+
+	for (const auto & item: processIndex)
+	{
+		double aperture = processResult[item].width * currentPixelEquivalent;
+		info.aperture.emplace_back(aperture);
 	}
 }
 

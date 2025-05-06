@@ -18,7 +18,7 @@ public:
 	float outsideDiameter{};
 public:
 	size_t holeCount{};
-	std::vector<float> aperture1{};
+	std::vector<float> aperture{};
 	std::vector<float> holeCentreDistance{};
 public:
 	float R{};
@@ -96,7 +96,7 @@ signals:
 	void imageReady(QPixmap image);
 private:
 	void getEliminationInfo(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
-	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);
+	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index);;
 
 private:
