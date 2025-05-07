@@ -1118,7 +1118,7 @@ void ImageProcessor::drawVerticalBoundaryLine(QImage& image)
 	}
 }
 
-void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info)
+void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectInfo& info)
 {
 	QVector<QString> textList;
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
@@ -1139,9 +1139,9 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 	QString holeDiameterText = QString("孔径:");
 
 	//孔径
-	for (const auto & item:info.aperture)
+	for (const auto& item : info.aperture)
 	{
-		holeDiameterText.append(QString::number(item, 'f', 2) +" ");
+		holeDiameterText.append(QString::number(item, 'f', 2) + " ");
 	}
 	holeDiameterText.append(" mm");
 	textList.push_back(holeDiameterText);
@@ -1151,7 +1151,7 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 	{
 		textList.push_back("孔心距: 非标纽扣 ");
 	}
-	else 
+	else
 	{
 		QString holeCentreDistanceText = QString("孔心距: %1").arg(info.holeCentreDistance[0], 0, 'f', 2);
 		for (size_t i = 1; i < info.holeCentreDistance.size(); i++)
@@ -1173,7 +1173,7 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 
 void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
-	if (processIndex.size()!=1)
+	if (processIndex.size() != 1)
 	{
 		return;
 	}
@@ -1198,22 +1198,95 @@ void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::Det
 
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& productSet = globalStruct.dlgProductSetConfig;
-	int outerRadius = productSet.outerRadius/2/ currentPixelEquivalent;
-	int innerRadius = productSet.innerRadius/2/ currentPixelEquivalent;
+	int outerRadius = productSet.outerRadius / 2 / currentPixelEquivalent;
+	int innerRadius = productSet.innerRadius / 2 / currentPixelEquivalent;
 
 	rw::rqw::ImagePainter::PainterConfig config;
 	config.thickness = 3;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
 
 	auto& body = processResult[processIndex[0]];
-	auto out = body.width/2 * currentPixelEquivalent;
-	QPoint centralPoint{ body.center_x,body.center_y};
+	auto out = body.width / 2 * currentPixelEquivalent;
+	QPoint centralPoint{ body.center_x,body.center_y };
 
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Blue);
 	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, centralPoint, outerRadius, config);
 
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Magenta);
 	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, centralPoint, innerRadius, config);
+}
+
+void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex)
+{
+	if (processResult.size() == 0)
+	{
+		return;
+	}
+	if (processIndex[ClassId::Body].size() == 0)
+	{
+		return;
+	}
+
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.thickness = 3;
+	config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+	for (size_t i = 0; i < processIndex.size(); i++)
+	{
+		if (i == ClassId::Body || i == ClassId::Hole)
+		{
+			continue;
+		}
+		for (size_t j = 0; j < processIndex[i].size(); j++)
+		{
+			auto& item = processResult[processIndex[i][j]];
+
+			switch (item.classId)
+			{
+			case ClassId::baibian:
+				config.text = "白边 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::duyan:
+				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::pobian:
+				config.text = "破边 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::qikong:
+				config.text = "气孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::moshi:
+				config.text = "磨石 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::liaotou:
+				config.text = "料头 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::zangwu:
+				config.text = "赃物 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::pokong:
+				config.text = "破孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::poyan:
+				config.text = "破眼 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::xiaoqikong:
+				config.text = "小气孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::mofa:
+				config.text = "毛发 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::xiaopobian:
+				config.text = "小破边 " + QString::number(qRound(item.score * 100));
+				break;
+			default:
+				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
+				break;
+			}
+
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+		}
+	}
 }
 
 std::vector<std::vector<size_t>>
@@ -1282,12 +1355,12 @@ std::vector<std::vector<size_t>> ImageProcessor::getIndexInShieldingRange(const 
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
-	if (info.size()==0)
+	if (info.size() == 0)
 	{
 		return result;
 	}
 
-	if (index[ClassId::Body].size()!=1)
+	if (index[ClassId::Body].size() != 1)
 	{
 		return result;
 	}
@@ -1318,14 +1391,14 @@ std::vector<std::vector<size_t>> ImageProcessor::getIndexInShieldingRange(const 
 	auto& body = info[index[ClassId::Body][0]];
 	QPoint centralPoint{ body.center_x,body.center_y };
 
-	for (int i = 0;i< index.size();i++)
+	for (int i = 0;i < index.size();i++)
 	{
-		if (i==ClassId::Body)
+		if (i == ClassId::Body)
 		{
 			result[i].emplace_back(index[i][0]);
 			continue;
 		}
-		for (int j = 0;j<index[i].size();j++)
+		for (int j = 0;j < index[i].size();j++)
 		{
 			auto& item = info[index[i][j]];
 			QPoint targetPoint{ item.center_x,item.center_y };
@@ -1487,7 +1560,7 @@ void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& proc
 }
 
 std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult,
-                                                      const std::vector<std::vector<size_t>>& index, size_t deviationValue)
+	const std::vector<std::vector<size_t>>& index, size_t deviationValue)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
@@ -1511,9 +1584,9 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 		for (int j = 0;j < index[i].size();j++)
 		{
 			auto& currentRec = processResult[index[i][j]];
-			if (bodyRec.leftTop.first- deviationValue <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first+ deviationValue)
+			if (bodyRec.leftTop.first - deviationValue <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first + deviationValue)
 			{
-				if (bodyRec.leftTop.second- deviationValue <= currentRec.center_y && bodyRec.rightBottom.second+ deviationValue >= currentRec.center_y)
+				if (bodyRec.leftTop.second - deviationValue <= currentRec.center_y && bodyRec.rightBottom.second + deviationValue >= currentRec.center_y)
 				{
 					result[i].emplace_back(index[i][j]);
 				}
@@ -1559,12 +1632,12 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	defectInfo.time= QString("处理时间: %1 ms").arg(duration);
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
 	//过滤出有效索引
 	auto processResultIndex = filterEffectiveIndexes(processResult);
 	//获取到当前图像的缺陷信息
-	getEliminationInfo(defectInfo,processResult,processResultIndex, frame.image);
+	getEliminationInfo(defectInfo, processResult, processResultIndex, frame.image);
 
 	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
@@ -1573,9 +1646,9 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	//绘制识别框
 	drawVerticalBoundaryLine(image);
 	drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+	drawErrorRec(image, processResult, processResultIndex);
 	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 	drawBody(image, processResult, processResultIndex[ClassId::Body]);
-	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, processResultIndex, processResult);
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
@@ -1595,23 +1668,23 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	emit imageReady(pixmap);
 }
 
-void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>> & index, const
-                                        cv::Mat& mat)
+void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
+	cv::Mat& mat)
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
-	getSpecialColorDifference(info,processResult,index, mat);
+	getSpecialColorDifference(info, processResult, index, mat);
 }
 
 void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
-	if (processIndex.size()==0)
+	if (processIndex.size() == 0)
 	{
 		return;
 	}
 	info.holeCount = processIndex.size();
 	double currentPixelEquivalent = 0;
-	if (imageProcessingModuleIndex==1)
+	if (imageProcessingModuleIndex == 1)
 	{
 		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent1;
 	}
@@ -1629,21 +1702,21 @@ void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::D
 	}
 
 	//计算孔径
-	for (const auto & item: processIndex)
+	for (const auto& item : processIndex)
 	{
 		double aperture = processResult[item].width * currentPixelEquivalent;
 		info.aperture.emplace_back(aperture);
 	}
 
 	//计算孔心距 其他孔非标处理
-	if (processIndex.size()%2!=0)
+	if (processIndex.size() % 2 != 0)
 	{
 		//奇数孔忽略
 		return;
 	}
 
 	//两孔
-	if (processIndex.size()==2)
+	if (processIndex.size() == 2)
 	{
 		auto x = std::abs(processResult[0].center_x - processResult[1].center_x);
 		auto y = std::abs(processResult[0].center_y - processResult[1].center_y);
@@ -1735,7 +1808,7 @@ void ImageProcessor::getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::D
 	for (const auto& item : processIndex)
 	{
 		double outsideDiameter = processResult[item].width * currentPixelEquivalent;
-		info.outsideDiameter= outsideDiameter;
+		info.outsideDiameter = outsideDiameter;
 	}
 }
 
@@ -1747,8 +1820,8 @@ void ImageProcessor::getSpecialColorDifference(ButtonDefectInfo& info, const std
 	}
 	auto rgb = ImageProcessUtilty::calculateRegionRGB(mat,
 		processResult[index[ClassId::Body][0]],
-		ImageProcessUtilty::CropMode::InscribedCircle, 
-		index[ClassId::Hole] ,
+		ImageProcessUtilty::CropMode::InscribedCircle,
+		index[ClassId::Hole],
 		processResult,
 		ImageProcessUtilty::CropMode::InscribedCircle);
 	info.special_R = rgb[0];
