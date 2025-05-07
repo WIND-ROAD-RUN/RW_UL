@@ -25,6 +25,10 @@ public:
 	float special_G{};
 	float special_B{};
 public:
+	float large_R{};
+	float large_G{};
+	float large_B{};
+public:
 	std::vector<float> edgeDamage;
 	std::vector<float> pore;
 	std::vector<float> paint;
@@ -87,7 +91,12 @@ struct MatInfo {
 
 class ImageProcessor : public QThread {
 	Q_OBJECT
-
+private:
+	std::vector<float> large_R_list{};
+	std::vector<float> large_G_list{};
+	std::vector<float> large_B_list{};
+public:
+	void clearLargeRGBList();
 private:
 	bool _isbad{ false };
 public:
@@ -116,6 +125,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_grindStone(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_blockEye(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_materialHead(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_largeColor(const ButtonDefectInfo& info);
 signals:
 	void imageReady(QPixmap image);
 private:
@@ -126,6 +136,8 @@ private:
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	                               cv::Mat& mat);
+	void getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
+		cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -159,7 +171,15 @@ public:
 	void appendHolesCountDefectInfo(QVector<QString> & textList, const ButtonDefectInfo& info);
 	void appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendSpecialColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendCrackDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendMaterialHeadDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
@@ -189,8 +209,7 @@ public:
 public:
 	void BuildModule();
 
-	//void reloadOOModel();
-	//void reloadSOModel();
+	void clearLargeRGBList();
 public:
 	ImageProcessingModule(int numConsumers, QObject* parent = nullptr);
 

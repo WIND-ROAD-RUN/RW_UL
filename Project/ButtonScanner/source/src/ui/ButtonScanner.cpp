@@ -922,6 +922,10 @@ void ButtonScanner::build_ioThread()
 					if (dlgNewProduction->_info.isActivate == false)
 					{
 						globalStruct.runningState = RunningState::OpenRemoveFunc;
+						globalStruct.imageProcessingModule1->clearLargeRGBList();
+						globalStruct.imageProcessingModule2->clearLargeRGBList();
+						globalStruct.imageProcessingModule3->clearLargeRGBList();
+						globalStruct.imageProcessingModule4->clearLargeRGBList();
 						QMetaObject::invokeMethod(qApp, [this, state]
 							{
 								_dlgExposureTimeSet->ResetCamera();

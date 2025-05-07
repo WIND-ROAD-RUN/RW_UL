@@ -1183,6 +1183,13 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectI
 	rgbText.append(QString(" B: %1").arg(info.special_B, 0, 'f', 2));
 	textList.push_back(rgbText);
 
+	//larget rgb
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+
+	QString largeColorText = QString("large R: %1 G: %2 B: %3").arg(info.large_R, 0, 'f', 2).arg(info.large_G, 0, 'f', 2).arg(info.large_B, 0, 'f', 2);
+	textList.push_back(largeColorText);
+
+
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
@@ -1202,6 +1209,14 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 	appendBodyCountDefectInfo(textList, info);
 	appendSpecialColorDefectInfo(textList, info);
 	appendEdgeDamageDefectInfo(textList, info);
+	appendLargeColorDefectInfo(textList, info);
+	appendPoreDectInfo(textList, info);
+	appendPaintDectInfo(textList, info);
+	appendBlockEyeDectInfo(textList, info);
+	appendGrindStoneDectInfo(textList, info);
+	appendMaterialHeadDectInfo(textList, info);
+	appendCrackDectInfo(textList, info);
+	appendBrokenEyeDectInfo(textList, info);
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
@@ -1261,6 +1276,18 @@ void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, co
 	}
 }
 
+void ImageProcessor::appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.largeColorDifferenceEnable)
+	{
+		QString largeColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
+		textList.push_back(largeColorText);
+		largeColorText = QString("目标: R: %1 G: %2 B: %3").arg(info.large_R).arg(info.large_G).arg(info.large_B);
+		textList.push_back(largeColorText);
+	}
+}
+
 void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
@@ -1273,6 +1300,111 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 		}
 		edgeDamageText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.edgeDamageSimilarity)));
 		textList.push_back(edgeDamageText);
+	}
+}
+
+void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.poreEnable)
+	{
+		QString poreText("气孔:");
+		for (const auto& item : info.pore)
+		{
+			poreText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		poreText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.poreEnableScore)));
+		textList.push_back(poreText);
+	}
+}
+
+void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.paintEnable)
+	{
+		QString paintText("油漆:");
+		for (const auto& item : info.paint)
+		{
+			paintText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		paintText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.paintEnableScore)));
+		textList.push_back(paintText);
+	}
+}
+
+void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.brokenEyeEnable)
+	{
+		QString brokenEyeText("破眼:");
+		for (const auto& item : info.brokenEye)
+		{
+			brokenEyeText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		brokenEyeText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.brokenEyeSimilarity)));
+		textList.push_back(brokenEyeText);
+	}
+}
+
+void ImageProcessor::appendCrackDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.crackEnable)
+	{
+		QString crackText("裂痕:");
+		for (const auto& item : info.crack)
+		{
+			crackText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		crackText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.crackSimilarity)));
+		textList.push_back(crackText);
+	}
+}
+
+void ImageProcessor::appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.grindStoneEnable)
+	{
+		QString grindStoneText("磨石:");
+		for (const auto& item : info.grindStone)
+		{
+			grindStoneText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		grindStoneText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.grindStoneEnableScore)));
+		textList.push_back(grindStoneText);
+	}
+}
+
+void ImageProcessor::appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.blockEyeEnable)
+	{
+		QString blockEyeText("堵眼:");
+		for (const auto& item : info.blockEye)
+		{
+			blockEyeText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		blockEyeText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.blockEyeEnableScore)));
+		textList.push_back(blockEyeText);
+	}
+}
+
+void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.materialHeadEnable)
+	{
+		QString materialHeadText("料头:");
+		for (const auto& item : info.materialHead)
+		{
+			materialHeadText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		materialHeadText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.materialHeadEnableScore)));
+		textList.push_back(materialHeadText);
 	}
 }
 
@@ -1641,6 +1773,13 @@ bool ImageProcessor::isInShieldRange(const QPoint& outCentral, int outR, const Q
 	return false;
 }
 
+void ImageProcessor::clearLargeRGBList()
+{
+	large_G_list.clear();
+	large_R_list.clear();
+	large_B_list.clear();
+}
+
 ImageProcessor::ImageProcessor(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
 }
@@ -1952,6 +2091,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 		run_OpenRemoveFunc_process_defect_info_blockEye(info);
 		run_OpenRemoveFunc_process_defect_info_grindStone(info);
 		run_OpenRemoveFunc_process_defect_info_materialHead(info);
+		run_OpenRemoveFunc_process_defect_info_largeColor(info);
 	}
 }
 
@@ -2250,6 +2390,31 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(const B
 	}
 }
 
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor(const ButtonDefectInfo& info)
+{
+
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (large_G_list.empty() || large_R_list.empty() || large_B_list.empty())
+	{
+		return;
+	}
+	if (productSet.largeColorDifferenceEnable)
+	{
+		auto& deviation = productSet.largeColorDifferenceDeviation;
+
+		auto largeR = info.large_R + deviation;
+		auto largeG = info.large_G + deviation;
+		auto largeB = info.large_B + deviation;
+
+
+		if (info.special_R > largeR || info.special_G > largeG || info.special_B > largeB)
+		{
+			_isbad = true;
+		}
+	}
+}
+
 void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	cv::Mat& mat)
 {
@@ -2264,6 +2429,7 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getCrackInfo(info, processResult, index[ClassId::pokong]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
 	getPaintInfo(info, processResult, index[ClassId::mofa]);
+	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -2283,6 +2449,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getCrackInfo(info, processResult, index[ClassId::pokong]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
 	getPaintInfo(info, processResult, index[ClassId::mofa]);
+	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -2439,6 +2606,37 @@ void ImageProcessor::getSpecialColorDifference(ButtonDefectInfo& info, const std
 	info.special_B = rgb[2];
 }
 
+
+void ImageProcessor::getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat)
+{
+	if (index[ClassId::Body].empty())
+	{
+		return;
+	}
+	auto rgb = ImageProcessUtilty::calculateRegionRGB(mat,
+		processResult[index[ClassId::Body][0]],
+		ImageProcessUtilty::CropMode::InscribedCircle,
+		index[ClassId::Hole],
+		processResult,
+		ImageProcessUtilty::CropMode::InscribedCircle);
+	if (large_G_list.size() != 5)
+	{
+		large_G_list.push_back(rgb[0]);
+		large_R_list.push_back(rgb[1]);
+		large_B_list.push_back(rgb[2]);
+	}
+	else
+	{
+		float sum = std::accumulate(large_G_list.begin(), large_G_list.end(), 0.0f);
+		info.large_R = sum / 5;
+		sum = std::accumulate(large_R_list.begin(), large_R_list.end(), 0.0f);
+		info.large_G = sum / 5;
+		sum = std::accumulate(large_B_list.begin(), large_B_list.end(), 0.0f);
+		info.large_B = sum / 5;
+	}
+
+}
+
 void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
@@ -2554,6 +2752,14 @@ void ImageProcessingModule::BuildModule()
 		connect(processor, &ImageProcessor::imageReady, this, &ImageProcessingModule::imageReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
 		processor->start();
+	}
+}
+
+void ImageProcessingModule::clearLargeRGBList()
+{
+	for (auto& item : _processors)
+	{
+		item->clearLargeRGBList();
 	}
 }
 
