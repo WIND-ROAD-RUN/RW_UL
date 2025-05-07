@@ -1186,6 +1186,26 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectI
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
+void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info)
+{
+	QVector<QString> textList;
+	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+	configList.push_back(config);
+	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+	configList.push_back(config);
+	//运行时间
+	textList.push_back(info.time);
+	//孔数
+	QString holeCountText = QString("孔数: %1").arg(info.holeCount);
+	textList.push_back(holeCountText);
+
+	QString holeDiameterText = QString("孔径:");
+
+	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
+}
+
 void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() != 1)
@@ -1693,6 +1713,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	//AI识别完成
 	//过滤出有效索引
 	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+
 	//获取到当前图像的缺陷信息
 	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
 
@@ -1704,7 +1725,17 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 
 	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
-	drawButtonDefectInfoText(image, defectInfo);
+	drawButtonDefectInfoText_defect(image, defectInfo);
+
+	//绘制识别框
+	drawVerticalBoundaryLine(image);
+	if (productSet.shieldingRangeEnable)
+	{
+		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+	}
+	drawErrorRec(image, processResult, processResultIndex);
+	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
+	drawBody(image, processResult, processResultIndex[ClassId::Body]);
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
