@@ -1223,6 +1223,17 @@ void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, cons
 		apertureText.append(QString("mm 目标: %1 mm").arg(productSet.apertureValue + productSet.apertureSimilarity));
 		textList.push_back(apertureText);
 	}
+
+	if (_isbad && productSet.holeCenterDistanceEnable)
+	{
+		QString holeCenterDistanceText("孔心距: ");
+		for (const auto& item : info.holeCentreDistance)
+		{
+			holeCenterDistanceText.append(QString("%1 ").arg(item, 0, 'f', 2));
+		}
+		holeCenterDistanceText.append(QString("mm 目标: %1 mm").arg(productSet.holeCenterDistanceValue + productSet.holeCenterDistanceSimilarity));
+		textList.push_back(holeCenterDistanceText);
+	}
 }
 
 void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -1805,6 +1816,20 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 		for (const auto & item: aperture)
 		{
 			if (item>apertureStandard)
+			{
+				_isbad = true;
+			}
+		}
+	}
+
+	//孔心距
+	if (productSet.holeCenterDistanceEnable)
+	{
+		auto& holeCentreDistance = info.holeCentreDistance;
+		auto holeCentreDistanceStandard = productSet.holeCenterDistanceValue + productSet.holeCenterDistanceSimilarity;
+		for (const auto& item : holeCentreDistance)
+		{
+			if (item > holeCentreDistanceStandard)
 			{
 				_isbad = true;
 			}
