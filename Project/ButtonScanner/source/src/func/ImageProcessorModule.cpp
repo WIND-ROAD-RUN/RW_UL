@@ -1201,6 +1201,7 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 	appendHolesCountDefectInfo(textList, info);
 	appendBodyCountDefectInfo(textList,info);
 	appendSpecialColorDefectInfo(textList,info);
+	appendEdgeDamageDefectInfo(textList, info);
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
@@ -1257,6 +1258,22 @@ void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, co
 		textList.push_back(specialColorText);
 		specialColorText=QString("目标: R: %1 G: %2 B: %3").arg(productSet.specifyColorDifferenceR).arg(productSet.specifyColorDifferenceG).arg(productSet.specifyColorDifferenceB);
 		textList.push_back(specialColorText);
+	}
+}
+
+void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.edgeDamageEnable)
+	{
+		QString edgeDamageText("破边:");
+		for (const auto & item:info.edgeDamage)
+		{
+			edgeDamageText.push_back(QString(" %1 ").arg(static_cast<int>(item))) ;
+			textList.push_back(edgeDamageText);
+		}
+		edgeDamageText = QString("目标: %1").arg(static_cast<int>(productSet.edgeDamageSimilarity));
+		textList.push_back(edgeDamageText);
 	}
 }
 
@@ -1805,6 +1822,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 		run_OpenRemoveFunc_process_defect_info_hole(info);
 		run_OpenRemoveFunc_process_defect_info_body(info);
 		run_OpenRemoveFunc_process_defect_info_specialColor(info);
+		run_OpenRemoveFunc_process_defect_info_edgeDamage(info);
 	}
 }
 
@@ -1888,6 +1906,29 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(const B
 	}
 }
 
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.edgeDamageEnable)
+	{
+		auto& edgeDamage = info.edgeDamage;
+		if (edgeDamage.empty())
+		{
+			return;
+		}
+
+		for (const auto & item: edgeDamage)
+		{
+			if (item > productSet.edgeDamageSimilarity)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
 void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
 {
 	auto & globalStruct = GlobalStructData::getInstance();
@@ -1931,6 +1972,7 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
+	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -1941,6 +1983,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
+	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -2095,6 +2138,19 @@ void ImageProcessor::getSpecialColorDifference(ButtonDefectInfo& info, const std
 	info.special_R = rgb[0];
 	info.special_G = rgb[1];
 	info.special_B = rgb[2];
+}
+
+void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto & item: processIndex)
+	{
+		auto  edgeDamage = processResult[item].score *100;
+		info.edgeDamage.emplace_back(edgeDamage);
+	}
 }
 
 void ImageProcessingModule::BuildModule()

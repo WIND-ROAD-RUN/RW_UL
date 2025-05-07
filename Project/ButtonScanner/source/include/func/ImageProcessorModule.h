@@ -24,6 +24,8 @@ public:
 	float special_R{};
 	float special_G{};
 	float special_B{};
+public:
+	std::vector<float> edgeDamage;
 };
 
 struct ImagePainter
@@ -98,6 +100,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_specialColor(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_edgeDamage(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 signals:
 	void imageReady(QPixmap image);
@@ -109,6 +112,7 @@ private:
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	                               cv::Mat& mat);
+	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 private:
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
 public:
@@ -133,6 +137,7 @@ public:
 	void appendHolesCountDefectInfo(QVector<QString> & textList, const ButtonDefectInfo& info);
 	void appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendSpecialColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
