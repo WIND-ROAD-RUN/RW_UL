@@ -1200,6 +1200,7 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 
 	appendHolesCountDefectInfo(textList, info);
 	appendBodyCountDefectInfo(textList,info);
+	appendSpecialColorDefectInfo(textList,info);
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
@@ -1244,6 +1245,18 @@ void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const
 		QString holeCountText = QString("外径: %1 mm ").arg(info.outsideDiameter, 0, 'f', 2) +
 			QString(" 目标: %1 mm").arg(productSet.outsideDiameterValue + productSet.outsideDiameterDeviation, 0, 'f', 2);
 		textList.push_back(holeCountText);
+	}
+}
+
+void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.specifyColorDifferenceEnable)
+	{
+		QString specialColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
+		textList.push_back(specialColorText);
+		specialColorText=QString("目标: R: %1 G: %2 B: %3").arg(productSet.specifyColorDifferenceR).arg(productSet.specifyColorDifferenceG).arg(productSet.specifyColorDifferenceB);
+		textList.push_back(specialColorText);
 	}
 }
 
@@ -1791,6 +1804,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 	{
 		run_OpenRemoveFunc_process_defect_info_hole(info);
 		run_OpenRemoveFunc_process_defect_info_body(info);
+		run_OpenRemoveFunc_process_defect_info_specialColor(info);
 	}
 }
 
@@ -1848,6 +1862,26 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(const ButtonDef
 		auto outsideDiameter = info.outsideDiameter;
 
 		if (outsideDiameter> outsideDiameterStandard)
+		{
+			_isbad = true;
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.specifyColorDifferenceEnable)
+	{
+		auto& special_R = info.special_R;
+		auto& special_G = info.special_G;
+		auto& special_B = info.special_B;
+		auto& specialColorDeviation = productSet.specifyColorDifferenceDeviation;
+		auto special_R_standard = productSet.specifyColorDifferenceR+specialColorDeviation;
+		auto special_G_standard = productSet.specifyColorDifferenceG + specialColorDeviation;
+		auto special_B_standard = productSet.specifyColorDifferenceB + specialColorDeviation;
+		if (special_R > special_R_standard || special_G > special_G_standard || special_B > special_B_standard)
 		{
 			_isbad = true;
 		}
