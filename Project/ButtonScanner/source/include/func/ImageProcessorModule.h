@@ -145,6 +145,8 @@ public:
 	void drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info);
 	void drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
+	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
+
 private:
 
 	QQueue<MatInfo>& _queue;

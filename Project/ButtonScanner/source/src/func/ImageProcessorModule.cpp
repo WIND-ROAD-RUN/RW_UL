@@ -1270,9 +1270,8 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 		for (const auto & item:info.edgeDamage)
 		{
 			edgeDamageText.push_back(QString(" %1 ").arg(static_cast<int>(item))) ;
-			textList.push_back(edgeDamageText);
 		}
-		edgeDamageText = QString("目标: %1").arg(static_cast<int>(productSet.edgeDamageSimilarity));
+		edgeDamageText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.edgeDamageSimilarity)));
 		textList.push_back(edgeDamageText);
 	}
 }
@@ -1391,6 +1390,118 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 			}
 
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+		}
+	}
+}
+
+void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	auto& mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
+	if (processResult.size() == 0)
+	{
+		return;
+	}
+	if (processIndex[ClassId::Body].size() == 0)
+	{
+		return;
+	}
+
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.thickness = 3;
+	config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+	for (size_t i = 0; i < processIndex.size(); i++)
+	{
+		if (i == ClassId::Body || i == ClassId::Hole)
+		{
+			continue;
+		}
+
+		for (size_t j = 0; j < processIndex[i].size(); j++)
+		{
+			auto& item = processResult[processIndex[i][j]];
+			switch (item.classId)
+			{
+			case ClassId::baibian:
+				config.text = "白边 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::duyan:
+				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::pobian:
+				config.text = "破边 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::qikong:
+				config.text = "气孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::moshi:
+				config.text = "磨石 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::liaotou:
+				config.text = "料头 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::zangwu:
+				config.text = "赃物 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::pokong:
+				config.text = "破孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::poyan:
+				config.text = "破眼 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::xiaoqikong:
+				config.text = "小气孔 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::mofa:
+				config.text = "毛发 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::xiaopobian:
+				config.text = "小破边 " + QString::number(qRound(item.score * 100));
+				break;
+			default:
+				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
+				break;
+			}
+
+			if (mainWindowConfig.isDefect)
+			{
+				if (i == ClassId::pobian && productSet.edgeDamageEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::qikong && productSet.poreEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::duyan && productSet.blockEyeEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::moshi && productSet.grindStoneEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::liaotou && productSet.materialHeadEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::zangwu && productSet.paintEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::pokong && productSet.crackEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+				else if (i == ClassId::poyan && productSet.brokenEyeEnable)
+				{
+					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+				}
+			}
+
+			
 		}
 	}
 }
@@ -1805,6 +1916,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
 	}
 	drawErrorRec(image, processResult, processResultIndex);
+	drawErrorRec_error(image, processResult, processResultIndex);
 	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 	drawBody(image, processResult, processResultIndex[ClassId::Body]);
 
