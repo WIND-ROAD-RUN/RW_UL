@@ -49,7 +49,7 @@ void DlgProductSet::readConfig()
 	ui->pbtn_photography->setText(QString::number(GlobalStructData.dlgProductSetConfig.photography));
 	ui->pbtn_blowTime->setText(QString::number(GlobalStructData.dlgProductSetConfig.blowTime));
 	ui->rbtn_edgeDamageEnable->setChecked(GlobalStructData.dlgProductSetConfig.edgeDamageEnable);
-	ui->rbtn_shieldingRangeEnable->setCheckable(GlobalStructData.dlgProductSetConfig.shieldingRangeEnable);
+	ui->rbtn_shieldingRangeEnable->setChecked(GlobalStructData.dlgProductSetConfig.shieldingRangeEnable);
 	ui->pbtn_outerRadius->setText(QString::number(GlobalStructData.dlgProductSetConfig.outerRadius));
 	ui->pbtn_innerRadius->setText(QString::number(GlobalStructData.dlgProductSetConfig.innerRadius));
 	ui->pbtn_edgeDamageSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity));
@@ -204,6 +204,7 @@ void DlgProductSet::build_radioButton()
 	ui->rbtn_paintEnable->setAutoExclusive(false);
 	ui->rbtn_grindStoneEnable->setAutoExclusive(false);
 	ui->rbtn_blockEyeEnable->setAutoExclusive(false);
+	ui->rbtn_shieldingRangeEnable->setAutoExclusive(false);
 }
 
 void DlgProductSet::pbtn_outsideDiameterValue_clicked() {

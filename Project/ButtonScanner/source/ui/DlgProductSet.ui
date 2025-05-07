@@ -1209,6 +1209,12 @@ QRadioButton::indicator:pressed {
                <property name="text">
                 <string>屏蔽范围</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
             </layout>
