@@ -92,11 +92,17 @@ protected:
 private:
 	void run_debug(MatInfo& frame);
 	void run_monitor(MatInfo& frame);
+private:
 	void run_OpenRemoveFunc(MatInfo& frame);
+	void run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) ;
+	void run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 signals:
 	void imageReady(QPixmap image);
 private:
-	void getEliminationInfo(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+	void getEliminationInfo_debug(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+	void getEliminationInfo_defect(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+
 	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
@@ -106,7 +112,9 @@ private:
 public:
 	void buildModelEngineOT(const QString& enginePath);
 private:
-	std::vector<std::vector<size_t>> filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info);
+	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
+	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
+
 	std::vector<std::vector<size_t>>
 		getIndexInBoundary
 		(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);

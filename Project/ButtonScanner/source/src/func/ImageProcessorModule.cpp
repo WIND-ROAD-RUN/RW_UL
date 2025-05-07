@@ -30,12 +30,27 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 //	_modelEnginePtrOnnxSO = std::make_unique<rw::imeso::ModelEngineSO>(enginePath.toStdString(), namePath.toStdString());*/
 //}
 
-std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info)
+std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
 {
 	auto processResultIndex = getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
 	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+	return processResultIndex;
+}
+
+std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(
+	std::vector<rw::DetectionRectangleInfo> info)
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+
+	auto processResultIndex = getClassIndex(info);
+	processResultIndex = getIndexInBoundary(info, processResultIndex);
+	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
+	if (globalStruct.dlgProductSetConfig.shieldingRangeEnable)
+	{
+		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+	}
 	return processResultIndex;
 }
 
@@ -1635,9 +1650,9 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
 	//过滤出有效索引
-	auto processResultIndex = filterEffectiveIndexes(processResult);
+	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
 	//获取到当前图像的缺陷信息
-	getEliminationInfo(defectInfo, processResult, processResultIndex, frame.image);
+	getEliminationInfo_debug(defectInfo, processResult, processResultIndex, frame.image);
 
 	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
@@ -1663,13 +1678,106 @@ void ImageProcessor::run_monitor(MatInfo& frame)
 
 void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 {
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+
+	//AI开始识别
+	ButtonDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto processResult = _modelEngineOT->processImg(frame.image);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
+
+	//剔除逻辑获取_isbad
+	run_OpenRemoveFunc_process_defect_info(defectInfo);
+
+	//如果_isbad为true，将错误信息发送到剔除队列中
+	run_OpenRemoveFunc_emitErrorInfo(frame);
+
+	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
+	drawButtonDefectInfoText(image, defectInfo);
+
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }
 
-void ImageProcessor::getEliminationInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) 
+{
+	run_OpenRemoveFunc_process_defect_info_hole(info);
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info) 
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.holesCountEnable)
+	{
+		auto holeCount = info.holeCount;
+		if (holeCount != productSet.holesCountValue)
+		{
+			_isbad = true;
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
+{
+	auto & globalStruct = GlobalStructData::getInstance();
+
+	if (_isbad) {
+		++globalStruct.statisticalInfo.wasteCount;
+	}
+
+	if (imageProcessingModuleIndex == 2 || imageProcessingModuleIndex == 4) {
+		++globalStruct.statisticalInfo.produceCount;
+	}
+
+	if (_isbad) {
+		float absLocation = frame.location;
+		if (absLocation < 0) {
+			absLocation = -absLocation; 
+		}
+
+		switch (imageProcessingModuleIndex)
+		{
+		case 1:
+			globalStruct.productPriorityQueue1.push(absLocation);
+			break;
+		case 2:
+			globalStruct.productPriorityQueue2.push(absLocation);
+			break;
+		case 3:
+			globalStruct.productPriorityQueue3.push(absLocation);
+			break;
+		case 4:
+			globalStruct.productPriorityQueue4.push(absLocation);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	cv::Mat& mat)
+{
+	getHoleInfo(info, processResult, index[ClassId::Hole]);
+	getBodyInfo(info, processResult, index[ClassId::Body]);
+	getSpecialColorDifference(info, processResult, index, mat);
+}
+
+void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
