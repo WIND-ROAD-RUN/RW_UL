@@ -1935,6 +1935,12 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 		run_OpenRemoveFunc_process_defect_info_body(info);
 		run_OpenRemoveFunc_process_defect_info_specialColor(info);
 		run_OpenRemoveFunc_process_defect_info_edgeDamage(info);
+		run_OpenRemoveFunc_process_defect_info_pore(info);
+		run_OpenRemoveFunc_process_defect_info_paint(info);
+		run_OpenRemoveFunc_process_defect_info_brokenEye(info);
+		run_OpenRemoveFunc_process_defect_info_blockEye(info);
+		run_OpenRemoveFunc_process_defect_info_grindStone(info);
+		run_OpenRemoveFunc_process_defect_info_materialHead(info);
 	}
 }
 
@@ -2079,12 +2085,174 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	}
 }
 
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.poreEnable)
+	{
+		auto& pore = info.pore;
+		if (pore.empty())
+		{
+			return;
+		}
+		for (const auto& item : pore)
+		{
+			if (item > productSet.poreEnableScore)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.paintEnable)
+	{
+		auto& paint = info.paint;
+		if (paint.empty())
+		{
+			return;
+		}
+		for (const auto& item : paint)
+		{
+			if (item > productSet.paintEnableScore)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.brokenEyeEnable)
+	{
+		auto& brokenEye = info.brokenEye;
+		if (brokenEye.empty())
+		{
+			return;
+		}
+		for (const auto& item : brokenEye)
+		{
+			if (item > productSet.brokenEyeSimilarity)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.crackEnable)
+	{
+		auto& crack = info.crack;
+		if (crack.empty())
+		{
+			return;
+		}
+		for (const auto& item : crack)
+		{
+			if (item > productSet.crackSimilarity)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.grindStoneEnable)
+	{
+		auto& grindStone = info.grindStone;
+		if (grindStone.empty())
+		{
+			return;
+		}
+		for (const auto& item : grindStone)
+		{
+			if (item > productSet.grindStoneEnableScore)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.blockEyeEnable)
+	{
+		auto& blockEye = info.blockEye;
+		if (blockEye.empty())
+		{
+			return;
+		}
+		for (const auto& item : blockEye)
+		{
+			if (item > productSet.blockEyeEnableScore)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.materialHeadEnable)
+	{
+		auto& materialHead = info.materialHead;
+		if (materialHead.empty())
+		{
+			return;
+		}
+		for (const auto& item : materialHead)
+		{
+			if (item > productSet.materialHeadEnableScore)
+			{
+				_isbad = true;
+				break;
+			}
+		}
+	}
+}
+
 void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	cv::Mat& mat)
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
+	getPoreInfo(info, processResult, index[ClassId::qikong]);
+	getBlockEyeInfo(info, processResult, index[ClassId::duyan]);
+	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
+	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
+	getPaintInfo(info, processResult, index[ClassId::zangwu]);
+	getCrackInfo(info, processResult, index[ClassId::pokong]);
+	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
+	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -2096,6 +2264,14 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
+	getPoreInfo(info, processResult, index[ClassId::qikong]);
+	getBlockEyeInfo(info, processResult, index[ClassId::duyan]);
+	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
+	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
+	getPaintInfo(info, processResult, index[ClassId::zangwu]);
+	getCrackInfo(info, processResult, index[ClassId::pokong]);
+	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
+	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
 
@@ -2262,6 +2438,97 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 	{
 		auto  edgeDamage = processResult[item].score *100;
 		info.edgeDamage.emplace_back(edgeDamage);
+	}
+}
+
+void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  pore = processResult[item].score * 100;
+		info.pore.emplace_back(pore);
+	}
+}
+
+void ImageProcessor::getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  paint = processResult[item].score * 100;
+		info.paint.emplace_back(paint);
+	}
+}
+
+void ImageProcessor::getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  brokenEye = processResult[item].score * 100;
+		info.brokenEye.emplace_back(brokenEye);
+	}
+}
+
+void ImageProcessor::getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  crack = processResult[item].score * 100;
+		info.crack.emplace_back(crack);
+	}
+}
+
+void ImageProcessor::getGrindStoneInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  grindStone = processResult[item].score * 100;
+		info.grindStone.emplace_back(grindStone);
+	}
+}
+
+void ImageProcessor::getBlockEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  blockEye = processResult[item].score * 100;
+		info.blockEye.emplace_back(blockEye);
+	}
+}
+
+void ImageProcessor::getMaterialHeadInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  materialHead = processResult[item].score * 100;
+		info.materialHead.emplace_back(materialHead);
 	}
 }
 

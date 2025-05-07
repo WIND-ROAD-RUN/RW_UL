@@ -26,6 +26,13 @@ public:
 	float special_B{};
 public:
 	std::vector<float> edgeDamage;
+	std::vector<float> pore;
+	std::vector<float> paint;
+	std::vector<float> brokenEye;
+	std::vector<float> crack;
+	std::vector<float> grindStone;
+	std::vector<float> blockEye;
+	std::vector<float> materialHead;
 };
 
 struct ImagePainter
@@ -102,6 +109,13 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_specialColor(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_edgeDamage(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
+	void run_OpenRemoveFunc_process_defect_info_pore(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_paint(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_brokenEye(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_crack(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_grindStone(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_blockEye(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_materialHead(const ButtonDefectInfo& info);
 signals:
 	void imageReady(QPixmap image);
 private:
@@ -113,6 +127,14 @@ private:
 	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 	                               cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getGrindStoneInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getBlockEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getMaterialHeadInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+
 private:
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
 public:
