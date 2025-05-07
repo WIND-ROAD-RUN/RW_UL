@@ -128,11 +128,14 @@ private:
 
 	static bool isInShieldRange(const QPoint & outCentral,int outR, const QPoint& innerCentral, int innerR,const QPoint & point);
 public:
+	void drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info);
+	void appendHolesCountDefectInfo(QVector<QString> & textList, const ButtonDefectInfo& info);
+	void appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
 	void drawVerticalBoundaryLine(QImage & image);
 	void drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info);
-	void drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info);
 	void drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 private:

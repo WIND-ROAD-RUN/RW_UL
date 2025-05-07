@@ -1197,13 +1197,32 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 	configList.push_back(config);
 	//运行时间
 	textList.push_back(info.time);
-	//孔数
-	QString holeCountText = QString("孔数: %1").arg(info.holeCount);
-	textList.push_back(holeCountText);
 
-	QString holeDiameterText = QString("孔径:");
+	appendHolesCountDefectInfo(textList, info);
+	appendBodyCountDefectInfo(textList,info);
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
+}
+
+void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad&& productSet.holesCountEnable)
+	{
+		QString holeCountText = QString("孔数: %1").arg(info.holeCount)+ QString("目标: %1").arg(static_cast<int>(productSet.holesCountValue));
+		textList.push_back(holeCountText);
+	}
+}
+
+void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.outsideDiameterEnable)
+	{
+		QString holeCountText = QString("外径: %1 mm ").arg(info.outsideDiameter, 0, 'f', 2) +
+			QString(" 目标: %1 mm").arg(productSet.outsideDiameterValue + productSet.outsideDiameterDeviation, 0, 'f', 2);
+		textList.push_back(holeCountText);
+	}
 }
 
 void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
@@ -1712,7 +1731,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
 	//过滤出有效索引
-	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
 
 	//获取到当前图像的缺陷信息
 	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
@@ -1743,8 +1762,14 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) 
 {
-	run_OpenRemoveFunc_process_defect_info_hole(info);
-	run_OpenRemoveFunc_process_defect_info_body(info);
+	_isbad = false;
+	auto& globalData = GlobalStructData::getInstance();
+	auto& isOpenDefect = globalData.mainWindowConfig.isDefect;
+	if (isOpenDefect)
+	{
+		run_OpenRemoveFunc_process_defect_info_hole(info);
+		run_OpenRemoveFunc_process_defect_info_body(info);
+	}
 }
 
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info) 
@@ -1754,7 +1779,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 	if (productSet.holesCountEnable)
 	{
 		auto holeCount = info.holeCount;
-		if (holeCount != productSet.holesCountValue)
+		if (holeCount != static_cast<size_t>(productSet.holesCountValue))
 		{
 			_isbad = true;
 		}
@@ -1763,6 +1788,19 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info)
 {
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.outsideDiameterEnable)
+	{
+		auto & outsideDiameterDeviation = productSet.outsideDiameterDeviation;
+		auto outsideDiameterStandard = outsideDiameterDeviation + productSet.outsideDiameterValue;
+		auto outsideDiameter = info.outsideDiameter;
+
+		if (outsideDiameter> outsideDiameterStandard)
+		{
+			_isbad = true;
+		}
+	}
 }
 
 void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
@@ -1815,6 +1853,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
 	const cv::Mat& mat)
 {
+	
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getSpecialColorDifference(info, processResult, index, mat);
