@@ -81,12 +81,6 @@ class ImageProcessor : public QThread {
 
 private:
 	bool _isbad{ false };
-private:
-	std::vector<std::vector<size_t>>
-	getIndexInBoundary
-	(const std::vector<rw::DetectionRectangleInfo>& info,const std::vector<std::vector<size_t>> & index);
-
-	bool isInBoundary(const rw::DetectionRectangleInfo & info);
 public:
 	ImageProcessor(QQueue<MatInfo>& queue,
 		QMutex& mutex,
@@ -113,6 +107,18 @@ public:
 	void buildModelEngineOT(const QString& enginePath);
 private:
 	std::vector<std::vector<size_t>> filterEffectiveIndexes(std::vector<rw::DetectionRectangleInfo> info);
+	std::vector<std::vector<size_t>>
+		getIndexInBoundary
+		(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
+
+	bool isInBoundary(const rw::DetectionRectangleInfo& info);
+
+	std::vector<std::vector<size_t>>
+		getIndexInShieldingRange
+		(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index) const;
+
+	static bool isInShieldRange(const QPoint & outCentral,int outR, const QPoint& innerCentral, int innerR,const QPoint & point);
+public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
 	void drawVerticalBoundaryLine(QImage & image);

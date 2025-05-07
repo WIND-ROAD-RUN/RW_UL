@@ -35,6 +35,7 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes(std::vec
 	auto processResultIndex = getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
+	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
 	return processResultIndex;
 }
 
@@ -1273,6 +1274,79 @@ bool ImageProcessor::isInBoundary(const rw::DetectionRectangleInfo& info)
 		{
 			return true;
 		}
+	}
+	return false;
+}
+
+std::vector<std::vector<size_t>> ImageProcessor::getIndexInShieldingRange(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index) const
+{
+	std::vector<std::vector<size_t>> result;
+	result.resize(index.size());
+	if (info.size()==0)
+	{
+		return result;
+	}
+
+	if (index[ClassId::Body].size()!=1)
+	{
+		return result;
+	}
+
+	double currentPixelEquivalent = 0;
+	if (imageProcessingModuleIndex == 1)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent4;
+	}
+
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& productSet = globalStruct.dlgProductSetConfig;
+	int outerRadius = productSet.outerRadius / 2 / currentPixelEquivalent;
+	int innerRadius = productSet.innerRadius / 2 / currentPixelEquivalent;
+
+	auto& body = info[index[ClassId::Body][0]];
+	QPoint centralPoint{ body.center_x,body.center_y };
+
+	for (int i = 0;i< index.size();i++)
+	{
+		if (i==ClassId::Body)
+		{
+			result[i].emplace_back(index[i][0]);
+			continue;
+		}
+		for (int j = 0;j<index[i].size();j++)
+		{
+			auto& item = info[index[i][j]];
+			QPoint targetPoint{ item.center_x,item.center_y };
+			if (!isInShieldRange(centralPoint, outerRadius, centralPoint, innerRadius, targetPoint))
+			{
+				result[i].emplace_back(index[i][j]);
+			}
+		}
+	}
+
+	return result;
+}
+
+bool ImageProcessor::isInShieldRange(const QPoint& outCentral, int outR, const QPoint& innerCentral, int innerR,
+	const QPoint& point)
+{
+	auto outDistance = std::sqrt(std::pow(point.x() - outCentral.x(), 2) + std::pow(point.y() - outCentral.y(), 2));
+	auto innerDistance = std::sqrt(std::pow(point.x() - innerCentral.x(), 2) + std::pow(point.y() - innerCentral.y(), 2));
+	if (outDistance <= outR && innerDistance >= innerR)
+	{
+		return true;
 	}
 	return false;
 }
