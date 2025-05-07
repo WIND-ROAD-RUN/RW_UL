@@ -1170,6 +1170,51 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image,const ButtonDefectIn
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
+void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size()!=1)
+	{
+		return;
+	}
+
+	double currentPixelEquivalent = 0;
+	if (imageProcessingModuleIndex == 1)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		currentPixelEquivalent = GlobalStructData::getInstance().dlgProduceLineSetConfig.pixelEquivalent4;
+	}
+
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& productSet = globalStruct.dlgProductSetConfig;
+	int outerRadius = productSet.outerRadius/2/ currentPixelEquivalent;
+	int innerRadius = productSet.innerRadius/2/ currentPixelEquivalent;
+
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.thickness = 3;
+	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
+
+	auto& body = processResult[processIndex[0]];
+	auto out = body.width/2 * currentPixelEquivalent;
+	QPoint centralPoint{ body.center_x,body.center_y};
+
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Blue);
+	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, centralPoint, outerRadius, config);
+
+	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Magenta);
+	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, centralPoint, innerRadius, config);
+}
+
 std::vector<std::vector<size_t>>
 ImageProcessor::getIndexInBoundary
 (const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
@@ -1453,6 +1498,7 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	//绘制识别框
 	drawVerticalBoundaryLine(image);
+	drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
 	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 	drawBody(image, processResult, processResultIndex[ClassId::Body]);
 	rw::rqw::ImagePainter::drawShapesOnSourceImg(image, processResultIndex, processResult);

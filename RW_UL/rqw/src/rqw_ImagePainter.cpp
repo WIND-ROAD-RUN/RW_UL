@@ -47,7 +47,7 @@ namespace rw
 			const std::vector<PainterConfig>& colorList, double proportion)
 		{
 			if (texts.empty() || proportion <= 0.0 || proportion > 1.0) {
-				return; 
+				return;
 			}
 
 			QPainter painter(&image);
@@ -86,7 +86,7 @@ namespace rw
 		{
 			QRect rect_total(
 				QPoint(total.leftTop.first, total.leftTop.second),
-				QSize(total.width, total.height) 
+				QSize(total.width, total.height)
 			);
 
 			QVector<QRect> rect_exclude;
@@ -103,7 +103,7 @@ namespace rw
 		}
 
 		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode,
-		                                           const QVector<QRect>& excludeRegions, CropMode excludeMode)
+			const QVector<QRect>& excludeRegions, CropMode excludeMode)
 		{
 			// 检查图像是否为空
 			if (image.isNull()) {
@@ -183,8 +183,27 @@ namespace rw
 			return QVector3D(totalR / pixelCount, totalG / pixelCount, totalB / pixelCount);
 		}
 
+		void ImagePainter::drawShapesOnSourceImg(QImage& image, const QPoint& center, int radius, PainterConfig config)
+		{
+
+			QPainter painter(&image);
+			painter.setPen(QPen(config.color, config.thickness));
+
+			if (config.shapeType == ShapeType::Circle) {
+				painter.drawEllipse(center, radius, radius);
+			}
+			else if (config.shapeType == ShapeType::Rectangle) {
+				int sideLength = radius * 2;
+				QRect rect(center.x() - radius, center.y() - radius, sideLength, sideLength);
+				painter.drawRect(rect);
+			}
+
+			painter.end();
+
+		}
+
 		QImage ImagePainter::drawShapes(const QImage& image, const std::vector<DetectionRectangleInfo>& rectInfo,
-		                                PainterConfig config)
+			PainterConfig config)
 		{
 			QImage resultImage = image.copy();
 			for (const auto& item : rectInfo)
@@ -195,7 +214,7 @@ namespace rw
 		}
 
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const std::vector<DetectionRectangleInfo>& rectInfo,
-		                                         PainterConfig config)
+			PainterConfig config)
 		{
 			for (const auto& item : rectInfo)
 			{
@@ -206,7 +225,7 @@ namespace rw
 		}
 
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const std::vector<std::vector<size_t>> index,
-		                                         const std::vector<DetectionRectangleInfo>& rectInfo, PainterConfig config)
+			const std::vector<DetectionRectangleInfo>& rectInfo, PainterConfig config)
 		{
 			for (const auto& classId : index) {
 				for (const auto& item : classId)
@@ -253,7 +272,7 @@ namespace rw
 
 			// 设置字体大小
 			QFont font = textPainter.font();
-			font.setPixelSize(config.fontSize); 
+			font.setPixelSize(config.fontSize);
 			textPainter.setFont(font);
 
 			// 绘制文字
