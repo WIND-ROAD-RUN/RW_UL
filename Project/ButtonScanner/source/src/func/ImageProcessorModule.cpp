@@ -1592,7 +1592,7 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 	auto& bodyRec = processResult[bodyIndex];
 	for (int i = 0;i < index.size();i++)
 	{
-		if (i == 1)
+		if (i == ClassId::Body)
 		{
 			continue;
 		}
@@ -1713,6 +1713,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) 
 {
 	run_OpenRemoveFunc_process_defect_info_hole(info);
+	run_OpenRemoveFunc_process_defect_info_body(info);
 }
 
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info) 
@@ -1727,6 +1728,10 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 			_isbad = true;
 		}
 	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info)
+{
 }
 
 void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const

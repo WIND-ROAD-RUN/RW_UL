@@ -96,6 +96,7 @@ private:
 	void run_OpenRemoveFunc(MatInfo& frame);
 	void run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) ;
 	void run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 signals:
 	void imageReady(QPixmap image);

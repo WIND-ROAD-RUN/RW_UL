@@ -9,8 +9,8 @@ QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
 struct ClassId
 {
-	static const int Body = 1;
-	static const int Hole = 0;
+	static const int Body = 0;
+	static const int Hole = 1;
 	static const int pobian = 2;
 	static const int qikong = 3;
 	static const int duyan = 4;
