@@ -1212,6 +1212,17 @@ void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, cons
 		QString holeCountText = QString("孔数: %1").arg(info.holeCount)+ QString("目标: %1").arg(static_cast<int>(productSet.holesCountValue));
 		textList.push_back(holeCountText);
 	}
+
+	if (_isbad && productSet.apertureEnable)
+	{
+		QString apertureText("孔径: ");
+		for (const auto & item:info.aperture)
+		{
+			apertureText.append(QString("%1 ").arg(item, 0, 'f', 2));
+		}
+		apertureText.append(QString("mm 目标: %1 mm").arg(productSet.apertureValue + productSet.apertureSimilarity));
+		textList.push_back(apertureText);
+	}
 }
 
 void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -1776,12 +1787,27 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
+	//孔数
 	if (productSet.holesCountEnable)
 	{
-		auto holeCount = info.holeCount;
+		auto & holeCount = info.holeCount;
 		if (holeCount != static_cast<size_t>(productSet.holesCountValue))
 		{
 			_isbad = true;
+		}
+	}
+
+	//孔径
+	if (productSet.apertureEnable)
+	{
+		auto& aperture = info.aperture;
+		auto apertureStandard = productSet.apertureValue + productSet.apertureSimilarity;
+		for (const auto & item: aperture)
+		{
+			if (item>apertureStandard)
+			{
+				_isbad = true;
+			}
 		}
 	}
 }
