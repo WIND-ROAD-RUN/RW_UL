@@ -259,7 +259,7 @@ void DlgNewProduction::pbtn_tab1_no_clicked()
 	this->_info.currentTabIndex = 1;
 
 	//为迎合新需求取消刀型和颜色之分
-	pbtn_tab2_check_color_clicked();
+	pbtn_tab2_check_blade_shape_clicked();
 }
 
 void DlgNewProduction::pbtn_tab1_exit_clicked()
@@ -520,7 +520,7 @@ void DlgNewProduction::pbtn_tab1_ok_clicked()
 		this->_info.currentTabIndex = 1;
 
 		//为迎合新需求取消刀型和颜色之分
-		pbtn_tab2_check_color_clicked();
+		pbtn_tab2_check_blade_shape_clicked();
 	}
 	else
 	{

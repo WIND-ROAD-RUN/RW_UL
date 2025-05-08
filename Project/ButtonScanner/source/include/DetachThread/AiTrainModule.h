@@ -26,7 +26,6 @@ public:
 	void setModelType(ModelType type) { _modelType = type; }
 public:
 	QProcess* _processTrainModel{nullptr};
-	QProcess* _processExportModel{ nullptr };
 private:
 	int _frameHeight;
 	int _frameWidth;
@@ -77,10 +76,6 @@ public slots:
 	void handleTrainModelProcessOutput();
 	void handleTrainModelProcessError();
 	void handleTrainModelProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-	void handleExportModelProcessOutput();
-	void handleExportModelProcessError();
-	void handleExportModelProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 public slots:
 	void cancelTrain();
 };

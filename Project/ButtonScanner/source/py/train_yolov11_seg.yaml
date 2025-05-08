@@ -1,10 +1,7 @@
-train: D:/zfkjData/ButtonScanner/Train/Obb/train  # 训练集图像路径
-val: D:/zfkjData/ButtonScanner/Train/Obb/train      # 验证集图像路径
+train: D:/zfkjData/ButtonScanner/Train/Obb
+val: D:/zfkjData/ButtonScanner/Train/Obb  
 
-train: C:/Users/zfkj/Desktop/1/images/train  # 训练集图像路径
-val: C:/Users/zfkj/Desktop/1/images/train      # 验证集图像路径
-
-nc: 11  # 类别数量（从 0 到 10，共 11 个类别）
+nc: 2  
 names: 
   0: good
   1: bad

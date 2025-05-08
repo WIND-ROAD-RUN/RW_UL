@@ -13,18 +13,12 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessOutput);
 	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessError);
 	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessFinished);
-
-	_processExportModel = new QProcess();
-	connect(_processExportModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleExportModelProcessOutput);
-	connect(_processExportModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleExportModelProcessError);
-	connect(_processExportModel, &QProcess::finished, this, &AiTrainModule::handleExportModelProcessFinished);
 }
 
 AiTrainModule::~AiTrainModule()
 {
 	wait();
 	delete _processTrainModel;
-	delete _processExportModel;
 }
 
 void AiTrainModule::startTrain()
@@ -134,35 +128,19 @@ QVector<AiTrainModule::DataItem> AiTrainModule::getObjectDetectionDataSet(const 
 
 void AiTrainModule::clear_older_trainData()
 {
-	QString workPlace = globalPath.yoloV5RootPath;
-	QDir dir(workPlace);
+	QString workPlace = globalPath.trainAIRootPath;
+
+	QString runsPath = R"(./runs)";
+	// 删除 runs 目录及其所有子文件和子文件夹
+	QDir dir(runsPath);
 	QString absolutePath = dir.absolutePath();
-
-	// 处理 Run 目录
-	{
-		QString runDir = workPlace + R"(runs\)";
-		QString trainDir = runDir + R"(train\)";
-		QString trainSeg = runDir + R"(train-seg\)";
-
-		// 删除 trainDir 及其所有子文件和子文件夹
-		QDir trainDirObj(trainDir);
-		if (trainDirObj.exists()) {
-			trainDirObj.removeRecursively();
-		}
-
-		// 删除 trainSeg 及其所有子文件和子文件夹
-		QDir trainSegObj(trainSeg);
-		if (trainSegObj.exists()) {
-			trainSegObj.removeRecursively();
-		}
+	if (dir.exists()) {
+		dir.removeRecursively();
 	}
-
-	// 处理 dataset 目录
+	// 处理 obb 目录
 	{
-		QString dataSetDir = workPlace + R"(datasets\mydataset)";
-		QString trainDir = dataSetDir + R"(\train\)";
-		QString valDir = dataSetDir + R"(\val\)";
-		QString testDir = dataSetDir + R"(\tes\)";
+		QString trainDir = workPlace + R"(\Obb\images\)";
+		QString LabelDir = workPlace + R"(\Obb\labels\)";
 
 		// 删除 trainDir 及其所有子文件和子文件夹
 		QDir trainDirObj(trainDir);
@@ -170,37 +148,26 @@ void AiTrainModule::clear_older_trainData()
 			trainDirObj.removeRecursively();
 		}
 
-		// 删除 valDir 及其所有子文件和子文件夹
-		QDir valDirObj(valDir);
-		if (valDirObj.exists()) {
-			valDirObj.removeRecursively();
-		}
-
-		// 删除 testDir 及其所有子文件和子文件夹
-		QDir testDirObj(testDir);
+		// 删除 LabelDir 及其所有子文件和子文件夹
+		QDir testDirObj(LabelDir);
 		if (testDirObj.exists()) {
 			testDirObj.removeRecursively();
 		}
 	}
 
-	//处理segDatasets
+	//处理seg
 	{
-		QString segDataSetDir = workPlace + R"(segDatasets\mydataset)";
-		QString trainDir = segDataSetDir + R"(\train\)";
-		QString valDir = segDataSetDir + R"(\val\)";
-		QString testDir = segDataSetDir + R"(\tes\)";
+		QString trainDir = workPlace + R"(\Seg\images\)";
+		QString LabelDir = workPlace + R"(\Seg\labels\)";
+
 		// 删除 trainDir 及其所有子文件和子文件夹
 		QDir trainDirObj(trainDir);
 		if (trainDirObj.exists()) {
 			trainDirObj.removeRecursively();
 		}
-		// 删除 valDir 及其所有子文件和子文件夹
-		QDir valDirObj(valDir);
-		if (valDirObj.exists()) {
-			valDirObj.removeRecursively();
-		}
-		// 删除 testDir 及其所有子文件和子文件夹
-		QDir testDirObj(testDir);
+
+		// 删除 LabelDir 及其所有子文件和子文件夹
+		QDir testDirObj(LabelDir);
 		if (testDirObj.exists()) {
 			testDirObj.removeRecursively();
 		}
@@ -235,21 +202,15 @@ void AiTrainModule::copyTrainData(const QVector<AiTrainModule::DataItem>& dataSe
 {
 	if (_modelType == ModelType::ObjectDetection)
 	{
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\tes\)"));
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\train\images\)"));
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\val\images\)"));
+		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\images\)"));
 
-		copyTrainLabelData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\train\labels)"));
-		copyTrainLabelData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\val\labels)"));
+		copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\labels\)"));
 	}
 	else if (_modelType == ModelType::Segment)
 	{
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\tes\)"));
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\train\images\)"));
-		copyTrainImgData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\val\images\)"));
+		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Seg\images\)"));
 
-		copyTrainLabelData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\train\labels)"));
-		copyTrainLabelData(dataSet, QString(globalPath.yoloV5RootPath + R"(\datasets\mydataset\val\labels)"));
+		copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Seg\labels\)"));
 	}
 }
 
@@ -311,43 +272,31 @@ void AiTrainModule::copyTrainLabelData(const QVector<AiTrainModule::DataItem>& d
 
 void AiTrainModule::trainSegmentModel()
 {
-	auto str = "activate yolov5 && cd /d " + globalPath.yoloV5RootPath.toStdString() + R"(segment\)" + " && python train.py";
+	std::string str = "activate yolov11 && python ./train_yolov11_seg.py";
 	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
 }
 
 void AiTrainModule::trainObbModel()
 {
-	auto str = "activate yolov5 && cd /d " + globalPath.yoloV5RootPath.toStdString() + " && python train.py";
+	//conda install -c pytorch -c nvidia -c conda-forge pytorch torchvision pytorch-cuda ultralytics
+	std::string str = "activate yolov11 && python ./train_yolov11_obb.py";
 	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
-}
-
-void AiTrainModule::exportOnnxModel()
-{
-	if (_modelType == ModelType::Segment)
-	{
-		auto str = "activate yolov5 && cd /d " + globalPath.yoloV5RootPath.toStdString() + " && python export_seg.py";
-		_processExportModel->start("cmd.exe", { "/c",str.c_str() });
-	}
-	else if (_modelType == ModelType::ObjectDetection)
-	{
-		auto str = "activate yolov5 && cd /d " + globalPath.yoloV5RootPath.toStdString() + " && python export.py";
-		_processExportModel->start("cmd.exe", { "/c",str.c_str() });
-	}
 }
 
 void AiTrainModule::copyModelToTemp()
 {
-	// 源文件路径
-	QString sourceFilePath = globalPath.yoloV5RootPath + R"(runs\train\exp\weights\best.onnx)";
+	QString exePath = QCoreApplication::applicationDirPath();
+	QString sourceFilePath = exePath+R"(/runs)";
 
 	if (_modelType == ModelType::Segment)
 	{
-		sourceFilePath = globalPath.yoloV5RootPath + R"(runs\train-seg\exp\weights\best.onnx)";
+		sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
 	}
 	else if (_modelType == ModelType::ObjectDetection)
 	{
-		sourceFilePath = globalPath.yoloV5RootPath + R"(runs\train\exp\weights\best.onnx)";
+		sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
 	}
+
 
 	// 目标目录路径
 	QString targetDirectory = globalPath.modelStorageManagerTempPath;
@@ -525,18 +474,10 @@ void AiTrainModule::run()
 	copyTrainData(dataSet);
 	copyTrainData(dataSetBad);
 
-	//if (_modelType == ModelType::Segment)
-	//{
-	//	emit appRunLog("开始训练分割模型");
-	//	trainSegmentModel();
-	//}
-	//else if (_modelType == ModelType::ObjectDetection)
-	//{
-	//	emit appRunLog("开始训练检测模型");
-	//	trainObbModel();
-	//}
+	emit appRunLog("开始训练检测模型");
+	trainObbModel();
 
-	//exec();
+	exec();
 }
 
 QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
@@ -567,17 +508,17 @@ QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBa
 		_frameWidth = image.cols;
 		_frameHeight = image.rows;
 		cv::Mat resultMat;
-		auto result=labelEngine->processImg(image);
+		auto result = labelEngine->processImg(image);
 		QString log = QString::number(i) + " ";
 
 		auto processResultIndex = ImageProcessUtilty::getClassIndex(result);
-		processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(result, processResultIndex,10);
+		processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(result, processResultIndex, 10);
 		if (processResultIndex[ClassId::Body].empty())
 		{
 			continue;
 		}
 		auto body = result[processResultIndex[ClassId::Body][0]];
-		dataSet.emplaceBack( imagePath, body);
+		dataSet.emplaceBack(imagePath, body);
 		log += "Area: " + QString::number(body.area) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
 		emit appRunLog(log);
 		i++;
@@ -620,7 +561,15 @@ void AiTrainModule::handleTrainModelProcessFinished(int exitCode, QProcess::Exit
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
-		exportOnnxModel();
+
+		emit updateTrainTitle("导出完成");
+		copyModelToTemp();
+		packageModelToStorage();
+		emit updateProgress(100, 100);
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
 	}
 	else
 	{
@@ -632,49 +581,11 @@ void AiTrainModule::handleTrainModelProcessFinished(int exitCode, QProcess::Exit
 	}
 }
 
-void AiTrainModule::handleExportModelProcessOutput()
-{
-	QByteArray output = _processExportModel->readAllStandardOutput();
-	QString outputStr = QString::fromLocal8Bit(output);
-	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
-}
-
-void AiTrainModule::handleExportModelProcessError()
-{
-	QByteArray errorOutput = _processExportModel->readAllStandardError();
-	QString errorStr = QString::fromLocal8Bit(errorOutput);
-	emit appRunLog(errorStr);
-}
-
-void AiTrainModule::handleExportModelProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	if (exitStatus == QProcess::NormalExit)
-	{
-		emit updateTrainTitle("导出完成");
-		copyModelToTemp();
-		packageModelToStorage();
-		emit updateProgress(100, 100);
-		emit updateTrainState(false);
-	}
-	else
-	{
-		emit updateTrainTitle("导出失败");
-		emit updateTrainState(false);
-	}
-	auto& global = GlobalStructData::getInstance();
-	global.isTrainModel = false;
-	quit();
-}
-
 void AiTrainModule::cancelTrain()
 {
 	if (_processTrainModel->state() == QProcess::Running) {
 		_processTrainModel->kill();
 		_processTrainModel->waitForFinished();
-	}
-	if (_processExportModel->state() == QProcess::Running) {
-		_processExportModel->kill();
-		_processExportModel->waitForFinished();
 	}
 	emit updateTrainTitle("训练已取消");
 	emit updateTrainState(false);
