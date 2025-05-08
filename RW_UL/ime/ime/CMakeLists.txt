@@ -21,4 +21,27 @@ target_link_libraries(${PROJECT_NAME}
 	PUBLIC imeo
 )
 
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
+    ARCHIVE DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/lib
+    LIBRARY DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/lib
+    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/bin
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/
+)
+
+install(DIRECTORY ${IME_UTILTY_ROOTPATH}/include/
+    DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/
+)
+
+install(FILES ${TensorRT_dlls} ${OnnxRuntime_dlls}
+    DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/dll 
+)
+
+install(FILES ${TensorRT_libs} ${OnnxRuntime_libs}
+    DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/libs
+)
+
 add_subdirectory(test)
