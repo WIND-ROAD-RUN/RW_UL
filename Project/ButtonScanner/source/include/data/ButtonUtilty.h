@@ -33,6 +33,8 @@ public:
 public:
 	QString modelStorageManagerRootPath = projectHome + R"(ModelStorage\)";
 	QString modelStorageManagerTempPath = modelStorageManagerRootPath + R"(Temp\)";
+	QString trainAIObbRootPath = projectHome + R"(Train\Obb)";
+	QString trainAISegRootPath = projectHome + R"(Train\Seg)";
 public:
 	QString configRootPath = projectHome + R"(config\)";
 public:

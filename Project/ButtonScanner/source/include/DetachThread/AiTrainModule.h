@@ -43,9 +43,9 @@ private:
 	std::unique_ptr<rw::ModelEngine> labelEngine;
 private:
 	/*rw::de getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);*/
-	//QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
-	//QVector<DataItem> getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
-	//QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
+	QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
+	QVector<DataItem> getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
+	QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
 private:
 	void clear_older_trainData();
 	void copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet);

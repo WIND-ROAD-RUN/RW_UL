@@ -53,84 +53,84 @@ void AiTrainModule::startTrain()
 //	return result;
 //}
 
-//QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
-//{
-//	QVector<AiTrainModule::DataItem> result;
-//	switch (type)
-//	{
-//	case ModelType::Segment:
-//		result = getSegmentDataSet(annotationDataSet, classId);
-//		break;
-//	case ModelType::ObjectDetection:
-//		result = getObjectDetectionDataSet(annotationDataSet, classId);
-//		break;
-//	default:
-//		break;
-//	}
-//	return result;
-//}
+QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
+{
+	QVector<AiTrainModule::DataItem> result;
+	switch (type)
+	{
+	case ModelType::Segment:
+		result = getSegmentDataSet(annotationDataSet, classId);
+		break;
+	case ModelType::ObjectDetection:
+		result = getObjectDetectionDataSet(annotationDataSet, classId);
+		break;
+	default:
+		break;
+	}
+	return result;
+}
 
-//QVector<AiTrainModule::DataItem> AiTrainModule::getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
-//{
-//	QVector<AiTrainModule::DataItem> result;
-//
-//	for (const auto& item : annotationDataSet)
-//	{
-//		std::string id = std::to_string(classId);
-//
-//		// 归一化中心点和宽高
-//		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
-//		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
-//		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
-//		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
-//
-//		// 计算椭圆上的 30 个点
-//		constexpr int numPoints = 30;
-//		std::string pointsStr;
-//		for (int i = 0; i < numPoints; ++i)
-//		{
-//			// 计算角度（均匀分布在 0 到 2π 之间）
-//			double angle = 2.0 * M_PI * i / numPoints;
-//
-//			// 椭圆公式：x = centerX + a * cos(angle), y = centerY + b * sin(angle)
-//			double x = norCenterX + (norWidth / 2.0) * std::cos(angle);
-//			double y = norCenterY + (norHeight / 2.0) * std::sin(angle);
-//
-//			// 将点添加到字符串中
-//			pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
-//		}
-//
-//		// 组合最终的标注字符串
-//		auto textStr = id + pointsStr;
-//
-//		// 添加到结果集
-//		result.append({ item.first, QString::fromStdString(textStr) });
-//	}
-//
-//	return result;
-//}
+QVector<AiTrainModule::DataItem> AiTrainModule::getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
+{
+	QVector<AiTrainModule::DataItem> result;
 
-//QVector<AiTrainModule::DataItem> AiTrainModule::getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
-//{
-//	QVector<AiTrainModule::DataItem> result;
-//	for (const auto& item : annotationDataSet)
-//	{
-//		std::string id = std::to_string(classId);
-//		//normalization归一化
-//
-//		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
-//		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
-//		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
-//		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
-//
-//		auto textStr = id + " " +
-//			std::to_string(norCenterX) + " " + std::to_string(norCenterY) + " "
-//			+ std::to_string(norWidth) + " " + std::to_string(norHeight);
-//
-//		result.append({ item.first, QString::fromStdString(textStr) });
-//	}
-//	return result;
-//}
+	for (const auto& item : annotationDataSet)
+	{
+		std::string id = std::to_string(classId);
+
+		// 归一化中心点和宽高
+		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
+		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
+		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
+		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
+
+		// 计算椭圆上的 30 个点
+		constexpr int numPoints = 30;
+		std::string pointsStr;
+		for (int i = 0; i < numPoints; ++i)
+		{
+			// 计算角度（均匀分布在 0 到 2π 之间）
+			double angle = 2.0 * M_PI * i / numPoints;
+
+			// 椭圆公式：x = centerX + a * cos(angle), y = centerY + b * sin(angle)
+			double x = norCenterX + (norWidth / 2.0) * std::cos(angle);
+			double y = norCenterY + (norHeight / 2.0) * std::sin(angle);
+
+			// 将点添加到字符串中
+			pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
+		}
+
+		// 组合最终的标注字符串
+		auto textStr = id + pointsStr;
+
+		// 添加到结果集
+		result.append({ item.first, QString::fromStdString(textStr) });
+	}
+
+	return result;
+}
+
+QVector<AiTrainModule::DataItem> AiTrainModule::getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
+{
+	QVector<AiTrainModule::DataItem> result;
+	for (const auto& item : annotationDataSet)
+	{
+		std::string id = std::to_string(classId);
+		//normalization归一化
+
+		double norCenterX = static_cast<double>(item.second.center_x) / static_cast<double>(_frameWidth);
+		double norCenterY = static_cast<double>(item.second.center_y) / static_cast<double>(_frameHeight);
+		double norWidth = static_cast<double>(item.second.width) / static_cast<double>(_frameWidth);
+		double norHeight = static_cast<double>(item.second.height) / static_cast<double>(_frameHeight);
+
+		auto textStr = id + " " +
+			std::to_string(norCenterX) + " " + std::to_string(norCenterY) + " "
+			+ std::to_string(norWidth) + " " + std::to_string(norHeight);
+
+		result.append({ item.first, QString::fromStdString(textStr) });
+	}
+	return result;
+}
 
 void AiTrainModule::clear_older_trainData()
 {
@@ -513,17 +513,17 @@ void AiTrainModule::run()
 	auto annotationBadDataSet = annotation_data_set(true);
 
 
-	//auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
-	//auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
-	//QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
-	//QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
-	//emit appRunLog(GoodSetLog);
-	//emit appRunLog(BadSetLog);
+	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
+	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
+	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
+	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
+	emit appRunLog(GoodSetLog);
+	emit appRunLog(BadSetLog);
 
-	////拷贝训练数据
-	//emit appRunLog("拷贝训练文件");
-	//copyTrainData(dataSet);
-	//copyTrainData(dataSetBad);
+	//拷贝训练数据
+	emit appRunLog("拷贝训练文件");
+	copyTrainData(dataSet);
+	copyTrainData(dataSetBad);
 
 	//if (_modelType == ModelType::Segment)
 	//{
@@ -578,7 +578,7 @@ QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBa
 		}
 		auto body = result[processResultIndex[ClassId::Body][0]];
 		dataSet.emplaceBack( imagePath, body);
-		log += "ClassId: " + QString::number(body.classId) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
+		log += "Area: " + QString::number(body.area) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
 		emit appRunLog(log);
 		i++;
 	}
