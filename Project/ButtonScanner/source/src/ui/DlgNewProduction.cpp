@@ -135,6 +135,16 @@ void DlgNewProduction::build_dialog()
 	tab4WorkGroup->addButton(ui->rbtn_tab4_firstWork2);
 	tab4WorkGroup->addButton(ui->rbtn_tab4_firstWork3);
 	tab4WorkGroup->addButton(ui->rbtn_tab4_firstWork4);
+
+
+
+	//为迎合新需求取消刀型和颜色之分
+	ui->rbtn_tab3_filterColor->setVisible(false);
+	ui->rbtn_tab3_checkBladeShape->setVisible(false);
+	ui->rbtn_tab4_filterColor->setVisible(false);
+	ui->rbtn_tab4_checkBladeShape->setVisible(false);
+	ui->rbtn_tab5_filterColor->setVisible(false);
+	ui->rbtn_tab5_checkBladeShape->setVisible(false);
 }
 
 void DlgNewProduction::destroy()
@@ -247,6 +257,9 @@ void DlgNewProduction::pbtn_tab1_no_clicked()
 {
 	ui->tabWidget->setCurrentIndex(1);
 	this->_info.currentTabIndex = 1;
+
+	//为迎合新需求取消刀型和颜色之分
+	pbtn_tab2_check_color_clicked();
 }
 
 void DlgNewProduction::pbtn_tab1_exit_clicked()
@@ -317,6 +330,12 @@ void DlgNewProduction::pbtn_tab3_pre_step_clicked()
 {
 	ui->tabWidget->setCurrentIndex(1);
 	this->_info.currentTabIndex = 1;
+	//为迎合新需求取消刀型和颜色之分
+	ui->tabWidget->setCurrentIndex(0);
+	this->_info.currentTabIndex = 0;
+	//
+
+
 	this->_info.state = _info.state = DlgNewProductionInfo::None;
 	ui->rbtn_tab3_filterColor->setChecked(false);
 	ui->rbtn_tab4_filterColor->setChecked(false);
@@ -499,6 +518,9 @@ void DlgNewProduction::pbtn_tab1_ok_clicked()
 		globalStruct.modelStorageManager->clear_temp();
 		ui->tabWidget->setCurrentIndex(1);
 		this->_info.currentTabIndex = 1;
+
+		//为迎合新需求取消刀型和颜色之分
+		pbtn_tab2_check_color_clicked();
 	}
 	else
 	{
