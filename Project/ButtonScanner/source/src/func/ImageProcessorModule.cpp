@@ -32,9 +32,9 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 
 std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
 {
-	auto processResultIndex = getClassIndex(info);
+	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
-	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
+	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex);
 	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
 	return processResultIndex;
 }
@@ -44,9 +44,9 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	auto processResultIndex = getClassIndex(info);
+	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
-	processResultIndex = getAllIndexInMaxBody(info, processResultIndex);
+	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex);
 	if (globalStruct.dlgProductSetConfig.shieldingRangeEnable)
 	{
 		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
@@ -1870,7 +1870,7 @@ void ImageProcessor::run()
 	}
 }
 
-std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
+std::vector<std::vector<size_t>> ImageProcessUtilty::getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
@@ -1889,7 +1889,7 @@ std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRe
 
 }
 
-void drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void ImageProcessUtilty::drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
 	rw::rqw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
@@ -1902,7 +1902,7 @@ void drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& proc
 	}
 }
 
-void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
+void ImageProcessUtilty::drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
 	rw::rqw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
@@ -1915,8 +1915,7 @@ void drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& proc
 	}
 }
 
-std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult,
-	const std::vector<std::vector<size_t>>& index, size_t deviationValue)
+std::vector<std::vector<size_t>> ImageProcessUtilty::getAllIndexInMaxBody(const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, size_t deviationValue)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
@@ -1951,6 +1950,7 @@ std::vector<std::vector<size_t>> getAllIndexInMaxBody(const std::vector<rw::Dete
 	}
 	return result;
 }
+
 
 cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const rw::DetectionRectangleInfo& total,
 	CropMode mode, const std::vector<size_t>& index, const std::vector<rw::DetectionRectangleInfo>& processResult,
@@ -2003,8 +2003,8 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	drawVerticalBoundaryLine(image);
 	drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
 	drawErrorRec(image, processResult, processResultIndex);
-	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
-	drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
+	ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
@@ -2056,8 +2056,8 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	}
 	drawErrorRec(image, processResult, processResultIndex);
 	drawErrorRec_error(image, processResult, processResultIndex);
-	drawHole(image, processResult, processResultIndex[ClassId::Hole]);
-	drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
+	ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
 
 	//保存图像
 	if (globalData.isTakePictures) {

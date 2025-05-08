@@ -6,6 +6,7 @@
 
 //#include"imeot_ModelEngineOT.h"
 #include"ime_ModelEngineFactory.h"
+#include "ImageProcessorModule.h"
 
 #include"opencv2/opencv.hpp"
 #include<QProcess>
@@ -41,10 +42,10 @@ public:
 private:
 	std::unique_ptr<rw::ModelEngine> labelEngine;
 private:
-	/*rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
-	QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
-	QVector<DataItem> getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
-	QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);*/
+	/*rw::de getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);*/
+	//QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
+	//QVector<DataItem> getSegmentDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
+	//QVector<DataItem> getObjectDetectionDataSet(const QVector<labelAndImg>& annotationDataSet, int classId);
 private:
 	void clear_older_trainData();
 	void copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet);
@@ -63,7 +64,7 @@ public:
 protected:
 	void run() override;
 private:
-	/*QVector<labelAndImg> annotation_data_set(bool isBad);*/
+	QVector<labelAndImg> annotation_data_set(bool isBad);
 private:
 	int parseProgressOO(const QString& logText, int& totalTasks);
 	int parseProgressSO(const QString& logText, int& totalTasks);

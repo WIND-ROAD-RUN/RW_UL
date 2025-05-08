@@ -499,18 +499,20 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	//auto& global = GlobalStructData::getInstance();
-	//global.isTrainModel = true;
-	//emit updateTrainState(true);
-	//emit updateTrainTitle("正在训练");
-	//emit appRunLog("训练启动....");
+	auto& global = GlobalStructData::getInstance();
+	global.isTrainModel = true;
+	emit updateTrainState(true);
+	emit updateTrainTitle("正在训练");
+	emit appRunLog("训练启动....");
 
-	//emit appRunLog("清理旧的训练数据....");
-	//clear_older_trainData();
+	emit appRunLog("清理旧的训练数据....");
+	clear_older_trainData();
 
-	////获取图片的label
-	//auto annotationGoodDataSet = annotation_data_set(false);
-	//auto annotationBadDataSet = annotation_data_set(true);
+	//获取图片的label
+	auto annotationGoodDataSet = annotation_data_set(false);
+	auto annotationBadDataSet = annotation_data_set(true);
+
+
 	//auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
 	//auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
 	//QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
@@ -537,54 +539,53 @@ void AiTrainModule::run()
 	//exec();
 }
 
-//QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
-//{
-//	QVector<QString> imageList;
-//	if (isBad)
-//	{
-//		emit appRunLog("正在标注要筛选的纽扣数据集");
-//		imageList = GlobalStructData::getInstance().modelStorageManager->getBadImagePathList();
-//	}
-//	else
-//	{
-//		emit appRunLog("正在标注正确的纽扣的数据集");
-//		imageList = GlobalStructData::getInstance().modelStorageManager->getGoodImagePathList();
-//	}
-//
-//	int i = 0;
-//
-//	QVector<labelAndImg> dataSet;
-//	dataSet.reserve(100);
-//
-//	//获取图片的label
-//	for (const auto& imagePath : imageList) {
-//		auto image = getMatFromPath(imagePath);
-//		if (image.empty()) {
-//			continue;
-//		}
-//		_frameWidth = image.cols;
-//		_frameHeight = image.rows;
-//		cv::Mat resultMat;
-//		std::vector<rw::imeot::ProcessRectanglesResultOT> result;
-//		labelEngine->ProcessMask(image, resultMat, result);
-//		QString log = QString::number(i) + " ";
-//
-//		bool hasBody;
-//		auto body = getBody(result, hasBody);
-//		if (!hasBody)
-//		{
-//			continue;
-//		}
-//
-//		dataSet.emplaceBack(imagePath, body);
-//		log += "ClassId: " + QString::number(body.classID) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
-//		emit appRunLog(log);
-//		i++;
-//	}
-//	emit appRunLog("标注完" + QString::number(dataSet.size()) + "条数据");
-//
-//	return dataSet;
-//}
+QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
+{
+	QVector<QString> imageList;
+	if (isBad)
+	{
+		emit appRunLog("正在标注要筛选的纽扣数据集");
+		imageList = GlobalStructData::getInstance().modelStorageManager->getBadImagePathList();
+	}
+	else
+	{
+		emit appRunLog("正在标注正确的纽扣的数据集");
+		imageList = GlobalStructData::getInstance().modelStorageManager->getGoodImagePathList();
+	}
+
+	int i = 0;
+
+	QVector<labelAndImg> dataSet;
+	dataSet.reserve(100);
+
+	//获取图片的label
+	for (const auto& imagePath : imageList) {
+		auto image = getMatFromPath(imagePath);
+		if (image.empty()) {
+			continue;
+		}
+		_frameWidth = image.cols;
+		_frameHeight = image.rows;
+		cv::Mat resultMat;
+		auto result=labelEngine->processImg(image);
+		QString log = QString::number(i) + " ";
+
+		auto processResultIndex = ImageProcessUtilty::getClassIndex(result);
+		processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(result, processResultIndex,10);
+		if (processResultIndex[ClassId::Body].empty())
+		{
+			continue;
+		}
+		auto body = result[processResultIndex[ClassId::Body][0]];
+		dataSet.emplaceBack( imagePath, body);
+		log += "ClassId: " + QString::number(body.classId) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
+		emit appRunLog(log);
+		i++;
+	}
+	emit appRunLog("标注完" + QString::number(dataSet.size()) + "条数据");
+
+	return dataSet;
+}
 
 void AiTrainModule::handleTrainModelProcessOutput()
 {
