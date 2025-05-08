@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
     # 开始训练
     model.train(
-        data='dataset.yaml',  # 数据集配置文件
+        data='./train_yolov11_obb.yaml',  # 数据集配置文件
         epochs=100,           # 训练轮数
         batch=16,             # 批量大小
         imgsz=640,            # 输入图像大小
