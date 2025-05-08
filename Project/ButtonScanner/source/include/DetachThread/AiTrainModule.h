@@ -53,7 +53,6 @@ private:
 private:
 	void trainSegmentModel();
 	void trainObbModel();
-	void exportOnnxModel();
 	void copyModelToTemp();
 	void packageModelToStorage();
 private:

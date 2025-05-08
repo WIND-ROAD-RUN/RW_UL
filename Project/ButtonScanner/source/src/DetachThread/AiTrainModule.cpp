@@ -26,27 +26,6 @@ void AiTrainModule::startTrain()
 	start();
 }
 
-//rw::imeot::ProcessRectanglesResultOT AiTrainModule::getBody(
-//	std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody)
-//{
-//	hasBody = false;
-//	rw::imeot::ProcessRectanglesResultOT result;
-//	result.width = 0;
-//	result.height = 0;
-//	for (auto& i : processRectanglesResult)
-//	{
-//		if (i.classID == 0)
-//		{
-//			if ((i.width * i.height) > (result.width * result.height))
-//			{
-//				result = i;
-//				hasBody = true;
-//			}
-//		}
-//	}
-//	return result;
-//}
-
 QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
 {
 	QVector<AiTrainModule::DataItem> result;
@@ -290,7 +269,7 @@ void AiTrainModule::copyModelToTemp()
 
 	if (_modelType == ModelType::Segment)
 	{
-		sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
+		sourceFilePath = sourceFilePath + R"(/segment/train/weights/best.onnx)";
 	}
 	else if (_modelType == ModelType::ObjectDetection)
 	{
@@ -476,6 +455,7 @@ void AiTrainModule::run()
 
 	emit appRunLog("开始训练检测模型");
 	trainObbModel();
+	//trainSegmentModel();
 
 	exec();
 }

@@ -1,5 +1,5 @@
-train: D:/zfkjData/ButtonScanner/Train/Obb
-val: D:/zfkjData/ButtonScanner/Train/Obb  
+train: D:/zfkjData/ButtonScanner/Train/Seg
+val: D:/zfkjData/ButtonScanner/Train/Seg 
 
 nc: 2  
 names: 
