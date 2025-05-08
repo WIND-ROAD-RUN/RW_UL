@@ -13,7 +13,7 @@ int main() {
 	config.modelPath = R"(C:\Users\rw\Desktop\best.engine)";
 	auto model_engine =rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::yolov11_seg);
 
-	const string path{ R"(C:\Users\rw\Desktop\bus.jpg)" };
+	const string path{ R"(C:\Users\rw\Desktop\1.png)" };
 
 	Mat image = imread(path);
 	if (image.empty())

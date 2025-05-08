@@ -5,9 +5,10 @@
 
 AiTrainModule::AiTrainModule(QObject* parent)
 	: QThread(parent) {
-	/*auto enginePath = globalPath.modelRootPath + globalPath.engineFileName;
-	auto namePath = globalPath.modelRootPath + globalPath.nameFileName;
-	labelEngine = std::make_unique<rw::imeot::ModelEngineOT>(enginePath.toStdString(), namePath.toStdString());
+	auto enginePath = globalPath.modelRootPath + globalPath.engineObb;
+	rw::ModelEngineConfig config;
+	config.modelPath = enginePath.toStdString();
+	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 	_processTrainModel = new QProcess();
 	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessOutput);
 	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessError);
@@ -16,7 +17,7 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	_processExportModel = new QProcess();
 	connect(_processExportModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleExportModelProcessOutput);
 	connect(_processExportModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleExportModelProcessError);
-	connect(_processExportModel, &QProcess::finished, this, &AiTrainModule::handleExportModelProcessFinished);*/
+	connect(_processExportModel, &QProcess::finished, this, &AiTrainModule::handleExportModelProcessFinished);
 }
 
 AiTrainModule::~AiTrainModule()

@@ -5,6 +5,7 @@
 #include <atomic>
 
 //#include"imeot_ModelEngineOT.h"
+#include"ime_ModelEngineFactory.h"
 
 #include"opencv2/opencv.hpp"
 #include<QProcess>
@@ -29,7 +30,7 @@ private:
 	int _frameHeight;
 	int _frameWidth;
 public:
-	/*using labelAndImg = QPair<QString, rw::imeot::ProcessRectanglesResultOT>;*/
+	using labelAndImg = QPair<QString, rw::DetectionRectangleInfo>;
 	using DataItem = QPair<QString, QString>;
 	explicit AiTrainModule(QObject* parent = nullptr);
 
@@ -38,7 +39,7 @@ public:
 	void startTrain();
 
 private:
-	/*std::unique_ptr<rw::imeot::ModelEngineOT> labelEngine;*/
+	std::unique_ptr<rw::ModelEngine> labelEngine;
 private:
 	/*rw::imeot::ProcessRectanglesResultOT getBody(std::vector<rw::imeot::ProcessRectanglesResultOT>& processRectanglesResult, bool& hasBody);
 	QVector<DataItem> getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId);
