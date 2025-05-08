@@ -1,0 +1,7 @@
+train: C:/Users/zfkj/Desktop/datasets/mydataset/train
+val: C:/Users/zfkj/Desktop/datasets/mydataset/train  
+
+nc: 2 
+names: ['good', 'bad']                      
+
+
