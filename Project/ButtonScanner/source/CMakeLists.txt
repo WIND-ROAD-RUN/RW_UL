@@ -83,6 +83,17 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
+#获取python脚本
+file(GLOB PYTHON_FILES "${CMAKE_CURRENT_SOURCE_DIR}/py/*.py")
+file(GLOB YAML_FILES "${CMAKE_CURRENT_SOURCE_DIR}/py/*.yaml")
+#拷贝python脚本
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${PYTHON_FILES}
+	${YAML_FILES}
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
 # 安装可执行文件
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # 可执行文件安装到 bin 目录
