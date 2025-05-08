@@ -24,6 +24,7 @@ namespace rw
 		virtual void preprocess(const cv::Mat& mat)=0;
 		virtual void infer() = 0;
 		virtual std::vector<DetectionRectangleInfo> postProcess() = 0;
+	public:
 		virtual cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo> & infoList);
 	public:
 		std::vector<DetectionRectangleInfo> processImg(const cv::Mat & mat);

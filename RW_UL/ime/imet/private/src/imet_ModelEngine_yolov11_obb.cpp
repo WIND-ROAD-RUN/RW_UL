@@ -12,13 +12,13 @@ namespace rw
 	namespace imet
 	{
 
-		ModelEngine_Yolov11_Obb::ModelEngine_Yolov11_Obb(const std::string& modelPath,
+		ModelEngine_Yolov11_obb::ModelEngine_Yolov11_obb(const std::string& modelPath,
 		                                                                   nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
 
-		ModelEngine_Yolov11_Obb::~ModelEngine_Yolov11_Obb()
+		ModelEngine_Yolov11_obb::~ModelEngine_Yolov11_obb()
 		{
 			for (int i = 0; i < 2; i++)
 				(cudaFree(gpu_buffers[i]));
@@ -28,7 +28,7 @@ namespace rw
 			delete runtime;
 		}
 
-		void ModelEngine_Yolov11_Obb::init(std::string engine_path, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_obb::init(std::string engine_path, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(engine_path, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
@@ -59,14 +59,14 @@ namespace rw
 			cudaDeviceSynchronize();
 		}
 
-		void ModelEngine_Yolov11_Obb::infer()
+		void ModelEngine_Yolov11_obb::infer()
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
 			this->context->enqueueV3(NULL);
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
 			std::vector<Detection> output;
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
@@ -121,7 +121,7 @@ namespace rw
 
 		}
 
-		cv::Mat ModelEngine_Yolov11_Obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		cv::Mat ModelEngine_Yolov11_obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
 			ImagePainter::PainterConfig config;
@@ -135,7 +135,7 @@ namespace rw
 			return result;
 		}
 
-		void ModelEngine_Yolov11_Obb::preprocess(const cv::Mat& mat)
+		void ModelEngine_Yolov11_obb::preprocess(const cv::Mat& mat)
 		{
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
@@ -150,7 +150,7 @@ namespace rw
 				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::convertDetectionToDetectionRectangleInfo(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::convertDetectionToDetectionRectangleInfo(
 			const std::vector<Detection>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;

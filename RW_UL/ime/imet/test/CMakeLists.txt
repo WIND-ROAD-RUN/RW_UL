@@ -6,6 +6,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE imet)
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${IMET_PRIVATE_PATH}/include)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

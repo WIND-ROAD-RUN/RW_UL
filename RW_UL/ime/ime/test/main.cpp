@@ -8,12 +8,12 @@ using namespace cv;
 
 int main()
 {
-	const string path{ R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\work1\bad\20250426155302818.png)" };
+	const string path{ R"(C:\Users\rw\Desktop\bus.jpg)" };
 
 	rw::ModelEngineConfig config;
-	config.ModelPath = R"(C:\Users\rw\Desktop\model\best.engine)";
+	config.modelPath = R"(C:\Users\rw\Desktop\best.engine)";
 
-	auto modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::TensorRT);
+	auto modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
 	Mat image = imread(path);
 	if (image.empty())
 	{

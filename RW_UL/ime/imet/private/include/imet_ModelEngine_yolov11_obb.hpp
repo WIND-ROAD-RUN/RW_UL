@@ -10,7 +10,7 @@ namespace rw
 {
 	namespace imet
 	{
-		class ModelEngine_Yolov11_Obb
+		class ModelEngine_Yolov11_obb
 			: public ModelEngine
 		{
 		private:
@@ -22,16 +22,17 @@ namespace rw
 				cv::Rect bbox;
 			};
 		public:
-			ModelEngine_Yolov11_Obb(const std::string & modelPath, nvinfer1::ILogger& logger);
+			ModelEngine_Yolov11_obb(const std::string & modelPath, nvinfer1::ILogger& logger);
 		public:
-			~ModelEngine_Yolov11_Obb() override;
+			~ModelEngine_Yolov11_obb() override;
 		private:
 			void init(std::string engine_path, nvinfer1::ILogger& logger);
 		private:
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
-			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 			void preprocess(const cv::Mat& mat) override;
+		public:
+			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		private:
 			float* gpu_buffers[2];               //!< The vector of device buffers needed for engine execution
 			float* cpu_output_buffer;

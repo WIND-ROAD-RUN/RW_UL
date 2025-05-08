@@ -10,7 +10,7 @@ namespace rw {
 		//控制非极大值抑制的 IoU 阈值，移除重叠的候选框。
 		float nms_threshold = 0.4f;
 	public:
-		std::string ModelPath;
+		std::string modelPath;
 	};
 
 	enum class ModelType
