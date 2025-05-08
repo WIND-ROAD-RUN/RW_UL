@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -43,7 +43,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_ImageInput"/>
+                <widget class="QLineEdit" name="lineEdit_ImageInput">
+                 <property name="text">
+                  <string>D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -94,7 +98,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_modelPath"/>
+                <widget class="QLineEdit" name="lineEdit_modelPath">
+                 <property name="text">
+                  <string>D:\zfkjData\ButtonScanner\model\ObbModel.engine</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -110,7 +118,7 @@
                <item>
                 <widget class="QPushButton" name="pbtn_setWorkers">
                  <property name="text">
-                  <string>0</string>
+                  <string>1</string>
                  </property>
                 </widget>
                </item>

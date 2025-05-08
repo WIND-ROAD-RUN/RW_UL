@@ -1,7 +1,9 @@
 #include "AutomaticAnnotation.h"
+
 #include"NumberKeyboard.h"
 
-#include"ime_ModelEngineFactory.h"
+
+#include"rqw_ImagePainter.h"
 
 #include<QMessageBox>
 #include<QFileDialog>
@@ -44,6 +46,15 @@ AutomaticAnnotation::AutomaticAnnotation(QWidget *parent)
 
 AutomaticAnnotation::~AutomaticAnnotation()
 {
+	for (int i = 0;i < threads.size();i++)
+	{
+		disconnect(threads[i], &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage);
+	}
+
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i]->wait();
+		delete threads[i];
+	}
 	delete ui;
 }
 
@@ -82,7 +93,7 @@ void AutomaticAnnotation::build_connect()
 	QObject::connect(ui->pbtn_LookImage, &QPushButton::clicked
 		, this, &AutomaticAnnotation::pbtn_LookImage_clicked);
 	QObject::connect(ui->pbtn_next, &QPushButton::clicked
-		, this, &AutomaticAnnotation::on_pbtn_next_clicked);
+		, this, &AutomaticAnnotation::pbtn_next_clicked);
 }
 
 void AutomaticAnnotation::pbtn_setImageInput_clicked()
@@ -126,7 +137,7 @@ void AutomaticAnnotation::pbtn_setImageOutput_clicked()
 
 void AutomaticAnnotation::pbtn_setModelPath_clicked()
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select File"), "", tr("Model Files (*.onnx *.pb *.xml)"));
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select File"), "", tr("Model Files (*.onnx *.pb *.xml *.engine)"));
 	if (!filePath.isEmpty())
 	{
 		ui->lineEdit_modelPath->setText(filePath);
@@ -184,25 +195,16 @@ void AutomaticAnnotation::pbtn_LookImage_clicked()
 	viewer->show();
 }
 
-void AutomaticAnnotation::on_pbtn_next_clicked()
+void AutomaticAnnotation::pbtn_next_clicked()
 {
 	ui->tabWidget->setCurrentIndex(1);
-}
-
-void AutomaticAnnotation::on_pbtn_preStep_clicked()
-{
-	ui->tabWidget->setCurrentIndex(0);
-}
-
-void AutomaticAnnotation::on_pbtn_startAnnotation_clicked()
-{
 	auto currentDeployType = ui->cBox_checkDeployType->currentText();
 	auto currentModelType = ui->cBox_checkModelType->currentText();
 	auto imageInput = ui->lineEdit_ImageInput->text();
 	auto labelOutput = ui->lineEdit_labelOutput->text();
 	auto imageOutput = ui->lineEdit_ImageOutput->text();
 	auto modelPath = ui->lineEdit_modelPath->text();
-	auto workers = ui->pbtn_setWorkers->text();
+	auto workers = ui->pbtn_setWorkers->text().toInt();
 	auto confThreshold = ui->pbtn_setConfThreshold->text();
 	auto nmsThreshold = ui->pbtn_nmsThreshold->text();
 	rw::ModelEngineConfig config;
@@ -210,17 +212,57 @@ void AutomaticAnnotation::on_pbtn_startAnnotation_clicked()
 	config.nms_threshold = std::stof(nmsThreshold.toStdString());
 	config.conf_threshold = std::stof(confThreshold.toStdString());
 
-	/*auto engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
-	if (engine == nullptr)
+	auto paths = getAllImagePaths(ui->lineEdit_ImageInput->text());
+
+	int averageNum = paths.size() / workers;
+	int lastNum = paths.size() % workers;
+	for (int i = 0; i < workers; i++) {
+		AutomaticAnnotationThread* thread = nullptr;
+		if (i == 0) {
+			thread = new AutomaticAnnotationThread(paths.mid(i, averageNum + lastNum));
+		}
+		else {
+			thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
+		}
+		thread->config = config;
+		threads.push_back(thread);
+		connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
+	}
+}
+
+void AutomaticAnnotation::on_pbtn_preStep_clicked()
+{
+	for (int i = 0;i < threads.size();i++)
 	{
-		QMessageBox::warning(this, "Error", "Failed to create model engine.");
-		return;
-	}*/
-	auto paths=getAllImagePaths(ui->lineEdit_ImageInput->text());
-	ui->label_imgDisplay->setText(paths.at(0));
+		disconnect(threads[i], &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage);
+	}
+
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i]->wait();
+		delete threads[i];
+	}
+	threads.clear();
+	ui->tabWidget->setCurrentIndex(0);
+}
+
+void AutomaticAnnotation::on_pbtn_startAnnotation_clicked()
+{
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i]->start();
+	}
 }
 
 void AutomaticAnnotation::on_pbtn_tab2_exit_clicked()
 {
 	this->close();
 }
+
+void AutomaticAnnotation::displayImage(QString imagePath, QPixmap pixmap)
+{
+	if (pixmap.isNull()) {
+		qDebug() << "Failed to load image:" << imagePath;
+		return;
+	}
+	ui->label_imgDisplay->setPixmap(pixmap.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+

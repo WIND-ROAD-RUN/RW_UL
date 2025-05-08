@@ -47,6 +47,9 @@ namespace rw {
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.06);
 		public:
+			static QImage cvMatToQImage(const cv::Mat& mat);
+
+		public:
 			enum class CropMode {
 				Rectangle,       // 计算矩形区域的平均 RGB 值
 				InscribedCircle  // 计算矩形内接圆的平均 RGB 值

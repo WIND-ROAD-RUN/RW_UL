@@ -4,6 +4,7 @@
 #include "ui_AutomaticAnnotation.h"
 
 #include"PicturesViewer.h"
+#include"AutomaticAnnotationThread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class AutomaticAnnotationClass; };
@@ -18,6 +19,7 @@ public:
 	~AutomaticAnnotation();
 private:
 	PicturesViewer* viewer;
+	QVector<AutomaticAnnotationThread*> threads;
 public:
 	void build_ui();
 	void build_connect();
@@ -34,9 +36,11 @@ private slots:
 	void pbtn_nmsThreshold_clicked();
 	void pbtn_exit_clicked();
 	void pbtn_LookImage_clicked();
-	void on_pbtn_next_clicked();
+	void pbtn_next_clicked();
 private slots:
 	void on_pbtn_preStep_clicked();
 	void on_pbtn_startAnnotation_clicked();
 	void on_pbtn_tab2_exit_clicked();
+public slots:
+	void displayImage(QString imagePath, QPixmap pixmap);
 };
