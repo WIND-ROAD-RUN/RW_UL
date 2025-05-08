@@ -61,7 +61,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_labelOutput"/>
+                <widget class="QLineEdit" name="lineEdit_labelOutput">
+                 <property name="text">
+                  <string>D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\Labels</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -75,7 +79,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_ImageOutput"/>
+                <widget class="QLineEdit" name="lineEdit_ImageOutput">
+                 <property name="text">
+                  <string>D:\zfkjData\ButtonScanner\ModelStorage\Temp\ImageOutput</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
