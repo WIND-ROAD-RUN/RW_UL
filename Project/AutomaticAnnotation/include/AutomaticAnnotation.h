@@ -25,6 +25,8 @@ public:
 	void build_connect();
 private:
 	Ui::AutomaticAnnotationClass *ui;
+private:
+	void iniThread();
 
 private slots:
 	void pbtn_setImageInput_clicked();

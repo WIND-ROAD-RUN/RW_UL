@@ -1,4 +1,4 @@
-#include "AutomaticAnnotation.h"
+﻿#include "AutomaticAnnotation.h"
 
 #include"NumberKeyboard.h"
 
@@ -11,7 +11,7 @@
 
 static QStringList getAllImagePaths(const QString & path)
 {
-	QString folderPath = path; // ��ȡĿ¼·��
+	QString folderPath = path; // 获取目录路径
 	if (folderPath.isEmpty()) {
 		return QStringList();
 	}
@@ -21,14 +21,14 @@ static QStringList getAllImagePaths(const QString & path)
 		return QStringList();
 	}
 
-	// ����֧�ֵ�ͼƬ��ʽ
+	// 定义支持的图片格式
 	QStringList imageFilters = { "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff", "*.webp" };
 	QStringList imagePaths;
 
-	// ʹ�� QDirIterator �ݹ����Ŀ¼
+	// 使用 QDirIterator 递归遍历目录
 	QDirIterator it(folderPath, imageFilters, QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext()) {
-		imagePaths.append(it.next()); // ��ȡͼƬ�ľ���·��
+		imagePaths.append(it.next()); // 获取图片的绝对路径
 	}
 
 	return imagePaths;
@@ -94,6 +94,40 @@ void AutomaticAnnotation::build_connect()
 		, this, &AutomaticAnnotation::pbtn_LookImage_clicked);
 	QObject::connect(ui->pbtn_next, &QPushButton::clicked
 		, this, &AutomaticAnnotation::pbtn_next_clicked);
+}
+
+void AutomaticAnnotation::iniThread()
+{
+	auto currentDeployType = ui->cBox_checkDeployType->currentText();
+	auto currentModelType = ui->cBox_checkModelType->currentText();
+	auto imageInput = ui->lineEdit_ImageInput->text();
+	auto labelOutput = ui->lineEdit_labelOutput->text();
+	auto imageOutput = ui->lineEdit_ImageOutput->text();
+	auto modelPath = ui->lineEdit_modelPath->text();
+	auto workers = ui->pbtn_setWorkers->text().toInt();
+	auto confThreshold = ui->pbtn_setConfThreshold->text();
+	auto nmsThreshold = ui->pbtn_nmsThreshold->text();
+	rw::ModelEngineConfig config;
+	config.modelPath = modelPath.toStdString();
+	config.nms_threshold = std::stof(nmsThreshold.toStdString());
+	config.conf_threshold = std::stof(confThreshold.toStdString());
+
+	auto paths = getAllImagePaths(ui->lineEdit_ImageInput->text());
+
+	int averageNum = paths.size() / workers;
+	int lastNum = paths.size() % workers;
+	for (int i = 0; i < workers; i++) {
+		AutomaticAnnotationThread* thread = nullptr;
+		if (i == 0) {
+			thread = new AutomaticAnnotationThread(paths.mid(i, averageNum + lastNum));
+		}
+		else {
+			thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
+		}
+		thread->config = config;
+		threads.push_back(thread);
+		connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
+	}
 }
 
 void AutomaticAnnotation::pbtn_setImageInput_clicked()
@@ -197,37 +231,34 @@ void AutomaticAnnotation::pbtn_LookImage_clicked()
 
 void AutomaticAnnotation::pbtn_next_clicked()
 {
-	ui->tabWidget->setCurrentIndex(1);
-	auto currentDeployType = ui->cBox_checkDeployType->currentText();
-	auto currentModelType = ui->cBox_checkModelType->currentText();
-	auto imageInput = ui->lineEdit_ImageInput->text();
-	auto labelOutput = ui->lineEdit_labelOutput->text();
-	auto imageOutput = ui->lineEdit_ImageOutput->text();
-	auto modelPath = ui->lineEdit_modelPath->text();
-	auto workers = ui->pbtn_setWorkers->text().toInt();
-	auto confThreshold = ui->pbtn_setConfThreshold->text();
-	auto nmsThreshold = ui->pbtn_nmsThreshold->text();
-	rw::ModelEngineConfig config;
-	config.modelPath = modelPath.toStdString();
-	config.nms_threshold = std::stof(nmsThreshold.toStdString());
-	config.conf_threshold = std::stof(confThreshold.toStdString());
 
-	auto paths = getAllImagePaths(ui->lineEdit_ImageInput->text());
-
-	int averageNum = paths.size() / workers;
-	int lastNum = paths.size() % workers;
-	for (int i = 0; i < workers; i++) {
-		AutomaticAnnotationThread* thread = nullptr;
-		if (i == 0) {
-			thread = new AutomaticAnnotationThread(paths.mid(i, averageNum + lastNum));
-		}
-		else {
-			thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
-		}
-		thread->config = config;
-		threads.push_back(thread);
-		connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
+	if (ui->lineEdit_ImageInput->text().isEmpty())
+	{
+		QMessageBox::warning(this, "Warning", QString("请设置图像输入路径"));
+		return;
 	}
+	if (ui->lineEdit_labelOutput->text().isEmpty())
+	{
+		QMessageBox::warning(this, "Warning", QString("请设置标签输出路径"));
+		return;
+	}
+	if (ui->lineEdit_ImageOutput->text().isEmpty())
+	{
+		QMessageBox::warning(this, "Warning", QString("请设置图像输出路径") );
+		return;
+	}
+	if (ui->lineEdit_modelPath->text().isEmpty())
+	{
+		QMessageBox::warning(this, "Warning", QString("请设置模型路径"));
+		return;
+	}
+	if (ui->pbtn_setWorkers->text().toInt()==0)
+	{
+		QMessageBox::warning(this, "Warning", QString("工作线程数量不能为0") );
+		return;
+	}
+	ui->tabWidget->setCurrentIndex(1);
+	iniThread();
 }
 
 void AutomaticAnnotation::on_pbtn_preStep_clicked()
