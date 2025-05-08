@@ -1,0 +1,18 @@
+path: C:/Users/zfkj/Desktop/1/  # 数据集的根目录
+
+train: C:/Users/zfkj/Desktop/1/images/train  # 训练集图像路径
+val: C:/Users/zfkj/Desktop/1/images/train      # 验证集图像路径
+
+nc: 11  # 类别数量（从 0 到 10，共 11 个类别）
+names: 
+  0: body
+  1: hole
+  2: pobian
+  3: qikong
+  4: duyan
+  5: moshi
+  6: liaotou
+  7: zangwu
+  8: liehen
+  9: poyan
+  10: buyuan
