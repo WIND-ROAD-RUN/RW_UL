@@ -513,8 +513,8 @@ void AiTrainModule::run()
 	auto annotationBadDataSet = annotation_data_set(true);
 
 
-	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 1);
-	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 0);
+	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
+	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
 	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
 	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
 	emit appRunLog(GoodSetLog);
