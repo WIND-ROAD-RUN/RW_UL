@@ -39,10 +39,14 @@ void StatisticalInfoComputingThread::run()
 		{
 			auto newWasteCount = statisticalInfo.produceCount.load();
 			auto rate = static_cast<double>(newWasteCount - olderWasteCount);
-			//removeRate后使用为生产速度计算
-			statisticalInfo.removeRate = rate;
-			olderWasteCount = statisticalInfo.produceCount.load();
-			s = 0;
+			if (rate > 0)
+			{
+				//removeRate后使用为生产速度计算
+				statisticalInfo.removeRate = rate;
+				olderWasteCount = statisticalInfo.produceCount.load();
+				s = 0;
+			}
+
 		}
 
 		// 计算生产良率
@@ -52,8 +56,10 @@ void StatisticalInfoComputingThread::run()
 		{
 			continue;
 		}
-		statisticalInfo.productionYield = (static_cast<double>(totalCount - wasteCount) / totalCount) * 100;
-
+		if (totalCount> wasteCount)
+		{
+			statisticalInfo.productionYield = (static_cast<double>(totalCount - wasteCount) / totalCount) * 100;
+		}
 		// 发送信号更新UI
 		emit updateStatisticalInfo();
 		s++;
