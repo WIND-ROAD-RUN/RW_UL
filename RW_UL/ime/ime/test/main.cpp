@@ -1,35 +1,18 @@
-#include"opencv2/opencv.hpp"
-
+#include"imeo_ModelEngineFactory_OnnxRuntime.hpp"
 #include"ime_ModelEngineFactory.h"
-#include<string>
-
-using namespace std;
-using namespace cv;
 
 int main()
 {
-	const string path{ R"(C:\Users\rw\Desktop\bus.jpg)" };
-
 	rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\best.engine)";
-
-	auto modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
-	Mat image = imread(path);
+	config.modelPath = R"(D:\Workplace\rep\RW_UL\Project\yolo\build\yolo11n.onnx)";
+	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::OnnxRuntime);
+	cv::Mat image = cv::imread("D:/Workplace/rep/RW_UL/Project/yolo/build/bus.jpg");
 	if (image.empty())
 	{
-		cerr << "error reading image: " << path << endl;
+		std::cerr << "Error reading image: " << "D:/yolo/build/bus.jpg" << std::endl;
 	}
-
-	std::vector<rw::DetectionRectangleInfo> detection;
-	modelEngine->setDrawStatus(true);
-
-	auto start = std::chrono::system_clock::now();
-	auto result = modelEngine->processImg(image, detection);
-	auto end = std::chrono::system_clock::now();
-
-	auto tc = (double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.;
-	printf("cost %2.4lf ms\n", tc);
-
-	cv::imshow("asd", result);
+	auto result = model->processImg(image);
+	image = model->draw(image, result);
+	cv::imshow("sad", image);
 	cv::waitKey(0);
 }
