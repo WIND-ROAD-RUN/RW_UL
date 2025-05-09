@@ -1,6 +1,4 @@
 #include "YOLOv11.h"
-#include <NvOnnxParser.h>
-#include "common.h"
 #include <fstream>
 #include <iostream>
 #include<opencv2/opencv.hpp>
@@ -8,53 +6,49 @@
 #include<tchar.h>
 #define warmup true
 
+const std::vector<std::string> CLASS_NAMES = {
+	"person",         "bicycle",    "car",           "motorcycle",    "airplane",     "bus",           "train",
+	"truck",          "boat",       "traffic light", "fire hydrant",  "stop sign",    "parking meter", "bench",
+	"bird",           "cat",        "dog",           "horse",         "sheep",        "cow",           "elephant",
+	"bear",           "zebra",      "giraffe",       "backpack",      "umbrella",     "handbag",       "tie",
+	"suitcase",       "frisbee",    "skis",          "snowboard",     "sports ball",  "kite",          "baseball bat",
+	"baseball glove", "skateboard", "surfboard",     "tennis racket", "bottle",       "wine glass",    "cup",
+	"fork",           "knife",      "spoon",         "bowl",          "banana",       "apple",         "sandwich",
+	"orange",         "broccoli",   "carrot",        "hot dog",       "pizza",        "donut",         "cake",
+	"chair",          "couch",      "potted plant",  "bed",           "dining table", "toilet",        "tv",
+	"laptop",         "mouse",      "remote",        "keyboard",      "cell phone",   "microwave",     "oven",
+	"toaster",        "sink",       "refrigerator",  "book",          "clock",        "vase",          "scissors",
+	"teddy bear",     "hair drier", "toothbrush" };
 
-YOLOv11::YOLOv11(string model_path, nvinfer1::ILogger& logger, bool trt)
+const std::vector<std::vector<unsigned int>> COLORS = {
+	{0, 114, 189},   {217, 83, 25},   {237, 177, 32},  {126, 47, 142},  {119, 172, 48},  {77, 190, 238},
+	{162, 20, 47},   {76, 76, 76},    {153, 153, 153}, {255, 0, 0},     {255, 128, 0},   {191, 191, 0},
+	{0, 255, 0},     {0, 0, 255},     {170, 0, 255},   {85, 85, 0},     {85, 170, 0},    {85, 255, 0},
+	{170, 85, 0},    {170, 170, 0},   {170, 255, 0},   {255, 85, 0},    {255, 170, 0},   {255, 255, 0},
+	{0, 85, 128},    {0, 170, 128},   {0, 255, 128},   {85, 0, 128},    {85, 85, 128},   {85, 170, 128},
+	{85, 255, 128},  {170, 0, 128},   {170, 85, 128},  {170, 170, 128}, {170, 255, 128}, {255, 0, 128},
+	{255, 85, 128},  {255, 170, 128}, {255, 255, 128}, {0, 85, 255},    {0, 170, 255},   {0, 255, 255},
+	{85, 0, 255},    {85, 85, 255},   {85, 170, 255},  {85, 255, 255},  {170, 0, 255},   {170, 85, 255},
+	{170, 170, 255}, {170, 255, 255}, {255, 0, 255},   {255, 85, 255},  {255, 170, 255}, {85, 0, 0},
+	{128, 0, 0},     {170, 0, 0},     {212, 0, 0},     {255, 0, 0},     {0, 43, 0},      {0, 85, 0},
+	{0, 128, 0},     {0, 170, 0},     {0, 212, 0},     {0, 255, 0},     {0, 0, 43},      {0, 0, 85},
+	{0, 0, 128},     {0, 0, 170},     {0, 0, 212},     {0, 0, 255},     {0, 0, 0},       {36, 36, 36},
+	{73, 73, 73},    {109, 109, 109}, {146, 146, 146}, {182, 182, 182}, {219, 219, 219}, {0, 114, 189},
+	{80, 183, 189},  {128, 128, 0} };
+
+
+YOLOv11::YOLOv11(string model_path, bool trt)
 {
 	this->trt = trt;
-	init(model_path, logger);
+	init(model_path);
 }
 
 
-void YOLOv11::init(std::string engine_path, nvinfer1::ILogger& logger)
+void YOLOv11::init(std::string engine_path)
 {
 	if (trt)
 	{
-		std::cout << "trt infer" << std::endl;
-		//tensorrt
-		// Read the engine file
-		ifstream engineStream(engine_path, ios::binary);
-		engineStream.seekg(0, ios::end);
-		const size_t modelSize = engineStream.tellg();
-		engineStream.seekg(0, ios::beg);
-		unique_ptr<char[]> engineData(new char[modelSize]);
-		engineStream.read(engineData.get(), modelSize);
-		engineStream.close();
-
-		// Deserialize the tensorrt engine
-		runtime = createInferRuntime(logger);
-		engine = runtime->deserializeCudaEngine(engineData.get(), modelSize);
-		context = engine->createExecutionContext();
-
-		input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
-		input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
-		detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
-		num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
-		num_classes = detection_attribute_size - 4;
-
-		// Initialize input buffers
-		cpu_output_buffer = new float[detection_attribute_size * num_detections];
-		(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
-		// Initialize output buffer
-		(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
-
-		if (warmup) {
-			for (int i = 0; i < 10; i++) {
-				this->infer();
-			}
-			printf("model warmup 10 times\n");
-			cudaDeviceSynchronize();
-		}
+		
 	}
 	else
 	{
@@ -66,7 +60,7 @@ void YOLOv11::init(std::string engine_path, nvinfer1::ILogger& logger)
 		//OrtCUDAProviderOptions cudaOptions;
 		//options.AppendExecutionProvider_CUDA(cudaOptions);
 		//const wchar_t* path = L"yolo11n.onnx";
-		std::wstring path = L"yolo11n.onnx";
+		std::wstring path = L"D:/yolo/build/yolo11n.onnx";
 		session = Ort::Session(env, path.c_str(), options);
 		Ort::AllocatorWithDefaultOptions allocator;
 		//for (int i = 0;i < session.GetInputCount();++i)
@@ -100,15 +94,6 @@ YOLOv11::~YOLOv11()
 {
 	if (trt)
 	{
-		for (int i = 0; i < 2; i++)
-			(cudaFree(gpu_buffers[i]));
-		delete[] cpu_output_buffer;
-
-		// Destroy the engine
-		//cuda_preprocess_destroy();
-		delete context;
-		delete engine;
-		delete runtime;
 	}
 	else
 	{
@@ -123,9 +108,7 @@ void YOLOv11::preprocess(Mat& image) {
 
 	if (trt)
 	{
-		//tensorrt
-		(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * image.channels() * sizeof(float), cudaMemcpyHostToDevice));
-	}
+}
 	else
 	{//pointnet++
 
@@ -151,9 +134,7 @@ void YOLOv11::infer()
 {
 	if (trt)
 	{
-		this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
-		this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
-		this->context->enqueueV3(NULL);
+	
 	}
 	else
 	{
@@ -172,8 +153,7 @@ void YOLOv11::postprocess(vector<Detection>& output)
 {
 	if (trt)
 	{
-		(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
-	}
+}
 	else
 	{
 		cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
