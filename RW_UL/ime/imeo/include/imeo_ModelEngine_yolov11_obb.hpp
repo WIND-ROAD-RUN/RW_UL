@@ -22,6 +22,9 @@ namespace rw {
         public:
             ModelEngine_yolov11_obb(const std::string& modelPath);
             ~ModelEngine_yolov11_obb() override;
+        public:
+            std::string  input_name;
+            std::string  output_name;
         private:
             void preprocess(const cv::Mat& mat) override;
             void infer() override;
@@ -48,9 +51,15 @@ namespace rw {
             float nms_threshold = 0.4f;
         private:
             std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+
+		public:
+            cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
+
         private:
             int sourceWidth{};
             int sourceHeight{};
+        private:
+            static std::wstring stringToWString(const std::string& str);
         };
 
     }

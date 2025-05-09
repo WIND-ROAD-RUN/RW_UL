@@ -1,4 +1,4 @@
-#include"imeo_ModelEngine_yolov11_obb.hpp"
+﻿#include"imeo_ModelEngine_yolov11_obb.hpp"
 
 namespace rw
 {
@@ -21,8 +21,8 @@ namespace rw
 
 			infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 
-			std::vector<int64_t>input_node_dims = { 1,3,640,640 };
-			auto input_size = 1 * 3 * 640 * 640;
+			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
+			auto input_size = 1 * 3 * input_h * input_w;
 			auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
 			input_tensor = Ort::Value::CreateTensor(
 				memory_info,
@@ -46,13 +46,14 @@ namespace rw
 				(const char* const*)output_node_names.data(),
 				output_node_names.size()
 			);
+
 		}
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_obb::postProcess()
 		{
 			std::vector<Detection> output;
 
-			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
 
+			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
@@ -95,30 +96,24 @@ namespace rw
 				output.push_back(result);
 			}
 
-
+			return convertDetectionToDetectionRectangleInfo(output);
 		}
 
 		void ModelEngine_yolov11_obb::init(const std::string& engine_path)
 		{
-			std::cout << "onnxruntime infer" << std::endl;
-			//onnxruntime
 			env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
 			Ort::SessionOptions options;
 			OrtSessionOptionsAppendExecutionProvider_CUDA(options, 0);
-			//OrtCUDAProviderOptions cudaOptions;
-			//options.AppendExecutionProvider_CUDA(cudaOptions);
-			//const wchar_t* path = L"yolo11n.onnx";
-			std::wstring path = LR"(D:\Workplace\rep\RW_UL\Project\yolo\build\yolo11n.onnx)";
+			std::wstring path = stringToWString(engine_path);
 			session = Ort::Session(env, path.c_str(), options);
 			Ort::AllocatorWithDefaultOptions allocator;
-			//for (int i = 0;i < session.GetInputCount();++i)
-			//{
-			//	session.GetInputNameAllocated(i, allocator)
-			//}
-			auto input_name = session.GetInputNameAllocated(0, allocator);
-			auto output_name = session.GetOutputNameAllocated(0, allocator);
-			input_node_names.push_back("images");
-			output_node_names.push_back("output0");
+
+			input_name = session.GetInputNameAllocated(0, allocator).get();
+			output_name = session.GetOutputNameAllocated(0, allocator).get();
+
+			input_node_names.push_back(input_name.c_str());
+			output_node_names.push_back(output_name.c_str());
+
 			auto input_shape = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
 			auto output_shape = session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
 			input_h = input_shape[2];
@@ -126,15 +121,6 @@ namespace rw
 			detection_attribute_size = output_shape[1];
 			num_detections = output_shape[2];
 			num_classes = output_shape[1] - 4;
-			if (true) {
-				cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_32FC3);
-				preprocess(zero_mat);
-				for (int i = 0; i < 10; i++) {
-					this->infer();
-				}
-				printf("model warmup 10 times\n");
-			}
-
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_obb::convertDetectionToDetectionRectangleInfo(
@@ -165,6 +151,27 @@ namespace rw
 				result.push_back(resultItem);
 			}
 			return result;
+		}
+		cv::Mat ModelEngine_yolov11_obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		{
+			cv::Mat result = mat.clone();
+			ImagePainter::PainterConfig config;
+			for (const auto& item : infoList)
+			{
+				std::ostringstream oss;
+				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
+				config.text = oss.str();
+				ImagePainter::drawShapesOnSourceImg(result, item, config);
+			}
+			return result;
+		}
+
+		std::wstring ModelEngine_yolov11_obb::stringToWString(const std::string& str)
+		{
+			size_t len = std::mbstowcs(nullptr, str.c_str(), 0);
+			std::wstring wstr(len, L'\0');
+			std::mbstowcs(&wstr[0], str.c_str(), len);
+			return wstr;
 		}
 	}
 }
