@@ -66,6 +66,25 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
+# 安装可执行文件
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # 可执行文件安装到 bin 目录
+)
+
+# 安装依赖的 DLL 文件
+install(FILES ${TensorRT_dlls} ${ZMotionRutime_dlls} ${OnnxRuntime_dlls}
+    DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} 
+)
+
+string(REPLACE "\\" "/" QT_PATH_FIXED ${QT_PATH})
+install(CODE "
+    execute_process(
+        COMMAND ${QT_PATH_FIXED}/bin/windeployqt.exe --no-compiler-runtime --no-opengl-sw ${INSTALL_PATH}/${PROJECT_NAME}/${PROJECT_NAME}.exe
+        WORKING_DIRECTORY ${INSTALL_PATH}/${PROJECT_NAME}
+    )
+    message(\"Running windeployqt during install phase\")
+")
+
 
 
 

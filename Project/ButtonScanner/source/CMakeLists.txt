@@ -100,7 +100,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 # 安装依赖的 DLL 文件
-install(FILES ${TensorRT_dlls} ${ZMotionRutime_dlls}
+install(FILES ${TensorRT_dlls} ${ZMotionRutime_dlls} ${OnnxRuntime_dlls}
     DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} 
 )
 
