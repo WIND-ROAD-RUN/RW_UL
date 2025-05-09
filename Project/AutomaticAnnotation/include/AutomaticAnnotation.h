@@ -21,6 +21,9 @@ private:
 	PicturesViewer* viewer;
 	QVector<AutomaticAnnotationThread*> threads;
 public:
+	int size{0};
+	int complete{ 0 };
+public:
 	void build_ui();
 	void build_connect();
 private:
@@ -45,4 +48,7 @@ private slots:
 	void on_pbtn_tab2_exit_clicked();
 public slots:
 	void displayImage(QString imagePath, QPixmap pixmap);
+public:
+	rw::ModelType getModelType();
+	rw::ModelEngineDeployType getDeployType();
 };

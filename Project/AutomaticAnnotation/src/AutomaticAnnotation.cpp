@@ -60,15 +60,17 @@ AutomaticAnnotation::~AutomaticAnnotation()
 
 void AutomaticAnnotation::build_ui()
 {
+	ui->progressBar->setValue(0);
+	ui->tabWidget->tabBar()->hide();
 	ui->tabWidget->setCurrentIndex(0);
 	viewer = new PicturesViewer(this);
 
-	ui->cBox_checkDeployType->addItem("OnnxRuntime");
 	ui->cBox_checkDeployType->addItem("TensorRT");
+	ui->cBox_checkDeployType->addItem("OnnxRuntime");
 	ui->cBox_checkDeployType->setCurrentIndex(0);
 
-	ui->cBox_checkModelType->addItem("Yolov11_seg");
 	ui->cBox_checkModelType->addItem("Yolov11_obb");
+	ui->cBox_checkModelType->addItem("Yolov11_seg");
 	ui->cBox_checkModelType->setCurrentIndex(0);
 }
 
@@ -113,21 +115,43 @@ void AutomaticAnnotation::iniThread()
 	config.conf_threshold = std::stof(confThreshold.toStdString());
 
 	auto paths = getAllImagePaths(ui->lineEdit_ImageInput->text());
-
+	size = paths.size();
 	int averageNum = paths.size() / workers;
 	int lastNum = paths.size() % workers;
-	for (int i = 0; i < workers; i++) {
-		AutomaticAnnotationThread* thread = nullptr;
-		if (i == 0) {
-			thread = new AutomaticAnnotationThread(paths.mid(i, averageNum + lastNum));
+	auto modelType = getModelType();
+	auto deployType = getDeployType();
+
+	try
+	{
+		auto test = rw::ModelEngineFactory::createModelEngine(config, modelType, deployType);
+
+		for (int i = 0; i < workers; i++) {
+			AutomaticAnnotationThread* thread = nullptr;
+			if (i == 0) {
+				thread = new AutomaticAnnotationThread(paths.mid(i, averageNum + lastNum));
+			}
+			else {
+				thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
+			}
+			thread->modelType = modelType;
+			thread->config = config;
+			thread->labelOutput = labelOutput;
+			thread->imageOutput = imageOutput;
+			thread->deployType = deployType;
+			threads.push_back(thread);
+			connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
 		}
-		else {
-			thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
-		}
-		thread->config = config;
-		threads.push_back(thread);
-		connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
+
+		ui->tabWidget->setCurrentIndex(1);
 	}
+	catch (...)
+	{
+		QMessageBox::warning(this, "Warning", QString("模型加载失败，请检查模型路径和类型"));
+		return;
+	}
+
+
+	
 }
 
 void AutomaticAnnotation::pbtn_setImageInput_clicked()
@@ -257,7 +281,6 @@ void AutomaticAnnotation::pbtn_next_clicked()
 		QMessageBox::warning(this, "Warning", QString("工作线程数量不能为0") );
 		return;
 	}
-	ui->tabWidget->setCurrentIndex(1);
 	iniThread();
 }
 
@@ -278,6 +301,8 @@ void AutomaticAnnotation::on_pbtn_preStep_clicked()
 
 void AutomaticAnnotation::on_pbtn_startAnnotation_clicked()
 {
+	complete = 0;
+	ui->progressBar->setValue(0);
 	for (int i = 0; i < threads.size(); i++) {
 		threads[i]->start();
 	}
@@ -290,10 +315,47 @@ void AutomaticAnnotation::on_pbtn_tab2_exit_clicked()
 
 void AutomaticAnnotation::displayImage(QString imagePath, QPixmap pixmap)
 {
+	complete++;
+	ui->progressBar->setValue((complete * 100) / size);
+
 	if (pixmap.isNull()) {
 		qDebug() << "Failed to load image:" << imagePath;
 		return;
 	}
 	ui->label_imgDisplay->setPixmap(pixmap.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+rw::ModelType AutomaticAnnotation::getModelType()
+{
+	auto currentModelType = ui->cBox_checkModelType->currentText();
+	if (currentModelType == "Yolov11_seg")
+	{
+		return rw::ModelType::yolov11_seg;
+	}
+	else if (currentModelType == "Yolov11_obb")
+	{
+		return rw::ModelType::yolov11_obb;
+	}
+	else
+	{
+		return rw::ModelType::yolov11_obb;
+	}
+}
+
+rw::ModelEngineDeployType AutomaticAnnotation::getDeployType()
+{
+	auto currentDeployType = ui->cBox_checkDeployType->currentText();
+	if (currentDeployType == "OnnxRuntime")
+	{
+		return rw::ModelEngineDeployType::OnnxRuntime;
+	}
+	else if (currentDeployType == "TensorRT")
+	{
+		return rw::ModelEngineDeployType::TensorRT;
+	}
+	else
+	{
+		return rw::ModelEngineDeployType::OnnxRuntime;
+	}
 }
 
