@@ -18,13 +18,12 @@ int main()
 	rw::imeo::ModelEngine_yolov11_obb model("D:/yolo/build/yolo11n.onnx");
 }
 
-
 //int main(int argc, char** argv)
 //{
 //	bool trt = 0;
 //	const string engine_file_path{ "yolo11n.engine" };
 //	//const string engine_file_path{ "yolov11n_int8.engine" };
-//	const string path{ "D:yolo/build/bus.jpg" };
+//	const string path{ R"(D:\Workplace\rep\RW_UL\Project\yolo\build\bus.jpg)"};
 //	// init model
 //	YOLOv11 model(engine_file_path, trt);
 //	// open image

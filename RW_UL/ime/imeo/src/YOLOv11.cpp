@@ -60,7 +60,7 @@ void YOLOv11::init(std::string engine_path)
 		//OrtCUDAProviderOptions cudaOptions;
 		//options.AppendExecutionProvider_CUDA(cudaOptions);
 		//const wchar_t* path = L"yolo11n.onnx";
-		std::wstring path = L"D:/yolo/build/yolo11n.onnx";
+		std::wstring path = LR"(D:\Workplace\rep\RW_UL\Project\yolo\build\yolo11n.onnx)";
 		session = Ort::Session(env, path.c_str(), options);
 		Ort::AllocatorWithDefaultOptions allocator;
 		//for (int i = 0;i < session.GetInputCount();++i)
@@ -78,14 +78,14 @@ void YOLOv11::init(std::string engine_path)
 		detection_attribute_size = output_shape[1];
 		num_detections = output_shape[2];
 		num_classes = output_shape[1] - 4;
-		//if (warmup) {
-		//	cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
-		//	preprocess(zero_mat);
-		//	for (int i = 0; i < 10; i++) {
-		//		this->infer();
-		//	}
-		//	printf("model warmup 10 times\n");
-		//}
+		if (warmup) {
+			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
+			preprocess(zero_mat);
+			for (int i = 0; i < 10; i++) {
+				this->infer();
+			}
+			printf("model warmup 10 times\n");
+		}
 	}
 
 }

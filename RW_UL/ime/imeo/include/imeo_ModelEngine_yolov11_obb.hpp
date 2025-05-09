@@ -31,14 +31,14 @@ namespace rw {
         private:
             Ort::Env env;
             Ort::Session session = Ort::Session(nullptr);
-            std::vector<Ort::Value> output_tensors;
+            std::vector<Ort::Value>output_tensors;
             std::vector<const char*> input_node_names;
             std::vector<const char*> output_node_names;
             Ort::Value input_tensor = Ort::Value(nullptr);
             std::vector<Ort::Value> ort_inputs;
             cv::Mat infer_image;
-            float* cpu_output_buffer;
         private:
+            float* cpu_output_buffer;
             int input_w;
             int input_h;
             int num_detections;
@@ -47,10 +47,11 @@ namespace rw {
             float conf_threshold = 0.3f;
             float nms_threshold = 0.4f;
         private:
-            static std::wstring stringToWString(const std::string& str) {
-                std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-                return converter.from_bytes(str);
-            }
+            std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+        private:
+            int sourceWidth{};
+            int sourceHeight{};
         };
+
     }
 }

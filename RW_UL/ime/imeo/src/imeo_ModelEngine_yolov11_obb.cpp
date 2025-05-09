@@ -16,6 +16,11 @@ namespace rw
 
 		void ModelEngine_yolov11_obb::preprocess(const cv::Mat& mat)
 		{
+			sourceWidth = mat.cols;
+			sourceHeight = mat.rows;
+
+			infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+
 			std::vector<int64_t>input_node_dims = { 1,3,640,640 };
 			auto input_size = 1 * 3 * 640 * 640;
 			auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
@@ -32,6 +37,7 @@ namespace rw
 
 		void ModelEngine_yolov11_obb::infer()
 		{
+
 			output_tensors = session.Run(
 				Ort::RunOptions{ nullptr },
 				(const char* const*)input_node_names.data(),
@@ -46,7 +52,7 @@ namespace rw
 			std::vector<Detection> output;
 
 			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
-			// Memcpy from device output buffer to host output buffer
+
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
@@ -89,7 +95,7 @@ namespace rw
 				output.push_back(result);
 			}
 
-			return std::vector<DetectionRectangleInfo>(output.size());
+
 		}
 
 		void ModelEngine_yolov11_obb::init(const std::string& engine_path)
@@ -102,7 +108,7 @@ namespace rw
 			//OrtCUDAProviderOptions cudaOptions;
 			//options.AppendExecutionProvider_CUDA(cudaOptions);
 			//const wchar_t* path = L"yolo11n.onnx";
-			std::wstring path = L"D:/yolo/build/yolo11n.onnx";
+			std::wstring path = LR"(D:\Workplace\rep\RW_UL\Project\yolo\build\yolo11n.onnx)";
 			session = Ort::Session(env, path.c_str(), options);
 			Ort::AllocatorWithDefaultOptions allocator;
 			//for (int i = 0;i < session.GetInputCount();++i)
@@ -121,13 +127,44 @@ namespace rw
 			num_detections = output_shape[2];
 			num_classes = output_shape[1] - 4;
 			if (true) {
-				cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
-				ModelEngine_yolov11_obb::preprocess(zero_mat);
+				cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_32FC3);
+				preprocess(zero_mat);
 				for (int i = 0; i < 10; i++) {
-					ModelEngine_yolov11_obb::infer();
+					this->infer();
 				}
 				printf("model warmup 10 times\n");
 			}
+
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_obb::convertDetectionToDetectionRectangleInfo(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			auto scaleX = sourceWidth / static_cast<float>(input_w);
+			auto scaleY = sourceHeight / static_cast<float>(input_h);
+			result.reserve(detections.size());
+			for (const auto& item : detections)
+			{
+				DetectionRectangleInfo resultItem;
+				resultItem.width = item.bbox.width * scaleX;
+				resultItem.height = item.bbox.height * scaleY;
+				resultItem.leftTop.first = item.bbox.x * scaleX;
+				resultItem.leftTop.second = item.bbox.y * scaleY;
+				resultItem.rightTop.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
+				resultItem.rightTop.second = item.bbox.y * scaleY;
+				resultItem.leftBottom.first = item.bbox.x * scaleX;
+				resultItem.leftBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
+				resultItem.rightBottom.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
+				resultItem.rightBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
+				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
+				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
+				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
 		}
 	}
 }
