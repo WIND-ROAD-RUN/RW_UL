@@ -94,6 +94,7 @@ namespace rw
 
 		void ModelEngine_yolov11_obb::init(const std::string& engine_path)
 		{
+			std::cout << "onnxruntime infer" << std::endl;
 			//onnxruntime
 			env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
 			Ort::SessionOptions options;
@@ -101,19 +102,15 @@ namespace rw
 			//OrtCUDAProviderOptions cudaOptions;
 			//options.AppendExecutionProvider_CUDA(cudaOptions);
 			//const wchar_t* path = L"yolo11n.onnx";
-			std::wstring path(stringToWString(engine_path));
+			std::wstring path = L"D:/yolo/build/yolo11n.onnx";
 			session = Ort::Session(env, path.c_str(), options);
 			Ort::AllocatorWithDefaultOptions allocator;
 			//for (int i = 0;i < session.GetInputCount();++i)
 			//{
 			//	session.GetInputNameAllocated(i, allocator)
 			//}
-			//auto input_name = session.GetInputNameAllocated(0, allocator);
-			//auto output_name = session.GetOutputNameAllocated(0, allocator);
-			std::string input_name(session.GetInputNameAllocated(0, allocator).get());
-			std::string output_name(session.GetOutputNameAllocated(0, allocator).get());
-			/*input_node_names.push_back(input_name.c_str());
-			output_node_names.push_back(output_name.c_str());*/
+			auto input_name = session.GetInputNameAllocated(0, allocator);
+			auto output_name = session.GetOutputNameAllocated(0, allocator);
 			input_node_names.push_back("images");
 			output_node_names.push_back("output0");
 			auto input_shape = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
@@ -123,11 +120,13 @@ namespace rw
 			detection_attribute_size = output_shape[1];
 			num_detections = output_shape[2];
 			num_classes = output_shape[1] - 4;
-
-			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
-			for (int i = 0; i < 10; i++) {
-				preprocess(zero_mat);
-				this->infer();
+			if (true) {
+				cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
+				ModelEngine_yolov11_obb::preprocess(zero_mat);
+				for (int i = 0; i < 10; i++) {
+					ModelEngine_yolov11_obb::infer();
+				}
+				printf("model warmup 10 times\n");
 			}
 		}
 	}

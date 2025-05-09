@@ -36,7 +36,6 @@ public:
 private:
     void init(std::string engine_path);
 
-    float* gpu_buffers[2];               //!< The vector of device buffers needed for engine execution
     float* cpu_output_buffer;
 
     // Model parameters
