@@ -121,6 +121,12 @@ namespace rw
 			detection_attribute_size = output_shape[1];
 			num_detections = output_shape[2];
 			num_classes = output_shape[1] - 4;
+
+			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
+			preprocess(zero_mat);
+			for (int i = 0; i < 10; i++) {
+				this->infer();
+			}
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::convertDetectionToDetectionRectangleInfo(

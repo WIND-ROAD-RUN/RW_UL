@@ -4,9 +4,9 @@
 int main()
 {
 	rw::ModelEngineConfig config;
-	config.modelPath = R"(D:\Workplace\rep\RW_UL\Project\yolo\build\yolo11n.onnx)";
+	config.modelPath = R"(C:\Users\rw\Desktop\best(1).onnx)";
 	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::OnnxRuntime);
-	cv::Mat image = cv::imread("D:/Workplace/rep/RW_UL/Project/yolo/build/bus.jpg");
+	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\1.png)");
 	if (image.empty())
 	{
 		std::cerr << "Error reading image: " << "D:/yolo/build/bus.jpg" << std::endl;
