@@ -4,17 +4,17 @@ namespace rw
 {
 	namespace imeo
 	{
-		ModelEngine_yolov11_obb::ModelEngine_yolov11_obb(const std::string& modelPath)
+		ModelEngine_Yolov11_Obb::ModelEngine_Yolov11_Obb(const std::string& modelPath)
 		{
 			init(modelPath);
 		}
 
-		ModelEngine_yolov11_obb::~ModelEngine_yolov11_obb()
+		ModelEngine_Yolov11_Obb::~ModelEngine_Yolov11_Obb()
 		{
 			output_tensors[0].release();
 		}
 
-		void ModelEngine_yolov11_obb::preprocess(const cv::Mat& mat)
+		void ModelEngine_Yolov11_Obb::preprocess(const cv::Mat& mat)
 		{
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
@@ -35,7 +35,7 @@ namespace rw
 			ort_inputs.push_back(std::move(input_tensor));
 		}
 
-		void ModelEngine_yolov11_obb::infer()
+		void ModelEngine_Yolov11_Obb::infer()
 		{
 
 			output_tensors = session.Run(
@@ -48,7 +48,7 @@ namespace rw
 			);
 
 		}
-		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_obb::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::postProcess()
 		{
 			std::vector<Detection> output;
 
@@ -99,7 +99,7 @@ namespace rw
 			return convertDetectionToDetectionRectangleInfo(output);
 		}
 
-		void ModelEngine_yolov11_obb::init(const std::string& engine_path)
+		void ModelEngine_Yolov11_Obb::init(const std::string& engine_path)
 		{
 			env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
 			Ort::SessionOptions options;
@@ -123,7 +123,7 @@ namespace rw
 			num_classes = output_shape[1] - 4;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_obb::convertDetectionToDetectionRectangleInfo(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Obb::convertDetectionToDetectionRectangleInfo(
 			const std::vector<Detection>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -152,7 +152,7 @@ namespace rw
 			}
 			return result;
 		}
-		cv::Mat ModelEngine_yolov11_obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		cv::Mat ModelEngine_Yolov11_Obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
 			ImagePainter::PainterConfig config;
@@ -166,7 +166,7 @@ namespace rw
 			return result;
 		}
 
-		std::wstring ModelEngine_yolov11_obb::stringToWString(const std::string& str)
+		std::wstring ModelEngine_Yolov11_Obb::stringToWString(const std::string& str)
 		{
 			size_t len = std::mbstowcs(nullptr, str.c_str(), 0);
 			std::wstring wstr(len, L'\0');

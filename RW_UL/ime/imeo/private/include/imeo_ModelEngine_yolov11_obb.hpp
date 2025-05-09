@@ -10,7 +10,7 @@
 
 namespace rw {
     namespace imeo {
-        class ModelEngine_yolov11_obb
+        class ModelEngine_Yolov11_Obb
 	        :public ModelEngine{
         private:
             struct Detection
@@ -20,8 +20,8 @@ namespace rw {
                 cv::Rect bbox;
             };
         public:
-            ModelEngine_yolov11_obb(const std::string& modelPath);
-            ~ModelEngine_yolov11_obb() override;
+            ModelEngine_Yolov11_Obb(const std::string& modelPath);
+            ~ModelEngine_Yolov11_Obb() override;
         public:
             std::string  input_name;
             std::string  output_name;
@@ -60,6 +60,14 @@ namespace rw {
             int sourceHeight{};
         private:
             static std::wstring stringToWString(const std::string& str);
+        public:
+            void setConf_threshold(float num) {
+                conf_threshold = num;
+            }
+
+            void setNms_threshold(float num) {
+                nms_threshold = num;
+            }
         };
 
     }
