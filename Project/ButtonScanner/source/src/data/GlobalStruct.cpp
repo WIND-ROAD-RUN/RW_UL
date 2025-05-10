@@ -58,21 +58,25 @@ void GlobalStructData::buildImageProcessingModule(size_t num)
 {
 	imageProcessingModule1 = std::make_unique<ImageProcessingModule>(num, this);
 	imageProcessingModule1->modelEngineOTPath = enginePath;
+	imageProcessingModule1->modelOnnxOOPath = onnxEngineOOPath;
 	imageProcessingModule1->index = 1;
 	imageProcessingModule1->BuildModule();
 
 	imageProcessingModule2 = std::make_unique<ImageProcessingModule>(num, this);
 	imageProcessingModule2->modelEngineOTPath = enginePath;
+	imageProcessingModule2->modelOnnxOOPath = onnxEngineOOPath;
 	imageProcessingModule2->index = 2;
 	imageProcessingModule2->BuildModule();
 
 	imageProcessingModule3 = std::make_unique<ImageProcessingModule>(num, this);
 	imageProcessingModule3->modelEngineOTPath = enginePath;
+	imageProcessingModule3->modelOnnxOOPath = onnxEngineOOPath;
 	imageProcessingModule3->index = 3;
 	imageProcessingModule3->BuildModule();
 
 	imageProcessingModule4 = std::make_unique<ImageProcessingModule>(num, this);
 	imageProcessingModule4->modelEngineOTPath = enginePath;
+	imageProcessingModule4->modelOnnxOOPath = onnxEngineOOPath;
 	imageProcessingModule4->index = 4;
 	imageProcessingModule4->BuildModule();
 }

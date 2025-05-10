@@ -149,8 +149,12 @@ private:
 
 private:
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
+	std::unique_ptr<rw::ModelEngine> _onnxRuntimeOO;
 public:
 	void buildModelEngineOT(const QString& enginePath);
+	void buildOnnxRuntimeOO(const QString& enginePath);
+public:
+	void reloadOnnxRuntimeOO(const QString& enginePath);
 private:
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
@@ -210,6 +214,8 @@ public:
 	void BuildModule();
 
 	void clearLargeRGBList();
+public:
+	void reLoadOnnxOO();
 public:
 	ImageProcessingModule(int numConsumers, QObject* parent = nullptr);
 

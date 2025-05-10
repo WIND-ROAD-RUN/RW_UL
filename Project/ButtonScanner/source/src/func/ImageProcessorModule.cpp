@@ -18,6 +18,24 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 }
 
+void ImageProcessor::buildOnnxRuntimeOO(const QString& enginePath)
+{
+	rw::ModelEngineConfig config;
+	config.conf_threshold = 0.5f;
+	config.nms_threshold = 0.5f;
+	config.modelPath = enginePath.toStdString();
+	_onnxRuntimeOO = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::OnnxRuntime);
+}
+
+void ImageProcessor::reloadOnnxRuntimeOO(const QString& enginePath)
+{
+	if (_onnxRuntimeOO)
+	{
+		_onnxRuntimeOO.reset();
+		buildOnnxRuntimeOO(enginePath);
+	}
+}
+
 //void ImageProcessor::buildModelEngineOnnxOO(const QString& enginePath, const QString& namePath)
 //{
 //	///*_modelEnginePtrOnnxOO.reset();*/
@@ -2748,6 +2766,7 @@ void ImageProcessingModule::BuildModule()
 		ImageProcessor* processor = new ImageProcessor(_queue, _mutex, _condition, workIndexCount, this);
 		workIndexCount++;
 		processor->buildModelEngineOT(modelEngineOTPath);
+		processor->buildOnnxRuntimeOO(modelOnnxOOPath);
 		processor->imageProcessingModuleIndex = index;
 		connect(processor, &ImageProcessor::imageReady, this, &ImageProcessingModule::imageReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
@@ -2761,6 +2780,16 @@ void ImageProcessingModule::clearLargeRGBList()
 	{
 		item->clearLargeRGBList();
 	}
+}
+
+void ImageProcessingModule::reLoadOnnxOO()
+{
+
+	for (auto& item : _processors)
+	{
+		item->reloadOnnxRuntimeOO(modelOnnxOOPath);
+	}
+
 }
 
 //void ImageProcessingModule::reloadOOModel()

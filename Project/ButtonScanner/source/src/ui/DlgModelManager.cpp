@@ -620,10 +620,10 @@ void DlgModelManager::copyOOModel()
 
 	// 拷贝文件
 	if (QFile::copy(sourceFile, targetFile)) {
-	/*	globalStruct.imageProcessingModule1->reloadOOModel();
-		globalStruct.imageProcessingModule2->reloadOOModel();
-		globalStruct.imageProcessingModule3->reloadOOModel();
-		globalStruct.imageProcessingModule4->reloadOOModel();*/
+		globalStruct.imageProcessingModule1->reLoadOnnxOO();
+		globalStruct.imageProcessingModule2->reLoadOnnxOO();
+		globalStruct.imageProcessingModule3->reLoadOnnxOO();
+		globalStruct.imageProcessingModule4->reLoadOnnxOO();
 		qDebug() << "文件拷贝成功:" << sourceFile << "到" << targetFile;
 		auto& globalStruct = GlobalStructData::getInstance();
 		globalStruct.isOpenBladeShape = false;
