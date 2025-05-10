@@ -113,6 +113,9 @@ void DlgExposureTimeSet::pbtn_exposureTimeValue_clicked()
 		globalStruct.setCameraExposureTime(4, newValue);
 
 		globalStruct.saveDlgExposureTimeSetConfig();
+
+
+		this->close();
 	}
 }
 
