@@ -65,6 +65,21 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(
 	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex);
+
+	if (globalStruct.dlgProductSetConfig.shieldingRangeEnable)
+	{
+		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+	}
+	return processResultIndex;
+}
+
+std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_positive(
+	std::vector<rw::DetectionRectangleInfo> info)
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+
+	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
+	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	if (globalStruct.dlgProductSetConfig.shieldingRangeEnable)
 	{
 		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
@@ -1223,18 +1238,30 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 	//运行时间
 	textList.push_back(info.time);
 
-	appendHolesCountDefectInfo(textList, info);
-	appendBodyCountDefectInfo(textList, info);
-	appendSpecialColorDefectInfo(textList, info);
-	appendEdgeDamageDefectInfo(textList, info);
-	appendLargeColorDefectInfo(textList, info);
-	appendPoreDectInfo(textList, info);
-	appendPaintDectInfo(textList, info);
-	appendBlockEyeDectInfo(textList, info);
-	appendGrindStoneDectInfo(textList, info);
-	appendMaterialHeadDectInfo(textList, info);
-	appendCrackDectInfo(textList, info);
-	appendBrokenEyeDectInfo(textList, info);
+	auto& productSet = GlobalStructData::getInstance().mainWindowConfig;
+	auto& positive = productSet.isPositive;
+	auto& defect = productSet.isDefect;
+
+	if (positive)
+	{
+		appendPositiveDectInfo(textList, info);
+	}
+
+	if (defect)
+	{
+		appendHolesCountDefectInfo(textList, info);
+		appendBodyCountDefectInfo(textList, info);
+		appendSpecialColorDefectInfo(textList, info);
+		appendEdgeDamageDefectInfo(textList, info);
+		appendLargeColorDefectInfo(textList, info);
+		appendPoreDectInfo(textList, info);
+		appendPaintDectInfo(textList, info);
+		appendBlockEyeDectInfo(textList, info);
+		appendGrindStoneDectInfo(textList, info);
+		appendMaterialHeadDectInfo(textList, info);
+		appendCrackDectInfo(textList, info);
+		appendBrokenEyeDectInfo(textList, info);
+	}
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
@@ -1363,6 +1390,22 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 		}
 		brokenEyeText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.brokenEyeSimilarity)));
 		textList.push_back(brokenEyeText);
+	}
+}
+
+void ImageProcessor::appendPositiveDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().mainWindowConfig;
+	auto & dlgSet= GlobalStructData::getInstance().dlgHideScoreSetConfig;
+	if (_isbad && productSet.isPositive)
+	{
+		QString positiveText("正反:");
+		for (const auto& item : info.positive)
+		{
+			positiveText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+		}
+		positiveText.append(QString(" 目标: %1").arg(static_cast<int>(dlgSet.forAndAgainstScore)));
+		textList.push_back(positiveText);
 	}
 }
 
@@ -2039,10 +2082,23 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
+	auto isPositive = globalData.mainWindowConfig.isPositive;
 
 	//AI开始识别
 	ButtonDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
+
+	QFuture<std::vector<std::vector<size_t>>> futureResultIndex;
+
+	if (isPositive)
+	{
+		// 使用 QtConcurrent::run 将处理逻辑放到单独的线程中
+		futureResultIndex = QtConcurrent::run([this, &frame]() {
+			auto processResult = _onnxRuntimeOO->processImg(frame.image);
+			//过滤出有效索引
+			return filterEffectiveIndexes_positive(processResult);
+			});
+	}
 
 	auto processResult = _modelEngineOT->processImg(frame.image);
 
@@ -2050,6 +2106,14 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
+
+	if (isPositive)
+	{
+		futureResultIndex.waitForFinished();
+		auto processResultIndexOO = futureResultIndex.result();
+		getEliminationInfo_positive(defectInfo, processResult, processResultIndexOO, frame.image);
+	}
+
 	//过滤出有效索引
 	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
 
@@ -2092,11 +2156,27 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	emit imageReady(pixmap);
 }
 
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(const ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& hideConfig = globalData.dlgHideScoreSetConfig;
+	for (const auto & item:info.positive)
+	{
+		if (item >= hideConfig.forAndAgainstScore)
+		{
+			_isbad = true;
+			break;
+		}
+
+	}
+}
+
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo& info)
 {
 	_isbad = false;
 	auto& globalData = GlobalStructData::getInstance();
 	auto& isOpenDefect = globalData.mainWindowConfig.isDefect;
+	auto & isOpenPositive= globalData.mainWindowConfig.isPositive;
 	if (isOpenDefect)
 	{
 		run_OpenRemoveFunc_process_defect_info_hole(info);
@@ -2110,6 +2190,11 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 		run_OpenRemoveFunc_process_defect_info_grindStone(info);
 		run_OpenRemoveFunc_process_defect_info_materialHead(info);
 		run_OpenRemoveFunc_process_defect_info_largeColor(info);
+	}
+
+	if (isOpenPositive)
+	{
+		run_OpenRemoveFunc_process_defect_info_positive(info);
 	}
 }
 
@@ -2455,7 +2540,6 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
 	const cv::Mat& mat)
 {
-
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
@@ -2469,6 +2553,20 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
+}
+
+void ImageProcessor::getEliminationInfo_positive(ButtonDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	if (globalData.mainWindowConfig.isPositive)
+	{
+		for (const auto &item : index[ClassIdPositive::Bad])
+		{
+			info.positive.push_back(processResult[item].score*100);
+		}
+	}
 }
 
 void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)

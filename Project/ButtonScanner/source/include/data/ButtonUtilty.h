@@ -26,6 +26,12 @@ struct ClassId
 
 };
 
+struct ClassIdPositive
+{
+	static const int Good = 0;
+	static const int Bad= 1;
+};
+
 inline struct GlobalPath
 {
 public:

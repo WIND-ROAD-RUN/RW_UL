@@ -29,14 +29,16 @@ public:
 	float large_G{};
 	float large_B{};
 public:
-	std::vector<float> edgeDamage;
-	std::vector<float> pore;
-	std::vector<float> paint;
-	std::vector<float> brokenEye;
-	std::vector<float> crack;
-	std::vector<float> grindStone;
-	std::vector<float> blockEye;
-	std::vector<float> materialHead;
+	std::vector<double> edgeDamage;
+	std::vector<double> pore;
+	std::vector<double> paint;
+	std::vector<double> brokenEye;
+	std::vector<double> crack;
+	std::vector<double> grindStone;
+	std::vector<double> blockEye;
+	std::vector<double> materialHead;
+public:
+	std::vector<double> positive;
 };
 
 struct ImagePainter
@@ -112,6 +114,7 @@ private:
 	void run_monitor(MatInfo& frame);
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);
+	void run_OpenRemoveFunc_process_defect_info_positive(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) ;
 	void run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info);
@@ -131,6 +134,7 @@ signals:
 private:
 	void getEliminationInfo_debug(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 	void getEliminationInfo_defect(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+	void getEliminationInfo_positive(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
 	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -158,6 +162,7 @@ public:
 private:
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
+	std::vector<std::vector<size_t>> filterEffectiveIndexes_positive(std::vector<rw::DetectionRectangleInfo> info);
 
 	std::vector<std::vector<size_t>>
 		getIndexInBoundary
@@ -180,6 +185,7 @@ public:
 	void appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendPositiveDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendCrackDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
