@@ -549,7 +549,7 @@ void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QPro
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
-		exportModelToEngine();
+		//exportModelToEngine();
 		emit updateTrainTitle("导出完成");
 		copyModelToTemp();
 		packageModelToStorage();
