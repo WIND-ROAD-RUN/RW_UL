@@ -35,15 +35,18 @@ void StatisticalInfoComputingThread::run()
 	while (running) {
 		QThread::sleep(1);
 		//每60s计算剔除功能
-		if (s == 60)
+		if (s == 30)
 		{
 			auto newWasteCount = statisticalInfo.produceCount.load();
 			long long rate = newWasteCount - olderWasteCount;
 			if (rate > 0)
 			{
 				//removeRate后使用为生产速度计算
-				statisticalInfo.removeRate = rate;
+				statisticalInfo.removeRate = rate*2;
 				olderWasteCount = statisticalInfo.produceCount.load();
+			}
+			else {
+				olderWasteCount = newWasteCount;
 			}
 			s = 0;
 		}
