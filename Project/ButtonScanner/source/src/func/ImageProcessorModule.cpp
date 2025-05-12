@@ -1044,6 +1044,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
 	auto isPositive = globalData.mainWindowConfig.isPositive;
+	auto isDefect = globalData.mainWindowConfig.isDefect;
 
 	//AI开始识别
 	ButtonDefectInfo defectInfo;
@@ -1051,35 +1052,41 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 
 	QFuture<std::vector<std::vector<size_t>>> futureResultIndex;
 
+	std::vector<rw::DetectionRectangleInfo> processResultPositive;
+
 	if (isPositive)
 	{
 		// 使用 QtConcurrent::run 将处理逻辑放到单独的线程中
-		futureResultIndex = QtConcurrent::run([this, &frame]() {
-			auto processResult = _onnxRuntimeOO->processImg(frame.image);
+		futureResultIndex = QtConcurrent::run([this, &processResultPositive,&frame]() {
+			processResultPositive = _onnxRuntimeOO->processImg(frame.image);
 			//过滤出有效索引
-			return filterEffectiveIndexes_positive(processResult);
+			return filterEffectiveIndexes_positive(processResultPositive);
 			});
 	}
 
-	auto processResult = _modelEngineOT->processImg(frame.image);
-
-	auto endTime = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
-	//AI识别完成
+	std::vector<rw::DetectionRectangleInfo> processResultDefect;
+	if (isDefect) {
+		processResultDefect = _modelEngineOT->processImg(frame.image);
+	}
 
 	if (isPositive)
 	{
 		futureResultIndex.waitForFinished();
 		auto processResultIndexOO = futureResultIndex.result();
-		getEliminationInfo_positive(defectInfo, processResult, processResultIndexOO, frame.image);
+		getEliminationInfo_positive(defectInfo, processResultPositive, processResultIndexOO, frame.image);
 	}
 
+
 	//过滤出有效索引
-	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
+	auto processResultIndex = filterEffectiveIndexes_defect(processResultDefect);
 
 	//获取到当前图像的缺陷信息
-	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
+	getEliminationInfo_defect(defectInfo, processResultDefect, processResultIndex, frame.image);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
 
 	//剔除逻辑获取_isbad
 	run_OpenRemoveFunc_process_defect_info(defectInfo);
@@ -1095,12 +1102,12 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	drawVerticalBoundaryLine(image);
 	if (productSet.shieldingRangeEnable)
 	{
-		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		drawShieldingRange(image, processResultDefect, processResultIndex[ClassId::Body]);
 	}
-	drawErrorRec(image, processResult, processResultIndex);
-	drawErrorRec_error(image, processResult, processResultIndex);
-	ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
-	ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	drawErrorRec(image, processResultDefect, processResultIndex);
+	drawErrorRec_error(image, processResultDefect, processResultIndex);
+	ImageProcessUtilty::drawHole(image, processResultDefect, processResultIndex[ClassId::Hole]);
+	ImageProcessUtilty::drawBody(image, processResultDefect, processResultIndex[ClassId::Body]);
 
 	//保存图像
 	if (globalData.isTakePictures) {
