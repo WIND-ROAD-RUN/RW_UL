@@ -26,6 +26,7 @@ public:
 	void setModelType(ModelType type) { _modelType = type; }
 public:
 	QProcess* _processTrainModel{nullptr};
+	QProcess* _processExportToEngine{ nullptr };
 private:
 	int _frameHeight;
 	int _frameWidth;
@@ -63,6 +64,8 @@ protected:
 	void run() override;
 private:
 	QVector<labelAndImg> annotation_data_set(bool isBad);
+private:
+	void exportModelToEngine();
 private:
 	int parseProgressOO(const QString& logText, int& totalTasks);
 	int parseProgressSO(const QString& logText, int& totalTasks);

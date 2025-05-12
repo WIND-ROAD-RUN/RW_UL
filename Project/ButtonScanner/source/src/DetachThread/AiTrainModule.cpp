@@ -10,6 +10,7 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	config.modelPath = enginePath.toStdString();
 	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 	_processTrainModel = new QProcess();
+	_processExportToEngine = new QProcess();
 	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessOutput);
 	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessError);
 	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessFinished);
@@ -508,6 +509,13 @@ QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBa
 	return dataSet;
 }
 
+void AiTrainModule::exportModelToEngine()
+{
+
+	std::string str = R"(.\trtexec.exe --onnx=.\runs\detect\train\weights\best.onnx --saveEngine=D:\zfkjData\ButtonScanner\model\customOO.engine)";
+	_processExportToEngine->start("cmd.exe", { "/c",str.c_str() });
+}
+
 void AiTrainModule::handleTrainModelProcessOutput()
 {
 	QByteArray output = _processTrainModel->readAllStandardOutput();
@@ -541,7 +549,7 @@ void AiTrainModule::handleTrainModelProcessFinished(int exitCode, QProcess::Exit
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
-
+		exportModelToEngine();
 		emit updateTrainTitle("导出完成");
 		copyModelToTemp();
 		packageModelToStorage();
