@@ -11,9 +11,9 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 	_processTrainModel = new QProcess();
 	_processExportToEngine = new QProcess();
-	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessOutput);
-	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessError);
-	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessFinished);
+	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessTrainModelOutput);
+	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessTrainModelError);
+	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessTrainModelFinished);
 }
 
 AiTrainModule::~AiTrainModule()
@@ -516,14 +516,14 @@ void AiTrainModule::exportModelToEngine()
 	_processExportToEngine->start("cmd.exe", { "/c",str.c_str() });
 }
 
-void AiTrainModule::handleTrainModelProcessOutput()
+void AiTrainModule::handleTrainModelProcessTrainModelOutput()
 {
 	QByteArray output = _processTrainModel->readAllStandardOutput();
 	QString outputStr = QString::fromLocal8Bit(output);
 	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
 }
 
-void AiTrainModule::handleTrainModelProcessError()
+void AiTrainModule::handleTrainModelProcessTrainModelError()
 {
 	QByteArray errorOutput = _processTrainModel->readAllStandardError();
 	QString errorStr = QString::fromLocal8Bit(errorOutput);
@@ -545,7 +545,7 @@ void AiTrainModule::handleTrainModelProcessError()
 	emit updateProgress(complete, 100);
 }
 
-void AiTrainModule::handleTrainModelProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus == QProcess::NormalExit)
 	{

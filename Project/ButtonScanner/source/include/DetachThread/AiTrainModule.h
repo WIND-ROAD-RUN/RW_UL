@@ -75,9 +75,9 @@ signals:
 	void updateTrainTitle(QString s);
 	void updateTrainState(bool isTrain);
 public slots:
-	void handleTrainModelProcessOutput();
-	void handleTrainModelProcessError();
-	void handleTrainModelProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+	void handleTrainModelProcessTrainModelOutput();
+	void handleTrainModelProcessTrainModelError();
+	void handleTrainModelProcessTrainModelFinished(int exitCode, QProcess::ExitStatus exitStatus);
 public slots:
 	void cancelTrain();
 };
