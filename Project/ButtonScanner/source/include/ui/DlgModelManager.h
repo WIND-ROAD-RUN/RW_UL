@@ -64,4 +64,6 @@ private slots:
 	void pbtn_preModel_clicked();
 	void pbtn_deleteModel_clicked();
 	void pbtn_loadModel_clicked();
+signals:
+	void updateExposureTime(int exposureTime);
 };

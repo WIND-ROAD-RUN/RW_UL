@@ -296,6 +296,8 @@ void ButtonScanner::build_ui()
 	labelClickable_title->setStyleSheet(ui->label_title->styleSheet());
 	ui->hLayout_title->replaceWidget(ui->label_title, labelClickable_title);
 	delete ui->label_title;
+
+	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 }
 
 void ButtonScanner::read_image()
@@ -1372,6 +1374,11 @@ void ButtonScanner::labelClickable_title_clicked()
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)
 {
 	labelWarning->addWarning(message, updateTimestampIfSame, redDuration);
+}
+
+void ButtonScanner::updateExposureTimeValueOnDlg(int exposureTime)
+{
+	_dlgExposureTimeSet->setExposureTime(exposureTime);
 }
 
 void ButtonScanner::pbtn_exit_clicked()

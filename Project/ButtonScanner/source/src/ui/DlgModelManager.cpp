@@ -184,7 +184,8 @@ void DlgModelManager::pbtn_loadModel_clicked()
 		_loadingDialog->hide();
 		return;
 	}
-
+	globalStruct.dlgExposureTimeSetConfig.expousureTime = config.exposureTime;
+	emit updateExposureTime(config.exposureTime);
 	if (globalStruct.camera1)
 	{
 		globalStruct.camera1->setExposureTime(config.exposureTime);

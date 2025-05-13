@@ -19,6 +19,11 @@ DlgExposureTimeSet::~DlgExposureTimeSet()
 	delete ui;
 }
 
+void DlgExposureTimeSet::setExposureTime(int exposureTime)
+{
+	ui->pbtn_exposureTimeValue->setText(QString::number(exposureTime));
+}
+
 void DlgExposureTimeSet::build_ui()
 {
 	auto& globalStruct = GlobalStructData::getInstance();

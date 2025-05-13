@@ -160,4 +160,6 @@ private:
 	void labelClickable_title_clicked();
 public slots:
 	void onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
+public slots:
+	void updateExposureTimeValueOnDlg(int exposureTime);
 };

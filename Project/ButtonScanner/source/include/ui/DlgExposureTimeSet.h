@@ -14,7 +14,8 @@ class DlgExposureTimeSet : public QDialog
 public:
 	DlgExposureTimeSet(QWidget* parent = nullptr);
 	~DlgExposureTimeSet();
-
+public:
+	void setExposureTime(int exposureTime);
 private:
 	void build_ui();
 	void build_connect();
