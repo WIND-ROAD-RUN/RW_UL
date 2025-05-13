@@ -157,7 +157,7 @@ void AiTrainModule::clear_older_trainData()
 			testDirObj.removeRecursively();
 		}
 	}
-	// 处理Temp下所有的onnx文件
+	// 处理Temp下所有的onnx和engine文件
 	{
 		QString tempDir = globalPath.modelStorageManagerTempPath;
 		QDir tempDirObj(tempDir);
@@ -165,13 +165,13 @@ void AiTrainModule::clear_older_trainData()
 			return;
 		}
 
-		// 获取所有 .onnx 文件
+		// 获取所有 .onnx 和 .engine 文件
 		QStringList filters;
-		filters << "*.onnx";
-		QStringList onnxFiles = tempDirObj.entryList(filters, QDir::Files);
+		filters << "*.onnx" << "*.engine";
+		QStringList files = tempDirObj.entryList(filters, QDir::Files);
 
-		// 删除每个 .onnx 文件
-		for (const QString& fileName : onnxFiles) {
+		// 删除每个文件
+		for (const QString& fileName : files) {
 			QString filePath = tempDirObj.filePath(fileName);
 			if (!QFile::remove(filePath)) {
 				qDebug() << "Failed to remove file:" << filePath;
