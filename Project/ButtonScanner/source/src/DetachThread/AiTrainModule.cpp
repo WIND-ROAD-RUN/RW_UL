@@ -433,37 +433,35 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	exportModelToEngine();
+	auto& global = GlobalStructData::getInstance();
+	global.isTrainModel = true;
+	emit updateTrainState(true);
+	emit updateTrainTitle("正在训练");
+	emit appRunLog("训练启动....");
 
-	//auto& global = GlobalStructData::getInstance();
-	//global.isTrainModel = true;
-	//emit updateTrainState(true);
-	//emit updateTrainTitle("正在训练");
-	//emit appRunLog("训练启动....");
+	emit appRunLog("清理旧的训练数据....");
+	clear_older_trainData();
 
-	//emit appRunLog("清理旧的训练数据....");
-	//clear_older_trainData();
-
-	////获取图片的label
-	//auto annotationGoodDataSet = annotation_data_set(false);
-	//auto annotationBadDataSet = annotation_data_set(true);
+	//获取图片的label
+	auto annotationGoodDataSet = annotation_data_set(false);
+	auto annotationBadDataSet = annotation_data_set(true);
 
 
-	//auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
-	//auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
-	//QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
-	//QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
-	//emit appRunLog(GoodSetLog);
-	//emit appRunLog(BadSetLog);
+	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
+	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
+	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
+	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
+	emit appRunLog(GoodSetLog);
+	emit appRunLog(BadSetLog);
 
-	////拷贝训练数据
-	//emit appRunLog("拷贝训练文件");
-	//copyTrainData(dataSet);
-	//copyTrainData(dataSetBad);
+	//拷贝训练数据
+	emit appRunLog("拷贝训练文件");
+	copyTrainData(dataSet);
+	copyTrainData(dataSetBad);
 
-	//emit appRunLog("开始训练检测模型");
-	//trainObbModel();
-	////trainSegmentModel();
+	emit appRunLog("开始训练检测模型");
+	trainObbModel();
+	//trainSegmentModel();
 
 	exec();
 }
@@ -556,15 +554,9 @@ void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QPro
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
-		//exportModelToEngine();
-		emit updateTrainTitle("导出完成");
-		copyModelToTemp();
-		packageModelToStorage();
-		emit updateProgress(100, 100);
-		emit updateTrainState(false);
-		auto& global = GlobalStructData::getInstance();
-		global.isTrainModel = false;
-		quit();
+		emit updateTrainTitle("正在导出模型");
+		emit updateProgress(0, 0);
+		exportModelToEngine();
 	}
 	else
 	{
@@ -592,6 +584,21 @@ void AiTrainModule::handleTrainModelProcessExportEngineError()
 
 void AiTrainModule::handleTrainModelProcessExportEngineFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("导出完成");
+		copyModelToTemp();
+		packageModelToStorage();
+		emit updateProgress(100, 100);
+	}
+	else
+	{
+		emit updateTrainTitle("导出失败");
+		emit updateTrainState(false);
+	}
+	auto& global = GlobalStructData::getInstance();
+	global.isTrainModel = false;
+	quit();
 }
 
 void AiTrainModule::cancelTrain()

@@ -466,6 +466,14 @@ void DlgNewProduction::appendAiTrainLog(QString log)
 
 void DlgNewProduction::updateProgress(int value, int total)
 {
+	if (value==0&&total==0)
+	{
+		ui->progressBar_tab5->setRange(0, 0);
+	}
+	else
+	{
+		ui->progressBar_tab5->setRange(0, 100);
+	}
 	int progress = static_cast<double>(value) / static_cast<double>(total) * 100;
 	ui->progressBar_tab5->setValue(progress);
 }
