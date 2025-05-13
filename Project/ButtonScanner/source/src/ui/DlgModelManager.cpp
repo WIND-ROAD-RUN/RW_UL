@@ -57,8 +57,8 @@ void DlgModelManager::copySOModel()
 	}
 
 	auto& config = _modelConfigs.at(currentIndex.row());
-	QString sourceFile = QString::fromStdString(config.rootPath) + "/customSO.onnx";
-	QString targetFile = globalPath.modelRootPath + "/customSO.onnx";
+	QString sourceFile = QString::fromStdString(config.rootPath) + "/customSO.engine";
+	QString targetFile = globalPath.modelRootPath + "/customSO.engine";
 
 	// 检查源文件是否存在
 	if (!QFile::exists(sourceFile)) {
@@ -599,8 +599,8 @@ void DlgModelManager::copyOOModel()
 	}
 
 	auto& config = _modelConfigs.at(currentIndex.row());
-	QString sourceFile = QString::fromStdString(config.rootPath) + "/customOO.onnx";
-	QString targetFile = globalPath.modelRootPath + "/customOO.onnx";
+	QString sourceFile = QString::fromStdString(config.rootPath) + "/customOO.engine";
+	QString targetFile = globalPath.modelRootPath + "/customOO.engine";
 
 	// 检查源文件是否存在
 	if (!QFile::exists(sourceFile)) {
