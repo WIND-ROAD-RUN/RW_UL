@@ -86,11 +86,11 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 #获取python脚本
 file(GLOB PYTHON_FILES "${CMAKE_CURRENT_SOURCE_DIR}/py/*.py")
 file(GLOB YAML_FILES "${CMAKE_CURRENT_SOURCE_DIR}/py/*.yaml")
+file(GLOB BAT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/bat/*.bat")
 #拷贝python脚本
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${PYTHON_FILES}
-	${YAML_FILES}
+    ${PYTHON_FILES} ${BAT_FILES} ${YAML_FILES}
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 

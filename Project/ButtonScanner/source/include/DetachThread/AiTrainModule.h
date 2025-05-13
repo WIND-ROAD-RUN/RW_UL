@@ -79,5 +79,9 @@ public slots:
 	void handleTrainModelProcessTrainModelError();
 	void handleTrainModelProcessTrainModelFinished(int exitCode, QProcess::ExitStatus exitStatus);
 public slots:
+	void handleTrainModelProcessExportEngineOutput();
+	void handleTrainModelProcessExportEngineError();
+	void handleTrainModelProcessExportEngineFinished(int exitCode, QProcess::ExitStatus exitStatus);
+public slots:
 	void cancelTrain();
 };

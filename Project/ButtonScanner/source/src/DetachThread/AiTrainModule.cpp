@@ -14,10 +14,15 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessTrainModelOutput);
 	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessTrainModelError);
 	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessTrainModelFinished);
+
+	connect(_processExportToEngine, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessExportEngineOutput);
+	connect(_processExportToEngine, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessExportEngineError);
+	connect(_processExportToEngine, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessExportEngineFinished);
 }
 
 AiTrainModule::~AiTrainModule()
 {
+	cancelTrain();
 	wait();
 	delete _processTrainModel;
 }
@@ -428,35 +433,37 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	auto& global = GlobalStructData::getInstance();
-	global.isTrainModel = true;
-	emit updateTrainState(true);
-	emit updateTrainTitle("正在训练");
-	emit appRunLog("训练启动....");
+	exportModelToEngine();
 
-	emit appRunLog("清理旧的训练数据....");
-	clear_older_trainData();
+	//auto& global = GlobalStructData::getInstance();
+	//global.isTrainModel = true;
+	//emit updateTrainState(true);
+	//emit updateTrainTitle("正在训练");
+	//emit appRunLog("训练启动....");
 
-	//获取图片的label
-	auto annotationGoodDataSet = annotation_data_set(false);
-	auto annotationBadDataSet = annotation_data_set(true);
+	//emit appRunLog("清理旧的训练数据....");
+	//clear_older_trainData();
+
+	////获取图片的label
+	//auto annotationGoodDataSet = annotation_data_set(false);
+	//auto annotationBadDataSet = annotation_data_set(true);
 
 
-	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
-	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
-	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
-	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
-	emit appRunLog(GoodSetLog);
-	emit appRunLog(BadSetLog);
+	//auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
+	//auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
+	//QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
+	//QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
+	//emit appRunLog(GoodSetLog);
+	//emit appRunLog(BadSetLog);
 
-	//拷贝训练数据
-	emit appRunLog("拷贝训练文件");
-	copyTrainData(dataSet);
-	copyTrainData(dataSetBad);
+	////拷贝训练数据
+	//emit appRunLog("拷贝训练文件");
+	//copyTrainData(dataSet);
+	//copyTrainData(dataSetBad);
 
-	emit appRunLog("开始训练检测模型");
-	trainObbModel();
-	//trainSegmentModel();
+	//emit appRunLog("开始训练检测模型");
+	//trainObbModel();
+	////trainSegmentModel();
 
 	exec();
 }
@@ -512,8 +519,8 @@ QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBa
 void AiTrainModule::exportModelToEngine()
 {
 
-	std::string str = R"(.\trtexec.exe --onnx=.\runs\detect\train\weights\best.onnx --saveEngine=D:\zfkjData\ButtonScanner\model\customOO.engine)";
-	_processExportToEngine->start("cmd.exe", { "/c",str.c_str() });
+	std::string batPath = R"(.\ConvertOnnxToEngine.bat)";
+	_processExportToEngine->start("cmd.exe", { "/c", batPath.c_str() });
 }
 
 void AiTrainModule::handleTrainModelProcessTrainModelOutput()
@@ -569,11 +576,33 @@ void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QPro
 	}
 }
 
+void AiTrainModule::handleTrainModelProcessExportEngineOutput()
+{
+	QByteArray output = _processExportToEngine->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleTrainModelProcessExportEngineError()
+{
+	QByteArray errorOutput = _processExportToEngine->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+}
+
+void AiTrainModule::handleTrainModelProcessExportEngineFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+}
+
 void AiTrainModule::cancelTrain()
 {
 	if (_processTrainModel->state() == QProcess::Running) {
 		_processTrainModel->kill();
 		_processTrainModel->waitForFinished();
+	}
+	if (_processExportToEngine->state() == QProcess::Running) {
+		_processExportToEngine->kill();
+		_processExportToEngine->waitForFinished();
 	}
 	emit updateTrainTitle("训练已取消");
 	emit updateTrainState(false);

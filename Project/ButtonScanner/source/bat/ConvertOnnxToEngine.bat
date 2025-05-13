@@ -3,6 +3,4 @@ REM If you need to activate a conda environment, uncomment and modify the next l
 REM call conda activate yolov11
 
 REM Run trtexec to convert ONNX to TensorRT engine
-.\trtexec.exe --onnx=.\runs\detect\train\weights\best.onnx --saveEngine=D:\zfkjData\ButtonScanner\model\customOO.engine
-
-pause
+.\trtexec.exe --onnx=.\runs\detect\train\weights\best.onnx --saveEngine=D:\zfkjData\ButtonScanner\ModelStorage\Temp\customOO.engine
