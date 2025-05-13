@@ -162,4 +162,5 @@ public slots:
 	void onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
 public slots:
 	void updateExposureTimeValueOnDlg(int exposureTime);
+	void checkPosiviveRadioButtonCheck();
 };

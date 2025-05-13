@@ -236,6 +236,7 @@ void DlgModelManager::pbtn_loadModel_clicked()
 
 	copyTargetImageFromStorageInTemp();
 	_loadingDialog->hide();
+	emit checkPosiviveRadioButtonCheck();
 	this->hide();
 }
 

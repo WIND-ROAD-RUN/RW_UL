@@ -66,4 +66,5 @@ private slots:
 	void pbtn_loadModel_clicked();
 signals:
 	void updateExposureTime(int exposureTime);
+	void checkPosiviveRadioButtonCheck();
 };

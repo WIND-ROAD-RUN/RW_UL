@@ -14,7 +14,7 @@ void GlobalStructData::setCameraExposureTime(int cameraIndex, size_t exposureTim
 				camera1->setGain(0);
 			}
 			else {
-				camera1->setGain(5);
+				camera1->setGain(10);
 			}
 		}
 		break;
@@ -25,7 +25,7 @@ void GlobalStructData::setCameraExposureTime(int cameraIndex, size_t exposureTim
 				camera2->setGain(0);
 			}
 			else {
-				camera2->setGain(5);
+				camera2->setGain(10);
 			}
 		}
 		break;
@@ -36,7 +36,7 @@ void GlobalStructData::setCameraExposureTime(int cameraIndex, size_t exposureTim
 				camera3->setGain(0);
 			}
 			else {
-				camera3->setGain(5);
+				camera3->setGain(10);
 			}
 		}        break;
 	case 4:
@@ -46,7 +46,7 @@ void GlobalStructData::setCameraExposureTime(int cameraIndex, size_t exposureTim
 				camera4->setGain(0);
 			}
 			else {
-				camera4->setGain(5);
+				camera4->setGain(10);
 			}
 		}        break;
 	default:

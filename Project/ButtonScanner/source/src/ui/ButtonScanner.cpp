@@ -297,7 +297,11 @@ void ButtonScanner::build_ui()
 	ui->hLayout_title->replaceWidget(ui->label_title, labelClickable_title);
 	delete ui->label_title;
 
-	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime, this, &ButtonScanner::updateExposureTimeValueOnDlg);
+	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime
+		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
+	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
+		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
+
 }
 
 void ButtonScanner::read_image()
@@ -1379,6 +1383,15 @@ void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame
 void ButtonScanner::updateExposureTimeValueOnDlg(int exposureTime)
 {
 	_dlgExposureTimeSet->setExposureTime(exposureTime);
+}
+
+void ButtonScanner::checkPosiviveRadioButtonCheck()
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+	globalStruct.mainWindowConfig.isPositive = true;
+	globalStruct.mainWindowConfig.isDefect = false;
+	ui->rbtn_ForAndAgainst->setChecked(true);
+	ui->rbtn_defect->setChecked(false);
 }
 
 void ButtonScanner::pbtn_exit_clicked()

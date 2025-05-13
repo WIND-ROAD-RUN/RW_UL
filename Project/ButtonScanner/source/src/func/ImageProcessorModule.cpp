@@ -710,10 +710,18 @@ ImageProcessor::getIndexInBoundary
 	{
 		for (size_t j = 0; j < index[i].size(); j++)
 		{
-			if (isInBoundary(info[index[i][j]]))
+			if (info[index[i][j]].classId==ClassId::Body)
+			{
+				if (isInBoundary(info[index[i][j]]))
+				{
+					result[i].push_back(index[i][j]);
+				}
+			}
+			else
 			{
 				result[i].push_back(index[i][j]);
 			}
+
 		}
 	}
 	return result;
