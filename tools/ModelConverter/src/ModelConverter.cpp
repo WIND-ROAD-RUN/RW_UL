@@ -113,8 +113,9 @@ void ModelConverter::pbtn_startConvert_clicked()
 {
 	ui->progressBar->setRange(0, 0);
 	auto inputFile = ui->lEdit_onnxFilePath->text();
+	QString baseName = QFileInfo(inputFile).baseName();
 	auto outPutPath = ui->lEdit_outPutPath->text();
-	auto outPutName = outPutPath+R"(\)"+ R"(best.engine)";
+	auto outPutName = outPutPath+R"(\)"+ baseName+ R"(.engine)";
 	_converter->inputFile = inputFile;
 	_converter->outputFile = outPutName;
 	ui->pbtn_startConvert->setEnabled(false);
