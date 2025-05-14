@@ -52,8 +52,8 @@ private:
 	void copyTrainImgData(const QVector<AiTrainModule::DataItem>& dataSet, const QString& path);
 	void copyTrainLabelData(const QVector<AiTrainModule::DataItem>& dataSet, const QString& path);
 private:
-	void trainSegmentModel();
-	void trainObbModel();
+	void trainColorModel();
+	void trainShapeModel();
 	void copyModelToTemp();
 	void packageModelToStorage();
 private:

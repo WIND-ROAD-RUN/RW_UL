@@ -255,13 +255,13 @@ void AiTrainModule::copyTrainLabelData(const QVector<AiTrainModule::DataItem>& d
 	}
 }
 
-void AiTrainModule::trainSegmentModel()
+void AiTrainModule::trainColorModel()
 {
 	std::string str = "activate yolov11 && python ./train_yolov11_seg.py";
 	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
 }
 
-void AiTrainModule::trainObbModel()
+void AiTrainModule::trainShapeModel()
 {
 	//conda install -c pytorch -c nvidia -c conda-forge pytorch torchvision pytorch-cuda ultralytics
 	std::string str = "activate yolov11 && python ./train_yolov11_obb_shape.py";
@@ -460,8 +460,8 @@ void AiTrainModule::run()
 	copyTrainData(dataSetBad);
 
 	emit appRunLog("开始训练检测模型");
-	trainObbModel();
-	//trainSegmentModel();
+	trainShapeModel();
+	//trainColorModel();
 
 	exec();
 }
