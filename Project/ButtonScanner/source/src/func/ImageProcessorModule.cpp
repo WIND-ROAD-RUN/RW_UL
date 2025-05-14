@@ -318,7 +318,7 @@ void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, co
 	{
 		QString specialColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
 		textList.push_back(specialColorText);
-		specialColorText = QString("目标: R: %1 G: %2 B: %3").arg(productSet.specifyColorDifferenceR).arg(productSet.specifyColorDifferenceG).arg(productSet.specifyColorDifferenceB);
+		specialColorText = QString("目标: R: %1 G: %2 B: %3 偏差: %4").arg(productSet.specifyColorDifferenceR).arg(productSet.specifyColorDifferenceG).arg(productSet.specifyColorDifferenceB).arg(productSet.specifyColorDifferenceDeviation);
 		textList.push_back(specialColorText);
 	}
 }
@@ -330,7 +330,7 @@ void ImageProcessor::appendLargeColorDefectInfo(QVector<QString>& textList, cons
 	{
 		QString largeColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
 		textList.push_back(largeColorText);
-		largeColorText = QString("目标: R: %1 G: %2 B: %3").arg(info.large_R).arg(info.large_G).arg(info.large_B);
+		largeColorText = QString("目标: R: %1 G: %2 B: %3 偏差: %4").arg(info.large_R).arg(info.large_G).arg(info.large_B).arg(productSet.largeColorDifferenceDeviation);
 		textList.push_back(largeColorText);
 	}
 }
