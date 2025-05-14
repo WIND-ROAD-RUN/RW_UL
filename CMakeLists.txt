@@ -38,3 +38,4 @@ find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(RW_UL)
 add_subdirectory(Project)
+add_subdirectory(tools)
