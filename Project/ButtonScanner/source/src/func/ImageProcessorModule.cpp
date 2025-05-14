@@ -271,13 +271,13 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.holesCountEnable)
+	if (_isbad && productSet.holesCountEnable&&info.isDrawholeCount)
 	{
 		QString holeCountText = QString("孔数: %1").arg(info.holeCount) + QString("目标: %1").arg(static_cast<int>(productSet.holesCountValue));
 		textList.push_back(holeCountText);
 	}
 
-	if (_isbad && productSet.apertureEnable)
+	if (_isbad && productSet.apertureEnable&&info.isDrawaperture)
 	{
 		QString apertureText("孔径: ");
 		for (const auto& item : info.aperture)
@@ -288,7 +288,7 @@ void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, cons
 		textList.push_back(apertureText);
 	}
 
-	if (_isbad && productSet.holeCenterDistanceEnable)
+	if (_isbad && productSet.holeCenterDistanceEnable && info.isDraweholeCentreDistance)
 	{
 		QString holeCenterDistanceText("孔心距: ");
 		for (const auto& item : info.holeCentreDistance)
@@ -303,7 +303,7 @@ void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, cons
 void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.outsideDiameterEnable)
+	if (_isbad && productSet.outsideDiameterEnable&& info.isoutsideDiameter)
 	{
 		QString holeCountText = QString("外径: %1 mm ").arg(info.outsideDiameter, 0, 'f', 2) +
 			QString(" 目标: %1 mm").arg(productSet.outsideDiameterValue + productSet.outsideDiameterDeviation, 0, 'f', 2);
@@ -314,7 +314,7 @@ void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const
 void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.specifyColorDifferenceEnable)
+	if (_isbad && productSet.specifyColorDifferenceEnable && info.isDrawSpecialColor)
 	{
 		QString specialColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
 		textList.push_back(specialColorText);
@@ -326,7 +326,7 @@ void ImageProcessor::appendSpecialColorDefectInfo(QVector<QString>& textList, co
 void ImageProcessor::appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.largeColorDifferenceEnable)
+	if (_isbad && productSet.largeColorDifferenceEnable && info.isDrawlargeColor)
 	{
 		QString largeColorText = QString("R: %1 G: %2 B: %3").arg(info.special_R, 0, 'f', 2).arg(info.special_G, 0, 'f', 2).arg(info.special_B, 0, 'f', 2);
 		textList.push_back(largeColorText);
@@ -338,14 +338,15 @@ void ImageProcessor::appendLargeColorDefectInfo(QVector<QString>& textList, cons
 void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.edgeDamageEnable)
+	if (_isbad && productSet.edgeDamageEnable && info.isDrawedgeDamage)
 	{
+		auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
 		QString edgeDamageText("破边:");
 		for (const auto& item : info.edgeDamage)
 		{
-			edgeDamageText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			edgeDamageText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
-		edgeDamageText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.edgeDamageSimilarity)));
+		edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
 		textList.push_back(edgeDamageText);
 	}
 }
@@ -353,12 +354,12 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.poreEnable)
+	if (_isbad && productSet.poreEnable && info.isDrawpore)
 	{
 		QString poreText("气孔:");
 		for (const auto& item : info.pore)
 		{
-			poreText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			poreText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		poreText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.poreEnableScore)));
 		textList.push_back(poreText);
@@ -368,12 +369,12 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.paintEnable)
+	if (_isbad && productSet.paintEnable && info.isDrawpaint)
 	{
 		QString paintText("油漆:");
 		for (const auto& item : info.paint)
 		{
-			paintText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			paintText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		paintText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.paintEnableScore)));
 		textList.push_back(paintText);
@@ -383,12 +384,12 @@ void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const Butto
 void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.brokenEyeEnable)
+	if (_isbad && productSet.brokenEyeEnable && info.isDrawbrokenEye)
 	{
 		QString brokenEyeText("破眼:");
 		for (const auto& item : info.brokenEye)
 		{
-			brokenEyeText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			brokenEyeText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		brokenEyeText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.brokenEyeSimilarity)));
 		textList.push_back(brokenEyeText);
@@ -399,7 +400,7 @@ void ImageProcessor::appendPositiveDectInfo(QVector<QString>& textList, const Bu
 {
 	auto& productSet = GlobalStructData::getInstance().mainWindowConfig;
 	auto & dlgSet= GlobalStructData::getInstance().dlgHideScoreSetConfig;
-	if (_isbad && productSet.isPositive)
+	if (_isbad && productSet.isPositive && info.isDrawpositiver)
 	{
 		QString positiveText("正反:");
 		for (const auto& item : info.positive)
@@ -414,12 +415,12 @@ void ImageProcessor::appendPositiveDectInfo(QVector<QString>& textList, const Bu
 void ImageProcessor::appendCrackDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.crackEnable)
+	if (_isbad && productSet.crackEnable && info.isDrawcrack)
 	{
 		QString crackText("裂痕:");
 		for (const auto& item : info.crack)
 		{
-			crackText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			crackText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		crackText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.crackSimilarity)));
 		textList.push_back(crackText);
@@ -429,12 +430,12 @@ void ImageProcessor::appendCrackDectInfo(QVector<QString>& textList, const Butto
 void ImageProcessor::appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.grindStoneEnable)
+	if (_isbad && productSet.grindStoneEnable && info.isDrawgrindStone)
 	{
 		QString grindStoneText("磨石:");
 		for (const auto& item : info.grindStone)
 		{
-			grindStoneText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			grindStoneText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		grindStoneText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.grindStoneEnableScore)));
 		textList.push_back(grindStoneText);
@@ -444,12 +445,12 @@ void ImageProcessor::appendGrindStoneDectInfo(QVector<QString>& textList, const 
 void ImageProcessor::appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.blockEyeEnable)
+	if (_isbad && productSet.blockEyeEnable && info.isDrawblockEye)
 	{
 		QString blockEyeText("堵眼:");
 		for (const auto& item : info.blockEye)
 		{
-			blockEyeText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			blockEyeText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		blockEyeText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.blockEyeEnableScore)));
 		textList.push_back(blockEyeText);
@@ -459,12 +460,12 @@ void ImageProcessor::appendBlockEyeDectInfo(QVector<QString>& textList, const Bu
 void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.materialHeadEnable)
+	if (_isbad && productSet.materialHeadEnable && info.isDrawmaterialHead)
 	{
 		QString materialHeadText("料头:");
 		for (const auto& item : info.materialHead)
 		{
-			materialHeadText.push_back(QString(" %1 ").arg(static_cast<int>(item)));
+			materialHeadText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
 		}
 		materialHeadText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.materialHeadEnableScore)));
 		textList.push_back(materialHeadText);
@@ -1133,7 +1134,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	emit imageReady(pixmap);
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& hideConfig = globalData.dlgHideScoreSetConfig;
@@ -1142,13 +1143,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(const Butto
 		if (item >= hideConfig.forAndAgainstScore)
 		{
 			_isbad = true;
+			info.isDrawpositiver = true;
 			break;
 		}
 
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info)
 {
 	_isbad = false;
 	auto& globalData = GlobalStructData::getInstance();
@@ -1175,7 +1177,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(const ButtonDefectIn
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1185,6 +1187,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 		auto& holeCount = info.holeCount;
 		if (holeCount != static_cast<size_t>(productSet.holesCountValue))
 		{
+			info.isDrawholeCount = true;
 			_isbad = true;
 		}
 	}
@@ -1199,6 +1202,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 			if (item > apertureStandard)
 			{
 				_isbad = true;
+				info.isDrawaperture = true;
 			}
 		}
 	}
@@ -1213,12 +1217,13 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(const ButtonDef
 			if (item > holeCentreDistanceStandard)
 			{
 				_isbad = true;
+				info.isDraweholeCentreDistance = true;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1231,11 +1236,12 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(const ButtonDef
 		if (outsideDiameter > outsideDiameterStandard)
 		{
 			_isbad = true;
+			info.isoutsideDiameter = true;
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1251,11 +1257,12 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(const B
 		if (special_R > special_R_standard || special_G > special_G_standard || special_B > special_B_standard)
 		{
 			_isbad = true;
+			info.isDrawSpecialColor = true;
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1272,6 +1279,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(const But
 			if (item > productSet.edgeDamageSimilarity)
 			{
 				_isbad = true;
+				info.isDrawedgeDamage = true;
 				break;
 			}
 		}
@@ -1316,7 +1324,7 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1332,13 +1340,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(const ButtonDef
 			if (item > productSet.poreEnableScore)
 			{
 				_isbad = true;
+				info.isDrawpore = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1354,13 +1363,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint(const ButtonDe
 			if (item > productSet.paintEnableScore)
 			{
 				_isbad = true;
+				info.isDrawpaint = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1376,13 +1386,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(const Butt
 			if (item > productSet.brokenEyeSimilarity)
 			{
 				_isbad = true;
+				info.isDrawbrokenEye = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1398,13 +1409,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(const ButtonDe
 			if (item > productSet.crackSimilarity)
 			{
 				_isbad = true;
+				info.isDrawcrack = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1420,13 +1432,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone(const But
 			if (item > productSet.grindStoneEnableScore)
 			{
 				_isbad = true;
+				info.isDrawgrindStone = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1442,13 +1455,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye(const Butto
 			if (item > productSet.blockEyeEnableScore)
 			{
 				_isbad = true;
+				info.isDrawblockEye = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead( ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1464,13 +1478,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(const B
 			if (item > productSet.materialHeadEnableScore)
 			{
 				_isbad = true;
+				info.isDrawmaterialHead = true;
 				break;
 			}
 		}
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor(const ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDefectInfo& info)
 {
 
 	auto& globalData = GlobalStructData::getInstance();
@@ -1491,6 +1506,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor(const But
 		if (info.special_R > largeR || info.special_G > largeG || info.special_B > largeB)
 		{
 			_isbad = true;
+			info.isDrawlargeColor = true;
 		}
 	}
 }

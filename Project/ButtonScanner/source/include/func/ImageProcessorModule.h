@@ -16,29 +16,55 @@ struct ButtonDefectInfo
 public:
 	QString time{};
 	double outsideDiameter{};
+	bool isoutsideDiameter{ false };
 public:
 	size_t holeCount{};
+	bool isDrawholeCount{ false };
+
 	std::vector<float> aperture{};
+	bool isDrawaperture{ false };
+
 	std::vector<float> holeCentreDistance{};
+	bool isDraweholeCentreDistance{ false };
 public:
 	float special_R{};
 	float special_G{};
 	float special_B{};
+	bool isDrawSpecialColor{false};
 public:
 	float large_R{};
 	float large_G{};
 	float large_B{};
+	bool isDrawlargeColor{ false };
 public:
 	std::vector<double> edgeDamage;
+	bool isDrawedgeDamage{ false };
+
 	std::vector<double> pore;
+	bool isDrawpore{ false };
+
 	std::vector<double> paint;
+	bool isDrawpaint{ false };
+
 	std::vector<double> brokenEye;
+	bool isDrawbrokenEye{ false };
+
 	std::vector<double> crack;
+	bool isDrawcrack{ false };
+
 	std::vector<double> grindStone;
+	bool isDrawgrindStone{ false };
+
 	std::vector<double> blockEye;
+	bool isDrawblockEye{ false };
+
 	std::vector<double> materialHead;
+	bool isDrawmaterialHead{ false };
+
 public:
+
 	std::vector<double> positive;
+	bool isDrawpositiver{ false };
 };
 
 struct ImagePainter
@@ -114,21 +140,21 @@ private:
 	void run_monitor(MatInfo& frame);
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);
-	void run_OpenRemoveFunc_process_defect_info_positive(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info(const ButtonDefectInfo & info) ;
-	void run_OpenRemoveFunc_process_defect_info_hole(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_body(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_specialColor(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_edgeDamage(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_positive(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info) ;
+	void run_OpenRemoveFunc_process_defect_info_hole(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_body( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_specialColor( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_edgeDamage( ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
-	void run_OpenRemoveFunc_process_defect_info_pore(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_paint(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_brokenEye(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_crack(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_grindStone(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_blockEye(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_materialHead(const ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_largeColor(const ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_pore( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_paint( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_brokenEye( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_crack( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_grindStone( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_blockEye( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_materialHead( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDefectInfo& info);
 signals:
 	void imageReady(QPixmap image);
 private:
