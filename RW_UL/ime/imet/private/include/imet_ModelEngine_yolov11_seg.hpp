@@ -48,6 +48,8 @@ namespace rw {
 			int num_classes = 80;
 			float conf_threshold = 0.3f;
 			float nms_threshold = 0.4f;
+		private:
+			std::vector<size_t> need_keep_classids{};
 		public:
 			void setConf_threshold(float num) {
 				conf_threshold = num;
@@ -55,6 +57,9 @@ namespace rw {
 
 			void setNms_threshold(float num) {
 				nms_threshold = num;
+			}
+			void setNeed_keep_classids(std::vector<size_t> num) {
+				need_keep_classids = num;
 			}
 		private:
 			int sourceWidth{};

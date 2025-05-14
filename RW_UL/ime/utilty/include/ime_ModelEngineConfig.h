@@ -1,6 +1,7 @@
 #pragma once
 
 #include<string>
+#include<vector>
 
 namespace rw {
 	struct ModelEngineConfig {
@@ -9,6 +10,8 @@ namespace rw {
 		float conf_threshold = 0.3f;
 		//控制非极大值抑制的 IoU 阈值，移除重叠的候选框。
 		float nms_threshold = 0.4f;
+	public:
+		std::vector<size_t> need_keep_classids{};
 	public:
 		std::string modelPath;
 	};

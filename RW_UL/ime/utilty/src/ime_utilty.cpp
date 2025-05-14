@@ -172,6 +172,64 @@ namespace rw
 		cv::line(image, cv::Point(0, position), cv::Point(image.cols - 1, position), lineColor, thickness);
 	}
 
+	std::vector<int> nmsWithKeepClass(
+		const std::vector<cv::Rect>& boxes,
+		const std::vector<int>& class_ids,
+		const std::vector<float>& confidences,
+		float conf_threshold,
+		float nms_threshold,
+		const std::vector<size_t>& need_keep_classids)
+	{
+		std::vector<int> nms_result;
+		std::set<size_t> keep_set(need_keep_classids.begin(), need_keep_classids.end());
+
+		if (need_keep_classids.empty()) {
+			// 全部一起NMS
+			cv::dnn::NMSBoxes(boxes, confidences, conf_threshold, nms_threshold, nms_result);
+			return nms_result;
+		}
+
+		// 先处理不在need_keep_classids中的框
+		std::vector<cv::Rect> other_boxes;
+		std::vector<float> other_confidences;
+		std::vector<int> other_indices;
+		for (int i = 0; i < class_ids.size(); ++i) {
+			if (keep_set.count(class_ids[i]) == 0) {
+				other_boxes.push_back(boxes[i]);
+				other_confidences.push_back(confidences[i]);
+				other_indices.push_back(i);
+			}
+		}
+		std::vector<int> other_nms;
+		if (!other_boxes.empty())
+			cv::dnn::NMSBoxes(other_boxes, other_confidences, conf_threshold, nms_threshold, other_nms);
+		for (int idx : other_nms) {
+			nms_result.push_back(other_indices[idx]);
+		}
+
+		// 对每个需要单独NMS的classid分别处理
+		for (size_t cid : keep_set) {
+			std::vector<cv::Rect> class_boxes;
+			std::vector<float> class_confidences;
+			std::vector<int> class_indices;
+			for (int i = 0; i < class_ids.size(); ++i) {
+				if (class_ids[i] == static_cast<int>(cid)) {
+					class_boxes.push_back(boxes[i]);
+					class_confidences.push_back(confidences[i]);
+					class_indices.push_back(i);
+				}
+			}
+			std::vector<int> class_nms;
+			if (!class_boxes.empty())
+				cv::dnn::NMSBoxes(class_boxes, class_confidences, conf_threshold, nms_threshold, class_nms);
+			for (int idx : class_nms) {
+				nms_result.push_back(class_indices[idx]);
+			}
+		}
+
+		return nms_result;
+	}
+
 	std::vector<rw::DetectionRectangleInfo>::const_iterator DetectionRectangleInfo::getMaxAreaRectangleIterator(
 		const std::vector<rw::DetectionRectangleInfo>& bodyIndexVector)
 	{

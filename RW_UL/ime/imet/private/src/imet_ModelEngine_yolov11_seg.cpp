@@ -57,8 +57,10 @@ namespace rw {
 
 				}
 			}
-			std::vector<int> nms_result;
-			cv::dnn::NMSBoxes(boxes, confidences, conf_threshold, nms_threshold, nms_result);
+
+			std::vector<int> nms_result = nmsWithKeepClass(
+				boxes, class_ids, confidences, conf_threshold, nms_threshold, need_keep_classids);
+
 			for (int i = 0; i < nms_result.size(); i++)
 			{
 				DetectionSeg result;

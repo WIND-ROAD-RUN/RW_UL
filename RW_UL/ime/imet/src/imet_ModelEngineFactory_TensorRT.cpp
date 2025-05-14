@@ -52,6 +52,7 @@ namespace rw {
 			}
 			modelEngine->setConf_threshold(config.conf_threshold);
 			modelEngine->setNms_threshold(config.nms_threshold);
+			modelEngine->setNeed_keep_classids(config.need_keep_classids);
 			return modelEngine;
 		}
 
