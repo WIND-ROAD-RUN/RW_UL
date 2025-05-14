@@ -971,9 +971,13 @@ std::vector<std::vector<size_t>> ImageProcessUtilty::getAllIndexInMaxBody(const 
 		for (int j = 0;j < index[i].size();j++)
 		{
 			auto& currentRec = processResult[index[i][j]];
-			if (bodyRec.leftTop.first - deviationValue <= currentRec.center_x && currentRec.center_x <= bodyRec.rightBottom.first + deviationValue)
+			auto leftStandard = static_cast<int>(bodyRec.leftTop.first - static_cast<int>(deviationValue));
+			auto rightStandard = static_cast<int>(bodyRec.rightBottom.first + static_cast<int>(deviationValue));
+			if (leftStandard <= currentRec.center_x && currentRec.center_x <= rightStandard)
 			{
-				if (bodyRec.leftTop.second - deviationValue <= currentRec.center_y && bodyRec.rightBottom.second + deviationValue >= currentRec.center_y)
+				auto leftStandard = static_cast<int>(bodyRec.leftTop.second - static_cast<int>(deviationValue));
+				auto rightStandard = static_cast<int>(bodyRec.rightBottom.second + static_cast<int>(deviationValue));
+				if (leftStandard <= currentRec.center_y && rightStandard >= currentRec.center_y)
 				{
 					result[i].emplace_back(index[i][j]);
 				}
