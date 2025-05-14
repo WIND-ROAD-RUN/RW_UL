@@ -721,7 +721,7 @@ void ButtonScanner::build_imageProcessorModule()
 
 	QDir dir;
 
-	QString enginePathFull = globalPath.modelRootPath + globalPath.engineObb;
+	QString enginePathFull = globalPath.modelRootPath + globalPath.engineSeg;
 	QString onnxEnginePathFull = globalPath.modelRootPath + globalPath.onnxRuntime;
 
 	QFileInfo engineFile(enginePathFull);

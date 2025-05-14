@@ -12,10 +12,10 @@
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
-	config.conf_threshold = 0.5f;
+	config.conf_threshold = 0.1f;
 	config.nms_threshold = 0.5f;
 	config.modelPath = enginePath.toStdString();
-	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
+	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
 }
 
 void ImageProcessor::buildOnnxRuntimeOO(const QString& enginePath)

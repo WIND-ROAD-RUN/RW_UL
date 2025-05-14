@@ -47,6 +47,7 @@ public:
 public:
 	QString modelRootPath = projectHome + R"(model\)";
 	QString engineObb = R"(ObbModel.engine)";
+	QString engineSeg = R"(SegModel.engine)";
 	QString onnxRuntime = R"(customOO.engine)";
 public:
 	QString yoloV5RootPath = R"(D:\y\yolov5-master\)";

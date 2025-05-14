@@ -5,7 +5,7 @@
 
 AiTrainModule::AiTrainModule(QObject* parent)
 	: QThread(parent) {
-	auto enginePath = globalPath.modelRootPath + globalPath.engineObb;
+	auto enginePath = globalPath.modelRootPath + globalPath.engineSeg;
 	rw::ModelEngineConfig config;
 	config.modelPath = enginePath.toStdString();
 	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
