@@ -563,7 +563,7 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				config.text = "料头 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::zangwu:
-				config.text = "脏污 " + QString::number(qRound(item.score * 100));
+				config.text = "油漆 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::liehen:
 				config.text = "裂痕 " + QString::number(qRound(item.score * 100));
@@ -639,7 +639,7 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 				config.text = "料头 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::zangwu:
-				config.text = "脏污 " + QString::number(qRound(item.score * 100));
+				config.text = "油漆 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::liehen:
 				config.text = "裂痕 " + QString::number(qRound(item.score * 100));
@@ -1169,6 +1169,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 		run_OpenRemoveFunc_process_defect_info_grindStone(info);
 		run_OpenRemoveFunc_process_defect_info_materialHead(info);
 		run_OpenRemoveFunc_process_defect_info_largeColor(info);
+		run_OpenRemoveFunc_process_defect_info_crack(info);
 	}
 
 	if (isOpenPositive)
