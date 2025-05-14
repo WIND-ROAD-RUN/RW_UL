@@ -16,10 +16,18 @@ ModelConverter::ModelConverter(QWidget *parent)
 	_converter = new Converter(this);
 	connect(_converter, &Converter::appRunLog,
 		this, &ModelConverter::on_appRunLog);
+	connect(_converter, &Converter::finish,
+		this, &ModelConverter::finish);
 }
 
 ModelConverter::~ModelConverter()
 {
+	isKill = true;
+	if (_converter)
+	{
+		_converter->cancel();
+		delete _converter;
+	}
 	delete ui;
 }
 
@@ -109,6 +117,9 @@ void ModelConverter::pbtn_startConvert_clicked()
 	auto outPutName = outPutPath+R"(\)"+ R"(best.engine)";
 	_converter->inputFile = inputFile;
 	_converter->outputFile = outPutName;
+	ui->pbtn_startConvert->setEnabled(false);
+	ui->pbtn_tab1Exit->setEnabled(false);
+	ui->pbtn_preStep->setEnabled(false);
 	_converter->run();
 }
 
@@ -121,4 +132,12 @@ void ModelConverter::finish()
 {
 	ui->progressBar->setRange(0, 100);
 	ui->progressBar->setValue(100);
+	ui->pbtn_startConvert->setEnabled(true);
+	ui->pbtn_tab1Exit->setEnabled(true);
+	ui->pbtn_preStep->setEnabled(true);
+	ui->plainTextEdit->appendPlainText("Convert finished.");
+	if (!isKill)
+	{
+		QMessageBox::information(this, tr("Info"), tr("Convert finished."));
+	}
 }

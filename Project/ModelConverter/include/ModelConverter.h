@@ -15,6 +15,8 @@ class ModelConverter : public QMainWindow
 private:
 	Converter* _converter{ nullptr };
 public:
+	bool isKill{false};
+public:
 	ModelConverter(QWidget *parent = nullptr);
 	~ModelConverter();
 

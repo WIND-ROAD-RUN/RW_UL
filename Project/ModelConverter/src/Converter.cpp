@@ -1,5 +1,23 @@
 #include"Converter.hpp"
 
+void Converter::cancel()
+{
+	if (_processExportToEngine)
+	{
+		_processExportToEngine->kill();
+		_processExportToEngine->waitForFinished();
+	}
+	if (isRunning())
+	{
+		wait();
+	}
+	if (_processExportToEngine)
+	{
+		delete _processExportToEngine;
+	}
+	_processExportToEngine = nullptr;
+}
+
 Converter::Converter(QObject* parent) : QThread(parent)
 {
 	_processExportToEngine = new QProcess(this);
@@ -13,6 +31,7 @@ Converter::Converter(QObject* parent) : QThread(parent)
 
 Converter::~Converter()
 {
+
 }
 
 void Converter::run()

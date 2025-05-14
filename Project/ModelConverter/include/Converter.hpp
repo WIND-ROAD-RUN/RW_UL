@@ -10,6 +10,8 @@ class Converter
 {
 	Q_OBJECT
 public:
+	void cancel();
+public:
 	QString inputFile;
 	QString outputFile;
 public:
