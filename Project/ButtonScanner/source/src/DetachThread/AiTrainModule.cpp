@@ -8,7 +8,7 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	auto enginePath = globalPath.modelRootPath + globalPath.engineSeg;
 	rw::ModelEngineConfig config;
 	config.modelPath = enginePath.toStdString();
-	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
+	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
 	_processTrainModel = new QProcess();
 	_processExportToEngine = new QProcess();
 	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessTrainModelOutput);
