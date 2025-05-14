@@ -183,50 +183,69 @@ namespace rw
 		std::vector<int> nms_result;
 		std::set<size_t> keep_set(need_keep_classids.begin(), need_keep_classids.end());
 
+		if (boxes.empty()) return nms_result;
+
 		if (need_keep_classids.empty()) {
-			// 全部一起NMS
-			cv::dnn::NMSBoxes(boxes, confidences, conf_threshold, nms_threshold, nms_result);
+			// 所有类别分别单独NMS
+			std::map<int, std::vector<int>> class_to_indices;
+			for (int i = 0; i < class_ids.size(); ++i) {
+				class_to_indices[class_ids[i]].push_back(i);
+			}
+			for (const auto& kv : class_to_indices) {
+				std::vector<cv::Rect> class_boxes;
+				std::vector<float> class_confidences;
+				std::vector<int> class_nms;
+				for (int idx : kv.second) {
+					class_boxes.push_back(boxes[idx]);
+					class_confidences.push_back(confidences[idx]);
+				}
+				if (!class_boxes.empty())
+					cv::dnn::NMSBoxes(class_boxes, class_confidences, conf_threshold, nms_threshold, class_nms);
+				for (int nms_idx : class_nms) {
+					nms_result.push_back(kv.second[nms_idx]);
+				}
+			}
 			return nms_result;
 		}
 
-		// 先处理不在need_keep_classids中的框
-		std::vector<cv::Rect> other_boxes;
-		std::vector<float> other_confidences;
-		std::vector<int> other_indices;
+		// 1. 需要一起NMS的类别
+		std::vector<cv::Rect> keep_boxes;
+		std::vector<float> keep_confidences;
+		std::vector<int> keep_indices;
+		// 2. 其他类别分组
+		std::map<int, std::vector<int>> class_to_indices;
 		for (int i = 0; i < class_ids.size(); ++i) {
-			if (keep_set.count(class_ids[i]) == 0) {
-				other_boxes.push_back(boxes[i]);
-				other_confidences.push_back(confidences[i]);
-				other_indices.push_back(i);
+			if (keep_set.count(class_ids[i])) {
+				keep_boxes.push_back(boxes[i]);
+				keep_confidences.push_back(confidences[i]);
+				keep_indices.push_back(i);
+			}
+			else {
+				class_to_indices[class_ids[i]].push_back(i);
 			}
 		}
-		std::vector<int> other_nms;
-		if (!other_boxes.empty())
-			cv::dnn::NMSBoxes(other_boxes, other_confidences, conf_threshold, nms_threshold, other_nms);
-		for (int idx : other_nms) {
-			nms_result.push_back(other_indices[idx]);
+		// 1. 对 need_keep_classids 里的框一起NMS
+		std::vector<int> keep_nms;
+		if (!keep_boxes.empty())
+			cv::dnn::NMSBoxes(keep_boxes, keep_confidences, conf_threshold, nms_threshold, keep_nms);
+		for (int nms_idx : keep_nms) {
+			nms_result.push_back(keep_indices[nms_idx]);
 		}
-
-		// 对每个需要单独NMS的classid分别处理
-		for (size_t cid : keep_set) {
+		// 2. 其他类别分别单独NMS
+		for (const auto& kv : class_to_indices) {
 			std::vector<cv::Rect> class_boxes;
 			std::vector<float> class_confidences;
-			std::vector<int> class_indices;
-			for (int i = 0; i < class_ids.size(); ++i) {
-				if (class_ids[i] == static_cast<int>(cid)) {
-					class_boxes.push_back(boxes[i]);
-					class_confidences.push_back(confidences[i]);
-					class_indices.push_back(i);
-				}
-			}
 			std::vector<int> class_nms;
+			for (int idx : kv.second) {
+				class_boxes.push_back(boxes[idx]);
+				class_confidences.push_back(confidences[idx]);
+			}
 			if (!class_boxes.empty())
 				cv::dnn::NMSBoxes(class_boxes, class_confidences, conf_threshold, nms_threshold, class_nms);
-			for (int idx : class_nms) {
-				nms_result.push_back(class_indices[idx]);
+			for (int nms_idx : class_nms) {
+				nms_result.push_back(kv.second[nms_idx]);
 			}
 		}
-
 		return nms_result;
 	}
 

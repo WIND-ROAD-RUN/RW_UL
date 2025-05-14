@@ -14,7 +14,7 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.1f;
 	config.nms_threshold = 0.1f;
-	config.need_keep_classids={7};
+	config.need_keep_classids={0,1};
 	config.modelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
 }
