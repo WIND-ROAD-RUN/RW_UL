@@ -1256,10 +1256,13 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor( Button
 		auto& special_G = info.special_G;
 		auto& special_B = info.special_B;
 		auto& specialColorDeviation = productSet.specifyColorDifferenceDeviation;
-		auto special_R_standard = productSet.specifyColorDifferenceR + specialColorDeviation;
-		auto special_G_standard = productSet.specifyColorDifferenceG + specialColorDeviation;
-		auto special_B_standard = productSet.specifyColorDifferenceB + specialColorDeviation;
-		if (special_R > special_R_standard || special_G > special_G_standard || special_B > special_B_standard)
+		auto special_R_standard = productSet.specifyColorDifferenceR;
+		auto special_G_standard = productSet.specifyColorDifferenceG;
+		auto special_B_standard = productSet.specifyColorDifferenceB;
+		auto isInR = ((special_R_standard - specialColorDeviation) <= special_R) &&( special_R <= (special_R_standard + specialColorDeviation));
+		auto isInG = ((special_G_standard - specialColorDeviation) <= special_G) && (special_G <= (special_G_standard + specialColorDeviation));
+		auto isInB = ((special_B_standard - specialColorDeviation) <= special_B) && (special_B <= (special_B_standard + specialColorDeviation));
+		if ((!isInR) || (!isInG) || (!isInB))
 		{
 			_isbad = true;
 			info.isDrawSpecialColor = true;
@@ -1503,12 +1506,14 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDe
 	{
 		auto& deviation = productSet.largeColorDifferenceDeviation;
 
-		auto largeR = info.large_R + deviation;
-		auto largeG = info.large_G + deviation;
-		auto largeB = info.large_B + deviation;
+		auto largeR = info.large_R;
+		auto largeG = info.large_G;
+		auto largeB = info.large_B;
+		auto isInR = ((largeR - deviation)<= info.special_R) && (info.special_R<=(largeR + deviation));
+		auto isInG = ((largeG - deviation) <= info.special_G) && (info.special_G <= (largeG + deviation));
+		auto isInB = ((largeB - deviation) <= info.special_B) && (info.special_B <= (largeB + deviation));
 
-
-		if (info.special_R > largeR || info.special_G > largeG || info.special_B > largeB)
+		if ((!isInR) || (!isInG) || (!isInB))
 		{
 			_isbad = true;
 			info.isDrawlargeColor = true;
