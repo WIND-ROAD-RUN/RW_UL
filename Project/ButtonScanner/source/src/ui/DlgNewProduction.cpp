@@ -423,11 +423,11 @@ void DlgNewProduction::pbtn_tab5_start_train_clicked()
 	auto& aiTrainModule = GlobalStructThread::getInstance().aiTrainModule;
 	if (this->_info.state == DlgNewProductionInfo::CheckBladeShape)
 	{
-		aiTrainModule->setModelType(ModelType::ObjectDetection);
+		aiTrainModule->setModelType(ModelType::BladeShape);
 	}
 	else if (this->_info.state == DlgNewProductionInfo::CheckColor)
 	{
-		aiTrainModule->setModelType(ModelType::Segment);
+		aiTrainModule->setModelType(ModelType::Color);
 	}
 	else
 	{

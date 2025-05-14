@@ -37,10 +37,10 @@ QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAn
 	QVector<AiTrainModule::DataItem> result;
 	switch (type)
 	{
-	case ModelType::Segment:
+	case ModelType::Color:
 		result = getSegmentDataSet(annotationDataSet, classId);
 		break;
-	case ModelType::ObjectDetection:
+	case ModelType::BladeShape:
 		result = getObjectDetectionDataSet(annotationDataSet, classId);
 		break;
 	default:
@@ -185,13 +185,13 @@ void AiTrainModule::clear_older_trainData()
 
 void AiTrainModule::copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet)
 {
-	if (_modelType == ModelType::ObjectDetection)
+	if (_modelType == ModelType::BladeShape)
 	{
 		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\images\)"));
 
 		copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\labels\)"));
 	}
-	else if (_modelType == ModelType::Segment)
+	else if (_modelType == ModelType::Color)
 	{
 		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Seg\images\)"));
 
@@ -273,11 +273,11 @@ void AiTrainModule::copyModelToTemp()
 	QString exePath = QCoreApplication::applicationDirPath();
 	QString sourceFilePath = exePath+R"(/runs)";
 
-	if (_modelType == ModelType::Segment)
+	if (_modelType == ModelType::Color)
 	{
 		sourceFilePath = sourceFilePath + R"(/segment/train/weights/best.onnx)";
 	}
-	else if (_modelType == ModelType::ObjectDetection)
+	else if (_modelType == ModelType::BladeShape)
 	{
 		sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
 	}
@@ -297,11 +297,11 @@ void AiTrainModule::copyModelToTemp()
 
 	QString targetFilePath = targetDirectory + "modelOnnx.onnx";
 
-	if (_modelType == ModelType::Segment)
+	if (_modelType == ModelType::Color)
 	{
 		targetFilePath = targetDirectory + "customSO.onnx";
 	}
-	else if (_modelType == ModelType::ObjectDetection)
+	else if (_modelType == ModelType::BladeShape)
 	{
 		targetFilePath = targetDirectory + "customOO.onnx";
 	}
@@ -339,11 +339,11 @@ void AiTrainModule::packageModelToStorage()
 	std::hash<std::string> hasher;
 	config.id = static_cast<long>(hasher(formattedDateTime.toStdString()));
 	config.name = formattedDateTime.toStdString();
-	if (_modelType == ModelType::ObjectDetection)
+	if (_modelType == ModelType::BladeShape)
 	{
 		config.modelType = rw::cdm::ModelType::BladeShape;
 	}
-	else if (_modelType == ModelType::Segment)
+	else if (_modelType == ModelType::Color)
 	{
 		config.modelType = rw::cdm::ModelType::Color;
 	}
@@ -433,37 +433,45 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	auto& global = GlobalStructData::getInstance();
-	global.isTrainModel = true;
-	emit updateTrainState(true);
-	emit updateTrainTitle("正在训练");
-	emit appRunLog("训练启动....");
+	if (_modelType==ModelType::BladeShape)
+	{
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = true;
+		emit updateTrainState(true);
+		emit updateTrainTitle("正在训练");
+		emit appRunLog("训练启动....");
 
-	emit appRunLog("清理旧的训练数据....");
-	clear_older_trainData();
+		emit appRunLog("清理旧的训练数据....");
+		clear_older_trainData();
 
-	//获取图片的label
-	auto annotationGoodDataSet = annotation_data_set(false);
-	auto annotationBadDataSet = annotation_data_set(true);
+		//获取图片的label
+		auto annotationGoodDataSet = annotation_data_set(false);
+		auto annotationBadDataSet = annotation_data_set(true);
 
+		auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
+		auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
+		QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
+		QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
+		emit appRunLog(GoodSetLog);
+		emit appRunLog(BadSetLog);
 
-	auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
-	auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
-	QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
-	QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
-	emit appRunLog(GoodSetLog);
-	emit appRunLog(BadSetLog);
+		//拷贝训练数据
+		emit appRunLog("拷贝训练文件");
+		copyTrainData(dataSet);
+		copyTrainData(dataSetBad);
 
-	//拷贝训练数据
-	emit appRunLog("拷贝训练文件");
-	copyTrainData(dataSet);
-	copyTrainData(dataSetBad);
+		emit appRunLog("开始训练检测模型");
+		trainShapeModel();
 
-	emit appRunLog("开始训练检测模型");
-	trainShapeModel();
-	//trainColorModel();
+		exec();
+	}
+	else if (_modelType==ModelType::Color)
+	{
+		
+	}
+	
 
-	exec();
+	quit();
 }
 
 QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
@@ -535,10 +543,10 @@ void AiTrainModule::handleTrainModelProcessTrainModelError()
 	emit appRunLog(errorStr);
 	int total = 100;
 	int complete = -1;
-	if (_modelType == ModelType::ObjectDetection) {
+	if (_modelType == ModelType::BladeShape) {
 		complete = parseProgressOO(errorStr, total);
 	}
-	else if (_modelType == ModelType::Segment)
+	else if (_modelType == ModelType::Color)
 	{
 		complete = parseProgressSO(errorStr, total);
 	}

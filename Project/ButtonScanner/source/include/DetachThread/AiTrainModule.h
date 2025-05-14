@@ -13,8 +13,8 @@
 
 enum class ModelType
 {
-	Segment,
-	ObjectDetection,
+	Color,
+	BladeShape,
 };
 
 class AiTrainModule : public QThread
