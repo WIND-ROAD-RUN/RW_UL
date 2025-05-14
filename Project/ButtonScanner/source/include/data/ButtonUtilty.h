@@ -17,7 +17,7 @@ struct ClassId
 	static const int moshi = 5;
 	static const int liaotou = 6;
 	static const int zangwu = 7;
-	static const int pokong = 8;
+	static const int liehen = 8;
 	static const int poyan = 9;
 	static const int xiaoqikong = 10;
 	static const int mofa = 11;

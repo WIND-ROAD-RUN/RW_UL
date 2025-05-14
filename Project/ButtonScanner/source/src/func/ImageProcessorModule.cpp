@@ -563,10 +563,10 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				config.text = "料头 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::zangwu:
-				config.text = "赃物 " + QString::number(qRound(item.score * 100));
+				config.text = "脏污 " + QString::number(qRound(item.score * 100));
 				break;
-			case ClassId::pokong:
-				config.text = "破孔 " + QString::number(qRound(item.score * 100));
+			case ClassId::liehen:
+				config.text = "裂痕 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::poyan:
 				config.text = "破眼 " + QString::number(qRound(item.score * 100));
@@ -639,10 +639,10 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 				config.text = "料头 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::zangwu:
-				config.text = "赃物 " + QString::number(qRound(item.score * 100));
+				config.text = "脏污 " + QString::number(qRound(item.score * 100));
 				break;
-			case ClassId::pokong:
-				config.text = "破孔 " + QString::number(qRound(item.score * 100));
+			case ClassId::liehen:
+				config.text = "裂痕 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::poyan:
 				config.text = "破眼 " + QString::number(qRound(item.score * 100));
@@ -687,7 +687,7 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::pokong && productSet.crackEnable)
+				else if (i == ClassId::liehen && productSet.crackEnable)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
@@ -1522,7 +1522,7 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
 	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
-	getCrackInfo(info, processResult, index[ClassId::pokong]);
+	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
 	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
@@ -1541,7 +1541,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
 	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
-	getCrackInfo(info, processResult, index[ClassId::pokong]);
+	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
 	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
