@@ -72,6 +72,10 @@ void AutomaticAnnotation::build_ui()
 	ui->cBox_checkModelType->addItem("Yolov11_obb");
 	ui->cBox_checkModelType->addItem("Yolov11_seg");
 	ui->cBox_checkModelType->setCurrentIndex(0);
+
+	ui->cBox_exportLabelType->addItem("Detection");
+	ui->cBox_exportLabelType->addItem("Segment");
+	ui->cBox_exportLabelType->setCurrentIndex(0);
 }
 
 void AutomaticAnnotation::build_connect()
@@ -133,6 +137,7 @@ void AutomaticAnnotation::iniThread()
 			else {
 				thread = new AutomaticAnnotationThread(paths.mid(i * averageNum, averageNum));
 			}
+			thread->labelType = ui->cBox_exportLabelType->currentText();
 			thread->modelType = modelType;
 			thread->config = config;
 			thread->labelOutput = labelOutput;

@@ -12,6 +12,8 @@
 class AutomaticAnnotationThread : public QThread {
     Q_OBJECT
 public:
+    QString labelType;
+public:
     QString labelOutput;
 	QString imageOutput;
     rw::ModelType modelType;

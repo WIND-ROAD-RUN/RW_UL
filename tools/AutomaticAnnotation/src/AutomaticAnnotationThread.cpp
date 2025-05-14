@@ -146,9 +146,7 @@ void AutomaticAnnotationThread::run()
 
 		auto fileName = QFileInfo(path).baseName();
 
-
-
-		if (modelType==rw::ModelType::yolov11_seg)
+		if (labelType==R"(Segment)")
 		{
 			auto label = getObjectSegmentDataSetItem(result, mat.cols, mat.rows);
 			saveLabels(label, fileName);

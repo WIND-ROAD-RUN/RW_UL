@@ -202,6 +202,20 @@
                </item>
               </layout>
              </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>导出标签类型</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="cBox_exportLabelType"/>
+               </item>
+              </layout>
+             </item>
             </layout>
            </widget>
           </item>
