@@ -42,6 +42,12 @@ QGroupBox::title {
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QRadioButton" name="rbtn_outsideDiameterEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -104,6 +110,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_outsideDiameterValue">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -318,6 +330,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_outsideDiameterDeviation">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -532,6 +550,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_photography">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -746,6 +770,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_blowTime">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -934,6 +964,12 @@ QPushButton:pressed {
         </item>
         <item>
          <widget class="QRadioButton" name="rbtn_edgeDamageEnable">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1088,6 +1124,12 @@ QLabel.icon {
         </item>
         <item>
          <widget class="QPushButton" name="pbtn_edgeDamageSimilarity">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1151,6 +1193,12 @@ QGroupBox::title {
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
               <widget class="QRadioButton" name="rbtn_shieldingRangeEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1315,6 +1363,12 @@ QLabel.icon {
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
               <widget class="QPushButton" name="pbtn_outerRadius">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1529,6 +1583,12 @@ QLabel.icon {
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QPushButton" name="pbtn_innerRadius">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1569,6 +1629,12 @@ QPushButton:pressed {
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
            <widget class="QRadioButton" name="rbtn_poreEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1631,6 +1697,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_poreEnableScore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1657,6 +1729,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QRadioButton" name="rbtn_paintEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1719,6 +1797,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_paintEnableScore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1780,6 +1864,12 @@ QGroupBox::title {
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
               <widget class="QRadioButton" name="rbtn_holesCountEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1844,6 +1934,12 @@ QRadioButton::indicator:pressed {
            </item>
            <item>
             <widget class="QPushButton" name="ptn_holesCountValue">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -1881,6 +1977,12 @@ QPushButton:pressed {
             <layout class="QHBoxLayout" name="horizontalLayout_11">
              <item>
               <widget class="QRadioButton" name="rbtn_brokenEyeEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -1945,6 +2047,12 @@ QRadioButton::indicator:pressed {
            </item>
            <item>
             <widget class="QLabel" name="label_17">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">/* 基础标签样式 */
 QLabel {
@@ -2037,6 +2145,12 @@ QLabel.icon {
            </item>
            <item>
             <widget class="QPushButton" name="pbtn_brokenEyeSimilarity">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -2074,6 +2188,12 @@ QPushButton:pressed {
             <layout class="QHBoxLayout" name="horizontalLayout_12">
              <item>
               <widget class="QRadioButton" name="rbtn_crackEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -2138,6 +2258,12 @@ QRadioButton::indicator:pressed {
            </item>
            <item>
             <widget class="QLabel" name="label_19">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">/* 基础标签样式 */
 QLabel {
@@ -2230,6 +2356,12 @@ QLabel.icon {
            </item>
            <item>
             <widget class="QPushButton" name="pbtn_crackSimilarity">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -2267,6 +2399,12 @@ QPushButton:pressed {
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
               <widget class="QRadioButton" name="rbtn_apertureEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -2333,6 +2471,12 @@ QRadioButton::indicator:pressed {
             <layout class="QHBoxLayout" name="horizontalLayout_21">
              <item>
               <widget class="QPushButton" name="pbtn_apertureValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -2547,6 +2691,12 @@ QLabel.icon {
             <layout class="QHBoxLayout" name="horizontalLayout_22">
              <item>
               <widget class="QPushButton" name="pbtn_apertureSimilarity">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -2678,6 +2828,12 @@ QLabel.icon {
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
               <widget class="QRadioButton" name="rbtn_holeCenterDistanceEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QRadioButton {
     spacing: 8px;
@@ -2744,6 +2900,12 @@ QRadioButton::indicator:pressed {
             <layout class="QHBoxLayout" name="horizontalLayout_23">
              <item>
               <widget class="QPushButton" name="pbtn_holeCenterDistanceValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -2958,6 +3120,12 @@ QLabel.icon {
             <layout class="QHBoxLayout" name="horizontalLayout_24">
              <item>
               <widget class="QPushButton" name="pbtn_holeCenterDistanceSimilarity">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3110,6 +3278,12 @@ QGroupBox::title {
        <layout class="QHBoxLayout" name="horizontalLayout_17">
         <item>
          <widget class="QRadioButton" name="rbtn_specifyColorDifferenceEnable">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">QRadioButton {
     spacing: 8px;
@@ -3266,6 +3440,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_specifyColorDifferenceR">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3388,6 +3568,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_specifyColorDifferenceG">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3510,6 +3696,12 @@ QLabel.icon {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_specifyColorDifferenceB">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3547,6 +3739,12 @@ QPushButton:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_specifyColorDifferenceDeviation">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3600,6 +3798,12 @@ QGroupBox::title {
        <layout class="QHBoxLayout" name="horizontalLayout_18">
         <item>
          <widget class="QRadioButton" name="rbtn_largeColorDifferenceEnable">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">QRadioButton {
     spacing: 8px;
@@ -3671,6 +3875,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_largeColorDifferenceDeviation">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3726,6 +3936,12 @@ QGroupBox::title {
          <layout class="QVBoxLayout" name="verticalLayout_15">
           <item>
            <widget class="QRadioButton" name="rbtn_grindStoneEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -3788,6 +4004,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_grindStoneScore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3818,6 +4040,12 @@ QPushButton:pressed {
          <layout class="QVBoxLayout" name="verticalLayout_16">
           <item>
            <widget class="QRadioButton" name="rbtn_blockEyeEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -3880,6 +4108,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_blockEyeScore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -3910,6 +4144,12 @@ QPushButton:pressed {
          <layout class="QVBoxLayout" name="verticalLayout_18">
           <item>
            <widget class="QRadioButton" name="rbtn_materialHeadEnable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton {
     spacing: 8px;
@@ -3972,6 +4212,12 @@ QRadioButton::indicator:pressed {
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_materialHeadScore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
     padding: 6px 14px;
