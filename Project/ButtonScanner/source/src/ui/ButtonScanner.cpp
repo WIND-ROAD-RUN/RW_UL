@@ -1221,6 +1221,8 @@ void ButtonScanner::pbtn_newProduction_clicked()
 		return;
 	}
 	if (dlgNewProduction != nullptr) {
+		currentRunningState = RunningState::Stop;
+		ui->rbtn_debug->setChecked(false);
 		dlgNewProduction->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 		dlgNewProduction->show();
 	}
