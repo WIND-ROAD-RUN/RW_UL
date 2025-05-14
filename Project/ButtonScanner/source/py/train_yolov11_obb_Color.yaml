@@ -1,0 +1,7 @@
+train: D:/zfkjData/ButtonScanner/Train/Obb  
+val: D:/zfkjData/ButtonScanner/Train/Obb
+
+nc: 2  
+names: 
+  0: good
+  1: bad
