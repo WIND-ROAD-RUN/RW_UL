@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "DlgHideScoreSet.h"
 
 #include "GlobalStruct.h"
@@ -54,6 +54,11 @@ void DlgHideScoreSet::pbtn_outsideDiameterScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_outsideDiameterScore->setText(value);
 		GlobalStructData.dlgHideScoreSetConfig.outsideDiameterScore = value.toDouble();
@@ -68,6 +73,11 @@ void DlgHideScoreSet::pbtn_forAndAgainstScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_forAndAgainstScore->setText(value);
 		GlobalStructData.dlgHideScoreSetConfig.forAndAgainstScore = value.toDouble();

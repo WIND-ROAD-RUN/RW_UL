@@ -315,6 +315,11 @@ void DlgProductSet::pbtn_brokenEyeSimilarity_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_brokenEyeSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.brokenEyeSimilarity = value.toDouble();
@@ -329,6 +334,11 @@ void DlgProductSet::pbtn_crackSimilarity_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_crackSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.crackSimilarity = value.toDouble();
@@ -357,6 +367,11 @@ void DlgProductSet::pbtn_apertureSimilarity_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_apertureSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.apertureSimilarity = value.toDouble();
@@ -385,6 +400,11 @@ void DlgProductSet::pbtn_holeCenterDistanceSimilarity_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_holeCenterDistanceSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.holeCenterDistanceSimilarity = value.toDouble();
@@ -399,6 +419,11 @@ void DlgProductSet::pbtn_specifyColorDifferenceR_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 255)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-255之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_specifyColorDifferenceR->setText(value);
 		GlobalStructData.dlgProductSetConfig.specifyColorDifferenceR = value.toDouble();
@@ -413,6 +438,11 @@ void DlgProductSet::pbtn_specifyColorDifferenceG_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 255)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-255之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_specifyColorDifferenceG->setText(value);
 		GlobalStructData.dlgProductSetConfig.specifyColorDifferenceG = value.toDouble();
@@ -427,6 +457,11 @@ void DlgProductSet::pbtn_specifyColorDifferenceB_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 255)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-255之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_specifyColorDifferenceB->setText(value);
 		GlobalStructData.dlgProductSetConfig.specifyColorDifferenceB = value.toDouble();
@@ -441,6 +476,11 @@ void DlgProductSet::pbtn_specifyColorDifferenceDeviation_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 255)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-255之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_specifyColorDifferenceDeviation->setText(value);
 		GlobalStructData.dlgProductSetConfig.specifyColorDifferenceDeviation = value.toDouble();
@@ -455,6 +495,11 @@ void DlgProductSet::pbtn_largeColorDifferenceDeviation_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 255)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-255之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_largeColorDifferenceDeviation->setText(value);
 		GlobalStructData.dlgProductSetConfig.largeColorDifferenceDeviation = value.toDouble();
@@ -469,6 +514,11 @@ void DlgProductSet::pbtn_edgeDamageSimilarity_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_edgeDamageSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity = value.toDouble();
@@ -483,6 +533,11 @@ void DlgProductSet::pbtn_poreEnableScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_poreEnableScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.poreEnableScore = value.toDouble();
@@ -497,6 +552,11 @@ void DlgProductSet::pbtn_paintEnableScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_paintEnableScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.paintEnableScore = value.toDouble();
@@ -511,6 +571,11 @@ void DlgProductSet::pbtn_grindStoneScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_grindStoneScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.grindStoneEnableScore = value.toDouble();
@@ -525,6 +590,11 @@ void DlgProductSet::pbtn_blockEyeScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blockEyeScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.blockEyeEnableScore = value.toDouble();
@@ -539,6 +609,11 @@ void DlgProductSet::pbtn_materialHeadScore_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_materialHeadScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.materialHeadEnableScore = value.toDouble();
