@@ -264,7 +264,7 @@ void AiTrainModule::trainSegmentModel()
 void AiTrainModule::trainObbModel()
 {
 	//conda install -c pytorch -c nvidia -c conda-forge pytorch torchvision pytorch-cuda ultralytics
-	std::string str = "activate yolov11 && python ./train_yolov11_obb.py";
+	std::string str = "activate yolov11 && python ./train_yolov11_obb_shape.py";
 	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
 }
 

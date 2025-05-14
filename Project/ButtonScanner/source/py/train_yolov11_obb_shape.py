@@ -4,7 +4,7 @@ if __name__ == '__main__':
     model = YOLO('yolo11m.pt')  
 
     model.train(
-        data='./train_yolov11_obb.yaml', 
+        data='./train_yolov11_obb_shape.yaml', 
         epochs=100,           
         batch=16,             
         imgsz=640,           
