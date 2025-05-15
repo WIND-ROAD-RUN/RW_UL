@@ -54,7 +54,7 @@ private:
 
 private:
 	void copyTargetImageFromStorageInTemp();
-	void copyOOModel();
+	void copyAndLoadModel();
 	void copySOModel();
 
 private slots:

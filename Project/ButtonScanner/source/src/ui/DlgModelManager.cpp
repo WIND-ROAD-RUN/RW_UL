@@ -166,7 +166,7 @@ void DlgModelManager::pbtn_loadModel_clicked()
 	_loadingDialog->updateMessage("加载中");
 	auto currentIndex = ui->listView_modelList->currentIndex();
 	auto& config = _modelConfigs.at(currentIndex.row());
-	copyOOModel();
+	copyAndLoadModel();
 	globalStruct.isOpenBladeShape = true;
 	globalStruct.isOpenColor = false;
 	globalStruct.dlgExposureTimeSetConfig.expousureTime = config.exposureTime;
@@ -576,7 +576,7 @@ void DlgModelManager::copyTargetImageFromStorageInTemp()
 	}
 }
 
-void DlgModelManager::copyOOModel()
+void DlgModelManager::copyAndLoadModel()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto currentIndex = ui->listView_modelList->currentIndex();
