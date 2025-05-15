@@ -166,24 +166,9 @@ void DlgModelManager::pbtn_loadModel_clicked()
 	_loadingDialog->updateMessage("加载中");
 	auto currentIndex = ui->listView_modelList->currentIndex();
 	auto& config = _modelConfigs.at(currentIndex.row());
-	if (config.modelType == rw::cdm::ModelType::BladeShape)
-	{
-		copyOOModel();
-		globalStruct.isOpenBladeShape = true;
-		globalStruct.isOpenColor = false;
-	}
-	else if (config.modelType == rw::cdm::ModelType::Color)
-	{
-		copySOModel();
-		globalStruct.isOpenBladeShape = false;
-		globalStruct.isOpenColor = true;
-	}
-	else
-	{
-		QMessageBox::warning(this, "警告", "模型类型不支持");
-		_loadingDialog->hide();
-		return;
-	}
+	copyOOModel();
+	globalStruct.isOpenBladeShape = true;
+	globalStruct.isOpenColor = false;
 	globalStruct.dlgExposureTimeSetConfig.expousureTime = config.exposureTime;
 	emit updateExposureTime(config.exposureTime);
 	if (globalStruct.camera1)
@@ -601,39 +586,67 @@ void DlgModelManager::copyOOModel()
 	}
 
 	auto& config = _modelConfigs.at(currentIndex.row());
-	QString sourceFile = QString::fromStdString(config.rootPath) + "/customOO.engine";
-	QString targetFile = globalPath.modelRootPath + "/customOO.engine";
+	QString sourceDirPath = QString::fromStdString(config.rootPath);
+	QString targetDirPath = globalPath.modelRootPath;
 
-	// 检查源文件是否存在
-	if (!QFile::exists(sourceFile)) {
-		qDebug() << "源文件不存在:" << sourceFile;
-		QMessageBox::warning(this, "错误", "源文件不存在: " + sourceFile);
+	QDir sourceDir(sourceDirPath);
+	if (!sourceDir.exists()) {
+		qDebug() << "源目录不存在:" << sourceDirPath;
+		QMessageBox::warning(this, "错误", "源目录不存在: " + sourceDirPath);
 		return;
 	}
 
-	// 如果目标文件已存在，则先删除
-	if (QFile::exists(targetFile)) {
-		if (!QFile::remove(targetFile)) {
-			qDebug() << "无法删除目标文件:" << targetFile;
-			QMessageBox::warning(this, "错误", "无法删除目标文件: " + targetFile);
+	QDir targetDir(targetDirPath);
+	if (!targetDir.exists()) {
+		if (!targetDir.mkpath(targetDirPath)) {
+			qDebug() << "无法创建目标目录:" << targetDirPath;
+			QMessageBox::warning(this, "错误", "无法创建目标目录: " + targetDirPath);
 			return;
 		}
 	}
 
-	// 拷贝文件
-	if (QFile::copy(sourceFile, targetFile)) {
-		globalStruct.imageProcessingModule1->reLoadOnnxOO();
-		globalStruct.imageProcessingModule2->reLoadOnnxOO();
-		globalStruct.imageProcessingModule3->reLoadOnnxOO();
-		globalStruct.imageProcessingModule4->reLoadOnnxOO();
-		qDebug() << "文件拷贝成功:" << sourceFile << "到" << targetFile;
-		auto& globalStruct = GlobalStructData::getInstance();
-		globalStruct.isOpenBladeShape = false;
+	// 筛选出 .engine 和 .onnx 文件
+	QStringList filters;
+	filters << "*.engine" << "*.onnx";
+	QStringList files = sourceDir.entryList(filters, QDir::Files | QDir::NoSymLinks);
+
+	if (files.isEmpty()) {
+		qDebug() << "未找到 .engine 或 .onnx 文件";
+		QMessageBox::information(this, "提示", "未找到 .engine 或 .onnx 文件");
+		return;
 	}
-	else {
-		qDebug() << "文件拷贝失败:" << sourceFile << "到" << targetFile;
-		QMessageBox::warning(this, "错误", "文件拷贝失败: " + sourceFile + " 到 " + targetFile);
+
+	// 遍历并拷贝文件
+	for (const QString& fileName : files) {
+		QString sourceFile = sourceDir.filePath(fileName);
+		QString targetFile = targetDir.filePath(fileName);
+
+		// 如果目标文件已存在，则先删除
+		if (QFile::exists(targetFile)) {
+			if (!QFile::remove(targetFile)) {
+				qDebug() << "无法删除目标文件:" << targetFile;
+				QMessageBox::warning(this, "错误", "无法删除目标文件: " + targetFile);
+				continue;
+			}
+		}
+
+		// 拷贝文件
+		if (QFile::copy(sourceFile, targetFile)) {
+			qDebug() << "文件拷贝成功:" << sourceFile << "到" << targetFile;
+		}
+		else {
+			qDebug() << "文件拷贝失败:" << sourceFile << "到" << targetFile;
+			QMessageBox::warning(this, "错误", "文件拷贝失败: " + sourceFile + " 到 " + targetFile);
+		}
 	}
+
+	// 重新加载模型
+	globalStruct.imageProcessingModule1->reLoadOnnxOO();
+	globalStruct.imageProcessingModule2->reLoadOnnxOO();
+	globalStruct.imageProcessingModule3->reLoadOnnxOO();
+	globalStruct.imageProcessingModule4->reLoadOnnxOO();
+
+	qDebug() << "所有 .engine 和 .onnx 文件拷贝完成";
 }
 
 bool DlgModelManager::copyDirectoryRecursively(const QString& sourceDirPath, const QString& targetDirPath)

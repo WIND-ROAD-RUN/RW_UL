@@ -46,6 +46,9 @@ public:
 	QVector<QString> getBadImagePathList();
 	QVector<QString> getGoodImagePathList();
 public:
+	QVector<QString> getBadImagePathList(int index);
+	QVector<QString> getGoodImagePathList(int index);
+public:
 	size_t work1_good_count_;
 	size_t work1_bad_count_;
 private:

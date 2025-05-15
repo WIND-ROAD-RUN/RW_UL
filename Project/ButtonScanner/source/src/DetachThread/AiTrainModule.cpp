@@ -9,22 +9,74 @@ AiTrainModule::AiTrainModule(QObject* parent)
 	rw::ModelEngineConfig config;
 	config.modelPath = enginePath.toStdString();
 	labelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
-	_processTrainModel = new QProcess();
+	_processTrainModelBladeShape = new QProcess();
 	_processExportToEngine = new QProcess();
-	connect(_processTrainModel, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessTrainModelOutput);
-	connect(_processTrainModel, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessTrainModelError);
-	connect(_processTrainModel, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessTrainModelFinished);
+	connect(_processTrainModelBladeShape, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessTrainModelBladeShapeOutput);
+	connect(_processTrainModelBladeShape, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessTrainModelBladeShapeError);
+	connect(_processTrainModelBladeShape, &QProcess::finished, this, &AiTrainModule::handleProcessTrainModelBladeShapeFinished);
 
-	connect(_processExportToEngine, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleTrainModelProcessExportEngineOutput);
-	connect(_processExportToEngine, &QProcess::readyReadStandardError, this, &AiTrainModule::handleTrainModelProcessExportEngineError);
-	connect(_processExportToEngine, &QProcess::finished, this, &AiTrainModule::handleTrainModelProcessExportEngineFinished);
+	connect(_processExportToEngine, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessExportEngineBladeShapeOutput);
+	connect(_processExportToEngine, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessExportEngineBladeShapeError);
+	connect(_processExportToEngine, &QProcess::finished, this, &AiTrainModule::handleProcessExportEngineBladeShapeFinished);
+
+	_processTrainModelColor1 = new QProcess();
+	connect(_processTrainModelColor1, &QProcess::readyReadStandardOutput,
+		this, &AiTrainModule::handleProcessTrainModelColor1Output);
+	connect(_processTrainModelColor1, &QProcess::readyReadStandardError,
+		this, &AiTrainModule::handleProcessTrainModelColor1Error);
+	connect(_processTrainModelColor1, &QProcess::finished,
+		this, &AiTrainModule::handleProcessTrainModelColor1Finished);
+
+	_processTrainModelColor2 = new QProcess();
+	connect(_processTrainModelColor2, &QProcess::readyReadStandardOutput,
+		this, &AiTrainModule::handleProcessTrainModelColor2Output);
+	connect(_processTrainModelColor2, &QProcess::readyReadStandardError,
+		this, &AiTrainModule::handleProcessTrainModelColor2Error);
+	connect(_processTrainModelColor2, &QProcess::finished,
+		this, &AiTrainModule::handleProcessTrainModelColor2Finished);
+
+	_processTrainModelColor3 = new QProcess();
+	connect(_processTrainModelColor3, &QProcess::readyReadStandardOutput,
+		this, &AiTrainModule::handleProcessTrainModelColor3Output);
+	connect(_processTrainModelColor3, &QProcess::readyReadStandardError,
+		this, &AiTrainModule::handleProcessTrainModelColor3Error);
+	connect(_processTrainModelColor3, &QProcess::finished,
+		this, &AiTrainModule::handleProcessTrainModelColor3Finished);
+
+	_processTrainModelColor4 = new QProcess();
+	connect(_processTrainModelColor4, &QProcess::readyReadStandardOutput,
+		this, &AiTrainModule::handleProcessTrainModelColor4Output);
+	connect(_processTrainModelColor4, &QProcess::readyReadStandardError,
+		this, &AiTrainModule::handleProcessTrainModelColor4Error);
+	connect(_processTrainModelColor4, &QProcess::finished,
+		this, &AiTrainModule::handleProcessTrainModelColor4Finished);
+
+	_processExportToEngineColor1 = new QProcess();
+	connect(_processExportToEngineColor1, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessExportEngineColor1Output);
+	connect(_processExportToEngineColor1, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessExportEngineColor1Error);
+	connect(_processExportToEngineColor1, &QProcess::finished, this, &AiTrainModule::handleProcessExportEngineColor1Finished);
+
+	_processExportToEngineColor2 = new QProcess();
+	connect(_processExportToEngineColor2, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessExportEngineColor2Output);
+	connect(_processExportToEngineColor2, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessExportEngineColor2Error);
+	connect(_processExportToEngineColor2, &QProcess::finished, this, &AiTrainModule::handleProcessExportEngineColor2Finished);
+
+	_processExportToEngineColor3 = new QProcess();
+	connect(_processExportToEngineColor3, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessExportEngineColor3Output);
+	connect(_processExportToEngineColor3, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessExportEngineColor3Error);
+	connect(_processExportToEngineColor3, &QProcess::finished, this, &AiTrainModule::handleProcessExportEngineColor3Finished);
+
+	_processExportToEngineColor4 = new QProcess();
+	connect(_processExportToEngineColor4, &QProcess::readyReadStandardOutput, this, &AiTrainModule::handleProcessExportEngineColor4Output);
+	connect(_processExportToEngineColor4, &QProcess::readyReadStandardError, this, &AiTrainModule::handleProcessExportEngineColor4Error);
+	connect(_processExportToEngineColor4, &QProcess::finished, this, &AiTrainModule::handleProcessExportEngineColor4Finished);
 }
 
 AiTrainModule::~AiTrainModule()
 {
 	cancelTrain();
 	wait();
-	delete _processTrainModel;
+	delete _processTrainModelBladeShape;
 }
 
 void AiTrainModule::startTrain()
@@ -32,20 +84,10 @@ void AiTrainModule::startTrain()
 	start();
 }
 
-QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, ModelType type, int classId)
+QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
 {
 	QVector<AiTrainModule::DataItem> result;
-	switch (type)
-	{
-	case ModelType::Color:
-		result = getSegmentDataSet(annotationDataSet, classId);
-		break;
-	case ModelType::BladeShape:
-		result = getObjectDetectionDataSet(annotationDataSet, classId);
-		break;
-	default:
-		break;
-	}
+	result = getObjectDetectionDataSet(annotationDataSet, classId);
 	return result;
 }
 
@@ -124,19 +166,11 @@ void AiTrainModule::clear_older_trainData()
 	}
 	// 处理 obb 目录
 	{
-		QString trainDir = workPlace + R"(\Obb\images\)";
-		QString LabelDir = workPlace + R"(\Obb\labels\)";
-
-		// 删除 trainDir 及其所有子文件和子文件夹
-		QDir trainDirObj(trainDir);
-		if (trainDirObj.exists()) {
-			trainDirObj.removeRecursively();
-		}
-
-		// 删除 LabelDir 及其所有子文件和子文件夹
-		QDir testDirObj(LabelDir);
-		if (testDirObj.exists()) {
-			testDirObj.removeRecursively();
+		QString obbDir= workPlace + R"(\Obb\)";
+		// 删除 obb 及其所有子文件和子文件夹
+		QDir obbDirObj(obbDir);
+		if (obbDirObj.exists()) {
+			obbDirObj.removeRecursively();
 		}
 	}
 
@@ -183,20 +217,53 @@ void AiTrainModule::clear_older_trainData()
 	}
 }
 
+void AiTrainModule::clear_older_trainData_color()
+{
+	QString workPlace = globalPath.trainAIRootPath;
+
+	QString runsPath = R"(./runs)";
+	// 删除 runs 目录及其所有子文件和子文件夹
+	QDir dir(runsPath);
+	QString absolutePath = dir.absolutePath();
+	if (dir.exists()) {
+		dir.removeRecursively();
+	}
+	// 处理 obb 目录
+	{
+		QString obbDir = workPlace + R"(\Obb\)";
+		// 删除 obb 及其所有子文件和子文件夹
+		QDir obbDirObj(obbDir);
+		if (obbDirObj.exists()) {
+			obbDirObj.removeRecursively();
+		}
+	}
+
+	//处理seg
+	{
+		QString trainDir = workPlace + R"(\Seg\images\)";
+		QString LabelDir = workPlace + R"(\Seg\labels\)";
+
+		// 删除 trainDir 及其所有子文件和子文件夹
+		QDir trainDirObj(trainDir);
+		if (trainDirObj.exists()) {
+			trainDirObj.removeRecursively();
+		}
+
+		// 删除 LabelDir 及其所有子文件和子文件夹
+		QDir testDirObj(LabelDir);
+		if (testDirObj.exists()) {
+			testDirObj.removeRecursively();
+		}
+	}
+}
+
 void AiTrainModule::copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet)
 {
-	if (_modelType == ModelType::BladeShape)
-	{
-		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\images\)"));
 
-		copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\labels\)"));
-	}
-	else if (_modelType == ModelType::Color)
-	{
-		copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Seg\images\)"));
+	copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\images\)"));
 
-		copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Seg\labels\)"));
-	}
+	copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\labels\)"));
+
 }
 
 void AiTrainModule::copyTrainImgData(const QVector<AiTrainModule::DataItem>& dataSet, const QString& path)
@@ -255,33 +322,43 @@ void AiTrainModule::copyTrainLabelData(const QVector<AiTrainModule::DataItem>& d
 	}
 }
 
-void AiTrainModule::trainColorModel()
+void AiTrainModule::trainColorModel(int index)
 {
-	std::string str = "activate yolov11 && python ./train_yolov11_seg.py";
-	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
+	if (index == 1)
+	{
+		std::string str = "activate yolov11 && python ./train_yolov11_obb_Color.py";
+		_processTrainModelColor1->start("cmd.exe", { "/c",str.c_str() });
+	}
+	if (index == 2)
+	{
+		std::string str = "activate yolov11 && python ./train_yolov11_obb_Color.py";
+		_processTrainModelColor2->start("cmd.exe", { "/c",str.c_str() });
+	}
+	if (index == 3)
+	{
+		std::string str = "activate yolov11 && python ./train_yolov11_obb_Color.py";
+		_processTrainModelColor3->start("cmd.exe", { "/c",str.c_str() });
+	}
+	if (index == 4)
+	{
+		std::string str = "activate yolov11 && python ./train_yolov11_obb_Color.py";
+		_processTrainModelColor4->start("cmd.exe", { "/c",str.c_str() });
+	}
 }
 
 void AiTrainModule::trainShapeModel()
 {
 	//conda install -c pytorch -c nvidia -c conda-forge pytorch torchvision pytorch-cuda ultralytics
 	std::string str = "activate yolov11 && python ./train_yolov11_obb_shape.py";
-	_processTrainModel->start("cmd.exe", { "/c",str.c_str() });
+	_processTrainModelBladeShape->start("cmd.exe", { "/c",str.c_str() });
 }
 
 void AiTrainModule::copyModelToTemp()
 {
 	QString exePath = QCoreApplication::applicationDirPath();
-	QString sourceFilePath = exePath+R"(/runs)";
+	QString sourceFilePath = exePath + R"(/runs)";
 
-	if (_modelType == ModelType::Color)
-	{
-		sourceFilePath = sourceFilePath + R"(/segment/train/weights/best.onnx)";
-	}
-	else if (_modelType == ModelType::BladeShape)
-	{
-		sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
-	}
-
+	sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
 
 	// 目标目录路径
 	QString targetDirectory = globalPath.modelStorageManagerTempPath;
@@ -295,26 +372,63 @@ void AiTrainModule::copyModelToTemp()
 		}
 	}
 
-	QString targetFilePath = targetDirectory + "modelOnnx.onnx";
+	QString targetFilePath1 = targetDirectory + "customOO1.onnx";
+	QString targetFilePath2 = targetDirectory + "customOO2.onnx";
+	QString targetFilePath3 = targetDirectory + "customOO3.onnx";
+	QString targetFilePath4 = targetDirectory + "customOO4.onnx";
 
-	if (_modelType == ModelType::Color)
-	{
-		targetFilePath = targetDirectory + "customSO.onnx";
-	}
-	else if (_modelType == ModelType::BladeShape)
-	{
-		targetFilePath = targetDirectory + "customOO.onnx";
-	}
 
-	if (QFile::exists(targetFilePath)) {
-		if (!QFile::remove(targetFilePath)) {
-			emit appRunLog("Failed to remove existing file:" + targetFilePath);
+	// 拷贝文件并重命名
+	if (QFile::exists(targetFilePath1)) {
+		if (!QFile::remove(targetFilePath1)) {
+			emit appRunLog("Failed to remove existing file:" + targetFilePath1);
 		}
 	}
 
+	if (QFile::copy(sourceFilePath, targetFilePath1)) {
+		emit appRunLog("File copied and renamed successfully: " + targetFilePath1);
+	}
+	else {
+		emit appRunLog("Failed to copy and rename file: " + sourceFilePath);
+	}
+
 	// 拷贝文件并重命名
-	if (QFile::copy(sourceFilePath, targetFilePath)) {
-		emit appRunLog("File copied and renamed successfully: " + targetFilePath);
+	if (QFile::exists(targetFilePath2)) {
+		if (!QFile::remove(targetFilePath2)) {
+			emit appRunLog("Failed to remove existing file:" + targetFilePath2);
+		}
+	}
+
+	if (QFile::copy(sourceFilePath, targetFilePath2)) {
+		emit appRunLog("File copied and renamed successfully: " + targetFilePath2);
+	}
+	else {
+		emit appRunLog("Failed to copy and rename file: " + sourceFilePath);
+	}
+
+	// 拷贝文件并重命名
+	if (QFile::exists(targetFilePath3)) {
+		if (!QFile::remove(targetFilePath3)) {
+			emit appRunLog("Failed to remove existing file:" + targetFilePath3);
+		}
+	}
+
+	if (QFile::copy(sourceFilePath, targetFilePath3)) {
+		emit appRunLog("File copied and renamed successfully: " + targetFilePath3);
+	}
+	else {
+		emit appRunLog("Failed to copy and rename file: " + sourceFilePath);
+	}
+
+	// 拷贝文件并重命名
+	if (QFile::exists(targetFilePath4)) {
+		if (!QFile::remove(targetFilePath4)) {
+			emit appRunLog("Failed to remove existing file:" + targetFilePath4);
+		}
+	}
+
+	if (QFile::copy(sourceFilePath, targetFilePath4)) {
+		emit appRunLog("File copied and renamed successfully: " + targetFilePath4);
 	}
 	else {
 		emit appRunLog("Failed to copy and rename file: " + sourceFilePath);
@@ -378,6 +492,64 @@ void AiTrainModule::packageModelToStorage()
 	emit updateTrainTitle("模型打包完成");
 }
 
+void AiTrainModule::copyModelToTempColor(int workIndex)
+{
+	QString exePath = QCoreApplication::applicationDirPath();
+	QString sourceFilePath = exePath + R"(/runs)";
+
+	sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
+
+
+	// 目标目录路径
+	QString targetDirectory = globalPath.modelStorageManagerTempPath;
+
+	// 确保目标目录存在，如果不存在则创建
+	QDir dir(targetDirectory);
+	if (!dir.exists()) {
+		if (!dir.mkpath(targetDirectory)) {
+			emit appRunLog("Failed to create target directory: " + targetDirectory);
+			return;
+		}
+	}
+
+	QString targetFilePath ;
+
+	if (workIndex==1)
+	{
+		targetFilePath = targetDirectory + "customOO1.onnx";
+	}
+	else if (workIndex == 2)
+	{
+		targetFilePath = targetDirectory + "customOO2.onnx";
+	}
+	else if (workIndex == 3)
+	{
+		targetFilePath = targetDirectory + "customOO3.onnx";
+	}
+	else if (workIndex == 4)
+	{
+		targetFilePath = targetDirectory + "customOO4.onnx";
+	}
+	else
+	{
+		targetFilePath = targetDirectory + "customOO1.onnx";
+	}
+
+	if (QFile::exists(targetFilePath)) {
+		if (!QFile::remove(targetFilePath)) {
+			emit appRunLog("Failed to remove existing file:" + targetFilePath);
+		}
+	}
+
+	// 拷贝文件并重命名
+	if (QFile::copy(sourceFilePath, targetFilePath)) {
+		emit appRunLog("File copied and renamed successfully: " + targetFilePath);
+	}
+	else {
+		emit appRunLog("Failed to copy and rename file: " + sourceFilePath);
+	}
+}
+
 void AiTrainModule::copy_all_files_to_storage(const QString& sourceFilePath, const QString& storage)
 {
 	// 确保目标路径存在，如果不存在则创建
@@ -433,23 +605,24 @@ cv::Mat AiTrainModule::getMatFromPath(const QString& path)
 
 void AiTrainModule::run()
 {
-	if (_modelType==ModelType::BladeShape)
+	emit appRunLog("训练启动....");
+
+	if (_modelType == ModelType::BladeShape)
 	{
 		auto& global = GlobalStructData::getInstance();
 		global.isTrainModel = true;
 		emit updateTrainState(true);
-		emit updateTrainTitle("正在训练");
-		emit appRunLog("训练启动....");
+		emit updateTrainTitle("开始训练刀型模型");
 
 		emit appRunLog("清理旧的训练数据....");
 		clear_older_trainData();
 
 		//获取图片的label
-		auto annotationGoodDataSet = annotation_data_set(false);
-		auto annotationBadDataSet = annotation_data_set(true);
+		auto annotationGoodDataSet = annotation_data_set_bladeShape(false);
+		auto annotationBadDataSet = annotation_data_set_bladeShape(true);
 
-		auto dataSet = getDataSet(annotationGoodDataSet, _modelType, 0);
-		auto dataSetBad = getDataSet(annotationBadDataSet, _modelType, 1);
+		auto dataSet = getDataSet(annotationGoodDataSet, 0);
+		auto dataSetBad = getDataSet(annotationBadDataSet, 1);
 		QString GoodSetLog = "其中正确的纽扣数据集有" + QString::number(dataSet.size()) + "条数据";
 		QString BadSetLog = "其中错误的纽扣数据集有" + QString::number(dataSetBad.size()) + "条数据";
 		emit appRunLog(GoodSetLog);
@@ -465,16 +638,47 @@ void AiTrainModule::run()
 
 		exec();
 	}
-	else if (_modelType==ModelType::Color)
+	else if (_modelType == ModelType::Color)
 	{
-		
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = true;
+		emit updateTrainState(true);
+		emit updateTrainTitle("开始训练色差模型");
+		emit appRunLog("清理旧的训练数据....");
+
+		auto annotationGoodDataSet1 = annotation_data_set_color(false, 1);
+		auto annotationBadDataSet1 = annotation_data_set_color(true, 1);
+		auto annotationGoodDataSet2 = annotation_data_set_color(false, 2);
+		auto annotationBadDataSet2 = annotation_data_set_color(true, 2);
+		auto annotationGoodDataSet3 = annotation_data_set_color(false, 3);
+		auto annotationBadDataSet3 = annotation_data_set_color(true, 3);
+		auto annotationGoodDataSet4 = annotation_data_set_color(false, 4);
+		auto annotationBadDataSet4 = annotation_data_set_color(true, 4);
+
+		dataSetGood1 = getDataSet(annotationGoodDataSet1, 0);
+		dataSetGood2 = getDataSet(annotationGoodDataSet2, 0);
+		dataSetGood3 = getDataSet(annotationGoodDataSet3, 0);
+		dataSetGood4 = getDataSet(annotationGoodDataSet4, 0);
+
+		dataSetBad1 = getDataSet(annotationBadDataSet1, 1);
+		dataSetBad2 = getDataSet(annotationBadDataSet2, 1);
+		dataSetBad3 = getDataSet(annotationBadDataSet3, 1);
+		dataSetBad4 = getDataSet(annotationBadDataSet4, 1);
+
+		emit appRunLog("清理旧的训练数据....");
+		clear_older_trainData();
+		emit appRunLog("拷贝训练文件");
+		copyTrainData(dataSetGood1);
+		copyTrainData(dataSetBad1);
+		trainColorModel(1);
+		exec();
 	}
-	
+
 
 	quit();
 }
 
-QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBad)
+QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set_bladeShape(bool isBad)
 {
 	QVector<QString> imageList;
 	if (isBad)
@@ -522,34 +726,100 @@ QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set(bool isBa
 	return dataSet;
 }
 
+QVector<AiTrainModule::labelAndImg> AiTrainModule::annotation_data_set_color(bool isBad, int workIndex)
+{
+	QVector<QString> imageList;
+	if (isBad)
+	{
+		emit appRunLog("正在标注要筛选的纽扣数据集 工位:" + QString::number(workIndex));
+		imageList = GlobalStructData::getInstance().modelStorageManager->getBadImagePathList(workIndex);
+	}
+	else
+	{
+		emit appRunLog("正在标注正确的纽扣的数据集 工位:" + QString::number(workIndex));
+		imageList = GlobalStructData::getInstance().modelStorageManager->getGoodImagePathList(workIndex);
+	}
+
+	int i = 0;
+
+	QVector<labelAndImg> dataSet;
+	dataSet.reserve(100);
+
+	//获取图片的label
+	for (const auto& imagePath : imageList) {
+		auto image = getMatFromPath(imagePath);
+		if (image.empty()) {
+			continue;
+		}
+		_frameWidth = image.cols;
+		_frameHeight = image.rows;
+		cv::Mat resultMat;
+		auto result = labelEngine->processImg(image);
+		QString log = QString::number(i) + " ";
+
+		auto processResultIndex = ImageProcessUtilty::getClassIndex(result);
+		processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(result, processResultIndex, 10);
+		if (processResultIndex[ClassId::Body].empty())
+		{
+			continue;
+		}
+		auto body = result[processResultIndex[ClassId::Body][0]];
+		dataSet.emplaceBack(imagePath, body);
+		log += "Area: " + QString::number(body.area) + " center_x" + QString::number(body.center_x) + " center_y" + QString::number(body.center_y);
+		emit appRunLog(log);
+		i++;
+	}
+	emit appRunLog("标注完" + QString::number(dataSet.size()) + "条数据");
+
+	return dataSet;
+}
+
 void AiTrainModule::exportModelToEngine()
 {
-
 	std::string batPath = R"(.\ConvertOnnxToEngine.bat)";
 	_processExportToEngine->start("cmd.exe", { "/c", batPath.c_str() });
 }
 
-void AiTrainModule::handleTrainModelProcessTrainModelOutput()
+void AiTrainModule::exportColor1ModelToEngine()
 {
-	QByteArray output = _processTrainModel->readAllStandardOutput();
+	std::string batPath = R"(.\ConvertOnnxToEngineColor1.bat)";
+	_processExportToEngineColor1->start("cmd.exe", { "/c", batPath.c_str() });
+}
+
+void AiTrainModule::exportColor2ModelToEngine()
+{
+	std::string batPath = R"(.\ConvertOnnxToEngineColor2.bat)";
+	_processExportToEngineColor2->start("cmd.exe", { "/c", batPath.c_str() });
+}
+
+void AiTrainModule::exportColor3ModelToEngine()
+{
+	std::string batPath = R"(.\ConvertOnnxToEngineColor3.bat)";
+	_processExportToEngineColor3->start("cmd.exe", { "/c", batPath.c_str() });
+}
+
+void AiTrainModule::exportColor4ModelToEngine()
+{
+	std::string batPath = R"(.\ConvertOnnxToEngineColor4.bat)";
+	_processExportToEngineColor4->start("cmd.exe", { "/c", batPath.c_str() });
+}
+
+void AiTrainModule::handleProcessTrainModelBladeShapeOutput()
+{
+	QByteArray output = _processTrainModelBladeShape->readAllStandardOutput();
 	QString outputStr = QString::fromLocal8Bit(output);
 	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
 }
 
-void AiTrainModule::handleTrainModelProcessTrainModelError()
+void AiTrainModule::handleProcessTrainModelBladeShapeError()
 {
-	QByteArray errorOutput = _processTrainModel->readAllStandardError();
+	QByteArray errorOutput = _processTrainModelBladeShape->readAllStandardError();
 	QString errorStr = QString::fromLocal8Bit(errorOutput);
 	emit appRunLog(errorStr);
 	int total = 100;
 	int complete = -1;
-	if (_modelType == ModelType::BladeShape) {
-		complete = parseProgressOO(errorStr, total);
-	}
-	else if (_modelType == ModelType::Color)
-	{
-		complete = parseProgressSO(errorStr, total);
-	}
+
+	complete = parseProgressOO(errorStr, total);
 
 	if (complete == -1)
 	{
@@ -558,7 +828,7 @@ void AiTrainModule::handleTrainModelProcessTrainModelError()
 	emit updateProgress(complete, 100);
 }
 
-void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void AiTrainModule::handleProcessTrainModelBladeShapeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
@@ -576,21 +846,21 @@ void AiTrainModule::handleTrainModelProcessTrainModelFinished(int exitCode, QPro
 	}
 }
 
-void AiTrainModule::handleTrainModelProcessExportEngineOutput()
+void AiTrainModule::handleProcessExportEngineBladeShapeOutput()
 {
 	QByteArray output = _processExportToEngine->readAllStandardOutput();
 	QString outputStr = QString::fromLocal8Bit(output);
 	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
 }
 
-void AiTrainModule::handleTrainModelProcessExportEngineError()
+void AiTrainModule::handleProcessExportEngineBladeShapeError()
 {
 	QByteArray errorOutput = _processExportToEngine->readAllStandardError();
 	QString errorStr = QString::fromLocal8Bit(errorOutput);
 	emit appRunLog(errorStr);
 }
 
-void AiTrainModule::handleTrainModelProcessExportEngineFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void AiTrainModule::handleProcessExportEngineBladeShapeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	if (exitStatus == QProcess::NormalExit)
 	{
@@ -602,22 +872,382 @@ void AiTrainModule::handleTrainModelProcessExportEngineFinished(int exitCode, QP
 	else
 	{
 		emit updateTrainTitle("导出失败");
-		emit updateTrainState(false);
 	}
 	auto& global = GlobalStructData::getInstance();
 	global.isTrainModel = false;
+	emit updateTrainState(false);
 	quit();
+}
+
+void AiTrainModule::handleProcessTrainModelColor1Output()
+{
+	QByteArray output = _processTrainModelColor1->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessTrainModelColor1Error()
+{
+	QByteArray errorOutput = _processTrainModelColor1->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+	int total = 100;
+	int complete = -1;
+
+	complete = parseProgressOO(errorStr, total);
+
+	if (complete == -1)
+	{
+		return;
+	}
+	complete = ((static_cast<double>(complete) / 100) * 25);
+	emit updateProgress(complete, 100);
+}
+
+void AiTrainModule::handleProcessTrainModelColor1Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("正在导出模型1");
+		emit updateProgress(0, 0);
+		copyModelToTempColor(1);
+		exportColor1ModelToEngine();
+	}
+	else
+	{
+		emit updateTrainTitle("训练失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessTrainModelColor2Error()
+{
+	QByteArray errorOutput = _processTrainModelColor2->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+	int total = 100;
+	int complete = -1;
+
+	complete = parseProgressOO(errorStr, total);
+
+	if (complete == -1)
+	{
+		return;
+	}
+	complete = ((static_cast<double>(complete) / 100) * 25);
+	emit updateProgress(complete + 25, 100);
+}
+
+void AiTrainModule::handleProcessTrainModelColor2Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("正在导出模型2");
+		emit updateProgress(0, 0);
+		copyModelToTempColor(2);
+		exportColor2ModelToEngine();
+	}
+	else
+	{
+		emit updateTrainTitle("训练失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessTrainModelColor3Output()
+{
+	QByteArray output = _processTrainModelColor3->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessTrainModelColor3Error()
+{
+	QByteArray errorOutput = _processTrainModelColor3->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+	int total = 100;
+	int complete = -1;
+
+	complete = parseProgressOO(errorStr, total);
+
+	if (complete == -1)
+	{
+		return;
+	}
+	complete = ((static_cast<double>(complete) / 100) * 25);
+	emit updateProgress(complete + 50, 100);
+}
+
+void AiTrainModule::handleProcessTrainModelColor3Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("正在导出模型3");
+		emit updateProgress(0, 0);
+		copyModelToTempColor(3);
+		exportColor3ModelToEngine();
+	}
+	else
+	{
+		emit updateTrainTitle("训练失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessTrainModelColor4Error()
+{
+	QByteArray errorOutput = _processTrainModelColor4->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+	int total = 100;
+	int complete = -1;
+
+	complete = parseProgressOO(errorStr, total);
+
+	if (complete == -1)
+	{
+		return;
+	}
+	complete = ((static_cast<double>(complete) / 100) * 25);
+	emit updateProgress(complete + 75, 100);
+}
+
+void AiTrainModule::handleProcessTrainModelColor4Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("正在导出模型4");
+		emit updateProgress(0, 0);
+		copyModelToTempColor(4);
+		exportColor4ModelToEngine();
+	}
+	else
+	{
+		emit updateTrainTitle("训练失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessExportEngineColor1Error()
+{
+	QByteArray errorOutput = _processExportToEngineColor1->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+}
+
+void AiTrainModule::handleProcessExportEngineColor1Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit appRunLog("清理旧的训练数据....");
+		clear_older_trainData_color();
+		emit appRunLog("拷贝训练文件");
+		copyTrainData(dataSetGood2);
+		copyTrainData(dataSetBad2);
+		emit updateTrainTitle("正在训练");
+		emit updateProgress(25, 100);
+		trainColorModel(2);
+	}
+	else
+	{
+		emit updateTrainTitle("导出失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessExportEngineColor2Error()
+{
+	QByteArray errorOutput = _processExportToEngineColor2->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+}
+
+void AiTrainModule::handleProcessExportEngineColor2Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit appRunLog("清理旧的训练数据....");
+		clear_older_trainData_color();
+		emit appRunLog("拷贝训练文件");
+		copyTrainData(dataSetGood3);
+		copyTrainData(dataSetBad3);
+		emit updateTrainTitle("正在训练");
+		emit updateProgress(50, 100);
+		trainColorModel(3);
+	}
+	else
+	{
+		emit updateTrainTitle("导出失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessExportEngineColor3Error()
+{
+	QByteArray errorOutput = _processExportToEngineColor3->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+}
+
+void AiTrainModule::handleProcessExportEngineColor3Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit appRunLog("清理旧的训练数据....");
+		clear_older_trainData_color();
+		emit appRunLog("拷贝训练文件");
+		copyTrainData(dataSetGood4);
+		copyTrainData(dataSetBad4);
+		emit updateTrainTitle("正在训练");
+		emit updateProgress(75, 100);
+		trainColorModel(4);
+	}
+	else
+	{
+		emit updateTrainTitle("导出失败");
+		emit updateTrainState(false);
+		auto& global = GlobalStructData::getInstance();
+		global.isTrainModel = false;
+		quit();
+	}
+}
+
+void AiTrainModule::handleProcessExportEngineColor4Error()
+{
+	QByteArray errorOutput = _processExportToEngineColor4->readAllStandardError();
+	QString errorStr = QString::fromLocal8Bit(errorOutput);
+	emit appRunLog(errorStr);
+}
+
+void AiTrainModule::handleProcessExportEngineColor4Finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if (exitStatus == QProcess::NormalExit)
+	{
+		emit updateTrainTitle("训练完成");
+		emit updateProgress(100, 100);
+		packageModelToStorage();
+	}
+	else
+	{
+		emit updateTrainTitle("导出失败");
+	}
+	auto& global = GlobalStructData::getInstance();
+	global.isTrainModel = false;
+	emit updateTrainState(false);
+	quit();
+}
+
+void AiTrainModule::handleProcessExportEngineColor4Output()
+{
+	QByteArray output = _processExportToEngineColor4->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessExportEngineColor3Output()
+{
+	QByteArray output = _processExportToEngineColor3->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessExportEngineColor2Output()
+{
+	QByteArray output = _processExportToEngineColor2->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessExportEngineColor1Output()
+{
+	QByteArray output = _processExportToEngineColor1->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessTrainModelColor4Output()
+{
+	QByteArray output = _processTrainModelColor4->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
+}
+
+void AiTrainModule::handleProcessTrainModelColor2Output()
+{
+	QByteArray output = _processTrainModelColor2->readAllStandardOutput();
+	QString outputStr = QString::fromLocal8Bit(output);
+	emit appRunLog(outputStr); // 将输出内容发送到日志或界面
 }
 
 void AiTrainModule::cancelTrain()
 {
-	if (_processTrainModel->state() == QProcess::Running) {
-		_processTrainModel->kill();
-		_processTrainModel->waitForFinished();
+	emit updateTrainTitle("正在终止");
+	if (_processTrainModelBladeShape->state() == QProcess::Running) {
+		_processTrainModelBladeShape->kill();
+		_processTrainModelBladeShape->waitForFinished();
 	}
 	if (_processExportToEngine->state() == QProcess::Running) {
 		_processExportToEngine->kill();
 		_processExportToEngine->waitForFinished();
+	}
+	if (_processTrainModelColor1->state() == QProcess::Running)
+	{
+		_processTrainModelColor1->kill();
+		_processTrainModelColor1->waitForFinished();
+	}
+	if (_processTrainModelColor2->state() == QProcess::Running)
+	{
+		_processTrainModelColor2->kill();
+		_processTrainModelColor2->waitForFinished();
+	}
+	if (_processTrainModelColor3->state() == QProcess::Running)
+	{
+		_processTrainModelColor3->kill();
+		_processTrainModelColor3->waitForFinished();
+	}
+	if (_processTrainModelColor4->state() == QProcess::Running)
+	{
+		_processTrainModelColor4->kill();
+		_processTrainModelColor4->waitForFinished();
+	}
+	if (_processExportToEngineColor1->state() == QProcess::Running)
+	{
+		_processExportToEngineColor1->kill();
+		_processExportToEngineColor1->waitForFinished();
+	}
+	if (_processExportToEngineColor2->state() == QProcess::Running)
+	{
+		_processExportToEngineColor2->kill();
+		_processExportToEngineColor2->waitForFinished();
+	}
+	if (_processExportToEngineColor3->state() == QProcess::Running)
+	{
+		_processExportToEngineColor3->kill();
+		_processExportToEngineColor3->waitForFinished();
+	}
+	if (_processExportToEngineColor4->state() == QProcess::Running)
+	{
+		_processExportToEngineColor4->kill();
+		_processExportToEngineColor4->waitForFinished();
 	}
 	emit updateTrainTitle("训练已取消");
 	emit updateTrainState(false);

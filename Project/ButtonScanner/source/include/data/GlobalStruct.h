@@ -126,7 +126,10 @@ public:
 public:
 	QString enginePath{ R"(C:\Users\34615\Desktop\best.engine)" };
 	QString namePath{ R"(C:\Users\34615\Desktop\index.names)" };
-	QString onnxEngineOOPath{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
+	QString onnxEngineOOPath1{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
+	QString onnxEngineOOPath2{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
+	QString onnxEngineOOPath3{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
+	QString onnxEngineOOPath4{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
 	QString onnxEngineSOPath{ R"(C:\Users\34615\Desktop\modelOnnx.onnx)" };
 public:
 	QString aiLearnOldConfigPath;

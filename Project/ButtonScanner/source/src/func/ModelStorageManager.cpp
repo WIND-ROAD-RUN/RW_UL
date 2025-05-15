@@ -312,6 +312,68 @@ QVector<QString> ModelStorageManager::getGoodImagePathList()
 	return goodImagePathList;
 }
 
+QVector<QString> ModelStorageManager::getBadImagePathList(int index)
+{
+	QVector<QString> badImagePathList;
+	auto& RootPath = globalPath.modelStorageManagerTempPath;
+	QString imageTempDir = RootPath + R"(Image\)";
+	QString workBadFolder;
+	switch (index)
+	{
+	case 1:
+		workBadFolder = imageTempDir + R"(work1\bad\)";
+		break;
+	case 2:
+		workBadFolder = imageTempDir + R"(work2\bad\)";
+		break;
+	case 3:
+		workBadFolder = imageTempDir + R"(work3\bad\)";
+		break;
+	case 4:
+		workBadFolder = imageTempDir + R"(work4\bad\)";
+		break;
+	default:
+		break;
+	}
+	QDir workBadDir(workBadFolder);
+
+	for (const QString& file : workBadDir.entryList(QDir::Files)) {
+		badImagePathList.append(workBadDir.absoluteFilePath(file));
+	}
+	return badImagePathList;
+}
+
+QVector<QString> ModelStorageManager::getGoodImagePathList(int index)
+{
+	QVector<QString> goodImagePathList;
+	auto& RootPath = globalPath.modelStorageManagerTempPath;
+	QString imageTempDir = RootPath + R"(Image\)";
+	QString workGoodFolder;
+	switch (index)
+	{
+	case 1:
+		workGoodFolder = imageTempDir + R"(work1\good\)";
+		break;
+	case 2:
+		workGoodFolder = imageTempDir + R"(work2\good\)";
+		break;
+	case 3:
+		workGoodFolder = imageTempDir + R"(work3\good\)";
+		break;
+	case 4:
+		workGoodFolder = imageTempDir + R"(work4\good\)";
+		break;
+	default:
+		break;
+	}
+	QDir workGoodDir(workGoodFolder);
+	// 获取绝对路径
+	for (const QString& file : workGoodDir.entryList(QDir::Files)) {
+		goodImagePathList.append(workGoodDir.absoluteFilePath(file));
+	}
+	return goodImagePathList;
+}
+
 void ModelStorageManager::check_work2Temp(const QString& imageRootPath)
 {
 	QString work2ImageTemp = imageRootPath + R"(work2\)";
