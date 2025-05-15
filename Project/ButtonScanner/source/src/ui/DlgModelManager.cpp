@@ -223,6 +223,7 @@ void DlgModelManager::pbtn_loadModel_clicked()
 	_loadingDialog->hide();
 	emit checkPosiviveRadioButtonCheck();
 	this->hide();
+	globalStruct.modelStorageManager->check_work_temp(globalStruct.modelStorageManager->imageSavePath);
 }
 
 void DlgModelManager::showEvent(QShowEvent* show_event)

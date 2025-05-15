@@ -164,24 +164,10 @@ void DlgNewProduction::img_display_work1(const QPixmap& pixmap)
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
-		if (_info.state == DlgNewProductionInfo::CheckColor)
-		{
-			if (ui->rbtn_tab4_firstWork1->isChecked())
-			{
-				modelStorageManager->work1_good_count_ += 1;
-				modelStorageManager->save_work1_image(pixmap.toImage(), true);
-				ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
-				ui->label_tab4_imgDisplay1->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-			}
-		}
-		else
-		{
-			modelStorageManager->work1_good_count_ += 1;
-			modelStorageManager->save_work1_image(pixmap.toImage(), true);
-			ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
-			ui->label_tab4_imgDisplay1->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-		}
-
+		modelStorageManager->work1_good_count_ += 1;
+		modelStorageManager->save_work1_image(pixmap.toImage(), true);
+		ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
+		ui->label_tab4_imgDisplay1->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 }
 
@@ -202,23 +188,10 @@ void DlgNewProduction::img_display_work2(const QPixmap& pixmap)
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
-		if (_info.state == DlgNewProductionInfo::CheckColor)
-		{
-			if (ui->rbtn_tab4_firstWork2->isChecked())
-			{
-				modelStorageManager->work2_good_count_ += 1;
-				modelStorageManager->save_work2_image(pixmap.toImage(), true);
-				ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
-				ui->label_tab4_imgDisplay2->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-			}
-		}
-		else
-		{
-			modelStorageManager->work2_good_count_ += 1;
-			modelStorageManager->save_work2_image(pixmap.toImage(), true);
-			ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
-			ui->label_tab4_imgDisplay2->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-		}
+		modelStorageManager->work2_good_count_ += 1;
+		modelStorageManager->save_work2_image(pixmap.toImage(), true);
+		ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
+		ui->label_tab4_imgDisplay2->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 }
 
@@ -239,23 +212,10 @@ void DlgNewProduction::img_display_work3(const QPixmap& pixmap)
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
-		if (_info.state == DlgNewProductionInfo::CheckColor)
-		{
-			if (ui->rbtn_tab4_firstWork3->isChecked())
-			{
-				modelStorageManager->work3_good_count_ += 1;
-				modelStorageManager->save_work3_image(pixmap.toImage(), true);
-				ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
-				ui->label_tab4_imgDisplay3->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-			}
-		}
-		else
-		{
-			modelStorageManager->work3_good_count_ += 1;
-			modelStorageManager->save_work3_image(pixmap.toImage(), true);
-			ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
-			ui->label_tab4_imgDisplay3->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-		}
+		modelStorageManager->work3_good_count_ += 1;
+		modelStorageManager->save_work3_image(pixmap.toImage(), true);
+		ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
+		ui->label_tab4_imgDisplay3->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 }
 
@@ -276,24 +236,10 @@ void DlgNewProduction::img_display_work4(const QPixmap& pixmap)
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
-		if (_info.state == DlgNewProductionInfo::CheckColor)
-		{
-			if (ui->rbtn_tab4_firstWork4->isChecked())
-			{
-				modelStorageManager->work4_good_count_ += 1;
-				modelStorageManager->save_work4_image(pixmap.toImage(), true);
-				ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
-				ui->label_tab4_imgDisplay4->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-			}
-		}
-		else
-		{
-			modelStorageManager->work4_good_count_ += 1;
-			modelStorageManager->save_work4_image(pixmap.toImage(), true);
-			ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
-			ui->label_tab4_imgDisplay4->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-		}
-
+		modelStorageManager->work4_good_count_ += 1;
+		modelStorageManager->save_work4_image(pixmap.toImage(), true);
+		ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
+		ui->label_tab4_imgDisplay4->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 }
 
@@ -475,6 +421,16 @@ void DlgNewProduction::showEvent(QShowEvent* show_event)
 	}
 	else
 	{
+		auto& modelStorageManager = GlobalStructData::getInstance().modelStorageManager;
+		ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
+		ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
+		ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
+		ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
+		ui->label_tab3_tabImgCount1->setText(QString::number(modelStorageManager->work1_bad_count_));
+		ui->label_tab3_tabImgCount2->setText(QString::number(modelStorageManager->work2_bad_count_));
+		ui->label_tab3_tabImgCount3->setText(QString::number(modelStorageManager->work3_bad_count_));
+		ui->label_tab3_tabImgCount4->setText(QString::number(modelStorageManager->work4_bad_count_));
+
 		ui->label_trainState->setText("未开始训练");
 		ui->progressBar_tab5->setValue(0);
 		ui->plainTextEdit_tab5->clear();
