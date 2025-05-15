@@ -166,6 +166,11 @@ void DlgProduceLineSet::pbtn_blowDistance1_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowDistance1->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowDistance1 = value.toDouble();
@@ -180,6 +185,11 @@ void DlgProduceLineSet::pbtn_blowTime1_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowTime1->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowTime1 = value.toDouble();
@@ -194,6 +204,11 @@ void DlgProduceLineSet::pbtn_blowDistance2_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowDistance2->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowDistance2 = value.toDouble();
@@ -208,6 +223,11 @@ void DlgProduceLineSet::pbtn_blowTime2_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowTime2->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowTime2 = value.toDouble();
@@ -222,6 +242,11 @@ void DlgProduceLineSet::pbtn_blowDistance3_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowDistance3->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowDistance3 = value.toDouble();
@@ -236,6 +261,11 @@ void DlgProduceLineSet::pbtn_blowTime3_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowTime3->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowTime3 = value.toDouble();
@@ -250,6 +280,11 @@ void DlgProduceLineSet::pbtn_blowDistance4_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowDistance4->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowDistance4 = value.toDouble();
@@ -264,6 +299,11 @@ void DlgProduceLineSet::pbtn_blowTime4_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowTime4->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.blowTime4 = value.toDouble();
@@ -278,6 +318,11 @@ void DlgProduceLineSet::pbtn_pixelEquivalent1_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_pixelEquivalent1->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.pixelEquivalent1 = value.toDouble();
@@ -292,6 +337,11 @@ void DlgProduceLineSet::pbtn_pixelEquivalent2_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_pixelEquivalent2->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.pixelEquivalent2 = value.toDouble();
@@ -306,6 +356,11 @@ void DlgProduceLineSet::pbtn_pixelEquivalent3_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_pixelEquivalent3->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.pixelEquivalent3 = value.toDouble();
@@ -320,6 +375,11 @@ void DlgProduceLineSet::pbtn_pixelEquivalent4_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_pixelEquivalent4->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.pixelEquivalent4 = value.toDouble();
@@ -334,6 +394,11 @@ void DlgProduceLineSet::pbtn_limit1_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_limit1->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.limit1 = value.toDouble();
@@ -348,6 +413,11 @@ void DlgProduceLineSet::pbtn_limit2_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_limit2->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.limit2 = value.toDouble();
@@ -362,6 +432,11 @@ void DlgProduceLineSet::pbtn_limit3_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_limit3->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.limit3 = value.toDouble();
@@ -376,6 +451,11 @@ void DlgProduceLineSet::pbtn_limit4_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_limit4->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.limit4 = value.toDouble();
@@ -390,6 +470,11 @@ void DlgProduceLineSet::pbtn_minBrightness_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_minBrightness->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.minBrightness = value.toDouble();
@@ -404,6 +489,11 @@ void DlgProduceLineSet::pbtn_maxBrightness_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_maxBrightness->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.maxBrightness = value.toDouble();
@@ -444,6 +534,11 @@ void DlgProduceLineSet::pbtn_beltReductionRatio_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_beltReductionRatio->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.beltReductionRatio = value.toDouble();
@@ -458,6 +553,11 @@ void DlgProduceLineSet::pbtn_accelerationAndDeceleration_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_accelerationAndDeceleration->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.accelerationAndDeceleration = value.toDouble();
@@ -471,6 +571,11 @@ void DlgProduceLineSet::pbtn_codeWheel_clicked() {
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_codeWheel->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.codeWheel = value.toDouble();
@@ -484,6 +589,11 @@ void DlgProduceLineSet::pbtn_pulseFactor_clicked() {
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_pulseFactor->setText(value);
 		GlobalStructData.dlgProduceLineSetConfig.pulseFactor = value.toDouble();

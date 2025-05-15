@@ -15,6 +15,15 @@ NumberKeyboard::~NumberKeyboard()
 	delete ui;
 }
 
+QString NumberKeyboard::getValue() const
+{
+	if (value.isEmpty())
+	{
+		return "0";
+	}
+	return value;
+}
+
 void NumberKeyboard::build_ui()
 {
 	ui->lineEdit->setFocus();

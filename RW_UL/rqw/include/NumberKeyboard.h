@@ -15,7 +15,7 @@ public:
 	NumberKeyboard(QWidget* parent = nullptr);
 	~NumberKeyboard();
 public:
-	QString getValue() const { return value; }
+	QString getValue() const;
 private:
 	void build_ui();
 	void build_connect();

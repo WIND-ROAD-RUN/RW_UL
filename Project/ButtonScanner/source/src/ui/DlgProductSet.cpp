@@ -214,6 +214,11 @@ void DlgProductSet::pbtn_outsideDiameterValue_clicked() {
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_outsideDiameterValue->setText(value);
 		GlobalStructData.dlgProductSetConfig.outsideDiameterValue = value.toDouble();
@@ -231,6 +236,11 @@ void DlgProductSet::pbtn_outsideDiameterDeviation_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_outsideDiameterDeviation->setText(value);
 		GlobalStructData.dlgProductSetConfig.outsideDiameterDeviation = value.toDouble();
@@ -245,6 +255,11 @@ void DlgProductSet::pbtn_photography_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_photography->setText(value);
 		GlobalStructData.dlgProductSetConfig.photography = value.toDouble();
@@ -259,6 +274,11 @@ void DlgProductSet::pbtn_blowTime_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_blowTime->setText(value);
 		GlobalStructData.dlgProductSetConfig.blowTime = value.toDouble();
@@ -273,6 +293,11 @@ void DlgProductSet::pbtn_outerRadius_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 )
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_outerRadius->setText(value);
 		GlobalStructData.dlgProductSetConfig.outerRadius = value.toDouble();
@@ -287,6 +312,11 @@ void DlgProductSet::pbtn_innerRadius_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_innerRadius->setText(value);
 		GlobalStructData.dlgProductSetConfig.innerRadius = value.toDouble();
@@ -301,6 +331,11 @@ void DlgProductSet::ptn_holesCountValue_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 10)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-10之间的值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->ptn_holesCountValue->setText(value);
 		GlobalStructData.dlgProductSetConfig.holesCountValue = value.toDouble();
@@ -353,6 +388,11 @@ void DlgProductSet::pbtn_apertureValue_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_apertureValue->setText(value);
 		GlobalStructData.dlgProductSetConfig.apertureValue = value.toDouble();
@@ -386,6 +426,11 @@ void DlgProductSet::pbtn_holeCenterDistanceValue_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_holeCenterDistanceValue->setText(value);
 		GlobalStructData.dlgProductSetConfig.holeCenterDistanceValue = value.toDouble();

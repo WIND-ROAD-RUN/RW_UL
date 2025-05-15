@@ -1253,6 +1253,11 @@ void ButtonScanner::pbtn_beltSpeed_clicked()
 		auto isAccept = numKeyBord.exec();
 		if (isAccept == QDialog::Accepted) {
 			auto value = numKeyBord.getValue();
+			if (value.toDouble() < 0 || value.toDouble() > 1200)
+			{
+				QMessageBox::warning(this, "提示", "请输入0-1200之间的值");
+				return;
+			}
 			auto& GlobalStructData = GlobalStructData::getInstance();
 			ui->pbtn_beltSpeed->setText(value);
 			GlobalStructData.mainWindowConfig.beltSpeed = value.toDouble();
