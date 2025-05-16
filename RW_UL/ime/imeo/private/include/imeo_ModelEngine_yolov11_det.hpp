@@ -10,7 +10,7 @@
 
 namespace rw {
     namespace imeo {
-        class ModelEngine_Yolov11_Obb
+        class ModelEngine_Yolov11_det
 	        :public ModelEngine{
         private:
             struct Detection
@@ -20,8 +20,8 @@ namespace rw {
                 cv::Rect bbox;
             };
         public:
-            ModelEngine_Yolov11_Obb(const std::string& modelPath);
-            ~ModelEngine_Yolov11_Obb() override;
+            ModelEngine_Yolov11_det(const std::string& modelPath);
+            ~ModelEngine_Yolov11_det() override;
         public:
             std::string  input_name;
             std::string  output_name;

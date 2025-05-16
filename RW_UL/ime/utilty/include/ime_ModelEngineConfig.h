@@ -18,7 +18,7 @@ namespace rw {
 
 	enum class ModelType
 	{
-		yolov11_obb,
+		yolov11_det,
 		yolov11_seg
 	};
 

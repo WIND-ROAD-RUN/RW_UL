@@ -10,7 +10,7 @@ namespace rw
 {
 	namespace imet
 	{
-		class ModelEngine_Yolov11_obb
+		class ModelEngine_Yolov11_det
 			: public ModelEngine
 		{
 		private:
@@ -22,9 +22,9 @@ namespace rw
 				cv::Rect bbox;
 			};
 		public:
-			ModelEngine_Yolov11_obb(const std::string & modelPath, nvinfer1::ILogger& logger);
+			ModelEngine_Yolov11_det(const std::string & modelPath, nvinfer1::ILogger& logger);
 		public:
-			~ModelEngine_Yolov11_obb() override;
+			~ModelEngine_Yolov11_det() override;
 		private:
 			void init(std::string engine_path, nvinfer1::ILogger& logger);
 		private:

@@ -69,7 +69,7 @@ void AutomaticAnnotation::build_ui()
 	ui->cBox_checkDeployType->addItem("OnnxRuntime");
 	ui->cBox_checkDeployType->setCurrentIndex(0);
 
-	ui->cBox_checkModelType->addItem("Yolov11_obb");
+	ui->cBox_checkModelType->addItem("Yolov11_det");
 	ui->cBox_checkModelType->addItem("Yolov11_seg");
 	ui->cBox_checkModelType->setCurrentIndex(0);
 
@@ -349,11 +349,11 @@ rw::ModelType AutomaticAnnotation::getModelType()
 	}
 	else if (currentModelType == "Yolov11_obb")
 	{
-		return rw::ModelType::yolov11_obb;
+		return rw::ModelType::yolov11_det;
 	}
 	else
 	{
-		return rw::ModelType::yolov11_obb;
+		return rw::ModelType::yolov11_det;
 	}
 }
 
