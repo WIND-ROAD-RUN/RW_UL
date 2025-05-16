@@ -4,6 +4,14 @@
 #include<vector>
 
 namespace rw {
+	enum class ImagePretreatmentPolicy
+	{
+		Resize = 0,
+		LetterBox = 1,
+		CenterCrop = 2,
+		AdaptiveResize = 3
+	};
+
 	struct ModelEngineConfig {
 	public:
 		//控制检测结果的最低置信度，过滤低置信度的候选框。
@@ -14,6 +22,8 @@ namespace rw {
 		std::vector<size_t> need_keep_classids{};
 	public:
 		std::string modelPath;
+	public:
+		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::LetterBox;
 	};
 
 	enum class ModelType
