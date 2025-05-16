@@ -13,6 +13,7 @@ class AutomaticAnnotationThread : public QThread {
     Q_OBJECT
 public:
     QString labelType;
+    QVector<int> labelList;
 public:
     QString labelOutput;
 	QString imageOutput;

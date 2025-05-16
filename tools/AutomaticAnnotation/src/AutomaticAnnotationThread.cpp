@@ -6,6 +6,21 @@
 #include<QFile>
 #include<QFileInfo>
 #include<QDir>
+#include <QSet>
+static std::vector<rw::DetectionRectangleInfo> filterByLabelList(
+const std::vector<rw::DetectionRectangleInfo>& input,
+const QVector<int>& labelList)
+{
+std::vector<rw::DetectionRectangleInfo> result;
+QSet<int> labelSet(labelList.begin(), labelList.end()); // Corrected initialization of QSet
+
+for (const auto& info : input) {
+	if (labelSet.contains(static_cast<int>(info.classId))) {
+		result.push_back(info);
+	}
+}
+return result;
+}
 
 AutomaticAnnotationThread::AutomaticAnnotationThread(const QVector<QString>& imagePaths, QObject* parent)
     : QThread(parent), m_imagePaths(imagePaths) {
@@ -45,8 +60,18 @@ QString AutomaticAnnotationThread::getObjectSegmentDataSetItem(
 		// 归一化中心点和宽高
 		double norCenterX = static_cast<double>(item.center_x) / static_cast<double>(width);
 		double norCenterY = static_cast<double>(item.center_y) / static_cast<double>(height);
-		double norWidth = static_cast<double>(item.width) / static_cast<double>(width);
-		double norHeight = static_cast<double>(item.height) / static_cast<double>(height);
+		double norWidth;
+		double norHeight;
+		if (item.width< item.height)
+		{
+			norWidth = static_cast<double>(item.width) / static_cast<double>(width);
+			norHeight = static_cast<double>(item.width) / static_cast<double>(height);
+		}
+		else
+		{
+			norWidth = static_cast<double>(item.height) / static_cast<double>(width);
+			norHeight = static_cast<double>(item.height) / static_cast<double>(height);
+		}
 
 		// 计算椭圆上的 30 个点
 		constexpr int numPoints = 30;
@@ -143,6 +168,7 @@ void AutomaticAnnotationThread::run()
 			continue;
 		}
         auto result = engine->processImg(mat);
+		result = filterByLabelList(result, labelList);
 
 		auto fileName = QFileInfo(path).baseName();
 
