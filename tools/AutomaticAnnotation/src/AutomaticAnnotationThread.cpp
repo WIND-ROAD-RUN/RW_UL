@@ -6,6 +6,21 @@
 #include<QFile>
 #include<QFileInfo>
 #include<QDir>
+#include <QSet>
+static std::vector<rw::DetectionRectangleInfo> filterByLabelList(
+const std::vector<rw::DetectionRectangleInfo>& input,
+const QVector<int>& labelList)
+{
+std::vector<rw::DetectionRectangleInfo> result;
+QSet<int> labelSet(labelList.begin(), labelList.end()); // Corrected initialization of QSet
+
+for (const auto& info : input) {
+	if (labelSet.contains(static_cast<int>(info.classId))) {
+		result.push_back(info);
+	}
+}
+return result;
+}
 
 AutomaticAnnotationThread::AutomaticAnnotationThread(const QVector<QString>& imagePaths, QObject* parent)
     : QThread(parent), m_imagePaths(imagePaths) {
@@ -143,6 +158,7 @@ void AutomaticAnnotationThread::run()
 			continue;
 		}
         auto result = engine->processImg(mat);
+		result = filterByLabelList(result, labelList);
 
 		auto fileName = QFileInfo(path).baseName();
 

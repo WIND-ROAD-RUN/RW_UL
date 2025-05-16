@@ -125,6 +125,15 @@ void AutomaticAnnotation::iniThread()
 	auto modelType = getModelType();
 	auto deployType = getDeployType();
 
+	QString labelListQString = ui->lEdit_labelList->text();
+	// 使用正则表达式分割，匹配非数字字符
+	QStringList strList = labelListQString.split(QRegularExpression("[^0-9]+"), Qt::SkipEmptyParts);
+
+	QVector<int> labelList;
+	for (const QString& str : strList) {
+		labelList.append(str.toInt());
+	}
+
 	try
 	{
 		auto test = rw::ModelEngineFactory::createModelEngine(config, modelType, deployType);
@@ -143,6 +152,7 @@ void AutomaticAnnotation::iniThread()
 			thread->labelOutput = labelOutput;
 			thread->imageOutput = imageOutput;
 			thread->deployType = deployType;
+			thread->labelList = labelList;
 			threads.push_back(thread);
 			connect(thread, &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage, Qt::QueuedConnection);
 		}
