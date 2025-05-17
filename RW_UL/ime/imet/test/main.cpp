@@ -2,7 +2,7 @@
 
 #include"NvInfer.h"
 #include"imet_ModelEngineFactory_TensorRT.hpp"
-#include"imet_ModelEngine_yolov11_seg.hpp"
+#include"imet_ModelEngine_yolov11_obb.hpp"
 #include<string>
 
 using namespace std;
@@ -10,10 +10,10 @@ using namespace cv;
 
 int main() {
 	rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\best.engine)";
-	auto model_engine =rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::yolov11_seg);
+	config.modelPath = R"(C:\Users\rw\Desktop\yolo11n-obb.engine)";
+	auto model_engine =rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::yolov11_obb);
 
-	const string path{ R"(C:\Users\rw\Desktop\1.png)" };
+	const string path{ R"(C:\Users\rw\Desktop\bus.jpg)" };
 
 	Mat image = imread(path);
 	if (image.empty())
