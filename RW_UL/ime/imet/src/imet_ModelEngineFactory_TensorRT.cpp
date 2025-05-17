@@ -38,9 +38,7 @@ namespace rw {
 				return nullptr;
 			}
 
-			modelEngine->setConf_threshold(config.conf_threshold);
-			modelEngine->setNms_threshold(config.nms_threshold);
-
+			modelEngine->setConfig(config);
 			return modelEngine;
 		}
 

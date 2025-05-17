@@ -1,6 +1,7 @@
 #pragma once
 
 #include"ime_ModelEngine.h"
+#include"ime_ModelEngineConfig.h"
 
 #include"NvInfer.h"
 
@@ -46,17 +47,12 @@ namespace rw
 			int num_detections;
 			int detection_attribute_size;
 			int num_classes = 80;
-			float conf_threshold = 0.3f;
-			float nms_threshold = 0.4f;
 
-			std::vector<cv::Scalar> colors;
+			ModelEngineConfig config;
 		public:
-			void setConf_threshold(float num){
-				conf_threshold = num;
-			}
-
-			void setNms_threshold(float num) {
-				nms_threshold = num;
+			void setConfig(const ModelEngineConfig& config)
+			{
+				this->config = config;
 			}
 		private:
 			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
