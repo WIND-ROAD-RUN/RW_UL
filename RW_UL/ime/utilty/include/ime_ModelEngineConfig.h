@@ -22,9 +22,11 @@ namespace rw {
 		//The set of classid will be together for nms
 		std::vector<size_t> classids_nms_together{};
 	public:
+		//The path of the model engine file.
 		std::string modelPath;
 	public:
-		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::LetterBox;
+		//The type of model engine.
+		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::Resize;
 	};
 
 	enum class ModelType

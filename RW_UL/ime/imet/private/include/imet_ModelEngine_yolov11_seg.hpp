@@ -30,7 +30,8 @@ namespace rw {
 			ModelEngine_Yolov11_seg(const std::string& modelPath, nvinfer1::ILogger& logger);
 			~ModelEngine_Yolov11_seg() override;
 		private:
-			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections);
+			std::vector<DetectionRectangleInfo> convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<DetectionSeg>& detections);
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 

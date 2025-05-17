@@ -12,8 +12,18 @@ namespace rw {
 		{
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
-			auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
-			(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+
+			if (config.imagePretreatmentPolicy== ImagePretreatmentPolicy::Resize)
+			{
+				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+			else
+			{
+				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+
 		}
 
 		void ModelEngine_Yolov11_seg::infer()
@@ -72,7 +82,7 @@ namespace rw {
 				output.push_back(result);
 			}
 
-			auto result = convertDetectionToDetectionRectangleInfo(output);
+			auto result = convertToDetectionRectangleInfo(output);
 			return result;
 		}
 
@@ -132,7 +142,21 @@ namespace rw {
 			delete runtime;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertDetectionToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
+		{
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				return convertWhenResize(detections);
+			}
+			else
+			{
+				return convertWhenResize(detections);
+			}
+			
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenResize(
+			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
 			result.reserve(detections.size());
@@ -160,6 +184,7 @@ namespace rw {
 			}
 			return result;
 		}
+
 		cv::Mat ModelEngine_Yolov11_seg::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();

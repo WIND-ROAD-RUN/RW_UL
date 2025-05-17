@@ -4,6 +4,7 @@
 int main()
 {
 	rw::ModelEngineConfig config;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::AdaptiveResize;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\SegModel.engine)";
 	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
 	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
