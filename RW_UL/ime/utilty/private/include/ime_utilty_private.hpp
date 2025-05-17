@@ -23,6 +23,16 @@ namespace rw
 		static cv::Mat letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color = cv::Scalar(0, 0, 0),
 			float* out_scale = nullptr, int* out_dw = nullptr, int* out_dh = nullptr);
 	public:
+		struct CenterCropParams {
+			int pad_left, pad_top;
+			int crop_x, crop_y;
+		};
+
+		static cv::Mat centerCrop(
+			const cv::Mat& src, int target_w, int target_h,
+			cv::Scalar pad_color = cv::Scalar(0, 0, 0),
+			CenterCropParams* out_params = nullptr
+		);
         
 	};
 	

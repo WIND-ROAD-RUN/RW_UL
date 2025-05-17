@@ -5,6 +5,7 @@
 #include"NvInfer.h"
 
 #include"ime_ModelEngineConfig.h"
+#include"ime_utilty_private.hpp"
 
 #include<string>
 
@@ -33,6 +34,7 @@ namespace rw {
 			std::vector<DetectionRectangleInfo> convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections);
 			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<DetectionSeg>& detections);
 			std::vector<DetectionRectangleInfo> convertWhenLetterBox(const std::vector<DetectionSeg>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenCentralCrop(const std::vector<DetectionSeg>& detections);
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 
@@ -63,8 +65,9 @@ namespace rw {
 			float letterBoxScale{};
 			int letterBoxdw{};
 			int letterBoxdh{};
+		private:
+			PreProcess::CenterCropParams centerCropParams;
 		};
-
 	}
 }
 

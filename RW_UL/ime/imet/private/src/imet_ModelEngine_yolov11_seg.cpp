@@ -1,7 +1,6 @@
 #include "imet_ModelEngine_yolov11_seg.hpp"
 
 #include"cuda_device_runtime_api.h"
-#include"ime_utilty_private.hpp"
 
 #include<fstream>
 #include<memory>
@@ -22,6 +21,12 @@ namespace rw {
 			{
 				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h,config.letterBoxColor,letterBoxScale,letterBoxdw,letterBoxdh);
 				auto infer_image = cv::dnn::blobFromImage(letterbox_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
+				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
 			else
@@ -158,6 +163,10 @@ namespace rw {
 			{
 				return convertWhenLetterBox(detections);
 			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				return convertWhenCentralCrop(detections);
+			}
 			else
 			{
 				return convertWhenResize(detections);
@@ -188,6 +197,43 @@ namespace rw {
 				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
 				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
 				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenCentralCrop(
+			const std::vector<DetectionSeg>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
+
+			const auto& params = centerCropParams;
+
+			for (const auto& item : detections)
+			{
+				// 反算到原图坐标
+				float x1 = item.bbox.x + params.crop_x - params.pad_left;
+				float y1 = item.bbox.y + params.crop_y - params.pad_top;
+				float x2 = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left;
+				float y2 = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top;
+
+				DetectionRectangleInfo resultItem;
+				resultItem.leftTop.first = x1;
+				resultItem.leftTop.second = y1;
+				resultItem.rightTop.first = x2;
+				resultItem.rightTop.second = y1;
+				resultItem.leftBottom.first = x1;
+				resultItem.leftBottom.second = y2;
+				resultItem.rightBottom.first = x2;
+				resultItem.rightBottom.second = y2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.center_x = (x1 + x2) / 2;
+				resultItem.center_y = (y1 + y2) / 2;
+				resultItem.area = resultItem.width * resultItem.height;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
 				result.push_back(resultItem);

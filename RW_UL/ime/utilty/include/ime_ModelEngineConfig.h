@@ -30,6 +30,7 @@ namespace rw {
 		//The type of model engine.
 		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::Resize;
 		cv::Scalar letterBoxColor{ 0, 0, 0 };
+		cv::Scalar centerCropColor{ 0, 0, 0 };
 	};
 
 	enum class ModelType

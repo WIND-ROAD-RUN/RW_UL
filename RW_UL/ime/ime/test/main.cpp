@@ -4,7 +4,7 @@
 int main()
 {
 	rw::ModelEngineConfig config;
-	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::Resize;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\SegModel.engine)";
 	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
 	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
@@ -18,38 +18,53 @@ int main()
 	cv::waitKey(0);
 }
 //#include <opencv2/opencv.hpp>
+//struct CenterCropParams {
+//    int pad_left, pad_top;
+//    int crop_x, crop_y;
+//};
 //
-//// letterbox函数：等比例缩放+填充，参数改为引用
-//cv::Mat letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color,
-//    float& out_scale, int& out_dw, int& out_dh)
+//static cv::Mat centerCrop(
+//    const cv::Mat& src, int target_w, int target_h, 
+//    cv::Scalar pad_color,
+//    CenterCropParams* out_params = nullptr
+//    )
 //{
 //    int src_w = src.cols;
 //    int src_h = src.rows;
-//    float r = std::min(target_w / (float)src_w, target_h / (float)src_h);
-//    int new_unpad_w = int(round(src_w * r));
-//    int new_unpad_h = int(round(src_h * r));
-//    int dw = (target_w - new_unpad_w) / 2;
-//    int dh = (target_h - new_unpad_h) / 2;
 //
-//    cv::Mat resized;
-//    cv::resize(src, resized, cv::Size(new_unpad_w, new_unpad_h));
+//    int pad_left = std::max(0, (target_w - src_w) / 2);
+//    int pad_right = std::max(0, target_w - src_w - pad_left);
+//    int pad_top = std::max(0, (target_h - src_h) / 2);
+//    int pad_bottom = std::max(0, target_h - src_h - pad_top);
 //
-//    cv::Mat out(target_h, target_w, src.type(), color);
-//    resized.copyTo(out(cv::Rect(dw, dh, new_unpad_w, new_unpad_h)));
+//    cv::Mat padded;
+//    if (pad_left > 0 || pad_right > 0 || pad_top > 0 || pad_bottom > 0) {
+//        cv::copyMakeBorder(src, padded, pad_top, pad_bottom, pad_left, pad_right, cv::BORDER_CONSTANT, pad_color);
+//    }
+//    else {
+//        padded = src;
+//    }
 //
-//    out_scale = r;
-//    out_dw = dw;
-//    out_dh = dh;
-//    return out;
+//    int crop_x = std::max(0, (padded.cols - target_w) / 2);
+//    int crop_y = std::max(0, (padded.rows - target_h) / 2);
+//
+//    if (out_params) {
+//        out_params->pad_left = pad_left;
+//        out_params->pad_top = pad_top;
+//        out_params->crop_x = crop_x;
+//        out_params->crop_y = crop_y;
+//    }
+//
+//    cv::Rect roi(crop_x, crop_y, target_w, target_h);
+//    return padded(roi).clone();
 //}
 //
-//// 用法示例
 //int main() {
 //    cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
-//    int input_w = 640, input_h = 640;
+//    int input_w = 200, input_h = 200;
 //    float scale;
 //    int dw, dh;
-//    cv::Mat letterbox_img = letterbox(mat, input_w, input_h, cv::Scalar(255, 255, 255), scale, dw, dh);
+//    cv::Mat letterbox_img = centerCrop(mat, input_w, input_h, cv::Scalar(255, 255, 255));
 //
 //    // 归一化和通道变换
 //    auto infer_image = cv::dnn::blobFromImage(letterbox_img, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true, false);
