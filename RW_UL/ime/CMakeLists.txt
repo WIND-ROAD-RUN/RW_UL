@@ -15,3 +15,4 @@ FIND_SOURCES_AND_HEADERS(UTILTY_SRC_LIST_PRIVATE
 add_subdirectory(imet)
 add_subdirectory(imeo)
 add_subdirectory(ime)
+add_subdirectory(utilty)

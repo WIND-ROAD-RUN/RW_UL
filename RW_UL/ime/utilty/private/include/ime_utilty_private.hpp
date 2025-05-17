@@ -14,5 +14,9 @@ namespace rw
 		float conf_threshold,
 		float nms_threshold,
 		const std::vector<size_t>& need_keep_classids);
+
+	struct PreProcess {
+
+	};
 	
 }

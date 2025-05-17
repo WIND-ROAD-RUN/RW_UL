@@ -4,9 +4,9 @@
 int main()
 {
 	rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\model\best_seg.onnx)";
-	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::OnnxRuntime);
-	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\1.png)");
+	config.modelPath = R"(C:\Users\rw\Desktop\models\SegModel.engine)";
+	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
+	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
 	if (image.empty())
 	{
 		std::cerr << "Error reading image: " << "D:/yolo/build/bus.jpg" << std::endl;
