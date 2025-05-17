@@ -4,6 +4,8 @@
 
 #include"NvInfer.h"
 
+#include"ime_ModelEngineConfig.h"
+
 #include<string>
 
 namespace rw {
@@ -46,20 +48,11 @@ namespace rw {
 			int maskCoefficientNum;
 			int detection_attribute_size;
 			int num_classes = 80;
-			float conf_threshold = 0.3f;
-			float nms_threshold = 0.4f;
-		private:
-			std::vector<size_t> need_keep_classids{};
+			rw::ModelEngineConfig config;
 		public:
-			void setConf_threshold(float num) {
-				conf_threshold = num;
-			}
-
-			void setNms_threshold(float num) {
-				nms_threshold = num;
-			}
-			void setNeed_keep_classids(std::vector<size_t> num) {
-				need_keep_classids = num;
+			void setConfig(const ModelEngineConfig & modelConfig)
+			{
+				config = modelConfig;
 			}
 		private:
 			int sourceWidth{};

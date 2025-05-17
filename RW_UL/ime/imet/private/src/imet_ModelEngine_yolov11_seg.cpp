@@ -41,7 +41,7 @@ namespace rw {
 				double score;
 				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
 
-				if (score > conf_threshold) {
+				if (score > config.conf_threshold) {
 					const float cx = det_output.at<float>(0, i);
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
@@ -60,7 +60,7 @@ namespace rw {
 			}
 
 			std::vector<int> nms_result = nmsWithKeepClass(
-				boxes, class_ids, confidences, conf_threshold, nms_threshold, need_keep_classids);
+				boxes, class_ids, confidences, config.conf_threshold, config.nms_threshold, config.classids_nms_together);
 
 			for (int i = 0; i < nms_result.size(); i++)
 			{
@@ -135,9 +135,9 @@ namespace rw {
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertDetectionToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
 			auto scaleX = sourceWidth / static_cast<float>(input_w);
 			auto scaleY = sourceHeight / static_cast<float>(input_h);
-			result.reserve(detections.size());
 			for (const auto& item : detections)
 			{
 				DetectionRectangleInfo resultItem;

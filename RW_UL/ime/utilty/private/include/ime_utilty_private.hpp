@@ -16,7 +16,14 @@ namespace rw
 		const std::vector<size_t>& need_keep_classids);
 
 	struct PreProcess {
-
+	public:
+		//letterbox function: scale + fill
+		static cv::Mat letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color,
+			float& out_scale, int& out_dw, int& out_dh);
+		static cv::Mat letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color = cv::Scalar(0, 0, 0),
+			float* out_scale = nullptr, int* out_dw = nullptr, int* out_dh = nullptr);
+	public:
+        
 	};
 	
 }

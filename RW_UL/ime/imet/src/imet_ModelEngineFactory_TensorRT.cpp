@@ -50,9 +50,7 @@ namespace rw {
 			if (!modelEngine) {
 				return nullptr;
 			}
-			modelEngine->setConf_threshold(config.conf_threshold);
-			modelEngine->setNms_threshold(config.nms_threshold);
-			modelEngine->setNeed_keep_classids(config.classids_nms_together);
+			modelEngine->setConfig(config);
 			return modelEngine;
 		}
 

@@ -78,4 +78,50 @@ namespace rw
 		}
 		return nms_result;
 	}
+
+
+	cv::Mat PreProcess::letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color, float& out_scale, int& out_dw, int& out_dh)
+	{
+		int src_w = src.cols;
+		int src_h = src.rows;
+		float r = std::min(target_w / (float)src_w, target_h / (float)src_h);
+		int new_unpad_w = int(round(src_w * r));
+		int new_unpad_h = int(round(src_h * r));
+		int dw = (target_w - new_unpad_w) / 2;
+		int dh = (target_h - new_unpad_h) / 2;
+
+		cv::Mat resized;
+		cv::resize(src, resized, cv::Size(new_unpad_w, new_unpad_h));
+
+		cv::Mat out(target_h, target_w, src.type(), color);
+		resized.copyTo(out(cv::Rect(dw, dh, new_unpad_w, new_unpad_h)));
+
+		out_scale = r;
+		out_dw = dw;
+		out_dh = dh;
+		return out;
+	}
+
+	cv::Mat PreProcess::letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color, float* out_scale,
+		int* out_dw, int* out_dh)
+	{
+		int src_w = src.cols;
+		int src_h = src.rows;
+		float r = std::min(target_w / (float)src_w, target_h / (float)src_h);
+		int new_unpad_w = int(round(src_w * r));
+		int new_unpad_h = int(round(src_h * r));
+		int dw = (target_w - new_unpad_w) / 2;
+		int dh = (target_h - new_unpad_h) / 2;
+
+		cv::Mat resized;
+		cv::resize(src, resized, cv::Size(new_unpad_w, new_unpad_h));
+
+		cv::Mat out(target_h, target_w, src.type(), color);
+		resized.copyTo(out(cv::Rect(dw, dh, new_unpad_w, new_unpad_h)));
+
+		if (out_scale) *out_scale = r;
+		if (out_dw) *out_dw = dw;
+		if (out_dh) *out_dh = dh;
+		return out;
+	}
 }
