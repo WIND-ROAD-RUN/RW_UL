@@ -9,7 +9,7 @@ namespace rw
 {
 	namespace imeo
 	{
-		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_Obb(const ModelEngineConfig& config);
+		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_Seg* createModelEngine_Yolov11_Seg(const ModelEngineConfig& config);
 
 		std::unique_ptr<ModelEngine> ModelEngineFactory_OnnxRuntime::createModelEngine(const ModelEngineConfig& config, ModelType modelType)
@@ -17,7 +17,7 @@ namespace rw
 			switch (modelType)
 			{
 			case ModelType::yolov11_det:
-				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_Obb(config));
+				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_det(config));
 			case ModelType::yolov11_seg:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_Seg(config));
 			default:
@@ -25,7 +25,7 @@ namespace rw
 			}
 		}
 
-		ModelEngine_Yolov11_det* createModelEngine_Yolov11_Obb(const ModelEngineConfig& config)
+		ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config)
 		{
 			ModelEngine_Yolov11_det* modelEngine = new ModelEngine_Yolov11_det(config.modelPath);
 			if (!modelEngine) {

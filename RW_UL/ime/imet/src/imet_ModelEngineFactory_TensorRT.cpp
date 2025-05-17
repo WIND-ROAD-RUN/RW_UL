@@ -11,7 +11,7 @@ class Logger : public nvinfer1::ILogger {
 
 namespace rw {
 	namespace imet {
-		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_Obb(const ModelEngineConfig& config);
+		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg* createModelEngine_Yolov11_seg(const ModelEngineConfig& config);
 
 
@@ -23,7 +23,7 @@ namespace rw {
 			switch (modelType)
 			{
 			case ModelType::yolov11_det:
-				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_Obb(config));
+				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_det(config));
 			case ModelType::yolov11_seg:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg(config));
 			default:
@@ -31,7 +31,7 @@ namespace rw {
 			}
 		}
 
-		ModelEngine_Yolov11_det* createModelEngine_Yolov11_Obb(const ModelEngineConfig& config)
+		ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config)
 		{
 			ModelEngine_Yolov11_det* modelEngine = new ModelEngine_Yolov11_det(config.modelPath, logger);
 			if (!modelEngine) {
