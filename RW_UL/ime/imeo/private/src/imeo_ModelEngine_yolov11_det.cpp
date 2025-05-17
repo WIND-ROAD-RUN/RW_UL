@@ -66,7 +66,7 @@ namespace rw
 				double score;
 				cv::minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
 
-				if (score > conf_threshold) {
+				if (score > config.conf_threshold) {
 					const float cx = det_output.at<float>(0, i);
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
@@ -84,7 +84,7 @@ namespace rw
 			}
 
 			std::vector<int> nms_result;
-			cv::dnn::NMSBoxes(boxes, confidences, conf_threshold, nms_threshold, nms_result);
+			cv::dnn::NMSBoxes(boxes, confidences, config.conf_threshold, config.nms_threshold, nms_result);
 
 			for (int i = 0; i < nms_result.size(); i++)
 			{

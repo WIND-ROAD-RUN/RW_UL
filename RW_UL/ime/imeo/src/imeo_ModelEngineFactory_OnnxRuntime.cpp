@@ -31,8 +31,7 @@ namespace rw
 			if (!modelEngine) {
 				return nullptr;
 			}
-			modelEngine->setConf_threshold(config.conf_threshold);
-			modelEngine->setNms_threshold(config.nms_threshold);
+			modelEngine->setConfig(config);
 
 			return modelEngine;
 		}
@@ -43,8 +42,7 @@ namespace rw
 			if (!modelEngine) {
 				return nullptr;
 			}
-			modelEngine->setConf_threshold(config.conf_threshold);
-			modelEngine->setNms_threshold(config.nms_threshold);
+			modelEngine->setConfig(config);
 
 			return modelEngine;
 		}

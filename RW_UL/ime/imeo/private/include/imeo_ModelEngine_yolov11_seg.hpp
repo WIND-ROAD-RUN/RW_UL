@@ -8,6 +8,7 @@
 
 #include"ime_ModelEngine.h"
 #include"onnxruntime_cxx_api.h"
+#include"ime_ModelEngineConfig.h"
 
 namespace rw {
     namespace imeo {
@@ -50,8 +51,7 @@ namespace rw {
             int detection_attribute_size;
             int maskCoefficientNum=32;
             int num_classes = 80;
-            float conf_threshold = 0.3f;
-            float nms_threshold = 0.4f;
+            ModelEngineConfig config;
         private:
             std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
 
@@ -64,13 +64,10 @@ namespace rw {
         private:
             static std::wstring stringToWString(const std::string& str);
         public:
-            void setConf_threshold(float num) {
-                conf_threshold = num;
-            }
-
-            void setNms_threshold(float num) {
-                nms_threshold = num;
-            }
+			void setConfig(const ModelEngineConfig& modelConfig)
+			{
+				this->config = modelConfig;
+			}
         };
 
     }
