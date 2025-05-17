@@ -4,7 +4,7 @@
 int main()
 {
 	rw::ModelEngineConfig config;
-	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::AdaptiveResize;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::Resize;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\SegModel.engine)";
 	auto model = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg,rw::ModelEngineDeployType::TensorRT);
 	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
@@ -45,11 +45,11 @@ int main()
 //
 //// 用法示例
 //int main() {
-//    cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\1.png)");
+//    cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\NG\NG20250517091144654.png)");
 //    int input_w = 640, input_h = 640;
 //    float scale;
 //    int dw, dh;
-//    cv::Mat letterbox_img = letterbox(mat, input_w, input_h, cv::Scalar(0, 0, 0), scale, dw, dh);
+//    cv::Mat letterbox_img = letterbox(mat, input_w, input_h, cv::Scalar(255, 255, 255), scale, dw, dh);
 //
 //    // 归一化和通道变换
 //    auto infer_image = cv::dnn::blobFromImage(letterbox_img, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true, false);

@@ -3,6 +3,8 @@
 #include<string>
 #include<vector>
 
+#include"opencv2/opencv.hpp"
+
 namespace rw {
 	enum class ImagePretreatmentPolicy
 	{
@@ -27,6 +29,7 @@ namespace rw {
 	public:
 		//The type of model engine.
 		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::Resize;
+		cv::Scalar letterBoxColor{ 0, 0, 0 };
 	};
 
 	enum class ModelType

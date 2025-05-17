@@ -32,6 +32,7 @@ namespace rw {
 		private:
 			std::vector<DetectionRectangleInfo> convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections);
 			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<DetectionSeg>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenLetterBox(const std::vector<DetectionSeg>& detections);
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 
@@ -58,10 +59,12 @@ namespace rw {
 		private:
 			int sourceWidth{};
 			int sourceHeight{};
+		private:
+			float letterBoxScale{};
+			int letterBoxdw{};
+			int letterBoxdh{};
 		};
-	
-	
-	
+
 	}
 }
 
