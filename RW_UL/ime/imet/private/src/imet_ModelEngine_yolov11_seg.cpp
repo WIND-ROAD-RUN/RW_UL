@@ -1,6 +1,7 @@
 #include "imet_ModelEngine_yolov11_seg.hpp"
 
 #include"cuda_device_runtime_api.h"
+#include"ime_utilty_private.hpp"
 
 #include<fstream>
 #include<memory>

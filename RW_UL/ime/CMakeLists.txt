@@ -7,6 +7,11 @@ FIND_SOURCES_AND_HEADERS(UTILTY_SRC_LIST
 	${IME_UTILTY_ROOTPATH}/src
 )
 
+FIND_SOURCES_AND_HEADERS(UTILTY_SRC_LIST_PRIVATE
+	${IME_UTILTY_ROOTPATH}/private/include 
+	${IME_UTILTY_ROOTPATH}/private/src
+)
+
 add_subdirectory(imet)
 add_subdirectory(imeo)
 add_subdirectory(ime)

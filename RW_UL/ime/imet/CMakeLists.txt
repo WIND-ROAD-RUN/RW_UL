@@ -14,12 +14,13 @@ FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${IMET_PRIVATE_PATH}/src
 )
 
-add_library(${PROJECT_NAME}  ${SRC_LIST} ${UTILTY_SRC_LIST})
+add_library(${PROJECT_NAME}  ${SRC_LIST} ${UTILTY_SRC_LIST} ${UTILTY_SRC_LIST_PRIVATE})
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/include
     PUBLIC ${UTILTY_INCLUDES}
+    PRIVATE ${IME_UTILTY_ROOTPATH}/private/include
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC  ${OpenCV_LIBS})

@@ -7,16 +7,6 @@
 namespace rw {
 	using Point = std::pair<int, int>;
 
-	std::vector<int> nmsWithKeepClass(
-		const std::vector<cv::Rect>& boxes,
-		const std::vector<int>& class_ids,
-		const std::vector<float>& confidences,
-		float conf_threshold,
-		float nms_threshold,
-		const std::vector<size_t>& need_keep_classids);
-	
-	
-
 	struct DetectionRectangleInfo
 	{
 	public:
