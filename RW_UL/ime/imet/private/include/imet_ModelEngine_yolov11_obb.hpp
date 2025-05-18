@@ -14,14 +14,17 @@ namespace rw
 		class ModelEngine_Yolov11_obb
 			: public ModelEngine
 		{
-		private:
+		public:
 			struct Detection
 			{
 			public:
-				float conf;
+				double conf;
 				int class_id;
-				cv::Rect bbox;
 				float angle;
+				float x;       // x-coordinate of the center
+				float y;       // y-coordinate of the center
+				float width;   // width of the box
+				float height;  // height of the box
 			};
 		public:
 			ModelEngine_Yolov11_obb(const std::string& modelPath, nvinfer1::ILogger& logger);

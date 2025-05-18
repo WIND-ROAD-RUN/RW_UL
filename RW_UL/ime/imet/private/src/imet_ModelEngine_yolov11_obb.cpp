@@ -5,7 +5,13 @@
 #include<fstream>
 #include<memory>
 #include <iomanip> 
-#include <sstream> 
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace rw
 {
@@ -66,18 +72,69 @@ namespace rw
 			this->context->enqueueV3(NULL);
 		}
 
+		inline cv::RotatedRect toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det) {
+			return cv::RotatedRect(
+				cv::Point2f(det.x + det.width / 2.0f, det.y + det.height / 2.0f), // center
+				cv::Size2f(det.width, det.height),
+				det.angle
+			);
+		}
+
+		// 计算两个旋转框的IoU
+		double rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a, const ModelEngine_Yolov11_obb::Detection& b) {
+			cv::RotatedRect rect1 = toRotatedRect(a);
+			cv::RotatedRect rect2 = toRotatedRect(b);
+
+			std::vector<cv::Point2f> intersection;
+			auto interType = cv::rotatedRectangleIntersection(rect1, rect2, intersection);
+
+			if (interType == cv::INTERSECT_NONE || intersection.empty())
+				return 0.0;
+
+			double interArea = cv::contourArea(intersection);
+			double area1 = rect1.size.area();
+			double area2 = rect2.size.area();
+			double iou = interArea / (area1 + area2 - interArea);
+			return iou;
+		}
+
+		// 旋转框NMS
+		std::vector<ModelEngine_Yolov11_obb::Detection> rotatedNMS(const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold) {
+			std::vector<ModelEngine_Yolov11_obb::Detection> result;
+			if (dets.empty()) return result;
+
+			// 按置信度降序排序
+			std::vector<size_t> idxs(dets.size());
+			std::iota(idxs.begin(), idxs.end(), 0);
+			std::sort(idxs.begin(), idxs.end(), [&](size_t i, size_t j) {
+				return dets[i].conf > dets[j].conf;
+				});
+
+			std::vector<bool> suppressed(dets.size(), false);
+
+			for (size_t i = 0; i < idxs.size(); ++i) {
+				if (suppressed[idxs[i]]) continue;
+				result.push_back(dets[idxs[i]]);
+				for (size_t j = i + 1; j < idxs.size(); ++j) {
+					if (suppressed[idxs[j]]) continue;
+					if (rotatedIoU(dets[idxs[i]], dets[idxs[j]]) > iouThreshold) {
+						suppressed[idxs[j]] = true;
+					}
+				}
+			}
+			return result;
+		}
+
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
 			std::vector<Detection> output;
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
-			std::vector<cv::Rect> boxes;
-			std::vector<int> class_ids;
-			std::vector<float> confidences;
+			std::vector<Detection> boxes;
 
 			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
 
 			for (int i = 0; i < det_output.cols; ++i) {
-				const  cv::Mat classes_scores = det_output.col(i).rowRange(5, 5 + num_classes);
+				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
 				cv::Point class_id_point;
 				double score;
 				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
@@ -87,37 +144,21 @@ namespace rw
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
 					const float oh = det_output.at<float>(3, i);
-					const float angle= det_output.at<float>(4, i);
-					cv::Rect box;
-					box.x = static_cast<int>((cx - 0.5 * ow));
-					box.y = static_cast<int>((cy - 0.5 * oh));
-					box.width = static_cast<int>(ow);
-					box.height = static_cast<int>(oh);
-
+					const float angle= det_output.at<float>(4 + num_classes, i);
+					Detection box;
+                    box.angle = angle;
+                    box.x = cx - ow / 2;
+                    box.y = cy - oh / 2;
+                    box.width = ow;
+                    box.height = oh;
+                    box.conf = score;
+                    box.class_id = class_id_point.y;
 					boxes.push_back(box);
-					class_ids.push_back(class_id_point.y);
-					confidences.push_back(score);
-
 				}
 			}
-			std::vector<int> nms_result;
-			cv::dnn::NMSBoxes(boxes, confidences, config.conf_threshold, config.nms_threshold, nms_result);
-			for (int i = 0; i < nms_result.size(); i++)
-			{
-				Detection result;
-				int idx = nms_result[i];
-				result.class_id = class_ids[idx];
-				result.conf = confidences[idx];
-				result.bbox = boxes[idx];
-				output.push_back(result);
-			}
-			auto size = output.size();
-			if (size == 0) {
-				return {};
-			}
+			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold); // 0.1为IoU阈值，可根据实际调整
 
-
-			auto result = convertDetectionToDetectionRectangleInfo(output);
+			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 
 			return result;
 		}
@@ -146,21 +187,38 @@ namespace rw
 			for (const auto& item : detections)
 			{
 				DetectionRectangleInfo resultItem;
-				resultItem.width = item.bbox.width * scaleX;
-				resultItem.height = item.bbox.height * scaleY;
-				resultItem.leftTop.first = item.bbox.x * scaleX;
-				resultItem.leftTop.second = item.bbox.y * scaleY;
-				resultItem.rightTop.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
-				resultItem.rightTop.second = item.bbox.y * scaleY;
-				resultItem.leftBottom.first = item.bbox.x * scaleX;
-				resultItem.leftBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
-				resultItem.rightBottom.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
-				resultItem.rightBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
-				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
-				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
-				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
-				resultItem.classId = item.class_id;
+
+				// 还原到原图坐标
+				float cx = (item.x + item.width / 2.0f) * scaleX;
+				float cy = (item.y + item.height / 2.0f) * scaleY;
+				float w = item.width * scaleX;
+				float h = item.height * scaleY;
+				float angle_rad = item.angle;
+
+				// 以中心为原点，未旋转时的四个角点
+				float dx[4] = { -w / 2,  w / 2,  w / 2, -w / 2 };
+				float dy[4] = { -h / 2, -h / 2,  h / 2,  h / 2 };
+
+				std::pair<int, int> corners[4];
+				for (int i = 0; i < 4; ++i) {
+					float x_rot = dx[i] * std::cos(angle_rad) - dy[i] * std::sin(angle_rad);
+					float y_rot = dx[i] * std::sin(angle_rad) + dy[i] * std::cos(angle_rad);
+					corners[i].first = static_cast<int>(std::round(cx + x_rot));
+					corners[i].second = static_cast<int>(std::round(cy + y_rot));
+				}
+
+				resultItem.leftTop = corners[0];
+				resultItem.rightTop = corners[1];
+				resultItem.rightBottom = corners[2];
+				resultItem.leftBottom = corners[3];
+				resultItem.center_x = static_cast<int>(std::round(cx));
+				resultItem.center_y = static_cast<int>(std::round(cy));
+				resultItem.width = static_cast<int>(std::round(w));
+				resultItem.height = static_cast<int>(std::round(h));
+				resultItem.area = static_cast<long>(std::round(w * h));
+				resultItem.classId = static_cast<size_t>(item.class_id);
 				resultItem.score = item.conf;
+
 				result.push_back(resultItem);
 			}
 			return result;

@@ -10,10 +10,12 @@ using namespace cv;
 
 int main() {
 	rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\yolo11n-obb.engine)";
+    config.conf_threshold = 0.2f;
+    config.nms_threshold = 0.1f;
+	config.modelPath = R"(C:\Users\34615\Desktop\yolo11n-obb.engine)";
 	auto model_engine =rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::yolov11_obb);
 
-	const string path{ R"(C:\Users\rw\Desktop\bus.jpg)" };
+	const string path{ R"(C:\Users\34615\Desktop\boats.jpg)" };
 
 	Mat image = imread(path);
 	if (image.empty())
