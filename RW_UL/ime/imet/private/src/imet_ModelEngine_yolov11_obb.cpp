@@ -72,58 +72,10 @@ namespace rw
 			this->context->enqueueV3(NULL);
 		}
 
-		inline cv::RotatedRect toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det) {
-			return cv::RotatedRect(
-				cv::Point2f(det.x + det.width / 2.0f, det.y + det.height / 2.0f), // center
-				cv::Size2f(det.width, det.height),
-				det.angle
-			);
-		}
+		
 
-		// 计算两个旋转框的IoU
-		double rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a, const ModelEngine_Yolov11_obb::Detection& b) {
-			cv::RotatedRect rect1 = toRotatedRect(a);
-			cv::RotatedRect rect2 = toRotatedRect(b);
-
-			std::vector<cv::Point2f> intersection;
-			auto interType = cv::rotatedRectangleIntersection(rect1, rect2, intersection);
-
-			if (interType == cv::INTERSECT_NONE || intersection.empty())
-				return 0.0;
-
-			double interArea = cv::contourArea(intersection);
-			double area1 = rect1.size.area();
-			double area2 = rect2.size.area();
-			double iou = interArea / (area1 + area2 - interArea);
-			return iou;
-		}
-
-		// 旋转框NMS
-		std::vector<ModelEngine_Yolov11_obb::Detection> rotatedNMS(const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold) {
-			std::vector<ModelEngine_Yolov11_obb::Detection> result;
-			if (dets.empty()) return result;
-
-			// 按置信度降序排序
-			std::vector<size_t> idxs(dets.size());
-			std::iota(idxs.begin(), idxs.end(), 0);
-			std::sort(idxs.begin(), idxs.end(), [&](size_t i, size_t j) {
-				return dets[i].conf > dets[j].conf;
-				});
-
-			std::vector<bool> suppressed(dets.size(), false);
-
-			for (size_t i = 0; i < idxs.size(); ++i) {
-				if (suppressed[idxs[i]]) continue;
-				result.push_back(dets[idxs[i]]);
-				for (size_t j = i + 1; j < idxs.size(); ++j) {
-					if (suppressed[idxs[j]]) continue;
-					if (rotatedIoU(dets[idxs[i]], dets[idxs[j]]) > iouThreshold) {
-						suppressed[idxs[j]] = true;
-					}
-				}
-			}
-			return result;
-		}
+		
+		
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
@@ -239,6 +191,60 @@ namespace rw
 				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 		}
 
-		
+		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::rotatedNMS(
+			const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold)
+		{
+			std::vector<ModelEngine_Yolov11_obb::Detection> result;
+			if (dets.empty()) return result;
+
+			// 按置信度降序排序
+			std::vector<size_t> idxs(dets.size());
+			std::iota(idxs.begin(), idxs.end(), 0);
+			std::sort(idxs.begin(), idxs.end(), [&](size_t i, size_t j) {
+				return dets[i].conf > dets[j].conf;
+				});
+
+			std::vector<bool> suppressed(dets.size(), false);
+
+			for (size_t i = 0; i < idxs.size(); ++i) {
+				if (suppressed[idxs[i]]) continue;
+				result.push_back(dets[idxs[i]]);
+				for (size_t j = i + 1; j < idxs.size(); ++j) {
+					if (suppressed[idxs[j]]) continue;
+					if (rotatedIoU(dets[idxs[i]], dets[idxs[j]]) > iouThreshold) {
+						suppressed[idxs[j]] = true;
+					}
+				}
+			}
+			return result;
+		}
+
+		double ModelEngine_Yolov11_obb::rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a,
+			const ModelEngine_Yolov11_obb::Detection& b)
+		{
+			cv::RotatedRect rect1 = toRotatedRect(a);
+			cv::RotatedRect rect2 = toRotatedRect(b);
+
+			std::vector<cv::Point2f> intersection;
+			auto interType = cv::rotatedRectangleIntersection(rect1, rect2, intersection);
+
+			if (interType == cv::INTERSECT_NONE || intersection.empty())
+				return 0.0;
+
+			double interArea = cv::contourArea(intersection);
+			double area1 = rect1.size.area();
+			double area2 = rect2.size.area();
+			double iou = interArea / (area1 + area2 - interArea);
+			return iou;
+		}
+
+		cv::RotatedRect ModelEngine_Yolov11_obb::toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det)
+		{
+			return cv::RotatedRect(
+				cv::Point2f(det.x + det.width / 2.0f, det.y + det.height / 2.0f), // center
+				cv::Size2f(det.width, det.height),
+				det.angle
+			);
+		}
 	}
 }

@@ -14,7 +14,7 @@ namespace rw
 		class ModelEngine_Yolov11_obb
 			: public ModelEngine
 		{
-		public:
+		private:
 			struct Detection
 			{
 			public:
@@ -36,6 +36,10 @@ namespace rw
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
 			void preprocess(const cv::Mat& mat) override;
+		private:
+			std::vector<ModelEngine_Yolov11_obb::Detection> rotatedNMS(const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold);
+			double rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a, const ModelEngine_Yolov11_obb::Detection& b);
+			cv::RotatedRect toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det);
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		private:
