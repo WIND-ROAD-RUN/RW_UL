@@ -168,7 +168,7 @@
                <item>
                 <widget class="QPushButton" name="pbtn_setConfThreshold">
                  <property name="text">
-                  <string>0.3</string>
+                  <string>0.1</string>
                  </property>
                 </widget>
                </item>
@@ -186,7 +186,7 @@
                <item>
                 <widget class="QPushButton" name="pbtn_nmsThreshold">
                  <property name="text">
-                  <string>0.4</string>
+                  <string>0.1</string>
                  </property>
                 </widget>
                </item>
