@@ -138,7 +138,8 @@ void AutomaticAnnotationThread::saveLabels(const QString& label, const QString& 
 	}
 
 	QFile file(labelPath);
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+	// 使用Append模式追加内容
+	if (!file.open(QIODevice::Append | QIODevice::Text)) {
 		qDebug() << "Failed to open file for writing:" << labelPath;
 		return;
 	}
