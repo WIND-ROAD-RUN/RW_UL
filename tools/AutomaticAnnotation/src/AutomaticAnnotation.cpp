@@ -177,6 +177,8 @@ void AutomaticAnnotation::pbtn_setImageInput_clicked()
 	if (!folderPath.isEmpty())
 	{
 		ui->lineEdit_ImageInput->setText(folderPath);
+		ui->lineEdit_ImageOutput->setText(folderPath+R"(/images)");
+		ui->lineEdit_labelOutput->setText(folderPath+ R"(/labels)");
 	}
 	else
 	{
