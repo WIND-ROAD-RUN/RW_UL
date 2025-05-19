@@ -11,8 +11,8 @@ int main() {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
-	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.engine)";
-	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::TensorRT);
+	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.onnx)";
+	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::OnnxRuntime);
 
 	const string path{ R"(C:\Users\rw\Desktop\temp\images\20250221080238888.jpg)" };
 

@@ -1,6 +1,4 @@
-#include"imet_ModelEngine_yolov11_obb.hpp"
-
-#include"cuda_device_runtime_api.h"
+#include"imeo_ModelEngine_yolov11_obb.hpp"
 
 #include<fstream>
 #include<memory>
@@ -11,67 +9,55 @@
 
 namespace rw
 {
-	namespace imet
+	namespace imeo
 	{
-
-		ModelEngine_Yolov11_obb::ModelEngine_Yolov11_obb(const std::string& modelPath,
-			nvinfer1::ILogger& logger)
+		ModelEngine_Yolov11_obb::ModelEngine_Yolov11_obb(const std::string& modelPath)
 		{
-			init(modelPath, logger);
+			init(modelPath);
 		}
 
 		ModelEngine_Yolov11_obb::~ModelEngine_Yolov11_obb()
 		{
-			for (int i = 0; i < 2; i++)
-				(cudaFree(gpu_buffers[i]));
-			delete[] cpu_output_buffer;
-			delete context;
-			delete engine;
-			delete runtime;
+			output_tensors[0].release();
 		}
 
-		void ModelEngine_Yolov11_obb::init(std::string engine_path, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_obb::preprocess(const cv::Mat& mat)
 		{
-			std::ifstream engineStream(engine_path, std::ios::binary);
-			engineStream.seekg(0, std::ios::end);
-			const size_t modelSize = engineStream.tellg();
-			engineStream.seekg(0, std::ios::beg);
-			std::unique_ptr<char[]> engineData(new char[modelSize]);
-			engineStream.read(engineData.get(), modelSize);
-			engineStream.close();
+			sourceWidth = mat.cols;
+			sourceHeight = mat.rows;
 
-			runtime = nvinfer1::createInferRuntime(logger);
-			engine = runtime->deserializeCudaEngine(engineData.get(), modelSize);
-			context = engine->createExecutionContext();
+			infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 
-			input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
-			input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
-			detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
-			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
-			num_classes = detection_attribute_size - 5;
-
-			cpu_output_buffer = new float[num_detections * detection_attribute_size];
-			(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
-
-			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
-
-			for (int i = 0;i < 10;i++) {
-				this->infer();
-			}
-			cudaDeviceSynchronize();
+			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
+			auto input_size = 1 * 3 * input_h * input_w;
+			auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+			input_tensor = Ort::Value::CreateTensor(
+				memory_info,
+				(float*)infer_image.data,
+				input_size,
+				input_node_dims.data(),
+				input_node_dims.size()
+			);
+			ort_inputs.clear();
+			ort_inputs.push_back(std::move(input_tensor));
 		}
 
 		void ModelEngine_Yolov11_obb::infer()
 		{
-			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
-			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
-			this->context->enqueueV3(NULL);
+
+			output_tensors = session.Run(
+				Ort::RunOptions{ nullptr },
+				(const char* const*)input_node_names.data(),
+				ort_inputs.data(),
+				ort_inputs.size(),
+				(const char* const*)output_node_names.data(),
+				output_node_names.size()
+			);
+
 		}
-
-
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
-			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
+			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
 			std::vector<Detection> boxes;
 
 			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
@@ -87,37 +73,53 @@ namespace rw
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
 					const float oh = det_output.at<float>(3, i);
-					const float angle= det_output.at<float>(4 + num_classes, i);
+					const float angle = det_output.at<float>(4 + num_classes, i);
 					Detection box;
-                    box.angle = angle;
-                    box.x = cx - ow / 2;
-                    box.y = cy - oh / 2;
-                    box.width = ow;
-                    box.height = oh;
-                    box.conf = score;
-                    box.class_id = class_id_point.y;
+					box.angle = angle;
+					box.x = cx - ow / 2;
+					box.y = cy - oh / 2;
+					box.width = ow;
+					box.height = oh;
+					box.conf = score;
+					box.class_id = class_id_point.y;
 					boxes.push_back(box);
 				}
 			}
-			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
+			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold); 
 
 			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 
 			return result;
 		}
 
-		cv::Mat ModelEngine_Yolov11_obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		void ModelEngine_Yolov11_obb::init(const std::string& engine_path)
 		{
-			cv::Mat result = mat.clone();
-			ImagePainter::PainterConfig config;
-			for (const auto& item : infoList)
-			{
-				std::ostringstream oss;
-				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
-				config.text = oss.str();
-				ImagePainter::drawShapesOnSourceImg(result, item, config);
+			env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
+			Ort::SessionOptions options;
+			OrtSessionOptionsAppendExecutionProvider_CUDA(options, 0);
+			std::wstring path = stringToWString(engine_path);
+			session = Ort::Session(env, path.c_str(), options);
+			Ort::AllocatorWithDefaultOptions allocator;
+
+			input_name = session.GetInputNameAllocated(0, allocator).get();
+			output_name = session.GetOutputNameAllocated(0, allocator).get();
+
+			input_node_names.push_back(input_name.c_str());
+			output_node_names.push_back(output_name.c_str());
+
+			auto input_shape = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
+			auto output_shape = session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
+			input_h = input_shape[2];
+			input_w = input_shape[3];
+			detection_attribute_size = output_shape[1];
+			num_detections = output_shape[2];
+			num_classes = output_shape[1] - 5;
+
+			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
+			preprocess(zero_mat);
+			for (int i = 0; i < 10; i++) {
+				this->infer();
 			}
-			return result;
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::convertDetectionToDetectionRectangleInfo(
@@ -165,21 +167,6 @@ namespace rw
 				result.push_back(resultItem);
 			}
 			return result;
-		}
-
-		void ModelEngine_Yolov11_obb::preprocess(const cv::Mat& mat)
-		{
-			sourceWidth = mat.cols;
-			sourceHeight = mat.rows;
-			auto infer_image =
-				cv::dnn::blobFromImage(mat,
-					1.f / 255.f,
-					cv::Size(input_w, input_h),
-					cv::Scalar(0, 0, 0), true);//1、缩放cv::resize;2、系数变换；3、色域变换bgr->rgb；4、图像裁剪cv::crop;5、数据标准化(x-mean)/var
-
-			(cudaMemcpy(gpu_buffers[0],
-				infer_image.data,
-				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 		}
 
 		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::rotatedNMS(
@@ -236,6 +223,28 @@ namespace rw
 				cv::Size2f(det.width, det.height),
 				det.angle
 			);
+		}
+
+		cv::Mat ModelEngine_Yolov11_obb::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		{
+			cv::Mat result = mat.clone();
+			ImagePainter::PainterConfig config;
+			for (const auto& item : infoList)
+			{
+				std::ostringstream oss;
+				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
+				config.text = oss.str();
+				ImagePainter::drawShapesOnSourceImg(result, item, config);
+			}
+			return result;
+		}
+
+		std::wstring ModelEngine_Yolov11_obb::stringToWString(const std::string& str)
+		{
+			size_t len = std::mbstowcs(nullptr, str.c_str(), 0);
+			std::wstring wstr(len, L'\0');
+			std::mbstowcs(&wstr[0], str.c_str(), len);
+			return wstr;
 		}
 	}
 }
