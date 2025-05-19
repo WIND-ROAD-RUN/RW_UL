@@ -1,2 +1,3 @@
 add_subdirectory(AutomaticAnnotation)
 add_subdirectory(ModelConverter)
+add_subdirectory(demo)
