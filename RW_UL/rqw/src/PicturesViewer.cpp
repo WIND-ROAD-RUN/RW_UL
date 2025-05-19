@@ -376,7 +376,7 @@ void PicturesViewer::pbtn_delete_clicked()
 
 void PicturesViewer::pbtn_delete_total_clicked()
 {
-	auto result=QMessageBox::question(this, "提示", "是否删除当前目录下所有图片？", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+	auto result = QMessageBox::question(this, "提示", "是否删除当前目录下所有图片？", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 	if (result == QMessageBox::No) {
 		return;
 	}

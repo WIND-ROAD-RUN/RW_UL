@@ -504,7 +504,7 @@ void DlgProduceLineSet::pbtn_motorSpeed_clicked()
 {
 	auto& globalStrut = GlobalStructData::getInstance();
 	auto currentRunningState = globalStrut.runningState.load();
-	if (currentRunningState==RunningState::OpenRemoveFunc)
+	if (currentRunningState == RunningState::OpenRemoveFunc)
 	{
 		QMessageBox::warning(this, "错误", "请先停止生产线");
 		return;

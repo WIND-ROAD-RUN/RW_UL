@@ -16,5 +16,4 @@ namespace rw {
 			return nullptr;
 		}
 	}
-
 }

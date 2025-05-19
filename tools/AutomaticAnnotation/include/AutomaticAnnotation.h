@@ -15,19 +15,19 @@ class AutomaticAnnotation : public QMainWindow
 	Q_OBJECT
 
 public:
-	AutomaticAnnotation(QWidget *parent = nullptr);
+	AutomaticAnnotation(QWidget* parent = nullptr);
 	~AutomaticAnnotation();
 private:
 	PicturesViewer* viewer;
 	QVector<AutomaticAnnotationThread*> threads;
 public:
-	int size{0};
+	int size{ 0 };
 	int complete{ 0 };
 public:
 	void build_ui();
 	void build_connect();
 private:
-	Ui::AutomaticAnnotationClass *ui;
+	Ui::AutomaticAnnotationClass* ui;
 private:
 	void iniThread();
 

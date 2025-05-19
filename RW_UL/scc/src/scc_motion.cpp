@@ -1,6 +1,5 @@
 #include "scc_Motion.h"
 
-
 namespace zwy {
 	namespace scc {
 		Motion::Motion()

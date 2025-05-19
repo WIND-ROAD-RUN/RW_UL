@@ -14,7 +14,7 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.1f;
 	config.nms_threshold = 0.1f;
-	config.classids_nms_together={0,1};
+	config.classids_nms_together = { 0,1 };
 	config.modelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
 }
@@ -224,7 +224,6 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectI
 	QString largeColorText = QString("large R: %1 G: %2 B: %3").arg(info.large_R, 0, 'f', 2).arg(info.large_G, 0, 'f', 2).arg(info.large_B, 0, 'f', 2);
 	textList.push_back(largeColorText);
 
-
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
@@ -271,13 +270,13 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.holesCountEnable&&info.isDrawholeCount)
+	if (_isbad && productSet.holesCountEnable && info.isDrawholeCount)
 	{
 		QString holeCountText = QString("孔数: %1").arg(info.holeCount) + QString("目标: %1").arg(static_cast<int>(productSet.holesCountValue));
 		textList.push_back(holeCountText);
 	}
 
-	if (_isbad && productSet.apertureEnable&&info.isDrawaperture)
+	if (_isbad && productSet.apertureEnable && info.isDrawaperture)
 	{
 		QString apertureText("孔径: ");
 		for (const auto& item : info.aperture)
@@ -303,7 +302,7 @@ void ImageProcessor::appendHolesCountDefectInfo(QVector<QString>& textList, cons
 void ImageProcessor::appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.outsideDiameterEnable&& info.isoutsideDiameter)
+	if (_isbad && productSet.outsideDiameterEnable && info.isoutsideDiameter)
 	{
 		QString holeCountText = QString("外径: %1 mm ").arg(info.outsideDiameter, 0, 'f', 2) +
 			QString(" 目标: %1 mm").arg(productSet.outsideDiameterValue + productSet.outsideDiameterDeviation, 0, 'f', 2);
@@ -399,7 +398,7 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 void ImageProcessor::appendPositiveDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().mainWindowConfig;
-	auto & dlgSet= GlobalStructData::getInstance().dlgHideScoreSetConfig;
+	auto& dlgSet = GlobalStructData::getInstance().dlgHideScoreSetConfig;
 	if (_isbad && productSet.isPositive && info.isDrawpositiver)
 	{
 		QString positiveText("正反:");
@@ -696,8 +695,6 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
 			}
-
-
 		}
 	}
 }
@@ -712,7 +709,7 @@ ImageProcessor::getIndexInBoundary
 	{
 		for (size_t j = 0; j < index[i].size(); j++)
 		{
-			if (info[index[i][j]].classId==ClassId::Body)
+			if (info[index[i][j]].classId == ClassId::Body)
 			{
 				if (isInBoundary(info[index[i][j]]))
 				{
@@ -723,7 +720,6 @@ ImageProcessor::getIndexInBoundary
 			{
 				result[i].push_back(index[i][j]);
 			}
-
 		}
 	}
 	return result;
@@ -881,7 +877,6 @@ void ImageProcessor::run()
 			continue; // 跳过空帧
 		}
 
-
 		auto& globalData = GlobalStructData::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
@@ -918,7 +913,6 @@ std::vector<std::vector<size_t>> ImageProcessUtilty::getClassIndex(const std::ve
 	}
 
 	return result;
-
 }
 
 void ImageProcessUtilty::drawHole(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
@@ -987,7 +981,6 @@ std::vector<std::vector<size_t>> ImageProcessUtilty::getAllIndexInMaxBody(const 
 	return result;
 }
 
-
 cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const rw::DetectionRectangleInfo& total,
 	CropMode mode, const std::vector<size_t>& index, const std::vector<rw::DetectionRectangleInfo>& processResult,
 	CropMode excludeMode)
@@ -1012,7 +1005,6 @@ cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const rw:
 	}
 	return calculateRegionRGB(image, rect_total, mode, rect_exclude, excludeMode);
 }
-
 
 void ImageProcessor::run_debug(MatInfo& frame)
 {
@@ -1071,7 +1063,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	if (isPositive)
 	{
 		// 使用 QtConcurrent::run 将处理逻辑放到单独的线程中
-		futureResultIndex = QtConcurrent::run([this, &processResultPositive,&frame]() {
+		futureResultIndex = QtConcurrent::run([this, &processResultPositive, &frame]() {
 			processResultPositive = _onnxRuntimeOO->processImg(frame.image);
 			//过滤出有效索引
 			return filterEffectiveIndexes_positive(processResultPositive);
@@ -1089,7 +1081,6 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 		auto processResultIndexOO = futureResultIndex.result();
 		getEliminationInfo_positive(defectInfo, processResultPositive, processResultIndexOO, frame.image);
 	}
-
 
 	//过滤出有效索引
 	auto processResultIndex = filterEffectiveIndexes_defect(processResultDefect);
@@ -1142,7 +1133,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(ButtonDefec
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& hideConfig = globalData.dlgHideScoreSetConfig;
-	for (const auto & item:info.positive)
+	for (const auto& item : info.positive)
 	{
 		if (item >= hideConfig.forAndAgainstScore)
 		{
@@ -1150,7 +1141,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_positive(ButtonDefec
 			info.isDrawpositiver = true;
 			break;
 		}
-
 	}
 }
 
@@ -1159,7 +1149,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 	_isbad = false;
 	auto& globalData = GlobalStructData::getInstance();
 	auto& isOpenDefect = globalData.mainWindowConfig.isDefect;
-	auto & isOpenPositive= globalData.mainWindowConfig.isPositive;
+	auto& isOpenPositive = globalData.mainWindowConfig.isPositive;
 	if (isOpenDefect)
 	{
 		run_OpenRemoveFunc_process_defect_info_hole(info);
@@ -1182,7 +1172,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1228,7 +1218,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_hole( ButtonDefectIn
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1246,7 +1236,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body( ButtonDefectIn
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1259,7 +1249,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor( Button
 		auto special_R_standard = productSet.specifyColorDifferenceR;
 		auto special_G_standard = productSet.specifyColorDifferenceG;
 		auto special_B_standard = productSet.specifyColorDifferenceB;
-		auto isInR = ((special_R_standard - specialColorDeviation) <= special_R) &&( special_R <= (special_R_standard + specialColorDeviation));
+		auto isInR = ((special_R_standard - specialColorDeviation) <= special_R) && (special_R <= (special_R_standard + specialColorDeviation));
 		auto isInG = ((special_G_standard - specialColorDeviation) <= special_G) && (special_G <= (special_G_standard + specialColorDeviation));
 		auto isInB = ((special_B_standard - specialColorDeviation) <= special_B) && (special_B <= (special_B_standard + specialColorDeviation));
 		if ((!isInR) || (!isInG) || (!isInB))
@@ -1270,7 +1260,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor( Button
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1332,7 +1322,7 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1355,7 +1345,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore( ButtonDefectIn
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1378,7 +1368,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint( ButtonDefectI
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1401,7 +1391,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye( ButtonDef
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1424,7 +1414,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack( ButtonDefectI
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1447,7 +1437,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone( ButtonDe
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1470,7 +1460,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye( ButtonDefe
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
@@ -1493,9 +1483,8 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead( Button
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDefectInfo& info)
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info)
 {
-
 	auto& globalData = GlobalStructData::getInstance();
 	auto& productSet = globalData.dlgProductSetConfig;
 	if (large_G_list.empty() || large_R_list.empty() || large_B_list.empty())
@@ -1509,7 +1498,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDe
 		auto largeR = info.large_R;
 		auto largeG = info.large_G;
 		auto largeB = info.large_B;
-		auto isInR = ((largeR - deviation)<= info.special_R) && (info.special_R<=(largeR + deviation));
+		auto isInR = ((largeR - deviation) <= info.special_R) && (info.special_R <= (largeR + deviation));
 		auto isInG = ((largeG - deviation) <= info.special_G) && (info.special_G <= (largeG + deviation));
 		auto isInB = ((largeB - deviation) <= info.special_B) && (info.special_B <= (largeB + deviation));
 
@@ -1565,9 +1554,9 @@ void ImageProcessor::getEliminationInfo_positive(ButtonDefectInfo& info,
 	auto& globalData = GlobalStructData::getInstance();
 	if (globalData.mainWindowConfig.isPositive)
 	{
-		for (const auto &item : index[ClassIdPositive::Bad])
+		for (const auto& item : index[ClassIdPositive::Bad])
 		{
-			info.positive.push_back(processResult[item].score*100);
+			info.positive.push_back(processResult[item].score * 100);
 		}
 	}
 }
@@ -1673,8 +1662,6 @@ void ImageProcessor::getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		info.holeCentreDistance.push_back(xAxisDistance);
 		info.holeCentreDistance.push_back(yAxisDistance);
 	}
-
-
 }
 
 void ImageProcessor::getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
@@ -1725,7 +1712,6 @@ void ImageProcessor::getSpecialColorDifference(ButtonDefectInfo& info, const std
 	info.special_B = rgb[2];
 }
 
-
 void ImageProcessor::getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat)
 {
 	if (index[ClassId::Body].empty())
@@ -1753,7 +1739,6 @@ void ImageProcessor::getLargeColorDifference(ButtonDefectInfo& info, const std::
 		sum = std::accumulate(large_B_list.begin(), large_B_list.end(), 0.0f);
 		info.large_B = sum / 5;
 	}
-
 }
 
 void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
@@ -1885,12 +1870,10 @@ void ImageProcessingModule::clearLargeRGBList()
 
 void ImageProcessingModule::reLoadOnnxOO()
 {
-
 	for (auto& item : _processors)
 	{
 		item->reloadOnnxRuntimeOO(modelOnnxOOPath);
 	}
-
 }
 
 ImageProcessingModule::ImageProcessingModule(int numConsumers, QObject* parent)
@@ -2049,4 +2032,3 @@ cv::Vec3f ImageProcessUtilty::calculateRegionRGB(const cv::Mat& image, const cv:
 	// 返回平均 RGB 值
 	return cv::Vec3f(meanRGB[2], meanRGB[1], meanRGB[0]); // 注意：OpenCV 的通道顺序是 BGR
 }
-

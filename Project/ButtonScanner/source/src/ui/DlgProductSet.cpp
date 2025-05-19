@@ -293,7 +293,7 @@ void DlgProductSet::pbtn_outerRadius_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0 )
+		if (value.toDouble() < 0)
 		{
 			QMessageBox::warning(this, "提示", "请输入大于0的数值");
 			return;

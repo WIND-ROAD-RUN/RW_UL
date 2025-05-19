@@ -166,7 +166,7 @@ void AiTrainModule::clear_older_trainData()
 	}
 	// 处理 obb 目录
 	{
-		QString obbDir= workPlace + R"(\Obb\)";
+		QString obbDir = workPlace + R"(\Obb\)";
 		// 删除 obb 及其所有子文件和子文件夹
 		QDir obbDirObj(obbDir);
 		if (obbDirObj.exists()) {
@@ -259,11 +259,9 @@ void AiTrainModule::clear_older_trainData_color()
 
 void AiTrainModule::copyTrainData(const QVector<AiTrainModule::DataItem>& dataSet)
 {
-
 	copyTrainImgData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\images\)"));
 
 	copyTrainLabelData(dataSet, QString(globalPath.trainAIRootPath + R"(\Obb\labels\)"));
-
 }
 
 void AiTrainModule::copyTrainImgData(const QVector<AiTrainModule::DataItem>& dataSet, const QString& path)
@@ -376,7 +374,6 @@ void AiTrainModule::copyModelToTemp()
 	QString targetFilePath2 = targetDirectory + "customOO2.onnx";
 	QString targetFilePath3 = targetDirectory + "customOO3.onnx";
 	QString targetFilePath4 = targetDirectory + "customOO4.onnx";
-
 
 	// 拷贝文件并重命名
 	if (QFile::exists(targetFilePath1)) {
@@ -499,7 +496,6 @@ void AiTrainModule::copyModelToTempColor(int workIndex)
 
 	sourceFilePath = sourceFilePath + R"(/detect/train/weights/best.onnx)";
 
-
 	// 目标目录路径
 	QString targetDirectory = globalPath.modelStorageManagerTempPath;
 
@@ -512,9 +508,9 @@ void AiTrainModule::copyModelToTempColor(int workIndex)
 		}
 	}
 
-	QString targetFilePath ;
+	QString targetFilePath;
 
-	if (workIndex==1)
+	if (workIndex == 1)
 	{
 		targetFilePath = targetDirectory + "customOO1.onnx";
 	}
@@ -673,7 +669,6 @@ void AiTrainModule::run()
 		trainColorModel(1);
 		exec();
 	}
-
 
 	quit();
 }

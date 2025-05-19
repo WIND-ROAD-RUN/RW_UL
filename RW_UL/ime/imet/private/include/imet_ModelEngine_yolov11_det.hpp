@@ -25,7 +25,7 @@ namespace rw
 				cv::Rect bbox;
 			};
 		public:
-			ModelEngine_Yolov11_det(const std::string & modelPath, nvinfer1::ILogger& logger);
+			ModelEngine_Yolov11_det(const std::string& modelPath, nvinfer1::ILogger& logger);
 		public:
 			~ModelEngine_Yolov11_det() override;
 		private:

@@ -8,23 +8,22 @@
 #include<QDir>
 #include <QSet>
 static std::vector<rw::DetectionRectangleInfo> filterByLabelList(
-const std::vector<rw::DetectionRectangleInfo>& input,
-const QVector<int>& labelList)
+	const std::vector<rw::DetectionRectangleInfo>& input,
+	const QVector<int>& labelList)
 {
-std::vector<rw::DetectionRectangleInfo> result;
-QSet<int> labelSet(labelList.begin(), labelList.end()); // Corrected initialization of QSet
+	std::vector<rw::DetectionRectangleInfo> result;
+	QSet<int> labelSet(labelList.begin(), labelList.end()); // Corrected initialization of QSet
 
-for (const auto& info : input) {
-	if (labelSet.contains(static_cast<int>(info.classId))) {
-		result.push_back(info);
+	for (const auto& info : input) {
+		if (labelSet.contains(static_cast<int>(info.classId))) {
+			result.push_back(info);
+		}
 	}
-}
-return result;
+	return result;
 }
 
 AutomaticAnnotationThread::AutomaticAnnotationThread(const QVector<QString>& imagePaths, QObject* parent)
-    : QThread(parent), m_imagePaths(imagePaths) {
-
+	: QThread(parent), m_imagePaths(imagePaths) {
 }
 
 QString AutomaticAnnotationThread::getObjectDetectionDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height)
@@ -62,7 +61,7 @@ QString AutomaticAnnotationThread::getObjectSegmentDataSetItem(
 		double norCenterY = static_cast<double>(item.center_y) / static_cast<double>(height);
 		double norWidth;
 		double norHeight;
-		if (item.width< item.height)
+		if (item.width < item.height)
 		{
 			norWidth = static_cast<double>(item.width) / static_cast<double>(width);
 			norHeight = static_cast<double>(item.width) / static_cast<double>(height);
@@ -90,7 +89,7 @@ QString AutomaticAnnotationThread::getObjectSegmentDataSetItem(
 		}
 
 		// 组合最终的标注字符串
-		auto textStr = id + pointsStr+"\n";
+		auto textStr = id + pointsStr + "\n";
 
 		// 添加到结果集
 		result.append(QString::fromStdString(textStr));
@@ -151,7 +150,6 @@ void AutomaticAnnotationThread::saveLabels(const QString& label, const QString& 
 
 void AutomaticAnnotationThread::saveLabels_seg(const QString& label, const QString& fileName)
 {
-	
 }
 
 void AutomaticAnnotationThread::saveImage(const QString& imagePath)
@@ -180,32 +178,31 @@ void AutomaticAnnotationThread::saveImage(const QString& imagePath)
 	}
 }
 
-
 void AutomaticAnnotationThread::run()
 {
-    auto engine = rw::ModelEngineFactory::createModelEngine(config, modelType, deployType);
-    if (engine == nullptr)
-    {
-        return;
-    }
+	auto engine = rw::ModelEngineFactory::createModelEngine(config, modelType, deployType);
+	if (engine == nullptr)
+	{
+		return;
+	}
 
-    for (const QString& path : m_imagePaths) {
+	for (const QString& path : m_imagePaths) {
 		auto mat = cv::imread(path.toStdString());
 		if (mat.empty()) {
 			qDebug() << "Failed to load image:" << path;
 			continue;
 		}
-        auto result = engine->processImg(mat);
+		auto result = engine->processImg(mat);
 		result = filterByLabelList(result, labelList);
 
 		auto fileName = QFileInfo(path).baseName();
 
-		if (labelType==R"(Segment)")
+		if (labelType == R"(Segment)")
 		{
 			auto label = getObjectSegmentDataSetItem(result, mat.cols, mat.rows);
 			saveLabels(label, fileName);
 		}
-		else if (labelType==R"(OrientedBoundingBoxes)")
+		else if (labelType == R"(OrientedBoundingBoxes)")
 		{
 			auto label = getOrientedBoundingBoxesDataSetItem(result, mat.cols, mat.rows);
 			saveLabels(label, fileName);
@@ -217,13 +214,12 @@ void AutomaticAnnotationThread::run()
 		}
 		saveImage(path);
 
-        auto image=rw::rqw::ImagePainter::cvMatToQImage(mat);
+		auto image = rw::rqw::ImagePainter::cvMatToQImage(mat);
 
 		rw::rqw::ImagePainter::drawShapesOnSourceImg(image, result);
 
 		QPixmap pixmap = QPixmap::fromImage(image);
 
-        emit imageProcessed(path, pixmap);
-    }
-
+		emit imageProcessed(path, pixmap);
+	}
 }

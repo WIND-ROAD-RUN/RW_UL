@@ -4,7 +4,6 @@
 
 #include<QProcess>
 
-
 class Converter
 	: public QThread
 {
@@ -29,5 +28,4 @@ public slots:
 	void handleOutput();
 	void handleError();
 	void handleFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
 };

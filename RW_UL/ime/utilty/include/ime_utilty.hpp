@@ -70,13 +70,12 @@ namespace rw {
 			White,
 			Black,
 			Orange,
-			LightBlue, 
-			Gray,      
-			Purple,    
-			Brown,    
-			LightBrown 
+			LightBlue,
+			Gray,
+			Purple,
+			Brown,
+			LightBrown
 		};
-
 
 		static cv::Scalar toScalar(BasicColor color);
 
@@ -123,5 +122,4 @@ namespace rw {
 		static  void drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
 		static void drawHorizontalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
 	};
-
 }

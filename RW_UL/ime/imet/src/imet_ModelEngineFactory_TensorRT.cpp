@@ -6,7 +6,6 @@
 
 class Logger : public nvinfer1::ILogger {
 	void log(Severity severity, const char* msg) noexcept override {
-
 	}
 }logger;
 
@@ -15,7 +14,6 @@ namespace rw {
 		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg* createModelEngine_Yolov11_seg(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config);
-
 
 		std::unique_ptr<ModelEngine>
 			ModelEngineFactory_TensorRT::createModelEngine
@@ -65,6 +63,5 @@ namespace rw {
 			modelEngine->setConfig(config);
 			return modelEngine;
 		}
-
 	}
 }

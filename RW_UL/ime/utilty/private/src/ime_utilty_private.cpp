@@ -79,7 +79,6 @@ namespace rw
 		return nms_result;
 	}
 
-
 	cv::Mat PreProcess::letterbox(const cv::Mat& src, int target_w, int target_h, cv::Scalar color, float& out_scale, int& out_dw, int& out_dh)
 	{
 		int src_w = src.cols;

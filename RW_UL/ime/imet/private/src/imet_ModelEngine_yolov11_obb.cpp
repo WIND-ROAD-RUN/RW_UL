@@ -4,7 +4,7 @@
 
 #include<fstream>
 #include<memory>
-#include <iomanip> 
+#include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <numeric>
@@ -13,7 +13,6 @@ namespace rw
 {
 	namespace imet
 	{
-
 		ModelEngine_Yolov11_obb::ModelEngine_Yolov11_obb(const std::string& modelPath,
 			nvinfer1::ILogger& logger)
 		{
@@ -68,7 +67,6 @@ namespace rw
 			this->context->enqueueV3(NULL);
 		}
 
-
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
@@ -87,20 +85,20 @@ namespace rw
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
 					const float oh = det_output.at<float>(3, i);
-					const float angle= det_output.at<float>(4 + num_classes, i);
+					const float angle = det_output.at<float>(4 + num_classes, i);
 					Detection box;
-                    box.angle = angle;
-                    box.c_x = cx;
-                    box.c_y = cy;
-                    box.width = ow;
-                    box.height = oh;
-                    box.conf = score;
-                    box.class_id = class_id_point.y;
+					box.angle = angle;
+					box.c_x = cx;
+					box.c_y = cy;
+					box.width = ow;
+					box.height = oh;
+					box.conf = score;
+					box.class_id = class_id_point.y;
 					boxes.push_back(box);
 				}
 			}
 			//std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
-			std::vector<Detection> nms_boxes = rotatedNmsWithKeepClass(boxes,config.conf_threshold,config.nms_threshold,config.classids_nms_together);
+			std::vector<Detection> nms_boxes = rotatedNmsWithKeepClass(boxes, config.conf_threshold, config.nms_threshold, config.classids_nms_together);
 
 			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 
@@ -144,11 +142,10 @@ namespace rw
 				postDections = convertWhenResize(detections);
 			}
 
-
 			for (const auto& item : postDections)
 			{
 				DetectionRectangleInfo resultItem;
-			
+
 				float cx = item.c_x;
 				float cy = item.c_y;
 				float w = item.width;

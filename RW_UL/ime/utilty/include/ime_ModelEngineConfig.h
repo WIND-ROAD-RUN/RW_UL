@@ -36,7 +36,7 @@ namespace rw {
 	{
 		yolov11_det,
 		yolov11_seg,
-	    yolov11_obb
+		yolov11_obb
 	};
 
 	enum class ModelEngineDeployType

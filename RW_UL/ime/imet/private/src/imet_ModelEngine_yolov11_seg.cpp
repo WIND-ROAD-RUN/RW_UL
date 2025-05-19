@@ -12,14 +12,14 @@ namespace rw {
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
 
-			if (config.imagePretreatmentPolicy== ImagePretreatmentPolicy::Resize)
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
 				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
 			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
-				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h,config.letterBoxColor,letterBoxScale,letterBoxdw,letterBoxdh);
+				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
 				auto infer_image = cv::dnn::blobFromImage(letterbox_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
@@ -34,7 +34,6 @@ namespace rw {
 				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
-
 		}
 
 		void ModelEngine_Yolov11_seg::infer()
@@ -76,7 +75,6 @@ namespace rw {
 					boxes.push_back(box);
 					class_ids.push_back(class_id_point.y);
 					confidences.push_back(score);
-
 				}
 			}
 
@@ -171,7 +169,6 @@ namespace rw {
 			{
 				return convertWhenResize(detections);
 			}
-			
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenResize(

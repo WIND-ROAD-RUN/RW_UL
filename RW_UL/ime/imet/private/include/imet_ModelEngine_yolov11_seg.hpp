@@ -12,7 +12,7 @@
 namespace rw {
 	namespace imet {
 		class ModelEngine_Yolov11_seg
-			:public ModelEngine 
+			:public ModelEngine
 		{
 		private:
 			struct DetectionSeg
@@ -54,7 +54,7 @@ namespace rw {
 			int num_classes = 80;
 			rw::ModelEngineConfig config;
 		public:
-			void setConfig(const ModelEngineConfig & modelConfig)
+			void setConfig(const ModelEngineConfig& modelConfig)
 			{
 				config = modelConfig;
 			}
@@ -70,4 +70,3 @@ namespace rw {
 		};
 	}
 }
-

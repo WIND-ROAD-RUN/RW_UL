@@ -6,9 +6,9 @@
 namespace rw {
 	class ModelEngineFactory {
 	public:
-		static std::unique_ptr<ModelEngine> 
+		static std::unique_ptr<ModelEngine>
 			createModelEngine(const ModelEngineConfig& config,
-				ModelType modelType, 
+				ModelType modelType,
 				ModelEngineDeployType deployType);
 	};
 }

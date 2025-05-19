@@ -31,7 +31,6 @@ Converter::Converter(QObject* parent) : QThread(parent)
 
 Converter::~Converter()
 {
-
 }
 
 void Converter::run()

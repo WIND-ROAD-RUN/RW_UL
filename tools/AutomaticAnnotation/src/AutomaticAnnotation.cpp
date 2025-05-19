@@ -2,14 +2,13 @@
 
 #include"NumberKeyboard.h"
 
-
 #include"rqw_ImagePainter.h"
 
 #include<QMessageBox>
 #include<QFileDialog>
 #include<QDirIterator>
 
-static QStringList getAllImagePaths(const QString & path)
+static QStringList getAllImagePaths(const QString& path)
 {
 	QString folderPath = path; // 获取目录路径
 	if (folderPath.isEmpty()) {
@@ -34,7 +33,7 @@ static QStringList getAllImagePaths(const QString & path)
 	return imagePaths;
 }
 
-AutomaticAnnotation::AutomaticAnnotation(QWidget *parent)
+AutomaticAnnotation::AutomaticAnnotation(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::AutomaticAnnotationClass())
 {
@@ -167,9 +166,6 @@ void AutomaticAnnotation::iniThread()
 		QMessageBox::warning(this, "Warning", QString("模型加载失败，请检查模型路径和类型"));
 		return;
 	}
-
-
-	
 }
 
 void AutomaticAnnotation::pbtn_setImageInput_clicked()
@@ -178,8 +174,8 @@ void AutomaticAnnotation::pbtn_setImageInput_clicked()
 	if (!folderPath.isEmpty())
 	{
 		ui->lineEdit_ImageInput->setText(folderPath);
-		ui->lineEdit_ImageOutput->setText(folderPath+R"(/images)");
-		ui->lineEdit_labelOutput->setText(folderPath+ R"(/labels)");
+		ui->lineEdit_ImageOutput->setText(folderPath + R"(/images)");
+		ui->lineEdit_labelOutput->setText(folderPath + R"(/labels)");
 	}
 	else
 	{
@@ -275,7 +271,6 @@ void AutomaticAnnotation::pbtn_LookImage_clicked()
 
 void AutomaticAnnotation::pbtn_next_clicked()
 {
-
 	if (ui->lineEdit_ImageInput->text().isEmpty())
 	{
 		QMessageBox::warning(this, "Warning", QString("请设置图像输入路径"));
@@ -288,7 +283,7 @@ void AutomaticAnnotation::pbtn_next_clicked()
 	}
 	if (ui->lineEdit_ImageOutput->text().isEmpty())
 	{
-		QMessageBox::warning(this, "Warning", QString("请设置图像输出路径") );
+		QMessageBox::warning(this, "Warning", QString("请设置图像输出路径"));
 		return;
 	}
 	if (ui->lineEdit_modelPath->text().isEmpty())
@@ -296,9 +291,9 @@ void AutomaticAnnotation::pbtn_next_clicked()
 		QMessageBox::warning(this, "Warning", QString("请设置模型路径"));
 		return;
 	}
-	if (ui->pbtn_setWorkers->text().toInt()==0)
+	if (ui->pbtn_setWorkers->text().toInt() == 0)
 	{
-		QMessageBox::warning(this, "Warning", QString("工作线程数量不能为0") );
+		QMessageBox::warning(this, "Warning", QString("工作线程数量不能为0"));
 		return;
 	}
 	iniThread();
@@ -382,4 +377,3 @@ rw::ModelEngineDeployType AutomaticAnnotation::getDeployType()
 		return rw::ModelEngineDeployType::OnnxRuntime;
 	}
 }
-

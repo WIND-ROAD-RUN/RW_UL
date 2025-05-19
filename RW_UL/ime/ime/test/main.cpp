@@ -13,7 +13,7 @@ int main() {
 	config.nms_threshold = 0.1f;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.engine)";
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
-	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::TensorRT);
+	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb, rw::ModelEngineDeployType::TensorRT);
 
 	const string path{ R"(C:\Users\rw\Desktop\temp2\20250221080238888.jpg)" };
 

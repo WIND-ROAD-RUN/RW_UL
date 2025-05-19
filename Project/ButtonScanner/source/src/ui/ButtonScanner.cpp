@@ -91,7 +91,6 @@ void ButtonScanner::resizeEvent(QResizeEvent* event)
 
 	// 设置 label_lightBulb 的位置
 	label_lightBulb->setGeometry(newX, newY, bulbWidth, bulbHeight);
-
 }
 
 ButtonScanner::ButtonScanner(QWidget* parent)
@@ -301,7 +300,6 @@ void ButtonScanner::build_ui()
 		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
 		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
-
 }
 
 void ButtonScanner::read_image()
@@ -733,7 +731,7 @@ void ButtonScanner::build_imageProcessorModule()
 	QFileInfo onnxEngineFile3(onnxEnginePathFull3);
 	QFileInfo onnxEngineFile4(onnxEnginePathFull4);
 
-	if (!engineFile.exists()||!onnxEngineFile1.exists()|| !onnxEngineFile2.exists()|| !onnxEngineFile3.exists()|| !onnxEngineFile4.exists()) {
+	if (!engineFile.exists() || !onnxEngineFile1.exists() || !onnxEngineFile2.exists() || !onnxEngineFile3.exists() || !onnxEngineFile4.exists()) {
 		QMessageBox::critical(this, "Error", "Engine file or Name file does not exist. The application will now exit.");
 		QApplication::quit();
 		return;
@@ -744,7 +742,6 @@ void ButtonScanner::build_imageProcessorModule()
 	globalStruct.onnxEngineOOPath2 = onnxEnginePathFull2;
 	globalStruct.onnxEngineOOPath3 = onnxEnginePathFull3;
 	globalStruct.onnxEngineOOPath4 = onnxEnginePathFull4;
-
 
 	globalStruct.buildImageProcessingModule(2);
 
@@ -998,8 +995,7 @@ void ButtonScanner::build_ioThread()
 						});
 				}
 				else {
-
-						motionPtr->SetIOOut(8, false);
+					motionPtr->SetIOOut(8, false);
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {
@@ -1048,7 +1044,6 @@ void ButtonScanner::build_detachThread()
 
 void ButtonScanner::showEvent(QShowEvent* event)
 {
-
 	int displayX = ui->gBoix_ImageDisplay->x();
 	int displayY = ui->gBoix_ImageDisplay->y();
 	int displayWidth = ui->gBoix_ImageDisplay->width();
@@ -1066,7 +1061,7 @@ void ButtonScanner::showEvent(QShowEvent* event)
 	int newY = centerY - bulbHeight / 2;
 
 	// 设置 label_lightBulb 的位置
-	label_lightBulb->setGeometry(newX+30, newY, bulbWidth, bulbHeight);
+	label_lightBulb->setGeometry(newX + 30, newY, bulbWidth, bulbHeight);
 }
 
 QImage ButtonScanner::cvMatToQImage(const cv::Mat& mat)

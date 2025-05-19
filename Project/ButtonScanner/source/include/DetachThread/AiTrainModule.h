@@ -25,7 +25,7 @@ private:
 public:
 	void setModelType(ModelType type) { _modelType = type; }
 public:
-	QProcess* _processTrainModelBladeShape{nullptr};
+	QProcess* _processTrainModelBladeShape{ nullptr };
 	QProcess* _processExportToEngine{ nullptr };
 public:
 	QProcess* _processTrainModelColor1{ nullptr };
@@ -75,7 +75,7 @@ protected:
 	void run() override;
 private:
 	QVector<labelAndImg> annotation_data_set_bladeShape(bool isBad);
-	QVector<labelAndImg> annotation_data_set_color(bool isBad,int workIndex);
+	QVector<labelAndImg> annotation_data_set_color(bool isBad, int workIndex);
 private:
 	void exportModelToEngine();
 private:

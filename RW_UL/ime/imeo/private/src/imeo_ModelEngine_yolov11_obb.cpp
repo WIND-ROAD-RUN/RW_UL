@@ -2,7 +2,7 @@
 
 #include<fstream>
 #include<memory>
-#include <iomanip> 
+#include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <numeric>
@@ -61,7 +61,6 @@ namespace rw
 
 		void ModelEngine_Yolov11_obb::infer()
 		{
-
 			output_tensors = session.Run(
 				Ort::RunOptions{ nullptr },
 				(const char* const*)input_node_names.data(),
@@ -70,7 +69,6 @@ namespace rw
 				(const char* const*)output_node_names.data(),
 				output_node_names.size()
 			);
-
 		}
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
@@ -202,7 +200,6 @@ namespace rw
 					}
 				}
 			}
-
 
 			std::vector<Detection> nms_result;
 			nms_result.reserve(nms_indices.size());

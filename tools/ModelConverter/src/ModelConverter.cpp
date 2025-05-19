@@ -5,7 +5,7 @@
 #include<QFileDialog>
 #include<QMessageBox>
 
-ModelConverter::ModelConverter(QWidget *parent)
+ModelConverter::ModelConverter(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::ModelConverterClass())
 {
@@ -43,9 +43,9 @@ void ModelConverter::build_connect()
 		this, &ModelConverter::pbtn_openOnnxFilePath_clicked);
 	connect(ui->pbtn_outPutPath, &QPushButton::clicked,
 		this, &ModelConverter::pbtn_outPutPath_clicked);
-	connect(ui->pbtn_exit, &QPushButton::clicked, 
+	connect(ui->pbtn_exit, &QPushButton::clicked,
 		this, &ModelConverter::pbtn_exit_clicked);
-	connect(ui->pbtn_nextStep, &QPushButton::clicked, 
+	connect(ui->pbtn_nextStep, &QPushButton::clicked,
 		this, &ModelConverter::pbtn_nextStep);
 	connect(ui->pbtn_tab1Exit, &QPushButton::clicked,
 		this, &ModelConverter::pbtn_tab1Exit_clicked);
@@ -53,7 +53,6 @@ void ModelConverter::build_connect()
 		this, &ModelConverter::pbtn_preStep_clicked);
 	connect(ui->pbtn_startConvert, &QPushButton::clicked,
 		this, &ModelConverter::pbtn_startConvert_clicked);
-
 }
 
 void ModelConverter::pbtn_openOnnxFilePath_clicked()
@@ -115,7 +114,7 @@ void ModelConverter::pbtn_startConvert_clicked()
 	auto inputFile = ui->lEdit_onnxFilePath->text();
 	QString baseName = QFileInfo(inputFile).baseName();
 	auto outPutPath = ui->lEdit_outPutPath->text();
-	auto outPutName = outPutPath+R"(\)"+ baseName+ R"(.engine)";
+	auto outPutName = outPutPath + R"(\)" + baseName + R"(.engine)";
 	_converter->inputFile = inputFile;
 	_converter->outputFile = outPutName;
 	ui->pbtn_startConvert->setEnabled(false);

@@ -33,7 +33,5 @@ namespace rw
 			cv::Scalar pad_color = cv::Scalar(0, 0, 0),
 			CenterCropParams* out_params = nullptr
 		);
-        
 	};
-	
 }

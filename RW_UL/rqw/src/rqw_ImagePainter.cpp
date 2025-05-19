@@ -56,14 +56,14 @@ namespace rw
 			//calculate the font size based on the image height and the proportion
 			//getting the image height
 			int imageHeight = image.height();
-			int fontSize = static_cast<int>(imageHeight * proportion); 
+			int fontSize = static_cast<int>(imageHeight * proportion);
 
 			QFont font = painter.font();
 			font.setPixelSize(fontSize);
 			painter.setFont(font);
 
 			int x = 0;
-			int y = fontSize; 
+			int y = fontSize;
 
 			for (size_t i = 0; i < texts.size(); ++i) {
 				QColor color = (i < colorList.size()) ? colorList[i].textColor : colorList.back().textColor;
@@ -71,7 +71,7 @@ namespace rw
 
 				painter.drawText(x, y, texts[i]);
 
-				y += fontSize; 
+				y += fontSize;
 			}
 
 			painter.end();
@@ -97,7 +97,7 @@ namespace rw
 		}
 
 		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const DetectionRectangleInfo& total,
-		                                           CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode)
+			CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode)
 		{
 			QRect rect_total(
 				QPoint(total.leftTop.first, total.leftTop.second),
@@ -114,7 +114,6 @@ namespace rw
 				rect_exclude.push_back(rect_excludeItem);
 			}
 			return calculateRegionRGB(image, rect_total, mode, rect_exclude, excludeMode);
-
 		}
 
 		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode,
@@ -154,7 +153,7 @@ namespace rw
 			for (const auto& excludeRect : excludeRegions) {
 				QRect validExcludeRect = excludeRect.intersected(validRect);
 				if (validExcludeRect.isEmpty()) {
-					continue; 
+					continue;
 				}
 
 				if (excludeMode == CropMode::Rectangle) {
@@ -173,7 +172,7 @@ namespace rw
 
 			for (int y = 0; y < image.height(); ++y) {
 				for (int x = 0; x < image.width(); ++x) {
-					if (qGray(mask.pixel(x, y)) > 0) { 
+					if (qGray(mask.pixel(x, y)) > 0) {
 						QColor color(image.pixel(x, y));
 						totalR += color.red();
 						totalG += color.green();
@@ -192,7 +191,6 @@ namespace rw
 
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const QPoint& center, int radius, PainterConfig config)
 		{
-
 			QPainter painter(&image);
 			painter.setPen(QPen(config.color, config.thickness));
 
@@ -206,7 +204,6 @@ namespace rw
 			}
 
 			painter.end();
-
 		}
 
 		QImage ImagePainter::drawShapes(const QImage& image, const std::vector<DetectionRectangleInfo>& rectInfo,

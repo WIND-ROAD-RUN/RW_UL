@@ -37,7 +37,7 @@ namespace rw
 			}
 			else
 			{
-				 infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 			}
 
 			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
@@ -56,7 +56,6 @@ namespace rw
 
 		void ModelEngine_Yolov11_Seg::infer()
 		{
-
 			output_tensors = session.Run(
 				Ort::RunOptions{ nullptr },
 				(const char* const*)input_node_names.data(),
@@ -65,12 +64,10 @@ namespace rw
 				(const char* const*)output_node_names.data(),
 				output_node_names.size()
 			);
-
 		}
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Seg::postProcess()
 		{
 			std::vector<Detection> output;
-
 
 			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
 			std::vector<cv::Rect> boxes;
@@ -147,7 +144,7 @@ namespace rw
 			detection_attribute_size = output_shape[1];
 			num_detections = output_shape[2];
 			maskCoefficientNum = 32;
-			num_classes = output_shape[1] - 4- maskCoefficientNum;
+			num_classes = output_shape[1] - 4 - maskCoefficientNum;
 
 			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
 			preprocess(zero_mat);

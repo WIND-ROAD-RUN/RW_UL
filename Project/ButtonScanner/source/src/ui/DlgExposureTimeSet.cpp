@@ -119,7 +119,6 @@ void DlgExposureTimeSet::pbtn_exposureTimeValue_clicked()
 
 		globalStruct.saveDlgExposureTimeSetConfig();
 
-
 		this->close();
 	}
 }

@@ -7,7 +7,7 @@ namespace rw
 		isDraw = status;
 	}
 
-	cv::Mat ModelEngine::draw(const cv::Mat& mat,const std::vector<DetectionRectangleInfo>& infoList)
+	cv::Mat ModelEngine::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 	{
 		return mat;
 	}

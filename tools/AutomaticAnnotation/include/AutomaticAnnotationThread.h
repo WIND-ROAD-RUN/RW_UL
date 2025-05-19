@@ -10,33 +10,33 @@
 #include"ime_ModelEngineFactory.h"
 
 class AutomaticAnnotationThread : public QThread {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    QString labelType;
-    QVector<int> labelList;
+	QString labelType;
+	QVector<int> labelList;
 public:
-    QString labelOutput;
+	QString labelOutput;
 	QString imageOutput;
-    rw::ModelType modelType;
+	rw::ModelType modelType;
 	rw::ModelEngineDeployType deployType;
 public:
-    explicit AutomaticAnnotationThread(const QVector<QString>& imagePaths, QObject* parent = nullptr);
+	explicit AutomaticAnnotationThread(const QVector<QString>& imagePaths, QObject* parent = nullptr);
 private:
-    QString getObjectDetectionDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet,int width,int height);
-    QString getObjectSegmentDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
-    QString getOrientedBoundingBoxesDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
+	QString getObjectDetectionDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
+	QString getObjectSegmentDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
+	QString getOrientedBoundingBoxesDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
 
-	void saveLabels(const QString & label,const QString & fileName);
-    void saveLabels_seg(const QString& label, const QString& fileName);
+	void saveLabels(const QString& label, const QString& fileName);
+	void saveLabels_seg(const QString& label, const QString& fileName);
 	void saveImage(const QString& imagePath);
 signals:
-    void imageProcessed(QString imagePath,QPixmap pixmap);
+	void imageProcessed(QString imagePath, QPixmap pixmap);
 
 protected:
-    void run() override;
+	void run() override;
 public:
-    rw::ModelEngineConfig config;
+	rw::ModelEngineConfig config;
 
 private:
-    QVector<QString> m_imagePaths;
+	QVector<QString> m_imagePaths;
 };

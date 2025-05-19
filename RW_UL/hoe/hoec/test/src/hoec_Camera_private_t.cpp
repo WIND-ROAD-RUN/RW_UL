@@ -3,5 +3,4 @@
 #include"opencv2/opencv.hpp"
 
 namespace hoec_Camera_MVS_refactor {
-    
 }

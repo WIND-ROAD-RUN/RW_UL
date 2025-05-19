@@ -15,9 +15,9 @@ class ModelConverter : public QMainWindow
 private:
 	Converter* _converter{ nullptr };
 public:
-	bool isKill{false};
+	bool isKill{ false };
 public:
-	ModelConverter(QWidget *parent = nullptr);
+	ModelConverter(QWidget* parent = nullptr);
 	~ModelConverter();
 
 private:
@@ -25,7 +25,7 @@ private:
 	void build_connect();
 
 private:
-	Ui::ModelConverterClass *ui;
+	Ui::ModelConverterClass* ui;
 private slots:
 	void pbtn_openOnnxFilePath_clicked();
 	void pbtn_outPutPath_clicked();

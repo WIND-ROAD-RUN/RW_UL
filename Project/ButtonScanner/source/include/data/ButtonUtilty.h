@@ -23,13 +23,12 @@ struct ClassId
 	static const int mofa = 11;
 	static const int xiaopobian = 12;
 	static const int baibian = 13;
-
 };
 
 struct ClassIdPositive
 {
 	static const int Good = 0;
-	static const int Bad= 1;
+	static const int Bad = 1;
 };
 
 inline struct GlobalPath

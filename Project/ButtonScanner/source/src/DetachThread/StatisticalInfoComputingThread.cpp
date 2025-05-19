@@ -31,7 +31,7 @@ void StatisticalInfoComputingThread::run()
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;
 	auto olderWasteCount = statisticalInfo.produceCount.load();
-	static size_t s=0;
+	static size_t s = 0;
 	while (running) {
 		QThread::sleep(1);
 		//每60s计算剔除功能
@@ -42,7 +42,7 @@ void StatisticalInfoComputingThread::run()
 			if (rate > 0)
 			{
 				//removeRate后使用为生产速度计算
-				statisticalInfo.removeRate = rate*2;
+				statisticalInfo.removeRate = rate * 2;
 				olderWasteCount = statisticalInfo.produceCount.load();
 			}
 			else {

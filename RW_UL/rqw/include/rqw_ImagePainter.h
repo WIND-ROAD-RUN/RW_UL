@@ -55,13 +55,13 @@ namespace rw {
 				InscribedCircle  //calculate the average color of the inscribed circle
 			};
 
-			QVector3D calculateRegionRGB(const QImage& image, const DetectionRectangleInfo & total, CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode);
+			QVector3D calculateRegionRGB(const QImage& image, const DetectionRectangleInfo& total, CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode);
 			QVector3D calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode, const QVector<QRect>& excludeRegions, CropMode excludeMode);
 		public:
 			static void drawShapesOnSourceImg(
 				QImage& image,
-				const QPoint& center, 
-				int radius,           
+				const QPoint& center,
+				int radius,
 				PainterConfig config = {}
 			);
 		public:
@@ -95,6 +95,5 @@ namespace rw {
 			static void drawVerticalLine(QImage& image, int position, const ImagePainter::PainterConfig& config);
 			static void drawHorizontalLine(QImage& image, int position, const ImagePainter::PainterConfig& config);
 		};
-	
 	}
 }

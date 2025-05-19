@@ -54,7 +54,6 @@ namespace rw
 
 		void ModelEngine_Yolov11_det::infer()
 		{
-
 			output_tensors = session.Run(
 				Ort::RunOptions{ nullptr },
 				(const char* const*)input_node_names.data(),
@@ -63,12 +62,10 @@ namespace rw
 				(const char* const*)output_node_names.data(),
 				output_node_names.size()
 			);
-
 		}
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::postProcess()
 		{
 			std::vector<Detection> output;
-
 
 			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
 			std::vector<cv::Rect> boxes;

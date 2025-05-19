@@ -30,7 +30,7 @@ public:
 	float special_R{};
 	float special_G{};
 	float special_B{};
-	bool isDrawSpecialColor{false};
+	bool isDrawSpecialColor{ false };
 public:
 	float large_R{};
 	float large_G{};
@@ -85,16 +85,16 @@ struct ImagePainter
 	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
 };
 
-struct ImageProcessUtilty 
+struct ImageProcessUtilty
 {
 	enum class CropMode {
 		Rectangle,       // 计算矩形区域的平均 RGB 值
 		InscribedCircle  // 计算矩形内接圆的平均 RGB 值
 	};
 
-	static cv::Vec3f calculateRegionRGB(const cv::Mat& image, 
+	static cv::Vec3f calculateRegionRGB(const cv::Mat& image,
 		const rw::DetectionRectangleInfo& total,
-		CropMode mode, 
+		CropMode mode,
 		const std::vector<size_t>& index,
 		const std::vector<rw::DetectionRectangleInfo>& processResult,
 		CropMode excludeMode = CropMode::Rectangle);
@@ -141,31 +141,31 @@ private:
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);
 	void run_OpenRemoveFunc_process_defect_info_positive(ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info) ;
+	void run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_hole(ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_body( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_specialColor( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_edgeDamage( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_body(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_specialColor(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
-	void run_OpenRemoveFunc_process_defect_info_pore( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_paint( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_brokenEye( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_crack( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_grindStone( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_blockEye( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_materialHead( ButtonDefectInfo& info);
-	void run_OpenRemoveFunc_process_defect_info_largeColor( ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_paint(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_grindStone(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
 signals:
 	void imageReady(QPixmap image);
 private:
-	void getEliminationInfo_debug(ButtonDefectInfo & info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+	void getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 	void getEliminationInfo_defect(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 	void getEliminationInfo_positive(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
 	void getHoleInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBodyInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getSpecialColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
-	                               cv::Mat& mat);
+		cv::Mat& mat);
 	void getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 		cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -200,10 +200,10 @@ private:
 		getIndexInShieldingRange
 		(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index) const;
 
-	static bool isInShieldRange(const QPoint & outCentral,int outR, const QPoint& innerCentral, int innerR,const QPoint & point);
+	static bool isInShieldRange(const QPoint& outCentral, int outR, const QPoint& innerCentral, int innerR, const QPoint& point);
 public:
 	void drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info);
-	void appendHolesCountDefectInfo(QVector<QString> & textList, const ButtonDefectInfo& info);
+	void appendHolesCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBodyCountDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendSpecialColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
@@ -219,8 +219,8 @@ public:
 public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
-	void drawVerticalBoundaryLine(QImage & image);
-	void drawButtonDefectInfoText(QImage& image,const ButtonDefectInfo& info);
+	void drawVerticalBoundaryLine(QImage& image);
+	void drawButtonDefectInfoText(QImage& image, const ButtonDefectInfo& info);
 	void drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);

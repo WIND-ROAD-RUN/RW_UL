@@ -4,16 +4,15 @@
 
 #include<fstream>
 #include<memory>
-#include <iomanip> 
-#include <sstream> 
+#include <iomanip>
+#include <sstream>
 
 namespace rw
 {
 	namespace imet
 	{
-
 		ModelEngine_Yolov11_det::ModelEngine_Yolov11_det(const std::string& modelPath,
-		                                                                   nvinfer1::ILogger& logger)
+			nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
@@ -96,7 +95,6 @@ namespace rw
 					boxes.push_back(box);
 					class_ids.push_back(class_id_point.y);
 					confidences.push_back(score);
-
 				}
 			}
 
@@ -113,14 +111,13 @@ namespace rw
 				output.push_back(result);
 			}
 			auto size = output.size();
-			if (size==0){
+			if (size == 0) {
 				return {};
 			}
 
 			auto result = convertDetectionToDetectionRectangleInfo(output);
 
 			return result;
-
 		}
 
 		cv::Mat ModelEngine_Yolov11_det::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
@@ -130,7 +127,7 @@ namespace rw
 			for (const auto& item : infoList)
 			{
 				std::ostringstream oss;
-				oss << "classId:"<<item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
+				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
 			}

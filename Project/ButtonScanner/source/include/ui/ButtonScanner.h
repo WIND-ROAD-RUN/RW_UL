@@ -114,7 +114,6 @@ public:
 	void build_detachThread();
 public:
 	void showEvent(QShowEvent* event) override;
-	
 
 private:
 	Ui::ButtonScannerClass* ui;
