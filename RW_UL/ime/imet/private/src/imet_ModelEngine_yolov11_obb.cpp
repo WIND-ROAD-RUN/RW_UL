@@ -99,7 +99,8 @@ namespace rw
 					boxes.push_back(box);
 				}
 			}
-			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
+			//std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
+			std::vector<Detection> nms_boxes = rotatedNmsWithKeepClass(boxes,config.conf_threshold,config.nms_threshold,config.classids_nms_together);
 
 			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 
@@ -284,6 +285,83 @@ namespace rw
 				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
+		}
+
+		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::rotatedNmsWithKeepClass(
+			const std::vector<Detection>& dets,
+			float conf_threshold,
+			float nms_threshold,
+			const std::vector<size_t>& need_keep_classids)
+		{
+			std::vector<int> nms_indices;
+			std::set<size_t> keep_set(need_keep_classids.begin(), need_keep_classids.end());
+
+			if (dets.empty()) return {};
+
+			// 1. 按需分组
+			std::vector<int> keep_indices;
+			std::map<int, std::vector<int>> class_to_indices;
+			for (int i = 0; i < dets.size(); ++i) {
+				if (dets[i].conf < conf_threshold) continue;
+				if (keep_set.count(dets[i].class_id)) {
+					keep_indices.push_back(i);
+				}
+				else {
+					class_to_indices[dets[i].class_id].push_back(i);
+				}
+			}
+
+			// 2. 对需要一起NMS的类别做NMS
+			if (!keep_indices.empty()) {
+				std::vector<int> sorted_indices = keep_indices;
+				std::sort(sorted_indices.begin(), sorted_indices.end(), [&](int a, int b) {
+					return dets[a].conf > dets[b].conf;
+					});
+				std::vector<bool> suppressed(sorted_indices.size(), false);
+				for (size_t i = 0; i < sorted_indices.size(); ++i) {
+					if (suppressed[i]) continue;
+					int idx_i = sorted_indices[i];
+					nms_indices.push_back(idx_i);
+					for (size_t j = i + 1; j < sorted_indices.size(); ++j) {
+						if (suppressed[j]) continue;
+						int idx_j = sorted_indices[j];
+						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nms_threshold) {
+							suppressed[j] = true;
+						}
+					}
+				}
+			}
+
+			// 3. 其余类别各自做NMS
+			for (const auto& kv : class_to_indices) {
+				const auto& indices = kv.second;
+				if (indices.empty()) continue;
+				std::vector<int> sorted_indices = indices;
+				std::sort(sorted_indices.begin(), sorted_indices.end(), [&](int a, int b) {
+					return dets[a].conf > dets[b].conf;
+					});
+				std::vector<bool> suppressed(sorted_indices.size(), false);
+				for (size_t i = 0; i < sorted_indices.size(); ++i) {
+					if (suppressed[i]) continue;
+					int idx_i = sorted_indices[i];
+					nms_indices.push_back(idx_i);
+					for (size_t j = i + 1; j < sorted_indices.size(); ++j) {
+						if (suppressed[j]) continue;
+						int idx_j = sorted_indices[j];
+						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nms_threshold) {
+							suppressed[j] = true;
+						}
+					}
+				}
+			}
+
+			// 根据索引返回Detection对象
+			std::vector<Detection> nms_result;
+			nms_result.reserve(nms_indices.size());
+			for (int idx : nms_indices) {
+				nms_result.push_back(dets[idx]);
+			}
+			return nms_result;
 		}
 
 		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::rotatedNMS(

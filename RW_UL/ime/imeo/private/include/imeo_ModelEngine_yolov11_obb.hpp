@@ -57,6 +57,12 @@ namespace rw {
 
             ModelEngineConfig config;
         private:
+            std::vector<Detection> rotatedNmsWithKeepClass(
+                const std::vector<Detection>& dets,
+                float conf_threshold,
+                float nms_threshold,
+                const std::vector<size_t>& need_keep_classids);
+        private:
             std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
             std::vector<Detection> convertWhenResize(const std::vector<Detection>& detections);
             std::vector<Detection> convertWhenLetterBox(const std::vector<Detection>& detections);

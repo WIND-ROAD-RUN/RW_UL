@@ -38,6 +38,12 @@ namespace rw
 			std::vector<DetectionRectangleInfo> postProcess() override;
 			void preprocess(const cv::Mat& mat) override;
 		private:
+			std::vector<Detection> rotatedNmsWithKeepClass(
+				const std::vector<Detection>& dets,
+				float conf_threshold,
+				float nms_threshold,
+				const std::vector<size_t>& need_keep_classids);
+		private:
 			std::vector<ModelEngine_Yolov11_obb::Detection> rotatedNMS(const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold);
 			double rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a, const ModelEngine_Yolov11_obb::Detection& b);
 			cv::RotatedRect toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det);

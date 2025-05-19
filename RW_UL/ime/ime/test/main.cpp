@@ -1,4 +1,4 @@
-#include"opencv2/opencv.hpp"
+Ôªø#include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
 #include"ime_ModelEngineFactory.h"
@@ -11,11 +11,11 @@ int main() {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
-	config.modelPath = R"(D:\zfkjData\ButtonScanner\model\customOO.onnx)";
-	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::CenterCrop;
-	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_det,rw::ModelEngineDeployType::OnnxRuntime);
+	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.engine)";
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
+	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::TensorRT);
 
-	const string path{ R"(C:\Users\rw\Desktop\temp\NG20250417152301729.png)" };
+	const string path{ R"(C:\Users\rw\Desktop\temp2\20250221080238888.jpg)" };
 
 	Mat image = imread(path);
 	if (image.empty())
@@ -31,7 +31,7 @@ int main() {
 	printf("cost %2.4lf ms\n", tc);
 
 	cv::namedWindow("result", cv::WINDOW_NORMAL);
-	cv::resizeWindow("result", 1200, 1080); // ƒ„ø…“‘◊‘∂®“Â¥∞ø⁄¥Û–°
+	cv::resizeWindow("result", 1200, 1080); // ‰Ω†ÂèØ‰ª•Ëá™ÂÆö‰πâÁ™óÂè£Â§ßÂ∞è
 	imshow("result", resultImage);
 
 	cv::waitKey(0);
