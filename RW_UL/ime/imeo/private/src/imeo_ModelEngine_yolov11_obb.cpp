@@ -102,7 +102,7 @@ namespace rw
 					boxes.push_back(box);
 				}
 			}
-			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold); 
+			std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
 
 			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 

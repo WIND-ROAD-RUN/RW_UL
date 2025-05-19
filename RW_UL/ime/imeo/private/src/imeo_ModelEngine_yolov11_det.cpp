@@ -100,8 +100,8 @@ namespace rw
 				}
 			}
 
-			std::vector<int> nms_result;
-			cv::dnn::NMSBoxes(boxes, confidences, config.conf_threshold, config.nms_threshold, nms_result);
+			std::vector<int> nms_result = nmsWithKeepClass(
+				boxes, class_ids, confidences, config.conf_threshold, config.nms_threshold, config.classids_nms_together);
 
 			for (int i = 0; i < nms_result.size(); i++)
 			{
