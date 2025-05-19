@@ -119,6 +119,7 @@ void AutomaticAnnotation::iniThread()
 	config.modelPath = modelPath.toStdString();
 	config.nms_threshold = std::stof(nmsThreshold.toStdString());
 	config.conf_threshold = std::stof(confThreshold.toStdString());
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 
 	auto paths = getAllImagePaths(ui->lineEdit_ImageInput->text());
 	size = paths.size();

@@ -16,7 +16,7 @@ namespace rw
 		if (boxes.empty()) return nms_result;
 
 		if (need_keep_classids.empty()) {
-			// 所有类别分别单独NMS
+			// All classes are to be NMSed together
 			std::map<int, std::vector<int>> class_to_indices;
 			for (int i = 0; i < class_ids.size(); ++i) {
 				class_to_indices[class_ids[i]].push_back(i);
@@ -38,11 +38,11 @@ namespace rw
 			return nms_result;
 		}
 
-		// 1. 需要一起NMS的类别
+		// 1. The classes that need to be NMSed together
 		std::vector<cv::Rect> keep_boxes;
 		std::vector<float> keep_confidences;
 		std::vector<int> keep_indices;
-		// 2. 其他类别分组
+		// 2. other classes are grouped
 		std::map<int, std::vector<int>> class_to_indices;
 		for (int i = 0; i < class_ids.size(); ++i) {
 			if (keep_set.count(class_ids[i])) {
@@ -54,14 +54,14 @@ namespace rw
 				class_to_indices[class_ids[i]].push_back(i);
 			}
 		}
-		// 1. 对 need_keep_classids 里的框一起NMS
+		//3. NMS for the classes that need to be NMSed together
 		std::vector<int> keep_nms;
 		if (!keep_boxes.empty())
 			cv::dnn::NMSBoxes(keep_boxes, keep_confidences, conf_threshold, nms_threshold, keep_nms);
 		for (int nms_idx : keep_nms) {
 			nms_result.push_back(keep_indices[nms_idx]);
 		}
-		// 2. 其他类别分别单独NMS
+		//4. NMS for other classes
 		for (const auto& kv : class_to_indices) {
 			std::vector<cv::Rect> class_boxes;
 			std::vector<float> class_confidences;

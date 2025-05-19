@@ -51,8 +51,8 @@ namespace rw {
 
 		public:
 			enum class CropMode {
-				Rectangle,       // 计算矩形区域的平均 RGB 值
-				InscribedCircle  // 计算矩形内接圆的平均 RGB 值
+				Rectangle,      //calculate the average color of the rectangle
+				InscribedCircle  //calculate the average color of the inscribed circle
 			};
 
 			QVector3D calculateRegionRGB(const QImage& image, const DetectionRectangleInfo & total, CropMode mode, const QVector<DetectionRectangleInfo>& excludeRegions, CropMode excludeMode);

@@ -10,8 +10,7 @@ namespace rw {
 	{
 		Resize = 0,
 		LetterBox = 1,
-		CenterCrop = 2,
-		AdaptiveResize = 3
+		CenterCrop = 2
 	};
 
 	struct ModelEngineConfig {
