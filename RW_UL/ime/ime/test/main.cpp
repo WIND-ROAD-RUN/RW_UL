@@ -11,10 +11,10 @@ int main() {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
-	config.modelPath = R"(C:\Users\rw\Desktop\yolo11n-obb.engine)";
+	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.engine)";
 	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::TensorRT);
 
-	const string path{ R"(C:\Users\rw\Desktop\car.jpg)" };
+	const string path{ R"(C:\Users\rw\Desktop\temp\images\20250221080238888.jpg)" };
 
 	Mat image = imread(path);
 	if (image.empty())
@@ -29,6 +29,8 @@ int main() {
 	auto tc = (double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.;
 	printf("cost %2.4lf ms\n", tc);
 
+	cv::namedWindow("result", cv::WINDOW_NORMAL);
+	cv::resizeWindow("result", 1200, 1080); // 你可以自定义窗口大小
 	imshow("result", resultImage);
 
 	cv::waitKey(0);
