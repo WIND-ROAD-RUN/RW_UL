@@ -139,24 +139,59 @@ namespace rw
 		{
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
-			auto infer_image = 
-				cv::dnn::blobFromImage(mat, 
-					1.f / 255.f,
-					cv::Size(input_w, input_h),
-					cv::Scalar(0, 0, 0), true);//1、缩放cv::resize;2、系数变换；3、色域变换bgr->rgb；4、图像裁剪cv::crop;5、数据标准化(x-mean)/var
 
-			(cudaMemcpy(gpu_buffers[0],
-				infer_image.data, 
-				input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
+				auto infer_image = cv::dnn::blobFromImage(letterbox_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
+				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
+			else
+			{
+				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+			}
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::convertDetectionToDetectionRectangleInfo(
 			const std::vector<Detection>& detections)
 		{
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				return convertWhenResize(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				return convertWhenLetterBox(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				return convertWhenCentralCrop(detections);
+			}
+			else
+			{
+				return convertWhenResize(detections);
+			}
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::convertWhenResize(
+			const std::vector<Detection>& detections)
+		{
 			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
 			auto scaleX = sourceWidth / static_cast<float>(input_w);
 			auto scaleY = sourceHeight / static_cast<float>(input_h);
-			result.reserve(detections.size());
 			for (const auto& item : detections)
 			{
 				DetectionRectangleInfo resultItem;
@@ -173,6 +208,81 @@ namespace rw
 				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
 				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
 				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::convertWhenLetterBox(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
+
+			float scale = letterBoxScale;
+			int dw = letterBoxdw;
+			int dh = letterBoxdh;
+
+			for (const auto& item : detections)
+			{
+				DetectionRectangleInfo resultItem;
+
+				float x1 = (item.bbox.x - dw) / scale;
+				float y1 = (item.bbox.y - dh) / scale;
+				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;
+				float y2 = (item.bbox.y + item.bbox.height - dh) / scale;
+
+				resultItem.leftTop.first = x1;
+				resultItem.leftTop.second = y1;
+				resultItem.rightTop.first = x2;
+				resultItem.rightTop.second = y1;
+				resultItem.leftBottom.first = x1;
+				resultItem.leftBottom.second = y2;
+				resultItem.rightBottom.first = x2;
+				resultItem.rightBottom.second = y2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.center_x = (x1 + x2) / 2;
+				resultItem.center_y = (y1 + y2) / 2;
+				resultItem.area = resultItem.width * resultItem.height;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::convertWhenCentralCrop(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
+
+			const auto& params = centerCropParams;
+
+			for (const auto& item : detections)
+			{
+				float x1 = item.bbox.x + params.crop_x - params.pad_left;
+				float y1 = item.bbox.y + params.crop_y - params.pad_top;
+				float x2 = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left;
+				float y2 = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top;
+
+				DetectionRectangleInfo resultItem;
+				resultItem.leftTop.first = x1;
+				resultItem.leftTop.second = y1;
+				resultItem.rightTop.first = x2;
+				resultItem.rightTop.second = y1;
+				resultItem.leftBottom.first = x1;
+				resultItem.leftBottom.second = y2;
+				resultItem.rightBottom.first = x2;
+				resultItem.rightBottom.second = y2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.center_x = (x1 + x2) / 2;
+				resultItem.center_y = (y1 + y2) / 2;
+				resultItem.area = resultItem.width * resultItem.height;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
 				result.push_back(resultItem);

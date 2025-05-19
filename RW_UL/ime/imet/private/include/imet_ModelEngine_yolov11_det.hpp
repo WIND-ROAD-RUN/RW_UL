@@ -3,6 +3,8 @@
 #include"ime_ModelEngine.h"
 #include"ime_ModelEngineConfig.h"
 
+#include"ime_utilty_private.hpp"
+
 #include"NvInfer.h"
 
 #include<string>
@@ -56,9 +58,18 @@ namespace rw
 			}
 		private:
 			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<Detection>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenLetterBox(const std::vector<Detection>& detections);
+			std::vector<DetectionRectangleInfo> convertWhenCentralCrop(const std::vector<Detection>& detections);
 		private:
 			int sourceWidth{};
 			int sourceHeight{};
+		private:
+			float letterBoxScale{};
+			int letterBoxdw{};
+			int letterBoxdh{};
+		private:
+			PreProcess::CenterCropParams centerCropParams;
 		};
 	}
 }
