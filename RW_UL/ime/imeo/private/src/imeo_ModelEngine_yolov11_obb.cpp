@@ -26,7 +26,24 @@ namespace rw
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
 
-			infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				infer_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
+				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				infer_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
+				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else
+			{
+				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
 
 			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
 			auto input_size = 1 * 3 * input_h * input_w;
@@ -76,8 +93,8 @@ namespace rw
 					const float angle = det_output.at<float>(4 + num_classes, i);
 					Detection box;
 					box.angle = angle;
-					box.x = cx - ow / 2;
-					box.y = cy - oh / 2;
+					box.c_x = cx;
+					box.c_y = cy;
 					box.width = ow;
 					box.height = oh;
 					box.conf = score;
@@ -126,18 +143,34 @@ namespace rw
 			const std::vector<Detection>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
-			auto scaleX = sourceWidth / static_cast<float>(input_w);
-			auto scaleY = sourceHeight / static_cast<float>(input_h);
 			result.reserve(detections.size());
-			for (const auto& item : detections)
+
+			std::vector<Detection> postDections;
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				postDections = convertWhenResize(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				postDections = convertWhenLetterBox(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				postDections = convertWhenCentralCrop(detections);
+			}
+			else
+			{
+				postDections = convertWhenResize(detections);
+			}
+
+			for (const auto& item : postDections)
 			{
 				DetectionRectangleInfo resultItem;
 
-				// 还原到原图坐标
-				float cx = (item.x + item.width / 2.0f) * scaleX;
-				float cy = (item.y + item.height / 2.0f) * scaleY;
-				float w = item.width * scaleX;
-				float h = item.height * scaleY;
+				float cx = item.c_x;
+				float cy = item.c_y;
+				float w = item.width;
+				float h = item.height;
 				float angle_rad = item.angle;
 
 				// 以中心为原点，未旋转时的四个角点
@@ -164,6 +197,82 @@ namespace rw
 				resultItem.classId = static_cast<size_t>(item.class_id);
 				resultItem.score = item.conf;
 
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::convertWhenLetterBox(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<Detection> result;
+			result.reserve(detections.size());
+			const auto& params = centerCropParams;
+			float scale = letterBoxScale;
+			int dw = letterBoxdw;
+			int dh = letterBoxdh;
+			for (const auto& item : detections)
+			{
+				float x1 = (item.c_x - dw) / scale;
+				float y1 = (item.c_y - dh) / scale;
+				float x2 = (item.c_x + item.width - dw) / scale;
+				float y2 = (item.c_y + item.height - dh) / scale;
+				Detection resultItem;
+				resultItem.c_x = x1;
+				resultItem.c_y = y1;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.angle = item.angle;
+				resultItem.conf = item.conf;
+				resultItem.class_id = item.class_id;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::convertWhenCentralCrop(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<Detection> result;
+			result.reserve(detections.size());
+			const auto& params = centerCropParams;
+			for (const auto& item : detections)
+			{
+				float x1 = item.c_x + params.crop_x - params.pad_left;
+				float y1 = item.c_y + params.crop_y - params.pad_top;
+				float x2 = item.c_x + item.width + params.crop_x - params.pad_left;
+				float y2 = item.c_y + item.height + params.crop_y - params.pad_top;
+
+				Detection resultItem;
+				resultItem.c_x = (x1 + x2) / 2;
+				resultItem.c_y = (y1 + y2) / 2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.angle = item.angle;
+				resultItem.conf = item.conf;
+				resultItem.class_id = item.class_id;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::convertWhenResize(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<Detection> result;
+			result.reserve(detections.size());
+			auto scaleX = sourceWidth / static_cast<float>(input_w);
+			auto scaleY = sourceHeight / static_cast<float>(input_h);
+			for (const auto& item : detections)
+			{
+				Detection resultItem;
+				resultItem.width = item.width * scaleX;
+				resultItem.height = item.height * scaleY;
+				resultItem.c_x = item.c_x * scaleX;
+				resultItem.c_y = item.c_y * scaleY;
+				resultItem.angle = item.angle;
+				resultItem.conf = item.conf;
+				resultItem.class_id = item.class_id;
 				result.push_back(resultItem);
 			}
 			return result;
@@ -219,7 +328,7 @@ namespace rw
 		cv::RotatedRect ModelEngine_Yolov11_obb::toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det)
 		{
 			return cv::RotatedRect(
-				cv::Point2f(det.x + det.width / 2.0f, det.y + det.height / 2.0f), // center
+				cv::Point2f(det.c_x + det.width / 2.0f, det.c_y + det.height / 2.0f), // center
 				cv::Size2f(det.width, det.height),
 				det.angle
 			);

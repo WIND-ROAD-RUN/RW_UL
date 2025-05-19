@@ -2,6 +2,7 @@
 
 #include"ime_ModelEngine.h"
 #include"ime_ModelEngineConfig.h"
+#include"ime_utilty_private.hpp"
 
 #include"NvInfer.h"
 
@@ -21,8 +22,8 @@ namespace rw
 				double conf;
 				int class_id;
 				float angle;
-				float x;       // x-coordinate of the center
-				float y;       // y-coordinate of the center
+				float c_x;       // x-coordinate of the center
+				float c_y;       // y-coordinate of the center
 				float width;   // width of the box
 				float height;  // height of the box
 			};
@@ -58,6 +59,9 @@ namespace rw
 
 			ModelEngineConfig config;
 			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+			std::vector<Detection> convertWhenResize(const std::vector<Detection>& detections);
+			std::vector<Detection> convertWhenLetterBox(const std::vector<Detection>& detections);
+			std::vector<Detection> convertWhenCentralCrop(const std::vector<Detection>& detections);
 
 		public:
 			void setConfig(const ModelEngineConfig& config)
@@ -67,6 +71,12 @@ namespace rw
 		private:
 			int sourceWidth{};
 			int sourceHeight{};
+		private:
+			float letterBoxScale{};
+			int letterBoxdw{};
+			int letterBoxdh{};
+		private:
+			PreProcess::CenterCropParams centerCropParams;
 		};
 	}
 }

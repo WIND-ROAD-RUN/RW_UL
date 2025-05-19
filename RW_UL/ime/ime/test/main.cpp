@@ -12,9 +12,10 @@ int main() {
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.onnx)";
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::Resize;
 	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_obb,rw::ModelEngineDeployType::OnnxRuntime);
 
-	const string path{ R"(C:\Users\rw\Desktop\temp\images\20250221080238888.jpg)" };
+	const string path{ R"(C:\Users\rw\Desktop\temp2\20250221080238888.jpg)" };
 
 	Mat image = imread(path);
 	if (image.empty())

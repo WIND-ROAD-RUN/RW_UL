@@ -3,12 +3,12 @@
 
 #include <string>
 #include <locale>
-#include <codecvt>
 
 #include"ime_ModelEngine.h"
-#include"onnxruntime_cxx_api.h"
-
 #include"ime_ModelEngineConfig.h"
+#include"ime_utilty_private.hpp"
+
+#include"onnxruntime_cxx_api.h"
 
 namespace rw {
     namespace imeo {
@@ -21,8 +21,8 @@ namespace rw {
                 double conf;
                 int class_id;
                 float angle;
-                float x;       // x-coordinate of the center
-                float y;       // y-coordinate of the center
+                float c_x;       // x-coordinate of the center
+                float c_y;       // y-coordinate of the center
                 float width;   // width of the box
                 float height;  // height of the box
             };
@@ -58,6 +58,9 @@ namespace rw {
             ModelEngineConfig config;
         private:
             std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+            std::vector<Detection> convertWhenResize(const std::vector<Detection>& detections);
+            std::vector<Detection> convertWhenLetterBox(const std::vector<Detection>& detections);
+            std::vector<Detection> convertWhenCentralCrop(const std::vector<Detection>& detections);
         private:
             std::vector<ModelEngine_Yolov11_obb::Detection> rotatedNMS(const std::vector<ModelEngine_Yolov11_obb::Detection>& dets, double iouThreshold);
             double rotatedIoU(const ModelEngine_Yolov11_obb::Detection& a, const ModelEngine_Yolov11_obb::Detection& b);
@@ -75,6 +78,12 @@ namespace rw {
             {
                 this->config = modelConfig;
             }
+        private:
+            float letterBoxScale{};
+            int letterBoxdw{};
+            int letterBoxdh{};
+        private:
+            PreProcess::CenterCropParams centerCropParams;
         };
 
     }
