@@ -1,27 +1,20 @@
 #pragma once
 
 #include <QMainWindow>
-#include "ui_ModelConverter.h"
-
+#include "ui_demo.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class ModelConverterClass; };
+namespace Ui { class demoClass; };
 QT_END_NAMESPACE
 
-class ModelConverter : public QMainWindow
+class demo : public QMainWindow
 {
 	Q_OBJECT
+
 public:
-	bool isKill{ false };
-public:
-	ModelConverter(QWidget* parent = nullptr);
-	~ModelConverter();
+	demo(QWidget *parent = nullptr);
+	~demo();
 
 private:
-	void build_ui();
-	void build_connect();
-
-private:
-	Ui::ModelConverterClass* ui;
-
+	Ui::demoClass *ui;
 };

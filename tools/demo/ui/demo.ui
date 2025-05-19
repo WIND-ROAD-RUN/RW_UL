@@ -1,31 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <class>demo</class>
- <widget class="QMainWindow" name="demo">
-  <property name="geometry">
+<UI version="4.0" >
+ <class>demoClass</class>
+ <widget class="QMainWindow" name="demoClass" >
+  <property name="objectName" >
+   <string notr="true">demoClass</string>
+  </property>
+  <property name="geometry" >
    <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>893</width>
-    <height>688</height>
+	<x>0</x>
+	<y>0</y>
+	<width>600</width>
+	<height>400</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>ModelConverter</string>
-  </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+  <property name="windowTitle" >
+   <string>demo</string>
+  </property>  <widget class="QMenuBar" name="menuBar" />  <widget class="QToolBar" name="mainToolBar" />  <widget class="QWidget" name="centralWidget" />  <widget class="QStatusBar" name="statusBar" />
  </widget>
- <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <layoutDefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
  <connections/>
-</ui>
+</UI>

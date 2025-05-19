@@ -1,29 +1,13 @@
 #include "demo.h"
 
-#include <qtabbar.h>
-
-#include<QFileDialog>
-#include<QMessageBox>
-
-ModelConverter::ModelConverter(QWidget* parent)
+demo::demo(QWidget *parent)
 	: QMainWindow(parent)
-	, ui(new Ui::ModelConverterClass())
+	, ui(new Ui::demoClass())
 {
 	ui->setupUi(this);
-
 }
 
-ModelConverter::~ModelConverter()
+demo::~demo()
 {
-
-}
-
-void ModelConverter::build_ui()
-{
-
-}
-
-void ModelConverter::build_connect()
-{
-
+	delete ui;
 }
