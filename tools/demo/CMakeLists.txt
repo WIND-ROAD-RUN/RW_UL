@@ -38,6 +38,12 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concurrent)
 
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE hoec
+    PRIVATE rqw
+    PRIVATE ime
+)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${QT_PATH}/bin/windeployqt.exe --no-compiler-runtime --no-opengl-sw $<TARGET_FILE:${PROJECT_NAME}>
     COMMENT "Running windeployqt to package Qt dependencies"
@@ -45,7 +51,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${TensorRT_exes} ${TensorRT_dlls}
+    ${TensorRT_exes} ${TensorRT_dlls} ${ZMotionRutime_dlls} ${OnnxRuntime_dlls}
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
