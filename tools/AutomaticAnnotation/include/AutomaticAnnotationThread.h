@@ -24,6 +24,7 @@ public:
 private:
     QString getObjectDetectionDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet,int width,int height);
     QString getObjectSegmentDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
+    QString getOrientedBoundingBoxesDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height);
 
 	void saveLabels(const QString & label,const QString & fileName);
     void saveLabels_seg(const QString& label, const QString& fileName);

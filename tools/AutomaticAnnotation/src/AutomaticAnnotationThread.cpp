@@ -99,6 +99,33 @@ QString AutomaticAnnotationThread::getObjectSegmentDataSetItem(
 	return result;
 }
 
+QString AutomaticAnnotationThread::getOrientedBoundingBoxesDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height)
+{
+	QString result;
+	for (const auto& item : annotationDataSet)
+	{
+		std::string id = std::to_string(item.classId);
+
+		double x1 = static_cast<double>(item.leftTop.first) / static_cast<double>(width);
+		double y1 = static_cast<double>(item.leftTop.second) / static_cast<double>(height);
+		double x2 = static_cast<double>(item.rightTop.first) / static_cast<double>(width);
+		double y2 = static_cast<double>(item.rightTop.second) / static_cast<double>(height);
+		double x3 = static_cast<double>(item.rightBottom.first) / static_cast<double>(width);
+		double y3 = static_cast<double>(item.rightBottom.second) / static_cast<double>(height);
+		double x4 = static_cast<double>(item.leftBottom.first) / static_cast<double>(width);
+		double y4 = static_cast<double>(item.leftBottom.second) / static_cast<double>(height);
+
+		auto textStr = id + " " +
+			std::to_string(x1) + " " + std::to_string(y1) + " " +
+			std::to_string(x2) + " " + std::to_string(y2) + " " +
+			std::to_string(x3) + " " + std::to_string(y3) + " " +
+			std::to_string(x4) + " " + std::to_string(y4) + "\n";
+
+		result.append(QString::fromStdString(textStr));
+	}
+	return result;
+}
+
 void AutomaticAnnotationThread::saveLabels(const QString& label, const QString& fileName)
 {
 	QString labelPath = labelOutput + "/" + fileName + ".txt";
@@ -175,6 +202,11 @@ void AutomaticAnnotationThread::run()
 		if (labelType==R"(Segment)")
 		{
 			auto label = getObjectSegmentDataSetItem(result, mat.cols, mat.rows);
+			saveLabels(label, fileName);
+		}
+		else if (labelType==R"(OrientedBoundingBoxes)")
+		{
+			auto label = getOrientedBoundingBoxesDataSetItem(result, mat.cols, mat.rows);
 			saveLabels(label, fileName);
 		}
 		else

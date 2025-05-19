@@ -71,10 +71,12 @@ void AutomaticAnnotation::build_ui()
 
 	ui->cBox_checkModelType->addItem("Yolov11_det");
 	ui->cBox_checkModelType->addItem("Yolov11_seg");
+	ui->cBox_checkModelType->addItem("Yolov11_obb");
 	ui->cBox_checkModelType->setCurrentIndex(0);
 
 	ui->cBox_exportLabelType->addItem("Detection");
 	ui->cBox_exportLabelType->addItem("Segment");
+	ui->cBox_exportLabelType->addItem("OrientedBoundingBoxes");
 	ui->cBox_exportLabelType->setCurrentIndex(0);
 }
 
@@ -347,9 +349,13 @@ rw::ModelType AutomaticAnnotation::getModelType()
 	{
 		return rw::ModelType::yolov11_seg;
 	}
-	else if (currentModelType == "Yolov11_obb")
+	else if (currentModelType == "Yolov11_det")
 	{
 		return rw::ModelType::yolov11_det;
+	}
+	else if (currentModelType == "Yolov11_obb")
+	{
+		return rw::ModelType::yolov11_obb;
 	}
 	else
 	{

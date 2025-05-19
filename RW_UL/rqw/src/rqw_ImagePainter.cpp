@@ -53,29 +53,25 @@ namespace rw
 			QPainter painter(&image);
 			painter.setRenderHint(QPainter::Antialiasing);
 
-			// 计算字体大小
+			//calculate the font size based on the image height and the proportion
+			//getting the image height
 			int imageHeight = image.height();
-			int fontSize = static_cast<int>(imageHeight * proportion); // 字号由 proportion 决定
+			int fontSize = static_cast<int>(imageHeight * proportion); 
 
 			QFont font = painter.font();
 			font.setPixelSize(fontSize);
 			painter.setFont(font);
 
-			// 起始位置
 			int x = 0;
-			int y = fontSize; // 初始 y 坐标为字体大小，避免文字超出顶部
+			int y = fontSize; 
 
-			// 绘制每一行文字
 			for (size_t i = 0; i < texts.size(); ++i) {
-				// 获取颜色
 				QColor color = (i < colorList.size()) ? colorList[i].textColor : colorList.back().textColor;
 				painter.setPen(color);
 
-				// 绘制文字
 				painter.drawText(x, y, texts[i]);
 
-				// 更新 y 坐标
-				y += fontSize; // 每行文字的间距等于字体大小
+				y += fontSize; 
 			}
 
 			painter.end();
@@ -124,27 +120,22 @@ namespace rw
 		QVector3D ImagePainter::calculateRegionRGB(const QImage& image, const QRect& rect, CropMode mode,
 			const QVector<QRect>& excludeRegions, CropMode excludeMode)
 		{
-			// 检查图像是否为空
 			if (image.isNull()) {
 				throw std::invalid_argument("Input image is empty.");
 			}
 
-			// 检查图像是否为 RGB 格式
 			if (image.format() != QImage::Format_RGB32 && image.format() != QImage::Format_ARGB32) {
 				throw std::invalid_argument("Input image must be a 3-channel (RGB) image.");
 			}
 
-			// 确保矩形在图像范围内
 			QRect validRect = rect.intersected(image.rect());
 			if (validRect.isEmpty()) {
 				throw std::invalid_argument("The rectangle is outside the image bounds.");
 			}
 
-			// 创建掩码
 			QImage mask(image.size(), QImage::Format_Grayscale8);
 			mask.fill(0);
 
-			// 根据模式标记主区域
 			QPainter painter(&mask);
 			painter.setBrush(Qt::white);
 			if (mode == CropMode::Rectangle) {
@@ -159,12 +150,11 @@ namespace rw
 				throw std::invalid_argument("Invalid crop mode.");
 			}
 
-			// 处理需要排除的区域
 			painter.setBrush(Qt::black);
 			for (const auto& excludeRect : excludeRegions) {
 				QRect validExcludeRect = excludeRect.intersected(validRect);
 				if (validExcludeRect.isEmpty()) {
-					continue; // 跳过无效的排除区域
+					continue; 
 				}
 
 				if (excludeMode == CropMode::Rectangle) {
@@ -178,13 +168,12 @@ namespace rw
 			}
 			painter.end();
 
-			// 计算平均 RGB 值
 			double totalR = 0, totalG = 0, totalB = 0;
 			int pixelCount = 0;
 
 			for (int y = 0; y < image.height(); ++y) {
 				for (int x = 0; x < image.width(); ++x) {
-					if (qGray(mask.pixel(x, y)) > 0) { // 检查掩码是否有效
+					if (qGray(mask.pixel(x, y)) > 0) { 
 						QColor color(image.pixel(x, y));
 						totalR += color.red();
 						totalG += color.green();
@@ -198,7 +187,6 @@ namespace rw
 				throw std::runtime_error("No valid pixels in the specified region.");
 			}
 
-			// 返回平均 RGB 值
 			return QVector3D(totalR / pixelCount, totalG / pixelCount, totalB / pixelCount);
 		}
 
@@ -265,7 +253,7 @@ namespace rw
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, PainterConfig config)
 		{
 			if (config.shapeType == ShapeType::Rectangle) {
-				QPainter painter(&image);
+				/*QPainter painter(&image);
 				painter.setPen(QPen(config.color, config.thickness));
 				painter.drawRect(
 					QRectF(
@@ -274,7 +262,17 @@ namespace rw
 						rectInfo.rightBottom.first - rectInfo.leftTop.first,
 						rectInfo.rightBottom.second - rectInfo.leftTop.second
 					)
-				);
+				);*/
+				QPainter painter(&image);
+				painter.setPen(QPen(config.color, config.thickness));
+
+				QPolygonF obbPolygon;
+				obbPolygon << QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second)
+					<< QPointF(rectInfo.rightTop.first, rectInfo.rightTop.second)
+					<< QPointF(rectInfo.rightBottom.first, rectInfo.rightBottom.second)
+					<< QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second);
+
+				painter.drawPolygon(obbPolygon);
 			}
 			else if (config.shapeType == ShapeType::Circle) {
 				QPainter painter(&image);
@@ -289,12 +287,10 @@ namespace rw
 			QPainter textPainter(&image);
 			textPainter.setPen(config.textColor);
 
-			// 设置字体大小
 			QFont font = textPainter.font();
 			font.setPixelSize(config.fontSize);
 			textPainter.setFont(font);
 
-			// 绘制文字
 			textPainter.drawText(
 				QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10),
 				config.text
