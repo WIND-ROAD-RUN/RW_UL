@@ -9,8 +9,8 @@ namespace rw {
 	namespace imet {
 		void ModelEngine_Yolov11_seg::preprocess(const cv::Mat& mat)
 		{
-			sourceWidth = mat.cols;
-			sourceHeight = mat.rows;
+			_sourceWidth = mat.cols;
+			_sourceHeight = mat.rows;
 
 			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
@@ -19,13 +19,13 @@ namespace rw {
 			}
 			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
-				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
+				cv::Mat letterbox_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, _letterBoxScale, _letterBoxdw, _letterBoxdh);
 				auto infer_image = cv::dnn::blobFromImage(letterbox_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
 			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
 			{
-				cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
+				cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &_centerCropParams);
 				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
 			}
@@ -95,9 +95,9 @@ namespace rw {
 			return result;
 		}
 
-		void ModelEngine_Yolov11_seg::init(std::string engine_path, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_seg::init(const std::string & enginePath, nvinfer1::ILogger& logger)
 		{
-			std::ifstream engineStream(engine_path, std::ios::binary);
+			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
 			const size_t modelSize = engineStream.tellg();
 			engineStream.seekg(0, std::ios::beg);
@@ -176,8 +176,8 @@ namespace rw {
 		{
 			std::vector<DetectionRectangleInfo> result;
 			result.reserve(detections.size());
-			auto scaleX = sourceWidth / static_cast<float>(input_w);
-			auto scaleY = sourceHeight / static_cast<float>(input_h);
+			auto scaleX = _sourceWidth / static_cast<float>(input_w);
+			auto scaleY = _sourceHeight / static_cast<float>(input_h);
 			for (const auto& item : detections)
 			{
 				DetectionRectangleInfo resultItem;
@@ -207,7 +207,7 @@ namespace rw {
 			std::vector<DetectionRectangleInfo> result;
 			result.reserve(detections.size());
 
-			const auto& params = centerCropParams;
+			const auto& params = _centerCropParams;
 
 			for (const auto& item : detections)
 			{
@@ -245,9 +245,9 @@ namespace rw {
 			result.reserve(detections.size());
 
 			// letterBoxScale: Ëõ·ÅÏµÊý£¬letterBoxdw/letterBoxdh: padding
-			float scale = letterBoxScale;
-			int dw = letterBoxdw;
-			int dh = letterBoxdh;
+			float scale = _letterBoxScale;
+			int dw = _letterBoxdw;
+			int dh = _letterBoxdh;
 
 			for (const auto& item : detections)
 			{

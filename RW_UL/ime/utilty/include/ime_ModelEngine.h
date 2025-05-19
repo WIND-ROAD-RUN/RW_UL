@@ -11,7 +11,7 @@ namespace rw
 	class ModelEngine
 	{
 	private:
-		std::atomic_bool isDraw{ false };
+		std::atomic_bool _isDraw{ false };
 	public:
 		ModelEngine() = default;
 		virtual ~ModelEngine() = default;

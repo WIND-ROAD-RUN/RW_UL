@@ -16,7 +16,7 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 	config.nms_threshold = 0.1f;
 	config.classids_nms_together = { 0,1 };
 	config.modelPath = enginePath.toStdString();
-	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_seg, rw::ModelEngineDeployType::TensorRT);
+	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 }
 
 void ImageProcessor::buildOnnxRuntimeOO(const QString& enginePath)
@@ -25,7 +25,7 @@ void ImageProcessor::buildOnnxRuntimeOO(const QString& enginePath)
 	config.conf_threshold = 0.5f;
 	config.nms_threshold = 0.5f;
 	config.modelPath = enginePath.toStdString();
-	_onnxRuntimeOO = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::yolov11_det, rw::ModelEngineDeployType::TensorRT);
+	_onnxRuntimeOO = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
 }
 
 void ImageProcessor::reloadOnnxRuntimeOO(const QString& enginePath)

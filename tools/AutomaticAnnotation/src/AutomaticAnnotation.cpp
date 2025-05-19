@@ -345,19 +345,19 @@ rw::ModelType AutomaticAnnotation::getModelType()
 	auto currentModelType = ui->cBox_checkModelType->currentText();
 	if (currentModelType == "Yolov11_seg")
 	{
-		return rw::ModelType::yolov11_seg;
+		return rw::ModelType::Yolov11_Seg;
 	}
 	else if (currentModelType == "Yolov11_det")
 	{
-		return rw::ModelType::yolov11_det;
+		return rw::ModelType::Yolov11_Det;
 	}
 	else if (currentModelType == "Yolov11_obb")
 	{
-		return rw::ModelType::yolov11_obb;
+		return rw::ModelType::Yolov11_Obb;
 	}
 	else
 	{
-		return rw::ModelType::yolov11_det;
+		return rw::ModelType::Yolov11_Det;
 	}
 }
 

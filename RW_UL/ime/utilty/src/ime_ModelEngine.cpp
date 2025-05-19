@@ -4,7 +4,7 @@ namespace rw
 {
 	void ModelEngine::setDrawStatus(bool status)
 	{
-		isDraw = status;
+		_isDraw = status;
 	}
 
 	cv::Mat ModelEngine::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
@@ -25,7 +25,7 @@ namespace rw
 		preprocess(mat);
 		infer();
 		detection = postProcess();
-		if (isDraw)
+		if (_isDraw)
 		{
 			return draw(mat, detection);
 		}

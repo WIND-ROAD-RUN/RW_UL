@@ -33,23 +33,23 @@ namespace rw {
 		private:
 			void init(const std::string& engine_path);
 		private:
-			Ort::Env env;
-			Ort::Session session = Ort::Session(nullptr);
-			std::vector<Ort::Value>output_tensors;
-			std::vector<const char*> input_node_names;
-			std::vector<const char*> output_node_names;
-			Ort::Value input_tensor = Ort::Value(nullptr);
-			std::vector<Ort::Value> ort_inputs;
-			cv::Mat infer_image;
+			Ort::Env _env;
+			Ort::Session _session = Ort::Session(nullptr);
+			std::vector<Ort::Value>_output_tensors;
+			std::vector<const char*> _input_node_names;
+			std::vector<const char*> _output_node_names;
+			Ort::Value _input_tensor = Ort::Value(nullptr);
+			std::vector<Ort::Value> _ort_inputs;
+			cv::Mat _infer_image;
 		private:
-			float* cpu_output_buffer;
-			int input_w;
-			int input_h;
-			int num_detections;
-			int detection_attribute_size;
-			int num_classes = 80;
+			float* _cpu_output_buffer;
+			int _input_w;
+			int _input_h;
+			int _num_detections;
+			int _detection_attribute_size;
+			int _num_classes = 80;
 
-			ModelEngineConfig config;
+			ModelEngineConfig _config;
 		private:
 			std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
 			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<Detection>& detections);
@@ -59,21 +59,21 @@ namespace rw {
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 
 		private:
-			int sourceWidth{};
-			int sourceHeight{};
+			int _sourceWidth{};
+			int _sourceHeight{};
 		private:
 			static std::wstring stringToWString(const std::string& str);
 		public:
 			void setConfig(const ModelEngineConfig& modelConfig)
 			{
-				this->config = modelConfig;
+				this->_config = modelConfig;
 			}
 		private:
-			float letterBoxScale{};
-			int letterBoxdw{};
-			int letterBoxdh{};
+			float _letterBoxScale{};
+			int _letterBoxdw{};
+			int _letterBoxdh{};
 		private:
-			PreProcess::CenterCropParams centerCropParams;
+			PreProcess::CenterCropParams _centerCropParams;
 		};
 	}
 }

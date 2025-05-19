@@ -18,81 +18,81 @@ namespace rw
 
 		ModelEngine_Yolov11_obb::~ModelEngine_Yolov11_obb()
 		{
-			output_tensors[0].release();
+			_output_tensors[0].release();
 		}
 
 		void ModelEngine_Yolov11_obb::preprocess(const cv::Mat& mat)
 		{
-			sourceWidth = mat.cols;
-			sourceHeight = mat.rows;
+			_sourceWidth = mat.cols;
+			_sourceHeight = mat.rows;
 
-			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
-				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				_infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
 			}
-			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
-				infer_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
-				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				_infer_image = PreProcess::letterbox(mat, _input_w, _input_h, _config.letterBoxColor, _letterBoxScale, _letterBoxdw, _letterBoxdh);
+				_infer_image = cv::dnn::blobFromImage(_infer_image, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
 			}
-			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
 			{
-				infer_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
-				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				_infer_image = PreProcess::centerCrop(mat, _input_w, _input_h, _config.centerCropColor, &_centerCropParams);
+				_infer_image = cv::dnn::blobFromImage(_infer_image, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
 			}
 			else
 			{
-				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+				_infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
 			}
 
-			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
-			auto input_size = 1 * 3 * input_h * input_w;
+			std::vector<int64_t>input_node_dims = { 1,3,_input_h,_input_h };
+			auto input_size = 1 * 3 * _input_h * _input_w;
 			auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-			input_tensor = Ort::Value::CreateTensor(
+			_input_tensor = Ort::Value::CreateTensor(
 				memory_info,
-				(float*)infer_image.data,
+				(float*)_infer_image.data,
 				input_size,
 				input_node_dims.data(),
 				input_node_dims.size()
 			);
-			ort_inputs.clear();
-			ort_inputs.push_back(std::move(input_tensor));
+			_ort_inputs.clear();
+			_ort_inputs.push_back(std::move(_input_tensor));
 		}
 
 		void ModelEngine_Yolov11_obb::infer()
 		{
-			output_tensors = session.Run(
+			_output_tensors = _session.Run(
 				Ort::RunOptions{ nullptr },
-				(const char* const*)input_node_names.data(),
-				ort_inputs.data(),
-				ort_inputs.size(),
-				(const char* const*)output_node_names.data(),
-				output_node_names.size()
+				(const char* const*)_input_node_names.data(),
+				_ort_inputs.data(),
+				_ort_inputs.size(),
+				(const char* const*)_output_node_names.data(),
+				_output_node_names.size()
 			);
 		}
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_obb::postProcess()
 		{
-			cpu_output_buffer = output_tensors[0].GetTensorMutableData<float>();
+			_cpu_output_buffer = _output_tensors[0].GetTensorMutableData<float>();
 			std::vector<Detection> boxes;
 
-			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
+			const cv::Mat det_output(_detection_attribute_size, _num_detections, CV_32F, _cpu_output_buffer);
 
 			for (int i = 0; i < det_output.cols; ++i) {
-				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
+				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + _num_classes);
 				cv::Point class_id_point;
 				double score;
 				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
 
-				if (score > config.conf_threshold) {
+				if (score > _config.conf_threshold) {
 					const float cx = det_output.at<float>(0, i);
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
 					const float oh = det_output.at<float>(3, i);
-					const float angle = det_output.at<float>(4 + num_classes, i);
+					const float angle = det_output.at<float>(4 + _num_classes, i);
 					Detection box;
 					box.angle = angle;
-					box.c_x = cx;
-					box.c_y = cy;
+					box.central_x = cx;
+					box.central_y = cy;
 					box.width = ow;
 					box.height = oh;
 					box.conf = score;
@@ -101,7 +101,7 @@ namespace rw
 				}
 			}
 			//std::vector<Detection> nms_boxes = rotatedNMS(boxes, config.nms_threshold);
-			std::vector<Detection> nms_boxes = rotatedNmsWithKeepClass(boxes, config.conf_threshold, config.nms_threshold, config.classids_nms_together);
+			std::vector<Detection> nms_boxes = rotatedNmsWithKeepClass(boxes, _config.conf_threshold, _config.nms_threshold, _config.classids_nms_together);
 
 			auto result = convertDetectionToDetectionRectangleInfo(nms_boxes);
 
@@ -110,28 +110,28 @@ namespace rw
 
 		void ModelEngine_Yolov11_obb::init(const std::string& engine_path)
 		{
-			env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
+			_env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolo");
 			Ort::SessionOptions options;
 			OrtSessionOptionsAppendExecutionProvider_CUDA(options, 0);
 			std::wstring path = stringToWString(engine_path);
-			session = Ort::Session(env, path.c_str(), options);
+			_session = Ort::Session(_env, path.c_str(), options);
 			Ort::AllocatorWithDefaultOptions allocator;
 
-			input_name = session.GetInputNameAllocated(0, allocator).get();
-			output_name = session.GetOutputNameAllocated(0, allocator).get();
+			input_name = _session.GetInputNameAllocated(0, allocator).get();
+			output_name = _session.GetOutputNameAllocated(0, allocator).get();
 
-			input_node_names.push_back(input_name.c_str());
-			output_node_names.push_back(output_name.c_str());
+			_input_node_names.push_back(input_name.c_str());
+			_output_node_names.push_back(output_name.c_str());
 
-			auto input_shape = session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
-			auto output_shape = session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
-			input_h = input_shape[2];
-			input_w = input_shape[3];
-			detection_attribute_size = output_shape[1];
-			num_detections = output_shape[2];
-			num_classes = output_shape[1] - 5;
+			auto input_shape = _session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
+			auto output_shape = _session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
+			_input_h = input_shape[2];
+			_input_w = input_shape[3];
+			_detection_attribute_size = output_shape[1];
+			_num_detections = output_shape[2];
+			_num_classes = output_shape[1] - 5;
 
-			cv::Mat zero_mat = cv::Mat::zeros(input_h, input_w, CV_8UC3);
+			cv::Mat zero_mat = cv::Mat::zeros(_input_h, _input_w, CV_8UC3);
 			preprocess(zero_mat);
 			for (int i = 0; i < 10; i++) {
 				this->infer();
@@ -139,18 +139,18 @@ namespace rw
 		}
 
 		std::vector<ModelEngine_Yolov11_obb::Detection> ModelEngine_Yolov11_obb::rotatedNmsWithKeepClass(
-			const std::vector<Detection>& dets, float conf_threshold, float nms_threshold,
-			const std::vector<size_t>& need_keep_classids)
+			const std::vector<Detection>& dets, float confThreshold, float nmsThreshold,
+			const std::vector<size_t>& needKeepClassids)
 		{
 			std::vector<int> nms_indices;
-			std::set<size_t> keep_set(need_keep_classids.begin(), need_keep_classids.end());
+			std::set<size_t> keep_set(needKeepClassids.begin(), needKeepClassids.end());
 
 			if (dets.empty()) return {};
 
 			std::vector<int> keep_indices;
 			std::map<int, std::vector<int>> class_to_indices;
 			for (int i = 0; i < dets.size(); ++i) {
-				if (dets[i].conf < conf_threshold) continue;
+				if (dets[i].conf < confThreshold) continue;
 				if (keep_set.count(dets[i].class_id)) {
 					keep_indices.push_back(i);
 				}
@@ -172,7 +172,7 @@ namespace rw
 					for (size_t j = i + 1; j < sorted_indices.size(); ++j) {
 						if (suppressed[j]) continue;
 						int idx_j = sorted_indices[j];
-						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nms_threshold) {
+						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nmsThreshold) {
 							suppressed[j] = true;
 						}
 					}
@@ -194,7 +194,7 @@ namespace rw
 					for (size_t j = i + 1; j < sorted_indices.size(); ++j) {
 						if (suppressed[j]) continue;
 						int idx_j = sorted_indices[j];
-						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nms_threshold) {
+						if (rotatedIoU(dets[idx_i], dets[idx_j]) > nmsThreshold) {
 							suppressed[j] = true;
 						}
 					}
@@ -216,15 +216,15 @@ namespace rw
 			result.reserve(detections.size());
 
 			std::vector<Detection> postDections;
-			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
 				postDections = convertWhenResize(detections);
 			}
-			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
 				postDections = convertWhenLetterBox(detections);
 			}
-			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
 			{
 				postDections = convertWhenCentralCrop(detections);
 			}
@@ -237,8 +237,8 @@ namespace rw
 			{
 				DetectionRectangleInfo resultItem;
 
-				float cx = item.c_x;
-				float cy = item.c_y;
+				float cx = item.central_x;
+				float cy = item.central_y;
 				float w = item.width;
 				float h = item.height;
 				float angle_rad = item.angle;
@@ -276,19 +276,19 @@ namespace rw
 		{
 			std::vector<Detection> result;
 			result.reserve(detections.size());
-			const auto& params = centerCropParams;
-			float scale = letterBoxScale;
-			int dw = letterBoxdw;
-			int dh = letterBoxdh;
+			const auto& params = _centerCropParams;
+			float scale = _letterBoxScale;
+			int dw = _letterBoxdw;
+			int dh = _letterBoxdh;
 			for (const auto& item : detections)
 			{
-				float x1 = (item.c_x - dw) / scale;
-				float y1 = (item.c_y - dh) / scale;
-				float x2 = (item.c_x + item.width - dw) / scale;
-				float y2 = (item.c_y + item.height - dh) / scale;
+				float x1 = (item.central_x - dw) / scale;
+				float y1 = (item.central_y - dh) / scale;
+				float x2 = (item.central_x + item.width - dw) / scale;
+				float y2 = (item.central_y + item.height - dh) / scale;
 				Detection resultItem;
-				resultItem.c_x = x1;
-				resultItem.c_y = y1;
+				resultItem.central_x = x1;
+				resultItem.central_y = y1;
 				resultItem.width = x2 - x1;
 				resultItem.height = y2 - y1;
 				resultItem.angle = item.angle;
@@ -304,17 +304,17 @@ namespace rw
 		{
 			std::vector<Detection> result;
 			result.reserve(detections.size());
-			const auto& params = centerCropParams;
+			const auto& params = _centerCropParams;
 			for (const auto& item : detections)
 			{
-				float x1 = item.c_x + params.crop_x - params.pad_left;
-				float y1 = item.c_y + params.crop_y - params.pad_top;
-				float x2 = item.c_x + item.width + params.crop_x - params.pad_left;
-				float y2 = item.c_y + item.height + params.crop_y - params.pad_top;
+				float x1 = item.central_x + params.crop_x - params.pad_left;
+				float y1 = item.central_y + params.crop_y - params.pad_top;
+				float x2 = item.central_x + item.width + params.crop_x - params.pad_left;
+				float y2 = item.central_y + item.height + params.crop_y - params.pad_top;
 
 				Detection resultItem;
-				resultItem.c_x = (x1 + x2) / 2;
-				resultItem.c_y = (y1 + y2) / 2;
+				resultItem.central_x = (x1 + x2) / 2;
+				resultItem.central_y = (y1 + y2) / 2;
 				resultItem.width = x2 - x1;
 				resultItem.height = y2 - y1;
 				resultItem.angle = item.angle;
@@ -330,15 +330,15 @@ namespace rw
 		{
 			std::vector<Detection> result;
 			result.reserve(detections.size());
-			auto scaleX = sourceWidth / static_cast<float>(input_w);
-			auto scaleY = sourceHeight / static_cast<float>(input_h);
+			auto scaleX = _sourceWidth / static_cast<float>(_input_w);
+			auto scaleY = _sourceHeight / static_cast<float>(_input_h);
 			for (const auto& item : detections)
 			{
 				Detection resultItem;
 				resultItem.width = item.width * scaleX;
 				resultItem.height = item.height * scaleY;
-				resultItem.c_x = item.c_x * scaleX;
-				resultItem.c_y = item.c_y * scaleY;
+				resultItem.central_x = item.central_x * scaleX;
+				resultItem.central_y = item.central_y * scaleY;
 				resultItem.angle = item.angle;
 				resultItem.conf = item.conf;
 				resultItem.class_id = item.class_id;
@@ -397,7 +397,7 @@ namespace rw
 		cv::RotatedRect ModelEngine_Yolov11_obb::toRotatedRect(const ModelEngine_Yolov11_obb::Detection& det)
 		{
 			return cv::RotatedRect(
-				cv::Point2f(det.c_x + det.width / 2.0f, det.c_y + det.height / 2.0f), // center
+				cv::Point2f(det.central_x + det.width / 2.0f, det.central_y + det.height / 2.0f), // center
 				cv::Size2f(det.width, det.height),
 				det.angle
 			);

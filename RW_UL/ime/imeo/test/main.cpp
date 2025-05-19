@@ -4,7 +4,7 @@ int main()
 {
 	rw::ModelEngineConfig config;
 	config.modelPath = R"(C:\Users\rw\Desktop\model\best_seg.onnx)";
-	auto model = rw::imeo::ModelEngineFactory_OnnxRuntime::createModelEngine(config, rw::ModelType::yolov11_seg);
+	auto model = rw::imeo::ModelEngineFactory_OnnxRuntime::createModelEngine(config, rw::ModelType::Yolov11_Seg);
 	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\1.png)");
 	if (image.empty())
 	{

@@ -13,7 +13,7 @@ int main() {
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
 	config.modelPath = R"(C:\Users\rw\Desktop\yolo11n-obb.engine)";
-	auto model_engine = rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::yolov11_obb);
+	auto model_engine = rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::Yolov11_Obb);
 
 	const string path{ R"(C:\Users\rw\Desktop\car.jpg)" };
 

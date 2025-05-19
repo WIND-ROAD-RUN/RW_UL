@@ -26,7 +26,7 @@ namespace rw {
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
 		private:
-			void init(std::string engine_path, nvinfer1::ILogger& logger);
+			void init(const std::string & enginePath, nvinfer1::ILogger& logger);
 		public:
 			ModelEngine_Yolov11_seg(const std::string& modelPath, nvinfer1::ILogger& logger);
 			~ModelEngine_Yolov11_seg() override;
@@ -59,14 +59,14 @@ namespace rw {
 				config = modelConfig;
 			}
 		private:
-			int sourceWidth{};
-			int sourceHeight{};
+			int _sourceWidth{};
+			int _sourceHeight{};
 		private:
-			float letterBoxScale{};
-			int letterBoxdw{};
-			int letterBoxdh{};
+			float _letterBoxScale{};
+			int _letterBoxdw{};
+			int _letterBoxdh{};
 		private:
-			PreProcess::CenterCropParams centerCropParams;
+			PreProcess::CenterCropParams _centerCropParams;
 		};
 	}
 }

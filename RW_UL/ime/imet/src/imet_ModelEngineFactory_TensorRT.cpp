@@ -22,11 +22,11 @@ namespace rw {
 			std::unique_ptr<ModelEngine> modelEngine = nullptr;
 			switch (modelType)
 			{
-			case ModelType::yolov11_det:
+			case ModelType::Yolov11_Det:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_det(config));
-			case ModelType::yolov11_seg:
+			case ModelType::Yolov11_Seg:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg(config));
-			case ModelType::yolov11_obb:
+			case ModelType::Yolov11_Obb:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_obb(config));
 			default:
 				return nullptr;
