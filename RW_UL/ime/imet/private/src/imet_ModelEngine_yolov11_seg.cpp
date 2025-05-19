@@ -214,7 +214,7 @@ namespace rw {
 
 			for (const auto& item : detections)
 			{
-				// 反算到原图坐标
+				//Calculate the original coordinates
 				float x1 = item.bbox.x + params.crop_x - params.pad_left;
 				float y1 = item.bbox.y + params.crop_y - params.pad_top;
 				float x2 = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left;

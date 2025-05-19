@@ -1,5 +1,7 @@
 #include"imeo_ModelEngine_yolov11_seg.hpp"
 
+#include <cuda_runtime_api.h>
+
 namespace rw
 {
 	namespace imeo
@@ -19,7 +21,24 @@ namespace rw
 			sourceWidth = mat.cols;
 			sourceHeight = mat.rows;
 
-			infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				infer_image = PreProcess::letterbox(mat, input_w, input_h, config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
+				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				infer_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &centerCropParams);
+				infer_image = cv::dnn::blobFromImage(infer_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
+			else
+			{
+				 infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
+			}
 
 			std::vector<int64_t>input_node_dims = { 1,3,input_h,input_h };
 			auto input_size = 1 * 3 * input_h * input_w;
@@ -140,10 +159,31 @@ namespace rw
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Seg::convertDetectionToDetectionRectangleInfo(
 			const std::vector<Detection>& detections)
 		{
+			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
+			{
+				return convertWhenResize(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
+			{
+				return convertWhenLetterBox(detections);
+			}
+			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
+			{
+				return convertWhenCentralCrop(detections);
+			}
+			else
+			{
+				return convertWhenResize(detections);
+			}
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Seg::convertWhenResize(
+			const std::vector<Detection>& detections)
+		{
 			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
 			auto scaleX = sourceWidth / static_cast<float>(input_w);
 			auto scaleY = sourceHeight / static_cast<float>(input_h);
-			result.reserve(detections.size());
 			for (const auto& item : detections)
 			{
 				DetectionRectangleInfo resultItem;
@@ -166,6 +206,85 @@ namespace rw
 			}
 			return result;
 		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Seg::convertWhenLetterBox(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
+
+			// letterBoxScale: scale , letterBoxdw/letterBoxdh: padding
+			float scale = letterBoxScale;
+			int dw = letterBoxdw;
+			int dh = letterBoxdh;
+
+			for (const auto& item : detections)
+			{
+				DetectionRectangleInfo resultItem;
+
+				// 反算到原图坐标
+				float x1 = (item.bbox.x - dw) / scale;
+				float y1 = (item.bbox.y - dh) / scale;
+				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;
+				float y2 = (item.bbox.y + item.bbox.height - dh) / scale;
+
+				resultItem.leftTop.first = x1;
+				resultItem.leftTop.second = y1;
+				resultItem.rightTop.first = x2;
+				resultItem.rightTop.second = y1;
+				resultItem.leftBottom.first = x1;
+				resultItem.leftBottom.second = y2;
+				resultItem.rightBottom.first = x2;
+				resultItem.rightBottom.second = y2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.center_x = (x1 + x2) / 2;
+				resultItem.center_y = (y1 + y2) / 2;
+				resultItem.area = resultItem.width * resultItem.height;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_Seg::convertWhenCentralCrop(
+			const std::vector<Detection>& detections)
+		{
+			std::vector<DetectionRectangleInfo> result;
+			result.reserve(detections.size());
+
+			const auto& params = centerCropParams;
+
+			for (const auto& item : detections)
+			{
+				//Calculate the original coordinates
+				float x1 = item.bbox.x + params.crop_x - params.pad_left;
+				float y1 = item.bbox.y + params.crop_y - params.pad_top;
+				float x2 = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left;
+				float y2 = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top;
+
+				DetectionRectangleInfo resultItem;
+				resultItem.leftTop.first = x1;
+				resultItem.leftTop.second = y1;
+				resultItem.rightTop.first = x2;
+				resultItem.rightTop.second = y1;
+				resultItem.leftBottom.first = x1;
+				resultItem.leftBottom.second = y2;
+				resultItem.rightBottom.first = x2;
+				resultItem.rightBottom.second = y2;
+				resultItem.width = x2 - x1;
+				resultItem.height = y2 - y1;
+				resultItem.center_x = (x1 + x2) / 2;
+				resultItem.center_y = (y1 + y2) / 2;
+				resultItem.area = resultItem.width * resultItem.height;
+				resultItem.classId = item.class_id;
+				resultItem.score = item.conf;
+				result.push_back(resultItem);
+			}
+			return result;
+		}
+
 		cv::Mat ModelEngine_Yolov11_Seg::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();

@@ -4,11 +4,12 @@
 
 #include <string>
 #include <locale>
-#include <codecvt>
 
 #include"ime_ModelEngine.h"
-#include"onnxruntime_cxx_api.h"
 #include"ime_ModelEngineConfig.h"
+#include"ime_utilty_private.hpp"
+
+#include"onnxruntime_cxx_api.h"
 
 namespace rw {
     namespace imeo {
@@ -54,6 +55,9 @@ namespace rw {
             ModelEngineConfig config;
         private:
             std::vector<DetectionRectangleInfo> convertDetectionToDetectionRectangleInfo(const std::vector<Detection>& detections);
+            std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<Detection>& detections);
+            std::vector<DetectionRectangleInfo> convertWhenLetterBox(const std::vector<Detection>& detections);
+            std::vector<DetectionRectangleInfo> convertWhenCentralCrop(const std::vector<Detection>& detections);
 
         public:
             cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
@@ -61,6 +65,12 @@ namespace rw {
         private:
             int sourceWidth{};
             int sourceHeight{};
+        private:
+            float letterBoxScale{};
+            int letterBoxdw{};
+            int letterBoxdh{};
+        private:
+            PreProcess::CenterCropParams centerCropParams;
         private:
             static std::wstring stringToWString(const std::string& str);
         public:
