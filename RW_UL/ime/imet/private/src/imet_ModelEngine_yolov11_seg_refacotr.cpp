@@ -52,8 +52,10 @@ namespace rw {
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
+			std::vector<cv::Mat> mask_sigmoids;
 
 			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
+			cv::Mat mask_protos(maskCoefficientNum, mask_h * mask_w, CV_32F, cpu_output_buffer2);
 
 			for (int i = 0; i < det_output.cols; ++i) {
 				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
@@ -75,7 +77,17 @@ namespace rw {
 					boxes.push_back(box);
 					class_ids.push_back(class_id_point.y);
 					confidences.push_back(score);
+
+					const  cv::Mat mask_coeffs = det_output.col(i).rowRange(4 + num_classes, detection_attribute_size);
+					cv::Mat mask_flat = mask_coeffs.t() * mask_protos; // [1, mask_h * mask_w]
+					cv::Mat mask = mask_flat.reshape(1, mask_h); // [mask_h, mask_w]
+					cv::Mat mask_sigmoid;
+					cv::exp(-mask, mask_sigmoid);
+					mask_sigmoid = 1.0 / (1.0 + mask_sigmoid);
+					mask_sigmoids.push_back(mask_sigmoid);
+
 				}
+
 			}
 
 			std::vector<int> nms_result = nmsWithKeepClass(
@@ -88,9 +100,11 @@ namespace rw {
 				result.class_id = class_ids[idx];
 				result.conf = confidences[idx];
 				result.bbox = boxes[idx];
+				result.mask_sigmoid = mask_sigmoids[idx];
 				output.push_back(result);
 			}
 
+			masks = output;
 			auto result = convertToDetectionRectangleInfo(output);
 			return result;
 		}
@@ -111,9 +125,11 @@ namespace rw {
 
 			input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
 			input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
+			maskCoefficientNum = engine->getTensorShape(engine->getIOTensorName(2)).d[1];
+			mask_h = engine->getTensorShape(engine->getIOTensorName(2)).d[2];
+			mask_w = engine->getTensorShape(engine->getIOTensorName(2)).d[3];
 			detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
 			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
-			maskCoefficientNum = 32;
 			num_classes = detection_attribute_size - 4 - maskCoefficientNum;
 
 			auto thirdOutputSize = engine->getTensorShape(engine->getIOTensorName(2)).d[1];
@@ -244,7 +260,6 @@ namespace rw {
 			std::vector<DetectionRectangleInfo> result;
 			result.reserve(detections.size());
 
-			// letterBoxScale: 缩放系数，letterBoxdw/letterBoxdh: padding
 			float scale = _letterBoxScale;
 			int dw = _letterBoxdw;
 			int dh = _letterBoxdh;
@@ -289,6 +304,31 @@ namespace rw {
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
+			}
+			for (int i = 0;i<masks.size();i++)
+			{
+				cv::Mat mask_resized;
+				cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(masks[i].bbox.width, masks[i].bbox.height), 0, 0, cv::INTER_LINEAR);
+				cv::Mat mask_bin;
+				cv::threshold(mask_resized, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+
+				// 取出bbox区域
+				cv::Rect bbox = masks[i].bbox;
+				// 检查bbox是否在图像范围内
+				cv::Rect img_rect(0, 0, result.cols, result.rows);
+				cv::Rect roi = bbox & img_rect;
+				if (roi.width <= 0 || roi.height <= 0) continue;
+
+				// 只取有效区域
+				cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
+				cv::Mat img_roi = result(roi);
+
+				// 着色（以红色为例）
+				std::vector<cv::Mat> channels;
+				cv::split(img_roi, channels);
+				// 红色通道加高亮
+				channels[2].setTo(255, mask_roi > 0); // BGR: 2为R通道
+				cv::merge(channels, img_roi);
 			}
 			return result;
 		}

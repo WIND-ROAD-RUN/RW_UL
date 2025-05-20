@@ -20,7 +20,10 @@ namespace rw {
 				float conf{};
 				int class_id{};
 				cv::Rect bbox{};
+				cv::Mat mask_sigmoid{};
 			};
+		public:
+			std::vector<DetectionSeg> masks;
 		private:
 			void preprocess(const cv::Mat& mat) override;
 			void infer() override;
@@ -48,6 +51,8 @@ namespace rw {
 			// Model parameters
 			int input_w;
 			int input_h;
+			int mask_w;
+			int mask_h;
 			int num_detections;
 			int maskCoefficientNum;
 			int detection_attribute_size;
