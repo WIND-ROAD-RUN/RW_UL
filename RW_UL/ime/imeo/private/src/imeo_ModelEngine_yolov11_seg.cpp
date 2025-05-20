@@ -76,7 +76,7 @@ namespace rw
 
 			const cv::Mat det_output(_detection_attribute_size, _num_detections, CV_32F, _cpu_output_buffer);
 
-			for (int i = 0; i < det_output.cols - _maskCoefficientNum; ++i) {
+			for (int i = 0; i < det_output.cols; ++i) {
 				const cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + _num_classes);
 				cv::Point class_id_point;
 				double score;

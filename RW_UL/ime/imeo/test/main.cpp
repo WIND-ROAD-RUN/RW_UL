@@ -1,17 +1,18 @@
-﻿#include"imeo_ModelEngineFactory_OnnxRuntime.hpp"
+﻿#include"opencv2/opencv.hpp"
 
-int main()
-{
-	rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\model\best_seg.onnx)";
-	auto model = rw::imeo::ModelEngineFactory_OnnxRuntime::createModelEngine(config, rw::ModelType::Yolov11_Seg);
-	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\1.png)");
-	if (image.empty())
-	{
-		std::cerr << "Error reading image: " << "D:/yolo/build/bus.jpg" << std::endl;
-	}
-	auto result = model->processImg(image);
-	image = model->draw(image, result);
-	cv::imshow("sad", image);
+
+#include"imeo_ModelEngine_yolov11_seg.hpp"
+#include<string>
+
+using namespace std;
+using namespace cv;
+
+int main() {
+	rw::imeo::ModelEngine_Yolov11_Seg modelEngine(R"(C:\Users\rw\Desktop\models\niukou.onnx)");
+	auto mat = cv::imread(R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\work1\bad\NG20250417152301729.png)");
+	auto result = modelEngine.processImg(mat);
+	auto matResult = modelEngine.draw(mat, result);
+	cv::imshow("result", matResult);
 	cv::waitKey(0);
+	return 0;
 }

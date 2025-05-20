@@ -1,37 +1,24 @@
 ﻿#include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
-#include"imet_ModelEngineFactory_TensorRT.hpp"
-#include"imet_ModelEngine_yolov11_obb.hpp"
+#include"imet_ModelEngine_yolov11_seg_refacotr.hpp"
+#include"imet_ModelEngine_yolov11_seg.hpp"
 #include<string>
 
 using namespace std;
 using namespace cv;
 
-int main() {
-	rw::ModelEngineConfig config;
-	config.conf_threshold = 0.2f;
-	config.nms_threshold = 0.1f;
-	config.modelPath = R"(C:\Users\rw\Desktop\yolo11n-obb.engine)";
-	auto model_engine = rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::Yolov11_Obb);
-
-	const string path{ R"(C:\Users\rw\Desktop\car.jpg)" };
-
-	Mat image = imread(path);
-	if (image.empty())
-	{
-		cerr << "error reading image: " << path << endl;
+class Logger : public nvinfer1::ILogger {
+	void log(Severity severity, const char* msg) noexcept override {
 	}
-	auto start = std::chrono::system_clock::now();
-	auto result = model_engine->processImg(image);
-	auto resultImage = model_engine->draw(image, result);
-	auto end = std::chrono::system_clock::now();
+}logger;
 
-	auto tc = (double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.;
-	printf("cost %2.4lf ms\n", tc);
-
-	imshow("result", resultImage);
-
+int main() {
+	rw::imet::ModelEngine_Yolov11_seg modelEngine(R"(C:\Users\rw\Desktop\models\SegModel.engine)", logger);
+	auto mat=cv::imread(R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\work1\bad\NG20250417152301729.png)");
+	auto result=modelEngine.processImg(mat);
+	auto matResult=modelEngine.draw(mat, result);
+	cv::imshow("result", matResult);
 	cv::waitKey(0);
 	return 0;
 }

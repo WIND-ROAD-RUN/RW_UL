@@ -1,4 +1,4 @@
-#include "imet_ModelEngine_yolov11_seg.hpp"
+#include "imet_ModelEngine_yolov11_seg_refacotr.hpp"
 
 #include"cuda_device_runtime_api.h"
 
@@ -7,7 +7,7 @@
 
 namespace rw {
 	namespace imet {
-		void ModelEngine_Yolov11_seg::preprocess(const cv::Mat& mat)
+		void ModelEngine_Yolov11_seg_refactor::preprocess(const cv::Mat& mat)
 		{
 			_sourceWidth = mat.cols;
 			_sourceHeight = mat.rows;
@@ -36,7 +36,7 @@ namespace rw {
 			}
 		}
 
-		void ModelEngine_Yolov11_seg::infer()
+		void ModelEngine_Yolov11_seg_refactor::infer()
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
@@ -44,7 +44,7 @@ namespace rw {
 			this->context->enqueueV3(NULL);
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::postProcess()
 		{
 			std::vector<DetectionSeg> output;
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
@@ -95,7 +95,7 @@ namespace rw {
 			return result;
 		}
 
-		void ModelEngine_Yolov11_seg::init(const std::string & enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_seg_refactor::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
@@ -134,13 +134,13 @@ namespace rw {
 			cudaDeviceSynchronize();
 		}
 
-		ModelEngine_Yolov11_seg::ModelEngine_Yolov11_seg(const std::string& modelPath,
+		ModelEngine_Yolov11_seg_refactor::ModelEngine_Yolov11_seg_refactor(const std::string& modelPath,
 			nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
 
-		ModelEngine_Yolov11_seg::~ModelEngine_Yolov11_seg()
+		ModelEngine_Yolov11_seg_refactor::~ModelEngine_Yolov11_seg_refactor()
 		{
 			for (int i = 0; i < 2; i++)
 				(cudaFree(gpu_buffers[i]));
@@ -151,7 +151,7 @@ namespace rw {
 			delete runtime;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
 		{
 			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
@@ -171,7 +171,7 @@ namespace rw {
 			}
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenResize(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenResize(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -201,7 +201,7 @@ namespace rw {
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenCentralCrop(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenCentralCrop(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -238,7 +238,7 @@ namespace rw {
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg::convertWhenLetterBox(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenLetterBox(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -279,7 +279,7 @@ namespace rw {
 			return result;
 		}
 
-		cv::Mat ModelEngine_Yolov11_seg::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		cv::Mat ModelEngine_Yolov11_seg_refactor::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
 			ImagePainter::PainterConfig config;

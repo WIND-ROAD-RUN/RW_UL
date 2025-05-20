@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} 
     PRIVATE ${IMEO_PRIVATE_PATH}/include 
+    PRIVATE ${IME_UTILTY_ROOTPATH}/private/include
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC  ${OpenCV_LIBS})
