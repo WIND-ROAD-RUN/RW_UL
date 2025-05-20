@@ -28,6 +28,11 @@ demo::demo(QWidget *parent)
 	ui->setupUi(this);
 
 	auto camerList=rw::rqw::CheckCameraList();
+	if (camerList.empty())
+	{
+		qDebug() << "No camera found!";
+		return;
+	}
 	m_cameraThread.initCamera(camerList[0], rw::rqw::CameraObjectTrigger::Software,0);
 	QObject::connect(&m_cameraThread, &rw::rqw::CameraPassiveThread::frameCaptured, this, &demo::displayImg);
 	m_cameraThread.startMonitor();
