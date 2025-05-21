@@ -29,6 +29,7 @@ void DlgProduceLineSet::build_ui()
 void DlgProduceLineSet::read_config()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
+	//SetValue
 	ui->pbtn_blowDistance1->setText(QString::number(globalStruct.dlgProduceLineSetConfig.blowDistance1));
 	ui->pbtn_blowDistance2->setText(QString::number(globalStruct.dlgProduceLineSetConfig.blowDistance2));
 	ui->pbtn_blowDistance3->setText(QString::number(globalStruct.dlgProduceLineSetConfig.blowDistance3));
@@ -45,14 +46,14 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_limit2->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit2));
 	ui->pbtn_limit3->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit3));
 	ui->pbtn_limit4->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit4));
-	ui->cbox_powerOn->setChecked(globalStruct.dlgProduceLineSetConfig.powerOn);
-	ui->cbox_blowingEnable1->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable1);
-	ui->cbox_blowingEnable2->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable2);
-	ui->cbox_blowingEnable3->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable3);
-	ui->cbox_blowingEnable4->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable4);
-	ui->cbox_none->setChecked(globalStruct.dlgProduceLineSetConfig.none);
-	ui->cbox_run->setChecked(globalStruct.dlgProduceLineSetConfig.run);
-	ui->cbox_alarm->setChecked(globalStruct.dlgProduceLineSetConfig.alarm);
+	ui->cbox_DO7->setChecked(globalStruct.dlgProduceLineSetConfig.powerOn);
+	ui->cbox_DO1->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable1);
+	ui->cbox_DO2->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable2);
+	ui->cbox_DO3->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable3);
+	ui->cbox_DO4->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable4);
+	ui->cbox_DO6->setChecked(globalStruct.dlgProduceLineSetConfig.none);
+	ui->cbox_DO8->setChecked(globalStruct.dlgProduceLineSetConfig.run);
+	ui->cbox_DO9->setChecked(globalStruct.dlgProduceLineSetConfig.alarm);
 	ui->cbox_workstationProtection12->setChecked(globalStruct.dlgProduceLineSetConfig.workstationProtection12);
 	ui->cbox_workstationProtection34->setChecked(globalStruct.dlgProduceLineSetConfig.workstationProtection34);
 	ui->pbtn_motorSpeed->setText(QString::number(globalStruct.dlgProduceLineSetConfig.motorSpeed));
@@ -62,6 +63,13 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_maxBrightness->setText(QString::number(globalStruct.dlgProduceLineSetConfig.maxBrightness));
 	ui->pbtn_codeWheel->setText(QString::number(globalStruct.dlgProduceLineSetConfig.codeWheel));
 	ui->pbtn_pulseFactor->setText(QString::number(globalStruct.dlgProduceLineSetConfig.pulseFactor));
+	
+	//Deprecated widget
+	ui->pbtn_maxBrightness->setVisible(false);
+	ui->pbtn_minBrightness->setVisible(false);
+	ui->label_lightRange->setVisible(false);
+	ui->label_lightRange1->setVisible(false);
+	//Deprecated widget
 }
 
 void DlgProduceLineSet::build_connect()
@@ -116,22 +124,22 @@ void DlgProduceLineSet::build_connect()
 	QObject::connect(ui->pbtn_accelerationAndDeceleration, &QPushButton::clicked,
 		this, &DlgProduceLineSet::pbtn_accelerationAndDeceleration_clicked);
 
-	QObject::connect(ui->cbox_powerOn, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_powerOn_checked);
-	QObject::connect(ui->cbox_blowingEnable1, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_blowingEnable1_checked);
-	QObject::connect(ui->cbox_blowingEnable2, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_blowingEnable2_checked);
-	QObject::connect(ui->cbox_blowingEnable3, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_blowingEnable3_checked);
-	QObject::connect(ui->cbox_blowingEnable4, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_blowingEnable4_checked);
-	QObject::connect(ui->cbox_none, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_none_checked);
-	QObject::connect(ui->cbox_run, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_run_checked);
-	QObject::connect(ui->cbox_alarm, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_alarm_checked);
+	QObject::connect(ui->cbox_DO7, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO7_checked);
+	QObject::connect(ui->cbox_DO1, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO0_checked);
+	QObject::connect(ui->cbox_DO2, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO2_checked);
+	QObject::connect(ui->cbox_DO3, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO3_checked);
+	QObject::connect(ui->cbox_DO4, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO4_checked);
+	QObject::connect(ui->cbox_DO6, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO6_checked);
+	QObject::connect(ui->cbox_DO8, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO8_checked);
+	QObject::connect(ui->cbox_DO9, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO9_checked);
 	QObject::connect(ui->cbox_workstationProtection12, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_workstationProtection12_checked);
 	QObject::connect(ui->cbox_workstationProtection34, &QCheckBox::clicked,
@@ -622,73 +630,73 @@ void DlgProduceLineSet::pbtn_close_clicked()
 	this->close();
 }
 
-void DlgProduceLineSet::cbox_powerOn_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO7_checked(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.powerOn = ischeck;
 }
 
-void DlgProduceLineSet::cbox_blowingEnable1_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO0_checked(bool ischeck)
 {
 	//auto& GlobalStructData = GlobalStructData::getInstance();
 	//GlobalStructData.dlgProduceLineSetConfig.blowingEnable1 = ischeck;
-	ui->cbox_blowingEnable1->setChecked(true);
+	ui->cbox_DO1->setChecked(true);
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
-	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime1 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine1.axis, BlowLines::blowLine1.ioNum, true, tifeishijian1);
-	ui->cbox_blowingEnable1->setChecked(false);
+	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime1 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine1.axis, BlowLines::blowLine1.ioNum, true, tifeishijian);
+	ui->cbox_DO1->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_blowingEnable2_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO2_checked(bool ischeck)
 {
 	/*auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.blowingEnable2 = ischeck;*/
-	ui->cbox_blowingEnable2->setChecked(true);
+	ui->cbox_DO2->setChecked(true);
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
-	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime2 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine2.axis, BlowLines::blowLine2.ioNum, true, tifeishijian1);
-	ui->cbox_blowingEnable2->setChecked(false);
+	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime2 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine2.axis, BlowLines::blowLine2.ioNum, true, tifeishijian);
+	ui->cbox_DO2->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_blowingEnable3_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO3_checked(bool ischeck)
 {
 	/*auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.blowingEnable3 = ischeck;*/
-	ui->cbox_blowingEnable3->setChecked(true);
+	ui->cbox_DO3->setChecked(true);
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
-	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime3 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine3.axis, BlowLines::blowLine3.ioNum, true, tifeishijian1);
-	ui->cbox_blowingEnable3->setChecked(false);
+	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime3 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine3.axis, BlowLines::blowLine3.ioNum, true, tifeishijian);
+	ui->cbox_DO3->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_blowingEnable4_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO4_checked(bool ischeck)
 {
 	/*auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.blowingEnable4 = ischeck;*/
-	ui->cbox_blowingEnable4->setChecked(true);
+	ui->cbox_DO4->setChecked(true);
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
-	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime4 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine4.axis, BlowLines::blowLine4.ioNum, true, tifeishijian1);
-	ui->cbox_blowingEnable4->setChecked(false);
+	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime4 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine4.axis, BlowLines::blowLine4.ioNum, true, tifeishijian);
+	ui->cbox_DO7->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_none_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO6_checked(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.none = ischeck;
 }
 
-void DlgProduceLineSet::cbox_run_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO8_checked(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.run = ischeck;
 }
 
-void DlgProduceLineSet::cbox_alarm_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO9_checked(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.alarm = ischeck;

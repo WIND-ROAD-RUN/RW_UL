@@ -54,14 +54,14 @@ private slots:
 	void pbtn_pulseFactor_clicked();
 	void pbtn_close_clicked();
 
-	void cbox_powerOn_checked(bool ischeck);
-	void cbox_blowingEnable1_checked(bool ischeck);
-	void cbox_blowingEnable2_checked(bool ischeck);
-	void cbox_blowingEnable3_checked(bool ischeck);
-	void cbox_blowingEnable4_checked(bool ischeck);
-	void cbox_none_checked(bool ischeck);
-	void cbox_run_checked(bool ischeck);
-	void cbox_alarm_checked(bool ischeck);
+	void cbox_DO7_checked(bool ischeck);
+	void cbox_DO0_checked(bool ischeck);
+	void cbox_DO2_checked(bool ischeck);
+	void cbox_DO3_checked(bool ischeck);
+	void cbox_DO4_checked(bool ischeck);
+	void cbox_DO6_checked(bool ischeck);
+	void cbox_DO8_checked(bool ischeck);
+	void cbox_DO9_checked(bool ischeck);
 	void cbox_workstationProtection12_checked(bool ischeck);
 	void cbox_workstationProtection34_checked(bool ischeck);
 	void cbox_debugMode_checked(bool ischeck);
