@@ -24,24 +24,26 @@ struct ControlLines
 	const static ControlLine blowLine2;
 	const static ControlLine blowLine3;
 	const static ControlLine blowLine4;
+	static constexpr int airPressureIn = 7;
+	static constexpr int warnOut = 8;
 };
 
 struct ClassId
 {
-	static const int Body = 0;
-	static const int Hole = 1;
-	static const int pobian = 2;
-	static const int qikong = 3;
-	static const int duyan = 4;
-	static const int moshi = 5;
-	static const int liaotou = 6;
-	static const int zangwu = 7;
-	static const int liehen = 8;
-	static const int poyan = 9;
-	static const int xiaoqikong = 10;
-	static const int mofa = 11;
-	static const int xiaopobian = 12;
-	static const int baibian = 13;
+	static constexpr int Body = 0;
+	static constexpr int Hole = 1;
+	static constexpr int pobian = 2;
+	static constexpr int qikong = 3;
+	static constexpr int duyan = 4;
+	static constexpr int moshi = 5;
+	static constexpr int liaotou = 6;
+	static constexpr int zangwu = 7;
+	static constexpr int liehen = 8;
+	static constexpr int poyan = 9;
+	static constexpr int xiaoqikong = 10;
+	static constexpr int mofa = 11;
+	static constexpr int xiaopobian = 12;
+	static constexpr int baibian = 13;
 };
 
 struct ClassIdPositive

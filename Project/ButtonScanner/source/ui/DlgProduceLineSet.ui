@@ -3262,7 +3262,7 @@ QGroupBox::title {
      <property name="title">
       <string/>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1">
+     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,0">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_32">
         <item>
@@ -3293,7 +3293,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3338,7 +3338,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3380,7 +3380,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3422,7 +3422,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3464,7 +3464,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3510,7 +3510,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3552,7 +3552,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3594,7 +3594,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3636,7 +3636,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3678,7 +3678,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3736,7 +3736,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3747,7 +3747,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3778,7 +3778,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3789,7 +3789,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3820,7 +3820,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3831,7 +3831,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3862,7 +3862,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3873,7 +3873,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3904,7 +3904,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3915,7 +3915,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3950,7 +3950,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -3961,7 +3961,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -3992,7 +3992,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4003,7 +4003,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -4034,7 +4034,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4045,7 +4045,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -4076,7 +4076,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4087,7 +4087,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -4097,7 +4097,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>7运行(DO:8)</string>
+                <string>运行(DO:8)</string>
                </property>
               </widget>
              </item>
@@ -4118,7 +4118,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4129,7 +4129,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: rgb(255, 85, 127); /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -4139,7 +4139,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>8报警(DO:9)</string>
+                <string>报警(DO:9)</string>
                </property>
               </widget>
              </item>
@@ -4169,7 +4169,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4224,7 +4224,7 @@ QCheckBox::indicator {
 
 QCheckBox::indicator:unchecked {
     /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
     border: 1px solid darkgray; /* 边框颜色 */
 }
 
@@ -4235,7 +4235,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color: red; /* 背景颜色 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 
@@ -4277,7 +4277,7 @@ QCheckBox::indicator:unchecked:hover {
 
 QCheckBox::indicator:checked {
     /* 选中状态的样式 */
-    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    background-color: rgb(255, 85, 127); /* 背景颜色 */
     border: 1px solid darkred; /* 边框颜色 */
 }
 

@@ -985,17 +985,17 @@ void ButtonScanner::build_ioThread()
 				}
 
 				//获取气压表数据
-				auto qiya = motionPtr->GetIOIn(7);
+				auto qiya = motionPtr->GetIOIn(ControlLines::airPressureIn);
 				if (qiya == true) {
 					//气压正常
-					motionPtr->SetIOOut(8, true);
+					motionPtr->SetIOOut(ControlLines::warnOut, true);
 					QMetaObject::invokeMethod(qApp, [this, state]
 						{
 							labelWarning->addWarning("气压不正常", true);
 						});
 				}
 				else {
-					motionPtr->SetIOOut(8, false);
+					motionPtr->SetIOOut(ControlLines::warnOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {
