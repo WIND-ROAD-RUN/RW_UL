@@ -17,7 +17,13 @@ namespace rw
 			ButtonScannerProduceLineSet(const rw::oso::ObjectStoreAssembly& assembly);
 			ButtonScannerProduceLineSet(const ButtonScannerProduceLineSet& buttonScannerMainWindow);
 			ButtonScannerProduceLineSet& operator=(const ButtonScannerProduceLineSet& buttonScannerMainWindow);
-
+		public:
+			bool takeNgPictures{ true };
+			bool takeMaskPictures{ true };
+			bool takeOkPictures{ true };
+		public:
+			bool drawRec{false};
+			bool drawCircle{true};
 		public:
 			bool blowingEnable1{ false };
 			bool blowingEnable2{ false };

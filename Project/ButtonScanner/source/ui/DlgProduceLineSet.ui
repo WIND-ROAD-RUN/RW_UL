@@ -1283,6 +1283,64 @@ QGroupBox::title {
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_29">
+          <item>
+           <widget class="QRadioButton" name="rbtn_drawCircle">
+            <property name="text">
+             <string>外径画园</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rbtn_drawRec">
+            <property name="text">
+             <string>外径画框</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_30">
+          <item>
+           <widget class="QCheckBox" name="cBox_takeNgPictures">
+            <property name="text">
+             <string>采Ng图</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cBox_takeMaskPictures">
+            <property name="text">
+             <string>采Mask图</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cBox_takeOkPictures">
+            <property name="text">
+             <string>采Ok图</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
            <widget class="QCheckBox" name="cbox_workstationProtection12">

@@ -29,10 +29,10 @@ private:
 	Ui::DlgProduceLineSetClass* ui;
 
 private slots:
-	void  pbtn_blowDistance1_clicked();
-	void  pbtn_blowDistance2_clicked();
-	void  pbtn_blowDistance3_clicked();
-	void  pbtn_blowDistance4_clicked();
+	void pbtn_blowDistance1_clicked();
+	void pbtn_blowDistance2_clicked();
+	void pbtn_blowDistance3_clicked();
+	void pbtn_blowDistance4_clicked();
 	void pbtn_blowTime1_clicked();
 	void pbtn_blowTime2_clicked();
 	void pbtn_blowTime3_clicked();
@@ -65,4 +65,11 @@ private slots:
 	void cbox_workstationProtection12_checked(bool ischeck);
 	void cbox_workstationProtection34_checked(bool ischeck);
 	void cbox_debugMode_checked(bool ischeck);
+
+	void cBox_takeMaskPictures(bool ischeck);
+	void cBox_takeNgPictures(bool ischeck);
+	void cBox_takeOkPictures(bool ischeck);
+
+	void rbtn_drawCircle_clicked();
+	void rbtn_drawRectangle_clicked();
 };

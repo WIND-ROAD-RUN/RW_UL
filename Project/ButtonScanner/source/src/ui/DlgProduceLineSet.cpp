@@ -141,6 +141,19 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::pbtn_codeWheel_clicked);
 	QObject::connect(ui->pbtn_pulseFactor, &QPushButton::clicked,
 		this, &DlgProduceLineSet::pbtn_pulseFactor_clicked);
+
+	QObject::connect(ui->cBox_takeMaskPictures, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeMaskPictures);
+	QObject::connect(ui->cBox_takeNgPictures, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeNgPictures);
+	QObject::connect(ui->cBox_takeOkPictures, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeOkPictures);
+
+	QObject::connect(ui->rbtn_drawCircle, &QRadioButton::clicked,
+		this, &DlgProduceLineSet::rbtn_drawCircle_clicked);
+	QObject::connect(ui->rbtn_drawRec, &QRadioButton::clicked,
+		this, &DlgProduceLineSet::rbtn_drawRectangle_clicked);
+
 }
 
 float DlgProduceLineSet::get_blowTime()
@@ -671,4 +684,36 @@ void DlgProduceLineSet::cbox_debugMode_checked(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.debugMode = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeMaskPictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeMaskPictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeNgPictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeNgPictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeOkPictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeOkPictures = ischeck;
+}
+
+void DlgProduceLineSet::rbtn_drawCircle_clicked()
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.drawCircle = true;
+	GlobalStructData.dlgProduceLineSetConfig.drawRec = false;
+}
+
+void DlgProduceLineSet::rbtn_drawRectangle_clicked()
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.drawCircle = false;
+	GlobalStructData.dlgProduceLineSetConfig.drawRec = true;
 }
