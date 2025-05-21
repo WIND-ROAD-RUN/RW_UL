@@ -935,8 +935,17 @@ void ImageProcessUtilty::drawHole(QImage& image, const std::vector<rw::Detection
 
 void ImageProcessUtilty::drawBody(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& index)
 {
+	auto& productLineSet = GlobalStructData::getInstance().dlgProduceLineSetConfig;
 	rw::rqw::ImagePainter::PainterConfig config;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
+	if (productLineSet.drawCircle)
+	{
+		config.shapeType = rw::rqw::ImagePainter::ShapeType::Circle;
+	}
+	if (productLineSet.drawRec)
+	{
+		config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
+	}
 	config.thickness = 5;
 
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Gray);
@@ -1056,6 +1065,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	auto& productSet = globalData.dlgProductSetConfig;
 	auto isPositive = globalData.mainWindowConfig.isPositive;
 	auto isDefect = globalData.mainWindowConfig.isDefect;
+	auto& productLineSet = globalData.dlgProduceLineSetConfig;
 
 	//AI开始识别
 	ButtonDefectInfo defectInfo;
@@ -1122,11 +1132,20 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	//保存图像
 	if (globalData.isTakePictures) {
 		if (_isbad) {
-			globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "NG", "Button");
-			globalData.imageSaveEngine->pushImage(image, "Mask", "Button");
+			if (productLineSet.takeNgPictures)
+			{
+				globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "NG", "Button");
+			}
+			if (productLineSet.takeMaskPictures)
+			{
+				globalData.imageSaveEngine->pushImage(image, "Mask", "Button");
+			}
 		}
 		else {
-			globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "OK", "Button");
+			if (productLineSet.takeOkPictures)
+			{
+				globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "OK", "Button");
+			}
 		}
 	}
 
