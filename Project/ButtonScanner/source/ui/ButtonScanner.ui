@@ -1372,7 +1372,7 @@ QGroupBox::title {
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="ButtonScanner.qrc"/>
+  <include location="../qrc/ButtonScanner.qrc"/>
  </resources>
  <connections/>
 </ui>
