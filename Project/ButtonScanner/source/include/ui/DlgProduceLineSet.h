@@ -10,7 +10,8 @@ QT_END_NAMESPACE
 class DlgProduceLineSet : public QDialog
 {
 	Q_OBJECT
-
+public:
+	bool isDebug{false};
 public:
 	DlgProduceLineSet(QWidget* parent = nullptr);
 	~DlgProduceLineSet();
@@ -54,14 +55,6 @@ private slots:
 	void pbtn_pulseFactor_clicked();
 	void pbtn_close_clicked();
 
-	void cbox_DO7_checked(bool ischeck);
-	void cbox_DO0_checked(bool ischeck);
-	void cbox_DO2_checked(bool ischeck);
-	void cbox_DO3_checked(bool ischeck);
-	void cbox_DO4_checked(bool ischeck);
-	void cbox_DO6_checked(bool ischeck);
-	void cbox_DO8_checked(bool ischeck);
-	void cbox_DO9_checked(bool ischeck);
 	void cbox_workstationProtection12_checked(bool ischeck);
 	void cbox_workstationProtection34_checked(bool ischeck);
 	void cbox_debugMode_checked(bool ischeck);
@@ -72,4 +65,29 @@ private slots:
 
 	void rbtn_drawCircle_clicked();
 	void rbtn_drawRectangle_clicked();
+private slots:
+	void cbox_DO0_checked(bool ischeck);
+	void cbox_DO1_checked(bool ischeck);
+	void cbox_DO2_checked(bool ischeck);
+	void cbox_DO3_checked(bool ischeck);
+	void cbox_DO4_checked(bool ischeck);
+	void cbox_DO5_checked(bool ischeck);
+	void cbox_DO6_checked(bool ischeck);
+	void cbox_DO7_checked(bool ischeck);
+	void cbox_DO8_checked(bool ischeck);
+	void cbox_DO9_checked(bool ischeck);
+	void cbox_DO10_checked(bool ischeck);
+	void cbox_beltControl(bool ischeck);
+private slots:
+	void cbox_DI0_checked(bool ischeck);
+	void cbox_DI1_checked(bool ischeck);
+	void cbox_DI2_checked(bool ischeck);
+	void cbox_DI3_checked(bool ischeck);
+	void cbox_DI4_checked(bool ischeck);
+	void cbox_DI5_checked(bool ischeck);
+	void cbox_DI6_checked(bool ischeck);
+	void cbox_DI7_checked(bool ischeck);
+	void cbox_DI8_checked(bool ischeck);
+	void cbox_DI9_checked(bool ischeck);
+	void cbox_DI10_checked(bool ischeck);
 };

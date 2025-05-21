@@ -923,9 +923,9 @@ void ButtonScanner::build_ioThread()
 					});
 					// pidaimove->stop();
 					motionPtr->StopAllAxis();
-					motionPtr->SetIOOut(1, false);
+					motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
 
-					motionPtr->SetIOOut(7, false);
+					motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 			}
 			else
 			{
@@ -955,17 +955,17 @@ void ButtonScanner::build_ioThread()
 						QThread::msleep(500);
 						motionPtr->SetIOOut(1, true);
 						//启动电机
-						motionPtr->SetAxisType(0, 1);
+						motionPtr->SetAxisType(ControlLines::beltAsis, 1);
 						double unit = GlobalStructData::getInstance().dlgProduceLineSetConfig.pulseFactor;
-						motionPtr->SetAxisPulse(0, unit);
+						motionPtr->SetAxisPulse(ControlLines::beltAsis, unit);
 						double acc = GlobalStructData::getInstance().dlgProduceLineSetConfig.accelerationAndDeceleration;
-						motionPtr->SetAxisAcc(0, acc);
-						motionPtr->SetAxisDec(0, acc);
+						motionPtr->SetAxisAcc(ControlLines::beltAsis, acc);
+						motionPtr->SetAxisDec(ControlLines::beltAsis, acc);
 						double speed = GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed;
-						motionPtr->SetAxisRunSpeed(0, speed);
+						motionPtr->SetAxisRunSpeed(ControlLines::beltAsis, speed);
 						// pidaimove->start(100);
-						motionPtr->AxisRun(0, -1);
-						motionPtr->SetIOOut(7, true);
+						motionPtr->AxisRun(ControlLines::beltAsis, -1);
+						motionPtr->SetIOOut(ControlLines::warnGreenOut, true);
 						});
 				}
 				//停止点
@@ -980,8 +980,8 @@ void ButtonScanner::build_ioThread()
 							label_lightBulb->setVisible(false);
 						});
 						motionPtr->StopAllAxis();
-						motionPtr->SetIOOut(1, false);
-						motionPtr->SetIOOut(7, false);
+						motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+						motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 				}
 
 				//获取气压表数据
@@ -999,24 +999,24 @@ void ButtonScanner::build_ioThread()
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {
-					motionPtr->SetIOOut(9, true);
+					motionPtr->SetIOOut(ControlLines::warnUpLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(9, false);
+					motionPtr->SetIOOut(ControlLines::warnUpLightOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.downLight) {
-					motionPtr->SetIOOut(10, true);
+					motionPtr->SetIOOut(ControlLines::warnDownLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(10, false);
+					motionPtr->SetIOOut(ControlLines::warnDownLightOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.sideLight) {
-					motionPtr->SetIOOut(0, true);
+					motionPtr->SetIOOut(ControlLines::warnSideLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(0, false);
+					motionPtr->SetIOOut(ControlLines::warnSideLightOut, false);
 				}
 			}
 

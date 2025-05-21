@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1324</width>
+    <width>1329</width>
     <height>1024</height>
    </rect>
   </property>
@@ -3262,7 +3262,7 @@ QGroupBox::title {
      <property name="title">
       <string/>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,0">
+     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_32">
         <item>
@@ -3314,7 +3314,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DI:0)</string>
+                <string>电机通电(DI:0)</string>
                </property>
                <property name="tristate">
                 <bool>false</bool>
@@ -3359,7 +3359,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DI:1)</string>
+                <string>吹气1(DI:1)</string>
                </property>
               </widget>
              </item>
@@ -3401,7 +3401,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>一工位吹气(DI:2)</string>
+                <string>吹气2(DI:2)</string>
                </property>
               </widget>
              </item>
@@ -3443,7 +3443,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>二工位吹气(DI:3)</string>
+                <string>吹气3(DI:3)</string>
                </property>
               </widget>
              </item>
@@ -3485,7 +3485,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>三工位吹气(DI:4)</string>
+                <string>吹气4(DI:4)</string>
                </property>
               </widget>
              </item>
@@ -3531,7 +3531,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DI:5)</string>
+                <string>绿灯(DI:5)</string>
                </property>
               </widget>
              </item>
@@ -3573,7 +3573,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>四工位吹气(DI:6)</string>
+                <string>报警红灯(DI:6)</string>
                </property>
               </widget>
              </item>
@@ -3615,7 +3615,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>(DI:7)</string>
+                <string>上光源(DI:7)</string>
                </property>
               </widget>
              </item>
@@ -3657,7 +3657,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>7运行(DI:8)</string>
+                <string>侧光源(DI:8)</string>
                </property>
               </widget>
              </item>
@@ -3699,7 +3699,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>8报警(DI:9)</string>
+                <string>下光源(DI:9)</string>
                </property>
               </widget>
              </item>
@@ -3757,7 +3757,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DO:0)</string>
+                <string>电机通电(DO:0)</string>
                </property>
               </widget>
              </item>
@@ -3971,7 +3971,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DO:5)</string>
+                <string>绿灯(DO:5)</string>
                </property>
               </widget>
              </item>
@@ -4013,7 +4013,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>(DO:6)</string>
+                <string>报警红灯(DO:6)</string>
                </property>
               </widget>
              </item>
@@ -4055,7 +4055,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上电(DO:7)</string>
+                <string>上光源(DO:7)</string>
                </property>
               </widget>
              </item>
@@ -4097,7 +4097,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>运行(DO:8)</string>
+                <string>侧光源(DO:8)</string>
                </property>
               </widget>
              </item>
@@ -4139,7 +4139,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>报警(DO:9)</string>
+                <string>下光源(DO:9)</string>
                </property>
               </widget>
              </item>
@@ -4151,7 +4151,7 @@ QCheckBox::indicator:checked:hover {
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="1,1,1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout_23">
         <item>
          <widget class="QCheckBox" name="cbox_DI10">
           <property name="styleSheet">
@@ -4190,22 +4190,9 @@ QCheckBox::indicator:checked:hover {
 }</string>
           </property>
           <property name="text">
-           <string>上电(DI:10)</string>
+           <string>(DI:10)</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item>
          <widget class="QCheckBox" name="cbox_DO10">
@@ -4245,7 +4232,49 @@ QCheckBox::indicator:checked:hover {
 }</string>
           </property>
           <property name="text">
-           <string>上电(DO:10)</string>
+           <string>(DO:10)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbox_beltControl">
+          <property name="styleSheet">
+           <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+          </property>
+          <property name="text">
+           <string>皮带启动</string>
           </property>
          </widget>
         </item>

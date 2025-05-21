@@ -26,6 +26,13 @@ struct ControlLines
 	const static ControlLine blowLine4;
 	static constexpr int airPressureIn = 7;
 	static constexpr int warnOut = 8;
+	static constexpr int motoPowerOut = 1;
+	static constexpr int beltAsis = 0;
+	static constexpr int warnGreenOut = 7;
+	static constexpr int warnRedOut = 8;
+	static constexpr int warnUpLightOut = 9;
+	static constexpr int warnSideLightOut = 0;
+	static constexpr int warnDownLightOut = 10 ;
 };
 
 struct ClassId
