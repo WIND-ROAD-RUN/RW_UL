@@ -31,14 +31,14 @@ namespace rw {
 			return rootPath;
 		}
 
-		void ImageSaveEngine::pushImage(const QImage& image, const QString& classify, const QString& namePrefix)
+		void ImageSaveEngine::pushImage(const ImageInfo& image)
 		{
 			QMutexLocker locker(&mutex);
 			if (saveQueue.size() >= maxQueueSize) {
 				std::cerr << "Queue is full, dropping image." << std::endl;
 				return;
 			}
-			saveQueue.enqueue({ image, classify });
+			saveQueue.enqueue(image);
 			condition.wakeOne();
 		}
 
@@ -68,7 +68,7 @@ namespace rw {
 		void ImageSaveEngine::processImages()
 		{
 			while (true) {
-				QList<QPair<QImage, QString>> tasks;
+				QList<ImageInfo> tasks;
 
 				{
 					QMutexLocker locker(&mutex);
@@ -88,27 +88,23 @@ namespace rw {
 
 				// 保存图片
 				for (const auto& task : tasks) {
-					saveImage(task.first, task.second);
+					saveImage(task);
 				}
 			}
 		}
 
-		void ImageSaveEngine::saveImage(const QImage& image, const QString& classifyWithPrefix)
+		void ImageSaveEngine::saveImage(const ImageInfo& image)
 		{
-			QDir dir(rootPath + "/" + classifyWithPrefix);
+			QDir dir(rootPath + "/" + image.classify);
 			if (!dir.exists()) {
 				dir.mkpath(".");
 			}
 
-			// 获取当前时间
-			QDateTime currentTime = QDateTime::currentDateTime();
-			QString timestamp = currentTime.toString("yyyyMMddhhmmsszzz"); // 年月日时分秒毫秒
-
 			// 构造文件名
-			QString fileName = dir.filePath(classifyWithPrefix + timestamp + ".png");
+			QString fileName = dir.filePath(image.classify + image.time + ".png");
 
 			// 保存图片
-			if (!image.save(fileName)) {
+			if (!image.image.save(fileName)) {
 				std::cerr << "Failed to save image: " << fileName.toStdString() << std::endl;
 			}
 		}

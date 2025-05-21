@@ -9,6 +9,7 @@
 
 #include <QtConcurrent>
 #include"opencv2/opencv.hpp"
+#include"rqw_ImageSaveEngine.h"
 
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
@@ -1129,22 +1130,26 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	ImageProcessUtilty::drawHole(image, processResultDefect, processResultIndex[ClassId::Hole]);
 	ImageProcessUtilty::drawBody(image, processResultDefect, processResultIndex[ClassId::Body]);
 
+	rw::rqw::ImageInfo imageInfo(cvMatToQImage(frame.image));
 	//保存图像
 	if (globalData.isTakePictures) {
 		if (_isbad) {
 			if (productLineSet.takeNgPictures)
 			{
-				globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "NG", "Button");
+				imageInfo.classify = "NG";
+				globalData.imageSaveEngine->pushImage(imageInfo);
 			}
 			if (productLineSet.takeMaskPictures)
 			{
-				globalData.imageSaveEngine->pushImage(image, "Mask", "Button");
+				imageInfo.classify = "Mask";
+				globalData.imageSaveEngine->pushImage(imageInfo);
 			}
 		}
 		else {
 			if (productLineSet.takeOkPictures)
 			{
-				globalData.imageSaveEngine->pushImage(cvMatToQImage(frame.image), "OK", "Button");
+				imageInfo.classify = "OK";
+				globalData.imageSaveEngine->pushImage(imageInfo);
 			}
 		}
 	}
