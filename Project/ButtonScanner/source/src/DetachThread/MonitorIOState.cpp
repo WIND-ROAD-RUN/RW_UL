@@ -1,4 +1,6 @@
 #include"MonitorIOState.hpp"
+#include <rqw_CameraObject.hpp>
+#include <ButtonUtilty.h>
 
 MonitorIOStateThread::MonitorIOStateThread(QObject* parent)
     : QThread(parent){
@@ -49,10 +51,26 @@ void MonitorIOStateThread::run()
 
 void MonitorIOStateThread::monitorDIState()
 {
-
+    auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+    emit DIState(ControlLines::stopIn, motionPtr->GetIOIn(ControlLines::stopIn));
+    emit DIState(ControlLines::startIn, motionPtr->GetIOIn(ControlLines::startIn));
+    emit DIState(ControlLines::airWarnIN, motionPtr->GetIOIn(ControlLines::airWarnIN));
+    emit DIState(ControlLines::shutdownComputerIn, motionPtr->GetIOIn(ControlLines::shutdownComputerIn));
+    emit DIState(ControlLines::camer1In, motionPtr->GetIOIn(ControlLines::camer1In));
+    emit DIState(ControlLines::camer2In, motionPtr->GetIOIn(ControlLines::camer2In));
+    emit DIState(ControlLines::camer3In, motionPtr->GetIOIn(ControlLines::camer3In));
+    emit DIState(ControlLines::camer4In, motionPtr->GetIOIn(ControlLines::camer4In));
 }
 
 void MonitorIOStateThread::monitorDOState()
 {
-
+    auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	emit DOState(ControlLines::warnOut, motionPtr->GetIOOut(ControlLines::warnOut));
+    emit DOState(ControlLines::motoPowerOut, motionPtr->GetIOOut(ControlLines::motoPowerOut));
+    emit DOState(ControlLines::beltAsis, motionPtr->GetIOOut(ControlLines::beltAsis));
+    emit DOState(ControlLines::warnGreenOut, motionPtr->GetIOOut(ControlLines::warnGreenOut));
+    emit DOState(ControlLines::warnRedOut, motionPtr->GetIOOut(ControlLines::warnRedOut));
+    emit DOState(ControlLines::warnUpLightOut, motionPtr->GetIOOut(ControlLines::warnUpLightOut));
+    emit DOState(ControlLines::warnSideLightOut, motionPtr->GetIOOut(ControlLines::warnSideLightOut));
+    emit DOState(ControlLines::warnDownLightOut, motionPtr->GetIOOut(ControlLines::warnDownLightOut));
 }

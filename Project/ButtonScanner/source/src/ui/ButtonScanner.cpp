@@ -909,7 +909,7 @@ void ButtonScanner::build_ioThread()
 		while (_mark_thread)
 		{
 			bool state = false;
-			state = motionPtr->GetIOIn(2);
+			state = motionPtr->GetIOIn(ControlLines::stopIn);
 			//急停
 
 			if (state == true)
@@ -931,7 +931,7 @@ void ButtonScanner::build_ioThread()
 			{
 				//开始按钮
 				bool state = false;
-				state = motionPtr->GetIOIn(1);
+				state = motionPtr->GetIOIn(ControlLines::startIn);
 				//启动程序
 				if (state == true)
 				{
@@ -953,7 +953,7 @@ void ButtonScanner::build_ioThread()
 					//所有电机上电
 					QtConcurrent::run([this, &motionPtr]() {
 						QThread::msleep(500);
-						motionPtr->SetIOOut(1, true);
+						motionPtr->SetIOOut(ControlLines::motoPowerOut, true);
 						//启动电机
 						motionPtr->SetAxisType(ControlLines::beltAsis, 1);
 						double unit = GlobalStructData::getInstance().dlgProduceLineSetConfig.pulseFactor;
@@ -969,7 +969,7 @@ void ButtonScanner::build_ioThread()
 						});
 				}
 				//停止点
-				state = motionPtr->GetIOIn(2);
+				state = motionPtr->GetIOIn(ControlLines::stopIn);
 				if (state)
 				{
 					globalStruct.runningState = RunningState::Stop;
@@ -985,7 +985,7 @@ void ButtonScanner::build_ioThread()
 				}
 
 				//获取气压表数据
-				auto qiya = motionPtr->GetIOIn(ControlLines::airPressureIn);
+				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIN);
 				if (qiya == true) {
 					//气压正常
 					motionPtr->SetIOOut(ControlLines::warnOut, true);

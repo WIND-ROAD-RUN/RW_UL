@@ -20,11 +20,21 @@ struct ControlLine
 
 struct ControlLines
 {
+public:
 	const static ControlLine blowLine1;
 	const static ControlLine blowLine2;
 	const static ControlLine blowLine3;
 	const static ControlLine blowLine4;
-	static constexpr int airPressureIn = 7;
+public:
+	static constexpr int stopIn = 2;
+	static constexpr int startIn = 1;
+	static constexpr int airWarnIN = 7;
+	static constexpr int shutdownComputerIn = 8;
+	static constexpr int camer1In = 6;
+	static constexpr int camer2In = 5;
+	static constexpr int camer3In = 4;
+	static constexpr int camer4In = 3;
+public:
 	static constexpr int warnOut = 8;
 	static constexpr int motoPowerOut = 1;
 	static constexpr int beltAsis = 0;

@@ -34,6 +34,10 @@ void DlgProduceLineSet::build_ui()
 	monitorIoStateThread = new MonitorIOStateThread(this);
 	monitorIoStateThread->setRunning(false);
 	monitorIoStateThread->start();
+	connect(monitorIoStateThread, &MonitorIOStateThread::DIState,
+		this, &DlgProduceLineSet::onDIState);
+	connect(monitorIoStateThread, &MonitorIOStateThread::DOState,
+		this, &DlgProduceLineSet::onDOState);
 }
 
 void DlgProduceLineSet::read_config()
@@ -832,6 +836,73 @@ void DlgProduceLineSet::cbox_DI9_checked(bool ischeck)
 void DlgProduceLineSet::cbox_DI10_checked(bool ischeck)
 {
 	ui->cbox_DI10->setChecked(false);
+}
+
+void DlgProduceLineSet::onDIState(int index, bool state)
+{
+	switch (index)
+	{
+	case ControlLines::stopIn:
+		ui->cbox_DI2->setChecked(state);
+		break;
+	case ControlLines::startIn:
+		ui->cbox_DI1->setChecked(state);
+		break;
+	case ControlLines::airWarnIN:
+		ui->cbox_DI4->setChecked(state);
+		break;
+	case ControlLines::shutdownComputerIn:
+		ui->cbox_DI3->setChecked(state);
+		break;
+	case ControlLines::camer1In:
+		ui->cbox_DI5->setChecked(state);
+		break;
+	case ControlLines::camer2In:
+		ui->cbox_DI6->setChecked(state);
+		break;
+	case ControlLines::camer3In:
+		ui->cbox_DI7->setChecked(state);
+		break;
+	case ControlLines::camer4In:
+		ui->cbox_DI8->setChecked(state);
+		break;
+	default:
+		break;
+	}
+}
+
+void DlgProduceLineSet::onDOState(int index, bool state)
+{
+	if (index == ControlLines::motoPowerOut) {
+		ui->cbox_DO0->setChecked(state);
+	}
+	else if (index == ControlLines::blowLine1.ioNum) {
+		ui->cbox_DO1->setChecked(state);
+	}
+	else if (index == ControlLines::blowLine2.ioNum) {
+		ui->cbox_DO2->setChecked(state);
+	}
+	else if (index == ControlLines::blowLine3.ioNum) {
+		ui->cbox_DO3->setChecked(state);
+	}
+	else if (index == ControlLines::blowLine4.ioNum) {
+		ui->cbox_DO4->setChecked(state);
+	}
+	else if (index == ControlLines::warnGreenOut) {
+		ui->cbox_DO5->setChecked(state);
+	}
+	else if (index == ControlLines::warnRedOut) {
+		ui->cbox_DO6->setChecked(state);
+	}
+	else if (index == ControlLines::warnUpLightOut) {
+		ui->cbox_DO7->setChecked(state);
+	}
+	else if (index == ControlLines::warnSideLightOut) {
+		ui->cbox_DO8->setChecked(state);
+	}
+	else if (index == ControlLines::warnDownLightOut) {
+		ui->cbox_DO9->setChecked(state);
+	}
 }
 
 void DlgProduceLineSet::cbox_workstationProtection12_checked(bool ischeck)

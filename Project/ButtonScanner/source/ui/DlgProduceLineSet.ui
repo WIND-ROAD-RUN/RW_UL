@@ -3314,7 +3314,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>电机通电(DI:0)</string>
+                <string>(DI:0)</string>
                </property>
                <property name="tristate">
                 <bool>false</bool>
@@ -3359,7 +3359,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>吹气1(DI:1)</string>
+                <string>启动(DI:1)</string>
                </property>
               </widget>
              </item>
@@ -3401,7 +3401,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>吹气2(DI:2)</string>
+                <string>急停(DI:2)</string>
                </property>
               </widget>
              </item>
@@ -3443,7 +3443,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>吹气3(DI:3)</string>
+                <string>关机(DI:3)</string>
                </property>
               </widget>
              </item>
@@ -3485,7 +3485,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>吹气4(DI:4)</string>
+                <string>气压报警(DI:4)</string>
                </property>
               </widget>
              </item>
@@ -3531,7 +3531,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>绿灯(DI:5)</string>
+                <string>1相机触发(DI:5)</string>
                </property>
               </widget>
              </item>
@@ -3573,7 +3573,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>报警红灯(DI:6)</string>
+                <string>2相机触发(DI:6)</string>
                </property>
               </widget>
              </item>
@@ -3615,7 +3615,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>上光源(DI:7)</string>
+                <string>3相机触发(DI:7)</string>
                </property>
               </widget>
              </item>
@@ -3657,7 +3657,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>侧光源(DI:8)</string>
+                <string>4相机触发(DI:8)</string>
                </property>
               </widget>
              </item>
@@ -3699,7 +3699,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>下光源(DI:9)</string>
+                <string>(DI:9)</string>
                </property>
               </widget>
              </item>

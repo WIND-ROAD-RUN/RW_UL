@@ -94,4 +94,7 @@ private slots:
 	void cbox_DI8_checked(bool ischeck);
 	void cbox_DI9_checked(bool ischeck);
 	void cbox_DI10_checked(bool ischeck);
+private slots:
+	void onDIState(int index, bool state);
+	void onDOState(int index, bool state);
 };
