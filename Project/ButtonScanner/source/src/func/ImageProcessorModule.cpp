@@ -8,12 +8,15 @@
 #include"rqw_ImagePainter.h"
 
 #include <QtConcurrent>
+#include"opencv2/opencv.hpp"
 
 void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.1f;
 	config.nms_threshold = 0.1f;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
+	config.letterBoxColor = cv::Scalar(114,114,114);
 	config.classids_nms_together = { 0,1 };
 	config.modelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
@@ -24,6 +27,8 @@ void ImageProcessor::buildOnnxRuntimeOO(const QString& enginePath)
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.5f;
 	config.nms_threshold = 0.5f;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
+	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.modelPath = enginePath.toStdString();
 	_onnxRuntimeOO = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
 }
@@ -53,7 +58,7 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 {
 	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
-	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex);
+	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex,10);
 	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
 	return processResultIndex;
 }
