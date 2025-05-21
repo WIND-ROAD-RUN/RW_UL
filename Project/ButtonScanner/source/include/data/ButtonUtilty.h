@@ -7,23 +7,23 @@ QImage cvMatToQImage(const cv::Mat& mat);
 
 QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
-struct BlowLine
+struct ControlLine
 {
 	int axis;
 	int ioNum;
-	BlowLine(int a,int i)
+	ControlLine(int a,int i)
 	{
 		axis = a;
 		ioNum = i;
 	}
 };
 
-struct BlowLines
+struct ControlLines
 {
-	const static BlowLine blowLine1;
-	const static BlowLine blowLine2;
-	const static BlowLine blowLine3;
-	const static BlowLine blowLine4;
+	const static ControlLine blowLine1;
+	const static ControlLine blowLine2;
+	const static ControlLine blowLine3;
+	const static ControlLine blowLine4;
 };
 
 struct ClassId

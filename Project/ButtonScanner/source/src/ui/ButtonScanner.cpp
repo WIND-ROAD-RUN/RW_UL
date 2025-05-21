@@ -841,7 +841,7 @@ void ButtonScanner::build_locationThread()
 					work1.tryPopMin(olderlacation1);
 
 					//吹气
-					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine1.axis, BlowLines::blowLine1.ioNum, true, tifeishijian1);
+					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine1.axis, ControlLines::blowLine1.ioNum, true, tifeishijian1);
 				}
 			}
 			{
@@ -857,7 +857,7 @@ void ButtonScanner::build_locationThread()
 					work2.tryPopMin(olderlacation2);
 
 					//吹气
-					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine2.axis, BlowLines::blowLine2.ioNum, true, tifeishijian2);
+					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine2.axis, ControlLines::blowLine2.ioNum, true, tifeishijian2);
 				}
 			}
 
@@ -874,7 +874,7 @@ void ButtonScanner::build_locationThread()
 					work3.tryPopMin(olderlacation3);
 
 					//吹气
-					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine3.axis, BlowLines::blowLine3.ioNum, true, tifeishijian3);
+					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine3.axis, ControlLines::blowLine3.ioNum, true, tifeishijian3);
 				}
 			}
 
@@ -891,7 +891,7 @@ void ButtonScanner::build_locationThread()
 					work4.tryPopMin(olderlacation4);
 
 					//吹气
-					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine4.axis, BlowLines::blowLine4.ioNum, true, tifeishijian4);
+					zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine4.axis, ControlLines::blowLine4.ioNum, true, tifeishijian4);
 				}
 			}
 		}

@@ -644,7 +644,7 @@ void DlgProduceLineSet::cbox_DO0_checked(bool ischeck)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
 	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime1 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine1.axis, BlowLines::blowLine1.ioNum, true, tifeishijian);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine1.axis, ControlLines::blowLine1.ioNum, true, tifeishijian);
 	ui->cbox_DO1->setChecked(false);
 }
 
@@ -656,7 +656,7 @@ void DlgProduceLineSet::cbox_DO2_checked(bool ischeck)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
 	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime2 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine2.axis, BlowLines::blowLine2.ioNum, true, tifeishijian);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine2.axis, ControlLines::blowLine2.ioNum, true, tifeishijian);
 	ui->cbox_DO2->setChecked(false);
 }
 
@@ -668,7 +668,7 @@ void DlgProduceLineSet::cbox_DO3_checked(bool ischeck)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
 	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime3 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine3.axis, BlowLines::blowLine3.ioNum, true, tifeishijian);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine3.axis, ControlLines::blowLine3.ioNum, true, tifeishijian);
 	ui->cbox_DO3->setChecked(false);
 }
 
@@ -680,8 +680,8 @@ void DlgProduceLineSet::cbox_DO4_checked(bool ischeck)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
 	double tifeishijian = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime4 + blowTime;
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine4.axis, BlowLines::blowLine4.ioNum, true, tifeishijian);
-	ui->cbox_DO7->setChecked(false);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine4.axis, ControlLines::blowLine4.ioNum, true, tifeishijian);
+	ui->cbox_DO4->setChecked(false);
 }
 
 void DlgProduceLineSet::cbox_DO6_checked(bool ischeck)
