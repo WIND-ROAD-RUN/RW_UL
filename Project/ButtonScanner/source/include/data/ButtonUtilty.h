@@ -7,6 +7,25 @@ QImage cvMatToQImage(const cv::Mat& mat);
 
 QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
+struct BlowLine
+{
+	int axis;
+	int ioNum;
+	BlowLine(int a,int i)
+	{
+		axis = a;
+		ioNum = i;
+	}
+};
+
+struct BlowLines
+{
+	const static BlowLine blowLine1;
+	const static BlowLine blowLine2;
+	const static BlowLine blowLine3;
+	const static BlowLine blowLine4;
+};
+
 struct ClassId
 {
 	static const int Body = 0;

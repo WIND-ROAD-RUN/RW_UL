@@ -3,6 +3,8 @@
 
 #include"NumberKeyboard.h"
 #include"GlobalStruct.h"
+#include"scc_motion.h"
+#include "rqw_CameraObject.hpp"
 
 DlgProduceLineSet::DlgProduceLineSet(QWidget* parent)
 	: QDialog(parent)
@@ -628,26 +630,50 @@ void DlgProduceLineSet::cbox_powerOn_checked(bool ischeck)
 
 void DlgProduceLineSet::cbox_blowingEnable1_checked(bool ischeck)
 {
-	auto& GlobalStructData = GlobalStructData::getInstance();
-	GlobalStructData.dlgProduceLineSetConfig.blowingEnable1 = ischeck;
+	//auto& GlobalStructData = GlobalStructData::getInstance();
+	//GlobalStructData.dlgProduceLineSetConfig.blowingEnable1 = ischeck;
+	ui->cbox_blowingEnable1->setChecked(true);
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
+	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime1 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine1.axis, BlowLines::blowLine1.ioNum, true, tifeishijian1);
+	ui->cbox_blowingEnable1->setChecked(false);
 }
 
 void DlgProduceLineSet::cbox_blowingEnable2_checked(bool ischeck)
 {
-	auto& GlobalStructData = GlobalStructData::getInstance();
-	GlobalStructData.dlgProduceLineSetConfig.blowingEnable2 = ischeck;
+	/*auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.blowingEnable2 = ischeck;*/
+	ui->cbox_blowingEnable2->setChecked(true);
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
+	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime2 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine2.axis, BlowLines::blowLine2.ioNum, true, tifeishijian1);
+	ui->cbox_blowingEnable2->setChecked(false);
 }
 
 void DlgProduceLineSet::cbox_blowingEnable3_checked(bool ischeck)
 {
-	auto& GlobalStructData = GlobalStructData::getInstance();
-	GlobalStructData.dlgProduceLineSetConfig.blowingEnable3 = ischeck;
+	/*auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.blowingEnable3 = ischeck;*/
+	ui->cbox_blowingEnable3->setChecked(true);
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
+	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime3 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine3.axis, BlowLines::blowLine3.ioNum, true, tifeishijian1);
+	ui->cbox_blowingEnable3->setChecked(false);
 }
 
 void DlgProduceLineSet::cbox_blowingEnable4_checked(bool ischeck)
 {
-	auto& GlobalStructData = GlobalStructData::getInstance();
-	GlobalStructData.dlgProduceLineSetConfig.blowingEnable4 = ischeck;
+	/*auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.blowingEnable4 = ischeck;*/
+	ui->cbox_blowingEnable4->setChecked(true);
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& blowTime = globalStruct.dlgProductSetConfig.blowTime;
+	double tifeishijian1 = GlobalStructData::getInstance().dlgProduceLineSetConfig.blowTime4 + blowTime;
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(BlowLines::blowLine4.axis, BlowLines::blowLine4.ioNum, true, tifeishijian1);
+	ui->cbox_blowingEnable4->setChecked(false);
 }
 
 void DlgProduceLineSet::cbox_none_checked(bool ischeck)
