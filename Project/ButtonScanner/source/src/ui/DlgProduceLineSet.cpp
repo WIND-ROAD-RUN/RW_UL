@@ -18,12 +18,22 @@ DlgProduceLineSet::DlgProduceLineSet(QWidget* parent)
 
 DlgProduceLineSet::~DlgProduceLineSet()
 {
+	monitorIoStateThread->destroyThread();
 	delete ui;
+}
+
+void DlgProduceLineSet::showEvent(QShowEvent* show_event)
+{
+	QDialog::showEvent(show_event);
+	monitorIoStateThread->setRunning(true);
 }
 
 void DlgProduceLineSet::build_ui()
 {
 	read_config();
+	monitorIoStateThread = new MonitorIOStateThread(this);
+	monitorIoStateThread->setRunning(false);
+	monitorIoStateThread->start();
 }
 
 void DlgProduceLineSet::read_config()
@@ -839,6 +849,7 @@ void DlgProduceLineSet::cbox_workstationProtection34_checked(bool ischeck)
 void DlgProduceLineSet::cbox_debugMode_checked(bool ischeck)
 {
 	isDebug = ischeck;
+	monitorIoStateThread->setRunning(!ischeck);
 }
 
 void DlgProduceLineSet::cBox_takeMaskPictures(bool ischeck)

@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include "ui_DlgProduceLineSet.h"
+#include"MonitorIOState.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgProduceLineSetClass; };
@@ -10,12 +11,15 @@ QT_END_NAMESPACE
 class DlgProduceLineSet : public QDialog
 {
 	Q_OBJECT
+private:
+	MonitorIOStateThread* monitorIoStateThread{nullptr};
 public:
 	bool isDebug{false};
 public:
 	DlgProduceLineSet(QWidget* parent = nullptr);
 	~DlgProduceLineSet();
-
+protected:
+	void showEvent(QShowEvent*) override;
 private:
 	void build_ui();
 	void read_config();
