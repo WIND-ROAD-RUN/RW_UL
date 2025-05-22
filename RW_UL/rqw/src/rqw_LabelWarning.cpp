@@ -162,6 +162,15 @@ namespace rw
 			return WarningInfo();
 		}
 
+		WarningInfo LabelWarning::topWarningListThreadSafe()
+		{
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			if (!_warningList.empty()) {
+				return _warningList.front();
+			}
+			return WarningInfo();
+		}
+
 		bool LabelWarning::isEmptyWarningListThreadSafe() const {
 			std::lock_guard<std::mutex> lock(_warningListMutex);
 			return _warningList.empty();

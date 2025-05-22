@@ -100,7 +100,7 @@ void DetachUtiltyThread::processOneWarnGet(rw::rqw::WarningInfo& info)
 	{
 		return;
 	}
-	info = warningLabel->popWarningListThreadSafe();
+	info = warningLabel->topWarningListThreadSafe();
 	isProcessing = true;
 	emit showDlgWarn(info);
 	openWarnAlarm(info);;
@@ -109,13 +109,14 @@ void DetachUtiltyThread::processOneWarnGet(rw::rqw::WarningInfo& info)
 void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 {
 	closeWarnAlarm(info);
+	info = warningLabel->popWarningListThreadSafe();
 	isProcessFinish = false;
 	auto isEmpty = warningLabel->isEmptyWarningListThreadSafe();
 	if (isEmpty)
 	{
 		return;
 	}
-	info = warningLabel->popWarningListThreadSafe();
+	info = warningLabel->topWarningListThreadSafe();
 	isProcessing = true;
 	emit showDlgWarn(info);
 	openWarnAlarm(info);

@@ -45,6 +45,7 @@ namespace rw
 			// warningList
 			void pushWarningList(const WarningInfo& info);
 			WarningInfo popWarningListThreadSafe();
+			WarningInfo topWarningListThreadSafe();
 			bool isEmptyWarningListThreadSafe() const;
 			std::deque<WarningInfo> getWarningListThreadSafe() const;
 			void clearWarningListThreadSafe();
