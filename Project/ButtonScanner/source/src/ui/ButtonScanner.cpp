@@ -443,6 +443,9 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(&GlobalStructData::getInstance(), &GlobalStructData::updateLightState,
 		this, &ButtonScanner::onUpdateLightStateUi);
+
+	QObject::connect(dlgWarn, &DlgWarn::isProcess,
+		this, &ButtonScanner::dlgWarningAccept);
 }
 
 void ButtonScanner::read_config()
@@ -1462,6 +1465,13 @@ void ButtonScanner::showDlgWarn(rw::rqw::WarningInfo info)
 	}
 
 	dlgWarn->show();
+}
+
+void ButtonScanner::dlgWarningAccept()
+{
+	auto &thread = GlobalStructThread::getInstance().detachUtiltyThread;
+	thread ->isProcessing = false;
+	thread->isProcessFinish = true;
 }
 
 void ButtonScanner::pbtn_exit_clicked()

@@ -79,15 +79,27 @@ void DetachUtiltyThread::CalculateRealtimeInformation(size_t s)
 
 void DetachUtiltyThread::processWarningInfo(size_t s)
 {
-	if (s%5==0&&!isProcessing)
+	static rw::rqw::WarningInfo warningInfo;
+	if (isProcessFinish)
 	{
-		auto isEmpty = warningLabel->isEmptyWarningListThreadSafe();
-		if (isEmpty)
-		{
-			return;
-		}
-		auto warningInfo = warningLabel->popWarningListThreadSafe();
-		isProcessing = true;
-		emit showDlgWarn(warningInfo);
+		isProcessFinish = false;
+		processOneWarn(warningInfo);
 	}
+	if (s % 5 == 0 && !isProcessing)
+	{
+		processOneWarn(warningInfo);
+	}
+}
+
+void DetachUtiltyThread::processOneWarn(rw::rqw::WarningInfo& info)
+{
+	isProcessFinish = false;
+	auto isEmpty = warningLabel->isEmptyWarningListThreadSafe();
+	if (isEmpty)
+	{
+		return;
+	}
+	info = warningLabel->popWarningListThreadSafe();
+	isProcessing = true;
+	emit showDlgWarn(info);
 }

@@ -167,5 +167,7 @@ public slots:
 	void checkPosiviveRadioButtonCheck();
 private slots:
 	void showDlgWarn(rw::rqw::WarningInfo info);
+public slots:
+	void dlgWarningAccept();
 
 };

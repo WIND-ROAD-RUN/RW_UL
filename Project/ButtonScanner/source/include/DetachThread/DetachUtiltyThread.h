@@ -1,16 +1,15 @@
 #pragma once
 
 #include <QThread>
-#include <QDebug>
 #include <atomic>
 #include"rqw_LabelWarning.h"
-#include"DlgWarn.h"
 
 class DetachUtiltyThread : public QThread
 {
 	Q_OBJECT
-private:
-	bool isProcessing{false};
+public:
+	std::atomic_bool isProcessing{false};
+	std::atomic_bool isProcessFinish{ false };
 public:
 	explicit DetachUtiltyThread(QObject* parent = nullptr);
 
@@ -29,6 +28,7 @@ protected:
 private:
 	void CalculateRealtimeInformation(size_t s);
 	void processWarningInfo(size_t s);
+	void processOneWarn(rw::rqw::WarningInfo & info);
 signals:
 	void updateStatisticalInfo();
 	void addWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);

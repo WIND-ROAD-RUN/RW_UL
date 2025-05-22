@@ -47,9 +47,11 @@ void DlgWarn::setTime(const QString& time)
 void DlgWarn::pbtn_ignore_clicked()
 {
 	this->hide();
+	emit isProcess();
 }
 
 void DlgWarn::pbtn_accept_clicked()
 {
 	this->hide();
+	emit isProcess();
 }

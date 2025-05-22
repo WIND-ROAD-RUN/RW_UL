@@ -20,7 +20,8 @@ public:
 	void setTitle(const QString & Tile);
 	void setText(const QString& text);
 	void setTime(const QString& time);
-
+signals:
+	void isProcess();
 private:
 	Ui::DlgWarnClass *ui;
 private slots:
