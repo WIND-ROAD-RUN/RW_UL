@@ -7,6 +7,18 @@ QImage cvMatToQImage(const cv::Mat& mat);
 
 QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
+struct WarningId
+{
+	static constexpr int cairPressureAlarm = 0;
+	static constexpr int ccameraDisconnectAlarm1 = 1;
+	static constexpr int ccameraDisconnectAlarm2 = 2;
+	static constexpr int ccameraDisconnectAlarm3 = 3;
+	static constexpr int ccameraDisconnectAlarm4 = 4;
+	static constexpr int clongTermIdleOperationAlarm = 5;
+	static constexpr int cwork1AndWork2EmptyAlarm = 6;
+	static constexpr int cwork2AndWork4EmptyAlarm = 7;
+};
+
 struct ControlLine
 {
 	int axis;
