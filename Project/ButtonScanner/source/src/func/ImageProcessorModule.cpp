@@ -595,7 +595,8 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 	}
 }
 
-void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex)
+void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
+                                        ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
 	auto& mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
@@ -668,35 +669,35 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 
 			if (mainWindowConfig.isDefect)
 			{
-				if (i == ClassId::pobian && productSet.edgeDamageEnable)
+				if (i == ClassId::pobian && productSet.edgeDamageEnable &&info.isDrawedgeDamage)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::qikong && productSet.poreEnable)
+				else if (i == ClassId::qikong && productSet.poreEnable && info.isDrawpore)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::duyan && productSet.blockEyeEnable)
+				else if (i == ClassId::duyan && productSet.blockEyeEnable&&info.isDrawblockEye)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::moshi && productSet.grindStoneEnable)
+				else if (i == ClassId::moshi && productSet.grindStoneEnable&&info.isDrawgrindStone)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::liaotou && productSet.materialHeadEnable)
+				else if (i == ClassId::liaotou && productSet.materialHeadEnable&&info.isDrawmaterialHead)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::zangwu && productSet.paintEnable)
+				else if (i == ClassId::zangwu && productSet.paintEnable&&info.isDrawpaint)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::liehen && productSet.crackEnable)
+				else if (i == ClassId::liehen && productSet.crackEnable&&info.isDrawcrack)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::poyan && productSet.brokenEyeEnable)
+				else if (i == ClassId::poyan && productSet.brokenEyeEnable&&info.isDrawbrokenEye)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
@@ -1126,7 +1127,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 		drawShieldingRange(image, processResultDefect, processResultIndex[ClassId::Body]);
 	}
 	drawErrorRec(image, processResultDefect, processResultIndex);
-	drawErrorRec_error(image, processResultDefect, processResultIndex);
+	drawErrorRec_error(image, processResultDefect, processResultIndex, defectInfo);
 	ImageProcessUtilty::drawHole(image, processResultDefect, processResultIndex[ClassId::Hole]);
 	ImageProcessUtilty::drawBody(image, processResultDefect, processResultIndex[ClassId::Body]);
 
