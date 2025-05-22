@@ -688,6 +688,7 @@ void ButtonScanner::build_camera()
 	{
 		rw::rqw::WarningInfo info;
 		info.message = "相机1连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm1;
 		info.type = rw::rqw::WarningType::Error;
 		labelWarning->addWarning(info);
 	}
@@ -698,6 +699,7 @@ void ButtonScanner::build_camera()
 	{
 		rw::rqw::WarningInfo info;
 		info.message = "相机2连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm2;
 		info.type = rw::rqw::WarningType::Error;
 		labelWarning->addWarning(info);
 	}
@@ -708,6 +710,7 @@ void ButtonScanner::build_camera()
 	{
 		rw::rqw::WarningInfo info;
 		info.message = "相机3连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm3;
 		info.type = rw::rqw::WarningType::Error;
 		labelWarning->addWarning(info);
 	}
@@ -718,6 +721,7 @@ void ButtonScanner::build_camera()
 	{
 		rw::rqw::WarningInfo info;
 		info.message = "相机4连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm4;
 		info.type = rw::rqw::WarningType::Error;
 		labelWarning->addWarning(info);
 	}
@@ -808,6 +812,7 @@ void ButtonScanner::build_motion()
 	{
 		rw::rqw::WarningInfo info;
 		info.message = "运动控制器连接失败";
+		info.warningId = WarningId::csportControlAlarm;
 		info.type = rw::rqw::WarningType::Error;
 		labelWarning->addWarning(info);
 		updateCardLabelState(false);
@@ -1009,6 +1014,7 @@ void ButtonScanner::build_ioThread()
 							rw::rqw::WarningInfo info;
 							info.message = "气压不正常";
 							info.type = rw::rqw::WarningType::Error;
+							info.warningId = WarningId::cairPressureAlarm;
 							labelWarning->addWarning(info, true);
 							updateCardLabelState(false);
 						});

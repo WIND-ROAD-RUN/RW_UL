@@ -17,6 +17,7 @@ struct WarningId
 	static constexpr int clongTermIdleOperationAlarm = 5;
 	static constexpr int cwork1AndWork2EmptyAlarm = 6;
 	static constexpr int cwork2AndWork4EmptyAlarm = 7;
+	static constexpr int csportControlAlarm = 8;
 };
 
 struct ControlLine
