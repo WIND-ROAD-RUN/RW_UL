@@ -2,6 +2,7 @@
 #include"DetachUtiltyThread.h"
 
 #include"GlobalStruct.h"
+#include "rqw_CameraObject.hpp"
 
 DetachUtiltyThread::DetachUtiltyThread(QObject* parent)
 	: QThread(parent), running(false) {
@@ -122,10 +123,12 @@ void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 
 void DetachUtiltyThread::openWarnAlarm(const rw::rqw::WarningInfo& info)
 {
-
+	auto &motion=zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motion->SetIOOut(ControlLines::warnRedOut, true);
 }
 
 void DetachUtiltyThread::closeWarnAlarm(const rw::rqw::WarningInfo& info)
 {
-
+	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motion->SetIOOut(ControlLines::warnGreenOut, false);
 }

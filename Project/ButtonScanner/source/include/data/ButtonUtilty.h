@@ -48,7 +48,6 @@ public:
 	static constexpr int camer3In = 4;
 	static constexpr int camer4In = 3;
 public:
-	static constexpr int warnOut = 8;
 	static constexpr int motoPowerOut = 1;
 	static constexpr int beltAsis = 0;
 	static constexpr int warnGreenOut = 7;

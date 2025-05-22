@@ -1013,7 +1013,7 @@ void ButtonScanner::build_ioThread()
 				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIN);
 				if (qiya == true) {
 					//气压正常
-					motionPtr->SetIOOut(ControlLines::warnOut, true);
+					motionPtr->SetIOOut(ControlLines::warnRedOut, true);
 					QMetaObject::invokeMethod(qApp, [this, state]
 						{
 							rw::rqw::WarningInfo info;
@@ -1025,7 +1025,7 @@ void ButtonScanner::build_ioThread()
 						});
 				}
 				else {
-					motionPtr->SetIOOut(ControlLines::warnOut, false);
+					motionPtr->SetIOOut(ControlLines::warnRedOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {

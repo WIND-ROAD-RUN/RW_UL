@@ -65,7 +65,7 @@ void MonitorIOStateThread::monitorDIState()
 void MonitorIOStateThread::monitorDOState()
 {
     auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
-	emit DOState(ControlLines::warnOut, motionPtr->GetIOOut(ControlLines::warnOut));
+	emit DOState(ControlLines::warnRedOut, motionPtr->GetIOOut(ControlLines::warnRedOut));
     emit DOState(ControlLines::motoPowerOut, motionPtr->GetIOOut(ControlLines::motoPowerOut));
     emit DOState(ControlLines::beltAsis, motionPtr->GetIOOut(ControlLines::beltAsis));
     emit DOState(ControlLines::warnGreenOut, motionPtr->GetIOOut(ControlLines::warnGreenOut));
