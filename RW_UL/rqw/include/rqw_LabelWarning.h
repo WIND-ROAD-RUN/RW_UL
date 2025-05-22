@@ -5,6 +5,7 @@
 #include "rqw_LabelClickable.h"
 #include "WarningInfoList.h"
 #include"WarnUtilty.hpp"
+#include <mutex>
 
 namespace rw
 {
@@ -23,9 +24,6 @@ namespace rw
 		public:
 			explicit LabelWarning(QWidget* parent = nullptr);
 
-			void addWarning(const WarningInfo& message, int redDuration = 5000);
-			void addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration = 5000);
-
 			// 设置队列最大容量
 			void setMaxHistorySize(size_t maxSize);
 
@@ -40,7 +38,22 @@ namespace rw
 
 			// 设置灰色状态持续时间
 			void setGrayDuration(int duration);
+		public:
+			void addWarning(const WarningInfo& message, int redDuration = 5000);
+			void addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration = 5000);
+		public:
+			// warningList
+			void pushWarningList(const WarningInfo& info);
+			WarningInfo popWarningListThreadSafe();
+			bool isEmptyWarningListThreadSafe() const;
+			std::deque<WarningInfo> getWarningListThreadSafe() const;
+			void clearWarningListThreadSafe();
 
+			// history
+			void pushHistory(const WarningInfo& info);
+			void updateLastHistoryTimestamp();
+			std::deque<WarningInfo> getHistoryThreadSafe() const;
+			void clearHistoryThreadSafe();
 		private slots:
 			// 槽函数：将文字颜色变为灰色
 			void onTimeoutToGray();
@@ -57,7 +70,6 @@ namespace rw
 			QTimer* _timerToGray;    // 定时器，用于控制红色变灰色
 			QTimer* _timerToBlack;   // 定时器，用于控制灰色变黑色
 			WarningInfo _currentMessage; // 当前警告信息
-			std::deque<WarningInfo> _history; // 历史警告信息队列
 			size_t _maxHistorySize;  // 队列最大容量
 
 			QString _warningColor;   // 警告颜色
@@ -65,6 +77,9 @@ namespace rw
 			int _grayDuration;       // 灰色状态持续时间（毫秒）
 		public:
 			std::deque<WarningInfo> _warningList; // 历史警告信息队列,供外部获取使用
+			std::deque<WarningInfo> _history; // 历史警告信息队列
+			mutable std::mutex _historyMutex;      // 新增
+			mutable std::mutex _warningListMutex;  // 新增
 		};
 	}
 }

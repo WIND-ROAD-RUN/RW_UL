@@ -37,12 +37,7 @@ namespace rw
 		{
 
 			// 添加到历史队列
-			_history.emplace_back(message);
-
-			// 检查队列容量
-			if (_history.size() > _maxHistorySize) {
-				_history.pop_front(); // 移除最早的警告信息
-			}
+			pushHistory(message);
 
 			// 更新当前警告信息
 			_currentMessage = message;
@@ -57,12 +52,7 @@ namespace rw
 			// 停止灰色到黑色的定时器（如果正在运行）
 			_timerToBlack->stop();
 
-			// 添加到历史队列供外部使用
-			_warningList.emplace_back(message);
-			// 检查队列容量
-			if (_warningList.size() > _maxHistorySize) {
-				_warningList.pop_front(); // 移除最早的警告信息
-			}
+			pushWarningList(message);
 		}
 
 		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration)
@@ -150,6 +140,66 @@ namespace rw
 
 		void LabelWarning::clearWarningHistory()
 		{
+			_history.clear();
+		}
+
+		// warningList 线程安全操作
+		void LabelWarning::pushWarningList(const WarningInfo& info) {
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			_warningList.push_back(info);
+			if (_warningList.size() > _maxHistorySize) {
+				_warningList.pop_front();
+			}
+		}
+
+		WarningInfo LabelWarning::popWarningListThreadSafe() {
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			if (!_warningList.empty()) {
+				WarningInfo warning = _warningList.front();
+				_warningList.pop_front();
+				return warning;
+			}
+			return WarningInfo();
+		}
+
+		bool LabelWarning::isEmptyWarningListThreadSafe() const {
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			return _warningList.empty();
+		}
+
+		std::deque<WarningInfo> LabelWarning::getWarningListThreadSafe() const {
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			return _warningList;
+		}
+
+		void LabelWarning::clearWarningListThreadSafe() {
+			std::lock_guard<std::mutex> lock(_warningListMutex);
+			_warningList.clear();
+		}
+
+		// history 线程安全操作
+		void LabelWarning::pushHistory(const WarningInfo& info) {
+			std::lock_guard<std::mutex> lock(_historyMutex);
+			_history.push_back(info);
+			if (_history.size() > _maxHistorySize) {
+				_history.pop_front();
+			}
+		}
+
+		void LabelWarning::updateLastHistoryTimestamp() {
+			std::lock_guard<std::mutex> lock(_historyMutex);
+			if (!_history.empty()) {
+				_history.back().timestamp = QDateTime::currentDateTime();
+			}
+		}
+
+		std::deque<WarningInfo> LabelWarning::getHistoryThreadSafe() const {
+			std::lock_guard<std::mutex> lock(_historyMutex);
+			return _history;
+		}
+
+		void LabelWarning::clearHistoryThreadSafe() {
+			std::lock_guard<std::mutex> lock(_historyMutex);
 			_history.clear();
 		}
 	}
