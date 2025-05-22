@@ -56,6 +56,13 @@ namespace rw
 
 			// 停止灰色到黑色的定时器（如果正在运行）
 			_timerToBlack->stop();
+
+			// 添加到历史队列供外部使用
+			_warningList.emplace_back(message);
+			// 检查队列容量
+			if (_warningList.size() > _maxHistorySize) {
+				_warningList.pop_front(); // 移除最早的警告信息
+			}
 		}
 
 		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration)
