@@ -1187,6 +1187,11 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 		else {
 			ui->label_camera1State->setText("连接失败");
 			ui->label_camera1State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机1断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm1;
+			labelWarning->addWarning(info);
 		}
 		break;
 	case 2:
@@ -1197,6 +1202,11 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 		else {
 			ui->label_camera2State->setText("连接失败");
 			ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机2断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm2;
+			labelWarning->addWarning(info);
 		}
 		break;
 	case 3:
@@ -1207,6 +1217,11 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 		else {
 			ui->label_camera3State->setText("连接失败");
 			ui->label_camera3State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机3断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm3;
+			labelWarning->addWarning(info);
 		}
 		break;
 	case 4:
@@ -1217,6 +1232,11 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 		else {
 			ui->label_camera4State->setText("连接失败");
 			ui->label_camera4State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机4断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm4;
+			labelWarning->addWarning(info);
 		}
 		break;
 	default:
@@ -1451,7 +1471,7 @@ void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame
 	info.message = message;
 	info.type = rw::rqw::WarningType::Error;
 	labelWarning->addWarning(info, updateTimestampIfSame, redDuration);
-	updateCardLabelState(false);
+	//updateCardLabelState(false);
 }
 
 void ButtonScanner::updateExposureTimeValueOnDlg(int exposureTime)
