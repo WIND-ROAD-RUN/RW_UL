@@ -28,7 +28,10 @@ protected:
 private:
 	void CalculateRealtimeInformation(size_t s);
 	void processWarningInfo(size_t s);
-	void processOneWarn(rw::rqw::WarningInfo & info);
+	void processOneWarnGet(rw::rqw::WarningInfo & info);
+	void processOneWarnFinsh(rw::rqw::WarningInfo& info);
+	void openWarnAlarm(const rw::rqw::WarningInfo& info);
+	void closeWarnAlarm(const rw::rqw::WarningInfo& info);
 signals:
 	void updateStatisticalInfo();
 	void addWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
