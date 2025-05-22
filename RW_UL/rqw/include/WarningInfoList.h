@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include <deque>
 #include <QDateTime>
+#include"WarnUtilty.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WarningInfoListClass; }
@@ -22,7 +23,7 @@ private:
 public:
 
 	// 设置警告信息
-	void setWarningHistory(const std::deque<std::pair<QDateTime, QString>>& history);
+	void setWarningHistory(const std::deque<rw::rqw::WarningInfo>& history);
 
 signals:
 	// 信号：清空警告信息

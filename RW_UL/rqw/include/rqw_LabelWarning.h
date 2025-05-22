@@ -7,6 +7,7 @@
 #include "rqw_LabelClickable.h"
 #include "WarningInfoList.h"
 #include"DlgWarn.h"
+#include"WarnUtilty.hpp"
 
 namespace rw
 {
@@ -27,15 +28,14 @@ namespace rw
 		public:
 			explicit LabelWarning(QWidget* parent = nullptr);
 
-			// 添加警告信息
-			void addWarning(const QString& message, int redDuration = 5000);
-			void addWarning(const QString& message, bool updateTimestampIfSame, int redDuration = 5000);
+			void addWarning(const WarningInfo& message, int redDuration = 5000);
+			void addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration = 5000);
 
 			// 设置队列最大容量
 			void setMaxHistorySize(size_t maxSize);
 
 			// 获取历史警告信息
-			std::deque<std::pair<QDateTime, QString>> getHistory() const;
+			std::deque<WarningInfo> getHistory() const;
 
 			// 设置警告颜色
 			void setWarningColor(const QString& color);
@@ -61,13 +61,15 @@ namespace rw
 		private:
 			QTimer* _timerToGray;    // 定时器，用于控制红色变灰色
 			QTimer* _timerToBlack;   // 定时器，用于控制灰色变黑色
-			QString _currentMessage; // 当前警告信息
-			std::deque<std::pair<QDateTime, QString>> _history; // 历史警告信息队列
+			WarningInfo _currentMessage; // 当前警告信息
+			std::deque<WarningInfo> _history; // 历史警告信息队列
 			size_t _maxHistorySize;  // 队列最大容量
 
 			QString _warningColor;   // 警告颜色
 			QString _timeoutColor;   // 超时后的颜色
 			int _grayDuration;       // 灰色状态持续时间（毫秒）
+		public:
+			std::deque<WarningInfo> _warningList; // 历史警告信息队列,供外部获取使用
 		};
 	}
 }

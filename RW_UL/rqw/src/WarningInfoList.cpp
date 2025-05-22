@@ -36,14 +36,14 @@ void WarningInfoList::build_connect()
 	connect(ui->pbtn_exit, &QPushButton::clicked, this, &WarningInfoList::hide);
 }
 
-void WarningInfoList::setWarningHistory(const std::deque<std::pair<QDateTime, QString>>& history)
+void WarningInfoList::setWarningHistory(const std::deque<rw::rqw::WarningInfo>& history)
 {
 	_model->removeRows(0, _model->rowCount());
 
 	for (const auto& entry : history) {
 		QList<QStandardItem*> rowItems;
-		rowItems.append(new QStandardItem(entry.first.toString("yyyy-MM-dd HH:mm:ss")));
-		rowItems.append(new QStandardItem(entry.second));
+		rowItems.append(new QStandardItem(entry.timestamp.toString("yyyy-MM-dd HH:mm:ss")));
+		rowItems.append(new QStandardItem(entry.message));
 		_model->appendRow(rowItems);
 	}
 }

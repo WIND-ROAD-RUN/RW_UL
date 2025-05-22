@@ -686,28 +686,40 @@ void ButtonScanner::build_camera()
 	updateCameraLabelState(1, build1Result);
 	if (!build1Result)
 	{
-		labelWarning->addWarning("相机1连接失败");
+		rw::rqw::WarningInfo info;
+		info.message = "相机1连接失败";
+		info.type = rw::rqw::WarningType::Error;
+		labelWarning->addWarning(info);
 	}
 
 	auto build2Result = globalStruct.buildCamera2();
 	updateCameraLabelState(2, build2Result);
 	if (!build2Result)
 	{
-		labelWarning->addWarning("相机2连接失败");
+		rw::rqw::WarningInfo info;
+		info.message = "相机2连接失败";
+		info.type = rw::rqw::WarningType::Error;
+		labelWarning->addWarning(info);
 	}
 
 	auto build3Result = globalStruct.buildCamera3();
 	updateCameraLabelState(3, build3Result);
 	if (!build3Result)
 	{
-		labelWarning->addWarning("相机3连接失败");
+		rw::rqw::WarningInfo info;
+		info.message = "相机3连接失败";
+		info.type = rw::rqw::WarningType::Error;
+		labelWarning->addWarning(info);
 	}
 
 	auto build4Result = globalStruct.buildCamera4();
 	updateCameraLabelState(4, build4Result);
 	if (!build4Result)
 	{
-		labelWarning->addWarning("相机4连接失败");
+		rw::rqw::WarningInfo info;
+		info.message = "相机4连接失败";
+		info.type = rw::rqw::WarningType::Error;
+		labelWarning->addWarning(info);
 	}
 
 	_dlgExposureTimeSet->ResetCamera(); //启动设置相机为默认状态
@@ -794,7 +806,10 @@ void ButtonScanner::build_motion()
 	}
 	else
 	{
-		labelWarning->addWarning("运动控制器连接失败");
+		rw::rqw::WarningInfo info;
+		info.message = "运动控制器连接失败";
+		info.type = rw::rqw::WarningType::Error;
+		labelWarning->addWarning(info);
 		updateCardLabelState(false);
 	}
 }
@@ -991,7 +1006,11 @@ void ButtonScanner::build_ioThread()
 					motionPtr->SetIOOut(ControlLines::warnOut, true);
 					QMetaObject::invokeMethod(qApp, [this, state]
 						{
-							labelWarning->addWarning("气压不正常", true);
+							rw::rqw::WarningInfo info;
+							info.message = "气压不正常";
+							info.type = rw::rqw::WarningType::Error;
+							labelWarning->addWarning(info, true);
+							updateCardLabelState(false);
 						});
 				}
 				else {
@@ -1390,7 +1409,11 @@ void ButtonScanner::labelClickable_title_clicked()
 
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)
 {
-	labelWarning->addWarning(message, updateTimestampIfSame, redDuration);
+	rw::rqw::WarningInfo info;
+	info.message = message;
+	info.type = rw::rqw::WarningType::Error;
+	labelWarning->addWarning(info, updateTimestampIfSame, redDuration);
+	updateCardLabelState(false);
 }
 
 void ButtonScanner::updateExposureTimeValueOnDlg(int exposureTime)

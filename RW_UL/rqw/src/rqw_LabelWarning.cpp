@@ -34,13 +34,11 @@ namespace rw
 			build_connect();
 		}
 
-		void LabelWarning::addWarning(const QString& message, int redDuration)
+		void LabelWarning::addWarning(const WarningInfo& message, int redDuration)
 		{
-			// 获取当前时间戳
-			QDateTime timestamp = QDateTime::currentDateTime();
 
 			// 添加到历史队列
-			_history.emplace_back(timestamp, message);
+			_history.emplace_back(message);
 
 			// 检查队列容量
 			if (_history.size() > _maxHistorySize) {
@@ -49,7 +47,7 @@ namespace rw
 
 			// 更新当前警告信息
 			_currentMessage = message;
-			this->setText(_currentMessage);
+			this->setText(_currentMessage.message);
 
 			// 设置文字为警告颜色
 			this->setStyleSheet(QString("QLabel { color: %1; }").arg(_warningColor));
@@ -63,16 +61,16 @@ namespace rw
 			_dlgWarn->show();
 		}
 
-		void LabelWarning::addWarning(const QString& message, bool updateTimestampIfSame, int redDuration)
+		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration)
 		{
 			// 如果启用了更新时间戳的功能，并且当前警告信息与上一次相同
-			if (updateTimestampIfSame && !_history.empty() && _history.back().second == message) {
+			if (updateTimestampIfSame && !_history.empty() && _history.back().message == message.message) {
 				// 更新最后一条警告信息的时间戳
-				_history.back().first = QDateTime::currentDateTime();
+				_history.back().timestamp = QDateTime::currentDateTime();
 
 				// 更新当前警告信息
 				_currentMessage = message;
-				this->setText(_currentMessage);
+				this->setText(_currentMessage.message);
 
 				// 重置红色到灰色的定时器
 				_timerToGray->start(redDuration);
@@ -97,7 +95,7 @@ namespace rw
 			}
 		}
 
-		std::deque<std::pair<QDateTime, QString>> LabelWarning::getHistory() const
+		std::deque<WarningInfo> LabelWarning::getHistory() const
 		{
 			return _history;
 		}
