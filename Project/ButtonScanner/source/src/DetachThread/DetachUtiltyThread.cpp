@@ -116,7 +116,7 @@ void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 	{
 		return;
 	}
-	info = warningLabel->topWarningListThreadSafe();
+	info = warningLabel->popWarningListThreadSafe();
 	isProcessing = true;
 	emit showDlgWarn(info);
 	openWarnAlarm(info);
@@ -126,10 +126,12 @@ void DetachUtiltyThread::openWarnAlarm(const rw::rqw::WarningInfo& info)
 {
 	auto &motion=zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motion->SetIOOut(ControlLines::warnRedOut, true);
+	motion->SetIOOut(ControlLines::warnGreenOut, false);
 }
 
 void DetachUtiltyThread::closeWarnAlarm(const rw::rqw::WarningInfo& info)
 {
 	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
-	motion->SetIOOut(ControlLines::warnGreenOut, false);
+	motion->SetIOOut(ControlLines::warnRedOut, false);
+	motion->SetIOOut(ControlLines::warnGreenOut, true);
 }

@@ -1009,11 +1009,8 @@ void ButtonScanner::build_ioThread()
 						motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 				}
 
-				//获取气压表数据
 				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIN);
 				if (qiya == true) {
-					//气压正常
-					motionPtr->SetIOOut(ControlLines::warnRedOut, true);
 					QMetaObject::invokeMethod(qApp, [this, state]
 						{
 							rw::rqw::WarningInfo info;
@@ -1023,9 +1020,6 @@ void ButtonScanner::build_ioThread()
 							labelWarning->addWarning(info, true);
 							updateCardLabelState(false);
 						});
-				}
-				else {
-					motionPtr->SetIOOut(ControlLines::warnRedOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {
