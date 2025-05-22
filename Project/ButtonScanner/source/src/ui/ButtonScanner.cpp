@@ -458,6 +458,7 @@ void ButtonScanner::read_config()
 	read_config_produceLineConfig();
 	read_config_exposureTimeSetConfig();
 	read_config_hideScoreSet();
+	read_config_warningManagerConfig();
 }
 
 void ButtonScanner::read_config_mainWindowConfig()
@@ -487,6 +488,33 @@ void ButtonScanner::read_config_mainWindowConfig()
 	}
 	else {
 		globalStruct.ReadMainWindowConfig();
+	}
+}
+
+void ButtonScanner::read_config_warningManagerConfig()
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+	QString warningManagerFilePathFull = globalPath.configRootPath + "warningManagerConfig.xml";
+	QFileInfo warningManagerFile(warningManagerFilePathFull);
+	globalStruct.warningManagerFilePath = warningManagerFilePathFull;
+	if (!warningManagerFile.exists()) {
+		QDir configDir = QFileInfo(warningManagerFilePathFull).absoluteDir();
+		if (!configDir.exists()) {
+			configDir.mkpath(".");
+		}
+		QFile file(warningManagerFilePathFull);
+		if (file.open(QIODevice::WriteOnly)) {
+			file.close();
+		}
+		else {
+			QMessageBox::critical(this, "Error", "无法创建配置文件warningManagerConfig.xml");
+		}
+		globalStruct.dlgWarningManagerConfig = rw::cdm::ButtonScannerDlgWarningManager();
+		globalStruct.saveWarningManagerConfig();
+		return;
+	}
+	else {
+		globalStruct.ReadWarningManagerConfig();
 	}
 }
 

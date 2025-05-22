@@ -156,6 +156,17 @@ void GlobalStructData::ReadDlgHideScoreSetConfig()
 	}
 }
 
+void GlobalStructData::ReadWarningManagerConfig()
+{
+	auto loadWarningManagerConfig = storeContext->load(warningManagerFilePath.toStdString());
+	if (loadWarningManagerConfig) {
+		dlgWarningManagerConfig = *loadWarningManagerConfig;
+	}
+	else {
+		LOG()  "Load main window config failed.";
+	}
+}
+
 void GlobalStructData::saveConfig()
 {
 	saveMainWindowConfig();
@@ -163,6 +174,7 @@ void GlobalStructData::saveConfig()
 	saveDlgProductSetConfig();
 	saveDlgExposureTimeSetConfig();
 	saveDlgHideScoreSetConfig();
+	saveWarningManagerConfig();
 }
 
 void GlobalStructData::saveMainWindowConfig()
@@ -187,6 +199,11 @@ void GlobalStructData::saveDlgExposureTimeSetConfig()
 void GlobalStructData::saveDlgHideScoreSetConfig()
 {
 	storeContext->save(dlgHideScoreSetConfig, dlgHideScoreSetPath.toStdString());
+}
+
+void GlobalStructData::saveWarningManagerConfig()
+{
+	storeContext->save(dlgWarningManagerConfig, warningManagerFilePath.toStdString());
 }
 
 bool GlobalStructData::isTargetCamera(const QString& cameraIndex, const QString& targetName)

@@ -91,6 +91,7 @@ private:
 	//read_config必须在最前面运行
 	void read_config();
 	void read_config_mainWindowConfig();
+	void read_config_warningManagerConfig();
 	void read_config_produceLineConfig();
 	void read_config_productSetConfig();
 	void read_config_exposureTimeSetConfig();
