@@ -5,6 +5,7 @@ DlgWarningManager::DlgWarningManager(QWidget *parent)
 	, ui(new Ui::DlgWarningManagerClass())
 {
 	ui->setupUi(this);
+	this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 }
 
 DlgWarningManager::~DlgWarningManager()

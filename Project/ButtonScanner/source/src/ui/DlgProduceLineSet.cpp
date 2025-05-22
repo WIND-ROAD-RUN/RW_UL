@@ -34,6 +34,7 @@ void DlgProduceLineSet::build_ui()
 	monitorIoStateThread = new MonitorIOStateThread(this);
 	monitorIoStateThread->setRunning(false);
 	monitorIoStateThread->start();
+	dlgWarningManager = new DlgWarningManager(this);
 	connect(monitorIoStateThread, &MonitorIOStateThread::DIState,
 		this, &DlgProduceLineSet::onDIState);
 	connect(monitorIoStateThread, &MonitorIOStateThread::DOState,
@@ -209,6 +210,9 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::cbox_DI9_checked);
 	QObject::connect(ui->cbox_DI10, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_DI10_checked);
+
+	QObject::connect(ui->pbtn_warnManager, &QPushButton::clicked
+		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 }
 
 float DlgProduceLineSet::get_blowTime()
@@ -903,6 +907,11 @@ void DlgProduceLineSet::onDOState(int index, bool state)
 	else if (index == ControlLines::warnDownLightOut) {
 		ui->cbox_DO9->setChecked(state);
 	}
+}
+
+void DlgProduceLineSet::pbtn_warningManager_clicked()
+{
+	dlgWarningManager->show();
 }
 
 void DlgProduceLineSet::cbox_workstationProtection12_checked(bool ischeck)
