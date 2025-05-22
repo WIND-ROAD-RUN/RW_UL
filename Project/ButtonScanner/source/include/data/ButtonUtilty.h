@@ -14,10 +14,14 @@ struct WarningId
 	static constexpr int ccameraDisconnectAlarm2 = 2;
 	static constexpr int ccameraDisconnectAlarm3 = 3;
 	static constexpr int ccameraDisconnectAlarm4 = 4;
-	static constexpr int clongTermIdleOperationAlarm = 5;
-	static constexpr int cwork1AndWork2EmptyAlarm = 6;
-	static constexpr int cwork2AndWork4EmptyAlarm = 7;
-	static constexpr int csportControlAlarm = 8;
+	static constexpr int cworkTrigger1 = 5;
+	static constexpr int cworkTrigger2 = 6;
+	static constexpr int cworkTrigger3 = 7;
+	static constexpr int cworkTrigger4 = 8;
+	static constexpr int csportControlAlarm = 9;
+	static constexpr int clongTermIdleOperationAlarm = 10;
+	static constexpr int cwork1AndWork2EmptyAlarm = 11;
+	static constexpr int cwork2AndWork4EmptyAlarm = 12;
 };
 
 struct ControlLine

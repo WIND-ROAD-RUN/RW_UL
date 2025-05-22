@@ -151,5 +151,33 @@ namespace rw
 		{
 			return !(*this == account);
 		}
+
+		bool ButtonScannerDlgWarningManager::findIsOpen(int id)
+		{
+			switch (id)
+			{
+			case 0:
+				return airPressure;
+			case 1:
+				return cameraDisconnect1;
+			case 2:
+				return cameraDisconnect2;
+			case 3:
+				return cameraDisconnect3;
+			case 4:
+				return cameraDisconnect4;
+			case 5:
+				return workTrigger1;
+			case 6:
+				return workTrigger2;
+			case 7:
+				return workTrigger3;
+			case 8:
+				return workTrigger4;
+			default:
+				break;
+			}
+			return true;
+		}
 	}
 }

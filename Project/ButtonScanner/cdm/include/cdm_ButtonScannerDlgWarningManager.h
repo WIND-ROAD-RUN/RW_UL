@@ -22,7 +22,8 @@ namespace rw
 			operator rw::oso::ObjectStoreAssembly() const;
 			bool operator==(const ButtonScannerDlgWarningManager& account) const;
 			bool operator!=(const ButtonScannerDlgWarningManager& account) const;
-
+		public:
+			bool findIsOpen(int id);
 		public:
 			bool cameraDisconnect1{true};
 			bool cameraDisconnect2{ true };

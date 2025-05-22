@@ -86,7 +86,7 @@ void DetachUtiltyThread::processWarningInfo(size_t s)
 		isProcessFinish = false;
 		processOneWarnFinsh(warningInfo);
 	}
-	if (s % 5 == 0 && !isProcessing)
+	if (s % 2 == 0 && !isProcessing)
 	{
 		processOneWarnGet(warningInfo);
 	}
@@ -100,10 +100,20 @@ void DetachUtiltyThread::processOneWarnGet(rw::rqw::WarningInfo& info)
 	{
 		return;
 	}
-	info = warningLabel->topWarningListThreadSafe();
 	isProcessing = true;
-	emit showDlgWarn(info);
-	openWarnAlarm(info);;
+	info = warningLabel->topWarningListThreadSafe();
+	auto& config = GlobalStructData::getInstance().dlgWarningManagerConfig;
+	auto isOpenWarn = config.findIsOpen(info.warningId);
+	if (isOpenWarn)
+	{
+		emit showDlgWarn(info);
+		openWarnAlarm(info);;
+	}
+	else
+	{
+		isProcessing = false;
+		warningLabel->popWarningListThreadSafe();
+	}
 }
 
 void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
@@ -116,10 +126,21 @@ void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 	{
 		return;
 	}
-	info = warningLabel->topWarningListThreadSafe();
 	isProcessing = true;
-	emit showDlgWarn(info);
-	openWarnAlarm(info);
+	info = warningLabel->topWarningListThreadSafe();
+	auto& config = GlobalStructData::getInstance().dlgWarningManagerConfig;
+	auto isOpenWarn = config.findIsOpen(info.warningId);
+	if (isOpenWarn)
+	{
+		emit showDlgWarn(info);
+		openWarnAlarm(info);
+	}
+	else
+	{
+		isProcessing = false;
+		warningLabel->popWarningListThreadSafe();
+	}
+
 }
 
 void DetachUtiltyThread::openWarnAlarm(const rw::rqw::WarningInfo& info)
