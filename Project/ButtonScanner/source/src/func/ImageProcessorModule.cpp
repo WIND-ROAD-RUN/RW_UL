@@ -230,7 +230,7 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectI
 	QString largeColorText = QString("large R: %1 G: %2 B: %3").arg(info.large_R, 0, 'f', 2).arg(info.large_G, 0, 'f', 2).arg(info.large_B, 0, 'f', 2);
 	textList.push_back(largeColorText);
 
-	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
+	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList,0.05);
 }
 
 void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info)
@@ -1141,8 +1141,9 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 			}
 			if (productLineSet.takeMaskPictures)
 			{
-				imageInfo.classify = "Mask";
-				globalData.imageSaveEngine->pushImage(imageInfo);
+				rw::rqw::ImageInfo mask(image);
+				mask.classify = "Mask";
+				globalData.imageSaveEngine->pushImage(mask);
 			}
 		}
 		else {
