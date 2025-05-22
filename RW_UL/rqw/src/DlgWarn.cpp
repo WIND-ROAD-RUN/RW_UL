@@ -29,6 +29,21 @@ void DlgWarn::build_connect()
 		this, &DlgWarn::pbtn_ignore_clicked);
 }
 
+void DlgWarn::setTitle(const QString& Tile)
+{
+	ui->label_title->setText(Tile);
+}
+
+void DlgWarn::setText(const QString& text)
+{
+	ui->label_info->setText(text);
+}
+
+void DlgWarn::setTime(const QString& time)
+{
+	ui->label_time->setText(time);
+}
+
 void DlgWarn::pbtn_ignore_clicked()
 {
 	this->hide();

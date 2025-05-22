@@ -16,6 +16,10 @@ public:
 private:
 	void build_ui();
 	void build_connect();
+public:
+	void setTitle(const QString & Tile);
+	void setText(const QString& text);
+	void setTime(const QString& time);
 
 private:
 	Ui::DlgWarnClass *ui;

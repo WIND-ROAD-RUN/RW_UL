@@ -1442,6 +1442,25 @@ void ButtonScanner::checkPosiviveRadioButtonCheck()
 
 void ButtonScanner::showDlgWarn(rw::rqw::WarningInfo info)
 {
+	QString timeStr = info.timestamp.toString("hh时mm分ss秒");
+	dlgWarn->setTime(timeStr);
+	dlgWarn->setText(info.message);
+	switch (info.type)
+	{
+	case rw::rqw::WarningType::Error:
+		dlgWarn->setTitle("错误");
+		break;
+	case rw::rqw::WarningType::Warning:
+		dlgWarn->setTitle("警告");
+		break;
+	case rw::rqw::WarningType::Info:
+		dlgWarn->setTitle("信息");
+		break;
+	default:
+		dlgWarn->setTitle("未知");
+		break;
+	}
+
 	dlgWarn->show();
 }
 
