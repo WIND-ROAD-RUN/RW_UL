@@ -10,6 +10,7 @@
 #include <QWaitCondition>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include<QThread>
 
 struct ButtonDefectInfo
 {

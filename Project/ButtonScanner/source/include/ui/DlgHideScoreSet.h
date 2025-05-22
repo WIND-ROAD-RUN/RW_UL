@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_DlgHideScoreSet.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgHideScoreSetClass; };

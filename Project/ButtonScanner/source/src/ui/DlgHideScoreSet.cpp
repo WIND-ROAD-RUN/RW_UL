@@ -3,6 +3,7 @@
 
 #include "GlobalStruct.h"
 #include"NumberKeyboard.h"
+#include "ui_DlgHideScoreSet.h"
 
 DlgHideScoreSet::DlgHideScoreSet(QWidget* parent)
 	: QDialog(parent)
