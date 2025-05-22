@@ -15,9 +15,13 @@ public:
 	void startThread();
 
 	void stopThread();
+private:
+	unsigned long long olderWasteCount{};
 
 protected:
 	void run() override;
+private:
+	void CalculateRealtimeInformation(int s);
 signals:
 
 	void updateStatisticalInfo();
