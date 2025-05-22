@@ -45,7 +45,7 @@ class GlobalStructThread
 {
 	Q_OBJECT
 public:
-	std::unique_ptr<DetachUtiltyThread> statisticalInfoComputingThread{ nullptr };
+	std::unique_ptr<DetachUtiltyThread> detachUtiltyThread{ nullptr };
 	std::unique_ptr<MonitorCameraAndCardStateThread> monitorCameraAndCardStateThread{ nullptr };
 	std::unique_ptr<AiTrainModule> aiTrainModule{ nullptr };
 public:

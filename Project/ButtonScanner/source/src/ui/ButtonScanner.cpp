@@ -212,7 +212,8 @@ void ButtonScanner::initializeComponents()
 		dlgNewProduction, &DlgNewProduction::updateTrainState, Qt::QueuedConnection);
 	QObject::connect(dlgNewProduction, &DlgNewProduction::cancelTrain,
 		GlobalStructThread::getInstance().aiTrainModule.get(), &AiTrainModule::cancelTrain);
-
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::showDlgWarn,
+		this, &ButtonScanner::showDlgWarn);
 	// 隐藏加载框
 	loadingDialog.close();
 }
@@ -275,6 +276,7 @@ void ButtonScanner::destroyComponents()
 void ButtonScanner::build_ui()
 {
 	label_lightBulb = new QLabel(this);
+	dlgWarn = new DlgWarn(this);
 
 	//Set RadioButton ,make sure these can be checked at the same time
 	read_image();
@@ -1054,9 +1056,9 @@ void ButtonScanner::build_detachThread()
 {
 	auto& globalStruct = GlobalStructThread::getInstance();
 	globalStruct.buildDetachThread();
-	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &DetachUtiltyThread::updateStatisticalInfo,
+	QObject::connect(globalStruct.detachUtiltyThread.get(), &DetachUtiltyThread::updateStatisticalInfo,
 		this, &ButtonScanner::updateStatisticalInfoUI, Qt::QueuedConnection);
-	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &DetachUtiltyThread::addWarningInfo,
+	QObject::connect(globalStruct.detachUtiltyThread.get(), &DetachUtiltyThread::addWarningInfo,
 		this, &ButtonScanner::onAddWarningInfo, Qt::QueuedConnection);
 
 	QObject::connect(globalStruct.monitorCameraAndCardStateThread.get(), &MonitorCameraAndCardStateThread::updateCameraLabelState,
@@ -1065,6 +1067,8 @@ void ButtonScanner::build_detachThread()
 		this, &ButtonScanner::updateCardLabelState, Qt::QueuedConnection);
 	QObject::connect(globalStruct.monitorCameraAndCardStateThread.get(), &MonitorCameraAndCardStateThread::addWarningInfo,
 		this, &ButtonScanner::onAddWarningInfo, Qt::QueuedConnection);
+
+	globalStruct.detachUtiltyThread->warningLabel = labelWarning;
 }
 
 void ButtonScanner::showEvent(QShowEvent* event)
@@ -1434,6 +1438,11 @@ void ButtonScanner::checkPosiviveRadioButtonCheck()
 	globalStruct.mainWindowConfig.isDefect = false;
 	ui->rbtn_ForAndAgainst->setChecked(true);
 	ui->rbtn_defect->setChecked(false);
+}
+
+void ButtonScanner::showDlgWarn(rw::rqw::WarningInfo info)
+{
+	dlgWarn->show();
 }
 
 void ButtonScanner::pbtn_exit_clicked()

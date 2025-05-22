@@ -35,16 +35,20 @@ void DetachUtiltyThread::run()
 	while (running) {
 		QThread::sleep(1);
 		CalculateRealtimeInformation(s);
-		s++;
+		processWarningInfo(s);
+		++s;
+		if (s==60)
+		{
+			s = 0;
+		}
 	}
 }
 
-void DetachUtiltyThread::CalculateRealtimeInformation(int s)
+void DetachUtiltyThread::CalculateRealtimeInformation(size_t s)
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;
-	//每60s计算剔除功能
-	if (s == 30)
+	if (s % 30==0)
 	{
 		auto newWasteCount = statisticalInfo.produceCount.load();
 		long long rate = newWasteCount - olderWasteCount;
@@ -57,7 +61,6 @@ void DetachUtiltyThread::CalculateRealtimeInformation(int s)
 		else {
 			olderWasteCount = newWasteCount;
 		}
-		s = 0;
 	}
 
 	// 计算生产良率
@@ -72,4 +75,19 @@ void DetachUtiltyThread::CalculateRealtimeInformation(int s)
 	}
 
 	emit updateStatisticalInfo();
+}
+
+void DetachUtiltyThread::processWarningInfo(size_t s)
+{
+	if (s%5==0&&!isProcessing)
+	{
+		auto isEmpty = warningLabel->isEmptyWarningListThreadSafe();
+		if (isEmpty)
+		{
+			return;
+		}
+		auto warningInfo = warningLabel->popWarningListThreadSafe();
+		isProcessing = true;
+		emit showDlgWarn(warningInfo);
+	}
 }

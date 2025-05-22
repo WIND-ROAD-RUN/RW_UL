@@ -11,6 +11,7 @@
 #include"rqw_LabelClickable.h"
 #include"rqw_LabelWarning.h"
 #include"PicturesViewer.h"
+#include"DlgWarn.h"
 
 #include"opencv2/opencv.hpp"
 #include<QImage>
@@ -31,6 +32,8 @@ QT_END_NAMESPACE
 class ButtonScanner : public QMainWindow
 {
 	Q_OBJECT
+private:
+	DlgWarn* dlgWarn = nullptr;
 private:
 	QLabel* label_lightBulb;
 private:
@@ -162,4 +165,7 @@ public slots:
 public slots:
 	void updateExposureTimeValueOnDlg(int exposureTime);
 	void checkPosiviveRadioButtonCheck();
+private slots:
+	void showDlgWarn(rw::rqw::WarningInfo info);
+
 };

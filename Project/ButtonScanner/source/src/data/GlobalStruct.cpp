@@ -557,8 +557,8 @@ void GlobalStructData::onStartMonitor4()
 void GlobalStructThread::buildDetachThread()
 {
 	auto& instance = GlobalStructData::getInstance();
-	statisticalInfoComputingThread = std::make_unique<DetachUtiltyThread>(this);
-	statisticalInfoComputingThread->startThread();
+	detachUtiltyThread = std::make_unique<DetachUtiltyThread>(this);
+	detachUtiltyThread->startThread();
 
 	monitorCameraAndCardStateThread = std::make_unique<MonitorCameraAndCardStateThread>(this);
 	QObject::connect(monitorCameraAndCardStateThread.get(), &MonitorCameraAndCardStateThread::buildCamera1,
@@ -593,14 +593,14 @@ void GlobalStructThread::buildDetachThread()
 
 void GlobalStructThread::destroyDetachThread()
 {
-	statisticalInfoComputingThread->stopThread();
+	detachUtiltyThread->stopThread();
 	monitorCameraAndCardStateThread->stopThread();
 
-	statisticalInfoComputingThread->wait();
-	statisticalInfoComputingThread->wait();
+	detachUtiltyThread->wait();
+	detachUtiltyThread->wait();
 
 	monitorCameraAndCardStateThread.reset();
-	statisticalInfoComputingThread.reset();
+	detachUtiltyThread.reset();
 	aiTrainModule.reset();
 }
 
