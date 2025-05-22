@@ -31,6 +31,10 @@ void DetachUtiltyThread::run()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;
+	 lastWork1Count = statisticalInfo.produceCount1.load();
+	 lastWork2Count = statisticalInfo.produceCount2.load();
+	 lastWork3Count = statisticalInfo.produceCount3.load();
+	 lastWork4Count = statisticalInfo.produceCount4.load();
 	olderWasteCount = statisticalInfo.produceCount.load();
 	static size_t s = 0;
 	while (running) {
