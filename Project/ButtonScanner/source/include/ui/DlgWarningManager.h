@@ -14,7 +14,12 @@ class DlgWarningManager : public QDialog
 public:
 	DlgWarningManager(QWidget *parent = nullptr);
 	~DlgWarningManager();
+public:
+	void build_connect();
+	void build_ui();
 
 private:
 	Ui::DlgWarningManagerClass *ui;
+public slots:
+	void pbtn_exit_clicked();
 };

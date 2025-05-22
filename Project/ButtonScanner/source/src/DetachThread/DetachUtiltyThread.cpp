@@ -116,7 +116,7 @@ void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 	{
 		return;
 	}
-	info = warningLabel->popWarningListThreadSafe();
+	info = warningLabel->topWarningListThreadSafe();
 	isProcessing = true;
 	emit showDlgWarn(info);
 	openWarnAlarm(info);
