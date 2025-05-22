@@ -46,6 +46,8 @@ signals:
 	void addWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
 signals:
 	void showDlgWarn(rw::rqw::WarningInfo info);
+signals:
+	void workTriggerError(int index);
 
 private:
 	std::atomic<bool> running; // 使用原子变量保证线程安全

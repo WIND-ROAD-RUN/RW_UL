@@ -185,35 +185,19 @@ void DetachUtiltyThread::processTrigger(size_t s)
 
 			if (newWork1Count== lastWork1Count)
 			{
-				rw::rqw::WarningInfo info;
-				info.message = "一工位运行中长时间无触发";
-				info.type = rw::rqw::WarningType::Warning;
-				info.warningId = WarningId::cworkTrigger1;
-				warningLabel->addWarning(info);
+				emit workTriggerError(1);
 			}
 			if (newWork2Count == lastWork2Count)
 			{
-				rw::rqw::WarningInfo info;
-				info.message = "二工位运行中长时间无触发";
-				info.type = rw::rqw::WarningType::Warning;
-				info.warningId = WarningId::cworkTrigger2;
-				warningLabel->addWarning(info);
+				emit workTriggerError(2);
 			}
 			if (newWork3Count == lastWork3Count)
 			{
-				rw::rqw::WarningInfo info;
-				info.message = "三工位运行中长时间无触发";
-				info.type = rw::rqw::WarningType::Warning;
-				info.warningId = WarningId::cworkTrigger3;
-				warningLabel->addWarning(info);
+				emit workTriggerError(3);
 			}
 			if (newWork4Count == lastWork4Count)
 			{
-				rw::rqw::WarningInfo info;
-				info.message = "四工位运行中长时间无触发";
-				info.type = rw::rqw::WarningType::Warning;
-				info.warningId = WarningId::cworkTrigger4;
-				warningLabel->addWarning(info);
+				emit workTriggerError(4);
 			}
 
 

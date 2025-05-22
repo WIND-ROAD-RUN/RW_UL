@@ -170,5 +170,6 @@ private slots:
 	void showDlgWarn(rw::rqw::WarningInfo info);
 public slots:
 	void dlgWarningAccept();
-
+public slots:
+	void workTriggerError(int index);
 };

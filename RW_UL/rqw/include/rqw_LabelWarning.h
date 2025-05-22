@@ -39,8 +39,8 @@ namespace rw
 			// 设置灰色状态持续时间
 			void setGrayDuration(int duration);
 		public:
-			void addWarning(const WarningInfo& message, int redDuration = 5000);
-			void addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration = 5000);
+			void addWarning(const WarningInfo& message, int redDuration);
+			void addWarning(const WarningInfo& message, bool updateTimestampIfSame=true, int redDuration = 5000,int time=5000);
 		public:
 			// warningList
 			void pushWarningList(const WarningInfo& info);

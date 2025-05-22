@@ -84,6 +84,8 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_minBrightness->setVisible(false);
 	ui->label_lightRange->setVisible(false);
 	ui->label_lightRange1->setVisible(false);
+	ui->cbox_workstationProtection12->setVisible(false);
+	ui->cbox_workstationProtection34->setVisible(false);
 	//Deprecated widget
 }
 

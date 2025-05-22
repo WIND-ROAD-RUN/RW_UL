@@ -213,7 +213,9 @@ void ButtonScanner::initializeComponents()
 	QObject::connect(dlgNewProduction, &DlgNewProduction::cancelTrain,
 		GlobalStructThread::getInstance().aiTrainModule.get(), &AiTrainModule::cancelTrain);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::showDlgWarn,
-		this, &ButtonScanner::showDlgWarn);
+		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
+		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
 	// 隐藏加载框
 	loadingDialog.close();
 }
@@ -239,6 +241,7 @@ void ButtonScanner::destroyComponents()
 	loadingDialog.updateMessage("正在停止所有轴...");
 	QCoreApplication::processEvents();
 	stop_all_axis();
+
 
 	// 销毁相机
 	loadingDialog.updateMessage("正在销毁相机...");
@@ -358,9 +361,9 @@ void ButtonScanner::stop_all_axis()
 {
 	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motionPtr->StopAllAxis();
-	motionPtr->SetIOOut(1, false);
-
-	motionPtr->SetIOOut(7, false);
+	motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+	motionPtr->SetIOOut(ControlLines::warnRedOut, false);
+	motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 }
 
 void ButtonScanner::build_dlgNewProduction()
@@ -1491,9 +1494,54 @@ void ButtonScanner::showDlgWarn(rw::rqw::WarningInfo info)
 
 void ButtonScanner::dlgWarningAccept()
 {
-	auto &thread = GlobalStructThread::getInstance().detachUtiltyThread;
-	thread ->isProcessing = false;
+	auto& thread = GlobalStructThread::getInstance().detachUtiltyThread;
+	thread->isProcessing = false;
 	thread->isProcessFinish = true;
+}
+
+void ButtonScanner::workTriggerError(int index)
+{
+	if (index == 1)
+	{
+
+		rw::rqw::WarningInfo info;
+		info.message = "一工位运行中长时间无触发";
+		info.type = rw::rqw::WarningType::Warning;
+		info.warningId = WarningId::cworkTrigger1;
+		labelWarning->addWarning(info);
+
+	}
+	if (index == 2)
+	{
+
+		rw::rqw::WarningInfo info;
+		info.message = "二工位运行中长时间无触发";
+		info.type = rw::rqw::WarningType::Warning;
+		info.warningId = WarningId::cworkTrigger2;
+		labelWarning->addWarning(info);
+
+	}
+	if (index == 3)
+	{
+
+		rw::rqw::WarningInfo info;
+		info.message = "三工位运行中长时间无触发";
+		info.type = rw::rqw::WarningType::Warning;
+		info.warningId = WarningId::cworkTrigger3;
+		labelWarning->addWarning(info);
+
+	}
+	if (index == 4)
+	{
+
+		rw::rqw::WarningInfo info;
+		info.message = "四工位运行中长时间无触发";
+		info.type = rw::rqw::WarningType::Warning;
+		info.warningId = WarningId::cworkTrigger4;
+		labelWarning->addWarning(info);
+
+	}
+
 }
 
 void ButtonScanner::pbtn_exit_clicked()

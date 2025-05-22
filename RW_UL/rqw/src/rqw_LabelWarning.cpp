@@ -55,24 +55,33 @@ namespace rw
 			pushWarningList(message);
 		}
 
-		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration)
+		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration, int time)
 		{
-			// 如果启用了更新时间戳的功能，并且当前警告信息与上一次相同
-			if (updateTimestampIfSame && !_history.empty() && _history.back().message == message.message) {
-				// 更新最后一条警告信息的时间戳
-				_history.back().timestamp = QDateTime::currentDateTime();
+			if (updateTimestampIfSame && !_history.empty()) {
+				// 查找5秒内相同warningId的警告
+				QDateTime now = QDateTime::currentDateTime();
+				for (auto it = _history.rbegin(); it != _history.rend(); ++it) {
+					if (it->warningId == message.warningId) {
+						qint64 msecsDiff = it->timestamp.msecsTo(now);
+						if (msecsDiff >= 0 && msecsDiff <= time) {
+							// 找到5秒内相同id的警告，更新其时间戳
+							it->timestamp = now;
+							// 更新当前警告信息
+							_currentMessage = message;
+							this->setText(_currentMessage.message);
 
-				// 更新当前警告信息
-				_currentMessage = message;
-				this->setText(_currentMessage.message);
+							// 重置红色到灰色的定时器
+							_timerToGray->start(redDuration);
 
-				// 重置红色到灰色的定时器
-				_timerToGray->start(redDuration);
+							// 停止灰色到黑色的定时器（如果正在运行）
+							_timerToBlack->stop();
 
-				// 停止灰色到黑色的定时器（如果正在运行）
-				_timerToBlack->stop();
-
-				return;
+							return;
+						}
+						// 如果找到id但超时，直接break
+						break;
+					}
+				}
 			}
 
 			// 如果信息不同或未启用时间戳更新功能，按正常逻辑添加警告信息
