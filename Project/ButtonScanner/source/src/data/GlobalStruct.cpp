@@ -557,7 +557,7 @@ void GlobalStructData::onStartMonitor4()
 void GlobalStructThread::buildDetachThread()
 {
 	auto& instance = GlobalStructData::getInstance();
-	statisticalInfoComputingThread = std::make_unique<StatisticalInfoComputingThread>(this);
+	statisticalInfoComputingThread = std::make_unique<DetachUtiltyThread>(this);
 	statisticalInfoComputingThread->startThread();
 
 	monitorCameraAndCardStateThread = std::make_unique<MonitorCameraAndCardStateThread>(this);

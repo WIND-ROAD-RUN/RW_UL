@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include"StatisticalInfoComputingThread.h"
+#include"DetachUtiltyThread.h"
 
 #include"GlobalStruct.h"
 
-StatisticalInfoComputingThread::StatisticalInfoComputingThread(QObject* parent)
+DetachUtiltyThread::DetachUtiltyThread(QObject* parent)
 	: QThread(parent), running(false) {
 }
 
-StatisticalInfoComputingThread::~StatisticalInfoComputingThread()
+DetachUtiltyThread::~DetachUtiltyThread()
 {
 	stopThread();
 	wait(); // 等待线程安全退出
 }
 
-void StatisticalInfoComputingThread::startThread()
+void DetachUtiltyThread::startThread()
 {
 	running = true;
 	if (!isRunning()) {
@@ -21,12 +21,12 @@ void StatisticalInfoComputingThread::startThread()
 	}
 }
 
-void StatisticalInfoComputingThread::stopThread()
+void DetachUtiltyThread::stopThread()
 {
 	running = false; // 停止线程
 }
 
-void StatisticalInfoComputingThread::run()
+void DetachUtiltyThread::run()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;

@@ -1048,9 +1048,9 @@ void ButtonScanner::build_detachThread()
 {
 	auto& globalStruct = GlobalStructThread::getInstance();
 	globalStruct.buildDetachThread();
-	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &StatisticalInfoComputingThread::updateStatisticalInfo,
+	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &DetachUtiltyThread::updateStatisticalInfo,
 		this, &ButtonScanner::updateStatisticalInfoUI, Qt::QueuedConnection);
-	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &StatisticalInfoComputingThread::addWarningInfo,
+	QObject::connect(globalStruct.statisticalInfoComputingThread.get(), &DetachUtiltyThread::addWarningInfo,
 		this, &ButtonScanner::onAddWarningInfo, Qt::QueuedConnection);
 
 	QObject::connect(globalStruct.monitorCameraAndCardStateThread.get(), &MonitorCameraAndCardStateThread::updateCameraLabelState,

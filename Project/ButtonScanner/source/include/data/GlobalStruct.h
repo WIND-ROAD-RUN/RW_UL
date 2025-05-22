@@ -16,7 +16,7 @@
 #include"dsl_PriorityQueue.hpp"
 #include"oso_StorageContext.hpp"
 #include"rqw_ImageSaveEngine.h"
-#include"StatisticalInfoComputingThread.h"
+#include"DetachUtiltyThread.h"
 #include"MonitorCameraAndCardStateThread.h"
 #include"dsl_ThreadSafeMinHeap.h"
 #include"AiTrainModule.h"
@@ -45,7 +45,7 @@ class GlobalStructThread
 {
 	Q_OBJECT
 public:
-	std::unique_ptr<StatisticalInfoComputingThread> statisticalInfoComputingThread{ nullptr };
+	std::unique_ptr<DetachUtiltyThread> statisticalInfoComputingThread{ nullptr };
 	std::unique_ptr<MonitorCameraAndCardStateThread> monitorCameraAndCardStateThread{ nullptr };
 	std::unique_ptr<AiTrainModule> aiTrainModule{ nullptr };
 public:
