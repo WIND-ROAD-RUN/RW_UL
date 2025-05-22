@@ -1326,6 +1326,23 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	if (imageProcessingModuleIndex == 2 || imageProcessingModuleIndex == 4) {
 		++globalStruct.statisticalInfo.produceCount;
 	}
+	if (imageProcessingModuleIndex==1)
+	{
+		++globalStruct.statisticalInfo.produceCount1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		++globalStruct.statisticalInfo.produceCount2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		++globalStruct.statisticalInfo.produceCount3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		++globalStruct.statisticalInfo.produceCount4;
+	}
+
 
 	if (_isbad) {
 		float absLocation = frame.location;

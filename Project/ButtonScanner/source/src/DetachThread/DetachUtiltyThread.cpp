@@ -37,8 +37,9 @@ void DetachUtiltyThread::run()
 		QThread::sleep(1);
 		CalculateRealtimeInformation(s);
 		processWarningInfo(s);
+		processTrigger(s);
 		++s;
-		if (s==60)
+		if (s==300)
 		{
 			s = 0;
 		}
@@ -155,4 +156,71 @@ void DetachUtiltyThread::closeWarnAlarm(const rw::rqw::WarningInfo& info)
 	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motion->SetIOOut(ControlLines::warnRedOut, false);
 	motion->SetIOOut(ControlLines::warnGreenOut, true);
+}
+
+void DetachUtiltyThread::processTrigger(size_t s)
+{
+	if (s%180==0)
+	{
+		auto& globalStruct = GlobalStructData::getInstance();
+		auto& statisticalInfo = globalStruct.statisticalInfo;
+		auto& runningState = globalStruct.runningState;
+		bool isRun = runningState.load() == RunningState::OpenRemoveFunc;
+
+		if (isRun)
+		{
+			if (isStopOnce)
+			{
+				isStopOnce = false;
+				return;
+			}
+			auto newWork1Count = statisticalInfo.produceCount1.load();
+			auto newWork2Count = statisticalInfo.produceCount2.load();
+			auto newWork3Count = statisticalInfo.produceCount3.load();
+			auto newWork4Count = statisticalInfo.produceCount4.load();
+
+			if (newWork1Count== lastWork1Count)
+			{
+				rw::rqw::WarningInfo info;
+				info.message = "一工位运行中长时间无触发";
+				info.type = rw::rqw::WarningType::Warning;
+				info.warningId = WarningId::cworkTrigger1;
+				warningLabel->addWarning(info);
+			}
+			if (newWork2Count == lastWork2Count)
+			{
+				rw::rqw::WarningInfo info;
+				info.message = "二工位运行中长时间无触发";
+				info.type = rw::rqw::WarningType::Warning;
+				info.warningId = WarningId::cworkTrigger2;
+				warningLabel->addWarning(info);
+			}
+			if (newWork3Count == lastWork3Count)
+			{
+				rw::rqw::WarningInfo info;
+				info.message = "三工位运行中长时间无触发";
+				info.type = rw::rqw::WarningType::Warning;
+				info.warningId = WarningId::cworkTrigger3;
+				warningLabel->addWarning(info);
+			}
+			if (newWork4Count == lastWork4Count)
+			{
+				rw::rqw::WarningInfo info;
+				info.message = "四工位运行中长时间无触发";
+				info.type = rw::rqw::WarningType::Warning;
+				info.warningId = WarningId::cworkTrigger4;
+				warningLabel->addWarning(info);
+			}
+
+
+			lastWork1Count = newWork1Count;
+			lastWork2Count = newWork2Count;
+			lastWork3Count = newWork3Count;
+			lastWork4Count = newWork4Count;
+		}
+		else
+		{
+			isStopOnce = true;
+		}
+	}
 }

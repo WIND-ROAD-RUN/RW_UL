@@ -82,6 +82,10 @@ public:
 		std::atomic_uint64_t wasteCount{ 0 };
 		std::atomic<double> productionYield{ 0 };
 		std::atomic<double> removeRate{ 0 };
+		std::atomic_uint64_t produceCount1{ 0 };
+		std::atomic_uint64_t produceCount2{ 0 };
+		std::atomic_uint64_t produceCount3{ 0 };
+		std::atomic_uint64_t produceCount4{ 0 };
 	} statisticalInfo;
 public:
 	ButtonScanner* mainWindow;

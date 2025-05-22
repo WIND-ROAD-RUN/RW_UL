@@ -18,6 +18,12 @@ public:
 	void startThread();
 
 	void stopThread();
+private:
+	unsigned long long lastWork1Count{ 0 };
+	unsigned long long lastWork2Count{ 0 };
+	unsigned long long lastWork3Count{ 0 };
+	unsigned long long lastWork4Count{ 0 };
+	bool isStopOnce{false};
 public:
 	rw::rqw::LabelWarning* warningLabel{nullptr};
 private:
@@ -27,11 +33,14 @@ protected:
 	void run() override;
 private:
 	void CalculateRealtimeInformation(size_t s);
+private:
 	void processWarningInfo(size_t s);
 	void processOneWarnGet(rw::rqw::WarningInfo & info);
 	void processOneWarnFinsh(rw::rqw::WarningInfo& info);
 	void openWarnAlarm(const rw::rqw::WarningInfo& info);
 	void closeWarnAlarm(const rw::rqw::WarningInfo& info);
+private:
+	void processTrigger(size_t s);
 signals:
 	void updateStatisticalInfo();
 	void addWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
