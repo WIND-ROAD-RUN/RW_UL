@@ -9,7 +9,6 @@ namespace rw
 			// 初始化样式
 			this->setStyleSheet(QString("QLabel { color: %1; }").arg(_warningColor));
 			this->warningInfoList = new WarningInfoList(this);
-			_dlgWarn = new DlgWarn(this);
 		}
 
 		void LabelWarning::build_connect()
@@ -57,8 +56,6 @@ namespace rw
 
 			// 停止灰色到黑色的定时器（如果正在运行）
 			_timerToBlack->stop();
-
-			_dlgWarn->show();
 		}
 
 		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration)

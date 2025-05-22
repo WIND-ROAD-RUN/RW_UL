@@ -1,12 +1,9 @@
 #pragma once
 
-#include <QLabel>
 #include <QTimer>
-#include <QDateTime>
 #include <deque>
 #include "rqw_LabelClickable.h"
 #include "WarningInfoList.h"
-#include"DlgWarn.h"
 #include"WarnUtilty.hpp"
 
 namespace rw
@@ -16,8 +13,6 @@ namespace rw
 		class LabelWarning : public ClickableLabel
 		{
 			Q_OBJECT
-		private:
-			DlgWarn* _dlgWarn; 
 		private:
 			WarningInfoList* warningInfoList;
 
