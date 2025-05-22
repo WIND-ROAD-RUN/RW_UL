@@ -4,7 +4,6 @@
 #include <QDebug>
 #include <atomic>
 
-//#include"imeot_ModelEngineOT.h"
 #include"ime_ModelEngineFactory.h"
 #include "ImageProcessorModule.h"
 
