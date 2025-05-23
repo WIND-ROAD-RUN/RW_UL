@@ -1158,6 +1158,9 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 	case 2:
 		ui->rbtn_sideLight->setChecked(state);
 		break;
+	case 3:
+		ui->rbtn_strobe->setChecked(state);
+		break;
 	default:
 		break;
 	}

@@ -471,6 +471,12 @@ void GlobalStructData::setSideLight(bool state)
 	emit updateLightState(2, state);
 }
 
+void GlobalStructData::setStrobeLight(bool state)
+{
+	mainWindowConfig.strobeLight = state;
+	emit updateLightState(3, state);
+}
+
 void GlobalStructData::onBuildCamera1()
 {
 	buildCamera1();

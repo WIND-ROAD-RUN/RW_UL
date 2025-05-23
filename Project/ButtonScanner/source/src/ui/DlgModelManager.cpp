@@ -219,6 +219,16 @@ void DlgModelManager::pbtn_loadModel_clicked()
 		globalStruct.setSideLight(false);
 	}
 
+	if (config.strobeLight)
+	{
+		globalStruct.setStrobeLight(true);
+	}
+	else
+	{
+		globalStruct.setStrobeLight(false);
+	}
+
+
 	copyTargetImageFromStorageInTemp();
 	_loadingDialog->hide();
 	emit checkPosiviveRadioButtonCheck();
@@ -424,7 +434,7 @@ void DlgModelManager::flashModelInfoTable(size_t index)
 	_ModelInfoModel->clear();
 	// 原始的列标题
 	QStringList originalHeaders = QStringList() << "模型名称:" << "ID:" << "模型类型:" << "上光源:"
-		<< "侧光源:" << "下光源:" << "曝光:"
+		<< "侧光源:" << "下光源:"<<"爆闪:" << "曝光:"
 		<< "增益:" << "模型根路径:" << "训练日期:";
 
 	// 设置旋转后的行标题（原始列标题变为行标题）
@@ -466,21 +476,25 @@ void DlgModelManager::flashModelInfoTable(size_t index)
 	downLightItem->setText(aiModelConfig.downLight ? "开启" : "关闭");
 	_ModelInfoModel->setItem(5, 0, downLightItem);
 
+	QStandardItem* strobeLightItem = new QStandardItem();
+	strobeLightItem->setText(aiModelConfig.strobeLight ? "开启" : "关闭");
+	_ModelInfoModel->setItem(6, 0, strobeLightItem);
+
 	QStandardItem* exposureItem = new QStandardItem();
 	exposureItem->setText(QString::number(aiModelConfig.exposureTime));
-	_ModelInfoModel->setItem(6, 0, exposureItem);
+	_ModelInfoModel->setItem(7, 0, exposureItem);
 
 	QStandardItem* gainItem = new QStandardItem();
 	gainItem->setText(QString::number(aiModelConfig.gain));
-	_ModelInfoModel->setItem(7, 0, gainItem);
+	_ModelInfoModel->setItem(8, 0, gainItem);
 
 	QStandardItem* rootPathItem = new QStandardItem();
 	rootPathItem->setText(QString::fromStdString(aiModelConfig.rootPath));
-	_ModelInfoModel->setItem(8, 0, rootPathItem);
+	_ModelInfoModel->setItem(9, 0, rootPathItem);
 
 	QStandardItem* dateItem = new QStandardItem();
 	dateItem->setText(formatDateString(aiModelConfig.date));
-	_ModelInfoModel->setItem(9, 0, dateItem);
+	_ModelInfoModel->setItem(10, 0, dateItem);
 
 	ui->tableView_modelInfo->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 	ui->tableView_modelInfo->horizontalHeader()->hide();

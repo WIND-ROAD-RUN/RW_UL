@@ -44,6 +44,8 @@ namespace rw
 			size_t exposureTime{ 100 };
 			size_t gain{ 2 };
 		public:
+			bool strobeLight{ false };
+		public:
 			std::string rootPath{};//模型数据相关根路径
 			std::string name{};//模型名称
 		public:

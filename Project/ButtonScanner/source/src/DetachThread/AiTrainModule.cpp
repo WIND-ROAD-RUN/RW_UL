@@ -103,6 +103,7 @@ void AiTrainModule::iniConfig()
 	config.upLight = global.mainWindowConfig.upLight;
 	config.downLight = global.mainWindowConfig.downLight;
 	config.exposureTime = global.dlgExposureTimeSetConfig.expousureTime;
+	config.strobeLight = global.mainWindowConfig.strobeLight;
 	if (config.exposureTime <= 200)
 	{
 		config.gain = 0;

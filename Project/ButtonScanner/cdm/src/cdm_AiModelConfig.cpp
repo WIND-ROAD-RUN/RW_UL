@@ -67,6 +67,13 @@ namespace rw
 				throw std::runtime_error("$variable$sideLight is not found");
 			}
 			sideLight = sideLightItem->getValueAsBool();
+
+			auto strobeLightItem = oso::ObjectStoreCoreToItem(assembly.getItem("$variable$strobeLight$"));
+			if (!strobeLightItem) {
+				throw std::runtime_error("$variable$sideLight is not found");
+			}
+			strobeLight = strobeLightItem->getValueAsBool();
+
 			auto exposureTimeItem = oso::ObjectStoreCoreToItem(assembly.getItem("$variable$exposureTime$"));
 			if (!exposureTimeItem) {
 				throw std::runtime_error("$variable$exposureTime is not found");
@@ -109,6 +116,7 @@ namespace rw
 			rootPath = buttonScannerMainWindow.rootPath;
 			name = buttonScannerMainWindow.name;
 			id = buttonScannerMainWindow.id;
+			strobeLight = buttonScannerMainWindow.strobeLight;
 		}
 
 		AiModelConfig& AiModelConfig::operator=(const AiModelConfig& buttonScannerMainWindow)
@@ -124,6 +132,7 @@ namespace rw
 				rootPath = buttonScannerMainWindow.rootPath;
 				name = buttonScannerMainWindow.name;
 				id = buttonScannerMainWindow.id;
+				strobeLight = buttonScannerMainWindow.strobeLight;
 			}
 			return *this;
 		}
@@ -158,6 +167,11 @@ namespace rw
 			sideLightItem->setValueFromBool(sideLight);
 			assembly.addItem(sideLightItem);
 
+			auto strobeLightItem = std::make_shared<oso::ObjectStoreItem>();
+			strobeLightItem->setName("$variable$strobeLight$");
+			strobeLightItem->setValueFromBool(strobeLight);
+			assembly.addItem(strobeLightItem);
+	
 			auto exposureTimeItem = std::make_shared<oso::ObjectStoreItem>();
 			exposureTimeItem->setName("$variable$exposureTime$");
 			exposureTimeItem->setValueFromInt(static_cast<int>(exposureTime));
@@ -197,7 +211,8 @@ namespace rw
 				gain == account.gain &&
 				rootPath == account.rootPath &&
 				name == account.name &&
-				id == account.id;
+				id == account.id&&
+				strobeLight==account.strobeLight;
 		}
 
 		bool AiModelConfig::operator!=(const AiModelConfig& account) const

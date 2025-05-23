@@ -202,6 +202,7 @@ public:
 	void setUpLight(bool state);
 	void setDownLight(bool state);
 	void setSideLight(bool state);
+	void setStrobeLight(bool state);
 public slots:
 	void onBuildCamera1();
 	void onBuildCamera2();
