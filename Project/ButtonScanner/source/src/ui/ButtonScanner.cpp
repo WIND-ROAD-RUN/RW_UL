@@ -1062,24 +1062,24 @@ void ButtonScanner::build_ioThread()
 				}
 
 				if (globalStruct.mainWindowConfig.upLight) {
-					motionPtr->SetIOOut(ControlLines::warnUpLightOut, true);
+					motionPtr->SetIOOut(ControlLines::upLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(ControlLines::warnUpLightOut, false);
+					motionPtr->SetIOOut(ControlLines::upLightOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.downLight) {
-					motionPtr->SetIOOut(ControlLines::warnDownLightOut, true);
+					motionPtr->SetIOOut(ControlLines::downLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(ControlLines::warnDownLightOut, false);
+					motionPtr->SetIOOut(ControlLines::downLightOut, false);
 				}
 
 				if (globalStruct.mainWindowConfig.sideLight) {
-					motionPtr->SetIOOut(ControlLines::warnSideLightOut, true);
+					motionPtr->SetIOOut(ControlLines::sideLightOut, true);
 				}
 				else {
-					motionPtr->SetIOOut(ControlLines::warnSideLightOut, false);
+					motionPtr->SetIOOut(ControlLines::sideLightOut, false);
 				}
 			}
 

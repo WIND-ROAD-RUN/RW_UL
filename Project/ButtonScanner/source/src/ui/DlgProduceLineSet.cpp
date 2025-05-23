@@ -185,8 +185,8 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::cbox_DO8_checked);
 	QObject::connect(ui->cbox_DO9, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_DO9_checked);
-	QObject::connect(ui->cbox_DO10, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO10_checked);
+	QObject::connect(ui->cbox_DO11, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DO11_checked);
 	QObject::connect(ui->cbox_beltControl, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_beltControl);
 
@@ -687,7 +687,7 @@ void DlgProduceLineSet::cbox_DO7_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::warnUpLightOut, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::upLightOut, ischeck);
 }
 
 void DlgProduceLineSet::cbox_DO1_checked(bool ischeck)
@@ -750,7 +750,7 @@ void DlgProduceLineSet::cbox_DO8_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::warnSideLightOut, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::sideLightOut, ischeck);
 }
 
 void DlgProduceLineSet::cbox_DO9_checked(bool ischeck)
@@ -759,15 +759,17 @@ void DlgProduceLineSet::cbox_DO9_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::warnDownLightOut, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::downLightOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO10_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DO11_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
 		return;
 	}
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::strobeLightOut, ischeck);
+
 }
 
 void DlgProduceLineSet::cbox_beltControl(bool ischeck)
@@ -785,8 +787,6 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 		zwy::scc::GlobalMotion::getInstance().motionPtr.get()->StopAllAxis();
 
 	}
-
-	
 }
 
 void DlgProduceLineSet::cbox_DI0_checked(bool ischeck)
@@ -900,14 +900,17 @@ void DlgProduceLineSet::onDOState(int index, bool state)
 	else if (index == ControlLines::warnRedOut) {
 		ui->cbox_DO6->setChecked(state);
 	}
-	else if (index == ControlLines::warnUpLightOut) {
+	else if (index == ControlLines::upLightOut) {
 		ui->cbox_DO7->setChecked(state);
 	}
-	else if (index == ControlLines::warnSideLightOut) {
+	else if (index == ControlLines::sideLightOut) {
 		ui->cbox_DO8->setChecked(state);
 	}
-	else if (index == ControlLines::warnDownLightOut) {
+	else if (index == ControlLines::downLightOut) {
 		ui->cbox_DO9->setChecked(state);
+	}
+	else if (index == ControlLines::strobeLightOut) {
+		ui->cbox_DO11->setChecked(state);
 	}
 }
 

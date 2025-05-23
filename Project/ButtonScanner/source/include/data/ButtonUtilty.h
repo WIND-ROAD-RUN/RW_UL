@@ -56,9 +56,10 @@ public:
 	static constexpr int beltAsis = 0;
 	static constexpr int warnGreenOut = 7;
 	static constexpr int warnRedOut = 8;
-	static constexpr int warnUpLightOut = 9;
-	static constexpr int warnSideLightOut = 0;
-	static constexpr int warnDownLightOut = 10 ;
+	static constexpr int upLightOut = 9;
+	static constexpr int sideLightOut = 0;
+	static constexpr int downLightOut = 10 ;
+	static constexpr int strobeLightOut = 11;
 };
 
 struct ClassId

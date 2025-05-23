@@ -82,7 +82,7 @@ private slots:
 	void cbox_DO7_checked(bool ischeck);
 	void cbox_DO8_checked(bool ischeck);
 	void cbox_DO9_checked(bool ischeck);
-	void cbox_DO10_checked(bool ischeck);
+	void cbox_DO11_checked(bool ischeck);
 	void cbox_beltControl(bool ischeck);
 private slots:
 	void cbox_DI0_checked(bool ischeck);

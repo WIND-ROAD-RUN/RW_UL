@@ -70,7 +70,8 @@ void MonitorIOStateThread::monitorDOState()
     emit DOState(ControlLines::beltAsis, motionPtr->GetIOOut(ControlLines::beltAsis));
     emit DOState(ControlLines::warnGreenOut, motionPtr->GetIOOut(ControlLines::warnGreenOut));
     emit DOState(ControlLines::warnRedOut, motionPtr->GetIOOut(ControlLines::warnRedOut));
-    emit DOState(ControlLines::warnUpLightOut, motionPtr->GetIOOut(ControlLines::warnUpLightOut));
-    emit DOState(ControlLines::warnSideLightOut, motionPtr->GetIOOut(ControlLines::warnSideLightOut));
-    emit DOState(ControlLines::warnDownLightOut, motionPtr->GetIOOut(ControlLines::warnDownLightOut));
+    emit DOState(ControlLines::upLightOut, motionPtr->GetIOOut(ControlLines::upLightOut));
+    emit DOState(ControlLines::sideLightOut, motionPtr->GetIOOut(ControlLines::sideLightOut));
+    emit DOState(ControlLines::downLightOut, motionPtr->GetIOOut(ControlLines::downLightOut));
+    emit DOState(ControlLines::strobeLightOut, motionPtr->GetIOOut(ControlLines::strobeLightOut));
 }
