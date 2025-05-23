@@ -72,25 +72,25 @@ void ButtonScanner::resizeEvent(QResizeEvent* event)
 	updateExposureTimeTrigger();
 	QMainWindow::resizeEvent(event);
 
-	// 获取 gBoix_ImageDisplay 的中心点
-	int displayX = ui->gBoix_ImageDisplay->x();
-	int displayY = ui->gBoix_ImageDisplay->y();
-	int displayWidth = ui->gBoix_ImageDisplay->width();
-	int displayHeight = ui->gBoix_ImageDisplay->height();
+	//// 获取 gBoix_ImageDisplay 的中心点
+	//int displayX = ui->gBoix_ImageDisplay->x();
+	//int displayY = ui->gBoix_ImageDisplay->y();
+	//int displayWidth = ui->gBoix_ImageDisplay->width();
+	//int displayHeight = ui->gBoix_ImageDisplay->height();
 
-	int centerX = displayX + displayWidth / 2;
-	int centerY = displayY + displayHeight / 2;
+	//int centerX = displayX + displayWidth / 2;
+	//int centerY = displayY + displayHeight / 2;
 
-	// 获取 label_lightBulb 的宽度和高度
-	int bulbWidth = label_lightBulb->width();
-	int bulbHeight = label_lightBulb->height();
+	//// 获取 label_lightBulb 的宽度和高度
+	//int bulbWidth = label_lightBulb->width();
+	//int bulbHeight = label_lightBulb->height();
 
-	// 计算 label_lightBulb 的新位置，使其中心对齐
-	int newX = centerX - bulbWidth / 2;
-	int newY = centerY - bulbHeight / 2;
+	//// 计算 label_lightBulb 的新位置，使其中心对齐
+	//int newX = centerX - bulbWidth / 2;
+	//int newY = centerY - bulbHeight / 2;
 
-	// 设置 label_lightBulb 的位置
-	label_lightBulb->setGeometry(newX, newY, bulbWidth, bulbHeight);
+	//// 设置 label_lightBulb 的位置
+	//label_lightBulb->setGeometry(newX, newY, bulbWidth, bulbHeight);
 }
 
 ButtonScanner::ButtonScanner(QWidget* parent)
