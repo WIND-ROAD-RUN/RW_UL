@@ -217,6 +217,16 @@ void ButtonScanner::initializeComponents()
 		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
+
+	auto mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
+
+	//初始化光源
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::upLightOut, mainWindowConfig.upLight);
+	motionPtr->SetIOOut(ControlLines::downLightOut, mainWindowConfig.downLight);
+	motionPtr->SetIOOut(ControlLines::sideLightOut, mainWindowConfig.sideLight);
+	motionPtr->SetIOOut(ControlLines::strobeLightOut, mainWindowConfig.strobeLight);
+
 	// 隐藏加载框
 	loadingDialog.close();
 }
