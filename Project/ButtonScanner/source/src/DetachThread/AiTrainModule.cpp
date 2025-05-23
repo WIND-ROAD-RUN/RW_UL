@@ -84,6 +84,35 @@ void AiTrainModule::startTrain()
 	start();
 }
 
+void AiTrainModule::iniConfig()
+{
+	auto& global = GlobalStructData::getInstance();
+	if (_modelType == ModelType::BladeShape)
+	{
+		config.modelType = rw::cdm::ModelType::BladeShape;
+	}
+	else if (_modelType == ModelType::Color)
+	{
+		config.modelType = rw::cdm::ModelType::Color;
+	}
+	else
+	{
+		config.modelType = rw::cdm::ModelType::Undefined;
+	}
+	config.sideLight = global.mainWindowConfig.sideLight;
+	config.upLight = global.mainWindowConfig.upLight;
+	config.downLight = global.mainWindowConfig.downLight;
+	config.exposureTime = global.dlgExposureTimeSetConfig.expousureTime;
+	if (config.exposureTime <= 200)
+	{
+		config.gain = 0;
+	}
+	else
+	{
+		config.gain = 5;
+	}
+}
+
 QVector<AiTrainModule::DataItem> AiTrainModule::getDataSet(const QVector<labelAndImg>& annotationDataSet, int classId)
 {
 	QVector<AiTrainModule::DataItem> result;
@@ -446,11 +475,10 @@ void AiTrainModule::packageModelToStorage()
 
 	auto& global = GlobalStructData::getInstance();
 
-	rw::cdm::AiModelConfig config;
 	std::hash<std::string> hasher;
 	config.id = static_cast<long>(hasher(formattedDateTime.toStdString()));
 	config.name = formattedDateTime.toStdString();
-	if (_modelType == ModelType::BladeShape)
+	/*if (_modelType == ModelType::BladeShape)
 	{
 		config.modelType = rw::cdm::ModelType::BladeShape;
 	}
@@ -473,7 +501,7 @@ void AiTrainModule::packageModelToStorage()
 	else
 	{
 		config.gain = 5;
-	}
+	}*/
 	config.date = formattedDateTime.toStdString();
 	config.rootPath = storage.toStdString();
 
@@ -608,6 +636,7 @@ void AiTrainModule::run()
 		auto& global = GlobalStructData::getInstance();
 		global.isTrainModel = true;
 		emit updateTrainState(true);
+		iniConfig();
 		emit updateTrainTitle("开始训练刀型模型");
 
 		emit appRunLog("清理旧的训练数据....");
@@ -640,6 +669,7 @@ void AiTrainModule::run()
 		global.isTrainModel = true;
 		emit updateTrainState(true);
 		emit updateTrainTitle("开始训练色差模型");
+		iniConfig();
 		emit appRunLog("清理旧的训练数据....");
 
 		auto annotationGoodDataSet1 = annotation_data_set_color(false, 1);

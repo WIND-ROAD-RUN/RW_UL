@@ -7,6 +7,8 @@
 #include"ime_ModelEngineFactory.h"
 #include "ImageProcessorModule.h"
 
+#include"cdm_AiModelConfig.h"
+
 #include"opencv2/opencv.hpp"
 #include<QProcess>
 
@@ -47,7 +49,10 @@ public:
 	~AiTrainModule() override;
 
 	void startTrain();
-
+private:
+	rw::cdm::AiModelConfig config;
+private:
+	void iniConfig();
 private:
 	std::unique_ptr<rw::ModelEngine> labelEngine;
 private:
