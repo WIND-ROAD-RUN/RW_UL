@@ -74,4 +74,8 @@ void MonitorIOStateThread::monitorDOState()
     emit DOState(ControlLines::sideLightOut, motionPtr->GetIOOut(ControlLines::sideLightOut));
     emit DOState(ControlLines::downLightOut, motionPtr->GetIOOut(ControlLines::downLightOut));
     emit DOState(ControlLines::strobeLightOut, motionPtr->GetIOOut(ControlLines::strobeLightOut));
+    emit DOState(ControlLines::blowLine1.ioNum, motionPtr->GetIOOut(ControlLines::blowLine1.ioNum));
+    emit DOState(ControlLines::blowLine2.ioNum, motionPtr->GetIOOut(ControlLines::blowLine2.ioNum));
+    emit DOState(ControlLines::blowLine3.ioNum, motionPtr->GetIOOut(ControlLines::blowLine3.ioNum));
+    emit DOState(ControlLines::blowLine4.ioNum, motionPtr->GetIOOut(ControlLines::blowLine4.ioNum));
 }
