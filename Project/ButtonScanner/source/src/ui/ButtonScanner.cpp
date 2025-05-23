@@ -1060,27 +1060,6 @@ void ButtonScanner::build_ioThread()
 							updateCardLabelState(false);
 						});
 				}
-
-				if (globalStruct.mainWindowConfig.upLight) {
-					motionPtr->SetIOOut(ControlLines::upLightOut, true);
-				}
-				else {
-					motionPtr->SetIOOut(ControlLines::upLightOut, false);
-				}
-
-				if (globalStruct.mainWindowConfig.downLight) {
-					motionPtr->SetIOOut(ControlLines::downLightOut, true);
-				}
-				else {
-					motionPtr->SetIOOut(ControlLines::downLightOut, false);
-				}
-
-				if (globalStruct.mainWindowConfig.sideLight) {
-					motionPtr->SetIOOut(ControlLines::sideLightOut, true);
-				}
-				else {
-					motionPtr->SetIOOut(ControlLines::sideLightOut, false);
-				}
 			}
 
 			QThread::msleep(200);
@@ -1427,6 +1406,8 @@ void ButtonScanner::rbtn_upLight_checked(bool checked)
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.mainWindowConfig.upLight = checked;
 	GlobalStructData.saveConfig();
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::upLightOut, checked);
 }
 
 void ButtonScanner::rbtn_sideLight_checked(bool checked)
@@ -1434,6 +1415,8 @@ void ButtonScanner::rbtn_sideLight_checked(bool checked)
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.mainWindowConfig.sideLight = checked;
 	GlobalStructData.saveConfig();
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::sideLightOut, checked);
 }
 
 void ButtonScanner::rbtn_downLight_checked(bool checked)
@@ -1441,6 +1424,8 @@ void ButtonScanner::rbtn_downLight_checked(bool checked)
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.mainWindowConfig.downLight = checked;
 	GlobalStructData.saveConfig();
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::downLightOut, checked);
 }
 
 void ButtonScanner::rbtn_defect_checked(bool checked)
@@ -1463,6 +1448,8 @@ void ButtonScanner::rbtn_strobe_checked(bool checked)
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.mainWindowConfig.strobeLight = checked;
 	GlobalStructData.saveConfig();
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::strobeLightOut, checked);
 }
 
 void ButtonScanner::labelClickable_title_clicked()
