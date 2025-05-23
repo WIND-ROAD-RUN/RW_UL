@@ -70,6 +70,12 @@ rw::cdm::ButtonScannerMainWindow::ButtonScannerMainWindow(const rw::oso::ObjectS
 	}
 	sideLight = sideLightItem->getValueAsBool();
 
+	auto strobeLightItem = oso::ObjectStoreCoreToItem(assembly.getItem("$variable$strobeLight$"));
+	if (!strobeLightItem) {
+		throw std::runtime_error("$variable$strobeLight$ is not found");
+	}
+	strobeLight = strobeLightItem->getValueAsBool();
+
 	auto lightValueItem = oso::ObjectStoreCoreToItem(assembly.getItem("$variable$beltSpeed$"));
 	if (!lightValueItem) {
 		throw std::runtime_error("$variable$beltSpeed$ is not found");
@@ -111,6 +117,7 @@ rw::cdm::ButtonScannerMainWindow::ButtonScannerMainWindow(const ButtonScannerMai
 	speed = buttonScannerMainWindow.speed;
 	isDefect = buttonScannerMainWindow.isDefect;
 	isPositive = buttonScannerMainWindow.isPositive;
+	strobeLight = buttonScannerMainWindow.strobeLight;
 }
 
 rw::cdm::ButtonScannerMainWindow& rw::cdm::ButtonScannerMainWindow::operator=(const ButtonScannerMainWindow& buttonScannerMainWindow)
@@ -130,6 +137,7 @@ rw::cdm::ButtonScannerMainWindow& rw::cdm::ButtonScannerMainWindow::operator=(co
 		speed = buttonScannerMainWindow.speed;
 		isDefect = buttonScannerMainWindow.isDefect;
 		isPositive = buttonScannerMainWindow.isPositive;
+		strobeLight = buttonScannerMainWindow.strobeLight;
 	}
 	return *this;
 }
@@ -189,6 +197,11 @@ rw::cdm::ButtonScannerMainWindow::operator rw::oso::ObjectStoreAssembly() const
 	downLightItem->setValueFromBool(downLight);
 	assembly.addItem(downLightItem);
 
+	auto strobeLightItem = std::make_shared<oso::ObjectStoreItem>();
+	strobeLightItem->setName("$variable$strobeLight$");
+	strobeLightItem->setValueFromBool(strobeLight);
+	assembly.addItem(strobeLightItem);
+
 	auto sideLightItem = std::make_shared<oso::ObjectStoreItem>();
 	sideLightItem->setName("$variable$sideLight$");
 	sideLightItem->setValueFromBool(sideLight);
@@ -227,7 +240,8 @@ bool rw::cdm::ButtonScannerMainWindow::operator==(const ButtonScannerMainWindow&
 		sideLight == account.sideLight &&
 		speed == account.speed &&
 		isDefect == account.isDefect &&
-		isPositive == account.isPositive;
+		isPositive == account.isPositive&&
+		strobeLight== account.strobeLight;
 }
 
 bool rw::cdm::ButtonScannerMainWindow::operator!=(const ButtonScannerMainWindow& account) const

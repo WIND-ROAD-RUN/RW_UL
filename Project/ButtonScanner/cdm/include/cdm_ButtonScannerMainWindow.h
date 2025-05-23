@@ -33,6 +33,7 @@ namespace rw
 			bool upLight{ false };
 			bool downLight{ false };
 			bool sideLight{ false };
+			bool strobeLight{ false };
 			double speed{ 0 };
 			double beltSpeed{ 0 };
 		public:

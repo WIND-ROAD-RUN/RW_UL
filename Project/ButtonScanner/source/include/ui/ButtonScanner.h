@@ -159,6 +159,7 @@ private slots:
 	void rbtn_downLight_checked(bool checked);
 	void rbtn_defect_checked(bool checked);
 	void rbtn_forAndAgainst_checked(bool checked);
+	void rbtn_strobe_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
 public slots:

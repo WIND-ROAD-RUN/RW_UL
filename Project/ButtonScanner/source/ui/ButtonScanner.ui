@@ -798,7 +798,7 @@ QGroupBox::title {
         <property name="title">
          <string/>
         </property>
-        <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1" columnstretch="1,1">
+        <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <widget class="QRadioButton" name="rbtn_upLight">
            <property name="sizePolicy">
@@ -1010,7 +1010,7 @@ QRadioButton::indicator:pressed {
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QPushButton" name="pbtn_beltSpeed">
+          <widget class="QRadioButton" name="rbtn_strobe">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -1018,27 +1018,64 @@ QRadioButton::indicator:pressed {
             </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-    font-size: 15px; 
+            <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333; /* 文字颜色始终保持这个值 */
 }
 
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
 }
 
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FFD700; /* 黄色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD700,
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton::indicator:disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 移除文字颜色修改的代码 */
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC9900;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFF59D,
+        stop:1 transparent
+    );
 }</string>
            </property>
            <property name="text">
-            <string>数值</string>
+            <string>爆闪</string>
            </property>
           </widget>
          </item>
@@ -1164,6 +1201,39 @@ QPushButton:pressed {
            </property>
            <property name="text">
             <string>设置</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbtn_beltSpeed">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+           </property>
+           <property name="text">
+            <string>数值</string>
            </property>
           </widget>
          </item>

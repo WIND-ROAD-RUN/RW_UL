@@ -121,6 +121,7 @@ void ButtonScanner::set_radioButton()
 	ui->rbtn_sideLight->setAutoExclusive(false);
 	ui->rbtn_takePicture->setAutoExclusive(false);
 	ui->rbtn_upLight->setAutoExclusive(false);
+	ui->rbtn_strobe->setAutoExclusive(false);
 
 	ui->rbtn_removeFunc->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 禁止鼠标事件
 	ui->rbtn_removeFunc->setFocusPolicy(Qt::NoFocus); // 禁止键盘焦点
@@ -305,6 +306,9 @@ void ButtonScanner::build_ui()
 		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
 		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
+
+	//Deprecated
+	ui->pbtn_beltSpeed->setVisible(false);
 }
 
 void ButtonScanner::read_image()
@@ -334,6 +338,7 @@ void ButtonScanner::build_mainWindowData()
 	ui->rbtn_downLight->setChecked(mainWindowConfig.downLight);
 	ui->rbtn_sideLight->setChecked(mainWindowConfig.sideLight);
 	ui->rbtn_defect->setChecked(mainWindowConfig.isDefect);
+	ui->rbtn_strobe->setChecked(mainWindowConfig.strobeLight);
 	ui->rbtn_ForAndAgainst->setChecked(mainWindowConfig.isPositive);
 	ui->pbtn_beltSpeed->setText(QString::number(globalStruct.dlgProduceLineSetConfig.motorSpeed));
 }
@@ -431,6 +436,9 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(ui->rbtn_defect, &QRadioButton::clicked,
 		this, &ButtonScanner::rbtn_defect_checked);
+
+	QObject::connect(ui->rbtn_strobe, &QRadioButton::clicked,
+		this, &ButtonScanner::rbtn_strobe_checked);
 
 	QObject::connect(ui->rbtn_ForAndAgainst, &QRadioButton::clicked,
 		this, &ButtonScanner::rbtn_forAndAgainst_checked);
@@ -1444,6 +1452,13 @@ void ButtonScanner::rbtn_forAndAgainst_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.mainWindowConfig.isPositive = checked;
+	GlobalStructData.saveConfig();
+}
+
+void ButtonScanner::rbtn_strobe_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.mainWindowConfig.strobeLight = checked;
 	GlobalStructData.saveConfig();
 }
 
