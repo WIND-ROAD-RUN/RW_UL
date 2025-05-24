@@ -58,33 +58,32 @@ namespace rw
 		void LabelWarning::addWarning(const WarningInfo& message, bool updateTimestampIfSame, int redDuration, int time)
 		{
 			if (updateTimestampIfSame && !_history.empty()) {
-				// 查找5秒内相同warningId的警告
+				// Find the same warningId in the last 10 seconds
 				QDateTime now = QDateTime::currentDateTime();
 				for (auto it = _history.rbegin(); it != _history.rend(); ++it) {
 					if (it->warningId == message.warningId) {
 						qint64 msecsDiff = it->timestamp.msecsTo(now);
 						if (msecsDiff >= 0 && msecsDiff <= time) {
-							// 找到5秒内相同id的警告，更新其时间戳
+							//Find the same warningId in the last 10 seconds
 							it->timestamp = now;
-							// 更新当前警告信息
+							//Update the warning message
 							_currentMessage = message;
 							this->setText(_currentMessage.message);
 
-							// 重置红色到灰色的定时器
+							//Reset the timer to gray
 							_timerToGray->start(redDuration);
-
-							// 停止灰色到黑色的定时器（如果正在运行）
+							//Stop the timer to black
 							_timerToBlack->stop();
 
 							return;
 						}
-						// 如果找到id但超时，直接break
+						// If the id is found but timeout,break directly
 						break;
 					}
 				}
 			}
 
-			// 如果信息不同或未启用时间戳更新功能，按正常逻辑添加警告信息
+			// If the information is different or the timestamp update function is not enabled, add the warning information according to the normal logic
 			addWarning(message, redDuration);
 		}
 
@@ -92,7 +91,6 @@ namespace rw
 		{
 			_maxHistorySize = maxSize;
 
-			// 如果当前队列超过新设置的容量，移除多余的元素
 			while (_history.size() > _maxHistorySize) {
 				_history.pop_front();
 			}
