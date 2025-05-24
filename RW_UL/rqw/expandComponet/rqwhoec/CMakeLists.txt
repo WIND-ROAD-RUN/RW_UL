@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 
-project(rqwm VERSION 0.1 LANGUAGES CXX)
+project(rqwhoec VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,10 +28,6 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC hoec
-	PUBLIC scc
-	PUBLIC ime
-	PUBLIC rqw
-	PUBLIC rqwhoec
 )
 
 #add_subdirectory(test)
