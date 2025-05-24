@@ -1040,7 +1040,7 @@ QRadioButton::indicator:hover {
 
 /* 选中状态 */
 QRadioButton::indicator:checked {
-    border: 2px solid #FFD700; /* 黄色边框 */
+    border: 2px solid rgb(255, 170, 0); /* 黄色边框 */
 }
 
 /* 选中时的内圆 */
@@ -1049,7 +1049,7 @@ QRadioButton::indicator:checked {
         cx:0.5, cy:0.5,
         radius:0.4,
         fx:0.5, fy:0.5,
-        stop:0 #FFD700,
+        stop:0 rgb(255, 170, 0),
         stop:1 transparent
     );
 }
