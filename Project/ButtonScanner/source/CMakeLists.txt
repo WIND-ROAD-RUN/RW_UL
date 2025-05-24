@@ -57,7 +57,7 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
 	PRIVATE hoec
 	PRIVATE scc
-	PRIVATE rqw
+	PRIVATE rqwm
 	PRIVATE dsl
 	PRIVATE hoec
 	PRIVATE oso
