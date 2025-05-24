@@ -6,8 +6,8 @@
 #include"PicturesViewer.h"
 #include<QThread>
 #include<QtConcurrent>
-#include"rqw_CameraObjectThread.hpp"
-#include"rqw_CameraObject.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
+#include"rqw_CameraObjectZMotion.hpp"
 
 DlgNewProduction::DlgNewProduction(QWidget* parent)
 	: QDialog(parent)

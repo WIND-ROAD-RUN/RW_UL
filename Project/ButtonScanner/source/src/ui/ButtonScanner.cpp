@@ -10,8 +10,8 @@
 #include"GlobalStruct.h"
 #include"ButtonUtilty.h"
 
-#include"rqw_CameraObjectThread.hpp"
-#include"rqw_CameraObject.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
+#include"rqw_CameraObjectZMotion.hpp"
 #include"hoec_CameraException.hpp"
 
 #include<qdebug>

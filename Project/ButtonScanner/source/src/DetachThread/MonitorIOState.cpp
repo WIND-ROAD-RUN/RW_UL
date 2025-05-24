@@ -1,5 +1,5 @@
 #include"MonitorIOState.hpp"
-#include <rqw_CameraObject.hpp>
+#include <rqw_CameraObjectZMotion.hpp>
 #include <ButtonUtilty.h>
 
 MonitorIOStateThread::MonitorIOStateThread(QObject* parent)

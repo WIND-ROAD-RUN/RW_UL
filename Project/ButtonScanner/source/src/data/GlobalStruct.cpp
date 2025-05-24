@@ -2,7 +2,7 @@
 
 #include "GlobalStruct.h"
 #include"hoec_CameraException.hpp"
-#include"rqw_CameraObjectThread.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
 
 void GlobalStructData::setCameraExposureTime(int cameraIndex, size_t exposureTime)
 {
@@ -249,13 +249,13 @@ bool GlobalStructData::buildCamera1()
 	if (cameraMetaData1.ip != "0") {
 		try
 		{
-			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera1 = std::make_unique<rw::rqw::CameraPassiveThreadZMotion>(this);
 			camera1->motionRedix = 2;
 			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Hardware, 2);
 			camera1->cameraIndex = 1;
 			camera1->setHeartbeatTime(5000);
 			setCameraExposureTime(1, dlgExposureTimeSetConfig.expousureTime);
-			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 				imageProcessingModule1.get(), &ImageProcessingModule::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
@@ -275,13 +275,13 @@ bool GlobalStructData::buildCamera2()
 	if (cameraMetaData2.ip != "0") {
 		try
 		{
-			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera2 = std::make_unique<rw::rqw::CameraPassiveThreadZMotion>(this);
 			camera2->motionRedix = 4;
 			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Hardware, 4);
 			camera2->cameraIndex = 2;
 			camera2->setHeartbeatTime(5000);
 			setCameraExposureTime(2, dlgExposureTimeSetConfig.expousureTime);
-			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 				imageProcessingModule2.get(), &ImageProcessingModule::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
@@ -301,13 +301,13 @@ bool GlobalStructData::buildCamera3()
 	if (cameraMetaData3.ip != "0") {
 		try
 		{
-			camera3 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera3 = std::make_unique<rw::rqw::CameraPassiveThreadZMotion>(this);
 			camera3->motionRedix = 6;
 			camera3->initCamera(cameraMetaData3, rw::rqw::CameraObjectTrigger::Hardware, 6);
 			camera3->cameraIndex = 3;
 			camera3->setHeartbeatTime(5000);
 			setCameraExposureTime(3, dlgExposureTimeSetConfig.expousureTime);
-			QObject::connect(camera3.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+			QObject::connect(camera3.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 				imageProcessingModule3.get(), &ImageProcessingModule::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
@@ -327,13 +327,13 @@ bool GlobalStructData::buildCamera4()
 	if (cameraMetaData4.ip != "0") {
 		try
 		{
-			camera4 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera4 = std::make_unique<rw::rqw::CameraPassiveThreadZMotion>(this);
 			camera4->motionRedix = 8;
 			camera4->initCamera(cameraMetaData4, rw::rqw::CameraObjectTrigger::Hardware, 8);
 			camera4->cameraIndex = 4;
 			camera4->setHeartbeatTime(5000);
 			setCameraExposureTime(4, dlgExposureTimeSetConfig.expousureTime);
-			QObject::connect(camera4.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+			QObject::connect(camera4.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 				imageProcessingModule4.get(), &ImageProcessingModule::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
@@ -404,28 +404,28 @@ void GlobalStructData::destroyCamera()
 
 void GlobalStructData::destroyCamera1()
 {
-	QObject::disconnect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+	QObject::disconnect(camera1.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 		imageProcessingModule1.get(), &ImageProcessingModule::onFrameCaptured);
 	camera1.reset();
 }
 
 void GlobalStructData::destroyCamera2()
 {
-	QObject::disconnect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+	QObject::disconnect(camera2.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 		imageProcessingModule2.get(), &ImageProcessingModule::onFrameCaptured);
 	camera2.reset();
 }
 
 void GlobalStructData::destroyCamera3()
 {
-	QObject::disconnect(camera3.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+	QObject::disconnect(camera3.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 		imageProcessingModule3.get(), &ImageProcessingModule::onFrameCaptured);
 	camera3.reset();
 }
 
 void GlobalStructData::destroyCamera4()
 {
-	QObject::disconnect(camera4.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+	QObject::disconnect(camera4.get(), &rw::rqw::CameraPassiveThreadZMotion::frameCaptured,
 		imageProcessingModule4.get(), &ImageProcessingModule::onFrameCaptured);
 	camera4.reset();
 }

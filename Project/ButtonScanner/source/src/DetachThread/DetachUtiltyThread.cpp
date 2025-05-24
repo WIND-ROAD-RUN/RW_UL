@@ -2,7 +2,7 @@
 #include"DetachUtiltyThread.h"
 
 #include"GlobalStruct.h"
-#include "rqw_CameraObject.hpp"
+#include "rqw_CameraObjectZMotion.hpp"
 
 DetachUtiltyThread::DetachUtiltyThread(QObject* parent)
 	: QThread(parent), running(false) {

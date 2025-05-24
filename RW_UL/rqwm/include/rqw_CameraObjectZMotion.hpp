@@ -45,7 +45,7 @@ namespace rw {
 	}
 
 	namespace rqw {
-		class CameraPassiveObject : public QObject
+		class CameraPassiveObjectZMotion : public QObject
 		{
 			Q_OBJECT
 		public:
@@ -55,13 +55,13 @@ namespace rw {
 			std::unique_ptr<hoec::CameraPassive> _cameraPassive;
 			CameraMetaData _cameraMetaData;
 		public:
-			CameraPassiveObject(const CameraPassiveObject&) = delete;
-			CameraPassiveObject& operator=(const CameraPassiveObject&) = delete;
-			CameraPassiveObject(CameraPassiveObject&&) = delete;
-			CameraPassiveObject& operator=(CameraPassiveObject&&) = delete;
+			CameraPassiveObjectZMotion(const CameraPassiveObjectZMotion&) = delete;
+			CameraPassiveObjectZMotion& operator=(const CameraPassiveObjectZMotion&) = delete;
+			CameraPassiveObjectZMotion(CameraPassiveObjectZMotion&&) = delete;
+			CameraPassiveObjectZMotion& operator=(CameraPassiveObjectZMotion&&) = delete;
 		public:
-			CameraPassiveObject(QObject* parent = nullptr);
-			~CameraPassiveObject() override;
+			CameraPassiveObjectZMotion(QObject* parent = nullptr);
+			~CameraPassiveObjectZMotion() override;
 		public:
 			void startMonitor() const;
 			void stopMonitor() const;

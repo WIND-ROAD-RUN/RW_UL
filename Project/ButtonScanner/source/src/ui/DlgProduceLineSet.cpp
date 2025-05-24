@@ -4,7 +4,7 @@
 #include"NumberKeyboard.h"
 #include"GlobalStruct.h"
 #include"scc_motion.h"
-#include "rqw_CameraObject.hpp"
+#include "rqw_CameraObjectZMotion.hpp"
 
 DlgProduceLineSet::DlgProduceLineSet(QWidget* parent)
 	: QDialog(parent)

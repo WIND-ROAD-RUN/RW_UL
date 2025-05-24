@@ -7,7 +7,7 @@
 
 #include"scc_Motion.h"
 
-#include"rqw_CameraObjectThread.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
 #include"cdm_ButtonScannerMainWindow.h"
 #include"cdm_ButtonScannerDlgProductSet.h"
 #include"cdm_ButtonScannerDlgExposureTimeSet.h"
@@ -159,10 +159,10 @@ public:
 	void destroyCamera2();
 	void destroyCamera3();
 	void destroyCamera4();
-	std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
-	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };
-	std::unique_ptr<rw::rqw::CameraPassiveThread> camera3{ nullptr };
-	std::unique_ptr<rw::rqw::CameraPassiveThread> camera4{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera1{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera2{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera3{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera4{ nullptr };
 
 	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 

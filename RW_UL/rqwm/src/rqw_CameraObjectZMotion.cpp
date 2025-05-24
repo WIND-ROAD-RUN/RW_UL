@@ -1,4 +1,4 @@
-#include "rqw_CameraObject.hpp"
+#include "rqw_CameraObjectZMotion.hpp"
 
 #include"hoec_CameraFactory.hpp"
 #include"hoec_Camera.hpp"
@@ -7,59 +7,59 @@ namespace rw
 {
 	namespace rqw
 	{
-		CameraPassiveObject::CameraPassiveObject(QObject* parent)
+		CameraPassiveObjectZMotion::CameraPassiveObjectZMotion(QObject* parent)
 		{
 		}
 
-		CameraPassiveObject::~CameraPassiveObject()
+		CameraPassiveObjectZMotion::~CameraPassiveObjectZMotion()
 			= default;
 
-		void CameraPassiveObject::startMonitor() const
+		void CameraPassiveObjectZMotion::startMonitor() const
 		{
 			_cameraPassive->startMonitor();
 		}
 
-		void CameraPassiveObject::stopMonitor() const
+		void CameraPassiveObjectZMotion::stopMonitor() const
 		{
 			_cameraPassive->stopMonitor();
 		}
 
-		void CameraPassiveObject::setHeartbeatTime(size_t value) const
+		void CameraPassiveObjectZMotion::setHeartbeatTime(size_t value) const
 		{
 			_cameraPassive->setHeartbeatTime(value);
 		}
 
-		void CameraPassiveObject::setFrameRate(float value) const
+		void CameraPassiveObjectZMotion::setFrameRate(float value) const
 		{
 			_cameraPassive->setFrameRate(value);
 		}
 
-		size_t CameraPassiveObject::getHeartbeatTime() const
+		size_t CameraPassiveObjectZMotion::getHeartbeatTime() const
 		{
 			return _cameraPassive->getHeartbeatTime();
 		}
 
-		float CameraPassiveObject::getFrameRate() const
+		float CameraPassiveObjectZMotion::getFrameRate() const
 		{
 			return _cameraPassive->getFrameRate();
 		}
 
-		void CameraPassiveObject::setExposureTime(size_t value) const
+		void CameraPassiveObjectZMotion::setExposureTime(size_t value) const
 		{
 			_cameraPassive->setExposureTime(value);
 		}
 
-		void CameraPassiveObject::setGain(size_t value) const
+		void CameraPassiveObjectZMotion::setGain(size_t value) const
 		{
 			_cameraPassive->setGain(value);
 		}
 
-		void CameraPassiveObject::setIOTime(size_t value) const
+		void CameraPassiveObjectZMotion::setIOTime(size_t value) const
 		{
 			_cameraPassive->setIOTime(value);
 		}
 
-		void CameraPassiveObject::setTriggerMode(CameraObjectTrigger mode) const
+		void CameraPassiveObjectZMotion::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			hoec::CameraTriggerMode hoecTrigger;
 			if (mode == CameraObjectTrigger::Hardware)
@@ -73,27 +73,27 @@ namespace rw
 			_cameraPassive->setTriggerMode(hoecTrigger);
 		}
 
-		void CameraPassiveObject::setTriggerLine(size_t lineIndex) const
+		void CameraPassiveObjectZMotion::setTriggerLine(size_t lineIndex) const
 		{
 			_cameraPassive->setTriggerLine(lineIndex);
 		}
 
-		size_t CameraPassiveObject::getExposureTime() const
+		size_t CameraPassiveObjectZMotion::getExposureTime() const
 		{
 			return _cameraPassive->getExposureTime();
 		}
 
-		size_t CameraPassiveObject::getGain() const
+		size_t CameraPassiveObjectZMotion::getGain() const
 		{
 			return _cameraPassive->getGain();
 		}
 
-		size_t CameraPassiveObject::getIOTime() const
+		size_t CameraPassiveObjectZMotion::getIOTime() const
 		{
 			return _cameraPassive->getIOTime();
 		}
 
-		CameraObjectTrigger CameraPassiveObject::getMonitorMode() const
+		CameraObjectTrigger CameraPassiveObjectZMotion::getMonitorMode() const
 		{
 			hoec::CameraTriggerMode hoecTrigger = _cameraPassive->getMonitorMode();
 			if (hoecTrigger == hoec::CameraTriggerMode::HardwareTriggered)
@@ -106,12 +106,12 @@ namespace rw
 			}
 		}
 
-		size_t CameraPassiveObject::getTriggerLine() const
+		size_t CameraPassiveObjectZMotion::getTriggerLine() const
 		{
 			return _cameraPassive->getTriggerLine();
 		}
 
-		void CameraPassiveObject::initCamera(const CameraMetaData& cameraMetaData, CameraObjectTrigger triggerMode)
+		void CameraPassiveObjectZMotion::initCamera(const CameraMetaData& cameraMetaData, CameraObjectTrigger triggerMode)
 		{
 			_cameraMetaData = cameraMetaData;
 			hoec::CameraIP hoecCameraIp;
@@ -139,7 +139,7 @@ namespace rw
 
 			_cameraPassive->RegisterCallBackFunc();
 		}
-		bool CameraPassiveObject::getConnectState()
+		bool CameraPassiveObjectZMotion::getConnectState()
 		{
 			if (_cameraPassive) {
 				return _cameraPassive->getConnectState();

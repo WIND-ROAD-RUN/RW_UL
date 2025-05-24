@@ -1,18 +1,18 @@
-#include"rqw_CameraObjectThread.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
 
-#include"rqw_CameraObject.hpp"
+#include"rqw_CameraObjectZMotion.hpp"
 #include"hoec_CameraException.hpp"
 
 namespace rw
 {
 	namespace rqw
 	{
-		CameraPassiveThread::CameraPassiveThread(QObject* parent)
+		CameraPassiveThreadZMotion::CameraPassiveThreadZMotion(QObject* parent)
 			:QThread(parent), _cameraObject(nullptr)
 		{
 		}
 
-		CameraPassiveThread::~CameraPassiveThread()
+		CameraPassiveThreadZMotion::~CameraPassiveThreadZMotion()
 		{
 			quit();
 			wait();
@@ -34,7 +34,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::initCamera(const rw::rqw::CameraMetaData& cameraMetaData,
+		void CameraPassiveThreadZMotion::initCamera(const rw::rqw::CameraMetaData& cameraMetaData,
 			rw::rqw::CameraObjectTrigger triggerMode, size_t motionInde)
 		{
 			if (_cameraObject)
@@ -43,19 +43,19 @@ namespace rw
 			}
 			if (!_cameraObject)
 			{
-				_cameraObject = new rw::rqw::CameraPassiveObject();
-				connect(_cameraObject, &rw::rqw::CameraPassiveObject::frameCaptured, this, &CameraPassiveThread::onFrameCaptured, Qt::DirectConnection);
+				_cameraObject = new rw::rqw::CameraPassiveObjectZMotion();
+				connect(_cameraObject, &rw::rqw::CameraPassiveObjectZMotion::frameCaptured, this, &CameraPassiveThreadZMotion::onFrameCaptured, Qt::DirectConnection);
 				_cameraObject->motionInde = motionInde;
 				_cameraObject->initCamera(cameraMetaData, triggerMode);
 			}
 		}
 
-		bool CameraPassiveThread::getConnectState()
+		bool CameraPassiveThreadZMotion::getConnectState()
 		{
 			return _cameraObject->getConnectState();
 		}
 
-		void CameraPassiveThread::startMonitor()
+		void CameraPassiveThreadZMotion::startMonitor()
 		{
 			if (!this->isRunning())
 			{
@@ -67,7 +67,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::stopMonitor()
+		void CameraPassiveThreadZMotion::stopMonitor()
 		{
 			if (_cameraObject)
 			{
@@ -77,7 +77,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setHeartbeatTime(size_t value) const
+		void CameraPassiveThreadZMotion::setHeartbeatTime(size_t value) const
 		{
 			if (_cameraObject)
 			{
@@ -85,7 +85,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setFrameRate(float value) const
+		void CameraPassiveThreadZMotion::setFrameRate(float value) const
 		{
 			if (_cameraObject)
 			{
@@ -93,7 +93,7 @@ namespace rw
 			}
 		}
 
-		size_t CameraPassiveThread::getHeartbeatTime() const
+		size_t CameraPassiveThreadZMotion::getHeartbeatTime() const
 		{
 			if (_cameraObject)
 			{
@@ -102,7 +102,7 @@ namespace rw
 			return 0;
 		}
 
-		float CameraPassiveThread::getFrameRate() const
+		float CameraPassiveThreadZMotion::getFrameRate() const
 		{
 			if (_cameraObject)
 			{
@@ -111,7 +111,7 @@ namespace rw
 			return 0;
 		}
 
-		void CameraPassiveThread::setExposureTime(size_t value) const
+		void CameraPassiveThreadZMotion::setExposureTime(size_t value) const
 		{
 			if (_cameraObject)
 			{
@@ -119,7 +119,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setGain(size_t value) const
+		void CameraPassiveThreadZMotion::setGain(size_t value) const
 		{
 			if (_cameraObject)
 			{
@@ -127,7 +127,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setIOTime(size_t value) const
+		void CameraPassiveThreadZMotion::setIOTime(size_t value) const
 		{
 			if (_cameraObject)
 			{
@@ -135,7 +135,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
+		void CameraPassiveThreadZMotion::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			if (_cameraObject)
 			{
@@ -143,7 +143,7 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setTriggerLine(size_t lineIndex) const
+		void CameraPassiveThreadZMotion::setTriggerLine(size_t lineIndex) const
 		{
 			if (_cameraObject)
 			{
@@ -151,7 +151,7 @@ namespace rw
 			}
 		}
 
-		size_t CameraPassiveThread::getExposureTime() const
+		size_t CameraPassiveThreadZMotion::getExposureTime() const
 		{
 			if (_cameraObject)
 			{
@@ -160,7 +160,7 @@ namespace rw
 			return 0;
 		}
 
-		size_t CameraPassiveThread::getGain() const
+		size_t CameraPassiveThreadZMotion::getGain() const
 		{
 			if (_cameraObject)
 			{
@@ -169,7 +169,7 @@ namespace rw
 			return 0;
 		}
 
-		size_t CameraPassiveThread::getIOTime() const
+		size_t CameraPassiveThreadZMotion::getIOTime() const
 		{
 			if (_cameraObject)
 			{
@@ -178,7 +178,7 @@ namespace rw
 			return 0;
 		}
 
-		CameraObjectTrigger CameraPassiveThread::getMonitorMode() const
+		CameraObjectTrigger CameraPassiveThreadZMotion::getMonitorMode() const
 		{
 			if (_cameraObject)
 			{
@@ -187,7 +187,7 @@ namespace rw
 			return CameraObjectTrigger::Undefined;
 		}
 
-		size_t CameraPassiveThread::getTriggerLine() const
+		size_t CameraPassiveThreadZMotion::getTriggerLine() const
 		{
 			if (_cameraObject)
 			{
@@ -196,12 +196,12 @@ namespace rw
 			return 0;
 		}
 
-		void CameraPassiveThread::run()
+		void CameraPassiveThreadZMotion::run()
 		{
 			exec();
 		}
 
-		void CameraPassiveThread::onFrameCaptured(cv::Mat frame, float location)
+		void CameraPassiveThreadZMotion::onFrameCaptured(cv::Mat frame, float location)
 		{
 			emit frameCaptured(std::move(frame), location, cameraIndex);
 		}

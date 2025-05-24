@@ -4,8 +4,8 @@
 #include"GlobalStruct.h"
 #include"scc_motion.h"
 #include"hoec_Camera.hpp"
-#include"rqw_CameraObjectThread.hpp"
-#include"rqw_CameraObject.hpp"
+#include"rqw_CameraObjectThreadZMotion.hpp"
+#include"rqw_CameraObjectZMotion.hpp"
 
 size_t MonitorCameraAndCardStateThread::runtimeCounts = 0;
 

@@ -8,21 +8,21 @@
 
 namespace rw {
 	namespace rqw {
-		class CameraPassiveObject;
+		class CameraPassiveObjectZMotion;
 
-		class CameraPassiveThread : public QThread
+		class CameraPassiveThreadZMotion : public QThread
 		{
 			Q_OBJECT
 		public:
 			size_t cameraIndex{ 0 };
 			size_t motionRedix;
 		public:
-			explicit CameraPassiveThread(QObject* parent = nullptr);
-			CameraPassiveThread(const CameraPassiveThread&) = delete; // 拷贝构造函数被删除
-			CameraPassiveThread& operator=(const CameraPassiveThread&) = delete; // 拷贝赋值运算符被删除
+			explicit CameraPassiveThreadZMotion(QObject* parent = nullptr);
+			CameraPassiveThreadZMotion(const CameraPassiveThreadZMotion&) = delete; // 拷贝构造函数被删除
+			CameraPassiveThreadZMotion& operator=(const CameraPassiveThreadZMotion&) = delete; // 拷贝赋值运算符被删除
 			// 其他成员函数和变量
 
-			~CameraPassiveThread() override;
+			~CameraPassiveThreadZMotion() override;
 
 			void initCamera(const rw::rqw::CameraMetaData& cameraMetaData, rw::rqw::CameraObjectTrigger triggerMode, size_t motionInde);
 
@@ -56,7 +56,7 @@ namespace rw {
 			void run() override;
 
 		private:
-			CameraPassiveObject* _cameraObject;
+			CameraPassiveObjectZMotion* _cameraObject;
 		private slots:
 			void onFrameCaptured(cv::Mat frame, float location);
 		};

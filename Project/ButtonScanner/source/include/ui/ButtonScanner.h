@@ -21,7 +21,7 @@ namespace rw
 {
 	namespace rqw
 	{
-		class CameraPassiveThread;
+		class CameraPassiveThreadZMotion;
 	}
 }
 
