@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 	a.setWindowIcon(QIcon(":/ButtonScanner/image/icon.png"));
 
 	ButtonScanner w;
-	w.showFullScreen();
+	//w.showFullScreen();
 	w.setFixedSize(w.size());
 	w.show();
 

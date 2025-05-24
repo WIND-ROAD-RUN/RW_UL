@@ -434,7 +434,7 @@ void DlgModelManager::flashModelInfoTable(size_t index)
 	_ModelInfoModel->clear();
 	// 原始的列标题
 	QStringList originalHeaders = QStringList() << "模型名称:" << "ID:" << "模型类型:" << "上光源:"
-		<< "侧光源:" << "下光源:"<<"爆闪:" << "曝光:"
+		<< "侧光源:" << "下光源:"<<"曝闪:" << "曝光:"
 		<< "增益:" << "模型根路径:" << "训练日期:";
 
 	// 设置旋转后的行标题（原始列标题变为行标题）
