@@ -26,10 +26,5 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
-target_link_libraries(${PROJECT_NAME} 
-	PUBLIC hoec
-	PUBLIC scc
-	PUBLIC ime
-)
 
 #add_subdirectory(test)
