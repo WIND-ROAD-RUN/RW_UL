@@ -311,6 +311,26 @@ void DlgNewProduction::pbtn_tab2_exit_clicked()
 
 void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 {
+	if (ui->rbtn_tab3_firstWork1->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work1\bad)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab3_firstWork2->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work2\bad)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab3_firstWork3->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work3\bad)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab3_firstWork4->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\bad)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
 	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	picturesViewer->show();
 }
@@ -349,6 +369,26 @@ void DlgNewProduction::pbtn_tab3_nex_step_clicked()
 
 void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
 {
+	if (ui->rbtn_tab4_firstWork1->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work1\good)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab4_firstWork2->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work2\good)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab4_firstWork3->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work3\good)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
+	else if (ui->rbtn_tab4_firstWork4->isChecked())
+	{
+		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\good)";
+		picturesViewer->setRootPath(tempImagePath);
+	}
 	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	picturesViewer->show();
 }
