@@ -42,7 +42,6 @@ target_include_directories(${PROJECT_NAME}
 )
 
 add_subdirectory(./test)
-add_subdirectory(./SerializedCodeGenerator)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/)
 install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/lib/)

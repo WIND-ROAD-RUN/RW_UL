@@ -15,8 +15,13 @@ qt_wrap_ui(GENERATED_UI_HEADERS ${UI_FILES})
 
 file(GLOB QRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/qrc/*.qrc")
 
+include(SerializedCodeGenerator)
+set(OSO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/osoFile/demoConfig.oso)
+oso_wrap_oso(GENERATED_HEADERS ${OSO_FILES} OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/osoHpp)
+
 FIND_SOURCES_AND_HEADERS(INCLUDE_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
+    ${CMAKE_CURRENT_SOURCE_DIR}/osoHpp
 )
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
@@ -33,6 +38,7 @@ qt_add_executable(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} 
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/osoHpp
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -42,6 +48,10 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE hoec
     PRIVATE rqw
     PRIVATE ime
+    PRIVATE rqwm
+    PRIVATE rqwime
+    PRIVATE oso
+
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

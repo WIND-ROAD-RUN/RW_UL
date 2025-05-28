@@ -51,7 +51,7 @@ demo::~demo()
 	delete ui;
 }
 
-void demo::displayImg(cv::Mat frame, float location, size_t index)
+void demo::displayImg(cv::Mat frame)
 {
 	if (frame.empty())
 	{

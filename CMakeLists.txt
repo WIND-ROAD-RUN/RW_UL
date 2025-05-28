@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 endif()
+
+set(SerializedCodeGeneratorCmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator/cmake")
+include(SerializedCodeGenerator)
 
 include(./cmake/func.cmake)
 include(./cmake/iniEnvironmet.cmake)

@@ -24,5 +24,5 @@ private:
 private:
 	Ui::demoClass *ui;
 private slots:
-	void displayImg(cv::Mat frame, float location, size_t index);
+	void displayImg(cv::Mat frame);
 };
