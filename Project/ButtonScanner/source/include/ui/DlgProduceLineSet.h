@@ -4,6 +4,7 @@
 #include "ui_DlgProduceLineSet.h"
 #include"MonitorIOState.hpp"
 #include"DlgWarningManager.h"
+#include"DlgWarningIOSetConfig.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgProduceLineSetClass; };
@@ -15,6 +16,7 @@ class DlgProduceLineSet : public QDialog
 private:
 	MonitorIOStateThread* monitorIoStateThread{nullptr};
 	DlgWarningManager* dlgWarningManager{ nullptr };
+	DlgWarningIOSetConfig* dlgWarningIOSetConfig{nullptr};
 public:
 	bool isDebug{false};
 public:
@@ -101,4 +103,5 @@ private slots:
 	void onDOState(int index, bool state);
 private slots:
 	void pbtn_warningManager_clicked();
+	void pbtn_DIOValueSet_clicked();
 };

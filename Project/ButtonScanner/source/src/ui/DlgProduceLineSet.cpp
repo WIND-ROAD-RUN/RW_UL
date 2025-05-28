@@ -35,6 +35,7 @@ void DlgProduceLineSet::build_ui()
 	monitorIoStateThread->setRunning(false);
 	monitorIoStateThread->start();
 	dlgWarningManager = new DlgWarningManager(this);
+	dlgWarningIOSetConfig = new DlgWarningIOSetConfig(this);
 	connect(monitorIoStateThread, &MonitorIOStateThread::DIState,
 		this, &DlgProduceLineSet::onDIState);
 	connect(monitorIoStateThread, &MonitorIOStateThread::DOState,
@@ -215,6 +216,8 @@ void DlgProduceLineSet::build_connect()
 
 	QObject::connect(ui->pbtn_warnManager, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
+	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
+		, this, &DlgProduceLineSet::pbtn_DIOValueSet_clicked);
 }
 
 float DlgProduceLineSet::get_blowTime()
@@ -917,6 +920,11 @@ void DlgProduceLineSet::onDOState(int index, bool state)
 void DlgProduceLineSet::pbtn_warningManager_clicked()
 {
 	dlgWarningManager->show();
+}
+
+void DlgProduceLineSet::pbtn_DIOValueSet_clicked()
+{
+	dlgWarningIOSetConfig->show();
 }
 
 void DlgProduceLineSet::cbox_workstationProtection12_checked(bool ischeck)
