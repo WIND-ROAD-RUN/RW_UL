@@ -54,7 +54,7 @@ void MonitorIOStateThread::monitorDIState()
     auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
     emit DIState(ControlLines::stopIn, motionPtr->GetIOIn(ControlLines::stopIn));
     emit DIState(ControlLines::startIn, motionPtr->GetIOIn(ControlLines::startIn));
-    emit DIState(ControlLines::airWarnIN, motionPtr->GetIOIn(ControlLines::airWarnIN));
+    emit DIState(ControlLines::airWarnIn, motionPtr->GetIOIn(ControlLines::airWarnIn));
     emit DIState(ControlLines::shutdownComputerIn, motionPtr->GetIOIn(ControlLines::shutdownComputerIn));
     emit DIState(ControlLines::camer1In, motionPtr->GetIOIn(ControlLines::camer1In));
     emit DIState(ControlLines::camer2In, motionPtr->GetIOIn(ControlLines::camer2In));

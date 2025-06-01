@@ -45,7 +45,7 @@ public:
 public:
 	static constexpr int stopIn = 2;
 	static constexpr int startIn = 1;
-	static constexpr int airWarnIN = 7;
+	static constexpr int airWarnIn = 7;
 	static constexpr int shutdownComputerIn = 8;
 	static constexpr int camer1In = 6;
 	static constexpr int camer2In = 5;

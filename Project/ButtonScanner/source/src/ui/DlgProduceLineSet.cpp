@@ -62,14 +62,10 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_limit2->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit2));
 	ui->pbtn_limit3->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit3));
 	ui->pbtn_limit4->setText(QString::number(globalStruct.dlgProduceLineSetConfig.limit4));
-	ui->cbox_DO7->setChecked(globalStruct.dlgProduceLineSetConfig.powerOn);
-	ui->cbox_DO1->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable1);
-	ui->cbox_DO2->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable2);
-	ui->cbox_DO3->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable3);
-	ui->cbox_DO4->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable4);
-	ui->cbox_DO6->setChecked(globalStruct.dlgProduceLineSetConfig.none);
-	ui->cbox_DO8->setChecked(globalStruct.dlgProduceLineSetConfig.run);
-	ui->cbox_DO9->setChecked(globalStruct.dlgProduceLineSetConfig.alarm);
+	ui->cbox_DOBlow1->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable1);
+	ui->cbox_DOBlow2->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable2);
+	ui->cbox_DOBlow3->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable3);
+	ui->cbox_DOBlow4->setChecked(globalStruct.dlgProduceLineSetConfig.blowingEnable4);
 	ui->cbox_workstationProtection12->setChecked(globalStruct.dlgProduceLineSetConfig.workstationProtection12);
 	ui->cbox_workstationProtection34->setChecked(globalStruct.dlgProduceLineSetConfig.workstationProtection34);
 	ui->pbtn_motorSpeed->setText(QString::number(globalStruct.dlgProduceLineSetConfig.motorSpeed));
@@ -166,47 +162,48 @@ void DlgProduceLineSet::build_connect()
 	QObject::connect(ui->rbtn_drawRec, &QRadioButton::clicked,
 		this, &DlgProduceLineSet::rbtn_drawRectangle_clicked);
 
-	QObject::connect(ui->cbox_DO0, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOMotoPower, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_motoPower_checked);
-	QObject::connect(ui->cbox_DO1, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOBlow1, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_blow1_checked);
-	QObject::connect(ui->cbox_DO2, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOBlow2, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_blow2_checked);
-	QObject::connect(ui->cbox_DO3, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOBlow3, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_blow3_checked);
-	QObject::connect(ui->cbox_DO4, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOBlow4, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_blow4_checked);
-	QObject::connect(ui->cbox_DO5, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOGreenLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_greenLight_checked);
-	QObject::connect(ui->cbox_DO6, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DORedLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_redLight_checked);
-	QObject::connect(ui->cbox_DO7, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOUpLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_upLight_checked);
-	QObject::connect(ui->cbox_DO8, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOSideLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_sideLight_checked);
-	QObject::connect(ui->cbox_DO9, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DODownLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_downLight_checked);
-	QObject::connect(ui->cbox_DO11, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOStoreLight, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_storeLight_checked);
-	QObject::connect(ui->cbox_beltControl, &QCheckBox::clicked,
+	QObject::connect(ui->cbox_DOBeltControl, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_beltControl);
 
-	QObject::connect(ui->cbox_DI1, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_start_checked);
-	QObject::connect(ui->cbox_DI2, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_stop_checked);
-	QObject::connect(ui->cbox_DI3, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_shutdownComputer_checked);
-	QObject::connect(ui->cbox_DI4, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_warn_checked);
-	QObject::connect(ui->cbox_DI5, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_cameraTrigger1_checked);
-	QObject::connect(ui->cbox_DI6, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_cameraTrigger2_checked);
-	QObject::connect(ui->cbox_DI7, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_cameraTrigger3_checked);
-	QObject::connect(ui->cbox_DI8, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_cameraTrigger4_checked);
+	QObject::connect(ui->cbox_DIStart, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DIStart_checked);
+	QObject::connect(ui->cbox_DIStop, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DIStop_checked);
+	QObject::connect(ui->cbox_DIShutdownComputer, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DIShutdownComputer_checked);
+	QObject::connect(ui->cbox_DIAirPressure, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DIAirPressure_checked);
+	QObject::connect(ui->cbox_DICameraTrigger1, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DICameraTrigger1_checked);
+	QObject::connect(ui->cbox_DICameraTrigger2, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DICameraTrigger2_checked);
+	QObject::connect(ui->cbox_DICameraTrigger3, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DICameraTrigger3_checked);
+	QObject::connect(ui->cbox_DICameraTrigger4, &QCheckBox::clicked,
+		this, &DlgProduceLineSet::cbox_DICameraTrigger4_checked);
+
 	QObject::connect(ui->pbtn_warnManager, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
@@ -786,44 +783,44 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 }
 
 
-void DlgProduceLineSet::cbox_start_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DIStart_checked(bool ischeck)
 {
-	ui->cbox_DI1->setChecked(false);
+	ui->cbox_DIStart->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_stop_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DIStop_checked(bool ischeck)
 {
-	ui->cbox_DI2->setChecked(false);
+	ui->cbox_DIStop->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_shutdownComputer_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DIShutdownComputer_checked(bool ischeck)
 {
-	ui->cbox_DI3->setChecked(false);
+	ui->cbox_DIShutdownComputer->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_warn_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DIAirPressure_checked(bool ischeck)
 {
-	ui->cbox_DI4->setChecked(false);
+	ui->cbox_DIAirPressure->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_cameraTrigger1_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DICameraTrigger1_checked(bool ischeck)
 {
-	ui->cbox_DI5->setChecked(false);
+	ui->cbox_DICameraTrigger1->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_cameraTrigger2_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DICameraTrigger2_checked(bool ischeck)
 {
-	ui->cbox_DI6->setChecked(false);
+	ui->cbox_DICameraTrigger2->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_cameraTrigger3_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DICameraTrigger3_checked(bool ischeck)
 {
-	ui->cbox_DI7->setChecked(false);
+	ui->cbox_DICameraTrigger3->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_cameraTrigger4_checked(bool ischeck)
+void DlgProduceLineSet::cbox_DICameraTrigger4_checked(bool ischeck)
 {
-	ui->cbox_DI8->setChecked(false);
+	ui->cbox_DICameraTrigger4->setChecked(false);
 }
 
 
@@ -832,28 +829,28 @@ void DlgProduceLineSet::onDIState(int index, bool state)
 	switch (index)
 	{
 	case ControlLines::stopIn:
-		ui->cbox_DI2->setChecked(state);
+		ui->cbox_DIStop->setChecked(state);
 		break;
 	case ControlLines::startIn:
-		ui->cbox_DI1->setChecked(state);
+		ui->cbox_DIStart->setChecked(state);
 		break;
-	case ControlLines::airWarnIN:
-		ui->cbox_DI4->setChecked(state);
+	case ControlLines::airWarnIn:
+		ui->cbox_DIAirPressure->setChecked(state);
 		break;
 	case ControlLines::shutdownComputerIn:
-		ui->cbox_DI3->setChecked(state);
+		ui->cbox_DIShutdownComputer->setChecked(state);
 		break;
 	case ControlLines::camer1In:
-		ui->cbox_DI5->setChecked(state);
+		ui->cbox_DICameraTrigger1->setChecked(state);
 		break;
 	case ControlLines::camer2In:
-		ui->cbox_DI6->setChecked(state);
+		ui->cbox_DICameraTrigger2->setChecked(state);
 		break;
 	case ControlLines::camer3In:
-		ui->cbox_DI7->setChecked(state);
+		ui->cbox_DICameraTrigger3->setChecked(state);
 		break;
 	case ControlLines::camer4In:
-		ui->cbox_DI8->setChecked(state);
+		ui->cbox_DICameraTrigger4->setChecked(state);
 		break;
 	default:
 		break;
@@ -863,37 +860,37 @@ void DlgProduceLineSet::onDIState(int index, bool state)
 void DlgProduceLineSet::onDOState(int index, bool state)
 {
 	if (index == ControlLines::motoPowerOut) {
-		ui->cbox_DO0->setChecked(state);
+		ui->cbox_DOMotoPower->setChecked(state);
 	}
 	else if (index == ControlLines::blowLine1.ioNum) {
-		ui->cbox_DO1->setChecked(state);
+		ui->cbox_DOBlow1->setChecked(state);
 	}
 	else if (index == ControlLines::blowLine2.ioNum) {
-		ui->cbox_DO2->setChecked(state);
+		ui->cbox_DOBlow2->setChecked(state);
 	}
 	else if (index == ControlLines::blowLine3.ioNum) {
-		ui->cbox_DO3->setChecked(state);
+		ui->cbox_DOBlow3->setChecked(state);
 	}
 	else if (index == ControlLines::blowLine4.ioNum) {
-		ui->cbox_DO4->setChecked(state);
+		ui->cbox_DOBlow4->setChecked(state);
 	}
 	else if (index == ControlLines::warnGreenOut) {
-		ui->cbox_DO5->setChecked(state);
+		ui->cbox_DOGreenLight->setChecked(state);
 	}
 	else if (index == ControlLines::warnRedOut) {
-		ui->cbox_DO6->setChecked(state);
+		ui->cbox_DORedLight->setChecked(state);
 	}
 	else if (index == ControlLines::upLightOut) {
-		ui->cbox_DO7->setChecked(state);
+		ui->cbox_DOUpLight->setChecked(state);
 	}
 	else if (index == ControlLines::sideLightOut) {
-		ui->cbox_DO8->setChecked(state);
+		ui->cbox_DOSideLight->setChecked(state);
 	}
 	else if (index == ControlLines::downLightOut) {
-		ui->cbox_DO9->setChecked(state);
+		ui->cbox_DODownLight->setChecked(state);
 	}
 	else if (index == ControlLines::strobeLightOut) {
-		ui->cbox_DO11->setChecked(state);
+		ui->cbox_DOStoreLight->setChecked(state);
 	}
 }
 

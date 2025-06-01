@@ -1089,7 +1089,7 @@ void ButtonScanner::build_ioThread()
 						motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 				}
 
-				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIN);
+				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIn);
 				if (qiya == true) {
 					QMetaObject::invokeMethod(qApp, [this, state]
 						{

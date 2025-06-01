@@ -87,14 +87,14 @@ private slots:
 	void cbox_storeLight_checked(bool ischeck);
 	void cbox_beltControl(bool ischeck);
 private slots:
-	void cbox_start_checked(bool ischeck);
-	void cbox_stop_checked(bool ischeck);
-	void cbox_shutdownComputer_checked(bool ischeck);
-	void cbox_warn_checked(bool ischeck);
-	void cbox_cameraTrigger1_checked(bool ischeck);
-	void cbox_cameraTrigger2_checked(bool ischeck);
-	void cbox_cameraTrigger3_checked(bool ischeck);
-	void cbox_cameraTrigger4_checked(bool ischeck);
+	void cbox_DIStart_checked(bool ischeck);
+	void cbox_DIStop_checked(bool ischeck);
+	void cbox_DIShutdownComputer_checked(bool ischeck);
+	void cbox_DIAirPressure_checked(bool ischeck);
+	void cbox_DICameraTrigger1_checked(bool ischeck);
+	void cbox_DICameraTrigger2_checked(bool ischeck);
+	void cbox_DICameraTrigger3_checked(bool ischeck);
+	void cbox_DICameraTrigger4_checked(bool ischeck);
 private slots:
 	void onDIState(int index, bool state);
 	void onDOState(int index, bool state);
