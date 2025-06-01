@@ -74,27 +74,27 @@ private slots:
 	void rbtn_drawCircle_clicked();
 	void rbtn_drawRectangle_clicked();
 private slots:
-	void cbox_DO0_checked(bool ischeck);
-	void cbox_DO1_checked(bool ischeck);
-	void cbox_DO2_checked(bool ischeck);
-	void cbox_DO3_checked(bool ischeck);
-	void cbox_DO4_checked(bool ischeck);
-	void cbox_DO5_checked(bool ischeck);
-	void cbox_DO6_checked(bool ischeck);
-	void cbox_DO7_checked(bool ischeck);
-	void cbox_DO8_checked(bool ischeck);
-	void cbox_DO9_checked(bool ischeck);
-	void cbox_DO11_checked(bool ischeck);
+	void cbox_motoPower_checked(bool ischeck);
+	void cbox_blow1_checked(bool ischeck);
+	void cbox_blow2_checked(bool ischeck);
+	void cbox_blow3_checked(bool ischeck);
+	void cbox_blow4_checked(bool ischeck);
+	void cbox_greenLight_checked(bool ischeck);
+	void cbox_redLight_checked(bool ischeck);
+	void cbox_upLight_checked(bool ischeck);
+	void cbox_sideLight_checked(bool ischeck);
+	void cbox_downLight_checked(bool ischeck);
+	void cbox_storeLight_checked(bool ischeck);
 	void cbox_beltControl(bool ischeck);
 private slots:
-	void cbox_DI1_checked(bool ischeck);
-	void cbox_DI2_checked(bool ischeck);
-	void cbox_DI3_checked(bool ischeck);
-	void cbox_DI4_checked(bool ischeck);
-	void cbox_DI5_checked(bool ischeck);
-	void cbox_DI6_checked(bool ischeck);
-	void cbox_DI7_checked(bool ischeck);
-	void cbox_DI8_checked(bool ischeck);
+	void cbox_start_checked(bool ischeck);
+	void cbox_stop_checked(bool ischeck);
+	void cbox_shutdownComputer_checked(bool ischeck);
+	void cbox_warn_checked(bool ischeck);
+	void cbox_cameraTrigger1_checked(bool ischeck);
+	void cbox_cameraTrigger2_checked(bool ischeck);
+	void cbox_cameraTrigger3_checked(bool ischeck);
+	void cbox_cameraTrigger4_checked(bool ischeck);
 private slots:
 	void onDIState(int index, bool state);
 	void onDOState(int index, bool state);

@@ -167,46 +167,46 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::rbtn_drawRectangle_clicked);
 
 	QObject::connect(ui->cbox_DO0, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO0_checked);
+		this, &DlgProduceLineSet::cbox_motoPower_checked);
 	QObject::connect(ui->cbox_DO1, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO1_checked);
+		this, &DlgProduceLineSet::cbox_blow1_checked);
 	QObject::connect(ui->cbox_DO2, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO2_checked);
+		this, &DlgProduceLineSet::cbox_blow2_checked);
 	QObject::connect(ui->cbox_DO3, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO3_checked);
+		this, &DlgProduceLineSet::cbox_blow3_checked);
 	QObject::connect(ui->cbox_DO4, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO4_checked);
+		this, &DlgProduceLineSet::cbox_blow4_checked);
 	QObject::connect(ui->cbox_DO5, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO5_checked);
+		this, &DlgProduceLineSet::cbox_greenLight_checked);
 	QObject::connect(ui->cbox_DO6, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO6_checked);
+		this, &DlgProduceLineSet::cbox_redLight_checked);
 	QObject::connect(ui->cbox_DO7, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO7_checked);
+		this, &DlgProduceLineSet::cbox_upLight_checked);
 	QObject::connect(ui->cbox_DO8, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO8_checked);
+		this, &DlgProduceLineSet::cbox_sideLight_checked);
 	QObject::connect(ui->cbox_DO9, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO9_checked);
+		this, &DlgProduceLineSet::cbox_downLight_checked);
 	QObject::connect(ui->cbox_DO11, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DO11_checked);
+		this, &DlgProduceLineSet::cbox_storeLight_checked);
 	QObject::connect(ui->cbox_beltControl, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_beltControl);
 
 	QObject::connect(ui->cbox_DI1, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI1_checked);
+		this, &DlgProduceLineSet::cbox_start_checked);
 	QObject::connect(ui->cbox_DI2, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI2_checked);
+		this, &DlgProduceLineSet::cbox_stop_checked);
 	QObject::connect(ui->cbox_DI3, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI3_checked);
+		this, &DlgProduceLineSet::cbox_shutdownComputer_checked);
 	QObject::connect(ui->cbox_DI4, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI4_checked);
+		this, &DlgProduceLineSet::cbox_warn_checked);
 	QObject::connect(ui->cbox_DI5, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI5_checked);
+		this, &DlgProduceLineSet::cbox_cameraTrigger1_checked);
 	QObject::connect(ui->cbox_DI6, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI6_checked);
+		this, &DlgProduceLineSet::cbox_cameraTrigger2_checked);
 	QObject::connect(ui->cbox_DI7, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI7_checked);
+		this, &DlgProduceLineSet::cbox_cameraTrigger3_checked);
 	QObject::connect(ui->cbox_DI8, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI8_checked);
+		this, &DlgProduceLineSet::cbox_cameraTrigger4_checked);
 	QObject::connect(ui->pbtn_warnManager, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
@@ -677,7 +677,7 @@ void DlgProduceLineSet::pbtn_close_clicked()
 	this->close();
 }
 
-void DlgProduceLineSet::cbox_DO7_checked(bool ischeck)
+void DlgProduceLineSet::cbox_upLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -686,7 +686,7 @@ void DlgProduceLineSet::cbox_DO7_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::upLightOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO1_checked(bool ischeck)
+void DlgProduceLineSet::cbox_blow1_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -695,7 +695,7 @@ void DlgProduceLineSet::cbox_DO1_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine1.ioNum, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO2_checked(bool ischeck)
+void DlgProduceLineSet::cbox_blow2_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -704,7 +704,7 @@ void DlgProduceLineSet::cbox_DO2_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine2.ioNum, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO3_checked(bool ischeck)
+void DlgProduceLineSet::cbox_blow3_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -713,7 +713,7 @@ void DlgProduceLineSet::cbox_DO3_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine3.ioNum, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO4_checked(bool ischeck)
+void DlgProduceLineSet::cbox_blow4_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -722,7 +722,7 @@ void DlgProduceLineSet::cbox_DO4_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine4.ioNum, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO5_checked(bool ischeck)
+void DlgProduceLineSet::cbox_greenLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -731,7 +731,7 @@ void DlgProduceLineSet::cbox_DO5_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::warnGreenOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO6_checked(bool ischeck)
+void DlgProduceLineSet::cbox_redLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -740,7 +740,7 @@ void DlgProduceLineSet::cbox_DO6_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::warnRedOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO8_checked(bool ischeck)
+void DlgProduceLineSet::cbox_sideLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -749,7 +749,7 @@ void DlgProduceLineSet::cbox_DO8_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::sideLightOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO9_checked(bool ischeck)
+void DlgProduceLineSet::cbox_downLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -758,7 +758,7 @@ void DlgProduceLineSet::cbox_DO9_checked(bool ischeck)
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::downLightOut, ischeck);
 }
 
-void DlgProduceLineSet::cbox_DO11_checked(bool ischeck)
+void DlgProduceLineSet::cbox_storeLight_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
@@ -786,42 +786,42 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 }
 
 
-void DlgProduceLineSet::cbox_DI1_checked(bool ischeck)
+void DlgProduceLineSet::cbox_start_checked(bool ischeck)
 {
 	ui->cbox_DI1->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI2_checked(bool ischeck)
+void DlgProduceLineSet::cbox_stop_checked(bool ischeck)
 {
 	ui->cbox_DI2->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI3_checked(bool ischeck)
+void DlgProduceLineSet::cbox_shutdownComputer_checked(bool ischeck)
 {
 	ui->cbox_DI3->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI4_checked(bool ischeck)
+void DlgProduceLineSet::cbox_warn_checked(bool ischeck)
 {
 	ui->cbox_DI4->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI5_checked(bool ischeck)
+void DlgProduceLineSet::cbox_cameraTrigger1_checked(bool ischeck)
 {
 	ui->cbox_DI5->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI6_checked(bool ischeck)
+void DlgProduceLineSet::cbox_cameraTrigger2_checked(bool ischeck)
 {
 	ui->cbox_DI6->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI7_checked(bool ischeck)
+void DlgProduceLineSet::cbox_cameraTrigger3_checked(bool ischeck)
 {
 	ui->cbox_DI7->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI8_checked(bool ischeck)
+void DlgProduceLineSet::cbox_cameraTrigger4_checked(bool ischeck)
 {
 	ui->cbox_DI8->setChecked(false);
 }
@@ -957,7 +957,7 @@ void DlgProduceLineSet::rbtn_drawRectangle_clicked()
 	GlobalStructData.dlgProduceLineSetConfig.drawRec = true;
 }
 
-void DlgProduceLineSet::cbox_DO0_checked(bool ischeck)
+void DlgProduceLineSet::cbox_motoPower_checked(bool ischeck)
 {
 	if (!isDebug)
 	{
