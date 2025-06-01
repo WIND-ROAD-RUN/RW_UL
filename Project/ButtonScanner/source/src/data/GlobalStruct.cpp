@@ -93,6 +93,7 @@ void GlobalStructData::ReadConfig()
 	ReadDlgProductSetConfig();
 	ReadDlgExposureTimeSetConfig();
 	ReadDlgHideScoreSetConfig();
+	ReadWarningManagerConfig();
 }
 
 void GlobalStructData::ReadMainWindowConfig()
@@ -167,6 +168,17 @@ void GlobalStructData::ReadWarningManagerConfig()
 	}
 }
 
+void GlobalStructData::readWarningIOSetConfig()
+{
+	auto loadWarningIOSetConfig = storeContext->load(warningIOSetConfigPath.toStdString());
+	if (loadWarningIOSetConfig) {
+		warningIOSetConfig = *loadWarningIOSetConfig;
+	}
+	else {
+		LOG()  "Load main window config failed.";
+	}
+}
+
 void GlobalStructData::saveConfig()
 {
 	saveMainWindowConfig();
@@ -175,6 +187,7 @@ void GlobalStructData::saveConfig()
 	saveDlgExposureTimeSetConfig();
 	saveDlgHideScoreSetConfig();
 	saveWarningManagerConfig();
+	saveWarningIOSetConfig();
 }
 
 void GlobalStructData::saveMainWindowConfig()
@@ -199,6 +212,11 @@ void GlobalStructData::saveDlgExposureTimeSetConfig()
 void GlobalStructData::saveDlgHideScoreSetConfig()
 {
 	storeContext->save(dlgHideScoreSetConfig, dlgHideScoreSetPath.toStdString());
+}
+
+void GlobalStructData::saveWarningIOSetConfig()
+{
+	storeContext->save(warningIOSetConfig, warningIOSetConfigPath.toStdString());
 }
 
 void GlobalStructData::saveWarningManagerConfig()

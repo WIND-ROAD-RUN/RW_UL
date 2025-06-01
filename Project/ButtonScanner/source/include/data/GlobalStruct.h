@@ -13,6 +13,7 @@
 #include"cdm_ButtonScannerDlgExposureTimeSet.h"
 #include"cdm_ButtonScannerDlgWarningManager.h"
 #include "cdm_ButtonScannerProduceLineSet.h"
+#include"WarningIOSetConfig.hpp"
 #include"cdm_ButtonScannerDlgHideScoreSet.h"
 #include"dsl_PriorityQueue.hpp"
 #include"oso_StorageContext.hpp"
@@ -105,6 +106,7 @@ public:
 	void ReadDlgExposureTimeSetConfig();
 	void ReadDlgHideScoreSetConfig();
 	void ReadWarningManagerConfig();
+	void readWarningIOSetConfig();
 public:
 	void saveConfig();
 	void saveMainWindowConfig();
@@ -112,6 +114,7 @@ public:
 	void saveDlgProductSetConfig();
 	void saveDlgExposureTimeSetConfig();
 	void saveDlgHideScoreSetConfig();
+	void saveWarningIOSetConfig();
 	void saveWarningManagerConfig();
 	std::unique_ptr<rw::oso::StorageContext> storeContext{ nullptr };
 public:
@@ -120,12 +123,14 @@ public:
 	QString dlgProductSetFilePath;
 	QString dlgExposureTimeSetFilePath;
 	QString dlgHideScoreSetPath;
+	QString warningIOSetConfigPath;
 	QString warningManagerFilePath;
 	rw::cdm::ButtonScannerMainWindow mainWindowConfig{};
 	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
 	rw::cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
 	rw::cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
 	rw::cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
+	cdm::WarningIOSetConfig warningIOSetConfig{};
 	rw::cdm::ButtonScannerDlgWarningManager dlgWarningManagerConfig{};
 public:
 	QString cameraIp1{ "11" };

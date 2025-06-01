@@ -96,6 +96,7 @@ private:
 	void read_config_productSetConfig();
 	void read_config_exposureTimeSetConfig();
 	void read_config_hideScoreSet();
+	void read_config_warningIOSetConfig();
 
 public:
 	void build_imageSaveEngine();

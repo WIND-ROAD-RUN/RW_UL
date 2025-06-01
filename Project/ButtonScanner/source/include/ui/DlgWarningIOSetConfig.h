@@ -17,6 +17,7 @@ public:
 private:
 	void build_ui();
 	void build_connect();
+	void read_config();
 
 private:
 	Ui::DlgWarningIOSetConfigClass *ui;

@@ -480,6 +480,7 @@ void ButtonScanner::read_config()
 	read_config_exposureTimeSetConfig();
 	read_config_hideScoreSet();
 	read_config_warningManagerConfig();
+	read_config_warningIOSetConfig();
 }
 
 void ButtonScanner::read_config_mainWindowConfig()
@@ -656,6 +657,36 @@ void ButtonScanner::read_config_hideScoreSet()
 	}
 	else {
 		globalStruct.ReadDlgHideScoreSetConfig();
+	}
+}
+
+void ButtonScanner::read_config_warningIOSetConfig()
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+
+	QString dlgWarningIOSetConfigFull = globalPath.configRootPath + "warningIOSetConfig.xml";
+	QFileInfo dlgWarningIOSetConfigFile(dlgWarningIOSetConfigFull);
+
+	globalStruct.warningIOSetConfigPath = dlgWarningIOSetConfigFull;
+
+	if (!dlgWarningIOSetConfigFile.exists()) {
+		QDir configDir = QFileInfo(dlgWarningIOSetConfigFull).absoluteDir();
+		if (!configDir.exists()) {
+			configDir.mkpath(".");
+		}
+		QFile file(dlgWarningIOSetConfigFull);
+		if (file.open(QIODevice::WriteOnly)) {
+			file.close();
+		}
+		else {
+			QMessageBox::critical(this, "Error", "无法创建配置文件warningIOSetConfig.xml");
+		}
+		globalStruct.warningIOSetConfig = cdm::WarningIOSetConfig();
+		globalStruct.saveWarningIOSetConfig();
+		return;
+	}
+	else {
+		globalStruct.readWarningIOSetConfig();
 	}
 }
 

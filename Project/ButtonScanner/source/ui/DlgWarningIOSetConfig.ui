@@ -108,7 +108,7 @@ QGroupBox::title {
      </property>
      <layout class="QGridLayout" name="gridLayout_4" columnminimumwidth="1,1">
       <item row="0" column="1">
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="gBox_DO">
         <property name="styleSheet">
          <string notr="true">QGroupBox {
     border: 1px solid #DDD;
@@ -872,7 +872,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_greenLightValue">
+              <widget class="QPushButton" name="pbtn_DOGreenLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -1001,7 +1001,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_redLightValue">
+              <widget class="QPushButton" name="pbtn_DORedLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -1130,7 +1130,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_upLightValue">
+              <widget class="QPushButton" name="pbtn_DOUpLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -1259,7 +1259,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_sideLightValue">
+              <widget class="QPushButton" name="pbtn_DOSideLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -1388,7 +1388,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_downLightValue">
+              <widget class="QPushButton" name="pbtn_DODownLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -1517,7 +1517,7 @@ QLabel.icon {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbtn_storeLightValue">
+              <widget class="QPushButton" name="pbtn_DOStoreLightValue">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
@@ -2639,7 +2639,7 @@ QLabel.icon {
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="gBox_DI">
         <property name="styleSheet">
          <string notr="true">QGroupBox {
     border: 1px solid #DDD;
