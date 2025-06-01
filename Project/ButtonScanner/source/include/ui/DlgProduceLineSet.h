@@ -87,7 +87,6 @@ private slots:
 	void cbox_DO11_checked(bool ischeck);
 	void cbox_beltControl(bool ischeck);
 private slots:
-	void cbox_DI0_checked(bool ischeck);
 	void cbox_DI1_checked(bool ischeck);
 	void cbox_DI2_checked(bool ischeck);
 	void cbox_DI3_checked(bool ischeck);
@@ -96,8 +95,6 @@ private slots:
 	void cbox_DI6_checked(bool ischeck);
 	void cbox_DI7_checked(bool ischeck);
 	void cbox_DI8_checked(bool ischeck);
-	void cbox_DI9_checked(bool ischeck);
-	void cbox_DI10_checked(bool ischeck);
 private slots:
 	void onDIState(int index, bool state);
 	void onDOState(int index, bool state);

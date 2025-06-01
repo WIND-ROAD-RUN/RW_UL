@@ -191,8 +191,6 @@ void DlgProduceLineSet::build_connect()
 	QObject::connect(ui->cbox_beltControl, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_beltControl);
 
-	QObject::connect(ui->cbox_DI0, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI0_checked);
 	QObject::connect(ui->cbox_DI1, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_DI1_checked);
 	QObject::connect(ui->cbox_DI2, &QCheckBox::clicked,
@@ -209,11 +207,6 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::cbox_DI7_checked);
 	QObject::connect(ui->cbox_DI8, &QCheckBox::clicked,
 		this, &DlgProduceLineSet::cbox_DI8_checked);
-	QObject::connect(ui->cbox_DI9, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI9_checked);
-	QObject::connect(ui->cbox_DI10, &QCheckBox::clicked,
-		this, &DlgProduceLineSet::cbox_DI10_checked);
-
 	QObject::connect(ui->pbtn_warnManager, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
@@ -792,10 +785,6 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 	}
 }
 
-void DlgProduceLineSet::cbox_DI0_checked(bool ischeck)
-{
-	ui->cbox_DI0->setChecked(false);
-}
 
 void DlgProduceLineSet::cbox_DI1_checked(bool ischeck)
 {
@@ -837,15 +826,6 @@ void DlgProduceLineSet::cbox_DI8_checked(bool ischeck)
 	ui->cbox_DI8->setChecked(false);
 }
 
-void DlgProduceLineSet::cbox_DI9_checked(bool ischeck)
-{
-	ui->cbox_DI9->setChecked(false);
-}
-
-void DlgProduceLineSet::cbox_DI10_checked(bool ischeck)
-{
-	ui->cbox_DI10->setChecked(false);
-}
 
 void DlgProduceLineSet::onDIState(int index, bool state)
 {

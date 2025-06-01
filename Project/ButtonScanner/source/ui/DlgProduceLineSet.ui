@@ -3347,65 +3347,17 @@ QGroupBox::title {
      <property name="title">
       <string/>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1">
+     <layout class="QVBoxLayout" name="verticalLayout_6" stretch="3,1">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_32">
+       <layout class="QHBoxLayout" name="horizontalLayout_23">
         <item>
-         <widget class="QFrame" name="frame">
-          <property name="frameShape">
-           <enum>QFrame::Shape::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Shadow::Sunken</enum>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>DI</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_18">
-             <item>
-              <widget class="QCheckBox" name="cbox_DI0">
-               <property name="styleSheet">
-                <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color:rgb(255, 0, 0); /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(0, 255, 0); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-               </property>
-               <property name="text">
-                <string>(DI:0)</string>
-               </property>
-               <property name="tristate">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
              <item>
               <widget class="QCheckBox" name="cbox_DI1">
                <property name="styleSheet">
@@ -3746,8 +3698,21 @@ QCheckBox::indicator:checked:hover {
                </property>
               </widget>
              </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="title">
+           <string>DO</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
-              <widget class="QCheckBox" name="cbox_DI9">
+              <widget class="QCheckBox" name="cbox_DO11">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -3784,26 +3749,10 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>(DI:9)</string>
+                <string>曝闪(DO:11)</string>
                </property>
               </widget>
              </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_2">
-          <property name="frameShape">
-           <enum>QFrame::Shape::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Shadow::Sunken</enum>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
               <widget class="QCheckBox" name="cbox_DO0">
                <property name="styleSheet">
@@ -4018,6 +3967,48 @@ QCheckBox::indicator:checked:hover {
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QCheckBox" name="cbox_beltControl">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+               </property>
+               <property name="text">
+                <string>皮带启动</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QCheckBox" name="cbox_DO5">
                <property name="styleSheet">
@@ -4236,132 +4227,19 @@ QCheckBox::indicator:checked:hover {
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_23">
+       <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="5,2">
         <item>
-         <widget class="QCheckBox" name="cbox_DI10">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color:rgb(255, 0, 0); /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(0, 255, 0); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
-          <property name="text">
-           <string>(DI:10)</string>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>298</width>
+            <height>20</height>
+           </size>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cbox_DO11">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color:rgb(255, 0, 0); /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(0, 255, 0); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-          </property>
-          <property name="text">
-           <string>曝闪(DO:11)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cbox_beltControl">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color:rgb(255, 0, 0); /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(0, 255, 0); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-          </property>
-          <property name="text">
-           <string>皮带启动</string>
-          </property>
-         </widget>
+         </spacer>
         </item>
         <item>
          <widget class="QCheckBox" name="cbox_debugMode">
