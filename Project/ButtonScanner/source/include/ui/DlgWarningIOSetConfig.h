@@ -10,7 +10,14 @@ QT_END_NAMESPACE
 class DlgWarningIOSetConfig : public QDialog
 {
 	Q_OBJECT
-
+private:
+	std::vector<std::vector<int>> DIFindAllDuplicateIndices();
+	void setDIErrorInfo(const std::vector<std::vector<int>>& index);
+	void setDIErrorInfo(int index);
+private:
+	std::vector<std::vector<int>> DOFindAllDuplicateIndices();
+	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
+	void setDOErrorInfo(int index);
 public:
 	DlgWarningIOSetConfig(QWidget *parent = nullptr);
 	~DlgWarningIOSetConfig();
