@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include "GlobalStruct.hpp"
+#include "NumberKeyboard.h"
 #include "Utilty.hpp"
 
 ZipperScanner::ZipperScanner(QWidget *parent)
@@ -35,6 +36,17 @@ void ZipperScanner::build_ui()
 
 void ZipperScanner::build_connect()
 {
+	// 退出
+	QObject::connect(ui->pbtn_exit, &QPushButton::clicked,
+		this, &ZipperScanner::pbtn_exit_clicked);
+
+	// 设置
+	QObject::connect(ui->pbtn_set, &QPushButton::clicked,
+		this, &ZipperScanner::pbtn_set_clicked);
+
+	// 分数
+	QObject::connect(ui->pbtn_score, &QPushButton::clicked,
+		this, &ZipperScanner::pbtn_score_clicked);
 }
 
 void ZipperScanner::build_ZipperScannerData()
@@ -168,5 +180,35 @@ void ZipperScanner::read_config_SetConfig()
 	{
 		globalStruct.setConfig = *globalStruct.storeContext->load(globalPath.setConfigPath.toStdString());
 	}
+}
+
+void ZipperScanner::pbtn_exit_clicked()
+{
+	this->close();
+}
+
+void ZipperScanner::pbtn_set_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		if (numKeyBord.getValue() == "1234") {
+			_dlgProductSet->setFixedSize(this->width(), this->height());
+			_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+			_dlgProductSet->exec();
+		}
+		else {
+			QMessageBox::warning(this, "Error", "密码错误，请重新输入");
+		}
+	}
+}
+
+void ZipperScanner::pbtn_score_clicked()
+{
+	_dlgProductScore->setFixedSize(this->width(), this->height());
+	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	_dlgProductScore->exec();
 }
 

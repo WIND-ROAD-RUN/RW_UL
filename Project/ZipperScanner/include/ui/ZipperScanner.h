@@ -34,6 +34,11 @@ public:
 	void read_config_ScoreConfig();
 	void read_config_SetConfig();
 
+private slots:
+	void pbtn_exit_clicked();
+	void pbtn_set_clicked();
+	void pbtn_score_clicked();
+
 private:
 	Ui::ZipperScannerClass *ui;
 };
