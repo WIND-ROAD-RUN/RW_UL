@@ -27,6 +27,7 @@ void ZipperScanner::read_config()
 	globalStruct.buildConfigManager(rw::oso::StorageType::Xml);
 
 	read_config_GeneralConfig();
+	read_config_ScoreConfig();
 
 }
 
@@ -61,6 +62,40 @@ void ZipperScanner::read_config_GeneralConfig()
 	else
 	{
 		globalStruct.generalConfig = *globalStruct.storeContext->load(globalPath.generalConfigPath.toStdString());
+	}
+}
+
+void ZipperScanner::read_config_ScoreConfig()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
+	auto& scoreConfigPathFull = globalPath.scoreConfigPath;
+
+	QFileInfo scoreConfigFile(scoreConfigPathFull);
+
+	if (!scoreConfigFile.exists())
+	{
+		QDir configDir = QFileInfo(scoreConfigPathFull).absoluteDir();
+		if (!configDir.exists())
+		{
+			configDir.mkpath(".");
+		}
+		QFile file(scoreConfigPathFull);
+		if (file.open(QIODevice::WriteOnly))
+		{
+			file.close();
+		}
+		else
+		{
+			QMessageBox::critical(this, "Error", "无法创建配置文件scoreConfig.xml");
+		}
+		globalStruct.scoreConfig = cdm::ScoreConfig();
+		globalStruct.storeContext->save(globalStruct.scoreConfig, globalPath.scoreConfigPath.toStdString());
+		return;
+	}
+	else
+	{
+		globalStruct.scoreConfig = *globalStruct.storeContext->load(globalPath.scoreConfigPath.toStdString());
 	}
 }
 

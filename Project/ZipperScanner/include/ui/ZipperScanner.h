@@ -18,6 +18,7 @@ public:
 public:
 	void read_config();
 	void read_config_GeneralConfig();
+	void read_config_ScoreConfig();
 
 private:
 	Ui::ZipperScannerClass *ui;
