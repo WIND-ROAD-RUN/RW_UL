@@ -14,7 +14,11 @@ class ZipperScanner : public QMainWindow
 public:
 	ZipperScanner(QWidget *parent = nullptr);
 	~ZipperScanner();
+public :
+	void build_ui();
+	void build_connect();
 
+	void build_ZipperScannerData();
 public:
 	void read_config();
 	void read_config_GeneralConfig();
