@@ -117,6 +117,12 @@ void DlgModelManager::pbtn_nextModel_clicked()
 {
 	auto maxIndex = _modelConfigs.size();
 	auto currentIndex = ui->listView_modelList->currentIndex();
+	if (maxIndex == 0) {
+		return;
+	}
+	if (!currentIndex.isValid()) {
+		return;
+	}
 	ui->listView_modelList->setCurrentIndex(currentIndex.siblingAtColumn(0).siblingAtRow((currentIndex.row() + 1) % maxIndex));
 }
 
@@ -124,6 +130,12 @@ void DlgModelManager::pbtn_preModel_clicked()
 {
 	auto maxIndex = _modelConfigs.size();
 	auto currentIndex = ui->listView_modelList->currentIndex();
+	if (maxIndex == 0) {
+		return;
+	}
+	if (!currentIndex.isValid()) {
+		return;
+	}
 	ui->listView_modelList->setCurrentIndex(currentIndex.siblingAtColumn(0).siblingAtRow((currentIndex.row() - 1 + maxIndex) % maxIndex));
 }
 
