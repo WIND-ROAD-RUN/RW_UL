@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 #include "ui_ZipperScanner.h"
+#include "DlgProductSet.h"
+#include "DlgProductScore.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ZipperScannerClass; };
@@ -14,11 +16,17 @@ class ZipperScanner : public QMainWindow
 public:
 	ZipperScanner(QWidget *parent = nullptr);
 	~ZipperScanner();
+
+public:
+	DlgProductSet* _dlgProductSet = nullptr;
+	DlgProductScore* _dlgProductScore = nullptr;
+
 public :
 	void build_ui();
 	void build_connect();
 
 	void build_ZipperScannerData();
+	void build_DlgProductSetData();
 public:
 	void read_config();
 	void read_config_GeneralConfig();

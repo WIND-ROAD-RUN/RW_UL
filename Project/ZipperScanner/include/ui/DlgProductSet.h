@@ -15,6 +15,10 @@ public:
 	DlgProductSet(QWidget *parent = nullptr);
 	~DlgProductSet();
 
+public:
+	void build_ui();
+	void read_config();
+
 private:
 	Ui::DlgProductSetClass *ui;
 };

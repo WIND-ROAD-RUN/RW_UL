@@ -27,7 +27,8 @@ ZipperScanner::~ZipperScanner()
 
 void ZipperScanner::build_ui()
 {
-
+	build_ZipperScannerData();
+	build_DlgProductSetData();
 
 
 }
@@ -47,6 +48,11 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->rbtn_strongLight->setChecked(zipperScannerConfig.qiangGuang);
 	ui->rbtn_mediumLight->setChecked(zipperScannerConfig.zhongGuang);
 	ui->rbtn_weakLight->setChecked(zipperScannerConfig.ruoGuang);
+}
+
+void ZipperScanner::build_DlgProductSetData()
+{
+	_dlgProductSet = new DlgProductSet(this);
 }
 
 void ZipperScanner::read_config()
