@@ -129,7 +129,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="vLayout_SideBar" stretch="8,16,6,4,3,2">
+     <layout class="QVBoxLayout" name="vLayout_SideBar" stretch="8,16,6,4,2">
       <item>
        <widget class="QGroupBox" name="groupBox_head">
         <property name="styleSheet">
@@ -786,7 +786,7 @@ QGroupBox::title {
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
-          <widget class="QRadioButton" name="rbtn_upLight">
+          <widget class="QRadioButton" name="rbtn_strongLight">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -851,12 +851,12 @@ QRadioButton::indicator:pressed {
 }</string>
            </property>
            <property name="text">
-            <string>上光源</string>
+            <string>强光</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QRadioButton" name="rbtn_sideLight">
+          <widget class="QRadioButton" name="rbtn_mediumLight">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -921,12 +921,12 @@ QRadioButton::indicator:pressed {
 }</string>
            </property>
            <property name="text">
-            <string>侧光源</string>
+            <string>中光</string>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="rbtn_downLight">
+          <widget class="QRadioButton" name="rbtn_weakLight">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -991,77 +991,7 @@ QRadioButton::indicator:pressed {
 }</string>
            </property>
            <property name="text">
-            <string>下光源</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QRadioButton" name="rbtn_strobe">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333; /* 文字颜色始终保持这个值 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid rgb(255, 170, 0); /* 黄色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 rgb(255, 170, 0),
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton::indicator:disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 移除文字颜色修改的代码 */
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC9900;
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFF59D,
-        stop:1 transparent
-    );
-}</string>
-           </property>
-           <property name="text">
-            <string>爆闪</string>
+            <string>弱光</string>
            </property>
           </widget>
          </item>
@@ -1125,39 +1055,6 @@ QPushButton:pressed {
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pbtn_newProduction">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-    font-size: 15px; 
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-           </property>
-           <property name="text">
-            <string>新物料</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="pbtn_set">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1187,168 +1084,6 @@ QPushButton:pressed {
            </property>
            <property name="text">
             <string>设置</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="gBox_produceSet">
-        <property name="styleSheet">
-         <string notr="true">QGroupBox {
-    font-size: 20px;
-    font-weight: bold;
-    background-color: rgb(181, 181, 181);
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-	border-radius: 15px
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 5px;
-    color: #2c3e50;
-}</string>
-        </property>
-        <property name="title">
-         <string/>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QRadioButton" name="rbtn_defect">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-           </property>
-           <property name="text">
-            <string>缺陷</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="rbtn_ForAndAgainst">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-           </property>
-           <property name="text">
-            <string>正反</string>
            </property>
           </widget>
          </item>
