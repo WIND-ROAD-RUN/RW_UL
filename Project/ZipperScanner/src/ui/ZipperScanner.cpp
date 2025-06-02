@@ -29,7 +29,7 @@ void ZipperScanner::build_ui()
 {
 	build_ZipperScannerData();
 	build_DlgProductSetData();
-
+	build_DlgProductScore();
 
 }
 
@@ -53,6 +53,11 @@ void ZipperScanner::build_ZipperScannerData()
 void ZipperScanner::build_DlgProductSetData()
 {
 	_dlgProductSet = new DlgProductSet(this);
+}
+
+void ZipperScanner::build_DlgProductScore()
+{
+	_dlgProductScore = new DlgProductScore(this);
 }
 
 void ZipperScanner::read_config()

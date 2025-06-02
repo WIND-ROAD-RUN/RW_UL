@@ -7,7 +7,7 @@ DlgProductSet::DlgProductSet(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	read_config();
+	build_ui();
 }
 
 DlgProductSet::~DlgProductSet()
@@ -17,7 +17,7 @@ DlgProductSet::~DlgProductSet()
 
 void DlgProductSet::build_ui()
 {
-	
+	read_config();
 }
 
 void DlgProductSet::read_config()

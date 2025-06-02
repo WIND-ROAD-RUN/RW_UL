@@ -822,7 +822,7 @@ QGroupBox::title {
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="QRadioButton" name="rbtn_maofaEnable">
+            <widget class="QRadioButton" name="rbtn_zangwuEnable">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -988,7 +988,7 @@ QLabel.icon {
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pbtn_maofaSimilarity">
+            <widget class="QPushButton" name="pbtn_zangwuSimilarity">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -1118,7 +1118,7 @@ QLabel.icon {
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pbtn_maofaArea">
+            <widget class="QPushButton" name="pbtn_zangwuArea">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>

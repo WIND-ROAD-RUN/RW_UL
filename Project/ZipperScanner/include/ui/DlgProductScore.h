@@ -15,6 +15,10 @@ public:
 	DlgProductScore(QWidget *parent = nullptr);
 	~DlgProductScore();
 
+public:
+	void build_ui();
+	void read_config();
+
 private:
 	Ui::DlgProductScoreClass *ui;
 };
