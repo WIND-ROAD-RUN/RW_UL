@@ -15,6 +15,10 @@ public:
 	ZipperScanner(QWidget *parent = nullptr);
 	~ZipperScanner();
 
+public:
+	void read_config();
+	void read_config_GeneralConfig();
+
 private:
 	Ui::ZipperScannerClass *ui;
 };

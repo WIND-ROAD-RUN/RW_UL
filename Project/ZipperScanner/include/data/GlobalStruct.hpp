@@ -4,20 +4,38 @@
 #include<QString>
 #include<QObject>
 
-class GlobalStructData
+#include "GeneralConfig.hpp"
+#include "ScoreConfig.hpp"
+#include "SetConfig.hpp"
+#include "oso_StorageContext.hpp"
+
+class GlobalStructDataZipper
 	:public QObject
 {
 	Q_OBJECT
 public:
-	static GlobalStructData& getInstance()
+	static GlobalStructDataZipper& getInstance()
 	{
-		static GlobalStructData instance;
+		static GlobalStructDataZipper instance;
 		return instance;
 	}
 
-	GlobalStructData(const GlobalStructData&) = delete;
-	GlobalStructData& operator=(const GlobalStructData&) = delete;
+	GlobalStructDataZipper(const GlobalStructDataZipper&) = delete;
+	GlobalStructDataZipper& operator=(const GlobalStructDataZipper&) = delete;
 private:
-	GlobalStructData();
-	~GlobalStructData() = default;
+	GlobalStructDataZipper();
+	~GlobalStructDataZipper() = default;
+
+public:
+	void buildConfigManager(rw::oso::StorageType type);
+
+public:
+	cdm::GeneralConfig generalConfig;
+	cdm::ScoreConfig scoreConfig;
+	cdm::SetConfig setConfig;
+
+	std::unique_ptr<rw::oso::StorageContext> storeContext{ nullptr };
+
+
+	
 };
