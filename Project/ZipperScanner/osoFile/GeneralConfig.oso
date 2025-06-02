@@ -7,5 +7,8 @@ namespace cdm {
 		totalProductionVolume : int :default = 0;
 		totalDefectiveVolume : int :default = 0;
 		productionYield : double :default = 0.0;
+		qiangGuang : bool :default = false;
+		zhongGuang : bool :default = false;
+		ruoGuang : bool :default = false;
 	};
 }

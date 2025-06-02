@@ -1,0 +1,9 @@
+#include <string>
+
+namespace cdm {
+	class SetConfig
+	{
+	public:
+		
+	};
+}
