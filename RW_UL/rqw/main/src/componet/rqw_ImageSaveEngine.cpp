@@ -101,7 +101,7 @@ namespace rw {
 			}
 
 			// 构造文件名
-			QString fileName = dir.filePath(image.classify + image.time + ".png");
+			QString fileName = dir.filePath(image.classify + image.time + ".jpg");
 
 			// 保存图片
 			if (!image.image.save(fileName)) {

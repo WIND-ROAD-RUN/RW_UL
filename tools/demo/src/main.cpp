@@ -1,6 +1,8 @@
 #include"demo.h"
 #include <QtWidgets/QApplication>
 #include"demoConfig.hpp"
+#include"ThumbnailsViewer.hpp"
+#include"opencv2/opencv.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -11,9 +13,9 @@ int main(int argc, char* argv[])
 	cdm::testClass test1(testAssembly);
 	auto d = test == test1;
 
-
-	demo w;
-	w.show();
+	ThumbnailsViewer viewer;
+	viewer.setRootPath(R"(C:\Users\rw\Desktop\1)");
+	viewer.show();
 
 	return a.exec();
 }
