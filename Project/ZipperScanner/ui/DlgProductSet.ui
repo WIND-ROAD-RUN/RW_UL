@@ -3771,7 +3771,7 @@ QGroupBox::title {
 }</string>
         </property>
         <property name="title">
-         <string>低光源</string>
+         <string>弱光源</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>

@@ -22,6 +22,9 @@ namespace cdm {
         int totalProductionVolume{ 0 };
         int totalDefectiveVolume{ 0 };
         double productionYield{ 0.0 };
+        bool qiangGuang{ false };
+        bool zhongGuang{ false };
+        bool ruoGuang{ false };
     };
 
     inline GeneralConfig::GeneralConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -46,6 +49,21 @@ namespace cdm {
             throw std::runtime_error("$variable$productionYield is not found");
         }
         productionYield = productionYieldItem->getValueAsDouble();
+        auto qiangGuangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiangGuang$"));
+        if (!qiangGuangItem) {
+            throw std::runtime_error("$variable$qiangGuang is not found");
+        }
+        qiangGuang = qiangGuangItem->getValueAsBool();
+        auto zhongGuangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zhongGuang$"));
+        if (!zhongGuangItem) {
+            throw std::runtime_error("$variable$zhongGuang is not found");
+        }
+        zhongGuang = zhongGuangItem->getValueAsBool();
+        auto ruoGuangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$ruoGuang$"));
+        if (!ruoGuangItem) {
+            throw std::runtime_error("$variable$ruoGuang is not found");
+        }
+        ruoGuang = ruoGuangItem->getValueAsBool();
     }
 
     inline GeneralConfig::GeneralConfig(const GeneralConfig& obj)
@@ -53,6 +71,9 @@ namespace cdm {
         totalProductionVolume = obj.totalProductionVolume;
         totalDefectiveVolume = obj.totalDefectiveVolume;
         productionYield = obj.productionYield;
+        qiangGuang = obj.qiangGuang;
+        zhongGuang = obj.zhongGuang;
+        ruoGuang = obj.ruoGuang;
     }
 
     inline GeneralConfig& GeneralConfig::operator=(const GeneralConfig& obj)
@@ -61,6 +82,9 @@ namespace cdm {
             totalProductionVolume = obj.totalProductionVolume;
             totalDefectiveVolume = obj.totalDefectiveVolume;
             productionYield = obj.productionYield;
+            qiangGuang = obj.qiangGuang;
+            zhongGuang = obj.zhongGuang;
+            ruoGuang = obj.ruoGuang;
         }
         return *this;
     }
@@ -81,12 +105,24 @@ namespace cdm {
         productionYieldItem->setName("$variable$productionYield$");
         productionYieldItem->setValueFromDouble(productionYield);
         assembly.addItem(productionYieldItem);
+        auto qiangGuangItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        qiangGuangItem->setName("$variable$qiangGuang$");
+        qiangGuangItem->setValueFromBool(qiangGuang);
+        assembly.addItem(qiangGuangItem);
+        auto zhongGuangItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        zhongGuangItem->setName("$variable$zhongGuang$");
+        zhongGuangItem->setValueFromBool(zhongGuang);
+        assembly.addItem(zhongGuangItem);
+        auto ruoGuangItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        ruoGuangItem->setName("$variable$ruoGuang$");
+        ruoGuangItem->setValueFromBool(ruoGuang);
+        assembly.addItem(ruoGuangItem);
         return assembly;
     }
 
     inline bool GeneralConfig::operator==(const GeneralConfig& obj) const
     {
-        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield;
+        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang;
     }
 
     inline bool GeneralConfig::operator!=(const GeneralConfig& obj) const

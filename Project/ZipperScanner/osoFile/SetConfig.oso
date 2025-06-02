@@ -4,6 +4,37 @@ namespace cdm {
 	class SetConfig
 	{
 	public:
-		
+		tiFeiChiXuShiJian1 : double :default = 0;
+		yanChiTiFeiShiJian1 : double :default = 0;
+
+		tiFeiChiXuShiJian2 : double :default = 0;
+		yanChiTiFeiShiJian2 : double :default = 0;
+
+		shangXianWei1 : double :default = 0;
+		xiaXianWei1 : double :default = 0;
+		zuoXianWei1 : double :default = 0;
+		youXianWei1 : double :default = 0;
+		xiangSuDangLiang1 : double :default = 0;
+
+		shangXianWei2 : double :default = 0;
+		xiaXianWei2 : double :default = 0;
+		zuoXianWei2 : double :default = 0;
+		youXianWei2 : double :default = 0;
+		xiangSuDangLiang2 : double :default = 0;
+
+		qiangBaoGuang : double :default = 0;
+		qiangZengYi : double :default = 0;
+
+		zhongBaoGuang : double :default = 0;
+		zhongZengYi : double :default = 0;
+
+		ruoBaoGuang : double :default = 0;
+		ruoZengYi : double :default = 0;
+
+		saveNGImg : bool :default = false;
+		saveMaskImg : bool :default = false;
+		saveOKImg : bool :default = false;
+
+		debugMode : bool :default = false;
 	};
 }
