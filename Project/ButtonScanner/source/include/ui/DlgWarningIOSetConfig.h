@@ -53,4 +53,5 @@ public slots:
 	void pbtn_DOSideLightValue_clicked();
 	void pbtn_DODownLightValue_clicked();
 	void pbtn_DOStoreLightValue_clicked();
+	void pbtn_DOStartBelt_clicked();
 };

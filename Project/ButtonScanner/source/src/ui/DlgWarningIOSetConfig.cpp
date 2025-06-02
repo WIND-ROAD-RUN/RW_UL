@@ -110,7 +110,8 @@ std::vector<std::vector<int>> DlgWarningIOSetConfig::DOFindAllDuplicateIndices()
 		config.DOUpLight,
 		config.DOSideLight,
 		config.DODownLight,
-		config.DOStrobeLight
+		config.DOStrobeLight,
+		config.DOStartBelt
 	};
 
 	std::unordered_map<int, std::vector<int>> valueToIndices;
@@ -152,6 +153,7 @@ void DlgWarningIOSetConfig::setDOErrorInfo(const std::vector<std::vector<int>>& 
 	ui->label_sideLightWarn->clear();
 	ui->lavbel_downWarn->clear();
 	ui->label_storeLightWarn->clear();
+	ui->label_startBelt->clear();
 	for (const auto& classic : index)
 	{
 		for (const auto& item : classic)
@@ -198,6 +200,9 @@ void DlgWarningIOSetConfig::setDOErrorInfo(int index)
 		break;
 	case 10:
 		ui->label_storeLightWarn->setText(text);
+		break;
+	case 11:
+		ui->label_startBelt->setText(text);
 		break;
 	}
 }
@@ -273,7 +278,8 @@ void DlgWarningIOSetConfig::build_connect()
 		this, &DlgWarningIOSetConfig::pbtn_DODownLightValue_clicked);
 	connect(ui->pbtn_DOStoreLightValue, &QPushButton::clicked,
 		this, &DlgWarningIOSetConfig::pbtn_DOStoreLightValue_clicked);
-
+	connect(ui->pbtn_DOStartBelt, &QPushButton::clicked,
+		this, &DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked);
 }
 
 void DlgWarningIOSetConfig::read_config()
@@ -298,6 +304,7 @@ void DlgWarningIOSetConfig::read_config()
 	ui->pbtn_DOUpLightValue->setText(QString::number(config.DOUpLight));
 	ui->pbtn_DODownLightValue->setText(QString::number(config.DODownLight));
 	ui->pbtn_DOStoreLightValue->setText(QString::number(config.DOStrobeLight));
+	ui->pbtn_DOStartBelt->setText(QString::number(config.DOStartBelt));
 }
 
 void DlgWarningIOSetConfig::pbtn_exit_clicked()
@@ -696,6 +703,28 @@ void DlgWarningIOSetConfig::pbtn_DOStoreLightValue_clicked()
 
 		ui->pbtn_DOStoreLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOStrobeLight = numValue;
+		auto index = DOFindAllDuplicateIndices();
+		setDOErrorInfo(index);
+	}
+}
+
+void DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		auto numValue = value.toInt();
+		if (numValue < 0)
+		{
+			QMessageBox::warning(this, QString("提示"), QString("请输入大于0的数值"));
+			return;
+		}
+
+		ui->pbtn_DOStartBelt->setText(value);
+		GlobalStructData::getInstance().warningIOSetConfig.DOStartBelt = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
