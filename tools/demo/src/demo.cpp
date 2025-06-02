@@ -33,7 +33,7 @@ demo::demo(QWidget *parent)
 		qDebug() << "No camera found!";
 		return;
 	}
-	m_cameraThread.initCamera(camerList[0], rw::rqw::CameraObjectTrigger::Software,0);
+	m_cameraThread.initCamera(camerList[0], rw::rqw::CameraObjectTrigger::Software);
 	QObject::connect(&m_cameraThread, &rw::rqw::CameraPassiveThread::frameCaptured, this, &demo::displayImg);
 	m_cameraThread.startMonitor();
 	m_cameraThread.setFrameRate(5);
