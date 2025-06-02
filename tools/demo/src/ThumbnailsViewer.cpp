@@ -4,17 +4,16 @@
 #include <QPixmap>
 #include <QIcon>
 
+
 ThumbnailsViewer::ThumbnailsViewer(QWidget* parent)
     : QWidget(parent)
-    , _listWidget(new QListWidget(this))
+    , _listWidget(new ThumbnailListWidget(this)) // 修改为自定义类
 {
     auto* layout = new QHBoxLayout(this);
     layout->addWidget(_listWidget);
     _listWidget->setViewMode(QListWidget::IconMode);
     _listWidget->setResizeMode(QListWidget::Adjust);
     _listWidget->setSpacing(10);
-
-    setThumbnailGridSize(_gridSize); // 初始化默认网格和icon大小
 
     _listWidget->setDragEnabled(false);
     _listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
