@@ -4,6 +4,7 @@
 #include<QStandardItemModel>
 #include<QItemSelection>
 #include<QDir>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class PicturesViewerClass; };
 QT_END_NAMESPACE
@@ -11,6 +12,11 @@ QT_END_NAMESPACE
 class PicturesViewer : public QMainWindow
 {
 	Q_OBJECT
+public:
+	enum class ViewerMode {
+		SignalPicture,
+		Thumbnail
+	};
 private:
 	QString _rootPath;
 private:
@@ -20,6 +26,9 @@ private:
 public:
 	PicturesViewer(QWidget* parent = nullptr);
 	~PicturesViewer();
+
+public:
+	void setViewerMode(ViewerMode mode);
 
 private:
 	void build_ui();

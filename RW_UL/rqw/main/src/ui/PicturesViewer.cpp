@@ -19,6 +19,22 @@ PicturesViewer::~PicturesViewer()
 	delete ui;
 }
 
+void PicturesViewer::setViewerMode(ViewerMode mode)
+{
+	switch (mode)
+	{
+	case ViewerMode::SignalPicture:
+		ui->tabWidget->setCurrentIndex(0);
+		break;
+	case ViewerMode::Thumbnail:
+		ui->tabWidget->setCurrentIndex(1);
+		break;
+	default:
+		ui->tabWidget->setCurrentIndex(0);
+		break;
+	}
+}
+
 void PicturesViewer::build_ui()
 {
 	_categoryModel = new QStandardItemModel(this);
@@ -26,6 +42,8 @@ void PicturesViewer::build_ui()
 
 	_picturesListModel = new QStandardItemModel(this);
 	ui->listView_picturesList->setModel(_picturesListModel);
+
+	setViewerMode(ViewerMode::SignalPicture);
 }
 
 void PicturesViewer::build_connect()
