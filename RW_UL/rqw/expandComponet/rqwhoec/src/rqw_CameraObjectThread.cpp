@@ -35,7 +35,7 @@ namespace rw
 		}
 
 		void CameraPassiveThread::initCamera(const rw::rqw::CameraMetaData& cameraMetaData,
-			rw::rqw::CameraObjectTrigger triggerMode, size_t motionInde)
+			rw::rqw::CameraObjectTrigger triggerMode)
 		{
 			if (_cameraObject)
 			{
