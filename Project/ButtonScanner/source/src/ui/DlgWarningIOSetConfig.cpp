@@ -111,7 +111,7 @@ std::vector<std::vector<int>> DlgWarningIOSetConfig::DOFindAllDuplicateIndices()
 		config.DOSideLight,
 		config.DODownLight,
 		config.DOStrobeLight,
-		config.DOStartBelt
+		config.axisStartBelt
 	};
 
 	std::unordered_map<int, std::vector<int>> valueToIndices;
@@ -304,7 +304,7 @@ void DlgWarningIOSetConfig::read_config()
 	ui->pbtn_DOUpLightValue->setText(QString::number(config.DOUpLight));
 	ui->pbtn_DODownLightValue->setText(QString::number(config.DODownLight));
 	ui->pbtn_DOStoreLightValue->setText(QString::number(config.DOStrobeLight));
-	ui->pbtn_DOStartBelt->setText(QString::number(config.DOStartBelt));
+	ui->pbtn_DOStartBelt->setText(QString::number(config.axisStartBelt));
 }
 
 void DlgWarningIOSetConfig::pbtn_exit_clicked()
@@ -724,7 +724,7 @@ void DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked()
 		}
 
 		ui->pbtn_DOStartBelt->setText(value);
-		GlobalStructData::getInstance().warningIOSetConfig.DOStartBelt = numValue;
+		GlobalStructData::getInstance().warningIOSetConfig.axisStartBelt = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}

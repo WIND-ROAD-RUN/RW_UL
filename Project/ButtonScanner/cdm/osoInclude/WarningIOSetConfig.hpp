@@ -39,7 +39,7 @@ namespace cdm {
         int DOSideLight{ 0 };
         int DODownLight{ 0 };
         int DOStrobeLight{ 0 };
-        int DOStartBelt{ 0 };
+        int axisStartBelt{ 0 };
     };
 
     inline WarningIOSetConfig::WarningIOSetConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -144,11 +144,11 @@ namespace cdm {
             throw std::runtime_error("$variable$DOStrobeLight is not found");
         }
         DOStrobeLight = DOStrobeLightItem->getValueAsInt();
-        auto DOStartBeltItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$DOStartBelt$"));
-        if (!DOStartBeltItem) {
-            throw std::runtime_error("$variable$DOStartBelt is not found");
+        auto axisStartBeltItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$axisStartBelt$"));
+        if (!axisStartBeltItem) {
+            throw std::runtime_error("$variable$axisStartBelt is not found");
         }
-        DOStartBelt = DOStartBeltItem->getValueAsInt();
+        axisStartBelt = axisStartBeltItem->getValueAsInt();
     }
 
     inline WarningIOSetConfig::WarningIOSetConfig(const WarningIOSetConfig& obj)
@@ -172,7 +172,7 @@ namespace cdm {
         DOSideLight = obj.DOSideLight;
         DODownLight = obj.DODownLight;
         DOStrobeLight = obj.DOStrobeLight;
-        DOStartBelt = obj.DOStartBelt;
+        axisStartBelt = obj.axisStartBelt;
     }
 
     inline WarningIOSetConfig& WarningIOSetConfig::operator=(const WarningIOSetConfig& obj)
@@ -197,7 +197,7 @@ namespace cdm {
             DOSideLight = obj.DOSideLight;
             DODownLight = obj.DODownLight;
             DOStrobeLight = obj.DOStrobeLight;
-            DOStartBelt = obj.DOStartBelt;
+            axisStartBelt = obj.axisStartBelt;
         }
         return *this;
     }
@@ -282,16 +282,16 @@ namespace cdm {
         DOStrobeLightItem->setName("$variable$DOStrobeLight$");
         DOStrobeLightItem->setValueFromInt(DOStrobeLight);
         assembly.addItem(DOStrobeLightItem);
-        auto DOStartBeltItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        DOStartBeltItem->setName("$variable$DOStartBelt$");
-        DOStartBeltItem->setValueFromInt(DOStartBelt);
-        assembly.addItem(DOStartBeltItem);
+        auto axisStartBeltItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        axisStartBeltItem->setName("$variable$axisStartBelt$");
+        axisStartBeltItem->setValueFromInt(axisStartBelt);
+        assembly.addItem(axisStartBeltItem);
         return assembly;
     }
 
     inline bool WarningIOSetConfig::operator==(const WarningIOSetConfig& obj) const
     {
-        return DIStart == obj.DIStart && DIStop == obj.DIStop && DIShutdownComputer == obj.DIShutdownComputer && DIAirPressure == obj.DIAirPressure && DICameraTrigger1 == obj.DICameraTrigger1 && DICameraTrigger2 == obj.DICameraTrigger2 && DICameraTrigger3 == obj.DICameraTrigger3 && DICameraTrigger4 == obj.DICameraTrigger4 && DOMotoPower == obj.DOMotoPower && DOBlow1 == obj.DOBlow1 && DOBlow2 == obj.DOBlow2 && DOBlow3 == obj.DOBlow3 && DOBlow4 == obj.DOBlow4 && DOGreenLight == obj.DOGreenLight && DORedLight == obj.DORedLight && DOUpLight == obj.DOUpLight && DOSideLight == obj.DOSideLight && DODownLight == obj.DODownLight && DOStrobeLight == obj.DOStrobeLight && DOStartBelt == obj.DOStartBelt;
+        return DIStart == obj.DIStart && DIStop == obj.DIStop && DIShutdownComputer == obj.DIShutdownComputer && DIAirPressure == obj.DIAirPressure && DICameraTrigger1 == obj.DICameraTrigger1 && DICameraTrigger2 == obj.DICameraTrigger2 && DICameraTrigger3 == obj.DICameraTrigger3 && DICameraTrigger4 == obj.DICameraTrigger4 && DOMotoPower == obj.DOMotoPower && DOBlow1 == obj.DOBlow1 && DOBlow2 == obj.DOBlow2 && DOBlow3 == obj.DOBlow3 && DOBlow4 == obj.DOBlow4 && DOGreenLight == obj.DOGreenLight && DORedLight == obj.DORedLight && DOUpLight == obj.DOUpLight && DOSideLight == obj.DOSideLight && DODownLight == obj.DODownLight && DOStrobeLight == obj.DOStrobeLight && axisStartBelt == obj.axisStartBelt;
     }
 
     inline bool WarningIOSetConfig::operator!=(const WarningIOSetConfig& obj) const

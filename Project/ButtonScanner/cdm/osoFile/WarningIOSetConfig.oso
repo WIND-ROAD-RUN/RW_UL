@@ -24,7 +24,7 @@ namespace cdm{
         DOSideLight : int : default = 0;
         DODownLight : int : default = 0;
         DOStrobeLight : int : default = 0;
-        DOStartBelt : int : default = 0;
+        axisStartBelt : int : default = 0;
     };
 }
 
