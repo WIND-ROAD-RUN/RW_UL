@@ -1070,6 +1070,7 @@ void ButtonScanner::build_ioThread()
 								ui->rbtn_removeFunc->setChecked(true);
 								ui->rbtn_debug->setChecked(false);
 								label_lightBulb->setVisible(false);
+								ui->cBox_isDisplayInfo->setVisible(false);
 							});
 					}
 					//所有电机上电
