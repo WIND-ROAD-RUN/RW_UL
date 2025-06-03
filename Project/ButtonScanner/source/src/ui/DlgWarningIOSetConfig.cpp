@@ -278,7 +278,7 @@ void DlgWarningIOSetConfig::build_connect()
 		this, &DlgWarningIOSetConfig::pbtn_DODownLightValue_clicked);
 	connect(ui->pbtn_DOStoreLightValue, &QPushButton::clicked,
 		this, &DlgWarningIOSetConfig::pbtn_DOStoreLightValue_clicked);
-	connect(ui->pbtn_DOStartBelt, &QPushButton::clicked,
+	connect(ui->pbtn_AxisStartBelt, &QPushButton::clicked,
 		this, &DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked);
 }
 
@@ -304,7 +304,7 @@ void DlgWarningIOSetConfig::read_config()
 	ui->pbtn_DOUpLightValue->setText(QString::number(config.DOUpLight));
 	ui->pbtn_DODownLightValue->setText(QString::number(config.DODownLight));
 	ui->pbtn_DOStoreLightValue->setText(QString::number(config.DOStrobeLight));
-	ui->pbtn_DOStartBelt->setText(QString::number(config.axisStartBelt));
+	ui->pbtn_AxisStartBelt->setText(QString::number(config.axisStartBelt));
 }
 
 void DlgWarningIOSetConfig::pbtn_exit_clicked()
@@ -723,7 +723,7 @@ void DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked()
 			return;
 		}
 
-		ui->pbtn_DOStartBelt->setText(value);
+		ui->pbtn_AxisStartBelt->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.axisStartBelt = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
