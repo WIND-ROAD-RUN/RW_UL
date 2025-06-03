@@ -4,6 +4,7 @@
 #include"ModelStorageManager.h"
 #include"GlobalStruct.h"
 #include"ButtonUtilty.h"
+#include "rqw_CameraObjectZMotion.hpp"
 
 DlgModelManager::DlgModelManager(QWidget* parent)
 	: QDialog(parent)
@@ -240,6 +241,11 @@ void DlgModelManager::pbtn_loadModel_clicked()
 		globalStruct.setStrobeLight(false);
 	}
 
+	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
+	motionPtr->SetIOOut(ControlLines::upLightOut, config.upLight);
+	motionPtr->SetIOOut(ControlLines::downLightOut, config.downLight);
+	motionPtr->SetIOOut(ControlLines::sideLightOut, config.sideLight);
+	motionPtr->SetIOOut(ControlLines::strobeLightOut, config.strobeLight);
 
 	copyTargetImageFromStorageInTemp();
 	_loadingDialog->hide();
