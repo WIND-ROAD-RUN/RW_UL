@@ -14,10 +14,13 @@ ZipperScanner::ZipperScanner(QWidget *parent)
 {
 	ui->setupUi(this);
 
+	// 读取参数
 	read_config();
 
+	// 构建UI
 	build_ui();
 
+	// 连接槽函数
 	build_connect();
 }
 
@@ -26,6 +29,7 @@ ZipperScanner::~ZipperScanner()
 	delete ui;
 }
 
+// 构建UI
 void ZipperScanner::build_ui()
 {
 	build_ZipperScannerData();
@@ -34,6 +38,7 @@ void ZipperScanner::build_ui()
 
 }
 
+// 连接槽函数
 void ZipperScanner::build_connect()
 {
 	// 退出
@@ -49,6 +54,7 @@ void ZipperScanner::build_connect()
 		this, &ZipperScanner::pbtn_score_clicked);
 }
 
+// 加载ZipperScanner窗体数据
 void ZipperScanner::build_ZipperScannerData()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -62,11 +68,13 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->rbtn_weakLight->setChecked(zipperScannerConfig.ruoGuang);
 }
 
+// 通过实现DlgProductSet的构造函数进行初始化
 void ZipperScanner::build_DlgProductSetData()
 {
 	_dlgProductSet = new DlgProductSet(this);
 }
 
+// 通过实现DlgProductScore的构造函数进行初始化
 void ZipperScanner::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScore(this);
@@ -83,6 +91,7 @@ void ZipperScanner::read_config()
 
 }
 
+// 读取通用配置
 void ZipperScanner::read_config_GeneralConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -117,6 +126,7 @@ void ZipperScanner::read_config_GeneralConfig()
 	}
 }
 
+// 读取分数配置
 void ZipperScanner::read_config_ScoreConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -151,6 +161,7 @@ void ZipperScanner::read_config_ScoreConfig()
 	}
 }
 
+// 读取设置配置
 void ZipperScanner::read_config_SetConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
