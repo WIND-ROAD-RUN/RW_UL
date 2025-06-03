@@ -35,6 +35,7 @@ public:
 
 	// 保存参数
 	void saveDlgProductSetConfig();
+	void saveDlgProductScoreConfig();
 	
 public:
 	// UI界面参数

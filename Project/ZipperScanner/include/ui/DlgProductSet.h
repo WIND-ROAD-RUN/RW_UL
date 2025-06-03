@@ -20,9 +20,6 @@ public:
 	void read_config();
 	void build_connect();
 
-public:
-	void saveDlgProductSetConfig();
-
 private slots:
 	void pbtn_close_clicked();
 

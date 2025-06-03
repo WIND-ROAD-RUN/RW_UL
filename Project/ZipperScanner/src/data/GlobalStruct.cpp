@@ -66,6 +66,12 @@ void GlobalStructDataZipper::saveDlgProductSetConfig()
 	storeContext->save(setConfig, setConfigPath);
 }
 
+void GlobalStructDataZipper::saveDlgProductScoreConfig()
+{
+	std::string scoreConfigPath = globalPath.scoreConfigPath.toStdString();
+	storeContext->save(scoreConfig, scoreConfigPath);
+}
+
 bool GlobalStructDataZipper::buildCamera1()
 {
 	return false;
