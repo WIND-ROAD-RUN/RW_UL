@@ -38,28 +38,28 @@ struct ControlLine
 struct ControlLines
 {
 public:
-	const static ControlLine blowLine1;
-	const static ControlLine blowLine2;
-	const static ControlLine blowLine3;
-	const static ControlLine blowLine4;
+	static ControlLine blowLine1;
+	static ControlLine blowLine2;
+	static ControlLine blowLine3;
+	static ControlLine blowLine4;
 public:
-	static constexpr int stopIn = 2;
-	static constexpr int startIn = 1;
-	static constexpr int airWarnIn = 7;
-	static constexpr int shutdownComputerIn = 8;
-	static constexpr int camer1In = 6;
-	static constexpr int camer2In = 5;
-	static constexpr int camer3In = 4;
-	static constexpr int camer4In = 3;
+	static int stopIn;
+	static int startIn;
+	static int airWarnIn;
+	static int shutdownComputerIn;
+	static int camer1In;
+	static int camer2In;
+	static int camer3In;
+	static int camer4In;
 public:
-	static constexpr int motoPowerOut = 1;
-	static constexpr int beltAsis = 0;
-	static constexpr int warnGreenOut = 7;
-	static constexpr int warnRedOut = 8;
-	static constexpr int upLightOut = 9;
-	static constexpr int sideLightOut = 0;
-	static constexpr int downLightOut = 10 ;
-	static constexpr int strobeLightOut = 11;
+	static int motoPowerOut;
+	static int beltAsis;
+	static int warnGreenOut;
+	static int warnRedOut;
+	static int upLightOut;
+	static int sideLightOut;
+	static int downLightOut;
+	static int strobeLightOut;
 };
 
 struct ClassId

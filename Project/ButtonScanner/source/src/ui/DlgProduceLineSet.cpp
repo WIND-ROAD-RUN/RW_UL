@@ -826,34 +826,29 @@ void DlgProduceLineSet::cbox_DICameraTrigger4_checked(bool ischeck)
 
 void DlgProduceLineSet::onDIState(int index, bool state)
 {
-	switch (index)
-	{
-	case ControlLines::stopIn:
+	if (index == ControlLines::stopIn) {
 		ui->cbox_DIStop->setChecked(state);
-		break;
-	case ControlLines::startIn:
+	}
+	if (index == ControlLines::startIn) {
 		ui->cbox_DIStart->setChecked(state);
-		break;
-	case ControlLines::airWarnIn:
+	}
+	if (index == ControlLines::airWarnIn) {
 		ui->cbox_DIAirPressure->setChecked(state);
-		break;
-	case ControlLines::shutdownComputerIn:
+	}
+	if (index == ControlLines::shutdownComputerIn) {
 		ui->cbox_DIShutdownComputer->setChecked(state);
-		break;
-	case ControlLines::camer1In:
+	}
+	if (index == ControlLines::camer1In) {
 		ui->cbox_DICameraTrigger1->setChecked(state);
-		break;
-	case ControlLines::camer2In:
+	}
+	if (index == ControlLines::camer2In) {
 		ui->cbox_DICameraTrigger2->setChecked(state);
-		break;
-	case ControlLines::camer3In:
+	}
+	if (index == ControlLines::camer3In) {
 		ui->cbox_DICameraTrigger3->setChecked(state);
-		break;
-	case ControlLines::camer4In:
+	}
+	if (index == ControlLines::camer4In) {
 		ui->cbox_DICameraTrigger4->setChecked(state);
-		break;
-	default:
-		break;
 	}
 }
 
