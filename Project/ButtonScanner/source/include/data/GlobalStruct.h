@@ -22,6 +22,7 @@
 #include"MonitorCameraAndCardStateThread.h"
 #include"dsl_ThreadSafeMinHeap.h"
 #include"AiTrainModule.h"
+#include"StrobeLightThread.hpp"
 
 #include<QString>
 
@@ -50,6 +51,7 @@ public:
 	std::unique_ptr<DetachUtiltyThread> detachUtiltyThread{ nullptr };
 	std::unique_ptr<MonitorCameraAndCardStateThread> monitorCameraAndCardStateThread{ nullptr };
 	std::unique_ptr<AiTrainModule> aiTrainModule{ nullptr };
+	//std::unique_ptr<StrobeLightThread> strobeLightThread{ nullptr };
 public:
 	void buildDetachThread();
 	void destroyDetachThread();
