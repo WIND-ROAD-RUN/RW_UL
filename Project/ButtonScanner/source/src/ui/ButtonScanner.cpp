@@ -43,14 +43,26 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
-		ui->rbtn_debug->setChecked(false);
+
+		//ui->rbtn_debug->setChecked(false);
 		auto& runningState = globalStructData.runningState;
+
+		bool beforeSetExposureTimeIsDebug = false;
+		if (runningState==RunningState::Debug)
+		{
+			beforeSetExposureTimeIsDebug = true;
+		}
+
 		runningState = RunningState::Monitor;
 		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 		_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 		_dlgExposureTimeSet->exec(); // 显示对话框
 		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 		runningState = RunningState::Stop;
+		if (beforeSetExposureTimeIsDebug)
+		{
+			rbtn_debug_checked(true); // 如果之前是调试模式，重新设置为调试模式
+		}
 	}
 }
 
@@ -1408,9 +1420,26 @@ void ButtonScanner::pbtn_openSaveLocation_clicked()
 void ButtonScanner::rbtn_debug_checked(bool checked)
 {
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
+	//if (!isRuning) {
+	//	if (checked) {
+	//		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+	//		auto& GlobalStructData = GlobalStructData::getInstance();
+	//		GlobalStructData.mainWindowConfig.isDebugMode = checked;
+	//		GlobalStructData.runningState = RunningState::Debug;
+	//	}
+	//	else {
+	//		auto& GlobalStructData = GlobalStructData::getInstance();
+	//		GlobalStructData.mainWindowConfig.isDebugMode = checked;
+	//		GlobalStructData.runningState = RunningState::Stop;
+	//		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+	//	}
+	//}
+	//else {
+	//	ui->rbtn_debug->setChecked(false);
+	//}
+
 	if (!isRuning) {
 		if (checked) {
-			_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 			auto& GlobalStructData = GlobalStructData::getInstance();
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Debug;
@@ -1419,7 +1448,6 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 			auto& GlobalStructData = GlobalStructData::getInstance();
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Stop;
-			_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 		}
 	}
 	else {
