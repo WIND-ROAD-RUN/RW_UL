@@ -1044,7 +1044,6 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	if (GlobalStructData::getInstance().debug_isDisplayInfo)
 	{
-		//绘制识别框
 		drawButtonDefectInfoText(image, defectInfo);
 		drawVerticalBoundaryLine(image);
 		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
