@@ -110,8 +110,7 @@ std::vector<std::vector<int>> DlgWarningIOSetConfig::DOFindAllDuplicateIndices()
 		config.DOUpLight,
 		config.DOSideLight,
 		config.DODownLight,
-		config.DOStrobeLight,
-		config.axisStartBelt
+		config.DOStrobeLight
 	};
 
 	std::unordered_map<int, std::vector<int>> valueToIndices;
@@ -153,7 +152,6 @@ void DlgWarningIOSetConfig::setDOErrorInfo(const std::vector<std::vector<int>>& 
 	ui->label_sideLightWarn->clear();
 	ui->lavbel_downWarn->clear();
 	ui->label_storeLightWarn->clear();
-	ui->label_startBelt->clear();
 	for (const auto& classic : index)
 	{
 		for (const auto& item : classic)
@@ -200,9 +198,6 @@ void DlgWarningIOSetConfig::setDOErrorInfo(int index)
 		break;
 	case 10:
 		ui->label_storeLightWarn->setText(text);
-		break;
-	case 11:
-		ui->label_startBelt->setText(text);
 		break;
 	}
 }
