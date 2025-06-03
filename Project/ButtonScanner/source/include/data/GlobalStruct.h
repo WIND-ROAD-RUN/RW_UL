@@ -75,6 +75,8 @@ class GlobalStructData
 {
 	Q_OBJECT
 public:
+	std::atomic_bool debug_isDisplayInfo{ true };
+public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
 public:
 	std::unique_ptr<ModelStorageManager> modelStorageManager;

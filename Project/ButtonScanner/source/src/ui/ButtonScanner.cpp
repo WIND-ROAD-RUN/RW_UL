@@ -329,6 +329,7 @@ void ButtonScanner::build_ui()
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
 		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
 
+	ui->cBox_isDisplayInfo->setVisible(false);
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
 	ui->rbtn_strobe->setVisible(false);
@@ -480,6 +481,9 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(dlgWarn, &DlgWarn::isProcess,
 		this, &ButtonScanner::dlgWarningAccept);
+
+	QObject::connect(ui->cBox_isDisplayInfo, &QCheckBox::clicked,
+		this, &ButtonScanner::cBox_isDisplayInfo_checked);
 }
 
 void ButtonScanner::read_config()
@@ -1452,6 +1456,7 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 			GlobalStructData.runningState = RunningState::Stop;
 			//GlobalThread.strobeLightThread->stopThread();
 		}
+		ui->cBox_isDisplayInfo->setVisible(checked);
 	}
 	else {
 		ui->rbtn_debug->setChecked(false);
@@ -1522,6 +1527,12 @@ void ButtonScanner::rbtn_strobe_checked(bool checked)
 	GlobalStructData.saveConfig();
 	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motionPtr->SetIOOut(ControlLines::strobeLightOut, checked);
+}
+
+void ButtonScanner::cBox_isDisplayInfo_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.debug_isDisplayInfo = checked;
 }
 
 void ButtonScanner::labelClickable_title_clicked()

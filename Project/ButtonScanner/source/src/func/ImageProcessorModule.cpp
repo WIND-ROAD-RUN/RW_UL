@@ -1041,14 +1041,17 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	//绘制defect信息
 	auto  image = cvMatToQImage(frame.image);
-	drawButtonDefectInfoText(image, defectInfo);
 
-	//绘制识别框
-	drawVerticalBoundaryLine(image);
-	drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
-	drawErrorRec(image, processResult, processResultIndex);
-	ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
-	ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	if (GlobalStructData::getInstance().debug_isDisplayInfo)
+	{
+		//绘制识别框
+		drawButtonDefectInfoText(image, defectInfo);
+		drawVerticalBoundaryLine(image);
+		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		drawErrorRec(image, processResult, processResultIndex);
+		ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
+		ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
+	}
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);

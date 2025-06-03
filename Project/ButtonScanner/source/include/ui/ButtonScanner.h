@@ -161,6 +161,8 @@ private slots:
 	void rbtn_defect_checked(bool checked);
 	void rbtn_forAndAgainst_checked(bool checked);
 	void rbtn_strobe_checked(bool checked);
+private slots:
+	void cBox_isDisplayInfo_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
 public slots:
@@ -175,3 +177,4 @@ public slots:
 public slots:
 	void workTriggerError(int index);
 };
+
