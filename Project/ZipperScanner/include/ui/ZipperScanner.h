@@ -24,6 +24,7 @@ public:
 public :
 	void build_ui();
 	void build_connect();
+	void build_camera();
 
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();

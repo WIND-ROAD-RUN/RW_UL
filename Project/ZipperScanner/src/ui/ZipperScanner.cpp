@@ -54,6 +54,14 @@ void ZipperScanner::build_connect()
 		this, &ZipperScanner::pbtn_score_clicked);
 }
 
+// 构建相机
+void ZipperScanner::build_camera()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.cameraIp1 = "11";
+	globalStruct.cameraIp2 = "12";
+}
+
 // 加载ZipperScanner窗体数据
 void ZipperScanner::build_ZipperScannerData()
 {
