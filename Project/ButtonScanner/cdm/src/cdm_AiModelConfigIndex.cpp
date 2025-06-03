@@ -152,6 +152,18 @@ namespace rw
 			modelIndexs.push_back(item);
 		}
 
+		void AiModelConfigIndex::pushFirstConfig(const ConfigIndexItem& item)
+		{
+			for (const auto& index : modelIndexs)
+			{
+				if (index.id == item.id)
+				{
+					return;
+				}
+			}
+			modelIndexs.insert(modelIndexs.begin(), item);
+		}
+
 		void AiModelConfigIndex::deleteConfig(const ConfigIndexItem& item)
 		{
 			for (size_t i = 0; i < modelIndexs.size(); ++i)

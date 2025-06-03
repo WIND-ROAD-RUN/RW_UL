@@ -15,7 +15,7 @@ void ModelStorageManager::addModelConfig(const rw::cdm::AiModelConfig& item)
 	indexItem.model_name = item.name;
 	indexItem.model_type = item.modelType;
 	indexItem.root_path = item.rootPath;
-	_config_index.pushConfig(indexItem);
+	_config_index.pushFirstConfig(indexItem);
 }
 
 void ModelStorageManager::eraseModelConfig(const rw::cdm::AiModelConfig& item)
