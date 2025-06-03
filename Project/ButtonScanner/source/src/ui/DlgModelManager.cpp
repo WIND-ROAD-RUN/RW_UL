@@ -5,6 +5,9 @@
 #include"GlobalStruct.h"
 #include"ButtonUtilty.h"
 #include "rqw_CameraObjectZMotion.hpp"
+#include <algorithm>
+#include <QRandomGenerator>
+#include <algorithm>
 
 DlgModelManager::DlgModelManager(QWidget* parent)
 	: QDialog(parent)
@@ -165,9 +168,14 @@ void DlgModelManager::pbtn_deleteModel_clicked()
 	modelStorageManager->eraseModelConfig(configItem);
 	_modelConfigs.remove(currentIndex.row());
 
-	// 清空模型信息表和示例图片（可选）
-	flashModelInfoTable(0);
-	flashExampleImage(0);
+	QModelIndex newIndex = ui->listView_modelList->currentIndex();
+	int showIndex = 0;
+	if (newIndex.isValid()) {
+		showIndex = newIndex.row();
+	}
+	flashModelInfoTable(showIndex);
+	flashExampleImage(showIndex);
+
 }
 
 void DlgModelManager::pbtn_loadModel_clicked()
@@ -334,7 +342,8 @@ QVector<QString> DlgModelManager::getImagePaths(const QString& rootPath, bool is
 	// 定义目标文件夹名称
 	QString targetFolder = isGood ? "good" : "bad";
 
-	// 遍历 work1, work2, work3, work4 文件夹
+	// 收集所有图片路径
+	QVector<QString> allImagePaths;
 	QStringList workFolders = rootDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 	for (const QString& workFolder : workFolders) {
 		QDir workDir(rootDir.filePath(workFolder));
@@ -345,20 +354,19 @@ QVector<QString> DlgModelManager::getImagePaths(const QString& rootPath, bool is
 			continue;
 		}
 
-		// 查找目标文件夹下的所有 .png 文件
 		QStringList filters;
-		filters << "*.png";
+		filters << "*.png" << "*.jpg" << "*.jpeg" << "*.bmp" << "*.gif" << "*.tif" << "*.tiff";
 		QStringList pngFiles = targetDir.entryList(filters, QDir::Files | QDir::NoSymLinks);
 
-		// 获取每个文件的绝对路径并添加到结果中
 		for (const QString& pngFile : pngFiles) {
-			imagePaths.append(targetDir.absoluteFilePath(pngFile));
-
-			// 如果已找到指定数量的图片，停止搜索
-			if (imagePaths.size() >= maxCount) {
-				return imagePaths;
-			}
+			allImagePaths.append(targetDir.absoluteFilePath(pngFile));
 		}
+	}
+
+	// 随机选取maxCount张图片
+	std::shuffle(allImagePaths.begin(), allImagePaths.end(), *QRandomGenerator::global());
+	for (int i = 0; i < std::min(maxCount, static_cast<int>(allImagePaths.size())); ++i) {
+		imagePaths.append(allImagePaths[i]);
 	}
 
 	return imagePaths;
@@ -414,6 +422,7 @@ void DlgModelManager::flashModelList()
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& modelStorageManager = globalStruct.modelStorageManager;
 	_configIndex = modelStorageManager->getModelConfigIndex();
+	std::reverse(_configIndex.modelIndexs.begin(), _configIndex.modelIndexs.end());
 
 	QStringList data;
 	for (const auto& item : _configIndex.modelIndexs)
