@@ -319,6 +319,7 @@ void ButtonScanner::build_ui()
 
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
+	ui->rbtn_strobe->setVisible(false);
 }
 
 void ButtonScanner::read_image()
