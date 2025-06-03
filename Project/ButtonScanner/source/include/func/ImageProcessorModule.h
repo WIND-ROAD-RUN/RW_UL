@@ -12,6 +12,8 @@
 #include <vector>
 #include<QThread>
 
+#include "rqw_ImageSaveEngine.h"
+
 struct ButtonDefectInfo
 {
 public:
@@ -156,6 +158,9 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
+
+	void save_image( rw::rqw::ImageInfo & imageInfo,const QImage & image);
+	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 signals:
 	void imageReady(QPixmap image);
 private:

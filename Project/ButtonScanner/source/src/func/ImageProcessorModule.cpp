@@ -17,7 +17,7 @@ void ImageProcessor::buildModelEngineOT(const QString& enginePath)
 	config.conf_threshold = 0.1f;
 	config.nms_threshold = 0.1f;
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
-	config.letterBoxColor = cv::Scalar(114,114,114);
+	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.classids_nms_together = { 0,1 };
 	config.modelPath = enginePath.toStdString();
 	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
@@ -59,7 +59,7 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 {
 	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
-	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex,10);
+	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex, 10);
 	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
 	return processResultIndex;
 }
@@ -230,7 +230,7 @@ void ImageProcessor::drawButtonDefectInfoText(QImage& image, const ButtonDefectI
 	QString largeColorText = QString("large R: %1 G: %2 B: %3").arg(info.large_R, 0, 'f', 2).arg(info.large_G, 0, 'f', 2).arg(info.large_B, 0, 'f', 2);
 	textList.push_back(largeColorText);
 
-	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList,0.05);
+	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList, 0.05);
 }
 
 void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const ButtonDefectInfo& info)
@@ -596,7 +596,7 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 }
 
 void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
-                                        ButtonDefectInfo& info)
+	ButtonDefectInfo& info)
 {
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
 	auto& mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
@@ -669,7 +669,7 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 
 			if (mainWindowConfig.isDefect)
 			{
-				if (i == ClassId::pobian && productSet.edgeDamageEnable &&info.isDrawedgeDamage)
+				if (i == ClassId::pobian && productSet.edgeDamageEnable && info.isDrawedgeDamage)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
@@ -677,27 +677,27 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::duyan && productSet.blockEyeEnable&&info.isDrawblockEye)
+				else if (i == ClassId::duyan && productSet.blockEyeEnable && info.isDrawblockEye)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::moshi && productSet.grindStoneEnable&&info.isDrawgrindStone)
+				else if (i == ClassId::moshi && productSet.grindStoneEnable && info.isDrawgrindStone)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::liaotou && productSet.materialHeadEnable&&info.isDrawmaterialHead)
+				else if (i == ClassId::liaotou && productSet.materialHeadEnable && info.isDrawmaterialHead)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::zangwu && productSet.paintEnable&&info.isDrawpaint)
+				else if (i == ClassId::zangwu && productSet.paintEnable && info.isDrawpaint)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::liehen && productSet.crackEnable&&info.isDrawcrack)
+				else if (i == ClassId::liehen && productSet.crackEnable && info.isDrawcrack)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
-				else if (i == ClassId::poyan && productSet.brokenEyeEnable&&info.isDrawbrokenEye)
+				else if (i == ClassId::poyan && productSet.brokenEyeEnable && info.isDrawbrokenEye)
 				{
 					rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
 				}
@@ -815,14 +815,14 @@ std::vector<std::vector<size_t>> ImageProcessor::getIndexInShieldingRange(const 
 	auto& body = info[index[ClassId::Body][0]];
 	QPoint centralPoint{ body.center_x,body.center_y };
 
-	for (int i = 0;i < index.size();i++)
+	for (int i = 0; i < index.size(); i++)
 	{
 		if (i == ClassId::Body)
 		{
 			result[i].emplace_back(index[i][0]);
 			continue;
 		}
-		for (int j = 0;j < index[i].size();j++)
+		for (int j = 0; j < index[i].size(); j++)
 		{
 			auto& item = info[index[i][j]];
 			QPoint targetPoint{ item.center_x,item.center_y };
@@ -909,7 +909,7 @@ std::vector<std::vector<size_t>> ImageProcessUtilty::getClassIndex(const std::ve
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
 
-	for (int i = 0;i < info.size();i++)
+	for (int i = 0; i < info.size(); i++)
 	{
 		if (info[i].classId > result.size())
 		{
@@ -972,13 +972,13 @@ std::vector<std::vector<size_t>> ImageProcessUtilty::getAllIndexInMaxBody(const 
 	result[ClassId::Body].emplace_back(bodyIndex);
 
 	auto& bodyRec = processResult[bodyIndex];
-	for (int i = 0;i < index.size();i++)
+	for (int i = 0; i < index.size(); i++)
 	{
 		if (i == ClassId::Body)
 		{
 			continue;
 		}
-		for (int j = 0;j < index[i].size();j++)
+		for (int j = 0; j < index[i].size(); j++)
 		{
 			auto& currentRec = processResult[index[i][j]];
 			auto leftStandard = static_cast<int>(bodyRec.leftTop.first - static_cast<int>(deviationValue));
@@ -1135,28 +1135,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 
 	rw::rqw::ImageInfo imageInfo(cvMatToQImage(frame.image));
 	//保存图像
-	if (globalData.isTakePictures) {
-		if (_isbad) {
-			if (productLineSet.takeNgPictures)
-			{
-				imageInfo.classify = "NG";
-				globalData.imageSaveEngine->pushImage(imageInfo);
-			}
-			if (productLineSet.takeMaskPictures)
-			{
-				rw::rqw::ImageInfo mask(image);
-				mask.classify = "Mask";
-				globalData.imageSaveEngine->pushImage(mask);
-			}
-		}
-		else {
-			if (productLineSet.takeOkPictures)
-			{
-				imageInfo.classify = "OK";
-				globalData.imageSaveEngine->pushImage(imageInfo);
-			}
-		}
-	}
+	save_image(imageInfo, image);
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
@@ -1328,7 +1307,7 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	if (imageProcessingModuleIndex == 2 || imageProcessingModuleIndex == 4) {
 		++globalStruct.statisticalInfo.produceCount;
 	}
-	if (imageProcessingModuleIndex==1)
+	if (imageProcessingModuleIndex == 1)
 	{
 		++globalStruct.statisticalInfo.produceCount1;
 	}
@@ -1558,6 +1537,70 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDef
 			info.isDrawlargeColor = true;
 		}
 	}
+}
+
+void ImageProcessor::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productLineSet = globalData.dlgProduceLineSetConfig;
+
+	if (!globalData.isTakePictures)
+	{
+		return;
+	}
+
+	if (imageProcessingModuleIndex == 1 && productLineSet.takeWork1Pictures)
+	{
+		if (globalData.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+	else if (imageProcessingModuleIndex == 2 && productLineSet.takeWork2Pictures)
+	{
+		if (globalData.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+	else if (imageProcessingModuleIndex == 3 && productLineSet.takeWork3Pictures)
+	{
+		if (globalData.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+	else if (imageProcessingModuleIndex == 4 && productLineSet.takeWork4Pictures)
+	{
+		if (globalData.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+
+}
+
+void ImageProcessor::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productLineSet = globalData.dlgProduceLineSetConfig;
+	if (_isbad) {
+		if (productLineSet.takeNgPictures)
+		{
+			imageInfo.classify = "NG";
+			globalData.imageSaveEngine->pushImage(imageInfo);
+		}
+		if (productLineSet.takeMaskPictures)
+		{
+			rw::rqw::ImageInfo mask(image);
+			mask.classify = "Mask";
+			globalData.imageSaveEngine->pushImage(mask);
+		}
+	}
+	else {
+		if (productLineSet.takeOkPictures)
+		{
+			imageInfo.classify = "OK";
+			globalData.imageSaveEngine->pushImage(imageInfo);
+		}
+	}
+
 }
 
 void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const

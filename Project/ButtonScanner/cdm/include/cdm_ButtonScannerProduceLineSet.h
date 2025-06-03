@@ -22,6 +22,11 @@ namespace rw
 			bool takeMaskPictures{ true };
 			bool takeOkPictures{ true };
 		public:
+			bool takeWork1Pictures{ true };
+			bool takeWork2Pictures{ true };
+			bool takeWork3Pictures{ true };
+			bool takeWork4Pictures{ true };
+		public:
 			bool drawRec{false};
 			bool drawCircle{true};
 		public:

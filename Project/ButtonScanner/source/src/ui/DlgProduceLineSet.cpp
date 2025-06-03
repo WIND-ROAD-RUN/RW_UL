@@ -157,6 +157,16 @@ void DlgProduceLineSet::build_connect()
 	QObject::connect(ui->cBox_takeOkPictures, &QCheckBox::checkStateChanged,
 		this, &DlgProduceLineSet::cBox_takeOkPictures);
 
+	QObject::connect(ui->cBox_takePicturesWork1, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeWork1Pictures);
+	QObject::connect(ui->cBox_takePicturesWork2, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeWork2Pictures);
+	QObject::connect(ui->cBox_takePicturesWork3, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeWork3Pictures);
+	QObject::connect(ui->cBox_takePicturesWork4, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takeWork4Pictures);
+
+
 	QObject::connect(ui->rbtn_drawCircle, &QRadioButton::clicked,
 		this, &DlgProduceLineSet::rbtn_drawCircle_clicked);
 	QObject::connect(ui->rbtn_drawRec, &QRadioButton::clicked,
@@ -208,6 +218,8 @@ void DlgProduceLineSet::build_connect()
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_DIOValueSet_clicked);
+
+
 }
 
 float DlgProduceLineSet::get_blowTime()
@@ -933,6 +945,30 @@ void DlgProduceLineSet::cBox_takeOkPictures(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.takeOkPictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeWork1Pictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeWork1Pictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeWork2Pictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeWork2Pictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeWork3Pictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeWork3Pictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takeWork4Pictures(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takeWork4Pictures = ischeck;
 }
 
 void DlgProduceLineSet::rbtn_drawCircle_clicked()

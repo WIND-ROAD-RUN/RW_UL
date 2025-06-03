@@ -71,6 +71,11 @@ private slots:
 	void cBox_takeNgPictures(bool ischeck);
 	void cBox_takeOkPictures(bool ischeck);
 
+	void cBox_takeWork1Pictures(bool ischeck);
+	void cBox_takeWork2Pictures(bool ischeck);
+	void cBox_takeWork3Pictures(bool ischeck);
+	void cBox_takeWork4Pictures(bool ischeck);
+
 	void rbtn_drawCircle_clicked();
 	void rbtn_drawRectangle_clicked();
 private slots:
