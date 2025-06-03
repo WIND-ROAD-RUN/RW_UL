@@ -599,6 +599,7 @@ void GlobalStructThread::buildDetachThread()
 {
 	auto& instance = GlobalStructData::getInstance();
 	detachUtiltyThread = std::make_unique<DetachUtiltyThread>(this);
+	strobeLightThread = std::make_unique<StrobeLightThread>(this);
 	detachUtiltyThread->startThread();
 
 	monitorCameraAndCardStateThread = std::make_unique<MonitorCameraAndCardStateThread>(this);

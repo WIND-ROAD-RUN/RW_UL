@@ -54,10 +54,10 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 		}
 
 		runningState = RunningState::Monitor;
-		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+		//_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 		_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 		_dlgExposureTimeSet->exec(); // 显示对话框
-		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+		//_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 		runningState = RunningState::Stop;
 		if (beforeSetExposureTimeIsDebug)
 		{
@@ -1437,17 +1437,18 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 	//else {
 	//	ui->rbtn_debug->setChecked(false);
 	//}
-
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	auto& GlobalThread = GlobalStructThread::getInstance();
 	if (!isRuning) {
 		if (checked) {
-			auto& GlobalStructData = GlobalStructData::getInstance();
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Debug;
+			GlobalThread.strobeLightThread->startThread();
 		}
 		else {
-			auto& GlobalStructData = GlobalStructData::getInstance();
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Stop;
+			GlobalThread.strobeLightThread->stopThread();
 		}
 	}
 	else {
