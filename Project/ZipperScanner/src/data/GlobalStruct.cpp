@@ -62,7 +62,7 @@ void GlobalStructDataZipper::buildConfigManager(rw::oso::StorageType type)
 
 void GlobalStructDataZipper::saveDlgProductSetConfig()
 {
-    std::string setConfigPath = globalPath.setConfigPath.toStdString();
+	std::string setConfigPath = globalPath.setConfigPath.toStdString();
 	storeContext->save(setConfig, setConfigPath);
 }
 
@@ -75,6 +75,7 @@ void GlobalStructDataZipper::saveDlgProductScoreConfig()
 void GlobalStructDataZipper::buildCamera()
 {
 	buildCamera1();
+	buildCamera2();
 }
 
 bool GlobalStructDataZipper::buildCamera1()
@@ -106,15 +107,45 @@ bool GlobalStructDataZipper::buildCamera1()
 
 bool GlobalStructDataZipper::buildCamera2()
 {
+	auto cameraList = rw::rqw::CheckCameraList();
+
+	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
+
+	if (cameraMetaData2.ip != "0")
+	{
+		try
+		{
+			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Software);
+			camera2->cameraIndex = 2;
+			camera2->setHeartbeatTime(5000);
+			setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
+			camera2->startMonitor();
+			return true;
+		}
+		catch (const std::exception&)
+		{
+			return false;
+			//LOG()  "Camera 2 initialization failed.";
+		}
+	}
 	return false;
+}
+
+void GlobalStructDataZipper::destroyCamera()
+{
+	destroyCamera1();
+	destroyCamera2();
 }
 
 void GlobalStructDataZipper::destroyCamera1()
 {
+	camera1.reset();
 }
 
 void GlobalStructDataZipper::destroyCamera2()
 {
+	camera2.reset();
 }
 
 rw::rqw::CameraMetaData GlobalStructDataZipper::cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo)

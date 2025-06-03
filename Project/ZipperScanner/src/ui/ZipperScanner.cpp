@@ -30,6 +30,7 @@ ZipperScanner::ZipperScanner(QWidget *parent)
 
 ZipperScanner::~ZipperScanner()
 {
+	destroyComponents();
 	delete ui;
 }
 
@@ -62,6 +63,11 @@ void ZipperScanner::build_connect()
 	QObject::connect(GlobalStructDataZipper::getInstance().camera1.get(),
 		&rw::rqw::CameraPassiveThread::frameCaptured,
 		this, &ZipperScanner::onFrameCaptured,Qt::QueuedConnection);
+
+	// 连接相机2出图
+	QObject::connect(GlobalStructDataZipper::getInstance().camera2.get(),
+		&rw::rqw::CameraPassiveThread::frameCaptured,
+		this, &ZipperScanner::onFrameCaptured, Qt::QueuedConnection);
 }
 
 // 构建相机
@@ -118,6 +124,22 @@ void ZipperScanner::build_DlgProductSetData()
 void ZipperScanner::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScore(this);
+}
+
+void ZipperScanner::destroyComponents()
+{
+
+
+
+	// 销毁相机
+	auto& globalStructData = GlobalStructDataZipper::getInstance();
+	QObject::disconnect(globalStructData.camera1.get(),
+		&rw::rqw::CameraPassiveThread::frameCaptured,
+		this, &ZipperScanner::onFrameCaptured);
+	QObject::disconnect(globalStructData.camera2.get(),
+		&rw::rqw::CameraPassiveThread::frameCaptured,
+		this, &ZipperScanner::onFrameCaptured);
+	globalStructData.destroyCamera();
 }
 
 void ZipperScanner::read_config()

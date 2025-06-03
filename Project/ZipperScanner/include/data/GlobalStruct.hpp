@@ -58,6 +58,8 @@ public:
 	bool buildCamera1();
 	bool buildCamera2();
 
+	void destroyCamera();
+
 	void destroyCamera1();
 	void destroyCamera2();
 

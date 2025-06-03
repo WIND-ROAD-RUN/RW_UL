@@ -32,6 +32,10 @@ public :
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
+
+public:
+	void destroyComponents();
+
 public:
 	void read_config();
 	void read_config_GeneralConfig();
