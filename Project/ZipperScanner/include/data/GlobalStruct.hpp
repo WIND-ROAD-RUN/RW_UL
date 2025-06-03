@@ -32,8 +32,9 @@ public:
 	void buildConfigManager(rw::oso::StorageType type);
 	
 
-	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
 
+	// 保存参数
+	void saveDlgProductSetConfig();
 	
 public:
 	// UI界面参数
@@ -56,7 +57,7 @@ public:
 	void destroyCamera2();
 
 	bool isTargetCamera(const QString& cameraIndex, const QString& targetName);
-
+	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
 	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 
 public:

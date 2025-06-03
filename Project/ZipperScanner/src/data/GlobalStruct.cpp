@@ -4,6 +4,7 @@
 
 #include "rqw_CameraObjectCore.hpp"
 #include "rqw_CameraObjectThreadZMotion.hpp"
+#include "Utilty.hpp"
 
 
 GlobalStructDataZipper::GlobalStructDataZipper()
@@ -57,6 +58,12 @@ void GlobalStructDataZipper::setCameraExposureTime(int cameraIndex, size_t expos
 void GlobalStructDataZipper::buildConfigManager(rw::oso::StorageType type)
 {
 	storeContext = std::make_unique<rw::oso::StorageContext>(type);
+}
+
+void GlobalStructDataZipper::saveDlgProductSetConfig()
+{
+    std::string setConfigPath = globalPath.setConfigPath.toStdString();
+	storeContext->save(setConfig, setConfigPath);
 }
 
 bool GlobalStructDataZipper::buildCamera1()
