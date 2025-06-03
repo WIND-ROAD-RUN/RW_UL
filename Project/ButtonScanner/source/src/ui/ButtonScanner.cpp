@@ -1098,7 +1098,6 @@ void ButtonScanner::build_ioThread()
 							info.type = rw::rqw::WarningType::Error;
 							info.warningId = WarningId::cairPressureAlarm;
 							labelWarning->addWarning(info, true);
-							updateCardLabelState(false);
 						});
 				}
 			}
