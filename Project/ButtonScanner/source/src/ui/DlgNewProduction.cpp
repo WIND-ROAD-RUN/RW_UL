@@ -311,7 +311,7 @@ void DlgNewProduction::pbtn_tab2_exit_clicked()
 
 void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 {
-	if (ui->rbtn_tab3_firstWork1->isChecked())
+	/*if (ui->rbtn_tab3_firstWork1->isChecked())
 	{
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work1\bad)";
 		picturesViewer->setRootPath(tempImagePath);
@@ -330,7 +330,8 @@ void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 	{
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\bad)";
 		picturesViewer->setRootPath(tempImagePath);
-	}
+	}*/
+	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
 	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	picturesViewer->show();
 }

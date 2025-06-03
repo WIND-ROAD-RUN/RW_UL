@@ -422,7 +422,6 @@ void DlgModelManager::flashModelList()
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& modelStorageManager = globalStruct.modelStorageManager;
 	_configIndex = modelStorageManager->getModelConfigIndex();
-	std::reverse(_configIndex.modelIndexs.begin(), _configIndex.modelIndexs.end());
 
 	QStringList data;
 	for (const auto& item : _configIndex.modelIndexs)

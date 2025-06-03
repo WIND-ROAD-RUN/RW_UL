@@ -75,6 +75,7 @@ void ModelStorageManager::build_manager()
 	}
 	else {
 		_config_index = *(globalStruct.storeContext->load(configPath.toStdString()));
+		std::reverse(_config_index.modelIndexs.begin(), _config_index.modelIndexs.end());
 	}
 }
 
@@ -83,6 +84,8 @@ void ModelStorageManager::destroy_manager()
 	auto& RootPath = globalPath.modelStorageManagerRootPath;
 	auto& globalStruct = GlobalStructData::getInstance();
 	QString configPath = RootPath + R"(modelStorageIndex.xml)";
+
+	std::reverse(_config_index.modelIndexs.begin(), _config_index.modelIndexs.end());
 	globalStruct.storeContext->save(_config_index, configPath.toStdString());
 }
 
