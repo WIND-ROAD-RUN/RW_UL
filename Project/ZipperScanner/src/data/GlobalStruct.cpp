@@ -2,8 +2,8 @@
 
 #include <qregularexpression.h>
 
+#include "hoec_Camera.hpp"
 #include "rqw_CameraObjectCore.hpp"
-#include "rqw_CameraObjectThreadZMotion.hpp"
 #include "Utilty.hpp"
 
 
@@ -72,8 +72,35 @@ void GlobalStructDataZipper::saveDlgProductScoreConfig()
 	storeContext->save(scoreConfig, scoreConfigPath);
 }
 
+void GlobalStructDataZipper::buildCamera()
+{
+	buildCamera1();
+}
+
 bool GlobalStructDataZipper::buildCamera1()
 {
+	auto cameraList = rw::rqw::CheckCameraList();
+
+	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
+
+	if (cameraMetaData1.ip != "0")
+	{
+		try
+		{
+			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
+			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Software);
+			camera1->cameraIndex = 1;
+			camera1->setHeartbeatTime(5000);
+			setCameraExposureTime(1, dlgExposureTimeSetConfig.exposureTime);
+			camera1->startMonitor();
+			return true;
+		}
+		catch (const std::exception&)
+		{
+			return false;
+			//LOG()  "Camera 1 initialization failed.";
+		}
+	}
 	return false;
 }
 

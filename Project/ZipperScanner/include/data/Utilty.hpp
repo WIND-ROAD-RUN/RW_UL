@@ -3,6 +3,16 @@
 #include <QString>
 #include "ZipperScanner.h"
 
+QImage cvMatToQImage(const cv::Mat& mat);
+
+QPixmap cvMatToQPixmap(const cv::Mat& mat);
+
+struct WarningId
+{
+	static constexpr int ccameraDisconnectAlarm1 = 1;
+	static constexpr int ccameraDisconnectAlarm2 = 2;
+};
+
 inline struct GlobalPath
 {
 public:

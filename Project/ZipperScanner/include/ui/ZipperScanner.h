@@ -4,6 +4,8 @@
 #include "ui_ZipperScanner.h"
 #include "DlgProductSet.h"
 #include "DlgProductScore.h"
+#include <rqw_LabelWarning.h>
+#include <opencv2/core/mat.hpp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ZipperScannerClass; };
@@ -21,11 +23,12 @@ public:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgProductScore* _dlgProductScore = nullptr;
 
+
 public :
 	void build_ui();
 	void build_connect();
 	void build_camera();
-
+    
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
@@ -39,6 +42,12 @@ private slots:
 	void pbtn_exit_clicked();
 	void pbtn_set_clicked();
 	void pbtn_score_clicked();
+
+
+private slots:
+	void onFrameCaptured(cv::Mat frame, size_t index);
+
+	void updateCameraLabelState(int cameraIndex, bool state);
 	
 
 private:

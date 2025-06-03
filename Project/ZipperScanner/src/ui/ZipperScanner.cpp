@@ -7,6 +7,7 @@
 #include "GlobalStruct.hpp"
 #include "NumberKeyboard.h"
 #include "Utilty.hpp"
+#include "WarnUtilty.hpp"
 
 ZipperScanner::ZipperScanner(QWidget *parent)
 	: QMainWindow(parent)
@@ -14,13 +15,16 @@ ZipperScanner::ZipperScanner(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	// ¶ÁÈ¡²ÎÊý
+	// è¯»å–å‚æ•°
 	read_config();
 
-	// ¹¹½¨UI
+	// æž„å»ºUI
 	build_ui();
 
-	// Á¬½Ó²Ûº¯Êý
+	// è¿žæŽ¥ç›¸æœº
+	build_camera();
+
+	// è¿žæŽ¥æ§½å‡½æ•°
 	build_connect();
 }
 
@@ -29,7 +33,7 @@ ZipperScanner::~ZipperScanner()
 	delete ui;
 }
 
-// ¹¹½¨UI
+// æž„å»ºUI
 void ZipperScanner::build_ui()
 {
 	build_ZipperScannerData();
@@ -38,36 +42,64 @@ void ZipperScanner::build_ui()
 
 }
 
-// Á¬½Ó²Ûº¯Êý
+// è¿žæŽ¥æ§½å‡½æ•°
 void ZipperScanner::build_connect()
 {
-	// ÍË³ö
+	// é€€å‡º
 	QObject::connect(ui->pbtn_exit, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_exit_clicked);
 
-	// ÉèÖÃ
+	// è®¾ç½®
 	QObject::connect(ui->pbtn_set, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_set_clicked);
 
-	// ·ÖÊý
+	// åˆ†æ•°
 	QObject::connect(ui->pbtn_score, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_score_clicked);
+
+
+	// è¿žæŽ¥ç›¸æœº1å‡ºå›¾
+	QObject::connect(GlobalStructDataZipper::getInstance().camera1.get(),
+		&rw::rqw::CameraPassiveThread::frameCaptured,
+		this, &ZipperScanner::onFrameCaptured,Qt::QueuedConnection);
 }
 
-// ¹¹½¨Ïà»ú
+// æž„å»ºç›¸æœº
 void ZipperScanner::build_camera()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	globalStruct.cameraIp1 = "11";
 	globalStruct.cameraIp2 = "12";
+
+	auto build1Result = globalStruct.buildCamera1();
+	updateCameraLabelState(1, build1Result);
+	if (!build1Result)
+	{
+		rw::rqw::WarningInfo info;
+		info.message = "ç›¸æœº1è¿žæŽ¥å¤±è´¥";
+		info.warningId = WarningId::ccameraDisconnectAlarm1;
+		info.type = rw::rqw::WarningType::Error;
+		//label_warningInfo->addWarning(info);
+	}
+	auto build2Result = globalStruct.buildCamera2();
+	updateCameraLabelState(2, build2Result);
+	if (!build2Result)
+	{
+		rw::rqw::WarningInfo info;
+		info.message = "ç›¸æœº2è¿žæŽ¥å¤±è´¥";
+		info.warningId = WarningId::ccameraDisconnectAlarm2;
+		info.type = rw::rqw::WarningType::Error;
+		//label_warningInfo->addWarning(info);
+	}
+	//_dlgExposureTimeSet->ResetCamera(); //å¯åŠ¨è®¾ç½®ç›¸æœºä¸ºé»˜è®¤çŠ¶æ€
 }
 
-// ¼ÓÔØZipperScanner´°ÌåÊý¾Ý
+// åŠ è½½ZipperScannerçª—ä½“æ•°æ®
 void ZipperScanner::build_ZipperScannerData()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& zipperScannerConfig = globalStruct.generalConfig;
-	// ³õÊ¼»¯È«¾ÖÊý¾Ý
+	// åˆå§‹åŒ–å…¨å±€æ•°æ®
 	ui->label_produceTotalValue->setText(QString::number(zipperScannerConfig.totalProductionVolume));
 	ui->label_wasteProductsValue->setText(QString::number(zipperScannerConfig.totalDefectiveVolume));
 	ui->label_productionYieldValue->setText(QString::number(zipperScannerConfig.productionYield) + QString(" %"));
@@ -76,13 +108,13 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->rbtn_weakLight->setChecked(zipperScannerConfig.ruoGuang);
 }
 
-// Í¨¹ýÊµÏÖDlgProductSetµÄ¹¹Ôìº¯Êý½øÐÐ³õÊ¼»¯
+// é€šè¿‡å®žçŽ°DlgProductSetçš„æž„é€ å‡½æ•°è¿›è¡Œåˆå§‹åŒ–
 void ZipperScanner::build_DlgProductSetData()
 {
 	_dlgProductSet = new DlgProductSet(this);
 }
 
-// Í¨¹ýÊµÏÖDlgProductScoreµÄ¹¹Ôìº¯Êý½øÐÐ³õÊ¼»¯
+// é€šè¿‡å®žçŽ°DlgProductScoreçš„æž„é€ å‡½æ•°è¿›è¡Œåˆå§‹åŒ–
 void ZipperScanner::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScore(this);
@@ -99,7 +131,7 @@ void ZipperScanner::read_config()
 
 }
 
-// ¶ÁÈ¡Í¨ÓÃÅäÖÃ
+// è¯»å–é€šç”¨é…ç½®
 void ZipperScanner::read_config_GeneralConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -122,7 +154,7 @@ void ZipperScanner::read_config_GeneralConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎÞ·¨´´½¨ÅäÖÃÎÄ¼þgeneralConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶generalConfig.xml");
 		}
 		globalStruct.generalConfig = cdm::GeneralConfig();
 		globalStruct.storeContext->save(globalStruct.generalConfig, globalPath.generalConfigPath.toStdString());
@@ -134,7 +166,7 @@ void ZipperScanner::read_config_GeneralConfig()
 	}
 }
 
-// ¶ÁÈ¡·ÖÊýÅäÖÃ
+// è¯»å–åˆ†æ•°é…ç½®
 void ZipperScanner::read_config_ScoreConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -157,7 +189,7 @@ void ZipperScanner::read_config_ScoreConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎÞ·¨´´½¨ÅäÖÃÎÄ¼þscoreConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶scoreConfig.xml");
 		}
 		globalStruct.scoreConfig = cdm::ScoreConfig();
 		globalStruct.storeContext->save(globalStruct.scoreConfig, globalPath.scoreConfigPath.toStdString());
@@ -169,7 +201,7 @@ void ZipperScanner::read_config_ScoreConfig()
 	}
 }
 
-// ¶ÁÈ¡ÉèÖÃÅäÖÃ
+// è¯»å–è®¾ç½®é…ç½®
 void ZipperScanner::read_config_SetConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -189,7 +221,7 @@ void ZipperScanner::read_config_SetConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎÞ·¨´´½¨ÅäÖÃÎÄ¼þsetConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶setConfig.xml");
 		}
 		globalStruct.setConfig = cdm::SetConfig();
 		globalStruct.storeContext->save(globalStruct.setConfig, globalPath.setConfigPath.toStdString());
@@ -219,7 +251,7 @@ void ZipperScanner::pbtn_set_clicked()
 			_dlgProductSet->exec();
 		}
 		else {
-			QMessageBox::warning(this, "Error", "ÃÜÂë´íÎó£¬ÇëÖØÐÂÊäÈë");
+			QMessageBox::warning(this, "Error", "å¯†ç é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥");
 		}
 	}
 }
@@ -229,5 +261,56 @@ void ZipperScanner::pbtn_score_clicked()
 	_dlgProductScore->setFixedSize(this->width(), this->height());
 	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_dlgProductScore->exec();
+}
+
+void ZipperScanner::onFrameCaptured(cv::Mat frame, size_t index)
+{
+	if (index == 1) {
+		QPixmap pixmap = cvMatToQPixmap(frame);
+		ui->label_imgDisplay_1->setPixmap(pixmap);
+	}
+	else if (index == 2) {
+		QPixmap pixmap = cvMatToQPixmap(frame);
+		ui->label_imgDisplay_2->setPixmap(pixmap);
+	}
+}
+
+void ZipperScanner::updateCameraLabelState(int cameraIndex, bool state)
+{
+	switch (cameraIndex)
+	{
+	case 1:
+		if (state) {
+			ui->label_camera1State->setText("è¿žæŽ¥æˆåŠŸ");
+			ui->label_camera1State->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else {
+			ui->label_camera1State->setText("è¿žæŽ¥å¤±è´¥");
+			ui->label_camera1State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "ç›¸æœº1æ–­è¿ž";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm1;
+			//labelWarning->addWarning(info);
+		}
+		break;
+	case 2:
+		if (state) {
+			ui->label_camera2State->setText("è¿žæŽ¥æˆåŠŸ");
+			ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else {
+			ui->label_camera2State->setText("è¿žæŽ¥å¤±è´¥");
+			ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "ç›¸æœº2æ–­è¿ž";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm2;
+			//labelWarning->addWarning(info);
+		}
+		break;
+	default:
+		break;
+	}
 }
 

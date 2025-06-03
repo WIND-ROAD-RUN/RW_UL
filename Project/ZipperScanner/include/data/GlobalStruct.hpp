@@ -9,7 +9,8 @@
 #include "SetConfig.hpp"
 #include "oso_StorageContext.hpp"
 #include "rqw_CameraObjectCore.hpp"
-#include "rqw_CameraObjectThreadZMotion.hpp"
+#include "rqw_CameraObjectThread.hpp"
+#include "ZipperScannerDlgExposureTimeSet.hpp"
 
 class GlobalStructDataZipper
 	:public QObject
@@ -44,12 +45,15 @@ public:
 	cdm::SetConfig setConfig;
 
 public:
+	void buildCamera();
 	// Па»ъ
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
-	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera1{ nullptr };
-	std::unique_ptr<rw::rqw::CameraPassiveThreadZMotion> camera2{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };
+
+	cdm::ZipperScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
 
 	bool buildCamera1();
 	bool buildCamera2();
