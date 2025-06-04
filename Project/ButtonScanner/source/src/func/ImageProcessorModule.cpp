@@ -1049,6 +1049,10 @@ void ImageProcessor::run_debug(MatInfo& frame)
 		drawErrorRec(image, processResult, processResultIndex);
 		ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 		ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
+
+		//为了再debug下绘制错误的rec识别框，暂且使用removeFution的逻辑调用，目前是为了debug下绘制错误的rec识别框，但是这里会修改_isBad成员变量
+		run_OpenRemoveFunc_process_defect_info(defectInfo);
+		drawErrorRec(image, processResult, processResultIndex);
 	}
 	if (GlobalStructData::getInstance().debug_isDisplayText)
 	{
@@ -1116,7 +1120,7 @@ void ImageProcessor::run_OpenRemoveFunc(MatInfo& frame)
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
 
-	//剔除逻辑获取_isbad
+	//剔除逻辑获取_isbad以及绘制defect错误信息
 	run_OpenRemoveFunc_process_defect_info(defectInfo);
 
 	//如果_isbad为true，将错误信息发送到剔除队列中
