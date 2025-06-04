@@ -6,6 +6,7 @@
 
 #include"DraggableListWidget.h"
 #include"LoadingDialog.h"
+#include"PictureViewerUtilty.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PictureViewerThumbnailsClass; };
@@ -19,9 +20,10 @@ private:
 	QHash<QString, QPixmap> m_thumbnailCache;         // Õº∆¨¬∑æ∂->Àı¬‘Õº
 private:
 	LoadingDialog* _loadingDialog = nullptr;
+	PictureViewerUtilty* pictureViewerUtilty=nullptr;
 public:
 	PictureViewerThumbnails(QWidget *parent = nullptr);
-	~PictureViewerThumbnails();
+	~PictureViewerThumbnails() override;
 public:
 	void setRootPath(const QString& rootPath);
 

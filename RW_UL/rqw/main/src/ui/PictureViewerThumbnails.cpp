@@ -70,8 +70,9 @@ void PictureViewerThumbnails::build_ui()
 	_listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 	_listWidget->setSpacing(8);
 
-	_loadingDialog = new LoadingDialog();
-	_categoryModel = new QStandardItemModel();
+	_loadingDialog = new LoadingDialog(this);
+	_categoryModel = new QStandardItemModel(this);
+	pictureViewerUtilty = new PictureViewerUtilty(this);
 	ui->treeView_categoryTree->setModel(_categoryModel);
 }
 
@@ -480,6 +481,6 @@ void PictureViewerThumbnails::onThumbnailDoubleClicked(QListWidgetItem* item)
 {
 	if (!item) return;
 	QString imagePath = item->data(Qt::UserRole).toString();
-	// 这里可以弹出全屏Dialog或做其它操作
-	QMessageBox::information(this, "双击图片", "你双击了图片: " + imagePath);
+	pictureViewerUtilty->setImgPath(imagePath);
+	pictureViewerUtilty->show();
 }
