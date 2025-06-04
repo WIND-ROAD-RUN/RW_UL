@@ -221,7 +221,7 @@ void PictureViewerThumbnails::loadThumbnailDisCache()
 		QListWidgetItem* item = new QListWidgetItem();
 		item->setText(fileInfo.fileName());
 		item->setData(Qt::UserRole, path);
-		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, big.height() + 32));
+		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
 		QImageReader reader(path);
 		reader.setAutoTransform(true);
 		QImage img = reader.read();
