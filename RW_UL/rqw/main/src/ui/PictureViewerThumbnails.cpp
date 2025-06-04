@@ -45,6 +45,12 @@ void PictureViewerThumbnails::setSize(const QSize& size)
 	}
 }
 
+void PictureViewerThumbnails::setSizeRange(const QSize& sizeSmall, const QSize& sizeBig)
+{
+	small = sizeSmall;
+	big = sizeBig;
+}
+
 void PictureViewerThumbnails::showEvent(QShowEvent* event)
 {
 	_loadingDialog->updateMessage("加载图片中");
@@ -103,6 +109,10 @@ void PictureViewerThumbnails::build_connect()
 		this, &PictureViewerThumbnails::pbtn_nextPicture_clicked);
 	connect(ui->pbtn_prePicture, &QPushButton::clicked,
 		this, &PictureViewerThumbnails::pbtn_prePicture_clicked);
+	connect(ui->pbtn_bigger, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_bigger_clicked);
+	connect(ui->pbtn_smaller, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_smaller_clicked);
 
 	connect(ui->treeView_categoryTree->selectionModel(), &QItemSelectionModel::currentChanged,
 		this, [this](const QModelIndex& current, const QModelIndex&) {
@@ -112,6 +122,7 @@ void PictureViewerThumbnails::build_connect()
 
 	connect(_listWidget, &QListWidget::itemDoubleClicked,
 		this, &PictureViewerThumbnails::onThumbnailDoubleClicked);
+
 }
 
 void PictureViewerThumbnails::loadImageList()
@@ -285,14 +296,14 @@ void PictureViewerThumbnails::preloadAllCategoryImages(const QDir& dir)
 			reader.setAutoTransform(true);
 			QImage img = reader.read();
 			if (!img.isNull()) {
-				QImage scaledImg = img.scaled(m_thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+				QImage scaledImg = img.scaled(big, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-				QPixmap squarePixmap(m_thumbnailSize);
+				QPixmap squarePixmap(big);
 				squarePixmap.fill(Qt::transparent);
 
 				QPainter painter(&squarePixmap);
-				int x = (m_thumbnailSize.width() - scaledImg.width()) / 2;
-				int y = (m_thumbnailSize.height() - scaledImg.height()) / 2;
+				int x = (big.width() - scaledImg.width()) / 2;
+				int y = (big.height() - scaledImg.height()) / 2;
 				painter.drawImage(x, y, scaledImg);
 				painter.end();
 
@@ -503,6 +514,50 @@ void PictureViewerThumbnails::pbtn_nextPicture_clicked()
 		_listWidget->setCurrentRow(currentRow + 1);
 	}
 	// 如果已经是最后一个，则不做处理（也可循环到第一个，根据需求调整）
+}
+
+void PictureViewerThumbnails::pbtn_bigger_clicked()
+{
+	QSize nextSize = { m_thumbnailSize.width() + 30 ,m_thumbnailSize.height() + 30 };
+	if (small.width() > nextSize.width())
+	{
+		if (small.height() > nextSize.height())
+		{
+			return;
+		}
+	}
+
+	if (nextSize.width() > big.width())
+	{
+		if (nextSize.height() > big.height())
+		{
+			return;
+		}
+	}
+	m_thumbnailSize = nextSize;
+	setSize(m_thumbnailSize);
+}
+
+void PictureViewerThumbnails::pbtn_smaller_clicked()
+{
+	QSize nextSize = { m_thumbnailSize.width() - 30 ,m_thumbnailSize.height() - 30 };
+	if (small.width() > nextSize.width())
+	{
+		if (small.height() > nextSize.height())
+		{
+			return;
+		}
+	}
+
+	if (nextSize.width() > big.width())
+	{
+		if (nextSize.height() > big.height())
+		{
+			return;
+		}
+	}
+	m_thumbnailSize = nextSize;
+	setSize(m_thumbnailSize);
 }
 
 void PictureViewerThumbnails::onThumbnailDoubleClicked(QListWidgetItem* item)

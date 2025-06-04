@@ -30,6 +30,10 @@ public:
 	void setRootPath(const QString& rootPath);
 
 	void setSize(const QSize& size);
+	void setSizeRange(const QSize & sizeSmall, const QSize& sizeBig);
+private:
+	QSize small{100,100};
+	QSize big{ 500,500 };
 signals:
 	void viewerClosed();
 protected:
@@ -64,6 +68,8 @@ private slots:
 	void pbtn_delete_clicked();
 	void pbtn_prePicture_clicked();
 	void pbtn_nextPicture_clicked();
+	void pbtn_bigger_clicked();
+	void pbtn_smaller_clicked();
 private slots:
 	void onThumbnailDoubleClicked(QListWidgetItem* item);
 };
