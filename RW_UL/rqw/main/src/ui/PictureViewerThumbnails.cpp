@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QDir>
 #include <QMessageBox>
+#include <QtConcurrent/qtconcurrentrun.h>
 
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget *parent)
 	: QMainWindow(parent)
@@ -48,11 +49,21 @@ void PictureViewerThumbnails::showEvent(QShowEvent* event)
 {
 	_loadingDialog->updateMessage("加载图片中");
 	_loadingDialog->show();
-	updateCategoryList();
+	updateCategoryList(); // 目录树结构建议仍在主线程更新
+
 	QDir rootDir(m_rootPath);
-	preloadAllCategoryImages(rootDir);
-	loadImageList();
-	_loadingDialog->close();
+
+	// 异步预加载图片和刷新列表
+	QtConcurrent::run([this, rootDir]() {
+		preloadAllCategoryImages(rootDir);
+
+		// 回到主线程刷新图片列表
+		QMetaObject::invokeMethod(this, [this]() {
+			loadImageList();
+			_loadingDialog->close();
+			}, Qt::QueuedConnection);
+		});
+
 	QMainWindow::showEvent(event);
 }
 
