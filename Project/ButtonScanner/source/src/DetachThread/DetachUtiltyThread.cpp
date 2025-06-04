@@ -219,7 +219,7 @@ void DetachUtiltyThread::processTakePictures(size_t s)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& isTakePictures = globalStruct.mainWindowConfig.isTakePictures;
 	auto& isSavePicturesLong = globalStruct.dlgProduceLineSetConfig.takePicturesLong;
-	if (s%60)
+	if (s%60==0)
 	{
 		if (lastIsTakePictures==true&& isTakePictures==true&& isSavePicturesLong==false)
 		{
