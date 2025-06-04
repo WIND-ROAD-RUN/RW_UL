@@ -27,10 +27,10 @@ void DlgNewProduction::build_ui()
 {
 	ui->tabWidget->tabBar()->hide();
 	build_dialog();
-	picturesViewer = new PicturesViewer(this);
+	picturesViewer = new PictureViewerThumbnails(this);
 	auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\)";
 	picturesViewer->setRootPath(tempImagePath);
-
+	picturesViewer->setSize({ 400,400 });
 	ui->rbtn_tab3_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab3_filterColor-> setEnabled(false);
 	ui->rbtn_tab4_checkBladeShape->setEnabled(false);
@@ -87,7 +87,7 @@ void DlgNewProduction::build_connect()
 	QObject::connect(ui->pbtn_tab5_cancelTrain, &QPushButton::clicked,
 		this, &DlgNewProduction::pbtn_tab5_cancelTrain_clicked);
 
-	QObject::connect(picturesViewer, &PicturesViewer::viewerClosed,
+	QObject::connect(picturesViewer, &PictureViewerThumbnails::viewerClosed,
 		this, &DlgNewProduction::flashImgCount);
 }
 

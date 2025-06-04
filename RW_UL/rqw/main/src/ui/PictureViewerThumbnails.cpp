@@ -302,6 +302,7 @@ void PictureViewerThumbnails::onThumbnailSelected()
 void PictureViewerThumbnails::pbtn_exit_clicked()
 {
 	this->close();
+	emit viewerClosed();
 }
 
 void PictureViewerThumbnails::pbtn_deleteTotal_clicked()

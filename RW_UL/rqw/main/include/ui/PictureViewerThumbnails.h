@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QDir>
 #include <QMainWindow>
@@ -16,8 +16,8 @@ class PictureViewerThumbnails : public QMainWindow
 {
 	Q_OBJECT
 private:
-	QHash<QString, QStringList> m_categoryImageCache; // Ä¿Â¼Â·¾¶->Í¼Æ¬Â·¾¶ÁÐ±í»º´æ
-	QHash<QString, QPixmap> m_thumbnailCache;         // Í¼Æ¬Â·¾¶->ËõÂÔÍ¼
+	QHash<QString, QStringList> m_categoryImageCache; // Ä¿Â¼Â·ï¿½ï¿½->Í¼Æ¬Â·ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
+	QHash<QString, QPixmap> m_thumbnailCache;         // Í¼Æ¬Â·ï¿½ï¿½->ï¿½ï¿½ï¿½ï¿½Í¼
 private:
 	LoadingDialog* _loadingDialog = nullptr;
 	PictureViewerUtilty* pictureViewerUtilty=nullptr;
@@ -33,6 +33,8 @@ protected:
 private:
 	void build_ui();
 	void build_connect();
+signals:
+	void viewerClosed();
 private:
 	void loadImageList();
 	void loadThumbnail(const QString& imagePath, QListWidgetItem* item);

@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_DlgNewProduction.h"
-#include"PicturesViewer.h"
+#include"PictureViewerThumbnails.h"
 
 #include"opencv2/opencv.hpp"
 
@@ -31,7 +31,7 @@ public:
 
 	~DlgNewProduction();
 public:
-	PicturesViewer* picturesViewer;
+	PictureViewerThumbnails* picturesViewer;
 private:
 	void build_ui();
 	void build_connect();

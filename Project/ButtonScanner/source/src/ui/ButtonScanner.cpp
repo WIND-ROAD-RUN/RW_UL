@@ -416,7 +416,7 @@ void ButtonScanner::destroy_modelStorageManager()
 
 void ButtonScanner::build_picturesViewer()
 {
-	_picturesViewer = new PicturesViewer(this);
+	_picturesViewer = new PictureViewerThumbnails(this);
 }
 
 void ButtonScanner::build_dlgModelManager()

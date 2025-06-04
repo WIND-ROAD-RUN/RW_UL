@@ -10,7 +10,7 @@
 #include"DlgModelManager.h"
 #include"rqw_LabelClickable.h"
 #include"rqw_LabelWarning.h"
-#include"PicturesViewer.h"
+#include"PictureViewerThumbnails.h"
 #include"DlgWarn.h"
 
 #include"opencv2/opencv.hpp"
@@ -40,7 +40,7 @@ private:
 	DlgProduceLineSet* _dlgProduceLineSet = nullptr;
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
-	PicturesViewer* _picturesViewer = nullptr;
+	PictureViewerThumbnails* _picturesViewer = nullptr;
 	DlgModelManager* _dlgModelManager = nullptr;
 public:
 	DlgNewProduction* dlgNewProduction = nullptr;
