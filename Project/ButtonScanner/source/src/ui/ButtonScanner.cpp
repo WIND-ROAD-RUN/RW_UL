@@ -229,7 +229,8 @@ void ButtonScanner::initializeComponents()
 		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
-
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::closeTakePictures,
+		this, &ButtonScanner::closeTakePictures, Qt::QueuedConnection);
 	auto mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
 
 	//初始化光源
@@ -1667,6 +1668,12 @@ void ButtonScanner::workTriggerError(int index)
 
 	}
 
+}
+
+void ButtonScanner::closeTakePictures()
+{
+	ui->rbtn_takePicture->setChecked(false);
+	rbtn_takePicture_checked(false);
 }
 
 void ButtonScanner::pbtn_exit_clicked()

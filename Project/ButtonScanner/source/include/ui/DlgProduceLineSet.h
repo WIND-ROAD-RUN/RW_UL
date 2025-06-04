@@ -70,6 +70,7 @@ private slots:
 	void cBox_takeMaskPictures(bool ischeck);
 	void cBox_takeNgPictures(bool ischeck);
 	void cBox_takeOkPictures(bool ischeck);
+	void cBox_takePicturesLong(bool ischeck);
 
 	void cBox_takeWork1Pictures(bool ischeck);
 	void cBox_takeWork2Pictures(bool ischeck);

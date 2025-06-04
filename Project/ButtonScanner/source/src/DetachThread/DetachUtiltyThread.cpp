@@ -42,6 +42,7 @@ void DetachUtiltyThread::run()
 		CalculateRealtimeInformation(s);
 		processWarningInfo(s);
 		processTrigger(s);
+		processTakePictures(s);
 		++s;
 		if (s==300)
 		{
@@ -210,5 +211,20 @@ void DetachUtiltyThread::processTrigger(size_t s)
 		{
 			isStopOnce = true;
 		}
+	}
+}
+
+void DetachUtiltyThread::processTakePictures(size_t s)
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& isTakePictures = globalStruct.mainWindowConfig.isTakePictures;
+	auto& isSavePicturesLong = globalStruct.dlgProduceLineSetConfig.takePicturesLong;
+	if (s%60)
+	{
+		if (lastIsTakePictures==true&& isTakePictures==true&& isSavePicturesLong==false)
+		{
+			emit closeTakePictures();
+		}
+		lastIsTakePictures = isTakePictures;
 	}
 }

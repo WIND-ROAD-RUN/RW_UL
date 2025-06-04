@@ -21,6 +21,7 @@ namespace rw
 			bool takeNgPictures{ true };
 			bool takeMaskPictures{ true };
 			bool takeOkPictures{ true };
+			bool takePicturesLong{ false };
 		public:
 			bool takeWork1Pictures{ true };
 			bool takeWork2Pictures{ true };

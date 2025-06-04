@@ -177,5 +177,7 @@ public slots:
 	void dlgWarningAccept();
 public slots:
 	void workTriggerError(int index);
+public slots:
+	void closeTakePictures();
 };
 

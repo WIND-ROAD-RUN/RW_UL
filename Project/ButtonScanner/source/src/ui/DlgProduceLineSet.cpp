@@ -156,6 +156,8 @@ void DlgProduceLineSet::build_connect()
 		this, &DlgProduceLineSet::cBox_takeNgPictures);
 	QObject::connect(ui->cBox_takeOkPictures, &QCheckBox::checkStateChanged,
 		this, &DlgProduceLineSet::cBox_takeOkPictures);
+	QObject::connect(ui->cbox_savePicturesLong, &QCheckBox::checkStateChanged,
+		this, &DlgProduceLineSet::cBox_takePicturesLong);
 
 	QObject::connect(ui->cBox_takePicturesWork1, &QCheckBox::checkStateChanged,
 		this, &DlgProduceLineSet::cBox_takeWork1Pictures);
@@ -945,6 +947,12 @@ void DlgProduceLineSet::cBox_takeOkPictures(bool ischeck)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProduceLineSetConfig.takeOkPictures = ischeck;
+}
+
+void DlgProduceLineSet::cBox_takePicturesLong(bool ischeck)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProduceLineSetConfig.takePicturesLong = ischeck;
 }
 
 void DlgProduceLineSet::cBox_takeWork1Pictures(bool ischeck)
