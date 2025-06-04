@@ -221,19 +221,19 @@ void PictureViewerThumbnails::loadThumbnailDisCache()
 		QListWidgetItem* item = new QListWidgetItem();
 		item->setText(fileInfo.fileName());
 		item->setData(Qt::UserRole, path);
-		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
+		item->setSizeHint(QSize(big.width() + 16, big.height() + 32));
 		QImageReader reader(path);
 		reader.setAutoTransform(true);
 		QImage img = reader.read();
 		if (!img.isNull()) {
-			QImage scaledImg = img.scaled(m_thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+			QImage scaledImg = img.scaled(big, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-			QPixmap squarePixmap(m_thumbnailSize);
+			QPixmap squarePixmap(big);
 			squarePixmap.fill(Qt::transparent);
 
 			QPainter painter(&squarePixmap);
-			int x = (m_thumbnailSize.width() - scaledImg.width()) / 2;
-			int y = (m_thumbnailSize.height() - scaledImg.height()) / 2;
+			int x = (big.width() - scaledImg.width()) / 2;
+			int y = (big.height() - scaledImg.height()) / 2;
 			painter.drawImage(x, y, scaledImg);
 			painter.end();
 
