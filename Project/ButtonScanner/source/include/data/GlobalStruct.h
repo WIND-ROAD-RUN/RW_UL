@@ -75,7 +75,8 @@ class GlobalStructData
 {
 	Q_OBJECT
 public:
-	std::atomic_bool debug_isDisplayInfo{ true };
+	std::atomic_bool debug_isDisplayRec{ true };
+	std::atomic_bool debug_isDisplayText{ true };
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
 public:

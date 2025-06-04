@@ -329,7 +329,8 @@ void ButtonScanner::build_ui()
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
 		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
 
-	ui->cBox_isDisplayInfo->setVisible(false);
+	ui->cBox_isDisplayRec->setVisible(false);
+	ui->cBox_isDisplayText->setVisible(false);
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
 	ui->rbtn_strobe->setVisible(false);
@@ -482,8 +483,11 @@ void ButtonScanner::build_connect()
 	QObject::connect(dlgWarn, &DlgWarn::isProcess,
 		this, &ButtonScanner::dlgWarningAccept);
 
-	QObject::connect(ui->cBox_isDisplayInfo, &QCheckBox::clicked,
-		this, &ButtonScanner::cBox_isDisplayInfo_checked);
+	QObject::connect(ui->cBox_isDisplayRec, &QCheckBox::clicked,
+		this, &ButtonScanner::cBox_isDisplayRec_checked);
+
+	QObject::connect(ui->cBox_isDisplayText, &QCheckBox::clicked,
+		this, &ButtonScanner::cBox_isDisplayText_checked);
 }
 
 void ButtonScanner::read_config()
@@ -1070,7 +1074,8 @@ void ButtonScanner::build_ioThread()
 								ui->rbtn_removeFunc->setChecked(true);
 								ui->rbtn_debug->setChecked(false);
 								label_lightBulb->setVisible(false);
-								ui->cBox_isDisplayInfo->setVisible(false);
+								ui->cBox_isDisplayRec->setVisible(false);
+								ui->cBox_isDisplayText->setVisible(false);
 							});
 					}
 					//所有电机上电
@@ -1457,7 +1462,8 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 			GlobalStructData.runningState = RunningState::Stop;
 			//GlobalThread.strobeLightThread->stopThread();
 		}
-		ui->cBox_isDisplayInfo->setVisible(checked);
+		ui->cBox_isDisplayRec->setVisible(checked);
+		ui->cBox_isDisplayText->setVisible(checked);
 	}
 	else {
 		ui->rbtn_debug->setChecked(false);
@@ -1530,10 +1536,16 @@ void ButtonScanner::rbtn_strobe_checked(bool checked)
 	motionPtr->SetIOOut(ControlLines::strobeLightOut, checked);
 }
 
-void ButtonScanner::cBox_isDisplayInfo_checked(bool checked)
+void ButtonScanner::cBox_isDisplayRec_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
-	GlobalStructData.debug_isDisplayInfo = checked;
+	GlobalStructData.debug_isDisplayRec = checked;
+}
+
+void ButtonScanner::cBox_isDisplayText_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.debug_isDisplayText = checked;
 }
 
 void ButtonScanner::labelClickable_title_clicked()

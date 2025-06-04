@@ -162,7 +162,8 @@ private slots:
 	void rbtn_forAndAgainst_checked(bool checked);
 	void rbtn_strobe_checked(bool checked);
 private slots:
-	void cBox_isDisplayInfo_checked(bool checked);
+	void cBox_isDisplayRec_checked(bool checked);
+	void cBox_isDisplayText_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
 public slots:
