@@ -40,4 +40,9 @@ private:
 	QStringList m_imageFiles;
 private slots:
 	void onThumbnailSelected();
+	void pbtn_exit_clicked();
+	void pbtn_deleteTotal_clicked();
+	void pbtn_delete_clicked();
+	void pbtn_prePicture_clicked();
+	void pbtn_nextPicture_clicked();
 };

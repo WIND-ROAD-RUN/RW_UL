@@ -9,6 +9,8 @@
 #include <QIcon>
 #include <QPainter>
 #include <QDir>
+#include <QMessageBox>
+
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::PictureViewerThumbnailsClass())
@@ -70,8 +72,19 @@ void PictureViewerThumbnails::build_ui()
 
 void PictureViewerThumbnails::build_connect()
 {
-	connect(_listWidget, &QListWidget::itemSelectionChanged, this, &PictureViewerThumbnails::onThumbnailSelected);
+	connect(_listWidget, &QListWidget::itemSelectionChanged, 
+		this, &PictureViewerThumbnails::onThumbnailSelected);
 
+	connect(ui->pbtn_delete, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_delete_clicked);
+	connect(ui->pbtn_deleteTotal, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_deleteTotal_clicked);
+	connect(ui->pbtn_exit, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_exit_clicked);
+	connect(ui->pbtn_nextPicture, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_nextPicture_clicked);
+	connect(ui->pbtn_prePicture, &QPushButton::clicked,
+		this, &PictureViewerThumbnails::pbtn_prePicture_clicked);
 }
 
 void PictureViewerThumbnails::loadImageList()
@@ -128,4 +141,141 @@ void PictureViewerThumbnails::onThumbnailSelected()
 		QString path = item->data(Qt::UserRole).toString();
 		ui->statusBar->showMessage(path);
 	}
+}
+
+void PictureViewerThumbnails::pbtn_exit_clicked()
+{
+	this->close();
+}
+
+void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
+{
+	auto result = QMessageBox::question(this, "提示", "是否删除当前目录下所有图片？", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+	if (result == QMessageBox::No) {
+		return;
+	}
+
+	// 获取当前选中目录的绝对路径
+	QString categoryPath = m_rootPath;
+	QDir dir(categoryPath);
+
+	// 检查目录是否存在
+	if (!dir.exists()) {
+		qDebug() << "Directory does not exist:" << categoryPath;
+		return;
+	}
+
+	// 删除目录中的所有文件
+	QStringList fileFilters;
+	fileFilters << "*"; // 匹配所有文件
+	QStringList files = dir.entryList(fileFilters, QDir::Files | QDir::NoSymLinks);
+	for (const QString& file : files) {
+		QString filePath = dir.filePath(file);
+		if (!QFile::remove(filePath)) {
+			qDebug() << "Failed to delete file:" << filePath;
+		}
+		else {
+			qDebug() << "Deleted file:" << filePath;
+		}
+	}
+
+	// 删除目录中的所有子文件夹及其内容
+	QStringList subDirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+	for (const QString& subDir : subDirs) {
+		QDir subDirPath(dir.filePath(subDir));
+		if (!subDirPath.removeRecursively()) {
+			qDebug() << "Failed to delete subdirectory:" << subDirPath.path();
+		}
+		else {
+			qDebug() << "Deleted subdirectory:" << subDirPath.path();
+		}
+	}
+
+	qDebug() << "Cleared all contents of directory:" << categoryPath;
+
+	// 更新目录列表
+	loadImageList();
+}
+
+void PictureViewerThumbnails::pbtn_delete_clicked()
+{
+	// 获取当前选中的索引
+	QModelIndex currentIndex = _listWidget->currentIndex();
+
+	// 检查索引是否有效
+	if (!currentIndex.isValid()) {
+		qDebug() << "No picture selected for deletion.";
+		return;
+	}
+
+	int row = currentIndex.row();
+
+	// 获取当前选中图片的绝对路径
+	QString picturePath = currentIndex.data(Qt::UserRole).toString();
+
+	// 删除文件
+	QFile file(picturePath);
+	if (file.exists()) {
+		if (file.remove()) {
+			qDebug() << "Deleted picture:" << picturePath;
+		}
+		else {
+			qDebug() << "Failed to delete picture:" << picturePath;
+			return;
+		}
+	}
+	else {
+		qDebug() << "File does not exist:" << picturePath;
+		return;
+	}
+
+	// 从m_imageFiles中移除
+	m_imageFiles.removeAll(picturePath);
+
+	// 从listWidget中移除item
+	QListWidgetItem* item = _listWidget->takeItem(row);
+	delete item;
+
+	// 设置当前索引为删除项之前的索引，如果有的话
+	int newRow = row - 1;
+	if (newRow < 0 && _listWidget->count() > 0) {
+		newRow = 0;
+	}
+	if (newRow >= 0 && _listWidget->count() > 0) {
+		_listWidget->setCurrentRow(newRow);
+	}
+}
+
+void PictureViewerThumbnails::pbtn_prePicture_clicked()
+{
+	int count = _listWidget->count();
+	if (count == 0) return;
+
+	int currentRow = _listWidget->currentRow();
+	if (currentRow == -1) {
+		// 没有选中任何项，默认选中第一个
+		_listWidget->setCurrentRow(0);
+		return;
+	}
+	if (currentRow > 0) {
+		_listWidget->setCurrentRow(currentRow - 1);
+	}
+	// 如果已经是第一个，则不做处理（也可循环到最后一个，根据需求调整）
+}
+
+void PictureViewerThumbnails::pbtn_nextPicture_clicked()
+{
+	int count = _listWidget->count();
+	if (count == 0) return;
+
+	int currentRow = _listWidget->currentRow();
+	if (currentRow == -1) {
+		// 没有选中任何项，默认选中第一个
+		_listWidget->setCurrentRow(0);
+		return;
+	}
+	if (currentRow < count - 1) {
+		_listWidget->setCurrentRow(currentRow + 1);
+	}
+	// 如果已经是最后一个，则不做处理（也可循环到第一个，根据需求调整）
 }
