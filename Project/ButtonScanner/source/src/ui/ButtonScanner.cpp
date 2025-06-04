@@ -418,6 +418,7 @@ void ButtonScanner::build_picturesViewer()
 {
 	_picturesViewer = new PictureViewerThumbnails(this);
 	_picturesViewer->setSize({ 100,100 });
+	_picturesViewer->setThumbnailCacheCapacity(1000);
 }
 
 void ButtonScanner::build_dlgModelManager()

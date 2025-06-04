@@ -31,13 +31,14 @@ void DlgNewProduction::build_ui()
 	auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\)";
 	picturesViewer->setRootPath(tempImagePath);
 	picturesViewer->setSize({ 100,100 });
+	picturesViewer->setThumbnailCacheCapacity(300);
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	ui->rbtn_tab3_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab3_filterColor-> setEnabled(false);
 	ui->rbtn_tab4_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab4_filterColor->setEnabled(false);
 	ui->rbtn_tab5_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab5_filterColor->setEnabled(false);
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 }
 
 void DlgNewProduction::build_connect()

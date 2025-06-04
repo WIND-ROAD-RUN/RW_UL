@@ -14,18 +14,33 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class PictureViewerThumbnailsClass; };
 QT_END_NAMESPACE
 
-class PictureViewerThumbnails : public QMainWindow
+namespace rw
 {
+	namespace dsl
+	{
+		template <typename Key, typename Value>
+		class CacheFIFO;
+	}
+}
+
+class PictureViewerThumbnails : public QMainWindow
+{ 
 	Q_OBJECT
 private:
+	std::unique_ptr<rw::dsl::CacheFIFO<QString, QPixmap>> _thumbnailCache;
+private:
 	QHash<QString, QStringList> m_categoryImageCache; 
-	QHash<QString, QPixmap> m_thumbnailCache;         
+	/*QHash<QString, QPixmap> m_thumbnailCache;  */       
 private:
 	LoadingDialog* _loadingDialog = nullptr;
 	PictureViewerUtilty* pictureViewerUtilty=nullptr;
 public:
 	PictureViewerThumbnails(QWidget *parent = nullptr);
 	~PictureViewerThumbnails() override;
+public:
+	void setThumbnailCacheCapacity(size_t capacity);
+private:
+	size_t _thumbnailCacheCapacity{1000};
 public:
 	void setRootPath(const QString& rootPath);
 

@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QtConcurrent/qtconcurrentrun.h>
+#include"dsl_CacheFIFO.hpp"
 
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget *parent)
 	: QMainWindow(parent)
@@ -25,6 +26,11 @@ PictureViewerThumbnails::PictureViewerThumbnails(QWidget *parent)
 PictureViewerThumbnails::~PictureViewerThumbnails()
 {
 	delete ui;
+}
+
+void PictureViewerThumbnails::setThumbnailCacheCapacity(size_t capacity)
+{
+	_thumbnailCacheCapacity = capacity;
 }
 
 void PictureViewerThumbnails::setRootPath(const QString& rootPath)
@@ -92,6 +98,9 @@ void PictureViewerThumbnails::build_ui()
 	pictureViewerUtilty = new PictureViewerUtilty(this);
 	pictureViewerUtilty->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	ui->treeView_categoryTree->setModel(_categoryModel);
+
+	_thumbnailCache = std::make_unique<rw::dsl::CacheFIFO<QString, QPixmap>>(_thumbnailCacheCapacity);
+
 }
 
 void PictureViewerThumbnails::build_connect()
@@ -157,11 +166,13 @@ void PictureViewerThumbnails::loadImageList()
 
 void PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidgetItem* item)
 {
-	if (m_thumbnailCache.contains(imagePath)) {
-		item->setIcon(QIcon(m_thumbnailCache.value(imagePath)));
+	auto icon=_thumbnailCache->get(imagePath);
+	if (icon.has_value())
+	{
+		item->setIcon(QIcon(icon.value()));
 		return;
 	}
-	// 兜底：如果没有缓存则正常加载
+
 	QImageReader reader(imagePath);
 	reader.setAutoTransform(true);
 	QImage img = reader.read();
@@ -178,7 +189,7 @@ void PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidge
 		painter.end();
 
 		item->setIcon(QIcon(squarePixmap));
-		m_thumbnailCache.insert(imagePath, squarePixmap);
+		_thumbnailCache->set(imagePath, squarePixmap);
 	}
 	else {
 		item->setIcon(QIcon());
@@ -290,8 +301,30 @@ void PictureViewerThumbnails::preloadAllCategoryImages(const QDir& dir)
 		QString imagePath = fileInfo.absoluteFilePath();
 		imagePaths << imagePath;
 
-		// 只在缓存中没有时才生成缩略图
-		if (!m_thumbnailCache.contains(imagePath)) {
+		//// 只在缓存中没有时才生成缩略图
+		//if (!m_thumbnailCache.contains(imagePath)) {
+		//	QImageReader reader(imagePath);
+		//	reader.setAutoTransform(true);
+		//	QImage img = reader.read();
+		//	if (!img.isNull()) {
+		//		QImage scaledImg = img.scaled(big, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+		//		QPixmap squarePixmap(big);
+		//		squarePixmap.fill(Qt::transparent);
+
+		//		QPainter painter(&squarePixmap);
+		//		int x = (big.width() - scaledImg.width()) / 2;
+		//		int y = (big.height() - scaledImg.height()) / 2;
+		//		painter.drawImage(x, y, scaledImg);
+		//		painter.end();
+
+		//		m_thumbnailCache.insert(imagePath, squarePixmap);
+		//	}
+		//}
+
+		auto value=_thumbnailCache->get(imagePath);
+		if (!value.has_value())
+		{
 			QImageReader reader(imagePath);
 			reader.setAutoTransform(true);
 			QImage img = reader.read();
@@ -307,7 +340,7 @@ void PictureViewerThumbnails::preloadAllCategoryImages(const QDir& dir)
 				painter.drawImage(x, y, scaledImg);
 				painter.end();
 
-				m_thumbnailCache.insert(imagePath, squarePixmap);
+				_thumbnailCache->set(imagePath, squarePixmap);
 			}
 		}
 	}
@@ -371,7 +404,7 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 		}
 		else {
 			qDebug() << "Deleted file:" << filePath;
-			m_thumbnailCache.remove(filePath); // 移除缩略图缓存
+			//m_thumbnailCache.remove(filePath); // 移除缩略图缓存
 		}
 	}
 
@@ -381,10 +414,10 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 		QDir subDirPath(dir.filePath(subDir));
 		// 递归删除子目录下的图片缩略图缓存
 		QStringList subFiles = subDirPath.entryList(fileFilters, QDir::Files | QDir::NoSymLinks);
-		for (const QString& subFile : subFiles) {
+		/*for (const QString& subFile : subFiles) {
 			QString subFilePath = subDirPath.filePath(subFile);
 			m_thumbnailCache.remove(subFilePath);
-		}
+		}*/
 		if (!subDirPath.removeRecursively()) {
 			qDebug() << "Failed to delete subdirectory:" << subDirPath.path();
 		}
@@ -445,8 +478,8 @@ void PictureViewerThumbnails::pbtn_delete_clicked()
 	// 从m_imageFiles中移除
 	m_imageFiles.removeAll(picturePath);
 
-	// 从缩略图缓存中移除
-	m_thumbnailCache.remove(picturePath);
+	//// 从缩略图缓存中移除
+	//m_thumbnailCache.remove(picturePath);
 
 	// 从目录图片路径缓存中移除
 	QModelIndex currentCategoryIndex = ui->treeView_categoryTree->currentIndex();
