@@ -13,7 +13,7 @@
 #include <QtConcurrent/qtconcurrentrun.h>
 #include"dsl_CacheFIFO.hpp"
 
-PictureViewerThumbnails::PictureViewerThumbnails(QWidget *parent)
+PictureViewerThumbnails::PictureViewerThumbnails(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::PictureViewerThumbnailsClass())
 {
@@ -45,11 +45,13 @@ void PictureViewerThumbnails::setSize(const QSize& size)
 	_listWidget->setIconSize(m_thumbnailSize);
 
 	QSize cellSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32);
+	disCacheImagePaths.clear();
 	for (int i = 0; i < _listWidget->count(); ++i) {
 		QListWidgetItem* item = _listWidget->item(i);
 		item->setSizeHint(cellSize);
 		loadThumbnail(item->data(Qt::UserRole).toString(), item);
 	}
+	loadThumbnailDisCache();
 }
 
 void PictureViewerThumbnails::setSizeRange(const QSize& sizeSmall, const QSize& sizeBig)
@@ -106,7 +108,7 @@ void PictureViewerThumbnails::build_ui()
 
 void PictureViewerThumbnails::build_connect()
 {
-	connect(_listWidget, &QListWidget::itemSelectionChanged, 
+	connect(_listWidget, &QListWidget::itemSelectionChanged,
 		this, &PictureViewerThumbnails::onThumbnailSelected);
 
 	connect(ui->pbtn_delete, &QPushButton::clicked,
@@ -153,6 +155,7 @@ void PictureViewerThumbnails::loadImageList()
 	// 从缓存获取图片路径
 	QStringList imageList = m_categoryImageCache.value(dirPath);
 
+	disCacheImagePaths.clear();
 	for (const QString& imagePath : imageList) {
 		m_imageFiles << imagePath;
 		QFileInfo fileInfo(imagePath);
@@ -160,21 +163,34 @@ void PictureViewerThumbnails::loadImageList()
 		item->setText(fileInfo.fileName());
 		item->setData(Qt::UserRole, imagePath);
 		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
-		_listWidget->addItem(item);
-		loadThumbnail(imagePath, item);
+		auto isload=loadThumbnail(imagePath, item);
+		if (isload)
+		{
+			_listWidget->addItem(item);
+		}
+		else
+		{
+			delete item;
+		}
 	}
+	loadThumbnailDisCache();
 }
 
-void PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidgetItem* item)
+bool PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidgetItem* item)
 {
-	auto icon=_thumbnailCache->get(imagePath);
+	auto icon = _thumbnailCache->get(imagePath);
 	if (icon.has_value())
 	{
 		item->setIcon(QIcon(icon.value()));
-		return;
+		return true;
+	}
+	else
+	{
+		disCacheImagePaths.append(imagePath);
+		return false;
 	}
 
-	QImageReader reader(imagePath);
+	/*QImageReader reader(imagePath);
 	reader.setAutoTransform(true);
 	QImage img = reader.read();
 	if (!img.isNull()) {
@@ -194,6 +210,40 @@ void PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidge
 	}
 	else {
 		item->setIcon(QIcon());
+	}*/
+}
+
+void PictureViewerThumbnails::loadThumbnailDisCache()
+{
+	for (const auto path : disCacheImagePaths)
+	{
+		QFileInfo fileInfo(path);
+		QListWidgetItem* item = new QListWidgetItem();
+		item->setText(fileInfo.fileName());
+		item->setData(Qt::UserRole, path);
+		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
+		QImageReader reader(path);
+		reader.setAutoTransform(true);
+		QImage img = reader.read();
+		if (!img.isNull()) {
+			QImage scaledImg = img.scaled(m_thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+			QPixmap squarePixmap(m_thumbnailSize);
+			squarePixmap.fill(Qt::transparent);
+
+			QPainter painter(&squarePixmap);
+			int x = (m_thumbnailSize.width() - scaledImg.width()) / 2;
+			int y = (m_thumbnailSize.height() - scaledImg.height()) / 2;
+			painter.drawImage(x, y, scaledImg);
+			painter.end();
+
+			item->setIcon(QIcon(squarePixmap));
+			_thumbnailCache->set(path, squarePixmap);
+		}
+		else {
+			item->setIcon(QIcon());
+		}
+		_listWidget->addItem(item);
 	}
 }
 
@@ -323,7 +373,7 @@ void PictureViewerThumbnails::preloadAllCategoryImages(const QDir& dir)
 		//	}
 		//}
 
-		auto value=_thumbnailCache->get(imagePath);
+		auto value = _thumbnailCache->get(imagePath);
 		if (!value.has_value())
 		{
 			QImageReader reader(imagePath);
@@ -500,14 +550,14 @@ void PictureViewerThumbnails::pbtn_delete_clicked()
 	delete item;
 
 	// 设置当前索引为删除项之前的索引，如果有的话
-	int newRow = row ;
+	int newRow = row;
 	if (newRow < 0 && _listWidget->count() > 0) {
 		newRow = 0;
 	}
 	if (newRow >= 0 && _listWidget->count() > 0) {
-		if (newRow>= _listWidget->count())
+		if (newRow >= _listWidget->count())
 		{
-			_listWidget->setCurrentRow(newRow-1);
+			_listWidget->setCurrentRow(newRow - 1);
 		}
 		else
 		{

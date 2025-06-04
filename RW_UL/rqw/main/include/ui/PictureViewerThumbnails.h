@@ -27,6 +27,8 @@ class PictureViewerThumbnails : public QMainWindow
 { 
 	Q_OBJECT
 private:
+	QVector<QString> disCacheImagePaths;
+private:
 	std::unique_ptr<rw::dsl::CacheFIFO<QString, QPixmap>> _thumbnailCache;
 private:
 	QHash<QString, QStringList> m_categoryImageCache; 
@@ -58,7 +60,8 @@ private:
 	void build_connect();
 private:
 	void loadImageList();
-	void loadThumbnail(const QString& imagePath, QListWidgetItem* item);
+	bool loadThumbnail(const QString& imagePath, QListWidgetItem* item);
+	void loadThumbnailDisCache();
 	void updateCategoryList();
 	void addSubFolders(const QDir& parentDir, QStandardItem* parentItem);
 	QModelIndex findFirstDeepestIndex(QStandardItemModel* model);
