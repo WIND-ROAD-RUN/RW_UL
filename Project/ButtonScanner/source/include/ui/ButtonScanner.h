@@ -51,7 +51,7 @@ private:
 	//变量监控线程关机的时候停止
 	bool _mark_thread = false;
 public:
-	QRect exposureTimeTriggerArea; // 指定区域
+	QRect exposureTimeTriggerArea;
 	float exposureTimeTriggerWidthRatio = 0.3f;
 	float exposureTimeTriggerRatio = 0.3f;
 private:
