@@ -3,11 +3,11 @@
 #include <QMouseEvent>
 #include <QScrollBar>
 
-class DraggableListWidget1 : public QListWidget
+class DraggableListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit DraggableListWidget1(QWidget* parent = nullptr)
+    explicit DraggableListWidget(QWidget* parent = nullptr)
         : QListWidget(parent) {
     }
 

@@ -11,7 +11,7 @@ ThumbnailsViewer::ThumbnailsViewer(QWidget* parent)
     : QWidget(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
-    m_listWidget = new DraggableListWidget(this);
+    m_listWidget = new DraggableListWidget1(this);
     m_listWidget->setViewMode(QListView::IconMode);
     m_listWidget->setResizeMode(QListView::Adjust);
     m_listWidget->setIconSize(m_thumbnailSize);

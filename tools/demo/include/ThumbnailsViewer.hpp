@@ -36,7 +36,7 @@ private:
 
     QString m_rootPath;
     QSize m_thumbnailSize{ 128, 128 };
-    DraggableListWidget* m_listWidget;
+    DraggableListWidget1* m_listWidget;
     QStatusBar* m_statusBar{ nullptr };
     QStringList m_imageFiles;
 };
