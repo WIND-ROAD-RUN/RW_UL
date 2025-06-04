@@ -1045,6 +1045,7 @@ void ButtonScanner::build_ioThread()
 					{
 						ui->rbtn_removeFunc->setChecked(false);
 						ui->rbtn_debug->setChecked(false);
+						rbtn_debug_checked(false);
 						label_lightBulb->setVisible(true);
 					});
 					// pidaimove->stop();
@@ -1105,6 +1106,7 @@ void ButtonScanner::build_ioThread()
 						{
 							ui->rbtn_removeFunc->setChecked(false);
 							ui->rbtn_debug->setChecked(false);
+							rbtn_debug_checked(false);
 							label_lightBulb->setVisible(false);
 						});
 						motionPtr->StopAllAxis();
