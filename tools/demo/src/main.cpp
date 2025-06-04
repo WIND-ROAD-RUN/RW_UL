@@ -20,8 +20,8 @@ int main(int argc, char* argv[])
 	viewer.show();*/
 
 	PictureViewerThumbnails viewer;
-	viewer.setRootPath(R"(C:\Users\rw\Desktop\1)");
-	viewer.setSize(QSize(500, 500));
+	viewer.setRootPath(R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image)");
+	viewer.setSize(QSize(400, 400));
 	viewer.show();
 
 	return a.exec();
