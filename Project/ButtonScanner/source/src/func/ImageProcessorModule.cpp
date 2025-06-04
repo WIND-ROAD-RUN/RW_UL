@@ -1052,7 +1052,7 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 		//为了再debug下绘制错误的rec识别框，暂且使用removeFution的逻辑调用，目前是为了debug下绘制错误的rec识别框，但是这里会修改_isBad成员变量
 		run_OpenRemoveFunc_process_defect_info(defectInfo);
-		drawErrorRec(image, processResult, processResultIndex);
+		drawErrorRec_error(image, processResult, processResultIndex, defectInfo);
 	}
 	if (GlobalStructData::getInstance().debug_isDisplayText)
 	{
