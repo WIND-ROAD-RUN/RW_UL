@@ -613,7 +613,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
              </property>
              <property name="text">
-              <string>显示识别框</string>
+              <string>识别框</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -658,7 +658,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
              </property>
              <property name="text">
-              <string>显示文字</string>
+              <string>文字</string>
              </property>
              <property name="checked">
               <bool>true</bool>
