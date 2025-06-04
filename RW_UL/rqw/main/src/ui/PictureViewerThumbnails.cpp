@@ -31,6 +31,7 @@ PictureViewerThumbnails::~PictureViewerThumbnails()
 void PictureViewerThumbnails::setThumbnailCacheCapacity(size_t capacity)
 {
 	_thumbnailCacheCapacity = capacity;
+	_thumbnailCache->resizeCapacity(_thumbnailCacheCapacity);
 }
 
 void PictureViewerThumbnails::setRootPath(const QString& rootPath)
