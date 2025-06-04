@@ -37,6 +37,7 @@ void DlgNewProduction::build_ui()
 	ui->rbtn_tab4_filterColor->setEnabled(false);
 	ui->rbtn_tab5_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab5_filterColor->setEnabled(false);
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 }
 
 void DlgNewProduction::build_connect()
@@ -86,9 +87,12 @@ void DlgNewProduction::build_connect()
 		this, &DlgNewProduction::pbtn_tab5_finish_clicked);
 	QObject::connect(ui->pbtn_tab5_cancelTrain, &QPushButton::clicked,
 		this, &DlgNewProduction::pbtn_tab5_cancelTrain_clicked);
+	QObject::connect(ui->pbtn_tab5_openImgLocate, &QPushButton::clicked,
+		this, &DlgNewProduction::pbtn_tab5_open_img_locate_clicked);
 
 	QObject::connect(picturesViewer, &PictureViewerThumbnails::viewerClosed,
 		this, &DlgNewProduction::flashImgCount);
+
 }
 
 void DlgNewProduction::set_motionRun(bool isRun)
@@ -311,7 +315,7 @@ void DlgNewProduction::pbtn_tab2_exit_clicked()
 
 void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 {
-	/*if (ui->rbtn_tab3_firstWork1->isChecked())
+	if (ui->rbtn_tab3_firstWork1->isChecked())
 	{
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work1\bad)";
 		picturesViewer->setRootPath(tempImagePath);
@@ -330,9 +334,9 @@ void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 	{
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\bad)";
 		picturesViewer->setRootPath(tempImagePath);
-	}*/
-	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	}
+	/*picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);*/
 	picturesViewer->show();
 }
 
@@ -370,7 +374,7 @@ void DlgNewProduction::pbtn_tab3_nex_step_clicked()
 
 void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
 {
-	/*if (ui->rbtn_tab4_firstWork1->isChecked())
+	if (ui->rbtn_tab4_firstWork1->isChecked())
 	{
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work1\good)";
 		picturesViewer->setRootPath(tempImagePath);
@@ -390,11 +394,10 @@ void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\good)";
 		picturesViewer->setRootPath(tempImagePath);
 	}
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	picturesViewer->show();*/
-	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	picturesViewer->show();
+
+	//picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	//picturesViewer->show();
 }
 
 void DlgNewProduction::pbtn_tab4_exit_clicked()
@@ -431,6 +434,13 @@ void DlgNewProduction::pbtn_tab5_start_train_clicked()
 		return;
 	}
 	aiTrainModule->startTrain();
+}
+
+void DlgNewProduction::pbtn_tab5_open_img_locate_clicked()
+{
+	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	picturesViewer->show();
 }
 
 void DlgNewProduction::pbtn_tab5_exit_clicked()

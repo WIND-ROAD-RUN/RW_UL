@@ -8,6 +8,8 @@
 #include"LoadingDialog.h"
 #include"PictureViewerUtilty.h"
 
+#include<QListWidgetItem>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class PictureViewerThumbnailsClass; };
 QT_END_NAMESPACE
@@ -28,13 +30,13 @@ public:
 	void setRootPath(const QString& rootPath);
 
 	void setSize(const QSize& size);
+signals:
+	void viewerClosed();
 protected:
 	void showEvent(QShowEvent* event) override;
 private:
 	void build_ui();
 	void build_connect();
-signals:
-	void viewerClosed();
 private:
 	void loadImageList();
 	void loadThumbnail(const QString& imagePath, QListWidgetItem* item);

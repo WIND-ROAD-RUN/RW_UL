@@ -73,6 +73,7 @@ void PictureViewerThumbnails::build_ui()
 	_loadingDialog = new LoadingDialog(this);
 	_categoryModel = new QStandardItemModel(this);
 	pictureViewerUtilty = new PictureViewerUtilty(this);
+	pictureViewerUtilty->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	ui->treeView_categoryTree->setModel(_categoryModel);
 }
 
@@ -181,18 +182,26 @@ void PictureViewerThumbnails::updateCategoryList()
 
 	// 遍历 _rootPath 下的所有文件夹
 	QStringList categoryFolders = rootDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-	for (const QString& category : categoryFolders) {
-		QString categoryPath = rootDir.filePath(category);
-		QStandardItem* categoryItem = new QStandardItem(category);
+	if (categoryFolders.isEmpty()) {
+		// 没有子目录，直接添加rootDir本身
+		QStandardItem* rootItem = new QStandardItem(rootDir.dirName());
+		rootItem->setData(rootDir.absolutePath(), Qt::UserRole);
+		_categoryModel->appendRow(rootItem);
+	}
+	else {
+		for (const QString& category : categoryFolders) {
+			QString categoryPath = rootDir.filePath(category);
+			QStandardItem* categoryItem = new QStandardItem(category);
 
-		// 保存绝对路径到节点
-		categoryItem->setData(categoryPath, Qt::UserRole);
+			// 保存绝对路径到节点
+			categoryItem->setData(categoryPath, Qt::UserRole);
 
-		// 递归添加子文件夹
-		QDir categoryDir(categoryPath);
-		addSubFolders(categoryDir, categoryItem);
+			// 递归添加子文件夹
+			QDir categoryDir(categoryPath);
+			addSubFolders(categoryDir, categoryItem);
 
-		_categoryModel->appendRow(categoryItem);
+			_categoryModel->appendRow(categoryItem);
+		}
 	}
 
 	// 设置模型到 treeView_categoryTree
@@ -435,12 +444,19 @@ void PictureViewerThumbnails::pbtn_delete_clicked()
 	delete item;
 
 	// 设置当前索引为删除项之前的索引，如果有的话
-	int newRow = row - 1;
+	int newRow = row ;
 	if (newRow < 0 && _listWidget->count() > 0) {
 		newRow = 0;
 	}
 	if (newRow >= 0 && _listWidget->count() > 0) {
-		_listWidget->setCurrentRow(newRow);
+		if (newRow>= _listWidget->count())
+		{
+			_listWidget->setCurrentRow(newRow-1);
+		}
+		else
+		{
+			_listWidget->setCurrentRow(newRow);
+		}
 	}
 }
 

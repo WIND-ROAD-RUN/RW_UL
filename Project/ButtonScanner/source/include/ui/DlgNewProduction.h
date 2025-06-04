@@ -84,6 +84,7 @@ private slots:
 	void pbtn_tab4_nex_step_clicked();
 private slots:
 	void pbtn_tab5_start_train_clicked();
+	void pbtn_tab5_open_img_locate_clicked();
 	void pbtn_tab5_exit_clicked();
 	void pbtn_tab5_pre_step_clicked();
 	void pbtn_tab5_finish_clicked();
