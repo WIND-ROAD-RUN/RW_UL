@@ -1,4 +1,4 @@
-#include "PictureViewerThumbnails.h"
+﻿#include "PictureViewerThumbnails.h"
 
 #include "ui_PictureViewerThumbnails.h"
 #include <QVBoxLayout>
@@ -27,7 +27,6 @@ PictureViewerThumbnails::~PictureViewerThumbnails()
 void PictureViewerThumbnails::setRootPath(const QString& rootPath)
 {
 	m_rootPath = rootPath;
-	loadImageList();
 }
 
 void PictureViewerThumbnails::setSize(const QSize& size)
@@ -43,6 +42,15 @@ void PictureViewerThumbnails::setSize(const QSize& size)
 	}
 }
 
+void PictureViewerThumbnails::showEvent(QShowEvent* event)
+{
+	_loadingDialog->updateMessage("加载图片中");
+	_loadingDialog->show();
+	loadImageList();
+	_loadingDialog->close();
+	QMainWindow::showEvent(event);
+}
+
 void PictureViewerThumbnails::build_ui()
 {
 	_listWidget = new DraggableListWidget(this);
@@ -56,6 +64,8 @@ void PictureViewerThumbnails::build_ui()
 	_listWidget->setMovement(QListView::Static);
 	_listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 	_listWidget->setSpacing(8);
+
+	_loadingDialog = new LoadingDialog();
 }
 
 void PictureViewerThumbnails::build_connect()

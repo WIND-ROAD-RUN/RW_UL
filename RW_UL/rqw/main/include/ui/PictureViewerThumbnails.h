@@ -3,6 +3,7 @@
 #include <QMainWindow>
 
 #include"DraggableListWidget.h"
+#include"LoadingDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PictureViewerThumbnailsClass; };
@@ -13,7 +14,7 @@ class PictureViewerThumbnails : public QMainWindow
 	Q_OBJECT
 private:
 	DraggableListWidget* _listWidget = nullptr;
-
+	LoadingDialog* _loadingDialog = nullptr;
 public:
 	PictureViewerThumbnails(QWidget *parent = nullptr);
 	~PictureViewerThumbnails();
@@ -21,7 +22,8 @@ public:
 	void setRootPath(const QString& rootPath);
 
 	void setSize(const QSize& size);
-
+protected:
+	void showEvent(QShowEvent* event) override;
 private:
 	void build_ui();
 	void build_connect();
