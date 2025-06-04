@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 
 	ThumbnailsViewer viewer;
 	viewer.setRootPath(R"(C:\Users\rw\Desktop\1)");
-	viewer.setThumbnailGridSize({ 600, 600 });
+	viewer.setSize(QSize(500,500));
 	viewer.show();
 
 	return a.exec();
