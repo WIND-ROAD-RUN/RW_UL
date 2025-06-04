@@ -30,7 +30,7 @@ void DlgNewProduction::build_ui()
 	picturesViewer = new PictureViewerThumbnails(this);
 	auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\)";
 	picturesViewer->setRootPath(tempImagePath);
-	picturesViewer->setSize({ 400,400 });
+	picturesViewer->setSize({ 100,100 });
 	ui->rbtn_tab3_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab3_filterColor-> setEnabled(false);
 	ui->rbtn_tab4_checkBladeShape->setEnabled(false);

@@ -16,8 +16,8 @@ class PictureViewerThumbnails : public QMainWindow
 {
 	Q_OBJECT
 private:
-	QHash<QString, QStringList> m_categoryImageCache; // Ŀ¼·��->ͼƬ·���б����
-	QHash<QString, QPixmap> m_thumbnailCache;         // ͼƬ·��->����ͼ
+	QHash<QString, QStringList> m_categoryImageCache; 
+	QHash<QString, QPixmap> m_thumbnailCache;         
 private:
 	LoadingDialog* _loadingDialog = nullptr;
 	PictureViewerUtilty* pictureViewerUtilty=nullptr;
