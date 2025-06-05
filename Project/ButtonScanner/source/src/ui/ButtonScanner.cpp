@@ -1486,6 +1486,11 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 void ButtonScanner::rbtn_takePicture_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
+	if (GlobalStructData.runningState==RunningState::Debug)
+	{
+		ui->rbtn_takePicture->setChecked(false);
+		return;
+	}
 	GlobalStructData.mainWindowConfig.isTakePictures = checked;
 	GlobalStructData.saveConfig();
 	GlobalStructData.isTakePictures = checked;
