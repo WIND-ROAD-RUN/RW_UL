@@ -49,35 +49,35 @@ public:
 public:
 	//std::vector<double> edgeDamage; 
 	std::vector<ButtonDefectInfoItem>edgeDamage1;
-	bool isDrawedgeDamage{ false };
+	//bool isDrawedgeDamage{ false };
 
 	//std::vector<double> pore;
 	std::vector<ButtonDefectInfoItem>pore1;
-	bool isDrawpore{ false };
+	//bool isDrawpore{ false };
 
 	//std::vector<double> paint;
 	std::vector<ButtonDefectInfoItem>paint1;
-	bool isDrawpaint{ false };
+	//bool isDrawpaint{ false };
 
 	//std::vector<double> brokenEye;
 	std::vector<ButtonDefectInfoItem>brokenEye1;
-	bool isDrawbrokenEye{ false };
+	//bool isDrawbrokenEye{ false };
 
 	//std::vector<double> crack;
 	std::vector<ButtonDefectInfoItem>crack1;
-	bool isDrawcrack{ false };
+	//bool isDrawcrack{ false };
 
 	//std::vector<double> grindStone;
 	std::vector<ButtonDefectInfoItem>grindStone1;
-	bool isDrawgrindStone{ false };
+	//bool isDrawgrindStone{ false };
 
 	//std::vector<double> blockEye;
 	std::vector<ButtonDefectInfoItem>blockEye1;
-	bool isDrawblockEye{ false };
+	//bool isDrawblockEye{ false };
 
 	//std::vector<double> materialHead;
 	std::vector<ButtonDefectInfoItem>materialHead1;
-	bool isDrawmaterialHead{ false };
+	//bool isDrawmaterialHead{ false };
 
 public:
 

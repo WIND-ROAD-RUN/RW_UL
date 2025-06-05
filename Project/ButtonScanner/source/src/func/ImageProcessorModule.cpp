@@ -773,7 +773,7 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
 	ButtonDefectInfo& info)
 {
-	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	/*auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
 	auto& mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
 	if (processResult.size() == 0)
 	{
@@ -878,7 +878,7 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
