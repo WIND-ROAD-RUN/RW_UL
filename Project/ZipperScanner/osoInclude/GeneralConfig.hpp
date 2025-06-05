@@ -25,6 +25,9 @@ namespace cdm {
         bool qiangGuang{ false };
         bool zhongGuang{ false };
         bool ruoGuang{ false };
+        bool isDebug{ false };
+        bool isDefect{ false };
+        bool isSaveImg{ false };
     };
 
     inline GeneralConfig::GeneralConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -64,6 +67,21 @@ namespace cdm {
             throw std::runtime_error("$variable$ruoGuang is not found");
         }
         ruoGuang = ruoGuangItem->getValueAsBool();
+        auto isDebugItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isDebug$"));
+        if (!isDebugItem) {
+            throw std::runtime_error("$variable$isDebug is not found");
+        }
+        isDebug = isDebugItem->getValueAsBool();
+        auto isDefectItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isDefect$"));
+        if (!isDefectItem) {
+            throw std::runtime_error("$variable$isDefect is not found");
+        }
+        isDefect = isDefectItem->getValueAsBool();
+        auto isSaveImgItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isSaveImg$"));
+        if (!isSaveImgItem) {
+            throw std::runtime_error("$variable$isSaveImg is not found");
+        }
+        isSaveImg = isSaveImgItem->getValueAsBool();
     }
 
     inline GeneralConfig::GeneralConfig(const GeneralConfig& obj)
@@ -74,6 +92,9 @@ namespace cdm {
         qiangGuang = obj.qiangGuang;
         zhongGuang = obj.zhongGuang;
         ruoGuang = obj.ruoGuang;
+        isDebug = obj.isDebug;
+        isDefect = obj.isDefect;
+        isSaveImg = obj.isSaveImg;
     }
 
     inline GeneralConfig& GeneralConfig::operator=(const GeneralConfig& obj)
@@ -85,6 +106,9 @@ namespace cdm {
             qiangGuang = obj.qiangGuang;
             zhongGuang = obj.zhongGuang;
             ruoGuang = obj.ruoGuang;
+            isDebug = obj.isDebug;
+            isDefect = obj.isDefect;
+            isSaveImg = obj.isSaveImg;
         }
         return *this;
     }
@@ -117,12 +141,24 @@ namespace cdm {
         ruoGuangItem->setName("$variable$ruoGuang$");
         ruoGuangItem->setValueFromBool(ruoGuang);
         assembly.addItem(ruoGuangItem);
+        auto isDebugItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isDebugItem->setName("$variable$isDebug$");
+        isDebugItem->setValueFromBool(isDebug);
+        assembly.addItem(isDebugItem);
+        auto isDefectItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isDefectItem->setName("$variable$isDefect$");
+        isDefectItem->setValueFromBool(isDefect);
+        assembly.addItem(isDefectItem);
+        auto isSaveImgItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isSaveImgItem->setName("$variable$isSaveImg$");
+        isSaveImgItem->setValueFromBool(isSaveImg);
+        assembly.addItem(isSaveImgItem);
         return assembly;
     }
 
     inline bool GeneralConfig::operator==(const GeneralConfig& obj) const
     {
-        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang;
+        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang && isDebug == obj.isDebug && isDefect == obj.isDefect && isSaveImg == obj.isSaveImg;
     }
 
     inline bool GeneralConfig::operator!=(const GeneralConfig& obj) const

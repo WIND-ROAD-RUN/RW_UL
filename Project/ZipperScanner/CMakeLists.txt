@@ -60,6 +60,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE hoec
 	PRIVATE rqwhoec
 	PRIVATE cdm
+	PRIVATE rqwime
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
