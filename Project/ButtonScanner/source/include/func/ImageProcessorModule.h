@@ -17,6 +17,13 @@
 struct ButtonDefectInfo
 {
 public:
+	struct ButtonDefectInfoItem
+	{
+		size_t index;
+		double score;
+		bool isDraw;
+	}; 
+public:
 	QString time{};
 	double outsideDiameter{};
 	bool isoutsideDiameter{ false };
@@ -40,28 +47,36 @@ public:
 	float large_B{};
 	bool isDrawlargeColor{ false };
 public:
-	std::vector<double> edgeDamage;
+	//std::vector<double> edgeDamage; 
+	std::vector<ButtonDefectInfoItem>edgeDamage1;
 	bool isDrawedgeDamage{ false };
 
-	std::vector<double> pore;
+	//std::vector<double> pore;
+	std::vector<ButtonDefectInfoItem>pore1;
 	bool isDrawpore{ false };
 
-	std::vector<double> paint;
+	//std::vector<double> paint;
+	std::vector<ButtonDefectInfoItem>paint1;
 	bool isDrawpaint{ false };
 
-	std::vector<double> brokenEye;
+	//std::vector<double> brokenEye;
+	std::vector<ButtonDefectInfoItem>brokenEye1;
 	bool isDrawbrokenEye{ false };
 
-	std::vector<double> crack;
+	//std::vector<double> crack;
+	std::vector<ButtonDefectInfoItem>crack1;
 	bool isDrawcrack{ false };
 
-	std::vector<double> grindStone;
+	//std::vector<double> grindStone;
+	std::vector<ButtonDefectInfoItem>grindStone1;
 	bool isDrawgrindStone{ false };
 
-	std::vector<double> blockEye;
+	//std::vector<double> blockEye;
+	std::vector<ButtonDefectInfoItem>blockEye1;
 	bool isDrawblockEye{ false };
 
-	std::vector<double> materialHead;
+	//std::vector<double> materialHead;
+	std::vector<ButtonDefectInfoItem>materialHead1;
 	bool isDrawmaterialHead{ false };
 
 public:
@@ -231,6 +246,8 @@ public:
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
 	                        ButtonDefectInfo& info);
+	void drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
+		ButtonDefectInfo& info);
 
 private:
 
