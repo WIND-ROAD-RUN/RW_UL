@@ -8,7 +8,7 @@
 #include <QWaitCondition>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include<QThread>
+#include <QThread>
 #include <QPixmap>
 
 
@@ -26,6 +26,7 @@ public:
 	public:
 		double score;	// 分数
 		double area;	// 面积
+		int index;		// 在processResult中的索引位置
 	};
 
 	std::vector<DetectItem> queYaList;		// 缺牙
@@ -124,13 +125,14 @@ private:
 	// 开启剔废时, 过滤出有效索引
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
 
-	// 筛选出在上下左右限位内的缺陷
+	// 筛选出在上下左右限位内的缺陷的下标
 	std::vector<std::vector<size_t>> getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
+	// 判断是否在上下左右限位内
 	bool isInBoundary(const rw::DetectionRectangleInfo& info);
 
 
 public:
-	// 绘制缺陷相关的信息(符合条件的缺陷会用红色显示)
+	// 开启剔废情况下绘制缺陷相关的信息(符合条件的缺陷会用红色显示)
 	void drawZipperDefectInfoText_defect(QImage& image, const ZipperDefectInfo& info);
 	// 添加各个缺陷信息到文本列表中
 	void appendQueyaDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info);
@@ -143,12 +145,12 @@ public:
 	void drawVerticalLine_locate(QImage& image, size_t locate);
 	// 在指定位置画横线
 	void drawHorizontalLine_locate(QImage& image, size_t locate);
-	// 绘制缺陷相关的信息
-	void drawZipperDefectInfoText(QImage& image, const ZipperDefectInfo& info);
+	// 开启调试情况下绘制缺陷相关的信息
+	void drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info);
 	// 绘画绿色的检测框
-	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
+	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	// 绘画红色的检测框
-	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
+	void drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
 
 private:
 	// 判断是否有缺陷

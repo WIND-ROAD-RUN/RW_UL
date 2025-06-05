@@ -13,6 +13,13 @@ struct WarningId
 	static constexpr int ccameraDisconnectAlarm2 = 2;
 };
 
+struct ClassId
+{
+	static constexpr int Queya = 0;
+	static constexpr int Tangshang = 1;
+	static constexpr int Zangwu = 2;
+};
+
 inline struct GlobalPath
 {
 public:
