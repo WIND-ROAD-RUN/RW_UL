@@ -1468,6 +1468,8 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Debug;
 			//GlobalThread.strobeLightThread->startThread();
+			ui->rbtn_takePicture->setChecked(false);
+			rbtn_takePicture_checked(false);
 		}
 		else {
 			_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
