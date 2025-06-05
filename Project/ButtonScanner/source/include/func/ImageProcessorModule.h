@@ -19,9 +19,9 @@ struct ButtonDefectInfo
 public:
 	struct ButtonDefectInfoItem
 	{
-		size_t index;
-		double score;
-		bool isDraw;
+		size_t index{0};
+		double score{0};
+		bool isDraw{false};
 	}; 
 public:
 	QString time{};
@@ -155,6 +155,7 @@ protected:
 	void run() override;
 private:
 	void run_debug(MatInfo& frame);
+	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
 	void run_monitor(MatInfo& frame);
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);

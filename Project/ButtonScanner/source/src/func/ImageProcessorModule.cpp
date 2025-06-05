@@ -1397,7 +1397,7 @@ void ImageProcessor::run_debug(MatInfo& frame)
 		ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
 
 		//为了再debug下绘制错误的rec识别框，暂且使用removeFution的逻辑调用，目前是为了debug下绘制错误的rec识别框，但是这里会修改_isBad成员变量
-		run_OpenRemoveFunc_process_defect_info(defectInfo);
+		run_OpenRemoveFunc_process_debug_info(defectInfo);
 		drawErrorRec_error1(image, processResult, processResultIndex, defectInfo);
 	}
 	if (GlobalStructData::getInstance().debug_isDisplayText)
@@ -1408,6 +1408,23 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info)
+{
+	_isbad = false;
+	run_OpenRemoveFunc_process_defect_info_hole(info);
+	run_OpenRemoveFunc_process_defect_info_body(info);
+	run_OpenRemoveFunc_process_defect_info_specialColor(info);
+	run_OpenRemoveFunc_process_defect_info_edgeDamage(info);
+	run_OpenRemoveFunc_process_defect_info_pore(info);
+	run_OpenRemoveFunc_process_defect_info_paint(info);
+	run_OpenRemoveFunc_process_defect_info_brokenEye(info);
+	run_OpenRemoveFunc_process_defect_info_blockEye(info);
+	run_OpenRemoveFunc_process_defect_info_grindStone(info);
+	run_OpenRemoveFunc_process_defect_info_materialHead(info);
+	run_OpenRemoveFunc_process_defect_info_largeColor(info);
+	run_OpenRemoveFunc_process_defect_info_crack(info);
 }
 
 void ImageProcessor::run_monitor(MatInfo& frame)
@@ -1659,7 +1676,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDef
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1752,7 +1768,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInf
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1790,7 +1805,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_paint(ButtonDefectIn
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1828,7 +1842,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefe
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1866,7 +1879,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectIn
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1904,7 +1916,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_grindStone(ButtonDef
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1942,7 +1953,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefec
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
@@ -1980,7 +1990,6 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_materialHead(ButtonD
 			{
 				_isbad = true;
 				item.isDraw = true;
-				break;
 			}
 		}
 	}
