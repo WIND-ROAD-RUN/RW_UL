@@ -412,6 +412,7 @@ void PictureViewerThumbnails::onThumbnailSelected()
 
 void PictureViewerThumbnails::pbtn_exit_clicked()
 {
+	stopAsyncLoadQueue();
 	this->close();
 	emit viewerClosed();
 }
