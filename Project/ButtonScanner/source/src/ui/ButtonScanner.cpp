@@ -1311,6 +1311,7 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 
 void ButtonScanner::updateCardLabelState(bool state)
 {
+	isConnnectCard = state;
 	if (state) {
 		ui->label_cardState->setText("连接成功");
 		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
@@ -1685,6 +1686,11 @@ void ButtonScanner::closeTakePictures()
 
 void ButtonScanner::shutdownComputerTrigger(int time)
 {
+	if (!isConnnectCard)
+	{
+		return;
+	}
+
 	int shutDownBoundary = 7;
 	if (time == -1)
 	{
