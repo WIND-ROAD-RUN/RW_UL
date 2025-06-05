@@ -9,6 +9,9 @@
 #include"PictureViewerUtilty.h"
 
 #include<QListWidgetItem>
+#include <QMutex>
+#include <QQueue>
+#include<QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PictureViewerThumbnailsClass; };
@@ -23,16 +26,53 @@ namespace rw
 	}
 }
 
+class ThumbnailLoaderThread : public QThread
+{
+	Q_OBJECT
+public:
+	ThumbnailLoaderThread(
+		QQueue<QListWidgetItem*>* queue,
+		QMutex* queueMutex,
+		rw::dsl::CacheFIFO<QString, QPixmap>* cache,
+		const QSize& thumbSize,
+		QObject* uiReceiver // 用于invokeMethod
+	);
+	~ThumbnailLoaderThread() override;
+	void stop();
+
+protected:
+	void run() override;
+signals:
+	void iconReady(QListWidgetItem* item, const QIcon& icon);
+
+private:
+	QQueue<QListWidgetItem*>* m_queue;
+	QMutex* m_queueMutex;
+	rw::dsl::CacheFIFO<QString, QPixmap>* m_cache;
+	QSize m_thumbSize;
+	QObject* m_uiReceiver;
+	std::atomic<bool> m_running{ true };
+};
+
+
 class PictureViewerThumbnails : public QMainWindow
 { 
 	Q_OBJECT
 private:
-	QVector<QString> disCacheImagePaths;
+	bool isFirstLoad{false};
+public:
+	void startAsyncLoadQueue();
+	void stopAsyncLoadQueue();
+private:
+	QQueue<QListWidgetItem*> disCacheImageItem;
+	QMutex disCacheImageItemMutex;
+	QSet<QString> loadingSet;
+private:
+	ThumbnailLoaderThread* m_loaderThread = nullptr;
 private:
 	std::unique_ptr<rw::dsl::CacheFIFO<QString, QPixmap>> _thumbnailCache;
 private:
 	QHash<QString, QStringList> m_categoryImageCache; 
-	/*QHash<QString, QPixmap> m_thumbnailCache;  */       
 private:
 	LoadingDialog* _loadingDialog = nullptr;
 	PictureViewerUtilty* pictureViewerUtilty=nullptr;
@@ -61,7 +101,6 @@ private:
 private:
 	void loadImageList();
 	bool loadThumbnail(const QString& imagePath, QListWidgetItem* item);
-	void loadThumbnailDisCache();
 	void updateCategoryList();
 	void addSubFolders(const QDir& parentDir, QStandardItem* parentItem);
 	QModelIndex findFirstDeepestIndex(QStandardItemModel* model);
@@ -90,4 +129,9 @@ private slots:
 	void pbtn_smaller_clicked();
 private slots:
 	void onThumbnailDoubleClicked(QListWidgetItem* item);
+private slots:
+	void treeView_categoryTree_changed(const QModelIndex& current, const QModelIndex&);
+
+public slots:
+	void iconReady(QListWidgetItem* item, const QIcon& icon);
 };

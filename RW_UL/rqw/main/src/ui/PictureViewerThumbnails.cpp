@@ -13,6 +13,96 @@
 #include <QtConcurrent/qtconcurrentrun.h>
 #include"dsl_CacheFIFO.hpp"
 
+ThumbnailLoaderThread::ThumbnailLoaderThread(QQueue<QListWidgetItem*>* queue, QMutex* queueMutex,
+	rw::dsl::CacheFIFO<QString, QPixmap>* cache, const QSize& thumbSize, QObject* uiReceiver)
+	: m_queue(queue)
+	, m_queueMutex(queueMutex)
+	, m_cache(cache)
+	, m_thumbSize(thumbSize)
+	, m_uiReceiver(uiReceiver)
+{
+	
+}
+
+ThumbnailLoaderThread::~ThumbnailLoaderThread()
+{
+	stop();
+	wait();
+}
+
+void ThumbnailLoaderThread::stop()
+{
+	m_running = false;
+}
+
+void ThumbnailLoaderThread::run()
+{
+	//QThread::sleep(1);
+	while (m_running) {
+		QListWidgetItem* item = nullptr;
+		{
+			QMutexLocker locker(m_queueMutex);
+			if (m_queue->isEmpty())
+				break;
+			item = m_queue->dequeue();
+		}
+		if (!item) continue;
+		QString path = item->data(Qt::UserRole).toString();
+
+		QImageReader reader(path);
+
+		reader.setAutoTransform(true);
+
+		QImage img = reader.read();
+
+		QPixmap squarePixmap;
+
+		if (!img.isNull()) {
+			QImage scaledImg = img.scaled(m_thumbSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+			squarePixmap = QPixmap(m_thumbSize);
+			squarePixmap.fill(Qt::transparent);
+			QPainter painter(&squarePixmap);
+			int x = (m_thumbSize.width() - scaledImg.width()) / 2;
+			int y = (m_thumbSize.height() - scaledImg.height()) / 2;
+			painter.drawImage(x, y, scaledImg);
+			painter.end();
+		}
+
+		QIcon icon;
+		if (!squarePixmap.isNull()) {
+			m_cache->set(path, squarePixmap);
+			icon = QIcon(squarePixmap);
+		}
+
+		emit iconReady(item, icon);
+	}
+}
+
+void PictureViewerThumbnails::startAsyncLoadQueue()
+{
+	m_loaderThread = new ThumbnailLoaderThread(
+		&disCacheImageItem,
+		&disCacheImageItemMutex,
+		_thumbnailCache.get(),
+		big, 
+		this
+	);
+	connect(m_loaderThread, &ThumbnailLoaderThread::iconReady
+		, this, &PictureViewerThumbnails::iconReady, Qt::QueuedConnection);
+	m_loaderThread->start();
+}
+
+void PictureViewerThumbnails::stopAsyncLoadQueue()
+{
+	if (m_loaderThread) {
+		m_loaderThread->stop();
+		m_loaderThread->wait();
+		disconnect(m_loaderThread, &ThumbnailLoaderThread::iconReady, this, &PictureViewerThumbnails::iconReady);
+		delete m_loaderThread;
+		m_loaderThread = nullptr;
+	}
+}
+
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::PictureViewerThumbnailsClass())
@@ -21,10 +111,12 @@ PictureViewerThumbnails::PictureViewerThumbnails(QWidget* parent)
 
 	build_ui();
 	build_connect();
+	isFirstLoad = true;
 }
 
 PictureViewerThumbnails::~PictureViewerThumbnails()
 {
+	stopAsyncLoadQueue();
 	delete ui;
 }
 
@@ -45,13 +137,11 @@ void PictureViewerThumbnails::setSize(const QSize& size)
 	_listWidget->setIconSize(m_thumbnailSize);
 
 	QSize cellSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32);
-	disCacheImagePaths.clear();
 	for (int i = 0; i < _listWidget->count(); ++i) {
 		QListWidgetItem* item = _listWidget->item(i);
 		item->setSizeHint(cellSize);
 		loadThumbnail(item->data(Qt::UserRole).toString(), item);
 	}
-	loadThumbnailDisCache();
 }
 
 void PictureViewerThumbnails::setSizeRange(const QSize& sizeSmall, const QSize& sizeBig)
@@ -64,20 +154,18 @@ void PictureViewerThumbnails::showEvent(QShowEvent* event)
 {
 	_loadingDialog->updateMessage("加载图片中");
 	_loadingDialog->show();
-	updateCategoryList(); // 目录树结构建议仍在主线程更新
+	updateCategoryList(); 
 
 	QDir rootDir(m_rootPath);
 
-	// 异步预加载图片和刷新列表
 	QtConcurrent::run([this, rootDir]() {
 		preloadAllCategoryImages(rootDir);
-
-		// 回到主线程刷新图片列表
 		QMetaObject::invokeMethod(this, [this]() {
 			loadImageList();
 			_loadingDialog->close();
 			}, Qt::QueuedConnection);
 		});
+
 
 	QMainWindow::showEvent(event);
 }
@@ -127,20 +215,25 @@ void PictureViewerThumbnails::build_connect()
 		this, &PictureViewerThumbnails::pbtn_smaller_clicked);
 
 	connect(ui->treeView_categoryTree->selectionModel(), &QItemSelectionModel::currentChanged,
-		this, [this](const QModelIndex& current, const QModelIndex&) {
-			Q_UNUSED(current);
-			loadImageList();
-		});
+		this,&PictureViewerThumbnails::treeView_categoryTree_changed);
 
 	connect(_listWidget, &QListWidget::itemDoubleClicked,
 		this, &PictureViewerThumbnails::onThumbnailDoubleClicked);
-
 }
 
 void PictureViewerThumbnails::loadImageList()
 {
-	_listWidget->clear();
-	m_imageFiles.clear();
+
+
+	stopAsyncLoadQueue();
+	{
+		QMutexLocker locker(&disCacheImageItemMutex);
+		//保证SetIcon槽函数全部执行完毕
+		QCoreApplication::processEvents();
+		disCacheImageItem.clear();
+	    _listWidget->clear();
+		m_imageFiles.clear();
+	}
 
 	// 获取当前选中目录的路径
 	QModelIndex currentCategoryIndex = ui->treeView_categoryTree->currentIndex();
@@ -152,10 +245,9 @@ void PictureViewerThumbnails::loadImageList()
 		}
 	}
 
-	// 从缓存获取图片路径
+	// 只加载当前目录下的图片
 	QStringList imageList = m_categoryImageCache.value(dirPath);
 
-	disCacheImagePaths.clear();
 	for (const QString& imagePath : imageList) {
 		m_imageFiles << imagePath;
 		QFileInfo fileInfo(imagePath);
@@ -163,17 +255,21 @@ void PictureViewerThumbnails::loadImageList()
 		item->setText(fileInfo.fileName());
 		item->setData(Qt::UserRole, imagePath);
 		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
-		auto isload=loadThumbnail(imagePath, item);
-		if (isload)
-		{
-			_listWidget->addItem(item);
+		auto icon = _thumbnailCache->get(imagePath);
+		if (icon.has_value()) {
+			item->setIcon(QIcon(icon.value()));
 		}
-		else
-		{
-			delete item;
+		else {
+			item->setIcon(QIcon());
+			{
+				QMutexLocker locker(&disCacheImageItemMutex);
+				disCacheImageItem.append(item);
+			}
 		}
+		_listWidget->addItem(item);
 	}
-	loadThumbnailDisCache();
+
+	startAsyncLoadQueue();
 }
 
 bool PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidgetItem* item)
@@ -186,64 +282,8 @@ bool PictureViewerThumbnails::loadThumbnail(const QString& imagePath, QListWidge
 	}
 	else
 	{
-		disCacheImagePaths.append(imagePath);
+		disCacheImageItem.append(item);
 		return false;
-	}
-
-	/*QImageReader reader(imagePath);
-	reader.setAutoTransform(true);
-	QImage img = reader.read();
-	if (!img.isNull()) {
-		QImage scaledImg = img.scaled(m_thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-		QPixmap squarePixmap(m_thumbnailSize);
-		squarePixmap.fill(Qt::transparent);
-
-		QPainter painter(&squarePixmap);
-		int x = (m_thumbnailSize.width() - scaledImg.width()) / 2;
-		int y = (m_thumbnailSize.height() - scaledImg.height()) / 2;
-		painter.drawImage(x, y, scaledImg);
-		painter.end();
-
-		item->setIcon(QIcon(squarePixmap));
-		_thumbnailCache->set(imagePath, squarePixmap);
-	}
-	else {
-		item->setIcon(QIcon());
-	}*/
-}
-
-void PictureViewerThumbnails::loadThumbnailDisCache()
-{
-	for (const auto path : disCacheImagePaths)
-	{
-		QFileInfo fileInfo(path);
-		QListWidgetItem* item = new QListWidgetItem();
-		item->setText(fileInfo.fileName());
-		item->setData(Qt::UserRole, path);
-		item->setSizeHint(QSize(m_thumbnailSize.width() + 16, m_thumbnailSize.height() + 32));
-		QImageReader reader(path);
-		reader.setAutoTransform(true);
-		QImage img = reader.read();
-		if (!img.isNull()) {
-			QImage scaledImg = img.scaled(m_thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-			QPixmap squarePixmap(m_thumbnailSize);
-			squarePixmap.fill(Qt::transparent);
-
-			QPainter painter(&squarePixmap);
-			int x = (m_thumbnailSize.width() - scaledImg.width()) / 2;
-			int y = (m_thumbnailSize.height() - scaledImg.height()) / 2;
-			painter.drawImage(x, y, scaledImg);
-			painter.end();
-
-			item->setIcon(QIcon(squarePixmap));
-			_thumbnailCache->set(path, squarePixmap);
-		}
-		else {
-			item->setIcon(QIcon());
-		}
-		_listWidget->addItem(item);
 	}
 }
 
@@ -349,51 +389,7 @@ void PictureViewerThumbnails::preloadAllCategoryImages(const QDir& dir)
 	QFileInfoList fileList = dir.entryInfoList(nameFilters, QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 	QStringList imagePaths;
 	for (const QFileInfo& fileInfo : fileList) {
-		QString imagePath = fileInfo.absoluteFilePath();
-		imagePaths << imagePath;
-
-		//// 只在缓存中没有时才生成缩略图
-		//if (!m_thumbnailCache.contains(imagePath)) {
-		//	QImageReader reader(imagePath);
-		//	reader.setAutoTransform(true);
-		//	QImage img = reader.read();
-		//	if (!img.isNull()) {
-		//		QImage scaledImg = img.scaled(big, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-		//		QPixmap squarePixmap(big);
-		//		squarePixmap.fill(Qt::transparent);
-
-		//		QPainter painter(&squarePixmap);
-		//		int x = (big.width() - scaledImg.width()) / 2;
-		//		int y = (big.height() - scaledImg.height()) / 2;
-		//		painter.drawImage(x, y, scaledImg);
-		//		painter.end();
-
-		//		m_thumbnailCache.insert(imagePath, squarePixmap);
-		//	}
-		//}
-
-		auto value = _thumbnailCache->get(imagePath);
-		if (!value.has_value())
-		{
-			QImageReader reader(imagePath);
-			reader.setAutoTransform(true);
-			QImage img = reader.read();
-			if (!img.isNull()) {
-				QImage scaledImg = img.scaled(big, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-				QPixmap squarePixmap(big);
-				squarePixmap.fill(Qt::transparent);
-
-				QPainter painter(&squarePixmap);
-				int x = (big.width() - scaledImg.width()) / 2;
-				int y = (big.height() - scaledImg.height()) / 2;
-				painter.drawImage(x, y, scaledImg);
-				painter.end();
-
-				_thumbnailCache->set(imagePath, squarePixmap);
-			}
-		}
+		imagePaths << fileInfo.absoluteFilePath();
 	}
 	m_categoryImageCache.insert(dir.absolutePath(), imagePaths);
 
@@ -422,7 +418,11 @@ void PictureViewerThumbnails::pbtn_exit_clicked()
 
 void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 {
-	auto result = QMessageBox::question(this, "提示", "是否删除当前目录下所有图片？", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+	stopAsyncLoadQueue();
+	// 询问用户是否删除当前目录下所有图片
+	auto result = QMessageBox::question(
+		this, "提示", "是否删除当前目录下所有图片？",
+		QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 	if (result == QMessageBox::No) {
 		return;
 	}
@@ -444,7 +444,7 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 		return;
 	}
 
-	// 删除目录中的所有文件，并同步移除缩略图缓存
+	// 删除目录中的所有文件
 	QStringList fileFilters;
 	fileFilters << "*"; // 匹配所有文件
 	QStringList files = dir.entryList(fileFilters, QDir::Files | QDir::NoSymLinks);
@@ -455,7 +455,7 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 		}
 		else {
 			qDebug() << "Deleted file:" << filePath;
-			//m_thumbnailCache.remove(filePath); // 移除缩略图缓存
+			// m_thumbnailCache->remove(filePath); // 如需移除缩略图缓存可放开
 		}
 	}
 
@@ -463,12 +463,6 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 	QStringList subDirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 	for (const QString& subDir : subDirs) {
 		QDir subDirPath(dir.filePath(subDir));
-		// 递归删除子目录下的图片缩略图缓存
-		QStringList subFiles = subDirPath.entryList(fileFilters, QDir::Files | QDir::NoSymLinks);
-		/*for (const QString& subFile : subFiles) {
-			QString subFilePath = subDirPath.filePath(subFile);
-			m_thumbnailCache.remove(subFilePath);
-		}*/
 		if (!subDirPath.removeRecursively()) {
 			qDebug() << "Failed to delete subdirectory:" << subDirPath.path();
 		}
@@ -480,7 +474,8 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 	// 清除该目录及其子目录的图片路径缓存
 	auto it = m_categoryImageCache.begin();
 	while (it != m_categoryImageCache.end()) {
-		if (it.key().startsWith(categoryPath)) {
+		const QString& key = it.key();
+		if (key == categoryPath || key.startsWith(categoryPath + "/")) {
 			it = m_categoryImageCache.erase(it);
 		}
 		else {
@@ -488,82 +483,61 @@ void PictureViewerThumbnails::pbtn_deleteTotal_clicked()
 		}
 	}
 
-	qDebug() << "Cleared all contents of directory:" << categoryPath;
+	// 清理 disCacheImageItem 中属于该目录的 item
+	{
+		QMutexLocker locker(&disCacheImageItemMutex);
+		for (int i = disCacheImageItem.size() - 1; i >= 0; --i) {
+			QListWidgetItem* item = disCacheImageItem[i];
+			if (item && item->data(Qt::UserRole).toString().startsWith(categoryPath)) {
+				disCacheImageItem.removeAt(i);
+			}
+		}
+	}
 
-	// 更新目录列表
+	// 刷新 UI
 	loadImageList();
 }
 
 void PictureViewerThumbnails::pbtn_delete_clicked()
 {
-	// 获取当前选中的索引
-	QModelIndex currentIndex = _listWidget->currentIndex();
+	stopAsyncLoadQueue();
 
-	// 检查索引是否有效
-	if (!currentIndex.isValid()) {
-		qDebug() << "No picture selected for deletion.";
+	// 获取当前选中的缩略图项
+	QListWidgetItem* item = _listWidget->currentItem();
+	if (!item) {
+		startAsyncLoadQueue();
 		return;
 	}
 
-	int row = currentIndex.row();
-
-	// 获取当前选中图片的绝对路径
-	QString picturePath = currentIndex.data(Qt::UserRole).toString();
+	QString imagePath = item->data(Qt::UserRole).toString();
 
 	// 删除文件
-	QFile file(picturePath);
-	if (file.exists()) {
-		if (file.remove()) {
-			qDebug() << "Deleted picture:" << picturePath;
-		}
-		else {
-			qDebug() << "Failed to delete picture:" << picturePath;
-			return;
-		}
-	}
-	else {
-		qDebug() << "File does not exist:" << picturePath;
-		return;
+	QFile::remove(imagePath);
+
+	// 从 m_imageFiles 移除
+	m_imageFiles.removeAll(imagePath);
+
+	// 从 m_categoryImageCache 移除
+	for (auto it = m_categoryImageCache.begin(); it != m_categoryImageCache.end(); ++it) {
+		it.value().removeAll(imagePath);
 	}
 
-	// 从m_imageFiles中移除
-	m_imageFiles.removeAll(picturePath);
-
-	//// 从缩略图缓存中移除
-	//m_thumbnailCache.remove(picturePath);
-
-	// 从目录图片路径缓存中移除
-	QModelIndex currentCategoryIndex = ui->treeView_categoryTree->currentIndex();
-	QString dirPath = m_rootPath;
-	if (currentCategoryIndex.isValid()) {
-		QVariant data = currentCategoryIndex.data(Qt::UserRole);
-		if (data.isValid()) {
-			dirPath = data.toString();
+	// 从 disCacheImageItem 移除
+	{
+		QMutexLocker locker(&disCacheImageItemMutex);
+		for (int i = disCacheImageItem.size() - 1; i >= 0; --i) {
+			QListWidgetItem* cacheItem = disCacheImageItem[i];
+			if (cacheItem && cacheItem->data(Qt::UserRole).toString() == imagePath) {
+				disCacheImageItem.removeAt(i);
+			}
 		}
 	}
-	if (m_categoryImageCache.contains(dirPath)) {
-		m_categoryImageCache[dirPath].removeAll(picturePath);
-	}
 
-	// 从listWidget中移除item
-	QListWidgetItem* item = _listWidget->takeItem(row);
-	delete item;
+	// 从 UI 移除
+	delete _listWidget->takeItem(_listWidget->row(item));
 
-	// 设置当前索引为删除项之前的索引，如果有的话
-	int newRow = row;
-	if (newRow < 0 && _listWidget->count() > 0) {
-		newRow = 0;
-	}
-	if (newRow >= 0 && _listWidget->count() > 0) {
-		if (newRow >= _listWidget->count())
-		{
-			_listWidget->setCurrentRow(newRow - 1);
-		}
-		else
-		{
-			_listWidget->setCurrentRow(newRow);
-		}
-	}
+	startAsyncLoadQueue();
+
 }
 
 void PictureViewerThumbnails::pbtn_prePicture_clicked()
@@ -650,4 +624,21 @@ void PictureViewerThumbnails::onThumbnailDoubleClicked(QListWidgetItem* item)
 	QString imagePath = item->data(Qt::UserRole).toString();
 	pictureViewerUtilty->setImgPath(imagePath);
 	pictureViewerUtilty->show();
+}
+
+void PictureViewerThumbnails::treeView_categoryTree_changed(const QModelIndex& current, const QModelIndex&)
+{
+	Q_UNUSED(current);
+	if (isFirstLoad)
+	{
+		isFirstLoad = false;
+		return;
+	}
+
+	loadImageList();
+}
+
+void PictureViewerThumbnails::iconReady(QListWidgetItem* item, const QIcon& icon)
+{
+	item->setIcon(icon);
 }
