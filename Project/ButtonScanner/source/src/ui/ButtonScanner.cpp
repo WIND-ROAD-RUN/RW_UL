@@ -231,6 +231,8 @@ void ButtonScanner::initializeComponents()
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::closeTakePictures,
 		this, &ButtonScanner::closeTakePictures, Qt::QueuedConnection);
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::shutdownComputer,
+		this, &ButtonScanner::shutdownComputerTrigger, Qt::QueuedConnection);
 	auto mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
 
 	//初始化光源
@@ -314,6 +316,7 @@ void ButtonScanner::build_ui()
 	build_dlgExposureTimeSet();
 	build_dlgNewProduction();
 	build_picturesViewer();
+	_dlgShutdownWarn = new DlgShutdownWarn(this);
 	build_dlgModelManager();
 	this->labelClickable_title = new rw::rqw::ClickableLabel(this);
 	labelWarning = new rw::rqw::LabelWarning(this);
@@ -1674,6 +1677,23 @@ void ButtonScanner::closeTakePictures()
 {
 	ui->rbtn_takePicture->setChecked(false);
 	rbtn_takePicture_checked(false);
+}
+
+void ButtonScanner::shutdownComputerTrigger(int time)
+{
+	if (time == -1)
+	{
+		_dlgShutdownWarn->close();
+		return;
+	}
+	if (time==0)
+	{
+		_dlgShutdownWarn->show();
+		return;
+	}
+
+	int shutDownBoundary = 10;
+	_dlgShutdownWarn->setTimeValue(shutDownBoundary-time);
 }
 
 void ButtonScanner::pbtn_exit_clicked()

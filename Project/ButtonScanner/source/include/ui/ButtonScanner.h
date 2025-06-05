@@ -11,6 +11,7 @@
 #include"rqw_LabelClickable.h"
 #include"rqw_LabelWarning.h"
 #include"PictureViewerThumbnails.h"
+#include"DlgShutdownWarn.h"
 #include"DlgWarn.h"
 
 #include"opencv2/opencv.hpp"
@@ -40,10 +41,12 @@ private:
 	DlgProduceLineSet* _dlgProduceLineSet = nullptr;
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
-	PictureViewerThumbnails* _picturesViewer = nullptr;
 	DlgModelManager* _dlgModelManager = nullptr;
 public:
 	DlgNewProduction* dlgNewProduction = nullptr;
+private:
+	PictureViewerThumbnails* _picturesViewer = nullptr;
+	DlgShutdownWarn* _dlgShutdownWarn = nullptr;
 public:
 	rw::rqw::ClickableLabel* labelClickable_title;
 	rw::rqw::LabelWarning* labelWarning;
@@ -179,5 +182,7 @@ public slots:
 	void workTriggerError(int index);
 public slots:
 	void closeTakePictures();
+public slots:
+	void shutdownComputerTrigger(int time);
 };
 

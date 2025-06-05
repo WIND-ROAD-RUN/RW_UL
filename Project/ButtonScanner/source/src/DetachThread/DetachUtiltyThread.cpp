@@ -43,6 +43,7 @@ void DetachUtiltyThread::run()
 		processWarningInfo(s);
 		processTrigger(s);
 		processTakePictures(s);
+		processShutdownIO(s);
 		++s;
 		if (s==300)
 		{
@@ -226,5 +227,33 @@ void DetachUtiltyThread::processTakePictures(size_t s)
 			emit closeTakePictures();
 		}
 		lastIsTakePictures = isTakePictures;
+	}
+}
+
+void DetachUtiltyThread::processShutdownIO(size_t s)
+{
+	if (s%1==0)
+	{
+		auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
+		auto isShutdown = motion->GetIOIn(ControlLines::shutdownComputerIn);
+
+		if (lastIsShutDown)
+		{
+			shutdownCount++;
+			emit shutdownComputer(shutdownCount);
+		}
+		else
+		{
+			if (isShutdown)
+			{
+				emit shutdownComputer(shutdownCount);
+			}
+			else
+			{
+				shutdownCount = 0;
+				emit shutdownComputer(-1);
+			}
+		}
+		lastIsShutDown = isShutdown;
 	}
 }
