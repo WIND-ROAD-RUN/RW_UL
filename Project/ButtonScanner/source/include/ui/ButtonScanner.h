@@ -182,6 +182,8 @@ public slots:
 	void workTriggerError(int index);
 public slots:
 	void closeTakePictures();
+private:
+	bool isShutdownByIO{false};
 public slots:
 	void shutdownComputerTrigger(int time);
 };

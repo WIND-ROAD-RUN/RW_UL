@@ -1,4 +1,4 @@
-#include "DlgShutdownWarn.h"
+ï»¿#include "DlgShutdownWarn.h"
 
 #include "ui_DlgShutdownWarn.h"
 
@@ -19,6 +19,8 @@ DlgShutdownWarn::~DlgShutdownWarn()
 
 void DlgShutdownWarn::build_ui()
 {
+	this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+
 }
 
 void DlgShutdownWarn::build_connect()
@@ -27,6 +29,6 @@ void DlgShutdownWarn::build_connect()
 
 void DlgShutdownWarn::setTimeValue(size_t s)
 {
-	QString text = "ÏµÍ³½«ÔÚ" + QString::number(s) + "sºó¹Ø»ú£¡£¡";
+	QString text = "ç³»ç»Ÿå°†åœ¨" + QString::number(s) + "såŽå…³æœºï¼ï¼ï¼";
 	ui->label_info->setText(text);
 }

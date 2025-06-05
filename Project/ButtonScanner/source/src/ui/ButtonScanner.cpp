@@ -119,7 +119,11 @@ ButtonScanner::ButtonScanner(QWidget* parent)
 ButtonScanner::~ButtonScanner()
 {
 	destroyComponents();
-
+	if (isShutdownByIO)
+	{
+		bool result = QProcess::startDetached("shutdown", QStringList() << "-s" << "-t" << "0");
+		qDebug() << "Shutdown command started:" << result;
+	}
 	delete ui;
 }
 
@@ -1681,6 +1685,7 @@ void ButtonScanner::closeTakePictures()
 
 void ButtonScanner::shutdownComputerTrigger(int time)
 {
+	int shutDownBoundary = 7;
 	if (time == -1)
 	{
 		_dlgShutdownWarn->close();
@@ -1689,14 +1694,21 @@ void ButtonScanner::shutdownComputerTrigger(int time)
 	if (time==0)
 	{
 		_dlgShutdownWarn->show();
+		_dlgShutdownWarn->setTimeValue(shutDownBoundary - time);
 		return;
 	}
 
-	int shutDownBoundary = 10;
-	_dlgShutdownWarn->setTimeValue(shutDownBoundary-time);
+	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time)% shutDownBoundary);
+
+	if ((shutDownBoundary - time)==0)
+	{
+		isShutdownByIO = true;
+		this->close();
+	}
 }
 
 void ButtonScanner::pbtn_exit_clicked()
 {
+	isShutdownByIO = false;
 	this->close();
 }
