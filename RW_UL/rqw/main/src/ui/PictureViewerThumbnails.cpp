@@ -637,6 +637,10 @@ void PictureViewerThumbnails::treeView_categoryTree_changed(const QModelIndex& c
 	}
 
 	loadImageList();
+
+	if (_listWidget->count() > 0) {
+		_listWidget->setCurrentRow(0);
+	}
 }
 
 void PictureViewerThumbnails::iconReady(QListWidgetItem* item, const QIcon& icon)
