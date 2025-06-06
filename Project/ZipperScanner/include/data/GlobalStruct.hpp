@@ -12,10 +12,35 @@
 #include "rqw_CameraObjectThread.hpp"
 #include "ZipperScannerDlgExposureTimeSet.hpp"
 
+
+// 状态机
+enum class RunningState
+{
+	Debug,
+	Monitor,
+	OpenRemoveFunc,
+	Stop
+};
+
 class GlobalStructDataZipper
 	:public QObject
 {
 	Q_OBJECT
+public:
+	std::atomic<RunningState> runningState{ RunningState::Stop };
+
+public:
+	// 统计信息
+	struct StatisticalInfo
+	{
+		std::atomic_uint64_t produceCount{ 0 };
+		std::atomic_uint64_t wasteCount{ 0 };
+		std::atomic<double> productionYield{ 0 };
+		std::atomic<double> removeRate{ 0 };
+		std::atomic_uint64_t produceCount1{ 0 };
+		std::atomic_uint64_t produceCount2{ 0 };
+	} statisticalInfo;
+
 public:
 	static GlobalStructDataZipper& getInstance()
 	{
@@ -69,7 +94,4 @@ public:
 
 public:
 	std::unique_ptr<rw::oso::StorageContext> storeContext{ nullptr };
-
-
-	
 };
