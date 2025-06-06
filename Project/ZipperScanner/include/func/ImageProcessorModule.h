@@ -98,9 +98,9 @@ signals:
 	void imageReady(QPixmap image);
 
 private:
-	// 展示和分析图像的所有检测信息
+	// 调试模式下将对应的缺陷信息添加到ZipperDefectInfo中
 	void getEliminationInfo_debug(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
-	// 判断产品是否需要剔除，并驱动后续的剔除动作或统计
+	// 剔废模式下将对应的缺陷信息添加到ZipperDefectInfo中
 	void getEliminationInfo_defect(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
 	// 抓取缺牙信息
@@ -116,8 +116,8 @@ private:
 	std::unique_ptr<rw::ModelEngine> _onnxRuntimeOO;
 public:
 	// 构建模型引擎
-	void buildModelEngineOT(const QString& enginePath);
-	void buildOnnxRuntimeOO(const QString& enginePath);
+	void buildSegModelEngineOT(const QString& enginePath);		// Segmentation 模型
+	void buildDetOnnxRuntimeOO(const QString& enginePath);		// Detection 模型
 
 private:
 	// 不开启剔废时, 过滤出有效索引
