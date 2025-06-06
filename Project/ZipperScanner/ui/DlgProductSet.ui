@@ -721,11 +721,13 @@ QGroupBox::title {
           <property name="title">
            <string/>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_20">
+          <layout class="QHBoxLayout" name="horizontalLayout_22">
            <item>
-            <widget class="QCheckBox" name="cBox_takeNgPictures">
-             <property name="styleSheet">
-              <string notr="true">QCheckBox {
+            <layout class="QHBoxLayout" name="horizontalLayout_21">
+             <item>
+              <widget class="QCheckBox" name="cBox_takeNgPictures_2">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
     /* 默认样式 */
     spacing: 10px; /* 文字和框框之间的间距 */
     font-size: 14px; /* 字体大小 */
@@ -758,19 +760,68 @@ QCheckBox::indicator:checked:hover {
     /* 选中状态鼠标悬停时的样式 */
     background-color: darkred; /* 背景颜色 */
 }</string>
-             </property>
-             <property name="text">
-              <string>采Ng图</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
+               </property>
+               <property name="text">
+                <string>1工位采图</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cBox_takeMaskPictures_2">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+               </property>
+               <property name="text">
+                <string>2工位采图</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QCheckBox" name="cBox_takeMaskPictures">
-             <property name="styleSheet">
-              <string notr="true">QCheckBox {
+            <layout class="QHBoxLayout" name="horizontalLayout_20">
+             <item>
+              <widget class="QCheckBox" name="cBox_takeNgPictures">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
     /* 默认样式 */
     spacing: 10px; /* 文字和框框之间的间距 */
     font-size: 14px; /* 字体大小 */
@@ -803,19 +854,19 @@ QCheckBox::indicator:checked:hover {
     /* 选中状态鼠标悬停时的样式 */
     background-color: darkred; /* 背景颜色 */
 }</string>
-             </property>
-             <property name="text">
-              <string>采Mask图</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="cBox_takeOkPictures">
-             <property name="styleSheet">
-              <string notr="true">QCheckBox {
+               </property>
+               <property name="text">
+                <string>采Ng图</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cBox_takeMaskPictures">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
     /* 默认样式 */
     spacing: 10px; /* 文字和框框之间的间距 */
     font-size: 14px; /* 字体大小 */
@@ -848,14 +899,61 @@ QCheckBox::indicator:checked:hover {
     /* 选中状态鼠标悬停时的样式 */
     background-color: darkred; /* 背景颜色 */
 }</string>
-             </property>
-             <property name="text">
-              <string>采Ok图</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
+               </property>
+               <property name="text">
+                <string>采Mask图</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cBox_takeOkPictures">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+               </property>
+               <property name="text">
+                <string>采Ok图</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
