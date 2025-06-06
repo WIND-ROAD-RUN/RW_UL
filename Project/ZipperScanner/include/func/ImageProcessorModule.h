@@ -110,6 +110,8 @@ private:
 	// 抓取脏污信息
 	void getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 
+	static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
+
 private:
 	// AI模型参数
 	std::unique_ptr<rw::ModelEngine> _modelEngineOT;

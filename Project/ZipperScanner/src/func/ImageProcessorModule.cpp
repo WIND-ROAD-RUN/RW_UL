@@ -208,6 +208,24 @@ void ImageProcessor::getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw:
 	}
 }
 
+std::vector<std::vector<size_t>> ImageProcessor::getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
+{
+	std::vector<std::vector<size_t>> result;
+	result.resize(20);
+
+	for (int i = 0;i < info.size();i++)
+	{
+		if (info[i].classId > result.size())
+		{
+			result.resize(info[i].classId + 1);
+		}
+
+		result[info[i].classId].emplace_back(i);
+	}
+
+	return result;
+}
+
 void ImageProcessor::buildSegModelEngineOT(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
@@ -234,8 +252,8 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
-	auto processIndex = getIndexInBoundary(info, processIndex);
-
+	auto processIndex = getClassIndex(info);
+	processIndex = getIndexInBoundary(info, processIndex);
 	return processIndex;
 }
 
@@ -243,7 +261,8 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(s
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
-	auto processIndex = getIndexInBoundary(info, processIndex);
+	auto processIndex = getClassIndex(info);
+	processIndex = getIndexInBoundary(info, processIndex);
 
 	return processIndex;
 }

@@ -75,8 +75,8 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 
-#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#    ${TensorRT_dlls} ${OnnxRuntime_dlls}
-#    $<TARGET_FILE_DIR:${PROJECT_NAME}>
-#)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${TensorRT_dlls} ${OnnxRuntime_dlls}
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
