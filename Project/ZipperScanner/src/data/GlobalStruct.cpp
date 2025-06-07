@@ -60,6 +60,21 @@ void GlobalStructDataZipper::buildConfigManager(rw::oso::StorageType type)
 	storeContext = std::make_unique<rw::oso::StorageContext>(type);
 }
 
+void GlobalStructDataZipper::buildImageProcessorModules(const QString& path)
+{
+	modelCamera1 = std::make_unique<ImageProcessingModuleZipper>(2);
+	modelCamera2 = std::make_unique<ImageProcessingModuleZipper>(2);
+
+	modelCamera1->modelEnginePath = path;
+	modelCamera2->modelEnginePath = path;
+
+	modelCamera1->BuildModule();
+	modelCamera2->BuildModule();
+
+	modelCamera1->index = 1;
+	modelCamera2->index = 2;
+}
+
 void GlobalStructDataZipper::saveDlgProductSetConfig()
 {
 	std::string setConfigPath = globalPath.setConfigPath.toStdString();

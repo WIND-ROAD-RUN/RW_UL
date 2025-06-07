@@ -63,12 +63,12 @@ struct MatInfo {
 };
 
 
-class ImageProcessor : public QThread 
+class ImageProcessorZipper : public QThread 
 {
 	Q_OBJECT
 
 public:
-	ImageProcessor(QQueue<MatInfo>& queue,
+	ImageProcessorZipper(QQueue<MatInfo>& queue,
 		QMutex& mutex,
 		QWaitCondition& condition,
 		int workIndex,
@@ -168,7 +168,7 @@ public:
 };
 
 
-class ImageProcessingModule : public QObject {
+class ImageProcessingModuleZipper : public QObject {
 	Q_OBJECT
 public:
 	QString modelEnginePath;
@@ -176,12 +176,9 @@ public:
 	// 初始化图像处理模块
 	void BuildModule();
 public:
-	// 重新加载 Onnx 推理模型
-	void reLoadOnnxOO();
-public:
-	ImageProcessingModule(int numConsumers, QObject* parent = nullptr);
+	ImageProcessingModuleZipper(int numConsumers, QObject* parent = nullptr);
 
-	~ImageProcessingModule();
+	~ImageProcessingModuleZipper();
 
 public slots:
 	// 相机回调函数
@@ -190,10 +187,8 @@ public slots:
 signals:
 	void imageReady(QPixmap image);
 
-	// 推送新图片
-	void imgForDlgNewProduction(cv::Mat mat, size_t index);
 public:
-	std::vector<ImageProcessor*> getProcessors() const {
+	std::vector<ImageProcessorZipper*> getProcessors() const {
 		return _processors;
 	}
 
@@ -201,7 +196,7 @@ private:
 	QQueue<MatInfo> _queue;
 	QMutex _mutex;
 	QWaitCondition _condition;
-	std::vector<ImageProcessor*> _processors;
+	std::vector<ImageProcessorZipper*> _processors;
 	int _numConsumers;
 public:
 	size_t index;

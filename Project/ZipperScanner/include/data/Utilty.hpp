@@ -66,9 +66,11 @@ public:
 	QString projectHome = R"(D:\zfkjData\ZipperScanner\)";
 public:
 	QString configRootPath = projectHome + R"(config\)";
+	QString modelRootPath = projectHome + R"(model\)";
 	QString generalConfigPath = configRootPath + R"(generalConfig.xml)";
 	QString scoreConfigPath = configRootPath + R"(scoreConfig.xml)";
 	QString setConfigPath = configRootPath + R"(setConfig.xml)";
+	QString modelPath = modelRootPath + R"(lalian.engine)";
 public:
 	QString imageSaveRootPath = projectHome + R"(SavedImages\)";
 

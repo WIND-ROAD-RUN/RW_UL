@@ -8,6 +8,7 @@
 #include "NumberKeyboard.h"
 #include "Utilty.hpp"
 #include "WarnUtilty.hpp"
+#include "rqw_CameraObjectThread.hpp"
 
 ZipperScanner::ZipperScanner(QWidget *parent)
 	: QMainWindow(parent)
@@ -20,6 +21,9 @@ ZipperScanner::ZipperScanner(QWidget *parent)
 
 	// 构建UI
 	build_ui();
+
+	// 构建图像处理模块
+	build_imageProcessorModule();
 
 	// 连接相机
 	build_camera();
@@ -83,6 +87,10 @@ void ZipperScanner::build_camera()
 		info.type = rw::rqw::WarningType::Error;
 		//label_warningInfo->addWarning(info);
 	}
+	else
+	{
+		QObject::connect(globalStruct.camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured, globalStruct.modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured);
+	}
 	auto build2Result = globalStruct.buildCamera2();
 	updateCameraLabelState(2, build2Result);
 	if (!build2Result)
@@ -93,7 +101,12 @@ void ZipperScanner::build_camera()
 		info.type = rw::rqw::WarningType::Error;
 		//label_warningInfo->addWarning(info);
 	}
-	//_dlgExposureTimeSet->ResetCamera(); //启动设置相机为默认状态
+	else
+	{
+		QObject::connect(globalStruct.camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured, globalStruct.modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured);
+	}
+
+	
 }
 
 // 加载ZipperScanner窗体数据
@@ -120,6 +133,29 @@ void ZipperScanner::build_DlgProductSetData()
 void ZipperScanner::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScore(this);
+}
+
+void ZipperScanner::build_imageProcessorModule()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
+	QDir dir;
+
+	QString enginePathFull = globalPath.modelPath;
+
+	QFileInfo engineFile(enginePathFull);
+
+	if (!engineFile.exists()) {
+		QMessageBox::critical(this, "Error", "Engine file or Name file does not exist. The application will now exit.");
+		QApplication::quit();
+		return;
+	}
+
+	globalStruct.buildImageProcessorModules(enginePathFull);
+
+	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleZipper::imageReady, this, &ZipperScanner::onCamera1Display);
+	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleZipper::imageReady, this, &ZipperScanner::onCamera2Display);
+
 }
 
 void ZipperScanner::destroyComponents()
@@ -273,6 +309,16 @@ void ZipperScanner::pbtn_score_clicked()
 	_dlgProductScore->setFixedSize(this->width(), this->height());
 	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_dlgProductScore->exec();
+}
+
+void ZipperScanner::onCamera1Display(QPixmap image)
+{
+	ui->label_imgDisplay_1->setPixmap(image.scaled(ui->label_imgDisplay_1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void ZipperScanner::onCamera2Display(QPixmap image)
+{
+	ui->label_imgDisplay_2->setPixmap(image.scaled(ui->label_imgDisplay_2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ZipperScanner::updateCameraLabelState(int cameraIndex, bool state)

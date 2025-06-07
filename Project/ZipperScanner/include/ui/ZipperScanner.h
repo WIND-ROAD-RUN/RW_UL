@@ -33,6 +33,8 @@ public :
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
 
+	void build_imageProcessorModule();
+
 public:
 	void destroyComponents();
 
@@ -50,6 +52,10 @@ private slots:
 
 private slots:
 	void updateCameraLabelState(int cameraIndex, bool state);
+
+	void onCamera1Display(QPixmap image);
+
+	void onCamera2Display(QPixmap image);
 	
 
 private:

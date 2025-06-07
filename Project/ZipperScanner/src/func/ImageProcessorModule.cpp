@@ -60,7 +60,32 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 	painter.end();
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info)
+ImageProcessorZipper::ImageProcessorZipper(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
+	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex){
+
+}
+
+void ImageProcessorZipper::run()
+{
+
+}
+
+void ImageProcessorZipper::run_debug(MatInfo& frame)
+{
+
+}
+
+void ImageProcessorZipper::run_monitor(MatInfo& frame)
+{
+
+}
+
+void ImageProcessorZipper::run_OpenRemoveFunc(MatInfo& frame)
+{
+
+}
+
+void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info)
 {
 	_isbad = false; // 重置坏品标志
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -74,7 +99,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& in
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDefectInfo& info)
+void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& productScore = globalStruct.scoreConfig;
@@ -96,7 +121,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDefectIn
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_TangShang(ZipperDefectInfo& info)
+void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_TangShang(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& productScore = globalStruct.scoreConfig;
@@ -118,7 +143,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_TangShang(ZipperDefe
 	}
 }
 
-void ImageProcessor::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectInfo& info)
+void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& productScore = globalStruct.scoreConfig;
@@ -142,7 +167,12 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectI
 
 }
 
-void ImageProcessor::getEliminationInfo_debug(ZipperDefectInfo& info,
+void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
+{
+
+}
+
+void ImageProcessorZipper::getEliminationInfo_debug(ZipperDefectInfo& info,
                                               const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
                                               const cv::Mat& mat)
 {
@@ -151,7 +181,7 @@ void ImageProcessor::getEliminationInfo_debug(ZipperDefectInfo& info,
 	getZangwuInfo(info, processResult, index[ClassId::Zangwu]);
 }
 
-void ImageProcessor::getEliminationInfo_defect(ZipperDefectInfo& info,
+void ImageProcessorZipper::getEliminationInfo_defect(ZipperDefectInfo& info,
                                                const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
                                                const cv::Mat& mat)
 {
@@ -160,7 +190,7 @@ void ImageProcessor::getEliminationInfo_defect(ZipperDefectInfo& info,
 	getZangwuInfo(info, processResult, index[ClassId::Zangwu]);
 }
 
-void ImageProcessor::getQueyaInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
+void ImageProcessorZipper::getQueyaInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
                                   const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
@@ -175,7 +205,7 @@ void ImageProcessor::getQueyaInfo(ZipperDefectInfo& info, const std::vector<rw::
 	}
 }
 
-void ImageProcessor::getTangshangInfo(ZipperDefectInfo& info,
+void ImageProcessorZipper::getTangshangInfo(ZipperDefectInfo& info,
                                       const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
@@ -190,7 +220,7 @@ void ImageProcessor::getTangshangInfo(ZipperDefectInfo& info,
 	}
 }
 
-void ImageProcessor::getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
+void ImageProcessorZipper::getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
                                    const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
@@ -208,7 +238,7 @@ void ImageProcessor::getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw:
 	}
 }
 
-std::vector<std::vector<size_t>> ImageProcessor::getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
+std::vector<std::vector<size_t>> ImageProcessorZipper::getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
@@ -226,7 +256,7 @@ std::vector<std::vector<size_t>> ImageProcessor::getClassIndex(const std::vector
 	return result;
 }
 
-void ImageProcessor::buildSegModelEngine(const QString& enginePath)
+void ImageProcessorZipper::buildSegModelEngine(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.1f;
@@ -234,10 +264,10 @@ void ImageProcessor::buildSegModelEngine(const QString& enginePath)
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.modelPath = enginePath.toStdString();
-	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
+	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
 }
 
-std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
+std::vector<std::vector<size_t>> ImageProcessorZipper::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
@@ -246,7 +276,7 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 	return processIndex;
 }
 
-std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info)
+std::vector<std::vector<size_t>> ImageProcessorZipper::filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
@@ -256,7 +286,7 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_defect(s
 	return processIndex;
 }
 
-std::vector<std::vector<size_t>> ImageProcessor::getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
+std::vector<std::vector<size_t>> ImageProcessorZipper::getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
 {
 	std::vector<std::vector<size_t>> result;
 	result.resize(index.size());
@@ -274,7 +304,7 @@ std::vector<std::vector<size_t>> ImageProcessor::getIndexInBoundary(const std::v
 }
 
 
-bool ImageProcessor::isInBoundary(const rw::DetectionRectangleInfo& info)
+bool ImageProcessorZipper::isInBoundary(const rw::DetectionRectangleInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto x = info.center_x;
@@ -312,7 +342,7 @@ bool ImageProcessor::isInBoundary(const rw::DetectionRectangleInfo& info)
 	return false;
 }
 
-void ImageProcessor::drawZipperDefectInfoText_defect(QImage& image, const ZipperDefectInfo& info)
+void ImageProcessorZipper::drawZipperDefectInfoText_defect(QImage& image, const ZipperDefectInfo& info)
 {
 	QVector<QString> textList;
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
@@ -343,7 +373,7 @@ void ImageProcessor::drawZipperDefectInfoText_defect(QImage& image, const Zipper
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
-void ImageProcessor::appendQueyaDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
+void ImageProcessorZipper::appendQueyaDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
 {
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.queYa && !info.queYaList.empty())
@@ -358,7 +388,7 @@ void ImageProcessor::appendQueyaDectInfo(QVector<QString>& textList, const Zippe
 	}
 }
 
-void ImageProcessor::appendTangshangDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
+void ImageProcessorZipper::appendTangshangDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
 {
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.tangShang && !info.tangShangList.empty())
@@ -373,7 +403,7 @@ void ImageProcessor::appendTangshangDectInfo(QVector<QString>& textList, const Z
 	}
 }
 
-void ImageProcessor::appendZangwuDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
+void ImageProcessorZipper::appendZangwuDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info)
 {
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.zangWu && !info.zangWuList.empty())
@@ -388,7 +418,7 @@ void ImageProcessor::appendZangwuDectInfo(QVector<QString>& textList, const Zipp
 	}
 }
 
-void ImageProcessor::drawVerticalLine_locate(QImage& image, size_t locate)
+void ImageProcessorZipper::drawVerticalLine_locate(QImage& image, size_t locate)
 {
 	if (image.isNull() || locate >= static_cast<size_t>(image.width())) {
 		return; // 如果图像无效或 locate 超出图像宽度，直接返回
@@ -404,7 +434,7 @@ void ImageProcessor::drawVerticalLine_locate(QImage& image, size_t locate)
 	painter.end(); // 结束绘制
 }
 
-void ImageProcessor::drawHorizontalLine_locate(QImage& image, size_t locate)
+void ImageProcessorZipper::drawHorizontalLine_locate(QImage& image, size_t locate)
 {
 	if (image.isNull() || locate >= static_cast<size_t>(image.height())) {
 		return; // 如果图像无效或 locate 超出图像高度，直接返回
@@ -420,7 +450,7 @@ void ImageProcessor::drawHorizontalLine_locate(QImage& image, size_t locate)
 	painter.end(); // 结束绘制
 }
 
-void ImageProcessor::drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info)
+void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info)
 {
 	QVector<QString> textList;
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
@@ -459,7 +489,7 @@ void ImageProcessor::drawZipperDefectInfoText_Debug(QImage& image, const ZipperD
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList, 0.05);
 }
 
-void ImageProcessor::drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
+void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
 	const std::vector<std::vector<size_t>>& processIndex)
 {
 	if (processResult.size() == 0)
@@ -496,7 +526,7 @@ void ImageProcessor::drawDefectRec(QImage& image, const std::vector<rw::Detectio
 	}
 }
 
-void ImageProcessor::drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
+void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
 	const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info)
 {
 	auto& scoreConfig = GlobalStructDataZipper::getInstance().scoreConfig;
@@ -584,10 +614,8 @@ void ImageProcessor::drawDefectRec_error(QImage& image, const std::vector<rw::De
 }
 
 
-void ImageProcessingModule::onFrameCaptured(cv::Mat frame, size_t index)
+void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 {
-	emit imgForDlgNewProduction(frame, index);
-
 	if (frame.empty()) {
 		return; // 跳过空帧
 	}
@@ -598,4 +626,45 @@ void ImageProcessingModule::onFrameCaptured(cv::Mat frame, size_t index)
 	mat.index = index;
 	_queue.enqueue(mat);
 	_condition.wakeOne();
+}
+
+void ImageProcessingModuleZipper::BuildModule()
+{
+	for (int i = 0; i < _numConsumers; ++i) {
+		static size_t workIndexCount = 0;
+		ImageProcessorZipper* processor = new ImageProcessorZipper(_queue, _mutex, _condition, workIndexCount, this);
+		workIndexCount++;
+		processor->buildSegModelEngine(modelEnginePath);
+		processor->imageProcessingModuleIndex = index;
+		connect(processor, &ImageProcessorZipper::imageReady, this, &ImageProcessingModuleZipper::imageReady, Qt::QueuedConnection);
+		_processors.push_back(processor);
+		processor->start();
+	}
+}
+
+ImageProcessingModuleZipper::ImageProcessingModuleZipper(int numConsumers, QObject* parent)
+	: QObject(parent), _numConsumers(numConsumers){
+
+}
+
+ImageProcessingModuleZipper::~ImageProcessingModuleZipper()
+{
+	// 通知所有线程退出
+	for (auto processor : _processors) {
+		processor->requestInterruption();
+	}
+
+	// 唤醒所有等待的线程
+	{
+		QMutexLocker locker(&_mutex);
+		_condition.wakeAll();
+	}
+
+	// 等待所有线程退出
+	for (auto processor : _processors) {
+		if (processor->isRunning()) {
+			processor->wait(1000); // 使用超时机制，等待1秒
+		}
+		delete processor;
+	}
 }

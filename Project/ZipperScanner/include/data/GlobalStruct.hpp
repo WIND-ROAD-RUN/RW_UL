@@ -11,6 +11,7 @@
 #include "rqw_CameraObjectCore.hpp"
 #include "rqw_CameraObjectThread.hpp"
 #include "ZipperScannerDlgExposureTimeSet.hpp"
+#include "ImageProcessorModule.h"
 
 
 // 状态机
@@ -56,7 +57,11 @@ private:
 
 public:
 	void buildConfigManager(rw::oso::StorageType type);
+
+	void buildImageProcessorModules(const QString& path);
 	
+	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
+	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
 
 	// 保存参数
