@@ -62,11 +62,9 @@ void ZipperScanner::build_connect()
 	QObject::connect(ui->pbtn_score, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_score_clicked);
 
-
-	// 连接相机1出图
-	
-
-	// 连接相机2出图
+	// 开启调试显示新窗体
+	QObject::connect(ui->rbtn_debug, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_debug_checked);
 	
 }
 
@@ -121,6 +119,14 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->rbtn_strongLight->setChecked(zipperScannerConfig.qiangGuang);
 	ui->rbtn_mediumLight->setChecked(zipperScannerConfig.zhongGuang);
 	ui->rbtn_weakLight->setChecked(zipperScannerConfig.ruoGuang);
+
+
+	// 开机默认不显示但是勾选
+	ui->ckb_shibiekuang->setVisible(false);
+	ui->ckb_wenzi->setVisible(false);
+
+	ui->ckb_shibiekuang->setChecked(true);
+	ui->ckb_wenzi->setChecked(true);
 }
 
 // 通过实现DlgProductSet的构造函数进行初始化
@@ -309,6 +315,34 @@ void ZipperScanner::pbtn_score_clicked()
 	_dlgProductScore->setFixedSize(this->width(), this->height());
 	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_dlgProductScore->exec();
+}
+
+void ZipperScanner::rbtn_debug_checked(bool checked)
+{
+	auto isRuning = ui->rbtn_removeFunc->isChecked();
+
+	auto& GlobalStructData = GlobalStructDataZipper::getInstance();
+	if (!isRuning) {
+		if (checked) {
+			//_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+			//GlobalStructData.generalConfig.isDebug = checked;
+			GlobalStructData.runningState = RunningState::Debug;
+			//GlobalThread.strobeLightThread->startThread();
+			ui->rbtn_takePicture->setChecked(false);
+			//rbtn_takePicture_checked(false);
+		}
+		else {
+			//_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+			//GlobalStructData.generalConfig.isDebug = checked;
+			GlobalStructData.runningState = RunningState::Stop;
+			//GlobalThread.strobeLightThread->stopThread();
+		}
+		ui->ckb_shibiekuang->setVisible(checked);
+		ui->ckb_wenzi->setVisible(checked);
+	}
+	else {
+		ui->rbtn_debug->setChecked(false);
+	}
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

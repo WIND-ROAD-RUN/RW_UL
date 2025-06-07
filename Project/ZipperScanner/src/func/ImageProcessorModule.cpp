@@ -67,6 +67,47 @@ ImageProcessorZipper::ImageProcessorZipper(QQueue<MatInfo>& queue, QMutex& mutex
 
 void ImageProcessorZipper::run()
 {
+	while (!QThread::currentThread()->isInterruptionRequested()) {
+		MatInfo frame;
+		{
+			QMutexLocker locker(&_mutex);
+			if (_queue.isEmpty()) {
+				_condition.wait(&_mutex);
+				if (QThread::currentThread()->isInterruptionRequested()) {
+					break;
+				}
+			}
+			if (!_queue.isEmpty()) {
+				frame = _queue.dequeue();
+			}
+			else {
+				continue; // 如果队列仍为空，跳过本次循环
+			}
+		}
+
+		// 检查 frame 是否有效
+		if (frame.image.empty()) {
+			continue; // 跳过空帧
+		}
+
+		auto& globalData = GlobalStructDataZipper::getInstance();
+
+		auto currentRunningState = globalData.runningState.load();
+		switch (currentRunningState)
+		{
+		case RunningState::Debug:
+			run_debug(frame);
+			break;
+		case RunningState::OpenRemoveFunc:
+			run_OpenRemoveFunc(frame);
+			break;
+		case RunningState::Monitor:
+			run_monitor(frame);
+			break;
+		default:
+			break;
+		}
+	}
 
 }
 
