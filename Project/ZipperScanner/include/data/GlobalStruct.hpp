@@ -29,6 +29,8 @@ class GlobalStructDataZipper
 	Q_OBJECT
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
+	std::atomic<bool> debug_isDisplayRec{ true };
+	std::atomic<bool> debug_isDisplayText{ true };
 
 public:
 	// 统计信息
@@ -59,7 +61,7 @@ public:
 	void buildConfigManager(rw::oso::StorageType type);
 
 	void buildImageProcessorModules(const QString& path);
-	
+
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
@@ -68,7 +70,7 @@ public:
 	void saveDlgProductSetConfig();
 	void saveDlgProductScoreConfig();
 	void saveDlgExposureTimeSetConfig();
-	
+
 public:
 	// UI界面参数
 	cdm::GeneralConfig generalConfig;

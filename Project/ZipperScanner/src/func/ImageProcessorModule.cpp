@@ -113,8 +113,40 @@ void ImageProcessorZipper::run()
 
 void ImageProcessorZipper::run_debug(MatInfo& frame)
 {
-	auto qimage = cvMatToQPixmap(frame.image);
-	emit imageReady(qimage);
+	//AI开始识别
+	ZipperDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto processResult = _modelEngine->processImg(frame.image);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo_debug(defectInfo, processResult, processResultIndex, frame.image);
+
+	//绘制defect信息
+	auto qImage = cvMatToQImage(frame.image);
+
+	auto qPixmap = cvMatToQPixmap(frame.image);
+
+	if (GlobalStructDataZipper::getInstance().debug_isDisplayRec)
+	{
+		drawHorizontalLine(qImage);
+		drawDefectRec(qImage, processResult, processResultIndex);
+
+		drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+	}
+	if (GlobalStructDataZipper::getInstance().debug_isDisplayText)
+	{
+		drawZipperDefectInfoText_Debug(qImage, defectInfo);
+	}
+
+	emit imageReady(qPixmap);
 }
 
 void ImageProcessorZipper::run_monitor(MatInfo& frame)
@@ -476,20 +508,22 @@ void ImageProcessorZipper::drawVerticalLine_locate(QImage& image, size_t locate)
 	painter.end(); // 结束绘制
 }
 
-void ImageProcessorZipper::drawHorizontalLine_locate(QImage& image, size_t locate)
+void ImageProcessorZipper::drawHorizontalLine(QImage& image)
 {
-	if (image.isNull() || locate >= static_cast<size_t>(image.height())) {
-		return; // 如果图像无效或 locate 超出图像高度，直接返回
+	auto& index = imageProcessingModuleIndex;
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	rw::rqw::ImagePainter::PainterConfig painterConfig;
+	painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Orange);
+	if (index == 1)
+	{
+		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.shangXianWei1, painterConfig);
+		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.xiaXianWei1, painterConfig);
 	}
-
-	QPainter painter(&image);
-	painter.setRenderHint(QPainter::Antialiasing); // 开启抗锯齿
-	painter.setPen(QPen(Qt::red, 2)); // 设置画笔颜色为红色，线宽为2像素
-
-	// 绘制横线，从图像左侧到右侧
-	painter.drawLine(QPoint(0, locate), QPoint(image.width(), locate));
-
-	painter.end(); // 结束绘制
+	else if (index == 2)
+	{
+		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.shangXianWei2, painterConfig);
+		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.xiaXianWei2, painterConfig);
+	}
 }
 
 void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info)
