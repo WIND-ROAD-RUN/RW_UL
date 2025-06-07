@@ -4,6 +4,7 @@
 #include "ui_ZipperScanner.h"
 #include "DlgProductSet.h"
 #include "DlgProductScore.h"
+#include "DlgExposureTimeSet.h"
 #include <rqw_LabelWarning.h>
 #include <opencv2/core/mat.hpp>
 
@@ -22,6 +23,7 @@ public:
 public:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgProductScore* _dlgProductScore = nullptr;
+	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 
 
 public :
@@ -32,6 +34,7 @@ public :
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
+	void build_DlgExposureTimeSet();
 
 	void build_imageProcessorModule();
 

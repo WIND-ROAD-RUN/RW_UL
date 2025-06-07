@@ -67,6 +67,7 @@ public:
 	// 保存参数
 	void saveDlgProductSetConfig();
 	void saveDlgProductScoreConfig();
+	void saveDlgExposureTimeSetConfig();
 	
 public:
 	// UI界面参数

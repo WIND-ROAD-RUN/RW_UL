@@ -44,6 +44,7 @@ void ZipperScanner::build_ui()
 	build_ZipperScannerData();
 	build_DlgProductSetData();
 	build_DlgProductScore();
+	build_DlgExposureTimeSet();
 
 }
 
@@ -139,6 +140,11 @@ void ZipperScanner::build_DlgProductSetData()
 void ZipperScanner::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScore(this);
+}
+
+void ZipperScanner::build_DlgExposureTimeSet()
+{
+	_dlgExposureTimeSet = new DlgExposureTimeSet(this);
 }
 
 void ZipperScanner::build_imageProcessorModule()
@@ -324,7 +330,7 @@ void ZipperScanner::rbtn_debug_checked(bool checked)
 	auto& GlobalStructData = GlobalStructDataZipper::getInstance();
 	if (!isRuning) {
 		if (checked) {
-			//_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+			_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 			//GlobalStructData.generalConfig.isDebug = checked;
 			GlobalStructData.runningState = RunningState::Debug;
 			//GlobalThread.strobeLightThread->startThread();
@@ -332,7 +338,7 @@ void ZipperScanner::rbtn_debug_checked(bool checked)
 			//rbtn_takePicture_checked(false);
 		}
 		else {
-			//_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+			_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 			//GlobalStructData.generalConfig.isDebug = checked;
 			GlobalStructData.runningState = RunningState::Stop;
 			//GlobalThread.strobeLightThread->stopThread();

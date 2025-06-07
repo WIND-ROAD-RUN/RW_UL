@@ -87,6 +87,11 @@ void GlobalStructDataZipper::saveDlgProductScoreConfig()
 	storeContext->save(scoreConfig, scoreConfigPath);
 }
 
+void GlobalStructDataZipper::saveDlgExposureTimeSetConfig()
+{
+	storeContext->save(dlgExposureTimeSetConfig, globalPath.dlgExposureTimeSetFilePath.toStdString());
+}
+
 void GlobalStructDataZipper::buildCamera()
 {
 	buildCamera1();
