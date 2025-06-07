@@ -76,6 +76,10 @@ void ZipperScanner::build_connect()
 	// 弱光
 	QObject::connect(ui->rbtn_weakLight, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_weakLight_checked);
+
+	// 暂时使用的槽函数
+	QObject::connect(ui->pbtn_openSaveLocation, &QPushButton::clicked,
+		this, &ZipperScanner::pbtn_openSaveLocation_clicked);
 }
 
 // 构建相机
@@ -385,6 +389,12 @@ void ZipperScanner::rbtn_weakLight_checked(bool checked)
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
 		globalStruct.setLightLevel(LightLevel::WeakLight);
 	}
+}
+
+void ZipperScanner::pbtn_openSaveLocation_clicked()
+{
+	auto& camera1 = GlobalStructDataZipper::getInstance().camera1;
+	camera1->setTriggerLine(1000);
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

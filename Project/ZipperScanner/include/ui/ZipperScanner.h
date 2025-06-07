@@ -55,6 +55,7 @@ private slots:
 	void rbtn_strongLight_checked(bool checked);
 	void rbtn_mediumLight_checked(bool checked);
 	void rbtn_weakLight_checked(bool checked);
+	void pbtn_openSaveLocation_clicked();
 
 
 private slots:
