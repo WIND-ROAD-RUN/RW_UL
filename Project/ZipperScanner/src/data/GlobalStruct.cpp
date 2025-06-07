@@ -68,11 +68,12 @@ void GlobalStructDataZipper::buildImageProcessorModules(const QString& path)
 	modelCamera1->modelEnginePath = path;
 	modelCamera2->modelEnginePath = path;
 
+	modelCamera1->index = 1;
+	modelCamera2->index = 2;
+
 	modelCamera1->BuildModule();
 	modelCamera2->BuildModule();
 
-	modelCamera1->index = 1;
-	modelCamera2->index = 2;
 }
 
 void GlobalStructDataZipper::saveDlgProductSetConfig()

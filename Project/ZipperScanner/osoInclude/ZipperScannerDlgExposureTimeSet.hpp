@@ -19,7 +19,7 @@ namespace cdm {
         bool operator!=(const ZipperScannerDlgExposureTimeSet& obj) const;
 
     public:
-        size_t exposureTime{ 1000 };
+        size_t exposureTime{ 400 };
     };
 
     inline ZipperScannerDlgExposureTimeSet::ZipperScannerDlgExposureTimeSet(const rw::oso::ObjectStoreAssembly& assembly)

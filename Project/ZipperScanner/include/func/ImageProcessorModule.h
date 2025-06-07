@@ -144,7 +144,7 @@ public:
 	// 在指定位置画竖线
 	void drawVerticalLine_locate(QImage& image, size_t locate);
 	// 在指定位置画横线
-	void drawHorizontalLine(QImage& image);
+	void drawBoundariesLines(QImage& image);
 	// 开启调试情况下绘制缺陷相关的信息
 	void drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info);
 	// 绘画绿色的检测框

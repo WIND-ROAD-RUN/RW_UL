@@ -1,4 +1,4 @@
-#include "ImageProcessorModule.h"
+ï»¿#include "ImageProcessorModule.h"
 
 #include <qcolor.h>
 #include <QPainter>
@@ -26,35 +26,35 @@ QColor ImagePainter::ColorToQColor(Color c)
 void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList, double proportion)
 {
 	if (texts.isEmpty() || proportion <= 0.0 || proportion > 1.0) {
-		return; // ÎŞĞ§ÊäÈëÖ±½Ó·µ»Ø
+		return; // æ— æ•ˆè¾“å…¥ç›´æ¥è¿”å›
 	}
 
 	QPainter painter(&image);
 	painter.setRenderHint(QPainter::Antialiasing);
 
-	// ¼ÆËã×ÖÌå´óĞ¡
+	// è®¡ç®—å­—ä½“å¤§å°
 	int imageHeight = image.height();
-	int fontSize = static_cast<int>(imageHeight * proportion); // ×ÖºÅÓÉ proportion ¾ö¶¨
+	int fontSize = static_cast<int>(imageHeight * proportion); // å­—å·ç”± proportion å†³å®š
 
 	QFont font = painter.font();
 	font.setPixelSize(fontSize);
 	painter.setFont(font);
 
-	// ÆğÊ¼Î»ÖÃ
+	// èµ·å§‹ä½ç½®
 	int x = 0;
 	int y = 0;
 
-	// »æÖÆÃ¿Ò»ĞĞÎÄ×Ö
+	// ç»˜åˆ¶æ¯ä¸€è¡Œæ–‡å­—
 	for (int i = 0; i < texts.size(); ++i) {
-		// »ñÈ¡ÑÕÉ«
+		// è·å–é¢œè‰²
 		QColor color = (i < colorList.size()) ? ColorToQColor(colorList[i]) : ColorToQColor(colorList.last());
 		painter.setPen(color);
 
-		// »æÖÆÎÄ×Ö
+		// ç»˜åˆ¶æ–‡å­—
 		painter.drawText(x, y + fontSize, texts[i]);
 
-		// ¸üĞÂ y ×ø±ê
-		y += fontSize; // Ã¿ĞĞÎÄ×ÖµÄ¼ä¾àµÈÓÚ×ÖÌå´óĞ¡
+		// æ›´æ–° y åæ ‡
+		y += fontSize; // æ¯è¡Œæ–‡å­—çš„é—´è·ç­‰äºå­—ä½“å¤§å°
 	}
 
 	painter.end();
@@ -81,13 +81,13 @@ void ImageProcessorZipper::run()
 				frame = _queue.dequeue();
 			}
 			else {
-				continue; // Èç¹û¶ÓÁĞÈÔÎª¿Õ£¬Ìø¹ı±¾´ÎÑ­»·
+				continue; // å¦‚æœé˜Ÿåˆ—ä»ä¸ºç©ºï¼Œè·³è¿‡æœ¬æ¬¡å¾ªç¯
 			}
 		}
 
-		// ¼ì²é frame ÊÇ·ñÓĞĞ§
+		// æ£€æŸ¥ frame æ˜¯å¦æœ‰æ•ˆ
 		if (frame.image.empty()) {
-			continue; // Ìø¹ı¿ÕÖ¡
+			continue; // è·³è¿‡ç©ºå¸§
 		}
 
 		auto& globalData = GlobalStructDataZipper::getInstance();
@@ -113,40 +113,39 @@ void ImageProcessorZipper::run()
 
 void ImageProcessorZipper::run_debug(MatInfo& frame)
 {
-	//AI¿ªÊ¼Ê¶±ğ
+	//AIå¼€å§‹è¯†åˆ«
 	ZipperDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto processResult = _modelEngine->processImg(frame.image);
-
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	defectInfo.time = QString("´¦ÀíÊ±¼ä: %1 ms").arg(duration);
-	//AIÊ¶±ğÍê³É
+	defectInfo.time = QString("å¤„ç†æ—¶é—´: %1 ms").arg(duration);
+	//AIè¯†åˆ«å®Œæˆ
 
-	//¹ıÂË³öÓĞĞ§Ë÷Òı
+	//è¿‡æ»¤å‡ºæœ‰æ•ˆç´¢å¼•
 	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
-	//»ñÈ¡µ½µ±Ç°Í¼ÏñµÄÈ±ÏİĞÅÏ¢
+	//è·å–åˆ°å½“å‰å›¾åƒçš„ç¼ºé™·ä¿¡æ¯
 	getEliminationInfo_debug(defectInfo, processResult, processResultIndex, frame.image);
 
-	//»æÖÆdefectĞÅÏ¢
+	//ç»˜åˆ¶defectä¿¡æ¯
 	auto qImage = cvMatToQImage(frame.image);
-
-	auto qPixmap = cvMatToQPixmap(frame.image);
 
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayRec)
 	{
-		drawHorizontalLine(qImage);
+		drawBoundariesLines(qImage);
 		drawDefectRec(qImage, processResult, processResultIndex);
 
-		drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+		//drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
 	}
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayText)
 	{
 		drawZipperDefectInfoText_Debug(qImage, defectInfo);
 	}
 
-	emit imageReady(qPixmap);
+	QPixmap pixmap = QPixmap::fromImage(qImage);
+
+	emit imageReady(pixmap);
 }
 
 void ImageProcessorZipper::run_monitor(MatInfo& frame)
@@ -161,7 +160,7 @@ void ImageProcessorZipper::run_OpenRemoveFunc(MatInfo& frame)
 
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info)
 {
-	_isbad = false; // ÖØÖÃ»µÆ·±êÖ¾
+	_isbad = false; // é‡ç½®åå“æ ‡å¿—
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& isOpenDefect = globalStruct.generalConfig.isDefect;
 
@@ -188,8 +187,8 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDe
 		{
 			if (item.score >= productScore.queYaScore)
 			{
-				_isbad = true; // ÓĞÈ±ÑÀ¾ÍÈÏÎªÊÇ»µÆ·
-				break; // ÕÒµ½Ò»¸ö·ûºÏÌõ¼şµÄÈ±ÑÀ¾Í¿ÉÒÔÁË
+				_isbad = true; // æœ‰ç¼ºç‰™å°±è®¤ä¸ºæ˜¯åå“
+				break; // æ‰¾åˆ°ä¸€ä¸ªç¬¦åˆæ¡ä»¶çš„ç¼ºç‰™å°±å¯ä»¥äº†
 			}
 		}
 	}
@@ -210,8 +209,8 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_TangShang(Zipp
 		{
 			if (item.score >= productScore.tangShangScore)
 			{
-				_isbad = true; // ÓĞÌÌÉË¾ÍÈÏÎªÊÇ»µÆ·
-				break; // ÕÒµ½Ò»¸ö·ûºÏÌõ¼şµÄÌÌÉË¾Í¿ÉÒÔÁË
+				_isbad = true; // æœ‰çƒ«ä¼¤å°±è®¤ä¸ºæ˜¯åå“
+				break; // æ‰¾åˆ°ä¸€ä¸ªç¬¦åˆæ¡ä»¶çš„çƒ«ä¼¤å°±å¯ä»¥äº†
 			}
 		}
 	}
@@ -233,8 +232,8 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperD
 		{
 			if (item.score >= productScore.zangWuScore)
 			{
-				_isbad = true; // ÓĞÔàÎÛ¾ÍÈÏÎªÊÇ»µÆ·
-				break; // ÕÒµ½Ò»¸ö·ûºÏÌõ¼şµÄÔàÎÛ¾Í¿ÉÒÔÁË
+				_isbad = true; // æœ‰è„æ±¡å°±è®¤ä¸ºæ˜¯åå“
+				break; // æ‰¾åˆ°ä¸€ä¸ªç¬¦åˆæ¡ä»¶çš„è„æ±¡å°±å¯ä»¥äº†
 			}
 		}
 	}
@@ -273,8 +272,8 @@ void ImageProcessorZipper::getQueyaInfo(ZipperDefectInfo& info, const std::vecto
 	}
 	for (const auto& item : processIndex)
 	{
-		auto queyaScore = processResult[item].score * 100; // ½«·ÖÊı×ª»»Îª°Ù·Ö±È
-		auto queyaArea = static_cast<double>(processResult[item].area); // »ñÈ¡Ãæ»ı
+		auto queyaScore = processResult[item].score * 100; // å°†åˆ†æ•°è½¬æ¢ä¸ºç™¾åˆ†æ¯”
+		auto queyaArea = static_cast<double>(processResult[item].area); // è·å–é¢ç§¯
 		info.queYaList.emplace_back(ZipperDefectInfo::DetectItem{ queyaScore, queyaArea, static_cast<int>(item) });
 	}
 }
@@ -288,8 +287,8 @@ void ImageProcessorZipper::getTangshangInfo(ZipperDefectInfo& info,
 	}
 	for (const auto& item : processIndex)
 	{
-		auto tangshangScore = processResult[item].score * 100; // ½«·ÖÊı×ª»»Îª°Ù·Ö±È
-		auto tangshangArea = static_cast<double>(processResult[item].area); // »ñÈ¡Ãæ»ı
+		auto tangshangScore = processResult[item].score * 100; // å°†åˆ†æ•°è½¬æ¢ä¸ºç™¾åˆ†æ¯”
+		auto tangshangArea = static_cast<double>(processResult[item].area); // è·å–é¢ç§¯
 		info.tangShangList.emplace_back(ZipperDefectInfo::DetectItem{ tangshangScore, tangshangArea, static_cast<int>(item) });
 	}
 }
@@ -304,8 +303,8 @@ void ImageProcessorZipper::getZangwuInfo(ZipperDefectInfo& info, const std::vect
 
 	for (const auto& item : processIndex)
 	{
-		auto zangwuScore = processResult[item].score * 100; // ½«·ÖÊı×ª»»Îª°Ù·Ö±È
-		auto zangwuArea = static_cast<double>(processResult[item].area); // »ñÈ¡Ãæ»ı
+		auto zangwuScore = processResult[item].score * 100; // å°†åˆ†æ•°è½¬æ¢ä¸ºç™¾åˆ†æ¯”
+		auto zangwuArea = static_cast<double>(processResult[item].area); // è·å–é¢ç§¯
 
 		info.zangWuList.emplace_back(ZipperDefectInfo::DetectItem{ zangwuScore, zangwuArea, static_cast<int>(item) });
 
@@ -422,28 +421,28 @@ void ImageProcessorZipper::drawZipperDefectInfoText_defect(QImage& image, const 
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
 	rw::rqw::ImagePainter::PainterConfig config;
 
-	// Ìí¼ÓÂÌÉ«ÓëºìÉ«
+	// æ·»åŠ ç»¿è‰²ä¸çº¢è‰²
 	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
 	configList.push_back(config);
 	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 	configList.push_back(config);
 
-	//ÔËĞĞÊ±¼ä
+	//è¿è¡Œæ—¶é—´
 	textList.push_back(info.time);
 
 	auto& generalSet = GlobalStructDataZipper::getInstance().generalConfig;
 	auto& isDefect = generalSet.isDefect;
 
-	// Èç¹û¿ªÆôÁËÌŞ·Ï¹¦ÄÜ
+	// å¦‚æœå¼€å¯äº†å‰”åºŸåŠŸèƒ½
 	if (isDefect)
 	{
-		// Ìí¼ÓÌŞ·ÏĞÅÏ¢(Èç¹ûĞÅÏ¢ÄÚÈİÌ«¶à¼ÇµÃĞŞ¸Ä)
+		// æ·»åŠ å‰”åºŸä¿¡æ¯(å¦‚æœä¿¡æ¯å†…å®¹å¤ªå¤šè®°å¾—ä¿®æ”¹)
 		appendQueyaDectInfo(textList, info);
 		appendTangshangDectInfo(textList, info);
 		appendZangwuDectInfo(textList, info);
 	}
 
-	// ½«ĞÅÏ¢ÏÔÊ¾µ½×óÉÏ½Ç
+	// å°†ä¿¡æ¯æ˜¾ç¤ºåˆ°å·¦ä¸Šè§’
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
 }
 
@@ -452,12 +451,12 @@ void ImageProcessorZipper::appendQueyaDectInfo(QVector<QString>& textList, const
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.queYa && !info.queYaList.empty())
 	{
-		QString queyaText("È±ÑÀ:");
+		QString queyaText("ç¼ºç‰™:");
 		for (const auto& item : info.queYaList)
 		{
 			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
-		queyaText.append(QString(" Ä¿±ê·ÖÊı: %1,Ä¿±êÃæ»ı: %2").arg(static_cast<int>(productScore.queYaScore)).arg(static_cast<int>(productScore.queYaArea)));
+		queyaText.append(QString(" ç›®æ ‡åˆ†æ•°: %1,ç›®æ ‡é¢ç§¯: %2").arg(static_cast<int>(productScore.queYaScore)).arg(static_cast<int>(productScore.queYaArea)));
 		textList.push_back(queyaText);
 	}
 }
@@ -467,12 +466,12 @@ void ImageProcessorZipper::appendTangshangDectInfo(QVector<QString>& textList, c
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.tangShang && !info.tangShangList.empty())
 	{
-		QString tangshangText("ÌÌÉË:");
+		QString tangshangText("çƒ«ä¼¤:");
 		for (const auto& item : info.tangShangList)
 		{
 			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
-		tangshangText.append(QString(" Ä¿±ê·ÖÊı: %1,Ä¿±êÃæ»ı: %2").arg(static_cast<int>(productScore.tangShangScore)).arg(static_cast<int>(productScore.tangShangArea)));
+		tangshangText.append(QString(" ç›®æ ‡åˆ†æ•°: %1,ç›®æ ‡é¢ç§¯: %2").arg(static_cast<int>(productScore.tangShangScore)).arg(static_cast<int>(productScore.tangShangArea)));
 		textList.push_back(tangshangText);
 	}
 }
@@ -482,12 +481,12 @@ void ImageProcessorZipper::appendZangwuDectInfo(QVector<QString>& textList, cons
 	auto& productScore = GlobalStructDataZipper::getInstance().scoreConfig;
 	if (_isbad && productScore.zangWu && !info.zangWuList.empty())
 	{
-		QString zangwuText("ÔàÎÛ:");
+		QString zangwuText("è„æ±¡:");
 		for (const auto& item : info.zangWuList)
 		{
 			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
-		zangwuText.append(QString(" Ä¿±ê·ÖÊı: %1,Ä¿±êÃæ»ı: %2").arg(static_cast<int>(productScore.zangWuScore)).arg(static_cast<int>(productScore.zangWuArea)));
+		zangwuText.append(QString(" ç›®æ ‡åˆ†æ•°: %1,ç›®æ ‡é¢ç§¯: %2").arg(static_cast<int>(productScore.zangWuScore)).arg(static_cast<int>(productScore.zangWuArea)));
 		textList.push_back(zangwuText);
 	}
 }
@@ -495,20 +494,20 @@ void ImageProcessorZipper::appendZangwuDectInfo(QVector<QString>& textList, cons
 void ImageProcessorZipper::drawVerticalLine_locate(QImage& image, size_t locate)
 {
 	if (image.isNull() || locate >= static_cast<size_t>(image.width())) {
-		return; // Èç¹ûÍ¼ÏñÎŞĞ§»ò locate ³¬³öÍ¼Ïñ¿í¶È£¬Ö±½Ó·µ»Ø
+		return; // å¦‚æœå›¾åƒæ— æ•ˆæˆ– locate è¶…å‡ºå›¾åƒå®½åº¦ï¼Œç›´æ¥è¿”å›
 	}
 
 	QPainter painter(&image);
-	painter.setRenderHint(QPainter::Antialiasing); // ¿ªÆô¿¹¾â³İ
-	painter.setPen(QPen(Qt::red, 2)); // ÉèÖÃ»­±ÊÑÕÉ«ÎªºìÉ«£¬Ïß¿íÎª2ÏñËØ
+	painter.setRenderHint(QPainter::Antialiasing); // å¼€å¯æŠ—é”¯é½¿
+	painter.setPen(QPen(Qt::red, 2)); // è®¾ç½®ç”»ç¬”é¢œè‰²ä¸ºçº¢è‰²ï¼Œçº¿å®½ä¸º2åƒç´ 
 
-	// »æÖÆÊúÏß£¬´ÓÍ¼Ïñ¶¥²¿µ½µ×²¿
+	// ç»˜åˆ¶ç«–çº¿ï¼Œä»å›¾åƒé¡¶éƒ¨åˆ°åº•éƒ¨
 	painter.drawLine(QPoint(locate, 0), QPoint(locate, image.height()));
 
-	painter.end(); // ½áÊø»æÖÆ
+	painter.end(); // ç»“æŸç»˜åˆ¶
 }
 
-void ImageProcessorZipper::drawHorizontalLine(QImage& image)
+void ImageProcessorZipper::drawBoundariesLines(QImage& image)
 {
 	auto& index = imageProcessingModuleIndex;
 	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -518,11 +517,15 @@ void ImageProcessorZipper::drawHorizontalLine(QImage& image)
 	{
 		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.shangXianWei1, painterConfig);
 		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.xiaXianWei1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, setConfig.zuoXianWei1, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, setConfig.youXianWei1, painterConfig);
 	}
 	else if (index == 2)
 	{
 		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.shangXianWei2, painterConfig);
 		rw::rqw::ImagePainter::drawHorizontalLine(image, setConfig.xiaXianWei2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, setConfig.zuoXianWei2, painterConfig);
+		rw::rqw::ImagePainter::drawVerticalLine(image, setConfig.youXianWei2, painterConfig);
 	}
 }
 
@@ -533,35 +536,35 @@ void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const Z
 	rw::rqw::ImagePainter::PainterConfig config;
 
 	configList.push_back(config);
-	//ÔËĞĞÊ±¼ä
+	//è¿è¡Œæ—¶é—´
 	textList.push_back(info.time);
 
-	// È±ÑÀ
+	// ç¼ºç‰™
 	if (!info.queYaList.empty()) {
-		QString queyaText("È±ÑÀ:");
+		QString queyaText("ç¼ºç‰™:");
 		for (const auto& item : info.queYaList) {
 			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(queyaText);
 	}
-	// ÌÌÉË
+	// çƒ«ä¼¤
 	if (!info.tangShangList.empty()) {
-		QString tangshangText("ÌÌÉË:");
+		QString tangshangText("çƒ«ä¼¤:");
 		for (const auto& item : info.tangShangList) {
 			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(tangshangText);
 	}
-	// ÔàÎÛ
+	// è„æ±¡
 	if (!info.zangWuList.empty()) {
-		QString zangwuText("ÔàÎÛ:");
+		QString zangwuText("è„æ±¡:");
 		for (const auto& item : info.zangWuList) {
 			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(zangwuText);
 	}
 
-	// ÏÔÊ¾µ½×óÉÏ½Ç
+	// æ˜¾ç¤ºåˆ°å·¦ä¸Šè§’
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList, 0.05);
 }
 
@@ -585,13 +588,13 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 			switch (item.classId)
 			{
 			case ClassId::Queya:
-				config.text = "È±ÑÀ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+				config.text = "ç¼ºç‰™ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 				break;
 			case ClassId::Tangshang:
-				config.text = "ÌÌÉË " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+				config.text = "çƒ«ä¼¤ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 				break;
 			case ClassId::Zangwu:
-				config.text = "ÔàÎÛ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+				config.text = "è„æ±¡ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 				break;
 			default:
 				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
@@ -628,19 +631,19 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 			case ClassId::Queya:
 				if (generalConfig.isDefect && scoreConfig.queYa)
 				{
-					config.text = "È±ÑÀ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+					config.text = "ç¼ºç‰™ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 					break;
 				}
 			case ClassId::Tangshang:
 				if (generalConfig.isDefect && scoreConfig.tangShang)
 				{
-					config.text = "ÌÌÉË " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+					config.text = "çƒ«ä¼¤ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 					break;
 				}
 			case ClassId::Zangwu:
 				if (generalConfig.isDefect && scoreConfig.zangWu)
 				{
-					config.text = "ÔàÎÛ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
+					config.text = "è„æ±¡ " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
 					break;
 				}
 			default:
@@ -648,7 +651,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 				break;
 			}
 
-			// Èç¹û¿ªÆôÁËÌŞ·Ï
+			// å¦‚æœå¼€å¯äº†å‰”åºŸ
 			if (generalConfig.isDefect)
 			{
 				if (item.classId == ClassId::Queya && scoreConfig.queYa)
@@ -658,7 +661,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 						if (detectItem.index == processIndex[i][j])
 						{
 							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // ÕÒµ½Æ¥ÅäµÄ¾ÍÌø³öÑ­»·
+							break; // æ‰¾åˆ°åŒ¹é…çš„å°±è·³å‡ºå¾ªç¯
 						}
 					}
 				}
@@ -669,7 +672,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 						if (detectItem.index == processIndex[i][j])
 						{
 							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // ÕÒµ½Æ¥ÅäµÄ¾ÍÌø³öÑ­»·
+							break; // æ‰¾åˆ°åŒ¹é…çš„å°±è·³å‡ºå¾ªç¯
 						}
 					}
 				}
@@ -680,7 +683,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 						if (detectItem.index == processIndex[i][j])
 						{
 							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // ÕÒµ½Æ¥ÅäµÄ¾ÍÌø³öÑ­»·
+							break; // æ‰¾åˆ°åŒ¹é…çš„å°±è·³å‡ºå¾ªç¯
 						}
 					}
 				}
@@ -693,7 +696,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 {
 	if (frame.empty()) {
-		return; // Ìø¹ı¿ÕÖ¡
+		return; // è·³è¿‡ç©ºå¸§
 	}
 
 	QMutexLocker locker(&_mutex);
@@ -725,21 +728,21 @@ ImageProcessingModuleZipper::ImageProcessingModuleZipper(int numConsumers, QObje
 
 ImageProcessingModuleZipper::~ImageProcessingModuleZipper()
 {
-	// Í¨ÖªËùÓĞÏß³ÌÍË³ö
+	// é€šçŸ¥æ‰€æœ‰çº¿ç¨‹é€€å‡º
 	for (auto processor : _processors) {
 		processor->requestInterruption();
 	}
 
-	// »½ĞÑËùÓĞµÈ´ıµÄÏß³Ì
+	// å”¤é†’æ‰€æœ‰ç­‰å¾…çš„çº¿ç¨‹
 	{
 		QMutexLocker locker(&_mutex);
 		_condition.wakeAll();
 	}
 
-	// µÈ´ıËùÓĞÏß³ÌÍË³ö
+	// ç­‰å¾…æ‰€æœ‰çº¿ç¨‹é€€å‡º
 	for (auto processor : _processors) {
 		if (processor->isRunning()) {
-			processor->wait(1000); // Ê¹ÓÃ³¬Ê±»úÖÆ£¬µÈ´ı1Ãë
+			processor->wait(1000); // ä½¿ç”¨è¶…æ—¶æœºåˆ¶ï¼Œç­‰å¾…1ç§’
 		}
 		delete processor;
 	}
