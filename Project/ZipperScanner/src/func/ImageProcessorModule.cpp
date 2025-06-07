@@ -98,12 +98,12 @@ void ImageProcessorZipper::run()
 		case RunningState::Debug:
 			run_debug(frame);
 			break;
-		case RunningState::OpenRemoveFunc:
+		/*case RunningState::OpenRemoveFunc:
 			run_OpenRemoveFunc(frame);
 			break;
 		case RunningState::Monitor:
 			run_monitor(frame);
-			break;
+			break;*/
 		default:
 			break;
 		}
@@ -113,7 +113,8 @@ void ImageProcessorZipper::run()
 
 void ImageProcessorZipper::run_debug(MatInfo& frame)
 {
-
+	auto qimage = cvMatToQPixmap(frame.image);
+	emit imageReady(qimage);
 }
 
 void ImageProcessorZipper::run_monitor(MatInfo& frame)
