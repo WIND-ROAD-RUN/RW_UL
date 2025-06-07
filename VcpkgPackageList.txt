@@ -1,0 +1,6 @@
+opencv
+pugixml
+jsoncpp
+sqlite3
+gtest
+spdlog
