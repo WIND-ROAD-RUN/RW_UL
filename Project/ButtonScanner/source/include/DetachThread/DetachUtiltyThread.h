@@ -19,6 +19,11 @@ public:
 
 	void stopThread();
 private:
+	bool lastIsTakePictures{false};
+private:
+	bool lastIsShutDown{false};
+	int shutdownCount{0};
+private:
 	unsigned long long lastWork1Count{ 0 };
 	unsigned long long lastWork2Count{ 0 };
 	unsigned long long lastWork3Count{ 0 };
@@ -41,6 +46,10 @@ private:
 	void closeWarnAlarm(const rw::rqw::WarningInfo& info);
 private:
 	void processTrigger(size_t s);
+private:
+	void processTakePictures(size_t s);
+private:
+	void processShutdownIO(size_t s);
 signals:
 	void updateStatisticalInfo();
 	void addWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
@@ -48,7 +57,10 @@ signals:
 	void showDlgWarn(rw::rqw::WarningInfo info);
 signals:
 	void workTriggerError(int index);
-
+signals:
+	void closeTakePictures();
+signals:
+	void shutdownComputer(int time);
 private:
 	std::atomic<bool> running; // 使用原子变量保证线程安全
 };

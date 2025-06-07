@@ -27,10 +27,12 @@ void DlgNewProduction::build_ui()
 {
 	ui->tabWidget->tabBar()->hide();
 	build_dialog();
-	picturesViewer = new PicturesViewer(this);
+	picturesViewer = new PictureViewerThumbnails(this);
 	auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\)";
 	picturesViewer->setRootPath(tempImagePath);
-
+	picturesViewer->setSize({ 100,100 });
+	picturesViewer->setThumbnailCacheCapacity(300);
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	ui->rbtn_tab3_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab3_filterColor-> setEnabled(false);
 	ui->rbtn_tab4_checkBladeShape->setEnabled(false);
@@ -86,9 +88,12 @@ void DlgNewProduction::build_connect()
 		this, &DlgNewProduction::pbtn_tab5_finish_clicked);
 	QObject::connect(ui->pbtn_tab5_cancelTrain, &QPushButton::clicked,
 		this, &DlgNewProduction::pbtn_tab5_cancelTrain_clicked);
+	QObject::connect(ui->pbtn_tab5_openImgLocate, &QPushButton::clicked,
+		this, &DlgNewProduction::pbtn_tab5_open_img_locate_clicked);
 
-	QObject::connect(picturesViewer, &PicturesViewer::viewerClosed,
+	QObject::connect(picturesViewer, &PictureViewerThumbnails::viewerClosed,
 		this, &DlgNewProduction::flashImgCount);
+
 }
 
 void DlgNewProduction::set_motionRun(bool isRun)
@@ -331,7 +336,8 @@ void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\bad)";
 		picturesViewer->setRootPath(tempImagePath);
 	}
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	/*picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);*/
 	picturesViewer->show();
 }
 
@@ -389,8 +395,10 @@ void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\good)";
 		picturesViewer->setRootPath(tempImagePath);
 	}
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	picturesViewer->show();
+
+	//picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	//picturesViewer->show();
 }
 
 void DlgNewProduction::pbtn_tab4_exit_clicked()
@@ -427,6 +435,13 @@ void DlgNewProduction::pbtn_tab5_start_train_clicked()
 		return;
 	}
 	aiTrainModule->startTrain();
+}
+
+void DlgNewProduction::pbtn_tab5_open_img_locate_clicked()
+{
+	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
+	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	picturesViewer->show();
 }
 
 void DlgNewProduction::pbtn_tab5_exit_clicked()

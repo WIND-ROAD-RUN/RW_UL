@@ -12,8 +12,17 @@
 #include <vector>
 #include<QThread>
 
+#include "rqw_ImageSaveEngine.h"
+
 struct ButtonDefectInfo
 {
+public:
+	struct ButtonDefectInfoItem
+	{
+		size_t index{0};
+		double score{0};
+		bool isDraw{false};
+	}; 
 public:
 	QString time{};
 	double outsideDiameter{};
@@ -38,29 +47,37 @@ public:
 	float large_B{};
 	bool isDrawlargeColor{ false };
 public:
-	std::vector<double> edgeDamage;
-	bool isDrawedgeDamage{ false };
+	//std::vector<double> edgeDamage; 
+	std::vector<ButtonDefectInfoItem>edgeDamage1;
+	//bool isDrawedgeDamage{ false };
 
-	std::vector<double> pore;
-	bool isDrawpore{ false };
+	//std::vector<double> pore;
+	std::vector<ButtonDefectInfoItem>pore1;
+	//bool isDrawpore{ false };
 
-	std::vector<double> paint;
-	bool isDrawpaint{ false };
+	//std::vector<double> paint;
+	std::vector<ButtonDefectInfoItem>paint1;
+	//bool isDrawpaint{ false };
 
-	std::vector<double> brokenEye;
-	bool isDrawbrokenEye{ false };
+	//std::vector<double> brokenEye;
+	std::vector<ButtonDefectInfoItem>brokenEye1;
+	//bool isDrawbrokenEye{ false };
 
-	std::vector<double> crack;
-	bool isDrawcrack{ false };
+	//std::vector<double> crack;
+	std::vector<ButtonDefectInfoItem>crack1;
+	//bool isDrawcrack{ false };
 
-	std::vector<double> grindStone;
-	bool isDrawgrindStone{ false };
+	//std::vector<double> grindStone;
+	std::vector<ButtonDefectInfoItem>grindStone1;
+	//bool isDrawgrindStone{ false };
 
-	std::vector<double> blockEye;
-	bool isDrawblockEye{ false };
+	//std::vector<double> blockEye;
+	std::vector<ButtonDefectInfoItem>blockEye1;
+	//bool isDrawblockEye{ false };
 
-	std::vector<double> materialHead;
-	bool isDrawmaterialHead{ false };
+	//std::vector<double> materialHead;
+	std::vector<ButtonDefectInfoItem>materialHead1;
+	//bool isDrawmaterialHead{ false };
 
 public:
 
@@ -138,6 +155,7 @@ protected:
 	void run() override;
 private:
 	void run_debug(MatInfo& frame);
+	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
 	void run_monitor(MatInfo& frame);
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);
@@ -156,6 +174,9 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
+
+	void save_image( rw::rqw::ImageInfo & imageInfo,const QImage & image);
+	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 signals:
 	void imageReady(QPixmap image);
 private:
@@ -226,6 +247,8 @@ public:
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
 	                        ButtonDefectInfo& info);
+	void drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
+		ButtonDefectInfo& info);
 
 private:
 

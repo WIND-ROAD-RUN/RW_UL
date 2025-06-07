@@ -19,22 +19,6 @@ PicturesViewer::~PicturesViewer()
 	delete ui;
 }
 
-void PicturesViewer::setViewerMode(ViewerMode mode)
-{
-	switch (mode)
-	{
-	case ViewerMode::SignalPicture:
-		ui->tabWidget->setCurrentIndex(0);
-		break;
-	case ViewerMode::Thumbnail:
-		ui->tabWidget->setCurrentIndex(1);
-		break;
-	default:
-		ui->tabWidget->setCurrentIndex(0);
-		break;
-	}
-}
-
 void PicturesViewer::build_ui()
 {
 	_categoryModel = new QStandardItemModel(this);
@@ -42,8 +26,6 @@ void PicturesViewer::build_ui()
 
 	_picturesListModel = new QStandardItemModel(this);
 	ui->listView_picturesList->setModel(_picturesListModel);
-
-	setViewerMode(ViewerMode::SignalPicture);
 }
 
 void PicturesViewer::build_connect()
@@ -63,17 +45,18 @@ void PicturesViewer::build_connect()
 	QObject::connect(ui->pbtn_prePicture, &QPushButton::clicked,
 		this, &PicturesViewer::pbtn_prevPicture_clicked);
 
+	QObject::connect(ui->pbtn_delete, &QPushButton::clicked,
+		this, &PicturesViewer::pbtn_delete_clicked);
+
+	QObject::connect(ui->pbtn_deleteTotal, &QPushButton::clicked,
+		this, &PicturesViewer::pbtn_delete_total_clicked);
+
 	QObject::connect(ui->pbtn_preCategory, &QPushButton::clicked,
 		this, &PicturesViewer::pbtn_preCategory_clicked);
 
 	QObject::connect(ui->pbtn_nextCategory, &QPushButton::clicked,
 		this, &PicturesViewer::pbtn_nextCategory_clicked);
 
-	QObject::connect(ui->pbtn_delete, &QPushButton::clicked,
-		this, &PicturesViewer::pbtn_delete_clicked);
-
-	QObject::connect(ui->pbtn_deleteTotal, &QPushButton::clicked,
-		this, &PicturesViewer::pbtn_delete_total_clicked);
 }
 
 void PicturesViewer::setRootPath(const QString& path)
@@ -289,29 +272,6 @@ void PicturesViewer::pbtn_prevPicture_clicked()
 	}
 }
 
-QList<QModelIndex> PicturesViewer::getAllIndexes(QStandardItemModel* model)
-{
-	QList<QModelIndex> indexes;
-	QStandardItem* rootItem = model->invisibleRootItem();
-	collectIndexes(rootItem, indexes);
-	return indexes;
-}
-
-void PicturesViewer::collectIndexes(QStandardItem* item, QList<QModelIndex>& indexes)
-{
-	if (!item) {
-		return;
-	}
-
-	for (int i = 0; i < item->rowCount(); ++i) {
-		QStandardItem* child = item->child(i);
-		if (child) {
-			indexes.append(child->index());
-			collectIndexes(child, indexes);
-		}
-	}
-}
-
 void PicturesViewer::pbtn_preCategory_clicked()
 {
 	QModelIndex currentIndex = ui->treeView_categoryTree->currentIndex();
@@ -342,6 +302,29 @@ void PicturesViewer::pbtn_nextCategory_clicked()
 
 	QModelIndex nextIndex = allIndexes.at(nextIndexPosition);
 	ui->treeView_categoryTree->setCurrentIndex(nextIndex);
+}
+
+QList<QModelIndex> PicturesViewer::getAllIndexes(QStandardItemModel* model)
+{
+	QList<QModelIndex> indexes;
+	QStandardItem* rootItem = model->invisibleRootItem();
+	collectIndexes(rootItem, indexes);
+	return indexes;
+}
+
+void PicturesViewer::collectIndexes(QStandardItem* item, QList<QModelIndex>& indexes)
+{
+	if (!item) {
+		return;
+	}
+
+	for (int i = 0; i < item->rowCount(); ++i) {
+		QStandardItem* child = item->child(i);
+		if (child) {
+			indexes.append(child->index());
+			collectIndexes(child, indexes);
+		}
+	}
 }
 
 void PicturesViewer::pbtn_delete_clicked()

@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_DlgNewProduction.h"
-#include"PicturesViewer.h"
+#include"PictureViewerThumbnails.h"
 
 #include"opencv2/opencv.hpp"
 
@@ -31,7 +31,7 @@ public:
 
 	~DlgNewProduction();
 public:
-	PicturesViewer* picturesViewer;
+	PictureViewerThumbnails* picturesViewer;
 private:
 	void build_ui();
 	void build_connect();
@@ -84,6 +84,7 @@ private slots:
 	void pbtn_tab4_nex_step_clicked();
 private slots:
 	void pbtn_tab5_start_train_clicked();
+	void pbtn_tab5_open_img_locate_clicked();
 	void pbtn_tab5_exit_clicked();
 	void pbtn_tab5_pre_step_clicked();
 	void pbtn_tab5_finish_clicked();

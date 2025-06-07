@@ -42,6 +42,8 @@ void DetachUtiltyThread::run()
 		CalculateRealtimeInformation(s);
 		processWarningInfo(s);
 		processTrigger(s);
+		processTakePictures(s);
+		processShutdownIO(s);
 		++s;
 		if (s==300)
 		{
@@ -210,5 +212,48 @@ void DetachUtiltyThread::processTrigger(size_t s)
 		{
 			isStopOnce = true;
 		}
+	}
+}
+
+void DetachUtiltyThread::processTakePictures(size_t s)
+{
+	auto& globalStruct = GlobalStructData::getInstance();
+	auto& isTakePictures = globalStruct.mainWindowConfig.isTakePictures;
+	auto& isSavePicturesLong = globalStruct.dlgProduceLineSetConfig.takePicturesLong;
+	if (s%60==0)
+	{
+		if (lastIsTakePictures==true&& isTakePictures==true&& isSavePicturesLong==false)
+		{
+			emit closeTakePictures();
+		}
+		lastIsTakePictures = isTakePictures;
+	}
+}
+
+void DetachUtiltyThread::processShutdownIO(size_t s)
+{
+	if (s%1==0)
+	{
+		auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
+		auto isShutdown = motion->GetIOIn(ControlLines::shutdownComputerIn);
+
+		if (lastIsShutDown)
+		{
+			shutdownCount++;
+			emit shutdownComputer(shutdownCount);
+		}
+		else
+		{
+			if (isShutdown)
+			{
+				emit shutdownComputer(shutdownCount);
+			}
+			else
+			{
+				shutdownCount = 0;
+				emit shutdownComputer(-1);
+			}
+		}
+		lastIsShutDown = isShutdown;
 	}
 }

@@ -43,14 +43,26 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
-		ui->rbtn_debug->setChecked(false);
+
+		//ui->rbtn_debug->setChecked(false);
 		auto& runningState = globalStructData.runningState;
+
+		bool beforeSetExposureTimeIsDebug = false;
+		if (runningState==RunningState::Debug)
+		{
+			beforeSetExposureTimeIsDebug = true;
+		}
+
 		runningState = RunningState::Monitor;
-		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+		//_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 		_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 		_dlgExposureTimeSet->exec(); // 显示对话框
-		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+		//_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 		runningState = RunningState::Stop;
+		if (beforeSetExposureTimeIsDebug)
+		{
+			rbtn_debug_checked(true); // 如果之前是调试模式，重新设置为调试模式
+		}
 	}
 }
 
@@ -107,7 +119,11 @@ ButtonScanner::ButtonScanner(QWidget* parent)
 ButtonScanner::~ButtonScanner()
 {
 	destroyComponents();
-
+	if (isShutdownByIO)
+	{
+		bool result = QProcess::startDetached("shutdown", QStringList() << "-s" << "-t" << "0");
+		qDebug() << "Shutdown command started:" << result;
+	}
 	delete ui;
 }
 
@@ -217,7 +233,10 @@ void ButtonScanner::initializeComponents()
 		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
-
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::closeTakePictures,
+		this, &ButtonScanner::closeTakePictures, Qt::QueuedConnection);
+	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::shutdownComputer,
+		this, &ButtonScanner::shutdownComputerTrigger, Qt::QueuedConnection);
 	auto mainWindowConfig = GlobalStructData::getInstance().mainWindowConfig;
 
 	//初始化光源
@@ -301,6 +320,7 @@ void ButtonScanner::build_ui()
 	build_dlgExposureTimeSet();
 	build_dlgNewProduction();
 	build_picturesViewer();
+	_dlgShutdownWarn = new DlgShutdownWarn(this);
 	build_dlgModelManager();
 	this->labelClickable_title = new rw::rqw::ClickableLabel(this);
 	labelWarning = new rw::rqw::LabelWarning(this);
@@ -317,8 +337,11 @@ void ButtonScanner::build_ui()
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
 		, this, &ButtonScanner::checkPosiviveRadioButtonCheck);
 
+	ui->cBox_isDisplayRec->setVisible(false);
+	ui->cBox_isDisplayText->setVisible(false);
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
+	ui->rbtn_strobe->setVisible(false);
 }
 
 void ButtonScanner::read_image()
@@ -401,7 +424,9 @@ void ButtonScanner::destroy_modelStorageManager()
 
 void ButtonScanner::build_picturesViewer()
 {
-	_picturesViewer = new PicturesViewer(this);
+	_picturesViewer = new PictureViewerThumbnails(this);
+	_picturesViewer->setSize({ 100,100 });
+	_picturesViewer->setThumbnailCacheCapacity(1000);
 }
 
 void ButtonScanner::build_dlgModelManager()
@@ -467,6 +492,12 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(dlgWarn, &DlgWarn::isProcess,
 		this, &ButtonScanner::dlgWarningAccept);
+
+	QObject::connect(ui->cBox_isDisplayRec, &QCheckBox::clicked,
+		this, &ButtonScanner::cBox_isDisplayRec_checked);
+
+	QObject::connect(ui->cBox_isDisplayText, &QCheckBox::clicked,
+		this, &ButtonScanner::cBox_isDisplayText_checked);
 }
 
 void ButtonScanner::read_config()
@@ -1024,6 +1055,7 @@ void ButtonScanner::build_ioThread()
 					{
 						ui->rbtn_removeFunc->setChecked(false);
 						ui->rbtn_debug->setChecked(false);
+						rbtn_debug_checked(false);
 						label_lightBulb->setVisible(true);
 					});
 					// pidaimove->stop();
@@ -1053,6 +1085,8 @@ void ButtonScanner::build_ioThread()
 								ui->rbtn_removeFunc->setChecked(true);
 								ui->rbtn_debug->setChecked(false);
 								label_lightBulb->setVisible(false);
+								ui->cBox_isDisplayRec->setVisible(false);
+								ui->cBox_isDisplayText->setVisible(false);
 							});
 					}
 					//所有电机上电
@@ -1082,6 +1116,7 @@ void ButtonScanner::build_ioThread()
 						{
 							ui->rbtn_removeFunc->setChecked(false);
 							ui->rbtn_debug->setChecked(false);
+							rbtn_debug_checked(false);
 							label_lightBulb->setVisible(false);
 						});
 						motionPtr->StopAllAxis();
@@ -1098,7 +1133,6 @@ void ButtonScanner::build_ioThread()
 							info.type = rw::rqw::WarningType::Error;
 							info.warningId = WarningId::cairPressureAlarm;
 							labelWarning->addWarning(info, true);
-							updateCardLabelState(false);
 						});
 				}
 			}
@@ -1277,6 +1311,7 @@ void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
 
 void ButtonScanner::updateCardLabelState(bool state)
 {
+	isConnnectCard = state;
 	if (state) {
 		ui->label_cardState->setText("连接成功");
 		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
@@ -1408,19 +1443,42 @@ void ButtonScanner::pbtn_openSaveLocation_clicked()
 void ButtonScanner::rbtn_debug_checked(bool checked)
 {
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
+	//if (!isRuning) {
+	//	if (checked) {
+	//		_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
+	//		auto& GlobalStructData = GlobalStructData::getInstance();
+	//		GlobalStructData.mainWindowConfig.isDebugMode = checked;
+	//		GlobalStructData.runningState = RunningState::Debug;
+	//	}
+	//	else {
+	//		auto& GlobalStructData = GlobalStructData::getInstance();
+	//		GlobalStructData.mainWindowConfig.isDebugMode = checked;
+	//		GlobalStructData.runningState = RunningState::Stop;
+	//		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+	//	}
+	//}
+	//else {
+	//	ui->rbtn_debug->setChecked(false);
+	//}
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	auto& GlobalThread = GlobalStructThread::getInstance();
 	if (!isRuning) {
 		if (checked) {
 			_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
-			auto& GlobalStructData = GlobalStructData::getInstance();
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Debug;
+			//GlobalThread.strobeLightThread->startThread();
+			ui->rbtn_takePicture->setChecked(false);
+			rbtn_takePicture_checked(false);
 		}
 		else {
-			auto& GlobalStructData = GlobalStructData::getInstance();
+			_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
 			GlobalStructData.mainWindowConfig.isDebugMode = checked;
 			GlobalStructData.runningState = RunningState::Stop;
-			_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+			//GlobalThread.strobeLightThread->stopThread();
 		}
+		ui->cBox_isDisplayRec->setVisible(checked);
+		ui->cBox_isDisplayText->setVisible(checked);
 	}
 	else {
 		ui->rbtn_debug->setChecked(false);
@@ -1430,6 +1488,11 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 void ButtonScanner::rbtn_takePicture_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
+	if (GlobalStructData.runningState==RunningState::Debug)
+	{
+		ui->rbtn_takePicture->setChecked(false);
+		return;
+	}
 	GlobalStructData.mainWindowConfig.isTakePictures = checked;
 	GlobalStructData.saveConfig();
 	GlobalStructData.isTakePictures = checked;
@@ -1491,6 +1554,18 @@ void ButtonScanner::rbtn_strobe_checked(bool checked)
 	GlobalStructData.saveConfig();
 	auto& motionPtr = zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motionPtr->SetIOOut(ControlLines::strobeLightOut, checked);
+}
+
+void ButtonScanner::cBox_isDisplayRec_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.debug_isDisplayRec = checked;
+}
+
+void ButtonScanner::cBox_isDisplayText_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.debug_isDisplayText = checked;
 }
 
 void ButtonScanner::labelClickable_title_clicked()
@@ -1610,7 +1685,43 @@ void ButtonScanner::workTriggerError(int index)
 
 }
 
+void ButtonScanner::closeTakePictures()
+{
+	ui->rbtn_takePicture->setChecked(false);
+	rbtn_takePicture_checked(false);
+}
+
+void ButtonScanner::shutdownComputerTrigger(int time)
+{
+	if (!isConnnectCard)
+	{
+		return;
+	}
+
+	int shutDownBoundary = 7;
+	if (time == -1)
+	{
+		_dlgShutdownWarn->close();
+		return;
+	}
+	if (time==0)
+	{
+		_dlgShutdownWarn->show();
+		_dlgShutdownWarn->setTimeValue(shutDownBoundary - time);
+		return;
+	}
+
+	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time)% shutDownBoundary);
+
+	if ((shutDownBoundary - time)==0)
+	{
+		isShutdownByIO = true;
+		this->close();
+	}
+}
+
 void ButtonScanner::pbtn_exit_clicked()
 {
+	isShutdownByIO = false;
 	this->close();
 }

@@ -110,8 +110,7 @@ std::vector<std::vector<int>> DlgWarningIOSetConfig::DOFindAllDuplicateIndices()
 		config.DOUpLight,
 		config.DOSideLight,
 		config.DODownLight,
-		config.DOStrobeLight,
-		config.DOStartBelt
+		config.DOStrobeLight
 	};
 
 	std::unordered_map<int, std::vector<int>> valueToIndices;
@@ -153,7 +152,6 @@ void DlgWarningIOSetConfig::setDOErrorInfo(const std::vector<std::vector<int>>& 
 	ui->label_sideLightWarn->clear();
 	ui->lavbel_downWarn->clear();
 	ui->label_storeLightWarn->clear();
-	ui->label_startBelt->clear();
 	for (const auto& classic : index)
 	{
 		for (const auto& item : classic)
@@ -200,9 +198,6 @@ void DlgWarningIOSetConfig::setDOErrorInfo(int index)
 		break;
 	case 10:
 		ui->label_storeLightWarn->setText(text);
-		break;
-	case 11:
-		ui->label_startBelt->setText(text);
 		break;
 	}
 }
@@ -278,7 +273,7 @@ void DlgWarningIOSetConfig::build_connect()
 		this, &DlgWarningIOSetConfig::pbtn_DODownLightValue_clicked);
 	connect(ui->pbtn_DOStoreLightValue, &QPushButton::clicked,
 		this, &DlgWarningIOSetConfig::pbtn_DOStoreLightValue_clicked);
-	connect(ui->pbtn_DOStartBelt, &QPushButton::clicked,
+	connect(ui->pbtn_AxisStartBelt, &QPushButton::clicked,
 		this, &DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked);
 }
 
@@ -286,25 +281,65 @@ void DlgWarningIOSetConfig::read_config()
 {
 	auto& config = GlobalStructData::getInstance().warningIOSetConfig;
 	ui->pbtn_DIAirPressureValue->setText(QString::number(config.DIAirPressure));
+	ControlLines::airWarnIn = config.DIAirPressure;
+
 	ui->pbtn_DICameraTriggerValue1->setText(QString::number(config.DICameraTrigger1));
+	ControlLines::camer1In = config.DICameraTrigger1;
+
 	ui->pbtn_DICameraTriggerValue2->setText(QString::number(config.DICameraTrigger2));
+	ControlLines::camer2In = config.DICameraTrigger2;
+
 	ui->pbtn_DICameraTriggerValue3->setText(QString::number(config.DICameraTrigger3));
+	ControlLines::camer3In = config.DICameraTrigger3;
+
 	ui->pbtn_DICameraTriggerValue4->setText(QString::number(config.DICameraTrigger4));
+	ControlLines::camer4In = config.DICameraTrigger4;
+
 	ui->pbtn_DIShutdownComputerValue->setText(QString::number(config.DIShutdownComputer));
+	ControlLines::shutdownComputerIn = config.DIShutdownComputer;
+
 	ui->pbtn_DIStartValue->setText(QString::number(config.DIStart));
+	ControlLines::startIn = config.DIStart;
+
 	ui->pbtn_DIStopValue->setText(QString::number(config.DIStop));
+	ControlLines::stopIn = config.DIStop;
+
 	ui->pbtn_DOBlowTime1Value->setText(QString::number(config.DOBlow1));
+	ControlLines::blowLine1.ioNum = config.DOBlow1;
+
 	ui->pbtn_DOBlowTime2Value->setText(QString::number(config.DOBlow2));
+	ControlLines::blowLine2.ioNum = config.DOBlow2;
+
 	ui->pbtn_DOBlowTime3Value->setText(QString::number(config.DOBlow3));
+	ControlLines::blowLine3.ioNum = config.DOBlow3;
+
 	ui->pbtn_DOBlowTime4Value->setText(QString::number(config.DOBlow4));
+	ControlLines::blowLine4.ioNum = config.DOBlow4;
+
 	ui->pbtn_DOMotoPowerValue->setText(QString::number(config.DOMotoPower));
+	ControlLines::motoPowerOut = config.DOMotoPower;
+
 	ui->pbtn_DOGreenLightValue->setText(QString::number(config.DOGreenLight));
+	ControlLines::warnGreenOut = config.DOGreenLight;
+
 	ui->pbtn_DORedLightValue->setText(QString::number(config.DORedLight));
+	ControlLines::warnRedOut = config.DORedLight;
+
 	ui->pbtn_DOSideLightValue->setText(QString::number(config.DOSideLight));
+	ControlLines::sideLightOut = config.DOSideLight;
+
 	ui->pbtn_DOUpLightValue->setText(QString::number(config.DOUpLight));
+	ControlLines::upLightOut = config.DOUpLight;
+
 	ui->pbtn_DODownLightValue->setText(QString::number(config.DODownLight));
+	ControlLines::downLightOut = config.DODownLight;
+
 	ui->pbtn_DOStoreLightValue->setText(QString::number(config.DOStrobeLight));
-	ui->pbtn_DOStartBelt->setText(QString::number(config.DOStartBelt));
+	ControlLines::strobeLightOut = config.DOStrobeLight;
+
+	ui->pbtn_AxisStartBelt->setText(QString::number(config.axisStartBelt));
+	ControlLines::beltAsis = config.axisStartBelt;
+
 }
 
 void DlgWarningIOSetConfig::pbtn_exit_clicked()
@@ -329,6 +364,7 @@ void DlgWarningIOSetConfig::pbtn_DIStartValue_clicked()
 
 		ui->pbtn_DIStartValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DIStart = numValue;
+		ControlLines::startIn = numValue;
 		auto index=DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -351,6 +387,7 @@ void DlgWarningIOSetConfig::pbtn_DIStopValue_clicked()
 
 		ui->pbtn_DIStopValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DIStop = numValue;
+		ControlLines::stopIn = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -373,6 +410,7 @@ void DlgWarningIOSetConfig::pbtn_DIShutdownComputerValue_clicked()
 
 		ui->pbtn_DIShutdownComputerValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DIShutdownComputer = numValue;
+		ControlLines::shutdownComputerIn = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -395,6 +433,7 @@ void DlgWarningIOSetConfig::pbtn_DIAirPressureValue_clicked()
 
 		ui->pbtn_DIAirPressureValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DIAirPressure = numValue;
+		ControlLines::airWarnIn = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -417,6 +456,7 @@ void DlgWarningIOSetConfig::pbtn_DICameraTriggerValue1_clicked()
 
 		ui->pbtn_DICameraTriggerValue1->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DICameraTrigger1 = numValue;
+		ControlLines::camer1In = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -439,6 +479,7 @@ void DlgWarningIOSetConfig::pbtn_DICameraTriggerValue2_clicked()
 
 		ui->pbtn_DICameraTriggerValue2->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DICameraTrigger2 = numValue;
+		ControlLines::camer2In = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -461,6 +502,7 @@ void DlgWarningIOSetConfig::pbtn_DICameraTriggerValue3_clicked()
 
 		ui->pbtn_DICameraTriggerValue3->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DICameraTrigger3 = numValue;
+		ControlLines::camer3In = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -483,6 +525,7 @@ void DlgWarningIOSetConfig::pbtn_DICameraTriggerValue4_clicked()
 
 		ui->pbtn_DICameraTriggerValue4->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DICameraTrigger4 = numValue;
+		ControlLines::camer4In = numValue;
 		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
@@ -505,6 +548,7 @@ void DlgWarningIOSetConfig::pbtn_DOBlowTime1Value_clicked()
 
 		ui->pbtn_DOBlowTime1Value->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOBlow1 = numValue;
+		ControlLines::blowLine1.ioNum = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -527,6 +571,7 @@ void DlgWarningIOSetConfig::pbtn_DOBlowTime2Value_clicked()
 
 		ui->pbtn_DOBlowTime2Value->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOBlow2 = numValue;
+		ControlLines::blowLine2.ioNum = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -549,6 +594,7 @@ void DlgWarningIOSetConfig::pbtn_DOBlowTime3Value_clicked()
 
 		ui->pbtn_DOBlowTime3Value->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOBlow3 = numValue;
+		ControlLines::blowLine3.ioNum = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -571,6 +617,7 @@ void DlgWarningIOSetConfig::pbtn_DOBlowTime4Value_clicked()
 
 		ui->pbtn_DOBlowTime4Value->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOBlow4 = numValue;
+		ControlLines::blowLine4.ioNum = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -593,6 +640,7 @@ void DlgWarningIOSetConfig::pbtn_DOGreenLightValue_clicked()
 
 		ui->pbtn_DOGreenLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOGreenLight = numValue;
+		ControlLines::warnGreenOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -615,6 +663,7 @@ void DlgWarningIOSetConfig::pbtn_DORedLightValue_clicked()
 
 		ui->pbtn_DORedLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DORedLight = numValue;
+		ControlLines::warnRedOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -637,6 +686,7 @@ void DlgWarningIOSetConfig::pbtn_DOUpLightValue_clicked()
 
 		ui->pbtn_DOUpLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOUpLight = numValue;
+		ControlLines::upLightOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -659,6 +709,7 @@ void DlgWarningIOSetConfig::pbtn_DOSideLightValue_clicked()
 
 		ui->pbtn_DOSideLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOSideLight = numValue;
+		ControlLines::sideLightOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -681,6 +732,7 @@ void DlgWarningIOSetConfig::pbtn_DODownLightValue_clicked()
 
 		ui->pbtn_DODownLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DODownLight = numValue;
+		ControlLines::downLightOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -703,6 +755,7 @@ void DlgWarningIOSetConfig::pbtn_DOStoreLightValue_clicked()
 
 		ui->pbtn_DOStoreLightValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOStrobeLight = numValue;
+		ControlLines::strobeLightOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -723,8 +776,9 @@ void DlgWarningIOSetConfig::pbtn_DOStartBelt_clicked()
 			return;
 		}
 
-		ui->pbtn_DOStartBelt->setText(value);
-		GlobalStructData::getInstance().warningIOSetConfig.DOStartBelt = numValue;
+		ui->pbtn_AxisStartBelt->setText(value);
+		GlobalStructData::getInstance().warningIOSetConfig.axisStartBelt = numValue;
+		ControlLines::beltAsis = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}
@@ -747,6 +801,7 @@ void DlgWarningIOSetConfig::pbtn_DOMotoPowerValue_clicked()
 
 		ui->pbtn_DOMotoPowerValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DOMotoPower = numValue;
+		ControlLines::motoPowerOut = numValue;
 		auto index = DOFindAllDuplicateIndices();
 		setDOErrorInfo(index);
 	}

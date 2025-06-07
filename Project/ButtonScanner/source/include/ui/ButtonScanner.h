@@ -10,7 +10,8 @@
 #include"DlgModelManager.h"
 #include"rqw_LabelClickable.h"
 #include"rqw_LabelWarning.h"
-#include"PicturesViewer.h"
+#include"PictureViewerThumbnails.h"
+#include"DlgShutdownWarn.h"
 #include"DlgWarn.h"
 
 #include"opencv2/opencv.hpp"
@@ -40,10 +41,12 @@ private:
 	DlgProduceLineSet* _dlgProduceLineSet = nullptr;
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
-	PicturesViewer* _picturesViewer = nullptr;
 	DlgModelManager* _dlgModelManager = nullptr;
 public:
 	DlgNewProduction* dlgNewProduction = nullptr;
+private:
+	PictureViewerThumbnails* _picturesViewer = nullptr;
+	DlgShutdownWarn* _dlgShutdownWarn = nullptr;
 public:
 	rw::rqw::ClickableLabel* labelClickable_title;
 	rw::rqw::LabelWarning* labelWarning;
@@ -51,7 +54,7 @@ private:
 	//变量监控线程关机的时候停止
 	bool _mark_thread = false;
 public:
-	QRect exposureTimeTriggerArea; // 指定区域
+	QRect exposureTimeTriggerArea;
 	float exposureTimeTriggerWidthRatio = 0.3f;
 	float exposureTimeTriggerRatio = 0.3f;
 private:
@@ -161,6 +164,9 @@ private slots:
 	void rbtn_defect_checked(bool checked);
 	void rbtn_forAndAgainst_checked(bool checked);
 	void rbtn_strobe_checked(bool checked);
+private slots:
+	void cBox_isDisplayRec_checked(bool checked);
+	void cBox_isDisplayText_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
 public slots:
@@ -174,4 +180,12 @@ public slots:
 	void dlgWarningAccept();
 public slots:
 	void workTriggerError(int index);
+public slots:
+	void closeTakePictures();
+private:
+	bool isShutdownByIO{false};
+	bool isConnnectCard{false};
+public slots:
+	void shutdownComputerTrigger(int time);
 };
+
