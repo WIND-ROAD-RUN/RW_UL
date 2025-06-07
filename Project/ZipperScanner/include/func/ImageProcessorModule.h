@@ -24,9 +24,10 @@ public:
 	struct DetectItem
 	{
 	public:
-		double score;	// 分数
-		double area;	// 面积
-		int index;		// 在processResult中的索引位置
+		double score = 0;	// 分数
+		double area = 0;	// 面积
+		int index = -1;		// 在processResult中的索引位置
+		bool isDraw = false;	// 是否满足剔废条件绘画红框
 	};
 
 	std::vector<DetectItem> queYaList;		// 缺牙
@@ -148,7 +149,7 @@ public:
 	// 开启调试情况下绘制缺陷相关的信息
 	void drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info);
 	// 绘画绿色的检测框
-	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
+	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
 	// 绘画红色的检测框
 	void drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
 

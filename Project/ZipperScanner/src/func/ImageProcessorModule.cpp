@@ -134,9 +134,9 @@ void ImageProcessorZipper::run_debug(MatInfo& frame)
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayRec)
 	{
 		drawBoundariesLines(qImage);
-		drawDefectRec(qImage, processResult, processResultIndex);
+		drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
 
-		//drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+		drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
 	}
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayText)
 	{
@@ -270,11 +270,35 @@ void ImageProcessorZipper::getQueyaInfo(ZipperDefectInfo& info, const std::vecto
 	{
 		return;
 	}
+
+	auto& scoreConfig = GlobalStructDataZipper::getInstance().scoreConfig;
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+
+	double pixToWorld = 0;
+
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang2;
+	}
+
 	for (const auto& item : processIndex)
 	{
+		ZipperDefectInfo::DetectItem defectItem;
+
 		auto queyaScore = processResult[item].score * 100; // 将分数转换为百分比
-		auto queyaArea = static_cast<double>(processResult[item].area); // 获取面积
-		info.queYaList.emplace_back(ZipperDefectInfo::DetectItem{ queyaScore, queyaArea, static_cast<int>(item) });
+		auto queyaArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
+		if (scoreConfig.queYa && queyaScore >= scoreConfig.queYaScore && queyaArea >= scoreConfig.queYaArea)
+		{
+			defectItem.isDraw = true;
+		}
+		defectItem.score = queyaScore;
+		defectItem.area = queyaArea;
+		defectItem.index = static_cast<int>(item);
+		info.queYaList.emplace_back(defectItem);
 	}
 }
 
@@ -285,11 +309,33 @@ void ImageProcessorZipper::getTangshangInfo(ZipperDefectInfo& info,
 	{
 		return;
 	}
+
+	auto& scoreConfig = GlobalStructDataZipper::getInstance().scoreConfig;
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+
+	double pixToWorld = 0;
+
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang2;
+	}
+
 	for (const auto& item : processIndex)
 	{
+		ZipperDefectInfo::DetectItem defectItem;
+
 		auto tangshangScore = processResult[item].score * 100; // 将分数转换为百分比
-		auto tangshangArea = static_cast<double>(processResult[item].area); // 获取面积
-		info.tangShangList.emplace_back(ZipperDefectInfo::DetectItem{ tangshangScore, tangshangArea, static_cast<int>(item) });
+		auto tangshangArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
+		if (scoreConfig.tangShang && tangshangScore >= scoreConfig.tangShangScore && tangshangArea >= scoreConfig.tangShangArea)
+		{
+			defectItem.isDraw = true;
+		}
+		defectItem.index = static_cast<int>(item);
+		info.tangShangList.emplace_back(defectItem);
 	}
 }
 
@@ -301,13 +347,32 @@ void ImageProcessorZipper::getZangwuInfo(ZipperDefectInfo& info, const std::vect
 		return;
 	}
 
+	auto& scoreConfig = GlobalStructDataZipper::getInstance().scoreConfig;
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+
+	double pixToWorld = 0;
+
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixToWorld = setConfig.xiangSuDangLiang2;
+	}
+
 	for (const auto& item : processIndex)
 	{
+		ZipperDefectInfo::DetectItem defectItem;
+
 		auto zangwuScore = processResult[item].score * 100; // 将分数转换为百分比
-		auto zangwuArea = static_cast<double>(processResult[item].area); // 获取面积
-
-		info.zangWuList.emplace_back(ZipperDefectInfo::DetectItem{ zangwuScore, zangwuArea, static_cast<int>(item) });
-
+		auto zangwuArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
+		if (scoreConfig.zangWu && zangwuScore >= scoreConfig.zangWuScore && zangwuArea >= scoreConfig.zangWuArea)
+		{
+			defectItem.isDraw = true;
+		}
+		defectItem.index = static_cast<int>(item);
+		info.zangWuList.emplace_back(defectItem);
 	}
 }
 
@@ -569,7 +634,7 @@ void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const Z
 }
 
 void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
-	const std::vector<std::vector<size_t>>& processIndex)
+	const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info)
 {
 	if (processResult.size() == 0)
 	{
@@ -580,29 +645,40 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 	config.thickness = 3;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-	for (size_t i = 0; i < processIndex.size(); i++)
+	
+	// 缺牙
+	for (const auto& item : info.queYaList)
 	{
-		for (size_t j = 0; j < processIndex[i].size(); j++)
+		if (!item.isDraw)
 		{
-			auto& item = processResult[processIndex[i][j]];
-			switch (item.classId)
-			{
-			case ClassId::Queya:
-				config.text = "缺牙 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-				break;
-			case ClassId::Tangshang:
-				config.text = "烫伤 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-				break;
-			case ClassId::Zangwu:
-				config.text = "脏污 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-				break;
-			default:
-				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-				break;
-			}
-			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
+			auto& queyaItem = processResult[item.index];
+			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, queyaItem, config);
 		}
 	}
+
+	// 烫伤
+	for (const auto& item : info.tangShangList)
+	{
+		if (!item.isDraw)
+		{
+			auto& tangshangItem = processResult[item.index];
+			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, tangshangItem, config);
+		}
+	}
+
+	// 脏污
+	for (const auto& item : info.zangWuList)
+	{
+		if (!item.isDraw)
+		{
+			auto& zangwuItem = processResult[item.index];
+			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, zangwuItem, config);
+		}
+	}
+
 }
 
 void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
@@ -621,73 +697,36 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 
-	for (size_t i = 0; i < processIndex.size(); i++)
+	// 缺牙
+	for (const auto& item : info.queYaList)
 	{
-		for (size_t j = 0; j < processIndex.size(); j++)
+		if (item.isDraw)
 		{
-			auto& item = processResult[processIndex[i][j]];
-			switch (item.classId)
-			{
-			case ClassId::Queya:
-				if (generalConfig.isDefect && scoreConfig.queYa)
-				{
-					config.text = "缺牙 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-					break;
-				}
-			case ClassId::Tangshang:
-				if (generalConfig.isDefect && scoreConfig.tangShang)
-				{
-					config.text = "烫伤 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-					break;
-				}
-			case ClassId::Zangwu:
-				if (generalConfig.isDefect && scoreConfig.zangWu)
-				{
-					config.text = "脏污 " + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-					break;
-				}
-			default:
-				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100)) + " " + QString::number(item.area);
-				break;
-			}
+			auto& queyaItem = processResult[item.index];
+			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, queyaItem, config);
+		}
+	}
 
-			// 如果开启了剔废
-			if (generalConfig.isDefect)
-			{
-				if (item.classId == ClassId::Queya && scoreConfig.queYa)
-				{
-					for (const auto& detectItem : info.queYaList)
-					{
-						if (detectItem.index == processIndex[i][j])
-						{
-							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // 找到匹配的就跳出循环
-						}
-					}
-				}
-				else if (item.classId == ClassId::Tangshang && scoreConfig.tangShang)
-				{
-					for (const auto& detectItem : info.tangShangList)
-					{
-						if (detectItem.index == processIndex[i][j])
-						{
-							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // 找到匹配的就跳出循环
-						}
-					}
-				}
-				else if (item.classId == ClassId::Zangwu && scoreConfig.zangWu)
-				{
-					for (const auto& detectItem : info.zangWuList)
-					{
-						if (detectItem.index == processIndex[i][j])
-						{
-							rw::rqw::ImagePainter::drawShapesOnSourceImg(image, item, config);
-							break; // 找到匹配的就跳出循环
-						}
-					}
-				}
-			}
+	// 烫伤
+	for (const auto& item : info.tangShangList)
+	{
+		if (item.isDraw)
+		{
+			auto& tangshangItem = processResult[item.index];
+			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, tangshangItem, config);
+		}
+	}
+
+	// 脏污
+	for (const auto& item : info.zangWuList)
+	{
+		if (item.isDraw)
+		{
+			auto& zangwuItem = processResult[item.index];
+			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, zangwuItem, config);
 		}
 	}
 }
