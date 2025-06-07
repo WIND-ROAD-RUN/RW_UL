@@ -52,6 +52,9 @@ private slots:
 	void pbtn_set_clicked();
 	void pbtn_score_clicked();
 	void rbtn_debug_checked(bool checked);
+	void rbtn_strongLight_checked(bool checked);
+	void rbtn_mediumLight_checked(bool checked);
+	void rbtn_weakLight_checked(bool checked);
 
 
 private slots:

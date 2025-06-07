@@ -55,6 +55,45 @@ void GlobalStructDataZipper::setCameraExposureTime(int cameraIndex, size_t expos
 	}
 }
 
+void GlobalStructDataZipper::setLightLevel(const LightLevel& level)
+{
+	switch (level)
+	{
+	case LightLevel::StrongLight :
+		if (camera1) {
+			camera1->setExposureTime(setConfig.qiangBaoGuang);
+			camera1->setGain(setConfig.qiangZengYi);
+		}
+		if (camera2) {
+			camera2->setExposureTime(setConfig.qiangBaoGuang);
+			camera2->setGain(setConfig.qiangZengYi);
+		}
+		break;
+	case LightLevel::MediumLight:
+		if (camera1) {
+			camera1->setExposureTime(setConfig.zhongBaoGuang);
+			camera1->setGain(setConfig.zhongZengYi);
+		}
+		if (camera2) {
+			camera2->setExposureTime(setConfig.zhongBaoGuang);
+			camera2->setGain(setConfig.zhongZengYi);
+		}
+		break;
+	case LightLevel::WeakLight:
+		if (camera1) {
+			camera1->setExposureTime(setConfig.ruoBaoGuang);
+			camera1->setGain(setConfig.ruoZengYi);
+		}
+		if (camera2) {
+			camera2->setExposureTime(setConfig.ruoBaoGuang);
+			camera2->setGain(setConfig.ruoZengYi);
+		}
+		break;
+	default:
+		break;
+	}
+}
+
 void GlobalStructDataZipper::buildConfigManager(rw::oso::StorageType type)
 {
 	storeContext = std::make_unique<rw::oso::StorageContext>(type);

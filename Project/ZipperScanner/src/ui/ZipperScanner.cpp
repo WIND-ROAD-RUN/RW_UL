@@ -10,7 +10,7 @@
 #include "WarnUtilty.hpp"
 #include "rqw_CameraObjectThread.hpp"
 
-ZipperScanner::ZipperScanner(QWidget *parent)
+ZipperScanner::ZipperScanner(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::ZipperScannerClass())
 {
@@ -66,7 +66,16 @@ void ZipperScanner::build_connect()
 	// 开启调试显示新窗体
 	QObject::connect(ui->rbtn_debug, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_debug_checked);
-	
+
+	// 强光
+	QObject::connect(ui->rbtn_strongLight, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_strongLight_checked);
+	// 中光
+	QObject::connect(ui->rbtn_mediumLight, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_mediumLight_checked);
+	// 弱光
+	QObject::connect(ui->rbtn_weakLight, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_weakLight_checked);
 }
 
 // 构建相机
@@ -105,7 +114,7 @@ void ZipperScanner::build_camera()
 		QObject::connect(globalStruct.camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured, globalStruct.modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured);
 	}
 
-	
+
 }
 
 // 加载ZipperScanner窗体数据
@@ -196,7 +205,7 @@ void ZipperScanner::read_config_GeneralConfig()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
-	auto &generalConfigPath = globalPath.generalConfigPath;
+	auto& generalConfigPath = globalPath.generalConfigPath;
 
 	QFileInfo generalConfigFile(generalConfigPath);
 
@@ -348,6 +357,33 @@ void ZipperScanner::rbtn_debug_checked(bool checked)
 	}
 	else {
 		ui->rbtn_debug->setChecked(false);
+	}
+}
+
+void ZipperScanner::rbtn_strongLight_checked(bool checked)
+{
+	if (checked)
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.setLightLevel(LightLevel::StrongLight);
+	}
+}
+
+void ZipperScanner::rbtn_mediumLight_checked(bool checked)
+{
+	if (checked)
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.setLightLevel(LightLevel::MediumLight);
+	}
+}
+
+void ZipperScanner::rbtn_weakLight_checked(bool checked)
+{
+	if (checked)
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.setLightLevel(LightLevel::WeakLight);
 	}
 }
 

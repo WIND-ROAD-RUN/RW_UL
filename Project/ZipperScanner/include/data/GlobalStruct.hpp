@@ -23,6 +23,12 @@ enum class RunningState
 	Stop
 };
 
+enum class LightLevel {
+	StrongLight, 
+	MediumLight, 
+	WeakLight
+};
+
 class GlobalStructDataZipper
 	:public QObject
 {
@@ -56,7 +62,8 @@ public:
 private:
 	GlobalStructDataZipper();
 	~GlobalStructDataZipper() = default;
-
+public:
+	void setLightLevel(const LightLevel & level);
 public:
 	void buildConfigManager(rw::oso::StorageType type);
 
