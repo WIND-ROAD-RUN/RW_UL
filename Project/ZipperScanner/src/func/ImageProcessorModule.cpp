@@ -226,7 +226,7 @@ std::vector<std::vector<size_t>> ImageProcessor::getClassIndex(const std::vector
 	return result;
 }
 
-void ImageProcessor::buildSegModelEngineOT(const QString& enginePath)
+void ImageProcessor::buildSegModelEngine(const QString& enginePath)
 {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.1f;
@@ -234,18 +234,7 @@ void ImageProcessor::buildSegModelEngineOT(const QString& enginePath)
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.modelPath = enginePath.toStdString();
-	_modelEngineOT = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
-}
-
-void ImageProcessor::buildDetOnnxRuntimeOO(const QString& enginePath)
-{
-	rw::ModelEngineConfig config;
-	config.conf_threshold = 0.5f;
-	config.nms_threshold = 0.5f;
-	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
-	config.letterBoxColor = cv::Scalar(114, 114, 114);
-	config.modelPath = enginePath.toStdString();
-	_onnxRuntimeOO = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
+	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 }
 
 std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)

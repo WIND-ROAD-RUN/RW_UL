@@ -60,14 +60,10 @@ void ZipperScanner::build_connect()
 
 
 	// 连接相机1出图
-	QObject::connect(GlobalStructDataZipper::getInstance().camera1.get(),
-		&rw::rqw::CameraPassiveThread::frameCaptured,
-		this, &ZipperScanner::onFrameCaptured,Qt::QueuedConnection);
+	
 
 	// 连接相机2出图
-	QObject::connect(GlobalStructDataZipper::getInstance().camera2.get(),
-		&rw::rqw::CameraPassiveThread::frameCaptured,
-		this, &ZipperScanner::onFrameCaptured, Qt::QueuedConnection);
+	
 }
 
 // 构建相机
@@ -133,12 +129,6 @@ void ZipperScanner::destroyComponents()
 
 	// 销毁相机
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
-	QObject::disconnect(globalStructData.camera1.get(),
-		&rw::rqw::CameraPassiveThread::frameCaptured,
-		this, &ZipperScanner::onFrameCaptured);
-	QObject::disconnect(globalStructData.camera2.get(),
-		&rw::rqw::CameraPassiveThread::frameCaptured,
-		this, &ZipperScanner::onFrameCaptured);
 	globalStructData.destroyCamera();
 }
 
@@ -283,18 +273,6 @@ void ZipperScanner::pbtn_score_clicked()
 	_dlgProductScore->setFixedSize(this->width(), this->height());
 	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_dlgProductScore->exec();
-}
-
-void ZipperScanner::onFrameCaptured(cv::Mat frame, size_t index)
-{
-	if (index == 1) {
-		QPixmap pixmap = cvMatToQPixmap(frame);
-		ui->label_imgDisplay_1->setPixmap(pixmap);
-	}
-	else if (index == 2) {
-		QPixmap pixmap = cvMatToQPixmap(frame);
-		ui->label_imgDisplay_2->setPixmap(pixmap);
-	}
 }
 
 void ZipperScanner::updateCameraLabelState(int cameraIndex, bool state)

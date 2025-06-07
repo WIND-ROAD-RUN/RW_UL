@@ -49,8 +49,6 @@ private slots:
 
 
 private slots:
-	void onFrameCaptured(cv::Mat frame, size_t index);
-
 	void updateCameraLabelState(int cameraIndex, bool state);
 	
 

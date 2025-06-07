@@ -114,12 +114,10 @@ private:
 
 private:
 	// AI模型参数
-	std::unique_ptr<rw::ModelEngine> _modelEngineOT;
-	std::unique_ptr<rw::ModelEngine> _onnxRuntimeOO;
+	std::unique_ptr<rw::ModelEngine> _modelEngine;
 public:
 	// 构建模型引擎
-	void buildSegModelEngineOT(const QString& enginePath);		// Segmentation 模型
-	void buildDetOnnxRuntimeOO(const QString& enginePath);		// Detection 模型
+	void buildSegModelEngine(const QString& enginePath);		// Segmentation 模型
 
 private:
 	// 不开启剔废时, 过滤出有效索引
@@ -173,10 +171,7 @@ public:
 class ImageProcessingModule : public QObject {
 	Q_OBJECT
 public:
-	QString modelEngineOTPath;
-	QString modelNamePath;
-	QString modelOnnxOOPath;
-	QString modelOnnxSOPath;
+	QString modelEnginePath;
 public:
 	// 初始化图像处理模块
 	void BuildModule();
