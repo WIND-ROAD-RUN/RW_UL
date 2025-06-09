@@ -16,12 +16,12 @@ namespace rw
 		struct OutTriggerConfig
 		{
 		public:
-			size_t lineSelector{0};
+			size_t lineSelector{ 0 };
 			size_t lineMode{ 0 };
-			size_t lineSource{0};
-			long durationValue{0};
+			size_t lineSource{ 0 };
+			long durationValue{ 0 };
 			size_t delayValue{ 0 };
-			size_t preDelayValue{0};
+			size_t preDelayValue{ 0 };
 			bool strobeEnable = false;
 		};
 
@@ -370,6 +370,10 @@ namespace rw
 			 *
 			 */
 			[[nodiscard]] virtual size_t getTriggerLine() = 0;
+		public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config)=0 ;
+			virtual void outTrigger() =0;
+			virtual void outTrigger(bool isOpen) =0;
 		};
 
 		class ICameraActive
@@ -470,6 +474,10 @@ namespace rw
 			CameraActive(ICamera* camera, ICameraActive* cameraActive);
 		public:
 			~CameraActive() override;
+		public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
+			virtual void outTrigger() override;
+			virtual void outTrigger(bool isOpen)override ;
 		};
 
 		class CameraPassive
@@ -511,6 +519,10 @@ namespace rw
 			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack);
 		public:
 			~CameraPassive() override;
+			public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
+			virtual void outTrigger() override;
+			virtual void outTrigger(bool isOpen)override ;
 		};
 	}
 }

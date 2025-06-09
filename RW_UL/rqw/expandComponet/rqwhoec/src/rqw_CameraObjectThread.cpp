@@ -188,5 +188,29 @@ namespace rw
 		{
 			emit frameCaptured(std::move(frame), cameraIndex);
 		}
+
+		void CameraPassiveThread::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (_cameraObject)
+			{
+				 _cameraObject->setOutTriggerConfig(config);
+			}
+		}
+
+		void CameraPassiveThread::outTrigger()
+		{
+			if (_cameraObject)
+			{
+				_cameraObject->outTrigger();
+			}
+		}
+
+		void CameraPassiveThread::outTrigger(bool isOpen)
+		{
+			if (_cameraObject)
+			{
+				_cameraObject->outTrigger(isOpen);
+			}
+		}
 	} // namespace rqw
 } // namespace rw

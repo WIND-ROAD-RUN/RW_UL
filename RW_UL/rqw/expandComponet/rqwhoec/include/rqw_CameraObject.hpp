@@ -53,6 +53,10 @@ namespace rw {
 		public:
 			void initCamera(const CameraMetaData& cameraMetaData, CameraObjectTrigger triggerMode);
 			bool getConnectState();
+		public:
+			void setOutTriggerConfig(const OutTriggerConfig& config) ;
+			void outTrigger() ;
+			void outTrigger(bool isOpen);
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};

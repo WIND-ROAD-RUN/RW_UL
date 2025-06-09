@@ -133,5 +133,34 @@ namespace rw
 			}
 			return false;
 		}
+
+		void CameraPassiveObject::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (_cameraPassive) {
+				rw::hoec::OutTriggerConfig configHoec;
+				configHoec.delayValue = config.delayValue;
+				configHoec.strobeEnable = config.strobeEnable;
+				configHoec.durationValue = config.durationValue;
+				configHoec.lineMode = config.lineMode;
+				configHoec.lineSelector = config.lineSelector;
+				configHoec.lineSource = config.lineSource;
+				configHoec.preDelayValue = config.preDelayValue;
+				_cameraPassive->setOutTriggerConfig(configHoec);
+			}
+		}
+
+		void CameraPassiveObject::outTrigger()
+		{
+			if (_cameraPassive) {
+				_cameraPassive->outTrigger();
+			}
+		}
+
+		void CameraPassiveObject::outTrigger(bool isOpen)
+		{
+			if (_cameraPassive) {
+				_cameraPassive->outTrigger(isOpen);
+			}
+		}
 	} // namespace rqw
 } // namespace rw

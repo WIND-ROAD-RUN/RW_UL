@@ -56,6 +56,10 @@ namespace rw {
 			CameraPassiveObject* _cameraObject;
 		private slots:
 			void onFrameCaptured(cv::Mat frame);
+		public:
+			void setOutTriggerConfig(const OutTriggerConfig& config);
+			void outTrigger();
+			void outTrigger(bool isOpen);
 		};
 	} // namespace rqw
 } // namespace rw

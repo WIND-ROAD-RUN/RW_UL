@@ -49,9 +49,9 @@ namespace rw {
 			CameraTriggerMode getMonitorMode() override;
 			size_t getTriggerLine() override;
 		public:
-			void setOutTriggerConfig(const OutTriggerConfig & config);
-			void outTrigger();
-			void outTrigger(bool isOpen);
+			void setOutTriggerConfig(const OutTriggerConfig & config) override;
+			void outTrigger() override;
+			void outTrigger(bool isOpen) override;
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

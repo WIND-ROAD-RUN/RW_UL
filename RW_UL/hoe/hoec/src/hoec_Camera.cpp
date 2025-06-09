@@ -142,6 +142,21 @@ namespace rw {
 			_cameraActive = nullptr;
 		}
 
+		void CameraActive::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			_camera->setOutTriggerConfig(config);
+		}
+
+		void CameraActive::outTrigger()
+		{
+			_camera->outTrigger();
+		}
+
+		void CameraActive::outTrigger(bool isOpen)
+		{
+			_camera->outTrigger(isOpen);
+		}
+
 		void CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -254,6 +269,21 @@ namespace rw {
 				_camera = nullptr;
 			}
 			_cameraPassive = nullptr;
+		}
+
+		void CameraPassive::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			_camera->setOutTriggerConfig(config);
+		}
+
+		void CameraPassive::outTrigger()
+		{
+			_camera->outTrigger();
+		}
+
+		void CameraPassive::outTrigger(bool isOpen)
+		{
+			_camera->outTrigger(isOpen);
 		}
 	}
 }
