@@ -41,15 +41,15 @@ namespace rw {
 			float getHeartbeatTime() override;
 			void setExposureTime(size_t value) override;
 			void setGain(size_t value) override;
-			void setIOTime(size_t value) override;
 			void setTriggerMode(CameraTriggerMode mode) override;
-			void setTriggerLine(size_t lineIndex) override;
+			void setInTriggerLine(size_t lineIndex) override;
 		public:
 			size_t getExposureTime() override;
 			size_t getGain() override;
-			size_t getIOTime() override;
 			CameraTriggerMode getMonitorMode() override;
 			size_t getTriggerLine() override;
+		public:
+
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

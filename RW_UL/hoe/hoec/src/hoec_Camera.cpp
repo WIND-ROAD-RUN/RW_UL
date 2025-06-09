@@ -76,19 +76,14 @@ namespace rw {
 			_camera->setGain(value);
 		}
 
-		void CameraActive::setIOTime(size_t value)
-		{
-			_camera->setIOTime(value);
-		}
-
 		void CameraActive::setTriggerMode(CameraTriggerMode mode)
 		{
 			_camera->setTriggerMode(mode);
 		}
 
-		void CameraActive::setTriggerLine(size_t lineIndex)
+		void CameraActive::setInTriggerLine(size_t lineIndex)
 		{
-			_camera->setTriggerLine(lineIndex);
+			_camera->setInTriggerLine(lineIndex);
 		}
 
 		size_t CameraActive::getExposureTime()
@@ -99,11 +94,6 @@ namespace rw {
 		size_t CameraActive::getGain()
 		{
 			return _camera->getGain();
-		}
-
-		size_t CameraActive::getIOTime()
-		{
-			return _camera->getIOTime();
 		}
 
 		CameraTriggerMode CameraActive::getMonitorMode()
@@ -204,19 +194,14 @@ namespace rw {
 			_camera->setGain(value);
 		}
 
-		void CameraPassive::setIOTime(size_t value)
-		{
-			_camera->setIOTime(value);
-		}
-
 		void CameraPassive::setTriggerMode(CameraTriggerMode mode)
 		{
 			_camera->setTriggerMode(mode);
 		}
 
-		void CameraPassive::setTriggerLine(size_t lineIndex)
+		void CameraPassive::setInTriggerLine(size_t lineIndex)
 		{
-			_camera->setTriggerLine(lineIndex);
+			_camera->setInTriggerLine(lineIndex);
 		}
 
 		size_t CameraPassive::getExposureTime()
@@ -227,11 +212,6 @@ namespace rw {
 		size_t CameraPassive::getGain()
 		{
 			return _camera->getGain();
-		}
-
-		size_t CameraPassive::getIOTime()
-		{
-			return _camera->getIOTime();
 		}
 
 		CameraTriggerMode CameraPassive::getMonitorMode()

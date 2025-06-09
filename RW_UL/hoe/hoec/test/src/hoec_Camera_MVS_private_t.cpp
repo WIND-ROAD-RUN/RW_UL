@@ -292,7 +292,7 @@ namespace  hoec_Camera_MVS
 			{
 				cameraActive.setExposureTime(2000);
 				cameraActive.setGain(10);
-				cameraActive.setTriggerLine(0);
+				cameraActive.setInTriggerLine(0);
 				//cameraActive.setIOTime(2000); //实现还有问题
 				cameraActive.setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 			}
@@ -366,7 +366,7 @@ namespace  hoec_Camera_MVS
 			{
 				cameraPassive.setExposureTime(2000);
 				cameraPassive.setGain(10);
-				cameraPassive.setTriggerLine(0);
+				cameraPassive.setInTriggerLine(0);
 				//cameraActive.setIOTime(2000); //实现还有问题
 				cameraPassive.setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 			}

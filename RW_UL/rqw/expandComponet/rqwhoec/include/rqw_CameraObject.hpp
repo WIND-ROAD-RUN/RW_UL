@@ -42,14 +42,12 @@ namespace rw {
 			float getFrameRate() const;
 			void setExposureTime(size_t value) const;
 			void setGain(size_t value) const;
-			void setIOTime(size_t value) const;
 			void setTriggerMode(CameraObjectTrigger mode) const;
 			void setTriggerLine(size_t lineIndex)const;
 		public:
 			//TODO: Add more functions
 			[[nodiscard]] size_t getExposureTime() const;
 			[[nodiscard]] size_t getGain() const;
-			[[nodiscard]] size_t getIOTime() const;
 			[[nodiscard]] CameraObjectTrigger getMonitorMode() const;
 			[[nodiscard]] size_t getTriggerLine() const;
 		public:

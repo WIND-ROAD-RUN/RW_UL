@@ -270,16 +270,6 @@ namespace rw {
 			throw CameraSettingError("Failed to set gain");
 		}
 
-		void Camera_MVS::setIOTime(size_t value)
-		{
-			auto result = MV_CC_SetIntValue(m_cameraHandle, "LineDebouncerTime ", value);
-			if (result == MV_OK)
-			{
-				return;
-			}
-			throw CameraSettingError("Failed to set I/OTime");
-		}
-
 		size_t Camera_MVS::getExposureTime()
 		{
 			MVCC_FLOATVALUE exposureTime;
@@ -302,19 +292,6 @@ namespace rw {
 			}
 
 			throw CameraRetrievalError("Failed to get gain");
-		}
-
-		size_t Camera_MVS::getIOTime()
-		{
-			//TODO::获取IO时间
-			MVCC_INTVALUE ioTime;
-			memset(&ioTime, 0, sizeof(MVCC_INTVALUE));
-			auto result = MV_CC_GetIntValue(m_cameraHandle, "Gain", &ioTime);
-			if (result == MV_OK) {
-				return size_t();
-			}
-
-			throw CameraRetrievalError("Failed to get ioTime");
 		}
 
 		CameraTriggerMode Camera_MVS::getMonitorMode() {
@@ -348,7 +325,7 @@ namespace rw {
 			}
 		}
 
-		void Camera_MVS::setTriggerLine(size_t lineIndex)
+		void Camera_MVS::setInTriggerLine(size_t lineIndex)
 		{
 			unsigned int lineValue = static_cast <unsigned int> (lineIndex);
 			if (MV_CC_SetTriggerSource(m_cameraHandle, lineValue) == MV_OK)

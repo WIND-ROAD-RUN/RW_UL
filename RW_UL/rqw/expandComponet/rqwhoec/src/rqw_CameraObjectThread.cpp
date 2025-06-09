@@ -126,13 +126,6 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setIOTime(size_t value) const
-		{
-			if (_cameraObject)
-			{
-				_cameraObject->setIOTime(value);
-			}
-		}
 
 		void CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
 		{
@@ -164,15 +157,6 @@ namespace rw
 			if (_cameraObject)
 			{
 				return _cameraObject->getGain();
-			}
-			return 0;
-		}
-
-		size_t CameraPassiveThread::getIOTime() const
-		{
-			if (_cameraObject)
-			{
-				return _cameraObject->getIOTime();
 			}
 			return 0;
 		}
