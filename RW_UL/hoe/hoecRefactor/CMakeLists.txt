@@ -5,7 +5,7 @@ project(hoecRefactor VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HOEC_PRIVATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/private)
+set(HOEC_REFACTOR_PRIVATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/private)
 set(MVS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/MVS)
 
 find_package(OpenCV REQUIRED)
@@ -13,14 +13,14 @@ find_package(OpenCV REQUIRED)
 FIND_SOURCES_AND_HEADERS(SRC_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/include 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${HOEC_PRIVATE_PATH}/include
-    ${HOEC_PRIVATE_PATH}/src
+    ${HOEC_REFACTOR_PRIVATE_PATH}/include
+    ${HOEC_REFACTOR_PRIVATE_PATH}/src
 )
 
 group_sources_and_headers(
 	"Private"
-	${HOEC_PRIVATE_PATH}/include
-	${HOEC_PRIVATE_PATH}/src
+	${HOEC_REFACTOR_PRIVATE_PATH}/include
+	${HOEC_REFACTOR_PRIVATE_PATH}/src
 )
 
 group_interface_sources_and_headers(

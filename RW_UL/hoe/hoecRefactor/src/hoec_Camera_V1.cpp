@@ -47,7 +47,7 @@ namespace rw
 			return _camera->setHeartbeatTime(heartBeatTime);
 		}
 
-		float CameraActive::getHeartbeatTime(bool& isGet)
+		size_t CameraActive::getHeartbeatTime(bool& isGet)
 		{
 			return _camera->getHeartbeatTime(isGet);
 		}
@@ -181,7 +181,7 @@ namespace rw
 			return _camera->setHeartbeatTime(heartBeatTime);
 		}
 
-		float CameraPassive::getHeartbeatTime(bool& isGet)
+		size_t CameraPassive::getHeartbeatTime(bool& isGet)
 		{
 			return _camera->getHeartbeatTime(isGet);
 		}
@@ -242,9 +242,9 @@ namespace rw
 			return _camera->getTriggerLine(isGet);
 		}
 
-		void CameraPassive::RegisterCallBackFunc()
+		bool CameraPassive::RegisterCallBackFunc()
 		{
-			_cameraPassive->RegisterCallBackFunc();
+			return _cameraPassive->RegisterCallBackFunc();
 		}
 
 		void CameraPassive::setCameraProvider(CameraProvider provider)

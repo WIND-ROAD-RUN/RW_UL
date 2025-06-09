@@ -38,7 +38,7 @@ namespace rw
 		public:
 			virtual bool setHeartbeatTime(size_t heartBeatTime) = 0;
 
-			virtual float getHeartbeatTime(bool& isGet) = 0;
+			virtual size_t getHeartbeatTime(bool& isGet) = 0;
 
 			virtual bool setFrameRate(float cameraFrameRate) = 0;
 			virtual float getFrameRate(bool& isGet) = 0;
@@ -78,7 +78,7 @@ namespace rw
 		public:
 			using UserToCallBack = std::function<void(cv::Mat)>;
 		public:
-			virtual void RegisterCallBackFunc() = 0;
+			virtual bool RegisterCallBackFunc() = 0;
 		};
 
 		class CameraActive
@@ -92,7 +92,7 @@ namespace rw
 			bool setFrameRate(float cameraFrameRate) override;
 		public:
 			bool setHeartbeatTime(size_t heartBeatTime)override;
-			float getHeartbeatTime(bool& isGet) override;
+			size_t getHeartbeatTime(bool& isGet) override;
 			float getFrameRate(bool& isGet) override;
 			bool startMonitor() override;
 			bool stopMonitor() override;
@@ -138,7 +138,7 @@ namespace rw
 			bool setFrameRate(float cameraFrameRate) override;
 		public:
 			bool setHeartbeatTime(size_t heartBeatTime)override;
-			float getHeartbeatTime(bool& isGet) override;
+			size_t getHeartbeatTime(bool& isGet) override;
 			float getFrameRate(bool& isGet) override;
 			bool startMonitor() override;
 			bool stopMonitor() override;
@@ -151,7 +151,7 @@ namespace rw
 			CameraTriggerMode getMonitorMode(bool& isGet) override;
 		public:
 			size_t getTriggerLine(bool& isGet) override;
-			void RegisterCallBackFunc() override;
+			bool RegisterCallBackFunc() override;
 		private:
 			CameraProvider _provider;
 		public:
