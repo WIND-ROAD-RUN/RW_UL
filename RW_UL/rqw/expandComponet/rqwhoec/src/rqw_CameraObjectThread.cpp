@@ -21,14 +21,8 @@ namespace rw
 				}
 			}
 			else {
-				try
-				{
-					if (_cameraObject) {
-						delete _cameraObject;
-					}
-				}
-				catch (const std::exception&)
-				{
+				if (_cameraObject) {
+					delete _cameraObject;
 				}
 			}
 		}
