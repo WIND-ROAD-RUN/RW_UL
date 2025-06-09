@@ -1,0 +1,173 @@
+#pragma once
+
+#include"hoec_Camera_utilty_V1.hpp"
+
+namespace rw
+{
+	namespace hoec_v1
+	{
+		class ICamera
+		{
+		protected:
+			CameraInfo _cameraInfo;
+			std::string _ip;
+		public:
+			virtual ~ICamera() = default;
+			ICamera() = default;
+			ICamera(ICamera&&) = delete;
+			ICamera& operator=(ICamera&&) = delete;
+			ICamera(const ICamera&) = delete;
+			ICamera& operator=(const ICamera&) = delete;
+
+		public:
+			void setIP(const std::string& ip);
+			[[nodiscard]] std::string getIP(bool & isGet) const;
+
+		public:
+			virtual bool connectCamera() = 0;
+
+			virtual bool getConnectState(bool& isGet) = 0;
+
+		public:
+			virtual bool startMonitor() = 0;
+			virtual bool stopMonitor() = 0;
+		public:
+			CameraInfo getCameraInfo();
+		protected:
+			void setCameraInfo(const CameraInfo& cameraInfo);
+		public:
+			virtual bool setHeartbeatTime(size_t heartBeatTime) = 0;
+
+			virtual float getHeartbeatTime(bool& isGet) = 0;
+
+			virtual bool setFrameRate(float cameraFrameRate) = 0;
+			virtual float getFrameRate(bool& isGet) = 0;
+
+			virtual bool setExposureTime(size_t value) = 0;
+			virtual bool setGain(size_t value) = 0;
+			virtual bool setTriggerMode(CameraTriggerMode mode) = 0;
+			virtual bool setInTriggerLine(size_t lineIndex) = 0;
+
+		public:
+			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
+			[[nodiscard]] virtual size_t getGain(bool& isGet) = 0;
+			[[nodiscard]] virtual CameraTriggerMode getMonitorMode(bool& isGet) = 0;
+			[[nodiscard]] virtual size_t getTriggerLine(bool& isGet) = 0;
+		public:
+			virtual bool setOutTriggerConfig(const OutTriggerConfig& config) = 0;
+			virtual bool outTrigger() = 0;
+			virtual bool outTrigger(bool isOpen) = 0;
+		};
+
+		class ICameraActive
+		{
+		public:
+			virtual ~ICameraActive() = default;
+		public:
+			[[nodiscard]] virtual cv::Mat getImage(bool& isGet) = 0;
+			[[nodiscard]] virtual cv::Mat getImage() = 0;
+		};
+
+		class ICameraPassive
+		{
+		public:
+			using UserToCallBack = std::function<void(cv::Mat)>;
+		public:
+			virtual ~ICameraPassive() = default;
+
+		public:
+			using UserToCallBack = std::function<void(cv::Mat)>;
+		public:
+			virtual void RegisterCallBackFunc() = 0;
+		};
+
+		class CameraActive
+			:public ICameraActive, public ICamera
+		{
+			friend class CameraFactory;
+		protected:
+			bool connectCamera() override;
+		public:
+			bool getConnectState(bool& isGet)override;
+			bool setFrameRate(float cameraFrameRate) override;
+		public:
+			bool setHeartbeatTime(size_t heartBeatTime)override;
+			float getHeartbeatTime(bool& isGet) override;
+			float getFrameRate(bool& isGet) override;
+			bool startMonitor() override;
+			bool stopMonitor() override;
+			bool setExposureTime(size_t value) override;
+			bool setGain(size_t value) override;
+			bool setTriggerMode(CameraTriggerMode mode) override;
+			bool setInTriggerLine(size_t lineIndex) override;
+			[[nodiscard]] size_t getExposureTime(bool& isGet) override;
+			[[nodiscard]] size_t getGain(bool& isGet) override;
+			[[nodiscard]] CameraTriggerMode getMonitorMode(bool& isGet) override;
+			[[nodiscard]] size_t getTriggerLine(bool& isGet) override;
+		public:
+			[[nodiscard]] cv::Mat getImage(bool& isGet) override;
+			[[nodiscard]] cv::Mat getImage() override;
+		private:
+			CameraProvider _provider;
+		public:
+			void setCameraProvider(CameraProvider provider);
+			CameraProvider getCameraProvider() const;
+		private:
+			ICamera* _camera{ nullptr };
+			ICameraActive* _cameraActive{ nullptr };
+		public:
+			CameraActive(ICamera* camera, ICameraActive* cameraActive);
+		public:
+			~CameraActive() override;
+		public:
+			virtual bool setOutTriggerConfig(const OutTriggerConfig& config) override;
+			virtual bool outTrigger() override;
+			virtual bool outTrigger(bool isOpen)override;
+		};
+
+		class CameraPassive
+			:public ICameraPassive, public ICamera
+		{
+			friend class CameraFactory;
+		public:
+			UserToCallBack _userToCallBack;
+		protected:
+			bool connectCamera() override;
+		public:
+			bool getConnectState(bool& isGet)override;
+			bool setFrameRate(float cameraFrameRate) override;
+		public:
+			bool setHeartbeatTime(size_t heartBeatTime)override;
+			float getHeartbeatTime(bool& isGet) override;
+			float getFrameRate(bool& isGet) override;
+			bool startMonitor() override;
+			bool stopMonitor() override;
+			bool setExposureTime(size_t value) override;
+			bool setGain(size_t value) override;
+			bool setTriggerMode(CameraTriggerMode mode) override;
+			bool setInTriggerLine(size_t lineIndex) override;
+			size_t getExposureTime(bool& isGet) override;
+			size_t getGain(bool& isGet) override;
+			CameraTriggerMode getMonitorMode(bool& isGet) override;
+		public:
+			size_t getTriggerLine(bool& isGet) override;
+			void RegisterCallBackFunc() override;
+		private:
+			CameraProvider _provider;
+		public:
+			void setCameraProvider(CameraProvider provider);
+			CameraProvider getCameraProvider() const;
+		private:
+			ICamera* _camera{ nullptr };
+			ICameraPassive* _cameraPassive{ nullptr };
+		public:
+			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack);
+		public:
+			~CameraPassive() override;
+		public:
+			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
+			bool outTrigger() override;
+			bool outTrigger(bool isOpen)override;
+		};
+	}
+}
