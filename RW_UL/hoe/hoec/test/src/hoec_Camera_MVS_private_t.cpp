@@ -658,7 +658,8 @@ namespace  hoec_Camera_MVS
 			config.strobeEnable = true;
 			cameraPassive.setOutTriggerConfig(config);
 
-			cameraPassive.outTriggerOut();
+			cameraPassive.outTrigger();
+			cameraPassive.outTrigger(true);
 		}
 
 		SUCCEED();

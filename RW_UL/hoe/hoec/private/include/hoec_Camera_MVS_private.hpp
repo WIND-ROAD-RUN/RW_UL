@@ -50,7 +50,8 @@ namespace rw {
 			size_t getTriggerLine() override;
 		public:
 			void setOutTriggerConfig(const OutTriggerConfig & config);
-			void outTriggerOut();
+			void outTrigger();
+			void outTrigger(bool isOpen);
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

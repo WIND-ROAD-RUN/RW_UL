@@ -363,9 +363,14 @@ namespace rw {
 			MV_CC_SetIntValue(m_cameraHandle, "StrobeLinePreDelay", config.preDelayValue);
 		}
 
-		void Camera_MVS::outTriggerOut()
+		void Camera_MVS::outTrigger()
 		{
 			MV_CC_SetCommandValue(m_cameraHandle, "LineTriggerSoftware");
+		}
+
+		void Camera_MVS::outTrigger(bool isOpen)
+		{
+			MV_CC_SetBoolValue(m_cameraHandle, "LineInverter", isOpen); 
 		}
 
 		Camera_MVS_Active::Camera_MVS_Active()
