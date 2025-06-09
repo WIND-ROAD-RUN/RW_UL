@@ -244,7 +244,7 @@ namespace  hoec_CameraFactory
 					cameraActive->setExposureTime(1000);
 					cameraActive->setGain(10);
 					//cameraActive->setIOTime(1000);
-					cameraActive->setTriggerLine(0);
+					cameraActive->setInTriggerLine(0);
 					cameraActive->setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 				}
 				catch (const CameraSettingError& e)
@@ -296,7 +296,7 @@ namespace  hoec_CameraFactory
 					cameraPassive->setExposureTime(1000);
 					cameraPassive->setGain(10);
 					//cameraPassive->setIOTime(1000);
-					cameraPassive->setTriggerLine(0);
+					cameraPassive->setInTriggerLine(0);
 					cameraPassive->setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 				}
 				catch (const CameraSettingError& e)

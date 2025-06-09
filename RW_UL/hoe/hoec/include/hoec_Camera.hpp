@@ -13,6 +13,18 @@ namespace rw
 	{
 		class CameraFactory;
 
+		struct OutTriggerConfig
+		{
+		public:
+			size_t lineSelector{ 0 };
+			size_t lineMode{ 0 };
+			size_t lineSource{ 0 };
+			long durationValue{ 0 };
+			size_t delayValue{ 0 };
+			size_t preDelayValue{ 0 };
+			bool strobeEnable = false;
+		};
+
 		struct CameraInfo
 		{
 			std::string ip;
@@ -271,21 +283,6 @@ namespace rw
 
 			/**
 			 *@Parameters:
-			 *  - value: The value of the IO time you want to set.
-			 *@Methods:
-			 *  Set the IO time of the camera.
-			 *@Returns: bool
-			 *  If set the IO time successfully, return true,otherwise return false.
-			 *@Throws:
-			 *  CameraSettingError: If failed to set the IO time, throw the CameraSettingError.
-			 *  Below is the reason:
-			 *      - Failed to set IO time
-			 *
-			 */
-			virtual void setIOTime(size_t value) = 0;
-
-			/**
-			 *@Parameters:
 			 *  - mode: The mode of the camera monitor you want to set.
 			 *      type: CameraMonitorMode
 			 *@Methods:
@@ -313,7 +310,7 @@ namespace rw
 			 *      - Failed to set trigger line
 			 *
 			 */
-			virtual void setTriggerLine(size_t lineIndex) = 0;
+			virtual void setInTriggerLine(size_t lineIndex) = 0;
 
 		public:
 
@@ -350,20 +347,6 @@ namespace rw
 			 *@Parameters:
 			 *  void
 			 *@Methods:
-			 *  Get the IO time of the camera.
-			 *@Returns: void
-			 *
-			 *@Throws:
-			 *  CameraRetrievalError: If failed to get the IO time, throw the CameraRetrievalError.
-			 *  Below is the reason:
-			 *      - Failed to get IO time
-			 */
-			[[nodiscard]] virtual size_t getIOTime() = 0;
-
-			/**
-			 *@Parameters:
-			 *  void
-			 *@Methods:
 			 *  Get the monitor mode of the camera.
 			 *@Returns: void
 			 *
@@ -387,6 +370,10 @@ namespace rw
 			 *
 			 */
 			[[nodiscard]] virtual size_t getTriggerLine() = 0;
+		public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config)=0 ;
+			virtual void outTrigger() =0;
+			virtual void outTrigger(bool isOpen) =0;
 		};
 
 		class ICameraActive
@@ -428,7 +415,6 @@ namespace rw
 			virtual ~ICameraPassive() = default;
 
 		public:
-
 			/**
 			 * @brief User defined callback function
 			 *
@@ -467,12 +453,10 @@ namespace rw
 			void stopMonitor() override;
 			void setExposureTime(size_t value) override;
 			void setGain(size_t value) override;
-			void setIOTime(size_t value) override;
 			void setTriggerMode(CameraTriggerMode mode) override;
-			void setTriggerLine(size_t lineIndex) override;
+			void setInTriggerLine(size_t lineIndex) override;
 			[[nodiscard]] size_t getExposureTime() override;
 			[[nodiscard]] size_t getGain() override;
-			[[nodiscard]] size_t getIOTime() override;
 			[[nodiscard]] CameraTriggerMode getMonitorMode() override;
 			[[nodiscard]] size_t getTriggerLine() override;
 		public:
@@ -490,6 +474,10 @@ namespace rw
 			CameraActive(ICamera* camera, ICameraActive* cameraActive);
 		public:
 			~CameraActive() override;
+		public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
+			virtual void outTrigger() override;
+			virtual void outTrigger(bool isOpen)override ;
 		};
 
 		class CameraPassive
@@ -511,12 +499,10 @@ namespace rw
 			void stopMonitor() override;
 			void setExposureTime(size_t value) override;
 			void setGain(size_t value) override;
-			void setIOTime(size_t value) override;
 			void setTriggerMode(CameraTriggerMode mode) override;
-			void setTriggerLine(size_t lineIndex) override;
+			void setInTriggerLine(size_t lineIndex) override;
 			size_t getExposureTime() override;
 			size_t getGain() override;
-			size_t getIOTime() override;
 			CameraTriggerMode getMonitorMode() override;
 		public:
 			size_t getTriggerLine() override;
@@ -533,6 +519,10 @@ namespace rw
 			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack);
 		public:
 			~CameraPassive() override;
+			public:
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
+			virtual void outTrigger() override;
+			virtual void outTrigger(bool isOpen)override ;
 		};
 	}
 }

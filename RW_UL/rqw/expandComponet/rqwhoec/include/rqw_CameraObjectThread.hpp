@@ -38,14 +38,12 @@ namespace rw {
 			float getFrameRate() const;
 			void setExposureTime(size_t value) const;
 			void setGain(size_t value) const;
-			void setIOTime(size_t value) const;
 			void setTriggerMode(CameraObjectTrigger mode) const;
 			void setTriggerLine(size_t lineIndex)const;
 		public:
 			//TODO: Add more functions
 			[[nodiscard]] size_t getExposureTime() const;
 			[[nodiscard]] size_t getGain() const;
-			[[nodiscard]] size_t getIOTime() const;
 			[[nodiscard]] CameraObjectTrigger getMonitorMode() const;
 			[[nodiscard]] size_t getTriggerLine() const;
 
@@ -58,6 +56,10 @@ namespace rw {
 			CameraPassiveObject* _cameraObject;
 		private slots:
 			void onFrameCaptured(cv::Mat frame);
+		public:
+			void setOutTriggerConfig(const OutTriggerConfig& config);
+			void outTrigger();
+			void outTrigger(bool isOpen);
 		};
 	} // namespace rqw
 } // namespace rw

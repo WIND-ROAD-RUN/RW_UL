@@ -54,11 +54,6 @@ namespace rw
 			_cameraPassive->setGain(value);
 		}
 
-		void CameraPassiveObject::setIOTime(size_t value) const
-		{
-			_cameraPassive->setIOTime(value);
-		}
-
 		void CameraPassiveObject::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			hoec::CameraTriggerMode hoecTrigger;
@@ -75,7 +70,7 @@ namespace rw
 
 		void CameraPassiveObject::setTriggerLine(size_t lineIndex) const
 		{
-			_cameraPassive->setTriggerLine(lineIndex);
+			_cameraPassive->setInTriggerLine(lineIndex);
 		}
 
 		size_t CameraPassiveObject::getExposureTime() const
@@ -88,10 +83,6 @@ namespace rw
 			return _cameraPassive->getGain();
 		}
 
-		size_t CameraPassiveObject::getIOTime() const
-		{
-			return _cameraPassive->getIOTime();
-		}
 
 		CameraObjectTrigger CameraPassiveObject::getMonitorMode() const
 		{
@@ -141,6 +132,35 @@ namespace rw
 				return _cameraPassive->getConnectState();
 			}
 			return false;
+		}
+
+		void CameraPassiveObject::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (_cameraPassive) {
+				rw::hoec::OutTriggerConfig configHoec;
+				configHoec.delayValue = config.delayValue;
+				configHoec.strobeEnable = config.strobeEnable;
+				configHoec.durationValue = config.durationValue;
+				configHoec.lineMode = config.lineMode;
+				configHoec.lineSelector = config.lineSelector;
+				configHoec.lineSource = config.lineSource;
+				configHoec.preDelayValue = config.preDelayValue;
+				_cameraPassive->setOutTriggerConfig(configHoec);
+			}
+		}
+
+		void CameraPassiveObject::outTrigger()
+		{
+			if (_cameraPassive) {
+				_cameraPassive->outTrigger();
+			}
+		}
+
+		void CameraPassiveObject::outTrigger(bool isOpen)
+		{
+			if (_cameraPassive) {
+				_cameraPassive->outTrigger(isOpen);
+			}
 		}
 	} // namespace rqw
 } // namespace rw

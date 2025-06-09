@@ -126,13 +126,6 @@ namespace rw
 			}
 		}
 
-		void CameraPassiveThread::setIOTime(size_t value) const
-		{
-			if (_cameraObject)
-			{
-				_cameraObject->setIOTime(value);
-			}
-		}
 
 		void CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
 		{
@@ -168,15 +161,6 @@ namespace rw
 			return 0;
 		}
 
-		size_t CameraPassiveThread::getIOTime() const
-		{
-			if (_cameraObject)
-			{
-				return _cameraObject->getIOTime();
-			}
-			return 0;
-		}
-
 		CameraObjectTrigger CameraPassiveThread::getMonitorMode() const
 		{
 			if (_cameraObject)
@@ -203,6 +187,30 @@ namespace rw
 		void CameraPassiveThread::onFrameCaptured(cv::Mat frame)
 		{
 			emit frameCaptured(std::move(frame), cameraIndex);
+		}
+
+		void CameraPassiveThread::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (_cameraObject)
+			{
+				 _cameraObject->setOutTriggerConfig(config);
+			}
+		}
+
+		void CameraPassiveThread::outTrigger()
+		{
+			if (_cameraObject)
+			{
+				_cameraObject->outTrigger();
+			}
+		}
+
+		void CameraPassiveThread::outTrigger(bool isOpen)
+		{
+			if (_cameraObject)
+			{
+				_cameraObject->outTrigger(isOpen);
+			}
 		}
 	} // namespace rqw
 } // namespace rw

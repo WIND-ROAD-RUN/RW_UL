@@ -292,7 +292,7 @@ namespace  hoec_Camera_MVS
 			{
 				cameraActive.setExposureTime(2000);
 				cameraActive.setGain(10);
-				cameraActive.setTriggerLine(0);
+				cameraActive.setInTriggerLine(0);
 				//cameraActive.setIOTime(2000); //实现还有问题
 				cameraActive.setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 			}
@@ -366,7 +366,7 @@ namespace  hoec_Camera_MVS
 			{
 				cameraPassive.setExposureTime(2000);
 				cameraPassive.setGain(10);
-				cameraPassive.setTriggerLine(0);
+				cameraPassive.setInTriggerLine(0);
 				//cameraActive.setIOTime(2000); //实现还有问题
 				cameraPassive.setTriggerMode(CameraTriggerMode::SoftwareTriggered);
 			}
@@ -594,6 +594,72 @@ namespace  hoec_Camera_MVS
 		{
 			std::cout << e.what() << '\n';
 			FAIL();
+		}
+
+		SUCCEED();
+	}
+
+	TEST(hoec_Camera_MVS, setOutTriggerConfig) {
+		auto ipList = Camera_MVS::getCameraIpList();
+		if (ipList.size() == 0)
+		{
+			std::cout << "Please connect the camera before test" << '\n';
+			SUCCEED();
+			return;
+		}
+
+		std::cout << "Will test camera by one" << '\n';
+		{
+			Camera_MVS_Active cameraActive;
+			cameraActive.setIP(ipList[0]);
+
+			try
+			{
+				cameraActive.connectCamera();
+			}
+			catch (const CameraConnectionError& e)
+			{
+				std::cout << e.what() << '\n';
+				FAIL();
+			}
+
+			auto cameraInfo = cameraActive.getCameraInfo();
+			std::cout << cameraInfo.ip << '\n';
+			std::cout << cameraInfo.name << '\n';
+			std::cout << cameraInfo.mac << '\n';
+		}
+
+		{
+			Camera_MVS_Passive cameraPassive;
+			cameraPassive.setIP(ipList[0]);
+
+			try
+			{
+				cameraPassive.connectCamera();
+			}
+			catch (const CameraConnectionError& e)
+			{
+				std::cout << e.what() << '\n';
+				FAIL();
+			}
+
+			auto cameraInfo = cameraPassive.getCameraInfo();
+			std::cout << cameraInfo.ip << '\n';
+			std::cout << cameraInfo.name << '\n';
+			std::cout << cameraInfo.mac << '\n';
+
+			OutTriggerConfig config;
+			config.lineSelector = 2;
+			config.lineMode = 8;
+			config.lineSource = 5;
+			config.durationValue = 1000 * 1000;
+			config.delayValue = 0;
+			config.preDelayValue = 0;
+			config.strobeEnable = true;
+			cameraPassive.setOutTriggerConfig(config);
+
+			cameraPassive.outTrigger();
+			cameraPassive.outTrigger(true);
 		}
 
 		SUCCEED();

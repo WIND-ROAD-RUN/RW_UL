@@ -10,6 +10,18 @@ namespace rw {
 	}
 
 	namespace rqw {
+		struct OutTriggerConfig
+		{
+		public:
+			size_t lineSelector{ 0 };
+			size_t lineMode{ 0 };
+			size_t lineSource{ 0 };
+			long durationValue{ 0 };
+			size_t delayValue{ 0 };
+			size_t preDelayValue{ 0 };
+			bool strobeEnable = false;
+		};
+
 		struct CameraMetaData
 		{
 			QString ip{ "Undefined" };
