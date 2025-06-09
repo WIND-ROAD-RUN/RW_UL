@@ -61,7 +61,7 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 }
 
 ImageProcessorZipper::ImageProcessorZipper(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
-	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex){
+	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
 
 }
 
@@ -101,9 +101,9 @@ void ImageProcessorZipper::run()
 		case RunningState::OpenRemoveFunc:
 			run_OpenRemoveFunc(frame);
 			break;
-		/*case RunningState::Monitor:
-			run_monitor(frame);
-			break;*/
+			/*case RunningState::Monitor:
+				run_monitor(frame);
+				break;*/
 		default:
 			break;
 		}
@@ -302,7 +302,17 @@ void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame
 
 	if (_isbad)
 	{
-
+		switch (imageProcessingModuleIndex)
+		{
+		case 1:
+			globalStruct.priorityQueue1->insert(frame.time, frame.time);
+			break;
+		case 2:
+			globalStruct.priorityQueue2->insert(frame.time, frame.time);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -357,8 +367,8 @@ void ImageProcessorZipper::save_image_work(rw::rqw::ImageInfo& imageInfo, const 
 }
 
 void ImageProcessorZipper::getEliminationInfo_debug(ZipperDefectInfo& info,
-                                              const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
-                                              const cv::Mat& mat)
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
 {
 	getQueyaInfo(info, processResult, index[ClassId::Queya]);
 	getTangshangInfo(info, processResult, index[ClassId::Tangshang]);
@@ -366,8 +376,8 @@ void ImageProcessorZipper::getEliminationInfo_debug(ZipperDefectInfo& info,
 }
 
 void ImageProcessorZipper::getEliminationInfo_defect(ZipperDefectInfo& info,
-                                               const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
-                                               const cv::Mat& mat)
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
 {
 	getQueyaInfo(info, processResult, index[ClassId::Queya]);
 	getTangshangInfo(info, processResult, index[ClassId::Tangshang]);
@@ -375,7 +385,7 @@ void ImageProcessorZipper::getEliminationInfo_defect(ZipperDefectInfo& info,
 }
 
 void ImageProcessorZipper::getQueyaInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
-                                  const std::vector<size_t>& processIndex)
+	const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
 	{
@@ -414,7 +424,7 @@ void ImageProcessorZipper::getQueyaInfo(ZipperDefectInfo& info, const std::vecto
 }
 
 void ImageProcessorZipper::getTangshangInfo(ZipperDefectInfo& info,
-                                      const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
 	{
@@ -451,7 +461,7 @@ void ImageProcessorZipper::getTangshangInfo(ZipperDefectInfo& info,
 }
 
 void ImageProcessorZipper::getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult,
-                                   const std::vector<size_t>& processIndex)
+	const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
 	{
@@ -756,7 +766,7 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 	config.thickness = 3;
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-	
+
 	// 缺牙
 	for (const auto& item : info.queYaList)
 	{
@@ -873,7 +883,7 @@ void ImageProcessingModuleZipper::BuildModule()
 }
 
 ImageProcessingModuleZipper::ImageProcessingModuleZipper(int numConsumers, QObject* parent)
-	: QObject(parent), _numConsumers(numConsumers){
+	: QObject(parent), _numConsumers(numConsumers) {
 
 }
 

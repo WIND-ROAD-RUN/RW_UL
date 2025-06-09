@@ -22,6 +22,10 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	// 构建UI
 	build_ui();
 
+	// 构建优先队列
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.build_PriorityQueue();
+
 	// 构建图像处理模块
 	build_imageProcessorModule();
 

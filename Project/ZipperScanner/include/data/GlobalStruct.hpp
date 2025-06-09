@@ -13,6 +13,8 @@
 #include "ZipperScannerDlgExposureTimeSet.hpp"
 #include "ImageProcessorModule.h"
 
+#include"dsl_PriorityQueue.hpp"
+
 
 // ×´Ì¬»ú
 enum class RunningState
@@ -29,10 +31,18 @@ enum class LightLevel {
 	WeakLight
 };
 
+using Time = std::chrono::system_clock::time_point;
+
 class GlobalStructDataZipper
 	:public QObject
 {
 	Q_OBJECT
+public:
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
+public:
+	void build_PriorityQueue();
+
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
 	std::atomic<bool> debug_isDisplayRec{ true };
