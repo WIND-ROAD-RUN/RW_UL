@@ -13,6 +13,18 @@ namespace rw
 	{
 		class CameraFactory;
 
+		struct OutTriggerConfig
+		{
+		public:
+			size_t lineSelector{0};
+			size_t lineMode{ 0 };
+			size_t lineSource{0};
+			long durationValue{0};
+			size_t delayValue{ 0 };
+			size_t preDelayValue{0};
+			bool strobeEnable = false;
+		};
+
 		struct CameraInfo
 		{
 			std::string ip;
@@ -399,7 +411,6 @@ namespace rw
 			virtual ~ICameraPassive() = default;
 
 		public:
-
 			/**
 			 * @brief User defined callback function
 			 *

@@ -348,6 +348,26 @@ namespace rw {
 			throw CameraRetrievalError("Failed to get trigger line");
 		}
 
+		void Camera_MVS::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (!config.strobeEnable)
+			{
+				MV_CC_SetBoolValue(m_cameraHandle, "StrobeEnable", config.strobeEnable);
+				return;
+			}
+			MV_CC_SetEnumValue(m_cameraHandle, "LineSelector", config.lineSelector);
+			MV_CC_SetEnumValue(m_cameraHandle, "LineMode", config.lineMode);
+			MV_CC_SetEnumValue(m_cameraHandle, "LineSource", config.lineSource);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLineDuration", config.durationValue);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLineDelay", config.delayValue);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLinePreDelay", config.preDelayValue);
+		}
+
+		void Camera_MVS::outTriggerOut()
+		{
+			MV_CC_SetCommandValue(m_cameraHandle, "LineTriggerSoftware");
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}
