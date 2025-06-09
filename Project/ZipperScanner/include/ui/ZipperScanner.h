@@ -42,6 +42,7 @@ public :
 	void build_DlgExposureTimeSet();
 
 	void build_imageProcessorModule();
+	void build_imageSaveEngine();
 
 public:
 	void destroyComponents();

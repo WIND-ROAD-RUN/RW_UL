@@ -26,6 +26,9 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	globalStruct.build_PriorityQueue();
 
+	// 构建图像保存引擎
+	build_imageSaveEngine();
+
 	// 构建图像处理模块
 	build_imageProcessorModule();
 
@@ -147,6 +150,9 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->ckb_wenzi->setChecked(true);
 
 	globalStruct.buildImageSaveEngine();
+
+	// 初始化图像查看器
+	_picturesViewer = new PictureViewerThumbnails(this);
 }
 
 // 通过实现DlgProductSet的构造函数进行初始化
@@ -187,6 +193,23 @@ void ZipperScanner::build_imageProcessorModule()
 	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleZipper::imageReady, this, &ZipperScanner::onCamera1Display);
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleZipper::imageReady, this, &ZipperScanner::onCamera2Display);
 
+}
+
+void ZipperScanner::build_imageSaveEngine()
+{
+	QDir dir;
+	QString imageSavePath = globalPath.imageSaveRootPath;
+	//清理旧的数据
+
+	//获取当前日期并设置保存路径
+	QString currentDate = QDate::currentDate().toString("yyyy_MM_dd");
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.buildImageSaveEngine();
+	QString imageSaveEnginePath = imageSavePath + currentDate;
+
+	QString imagesFilePathFilePathFull = dir.absoluteFilePath(imageSaveEnginePath);
+	globalStruct.imageSaveEngine->setRootPath(imagesFilePathFilePathFull);
+	globalStruct.imageSaveEngine->startEngine();
 }
 
 void ZipperScanner::destroyComponents()
