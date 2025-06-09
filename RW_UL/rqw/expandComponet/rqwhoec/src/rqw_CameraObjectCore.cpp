@@ -1,7 +1,7 @@
 #include"rqw_CameraObjectCore.hpp"
 
-#include"hoec_CameraFactory.hpp"
-#include"hoec_Camera.hpp"
+#include"hoec_CameraFactory_v1.hpp"
+#include"hoec_Camera_v1.hpp"
 
 namespace rw
 {
@@ -9,13 +9,13 @@ namespace rw
 	{
 		QVector<CameraMetaData> CheckCameraList()
 		{
-			auto stdCameraIpList = hoec::CameraFactory::checkAllCamera();
+			auto stdCameraIpList = hoec_v1::CameraFactory::checkAllCamera();
 			QVector<CameraMetaData> cameraIpList;
 			for (auto& cameraIp : stdCameraIpList)
 			{
 				CameraMetaData cameraMetaData;
 				cameraMetaData.ip = QString::fromStdString(cameraIp.ip);
-				cameraMetaData.provider = QString::fromStdString(hoec::to_string(cameraIp.provider));
+				cameraMetaData.provider = QString::fromStdString(hoec_v1::to_string(cameraIp.provider));
 				cameraIpList.push_back(cameraMetaData);
 			}
 

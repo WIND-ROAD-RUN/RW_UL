@@ -42,7 +42,7 @@ demo::demo(QWidget *parent)
 	config.modelPath = R"(C:\Users\zfkj\Desktop\best.engine)";
 	config.nms_threshold = 0.1;
 	config.conf_threshold = 0.1;
-	engine=rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
+	//engine=rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 
 }
 
@@ -57,8 +57,8 @@ void demo::displayImg(cv::Mat frame)
 	{
 		return;
 	}
-	auto result = engine->processImg(frame);
+	//auto result = engine->processImg(frame);
 	auto QImage = cvMatToQImage(frame);
-	rw::rqw::ImagePainter::drawShapesOnSourceImg(QImage, result);
+	//rw::rqw::ImagePainter::drawShapesOnSourceImg(QImage, result);
 	ui->label->setPixmap(QPixmap::fromImage(QImage).scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

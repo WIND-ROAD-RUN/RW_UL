@@ -27,25 +27,30 @@ namespace rw {
 
 			bool getConnectState();
 		public:
-			void startMonitor();
-			void stopMonitor();
+			bool startMonitor();
+			bool stopMonitor();
 
 		public:
-			//TODO: Add more functions
-			void setHeartbeatTime(size_t value) const;
-			void setFrameRate(float value) const;
-			size_t getHeartbeatTime() const;
-			float getFrameRate() const;
-			void setExposureTime(size_t value) const;
-			void setGain(size_t value) const;
-			void setTriggerMode(CameraObjectTrigger mode) const;
-			void setTriggerLine(size_t lineIndex)const;
+			bool setHeartbeatTime(size_t value) const;
+			bool setFrameRate(float value) const;
+			bool setExposureTime(size_t value) const;
+			bool setGain(size_t value) const;
+			bool setTriggerMode(CameraObjectTrigger mode) const;
+			bool setTriggerLine(size_t lineIndex)const;
 		public:
-			//TODO: Add more functions
 			[[nodiscard]] size_t getExposureTime() const;
 			[[nodiscard]] size_t getGain() const;
 			[[nodiscard]] CameraObjectTrigger getMonitorMode() const;
 			[[nodiscard]] size_t getTriggerLine() const;
+			size_t getHeartbeatTime() const;
+			float getFrameRate() const;
+
+			[[nodiscard]] size_t getExposureTime(bool& isGet) const;
+			[[nodiscard]] size_t getGain(bool& isGet) const;
+			[[nodiscard]] CameraObjectTrigger getMonitorMode(bool& isGet) const;
+			[[nodiscard]] size_t getTriggerLine(bool& isGet) const;
+			size_t getHeartbeatTime(bool& isGet) const;
+			float getFrameRate(bool& isGet) const;
 
 		signals:
 			void frameCaptured(cv::Mat frame, size_t index);
@@ -57,9 +62,9 @@ namespace rw {
 		private slots:
 			void onFrameCaptured(cv::Mat frame);
 		public:
-			void setOutTriggerConfig(const OutTriggerConfig& config);
-			void outTrigger();
-			void outTrigger(bool isOpen);
+			bool setOutTriggerConfig(const OutTriggerConfig& config);
+			bool outTrigger();
+			bool outTrigger(bool isOpen);
 		};
 	} // namespace rqw
 } // namespace rw

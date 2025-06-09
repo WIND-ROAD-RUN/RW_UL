@@ -9,7 +9,7 @@
 #include<QObject>
 
 namespace rw {
-	namespace hoec
+	namespace hoec_v1
 	{
 		class CameraPassive;
 	}
@@ -19,7 +19,7 @@ namespace rw {
 		{
 			Q_OBJECT
 		private:
-			std::unique_ptr<hoec::CameraPassive> _cameraPassive;
+			std::unique_ptr<hoec_v1::CameraPassive> _cameraPassive;
 			CameraMetaData _cameraMetaData;
 		public:
 			CameraPassiveObject(const CameraPassiveObject&) = delete;
@@ -30,26 +30,32 @@ namespace rw {
 			CameraPassiveObject(QObject* parent = nullptr);
 			~CameraPassiveObject() override;
 		public:
-			void startMonitor() const;
-			void stopMonitor() const;
+			bool startMonitor() const;
+			bool stopMonitor() const;
 		public:
-			//TODO: Add more functions
-			void setHeartbeatTime(size_t value) const;
-			void setFrameRate(float value) const;
+			bool setHeartbeatTime(size_t value) const;
+			bool setFrameRate(float value) const;
+			bool setExposureTime(size_t value) const;
+			bool setGain(size_t value) const;
+			bool setTriggerMode(CameraObjectTrigger mode) const;
+			bool setTriggerLine(size_t lineIndex)const;
+		public:
+			size_t getHeartbeatTime(bool& isGet) const;
+			float getFrameRate(bool& isGet) const;
+			[[nodiscard]] size_t getExposureTime(bool & isGet) const;
+			[[nodiscard]] size_t getGain(bool& isGet) const;
+			[[nodiscard]] CameraObjectTrigger getMonitorMode(bool& isGet) const;
+			[[nodiscard]] size_t getTriggerLine(bool& isGet) const;
+
 			size_t getHeartbeatTime() const;
 			float getFrameRate() const;
-			void setExposureTime(size_t value) const;
-			void setGain(size_t value) const;
-			void setTriggerMode(CameraObjectTrigger mode) const;
-			void setTriggerLine(size_t lineIndex)const;
-		public:
-			//TODO: Add more functions
 			[[nodiscard]] size_t getExposureTime() const;
 			[[nodiscard]] size_t getGain() const;
 			[[nodiscard]] CameraObjectTrigger getMonitorMode() const;
 			[[nodiscard]] size_t getTriggerLine() const;
 		public:
 			void initCamera(const CameraMetaData& cameraMetaData, CameraObjectTrigger triggerMode);
+			bool getConnectState(bool& isGet);
 			bool getConnectState();
 		public:
 			void setOutTriggerConfig(const OutTriggerConfig& config) ;

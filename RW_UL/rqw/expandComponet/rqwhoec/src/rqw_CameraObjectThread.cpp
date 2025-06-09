@@ -1,7 +1,6 @@
 #include"rqw_CameraObjectThread.hpp"
 
 #include"rqw_CameraObject.hpp"
-#include"hoec_CameraException.hpp"
 
 namespace rw
 {
@@ -54,7 +53,7 @@ namespace rw
 			return _cameraObject->getConnectState();
 		}
 
-		void CameraPassiveThread::startMonitor()
+		bool CameraPassiveThread::startMonitor()
 		{
 			if (!this->isRunning())
 			{
@@ -62,34 +61,35 @@ namespace rw
 			}
 			if (_cameraObject)
 			{
-				_cameraObject->startMonitor();
+				return _cameraObject->startMonitor();
 			}
 		}
 
-		void CameraPassiveThread::stopMonitor()
+		bool CameraPassiveThread::stopMonitor()
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->stopMonitor();
+				return _cameraObject->stopMonitor();
 				delete _cameraObject;
 				_cameraObject = nullptr;
 			}
 		}
 
-		void CameraPassiveThread::setHeartbeatTime(size_t value) const
+		bool CameraPassiveThread::setHeartbeatTime(size_t value) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setHeartbeatTime(value);
+				return _cameraObject->setHeartbeatTime(value);
 			}
 		}
 
-		void CameraPassiveThread::setFrameRate(float value) const
+		bool CameraPassiveThread::setFrameRate(float value) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setFrameRate(value);
+				return _cameraObject->setFrameRate(value);
 			}
+			return false;
 		}
 
 		size_t CameraPassiveThread::getHeartbeatTime() const
@@ -110,37 +110,95 @@ namespace rw
 			return 0;
 		}
 
-		void CameraPassiveThread::setExposureTime(size_t value) const
+		size_t CameraPassiveThread::getExposureTime(bool& isGet) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setExposureTime(value);
+				return _cameraObject->getExposureTime(isGet);
 			}
+			return 0;
 		}
 
-		void CameraPassiveThread::setGain(size_t value) const
+		size_t CameraPassiveThread::getGain(bool& isGet) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setGain(value);
+				return _cameraObject->getGain(isGet);
 			}
+			return 0;
+		}
+
+		CameraObjectTrigger CameraPassiveThread::getMonitorMode(bool& isGet) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getMonitorMode(isGet);
+			}
+			return CameraObjectTrigger::Undefined;
+		}
+
+		size_t CameraPassiveThread::getTriggerLine(bool& isGet) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getTriggerLine(isGet);
+			}
+			return 0;
+		}
+
+		size_t CameraPassiveThread::getHeartbeatTime(bool& isGet) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getHeartbeatTime(isGet);
+			}
+			return 0;
+		}
+
+		float CameraPassiveThread::getFrameRate(bool& isGet) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getFrameRate(isGet);
+			}
+			return 0;
+		}
+
+		bool CameraPassiveThread::setExposureTime(size_t value) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setExposureTime(value);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setGain(size_t value) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setGain(value);
+			}
+			return false;
 		}
 
 
-		void CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
+		bool CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setTriggerMode(mode);
+				return _cameraObject->setTriggerMode(mode);
 			}
+			return false;
 		}
 
-		void CameraPassiveThread::setTriggerLine(size_t lineIndex) const
+		bool CameraPassiveThread::setTriggerLine(size_t lineIndex) const
 		{
 			if (_cameraObject)
 			{
-				_cameraObject->setTriggerLine(lineIndex);
+				return _cameraObject->setTriggerLine(lineIndex);
 			}
+			return false;
 		}
 
 		size_t CameraPassiveThread::getExposureTime() const
@@ -189,28 +247,31 @@ namespace rw
 			emit frameCaptured(std::move(frame), cameraIndex);
 		}
 
-		void CameraPassiveThread::setOutTriggerConfig(const OutTriggerConfig& config)
+		bool CameraPassiveThread::setOutTriggerConfig(const OutTriggerConfig& config)
 		{
 			if (_cameraObject)
 			{
 				 _cameraObject->setOutTriggerConfig(config);
 			}
+			return false;
 		}
 
-		void CameraPassiveThread::outTrigger()
+		bool CameraPassiveThread::outTrigger()
 		{
 			if (_cameraObject)
 			{
 				_cameraObject->outTrigger();
 			}
+			return false;
 		}
 
-		void CameraPassiveThread::outTrigger(bool isOpen)
+		bool CameraPassiveThread::outTrigger(bool isOpen)
 		{
 			if (_cameraObject)
 			{
 				_cameraObject->outTrigger(isOpen);
 			}
+			return false;
 		}
 	} // namespace rqw
 } // namespace rw
