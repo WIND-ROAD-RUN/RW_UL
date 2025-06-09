@@ -44,7 +44,8 @@ namespace rw
 
 		enum class CameraProvider
 		{
-			MVS
+			MVS,
+			DS
 		};
 	}
 }

@@ -6,9 +6,7 @@
 
 #include<opencv2/opencv.hpp>
 
-#include<QVector>
 #include<QObject>
-#include<memory>
 
 namespace rw {
 	namespace hoec

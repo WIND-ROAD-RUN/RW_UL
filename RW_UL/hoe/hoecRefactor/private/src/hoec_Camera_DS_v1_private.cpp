@@ -8,7 +8,7 @@ namespace rw
 {
 	namespace hoec_v1
 	{
-		Camera_DS::Camera_DS()
+		/*Camera_DS::Camera_DS()
 		{
 		}
 
@@ -138,6 +138,6 @@ namespace rw
 
 		void Camera_DS_Passive::ImageCallBackFunc()
 		{
-		}
+		}*/
 	}
 }
