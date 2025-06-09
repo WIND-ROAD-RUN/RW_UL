@@ -145,6 +145,8 @@ void ZipperScanner::build_ZipperScannerData()
 
 	ui->ckb_shibiekuang->setChecked(true);
 	ui->ckb_wenzi->setChecked(true);
+
+	globalStruct.buildImageSaveEngine();
 }
 
 // 通过实现DlgProductSet的构造函数进行初始化
@@ -189,12 +191,17 @@ void ZipperScanner::build_imageProcessorModule()
 
 void ZipperScanner::destroyComponents()
 {
-
-
-
 	// 销毁相机
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
 	globalStructData.destroyCamera();
+	// 销毁图像处理模块
+	globalStructData.destroyImageProcessingModule();
+	// 销毁图像保存模块
+	globalStructData.destroyImageSaveEngine();
+	// 销毁剔废优先队列
+	globalStructData.destroy_PriorityQueue();
+	// 保存参数
+	globalStructData.saveGeneralConfig();
 }
 
 void ZipperScanner::read_config()
@@ -397,8 +404,12 @@ void ZipperScanner::rbtn_weakLight_checked(bool checked)
 
 void ZipperScanner::pbtn_openSaveLocation_clicked()
 {
-	auto& camera1 = GlobalStructDataZipper::getInstance().camera1;
-	camera1->setTriggerLine(1000);
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
+
+	_picturesViewer->setRootPath(imageSavePath);
+	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	_picturesViewer->show();
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

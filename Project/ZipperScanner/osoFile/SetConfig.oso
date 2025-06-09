@@ -36,5 +36,8 @@ namespace cdm {
 		saveOKImg : bool :default = false;
 
 		debugMode : bool :default = false;
+
+		takeWork1Pictures : bool :default = false;
+		takeWork2Pictures : bool :default = false;
 	};
 }

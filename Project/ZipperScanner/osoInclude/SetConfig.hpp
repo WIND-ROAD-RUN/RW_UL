@@ -44,7 +44,7 @@ namespace cdm {
         bool saveOKImg{ false };
         bool debugMode{ false };
         bool takeWork1Pictures{ false };
-		bool takeWork2Pictures{ false };
+        bool takeWork2Pictures{ false };
     };
 
     inline SetConfig::SetConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -174,6 +174,16 @@ namespace cdm {
             throw std::runtime_error("$variable$debugMode is not found");
         }
         debugMode = debugModeItem->getValueAsBool();
+        auto takeWork1PicturesItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$takeWork1Pictures$"));
+        if (!takeWork1PicturesItem) {
+            throw std::runtime_error("$variable$takeWork1Pictures is not found");
+        }
+        takeWork1Pictures = takeWork1PicturesItem->getValueAsBool();
+        auto takeWork2PicturesItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$takeWork2Pictures$"));
+        if (!takeWork2PicturesItem) {
+            throw std::runtime_error("$variable$takeWork2Pictures is not found");
+        }
+        takeWork2Pictures = takeWork2PicturesItem->getValueAsBool();
     }
 
     inline SetConfig::SetConfig(const SetConfig& obj)
@@ -202,6 +212,8 @@ namespace cdm {
         saveMaskImg = obj.saveMaskImg;
         saveOKImg = obj.saveOKImg;
         debugMode = obj.debugMode;
+        takeWork1Pictures = obj.takeWork1Pictures;
+        takeWork2Pictures = obj.takeWork2Pictures;
     }
 
     inline SetConfig& SetConfig::operator=(const SetConfig& obj)
@@ -231,6 +243,8 @@ namespace cdm {
             saveMaskImg = obj.saveMaskImg;
             saveOKImg = obj.saveOKImg;
             debugMode = obj.debugMode;
+            takeWork1Pictures = obj.takeWork1Pictures;
+            takeWork2Pictures = obj.takeWork2Pictures;
         }
         return *this;
     }
@@ -335,12 +349,20 @@ namespace cdm {
         debugModeItem->setName("$variable$debugMode$");
         debugModeItem->setValueFromBool(debugMode);
         assembly.addItem(debugModeItem);
+        auto takeWork1PicturesItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        takeWork1PicturesItem->setName("$variable$takeWork1Pictures$");
+        takeWork1PicturesItem->setValueFromBool(takeWork1Pictures);
+        assembly.addItem(takeWork1PicturesItem);
+        auto takeWork2PicturesItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        takeWork2PicturesItem->setName("$variable$takeWork2Pictures$");
+        takeWork2PicturesItem->setValueFromBool(takeWork2Pictures);
+        assembly.addItem(takeWork2PicturesItem);
         return assembly;
     }
 
     inline bool SetConfig::operator==(const SetConfig& obj) const
     {
-        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode;
+        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode && takeWork1Pictures == obj.takeWork1Pictures && takeWork2Pictures == obj.takeWork2Pictures;
     }
 
     inline bool SetConfig::operator!=(const SetConfig& obj) const

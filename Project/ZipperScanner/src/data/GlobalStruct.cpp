@@ -18,40 +18,12 @@ void GlobalStructDataZipper::build_PriorityQueue()
 
 	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
 	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
+}
 
-
-	//using namespace std::chrono;
-	//// 获取当前时间点
-	//auto now = system_clock::now();
-	//auto now_time = Time(now);
-	//// 插入当前时间点
-	//priorityQueue1->insert(now_time, now_time);
-	//// 插入当前时间点加1秒
-	//auto t1 = Time(now + seconds(1));
-	//priorityQueue1->insert(t1, t1);
-	//// 插入当前时间点加5秒
-	//auto t2 = Time(now + seconds(5));
-	//priorityQueue1->insert(t2, t2);
-	//// 插入当前时间点减10秒
-	//auto t3 = Time(now - seconds(10));
-	//priorityQueue1->insert(t3, t3);
-
-	////这里是取出逻辑
-	//Time preTime;
-	//try
-	//{
-	//	preTime=priorityQueue1->peek();
-	//}
-	//catch (const std::runtime_error&)
-	//{
-	//	return;
-	//}
-
-	//if (static_cast<double>(400)> 300) {
-	//	// 这里可以添加一些逻辑处理
-	//	priorityQueue1->top();
-	//}
-
+void GlobalStructDataZipper::destroy_PriorityQueue()
+{
+	priorityQueue1.reset();
+	priorityQueue2.reset();
 }
 
 GlobalStructDataZipper::GlobalStructDataZipper()
@@ -162,6 +134,12 @@ void GlobalStructDataZipper::buildImageProcessorModules(const QString& path)
 
 }
 
+void GlobalStructDataZipper::destroyImageProcessingModule()
+{
+	modelCamera1.reset();
+	modelCamera2.reset();
+}
+
 void GlobalStructDataZipper::buildImageSaveEngine()
 {
 	imageSaveEngine = std::make_unique<rw::rqw::ImageSaveEngine>(this, 2);
@@ -171,6 +149,12 @@ void GlobalStructDataZipper::destroyImageSaveEngine()
 {
 	imageSaveEngine->stop();
 	imageSaveEngine.reset();
+}
+
+void GlobalStructDataZipper::saveGeneralConfig()
+{
+	std::string generalConfigPath = globalPath.generalConfigPath.toStdString();
+	storeContext->save(generalConfig, generalConfigPath);
 }
 
 void GlobalStructDataZipper::saveDlgProductSetConfig()

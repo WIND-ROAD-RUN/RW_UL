@@ -8,6 +8,8 @@
 #include <rqw_LabelWarning.h>
 #include <opencv2/core/mat.hpp>
 
+#include "PictureViewerThumbnails.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class ZipperScannerClass; };
 QT_END_NAMESPACE
@@ -24,6 +26,9 @@ public:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgProductScore* _dlgProductScore = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
+
+private:
+	PictureViewerThumbnails* _picturesViewer = nullptr;
 
 
 public :

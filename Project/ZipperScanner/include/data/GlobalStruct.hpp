@@ -42,6 +42,7 @@ public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
 public:
 	void build_PriorityQueue();
+	void destroy_PriorityQueue();
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
@@ -81,6 +82,7 @@ public:
 	void buildConfigManager(rw::oso::StorageType type);
 
 	void buildImageProcessorModules(const QString& path);
+	void destroyImageProcessingModule();
 
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
@@ -91,7 +93,8 @@ public:
 	void buildImageSaveEngine();
 	void destroyImageSaveEngine();
 	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
-	
+
+	void saveGeneralConfig();
 	void saveDlgProductSetConfig();
 	void saveDlgProductScoreConfig();
 	void saveDlgExposureTimeSetConfig();
