@@ -10,6 +10,7 @@
 #include <vector>
 #include <QThread>
 #include <QPixmap>
+#include <rqw_ImageSaveEngine.h>
 
 
 // 拉链检测信息
@@ -94,6 +95,10 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectInfo& info);
 	// 检测到缺陷后发出错误信息
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
+
+	// 存图
+	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
+	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 
 signals:
 	void imageReady(QPixmap image);

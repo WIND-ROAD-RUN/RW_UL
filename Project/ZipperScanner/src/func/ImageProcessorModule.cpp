@@ -98,10 +98,10 @@ void ImageProcessorZipper::run()
 		case RunningState::Debug:
 			run_debug(frame);
 			break;
-		/*case RunningState::OpenRemoveFunc:
+		case RunningState::OpenRemoveFunc:
 			run_OpenRemoveFunc(frame);
 			break;
-		case RunningState::Monitor:
+		/*case RunningState::Monitor:
 			run_monitor(frame);
 			break;*/
 		default:
@@ -155,7 +155,40 @@ void ImageProcessorZipper::run_monitor(MatInfo& frame)
 
 void ImageProcessorZipper::run_OpenRemoveFunc(MatInfo& frame)
 {
+	//AI开始识别
+	ZipperDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
 
+	auto processResult = _modelEngine->processImg(frame.image);
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
+
+	//绘制defect信息
+	auto qImage = cvMatToQImage(frame.image);
+
+	// 画限位线
+	drawBoundariesLines(qImage);
+	// 不满足剔废条件的缺陷用绿色显示
+	drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
+	// 满足剔废条件的缺陷用红色显示
+	drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+
+	drawZipperDefectInfoText_defect(qImage, defectInfo);
+
+	rw::rqw::ImageInfo imageInfo(cvMatToQImage(frame.image));
+	//保存图像
+	save_image(imageInfo, qImage);
+
+	QPixmap pixmap = QPixmap::fromImage(qImage);
+
+	emit imageReady(pixmap);
 }
 
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info)
@@ -243,6 +276,56 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperD
 void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
 {
 
+}
+
+void ImageProcessorZipper::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
+
+	if (!globalStruct.isTakePictures)
+	{
+		return;
+	}
+
+	if (imageProcessingModuleIndex == 1 && setConfig.takeWork1Pictures)
+	{
+		if (globalStruct.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+	else if (imageProcessingModuleIndex == 2 && setConfig.takeWork2Pictures)
+	{
+		if (globalStruct.isTakePictures) {
+			save_image_work(imageInfo, image);
+		}
+	}
+}
+
+void ImageProcessorZipper::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image)
+{
+	auto& globalData = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalData.setConfig;
+	if (_isbad) {
+		if (setConfig.saveNGImg)
+		{
+			imageInfo.classify = "NG";
+			globalData.imageSaveEngine->pushImage(imageInfo);
+		}
+		if (setConfig.saveMaskImg)
+		{
+			rw::rqw::ImageInfo mask(image);
+			mask.classify = "Mask";
+			globalData.imageSaveEngine->pushImage(mask);
+		}
+	}
+	else {
+		if (setConfig.saveOKImg)
+		{
+			imageInfo.classify = "OK";
+			globalData.imageSaveEngine->pushImage(imageInfo);
+		}
+	}
 }
 
 void ImageProcessorZipper::getEliminationInfo_debug(ZipperDefectInfo& info,

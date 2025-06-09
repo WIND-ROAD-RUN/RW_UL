@@ -43,6 +43,8 @@ namespace cdm {
         bool saveMaskImg{ false };
         bool saveOKImg{ false };
         bool debugMode{ false };
+		bool takeWork1Pictures{ false };
+		bool takeWork2Pictures{ false };
     };
 
     inline SetConfig::SetConfig(const rw::oso::ObjectStoreAssembly& assembly)

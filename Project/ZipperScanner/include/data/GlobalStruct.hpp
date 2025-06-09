@@ -51,6 +51,9 @@ public:
 	} statisticalInfo;
 
 public:
+	std::atomic_bool isTakePictures{ false };
+
+public:
 	static GlobalStructDataZipper& getInstance()
 	{
 		static GlobalStructDataZipper instance;
@@ -72,8 +75,13 @@ public:
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
-
+	
+public:
 	// ±£´æ²ÎÊý
+	void buildImageSaveEngine();
+	void destroyImageSaveEngine();
+	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
+	
 	void saveDlgProductSetConfig();
 	void saveDlgProductScoreConfig();
 	void saveDlgExposureTimeSetConfig();

@@ -115,6 +115,17 @@ void GlobalStructDataZipper::buildImageProcessorModules(const QString& path)
 
 }
 
+void GlobalStructDataZipper::buildImageSaveEngine()
+{
+	imageSaveEngine = std::make_unique<rw::rqw::ImageSaveEngine>(this, 2);
+}
+
+void GlobalStructDataZipper::destroyImageSaveEngine()
+{
+	imageSaveEngine->stop();
+	imageSaveEngine.reset();
+}
+
 void GlobalStructDataZipper::saveDlgProductSetConfig()
 {
 	std::string setConfigPath = globalPath.setConfigPath.toStdString();

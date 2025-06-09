@@ -48,6 +48,8 @@ private slots:
 	void cBox_takeMaskPictures_checked();
 	void cBox_takeOkPictures_checked();
 	void cbox_debugMode_checked();
+	void cBox_takeCamera1Pictures_checked();
+	void cBox_takeCamera2Pictures_checked();
 
 private:
 	Ui::DlgProductSetClass *ui;

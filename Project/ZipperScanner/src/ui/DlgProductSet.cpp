@@ -535,3 +535,15 @@ void DlgProductSet::cbox_debugMode_checked()
 	globalStructSetConfig.debugMode = ui->cbox_debugMode->isChecked();
 }
 
+void DlgProductSet::cBox_takeCamera1Pictures_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	globalStructSetConfig.takeWork1Pictures = ui->cBox_takeCamera1Pictures->isChecked();
+}
+
+void DlgProductSet::cBox_takeCamera2Pictures_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	globalStructSetConfig.takeWork2Pictures = ui->cBox_takeCamera2Pictures->isChecked();
+}
+

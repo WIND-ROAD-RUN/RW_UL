@@ -725,7 +725,7 @@ QGroupBox::title {
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_21">
              <item>
-              <widget class="QCheckBox" name="cBox_takeNgPictures_2">
+              <widget class="QCheckBox" name="cBox_takeCamera1Pictures">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -770,7 +770,7 @@ QCheckBox::indicator:checked:hover {
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="cBox_takeMaskPictures_2">
+              <widget class="QCheckBox" name="cBox_takeCamera2Pictures">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
