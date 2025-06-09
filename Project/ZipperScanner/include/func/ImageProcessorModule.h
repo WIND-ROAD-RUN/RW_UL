@@ -60,7 +60,7 @@ struct ImagePainter
 // 图片信息
 struct MatInfo {
 	cv::Mat image;	// 图片内容
-	QString time;	// 记录拍照瞬间的时间点
+	std::chrono::system_clock::time_point time;	// 记录拍照瞬间的时间点
 	size_t index;	// 拍照的相机的下标
 };
 

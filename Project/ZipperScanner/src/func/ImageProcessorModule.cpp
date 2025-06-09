@@ -170,6 +170,11 @@ void ImageProcessorZipper::run_OpenRemoveFunc(MatInfo& frame)
 	//获取到当前图像的缺陷信息
 	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image);
 
+	// 剔除逻辑获取_isbad以及绘制defect错误信息
+	run_OpenRemoveFunc_process_defect_info(defectInfo);
+	//如果_isbad为true，将错误信息发送到剔除队列中
+	run_OpenRemoveFunc_emitErrorInfo(frame);
+
 	//绘制defect信息
 	auto qImage = cvMatToQImage(frame.image);
 
@@ -270,12 +275,35 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperD
 			}
 		}
 	}
-
 }
 
 void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
+	if (_isbad)
+	{
+		++globalStruct.statisticalInfo.wasteCount;
+	}
+
+	if (imageProcessingModuleIndex == 1 || imageProcessingModuleIndex == 2)
+	{
+		++globalStruct.statisticalInfo.produceCount;
+	}
+
+	if (imageProcessingModuleIndex == 1)
+	{
+		++globalStruct.statisticalInfo.produceCount1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		++globalStruct.statisticalInfo.produceCount2;
+	}
+
+	if (_isbad)
+	{
+
+	}
 }
 
 void ImageProcessorZipper::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -825,6 +853,7 @@ void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 	MatInfo mat;
 	mat.image = frame;
 	mat.index = index;
+	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
 	_queue.enqueue(mat);
 	_condition.wakeOne();
 }
