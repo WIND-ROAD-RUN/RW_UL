@@ -5,6 +5,7 @@
 #include "hoec_Camera.hpp"
 #include "rqw_CameraObjectCore.hpp"
 #include "Utilty.hpp"
+#include "DetachDefectThread.h"
 
 
 void GlobalStructDataZipper::build_PriorityQueue()
@@ -26,8 +27,41 @@ void GlobalStructDataZipper::destroy_PriorityQueue()
 	priorityQueue2.reset();
 }
 
+void GlobalStructDataZipper::build_DetachDefectThreadZipper()
+{
+	detachDefectThreadZipper = new DetachDefectThreadZipper;
+
+	// 连接剔废功能
+	QObject::connect(detachDefectThreadZipper, &DetachDefectThreadZipper::findIsBad
+		,this, &GlobalStructDataZipper::onCameraReject);
+}
+
+void GlobalStructDataZipper::destroy_DetachDefectThreadZipper()
+{
+	if (detachDefectThreadZipper)
+	{
+		delete detachDefectThreadZipper;
+	}
+}
+
+void GlobalStructDataZipper::onCameraReject(size_t index)
+{
+	if (generalConfig.isDefect)
+	{
+		if (index == 1)
+		{
+			camera1->outTrigger();
+		}
+		else if (index == 2)
+		{
+			camera2->outTrigger();
+		}
+	}
+}
+
 GlobalStructDataZipper::GlobalStructDataZipper()
 {
+
 }
 
 bool GlobalStructDataZipper::isTargetCamera(const QString& cameraIndex, const QString& targetName)
@@ -159,6 +193,8 @@ void GlobalStructDataZipper::saveGeneralConfig()
 
 void GlobalStructDataZipper::saveDlgProductSetConfig()
 {
+	// 调试模式默认为不开启
+	setConfig.debugMode = false;
 	std::string setConfigPath = globalPath.setConfigPath.toStdString();
 	storeContext->save(setConfig, setConfigPath);
 }
@@ -186,6 +222,10 @@ bool GlobalStructDataZipper::buildCamera1()
 
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	// 剔废持续时间
+	long DurationTime = setConfig.tiFeiChiXuShiJian1 * 1000;
+
 	if (cameraMetaData1.ip != "0")
 	{
 		try
@@ -196,6 +236,9 @@ bool GlobalStructDataZipper::buildCamera1()
 			camera1->setHeartbeatTime(5000);
 			setCameraExposureTime(1, dlgExposureTimeSetConfig.exposureTime);
 			camera1->startMonitor();
+			// 设置剔废IO输出
+			auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
+			camera1->setOutTriggerConfig(config);
 			return true;
 		}
 		catch (const std::exception&)
@@ -213,6 +256,10 @@ bool GlobalStructDataZipper::buildCamera2()
 
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	// 剔废持续时间
+	long DurationTime = setConfig.tiFeiChiXuShiJian2 * 1000;
+
 	if (cameraMetaData2.ip != "0")
 	{
 		try
@@ -222,6 +269,9 @@ bool GlobalStructDataZipper::buildCamera2()
 			camera2->cameraIndex = 2;
 			camera2->setHeartbeatTime(5000);
 			setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
+			// 设置剔废IO输出
+			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			return true;
 		}

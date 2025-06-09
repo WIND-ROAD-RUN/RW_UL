@@ -26,6 +26,9 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	globalStruct.build_PriorityQueue();
 
+	// 构建异步剔废线程
+	globalStruct.build_DetachDefectThreadZipper();
+
 	// 构建图像保存引擎
 	build_imageSaveEngine();
 
@@ -84,9 +87,13 @@ void ZipperScanner::build_connect()
 	QObject::connect(ui->rbtn_weakLight, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_weakLight_checked);
 
-	// 暂时使用的槽函数
+	// 打开图像路径文件夹
 	QObject::connect(ui->pbtn_openSaveLocation, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_openSaveLocation_clicked);
+
+	// 采图
+	QObject::connect(ui->rbtn_takePicture, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_takePicture_checked);
 }
 
 // 构建相机
@@ -141,6 +148,8 @@ void ZipperScanner::build_ZipperScannerData()
 	ui->rbtn_mediumLight->setChecked(zipperScannerConfig.zhongGuang);
 	ui->rbtn_weakLight->setChecked(zipperScannerConfig.ruoGuang);
 
+	// 去掉标题栏
+	this->setWindowFlags(Qt::FramelessWindowHint);
 
 	// 开机默认不显示但是勾选
 	ui->ckb_shibiekuang->setVisible(false);
@@ -221,6 +230,8 @@ void ZipperScanner::destroyComponents()
 	globalStructData.destroyImageProcessingModule();
 	// 销毁图像保存模块
 	globalStructData.destroyImageSaveEngine();
+	// 销毁异步剔废线程
+	globalStructData.destroy_DetachDefectThreadZipper();
 	// 销毁剔废优先队列
 	globalStructData.destroy_PriorityQueue();
 	// 保存参数
@@ -247,6 +258,7 @@ void ZipperScanner::read_config_GeneralConfig()
 
 	QFileInfo generalConfigFile(generalConfigPath);
 
+	// 如果文件不存在
 	if (!generalConfigFile.exists())
 	{
 		QDir configDir = QFileInfo(generalConfigPath).absoluteDir();
@@ -270,6 +282,10 @@ void ZipperScanner::read_config_GeneralConfig()
 	else
 	{
 		globalStruct.generalConfig = *globalStruct.storeContext->load(globalPath.generalConfigPath.toStdString());
+		// 加载主窗体UI的设置
+		ui->rbtn_strongLight->setChecked(globalStruct.generalConfig.qiangGuang);
+		ui->rbtn_mediumLight->setChecked(globalStruct.generalConfig.zhongGuang);
+		ui->rbtn_weakLight->setChecked(globalStruct.generalConfig.ruoGuang);
 	}
 }
 
@@ -357,6 +373,12 @@ void ZipperScanner::pbtn_set_clicked()
 			_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 			_dlgProductSet->exec();
 		}
+		else if (numKeyBord.getValue() == "6666")
+		{
+			_dlgExposureTimeSet->setFixedSize(500,300);
+			_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+			_dlgExposureTimeSet->exec();
+		}
 		else {
 			QMessageBox::warning(this, "Error", "密码错误，请重新输入");
 		}
@@ -400,29 +422,41 @@ void ZipperScanner::rbtn_debug_checked(bool checked)
 
 void ZipperScanner::rbtn_strongLight_checked(bool checked)
 {
+	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
 	if (checked)
 	{
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
 		globalStruct.setLightLevel(LightLevel::StrongLight);
+		generalConfig.zhongGuang = false;
+		generalConfig.ruoGuang = false;
 	}
+	generalConfig.qiangGuang = ui->rbtn_strongLight->isChecked();
 }
 
 void ZipperScanner::rbtn_mediumLight_checked(bool checked)
 {
+	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
 	if (checked)
 	{
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
 		globalStruct.setLightLevel(LightLevel::MediumLight);
+		generalConfig.qiangGuang = false;
+		generalConfig.ruoGuang = false;
 	}
+	generalConfig.zhongGuang = ui->rbtn_mediumLight->isChecked();
 }
 
 void ZipperScanner::rbtn_weakLight_checked(bool checked)
 {
+	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
 	if (checked)
 	{
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
 		globalStruct.setLightLevel(LightLevel::WeakLight);
+		generalConfig.qiangGuang = false;
+		generalConfig.zhongGuang = false;
 	}
+	generalConfig.ruoGuang = ui->rbtn_weakLight->isChecked();
 }
 
 void ZipperScanner::pbtn_openSaveLocation_clicked()
@@ -433,6 +467,16 @@ void ZipperScanner::pbtn_openSaveLocation_clicked()
 	_picturesViewer->setRootPath(imageSavePath);
 	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_picturesViewer->show();
+}
+
+void ZipperScanner::rbtn_takePicture_checked()
+{
+	if (ui->rbtn_debug->isChecked() == true)
+	{
+		ui->rbtn_takePicture->setChecked(false);
+	}
+	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
+	generalConfig.isSaveImg = ui->rbtn_takePicture->isChecked();
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

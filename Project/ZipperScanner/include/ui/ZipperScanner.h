@@ -30,7 +30,6 @@ public:
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
 
-
 public :
 	void build_ui();
 	void build_connect();
@@ -62,6 +61,7 @@ private slots:
 	void rbtn_mediumLight_checked(bool checked);
 	void rbtn_weakLight_checked(bool checked);
 	void pbtn_openSaveLocation_clicked();
+	void rbtn_takePicture_checked();
 
 
 private slots:
@@ -70,7 +70,6 @@ private slots:
 	void onCamera1Display(QPixmap image);
 
 	void onCamera2Display(QPixmap image);
-	
 
 private:
 	Ui::ZipperScannerClass *ui;

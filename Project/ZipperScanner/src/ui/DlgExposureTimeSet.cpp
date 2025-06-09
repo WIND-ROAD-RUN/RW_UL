@@ -94,8 +94,6 @@ void DlgExposureTimeSet::pbtn_exposureTimeValue_clicked()
 
 		globalStruct.setCameraExposureTime(1, newValue);
 		globalStruct.setCameraExposureTime(2, newValue);
-		globalStruct.setCameraExposureTime(3, newValue);
-		globalStruct.setCameraExposureTime(4, newValue);
 
 		globalStruct.saveDlgExposureTimeSetConfig();
 

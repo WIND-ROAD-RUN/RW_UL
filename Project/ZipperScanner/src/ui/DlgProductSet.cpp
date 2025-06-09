@@ -36,6 +36,10 @@ void DlgProductSet::read_config()
 	ui->pbtn_tifeichixushijian2->setText(QString::number(globalConfig.tiFeiChiXuShiJian2));
 	ui->pbtn_yanchitifeishijian2->setText(QString::number(globalConfig.yanChiTiFeiShiJian2));
 
+	// 采图
+	ui->cBox_takeCamera1Pictures->setChecked(globalConfig.takeWork1Pictures);
+	ui->cBox_takeCamera2Pictures->setChecked(globalConfig.takeWork2Pictures);
+
 	// 存图
 	ui->cBox_takeNgPictures->setChecked(globalConfig.saveNGImg);
 	ui->cBox_takeMaskPictures->setChecked(globalConfig.saveMaskImg);
@@ -65,7 +69,7 @@ void DlgProductSet::read_config()
 	ui->pbtn_ruobaoguang->setText(QString::number(globalConfig.ruoBaoGuang));
 	ui->pbtn_ruozengyi->setText(QString::number(globalConfig.ruoZengYi));
 
-	// 调试模式
+	// 调试模式默认为关闭
 	ui->cbox_debugMode->setChecked(globalConfig.debugMode);
 }
 
@@ -121,6 +125,10 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::cbox_debugMode_checked);
 	QObject::connect(ui->pbtn_close, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_close_clicked);
+	QObject::connect(ui->cBox_takeCamera1Pictures, &QCheckBox::clicked,
+		this, &DlgProductSet::cBox_takeCamera1Pictures_checked);
+	QObject::connect(ui->cBox_takeCamera2Pictures, &QCheckBox::clicked,
+		this, &DlgProductSet::cBox_takeCamera2Pictures_checked);
 }
 
 void DlgProductSet::pbtn_close_clicked()

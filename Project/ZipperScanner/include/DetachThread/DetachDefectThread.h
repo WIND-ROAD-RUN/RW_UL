@@ -1,11 +1,13 @@
 #pragma once
 
-#include <QThread>
 #include <atomic>
+#include<QThread>
 
-#include "dsl_PriorityQueue.hpp"
-#include "GlobalStruct.hpp"
 #include"rqw_LabelWarning.h"
+#include"dsl_PriorityQueue.hpp"
+
+#include"Utilty.hpp"
+#include"GlobalStruct.hpp"
 
 
 class DetachDefectThreadZipper : public QThread
@@ -23,8 +25,8 @@ public:
 
 	void stopThread();
 
-	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > &queue);
-	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > &queue);
+	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>> &queue);
+	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>> &queue);
 
 signals:
 	void findIsBad(size_t index);

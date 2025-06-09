@@ -12,9 +12,12 @@
 #include "rqw_CameraObjectThread.hpp"
 #include "ZipperScannerDlgExposureTimeSet.hpp"
 #include "ImageProcessorModule.h"
-
 #include"dsl_PriorityQueue.hpp"
+#include"Utilty.hpp"
+#include<chrono>
 
+
+class DetachDefectThreadZipper;
 
 // ×´Ì¬»ú
 enum class RunningState
@@ -31,8 +34,6 @@ enum class LightLevel {
 	WeakLight
 };
 
-using Time = std::chrono::system_clock::time_point;
-
 class GlobalStructDataZipper
 	:public QObject
 {
@@ -43,6 +44,13 @@ public:
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
+public:
+	DetachDefectThreadZipper *detachDefectThreadZipper;
+public:
+	void build_DetachDefectThreadZipper();
+	void destroy_DetachDefectThreadZipper();
+public slots:
+	void onCameraReject(size_t index);
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
