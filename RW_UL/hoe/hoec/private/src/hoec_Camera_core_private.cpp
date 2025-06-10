@@ -94,7 +94,18 @@ namespace rw {
 
 				return rgbImage;
 			}
+			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG8)
+			{
+				cv::Mat bayerImage(height, width, CV_8UC1, pData);
 
+				// Step 2: 创建一个用于存储 RGB 图像的 cv::Mat
+				cv::Mat rgbImage;
+
+				// Step 3: 使用 OpenCV 的 cvtColor 函数将 Bayer GB 8 转换为 RGB
+				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerRG2RGB);
+
+				return rgbImage;
+			}
 			int channels = 1; // 默认单通道
 
 			// 根据像素格式设置通道数
@@ -121,9 +132,7 @@ namespace rw {
 			case PixelType_Gvsp_BayerGR12_Packed:
 				channels = 1;
 				break;
-			case PixelType_Gvsp_BayerRG8:
-				channels = 1;
-				break;
+			
 			default:
 				std::cerr << "Unsupported pixel format which is " << frameInfo.enPixelType << std::endl;
 				return cv::Mat();

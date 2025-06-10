@@ -1,1 +1,2 @@
 add_subdirectory(ButtonScanner)
+add_subdirectory(ZipperScanner)
