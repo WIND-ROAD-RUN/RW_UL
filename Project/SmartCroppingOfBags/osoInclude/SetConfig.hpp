@@ -23,35 +23,36 @@ namespace cdm {
         bool tiqiantifei{ false };
         bool xiangjitiaoshi{ false };
         bool qiyonger{ false };
-        bool isxiangjizengyi{ false };
+        double jiange{ 0 };
         double zidongpingbifanwei{ 0 };
-        double pingjunmaichong{ 0 };
-        double maichongxinhao{ 0 };
-        double hanggao{ 0 };
-        double daichang{ 0 };
-        double daichangxishu{ 0 };
-        double guasijuli{ 0 };
-        double zuixiaodaichang{ 0 };
-        double zuidadaichang{ 0 };
-        double baisedailiangdufanweimin{ 0 };
-        double baisedailiangdufanweimax{ 0 };
-        double daokoudaoxiangjiluli{ 0 };
-        double tifeiyanshi{ 0 };
-        double baojingyanshi{ 0 };
-        double tifeishijian{ 0 };
-        double baojingshijian{ 0 };
-        double chuiqiyanshi{ 0 };
-        double dudaiyanshi{ 0 };
-        double chuiqishijian{ 0 };
-        double dudaishijian{ 0 };
-        double maichongxishu{ 0 };
-        double xiangjizengyi{ 0 };
-        double houfenpinqi{ 0 };
-        double chengfaqi{ 0 };
-        double qiedaoxianshangpingbi{ 0 };
-        double qiedaoxianxiapingbi{ 0 };
-        double yansedailiangdufanweimin{ 0 };
-        double yansedailiangdufanweimax{ 0 };
+        double pingjunmaichong1{ 0 };
+        double maichongxinhao1{ 0 };
+        double hanggao1{ 0 };
+        double daichang1{ 0 };
+        double daichangxishu1{ 0 };
+        double guasijuli1{ 0 };
+        double zuixiaodaichang1{ 0 };
+        double zuidadaichang1{ 0 };
+        double baisedailiangdufanweimin1{ 0 };
+        double baisedailiangdufanweimax1{ 0 };
+        double daokoudaoxiangjiluli1{ 0 };
+        double tifeiyanshi1{ 0 };
+        double baojingyanshi1{ 0 };
+        double tifeishijian1{ 0 };
+        double baojingshijian1{ 0 };
+        double chuiqiyanshi1{ 0 };
+        double dudaiyanshi1{ 0 };
+        double chuiqishijian1{ 0 };
+        double dudaishijian1{ 0 };
+        double maichongxishu1{ 0 };
+        bool isxiangjizengyi1{ false };
+        double xiangjizengyi1{ 0 };
+        double houfenpinqi1{ 0 };
+        double chengfaqi1{ 0 };
+        double qiedaoxianshangpingbi1{ 0 };
+        double qiedaoxianxiapingbi1{ 0 };
+        double yansedailiangdufanweimin1{ 0 };
+        double yansedailiangdufanweimax1{ 0 };
     };
 
     inline SetConfigSmartCroppingOfBags::SetConfigSmartCroppingOfBags(const rw::oso::ObjectStoreAssembly& assembly)
@@ -81,151 +82,156 @@ namespace cdm {
             throw std::runtime_error("$variable$qiyonger is not found");
         }
         qiyonger = qiyongerItem->getValueAsBool();
-        auto isxiangjizengyiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isxiangjizengyi$"));
-        if (!isxiangjizengyiItem) {
-            throw std::runtime_error("$variable$isxiangjizengyi is not found");
+        auto jiangeItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$jiange$"));
+        if (!jiangeItem) {
+            throw std::runtime_error("$variable$jiange is not found");
         }
-        isxiangjizengyi = isxiangjizengyiItem->getValueAsBool();
+        jiange = jiangeItem->getValueAsDouble();
         auto zidongpingbifanweiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zidongpingbifanwei$"));
         if (!zidongpingbifanweiItem) {
             throw std::runtime_error("$variable$zidongpingbifanwei is not found");
         }
         zidongpingbifanwei = zidongpingbifanweiItem->getValueAsDouble();
-        auto pingjunmaichongItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$pingjunmaichong$"));
-        if (!pingjunmaichongItem) {
-            throw std::runtime_error("$variable$pingjunmaichong is not found");
+        auto pingjunmaichong1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$pingjunmaichong1$"));
+        if (!pingjunmaichong1Item) {
+            throw std::runtime_error("$variable$pingjunmaichong1 is not found");
         }
-        pingjunmaichong = pingjunmaichongItem->getValueAsDouble();
-        auto maichongxinhaoItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$maichongxinhao$"));
-        if (!maichongxinhaoItem) {
-            throw std::runtime_error("$variable$maichongxinhao is not found");
+        pingjunmaichong1 = pingjunmaichong1Item->getValueAsDouble();
+        auto maichongxinhao1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$maichongxinhao1$"));
+        if (!maichongxinhao1Item) {
+            throw std::runtime_error("$variable$maichongxinhao1 is not found");
         }
-        maichongxinhao = maichongxinhaoItem->getValueAsDouble();
-        auto hanggaoItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$hanggao$"));
-        if (!hanggaoItem) {
-            throw std::runtime_error("$variable$hanggao is not found");
+        maichongxinhao1 = maichongxinhao1Item->getValueAsDouble();
+        auto hanggao1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$hanggao1$"));
+        if (!hanggao1Item) {
+            throw std::runtime_error("$variable$hanggao1 is not found");
         }
-        hanggao = hanggaoItem->getValueAsDouble();
-        auto daichangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daichang$"));
-        if (!daichangItem) {
-            throw std::runtime_error("$variable$daichang is not found");
+        hanggao1 = hanggao1Item->getValueAsDouble();
+        auto daichang1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daichang1$"));
+        if (!daichang1Item) {
+            throw std::runtime_error("$variable$daichang1 is not found");
         }
-        daichang = daichangItem->getValueAsDouble();
-        auto daichangxishuItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daichangxishu$"));
-        if (!daichangxishuItem) {
-            throw std::runtime_error("$variable$daichangxishu is not found");
+        daichang1 = daichang1Item->getValueAsDouble();
+        auto daichangxishu1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daichangxishu1$"));
+        if (!daichangxishu1Item) {
+            throw std::runtime_error("$variable$daichangxishu1 is not found");
         }
-        daichangxishu = daichangxishuItem->getValueAsDouble();
-        auto guasijuliItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$guasijuli$"));
-        if (!guasijuliItem) {
-            throw std::runtime_error("$variable$guasijuli is not found");
+        daichangxishu1 = daichangxishu1Item->getValueAsDouble();
+        auto guasijuli1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$guasijuli1$"));
+        if (!guasijuli1Item) {
+            throw std::runtime_error("$variable$guasijuli1 is not found");
         }
-        guasijuli = guasijuliItem->getValueAsDouble();
-        auto zuixiaodaichangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zuixiaodaichang$"));
-        if (!zuixiaodaichangItem) {
-            throw std::runtime_error("$variable$zuixiaodaichang is not found");
+        guasijuli1 = guasijuli1Item->getValueAsDouble();
+        auto zuixiaodaichang1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zuixiaodaichang1$"));
+        if (!zuixiaodaichang1Item) {
+            throw std::runtime_error("$variable$zuixiaodaichang1 is not found");
         }
-        zuixiaodaichang = zuixiaodaichangItem->getValueAsDouble();
-        auto zuidadaichangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zuidadaichang$"));
-        if (!zuidadaichangItem) {
-            throw std::runtime_error("$variable$zuidadaichang is not found");
+        zuixiaodaichang1 = zuixiaodaichang1Item->getValueAsDouble();
+        auto zuidadaichang1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$zuidadaichang1$"));
+        if (!zuidadaichang1Item) {
+            throw std::runtime_error("$variable$zuidadaichang1 is not found");
         }
-        zuidadaichang = zuidadaichangItem->getValueAsDouble();
-        auto baisedailiangdufanweiminItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baisedailiangdufanweimin$"));
-        if (!baisedailiangdufanweiminItem) {
-            throw std::runtime_error("$variable$baisedailiangdufanweimin is not found");
+        zuidadaichang1 = zuidadaichang1Item->getValueAsDouble();
+        auto baisedailiangdufanweimin1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baisedailiangdufanweimin1$"));
+        if (!baisedailiangdufanweimin1Item) {
+            throw std::runtime_error("$variable$baisedailiangdufanweimin1 is not found");
         }
-        baisedailiangdufanweimin = baisedailiangdufanweiminItem->getValueAsDouble();
-        auto baisedailiangdufanweimaxItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baisedailiangdufanweimax$"));
-        if (!baisedailiangdufanweimaxItem) {
-            throw std::runtime_error("$variable$baisedailiangdufanweimax is not found");
+        baisedailiangdufanweimin1 = baisedailiangdufanweimin1Item->getValueAsDouble();
+        auto baisedailiangdufanweimax1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baisedailiangdufanweimax1$"));
+        if (!baisedailiangdufanweimax1Item) {
+            throw std::runtime_error("$variable$baisedailiangdufanweimax1 is not found");
         }
-        baisedailiangdufanweimax = baisedailiangdufanweimaxItem->getValueAsDouble();
-        auto daokoudaoxiangjiluliItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daokoudaoxiangjiluli$"));
-        if (!daokoudaoxiangjiluliItem) {
-            throw std::runtime_error("$variable$daokoudaoxiangjiluli is not found");
+        baisedailiangdufanweimax1 = baisedailiangdufanweimax1Item->getValueAsDouble();
+        auto daokoudaoxiangjiluli1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$daokoudaoxiangjiluli1$"));
+        if (!daokoudaoxiangjiluli1Item) {
+            throw std::runtime_error("$variable$daokoudaoxiangjiluli1 is not found");
         }
-        daokoudaoxiangjiluli = daokoudaoxiangjiluliItem->getValueAsDouble();
-        auto tifeiyanshiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tifeiyanshi$"));
-        if (!tifeiyanshiItem) {
-            throw std::runtime_error("$variable$tifeiyanshi is not found");
+        daokoudaoxiangjiluli1 = daokoudaoxiangjiluli1Item->getValueAsDouble();
+        auto tifeiyanshi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tifeiyanshi1$"));
+        if (!tifeiyanshi1Item) {
+            throw std::runtime_error("$variable$tifeiyanshi1 is not found");
         }
-        tifeiyanshi = tifeiyanshiItem->getValueAsDouble();
-        auto baojingyanshiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baojingyanshi$"));
-        if (!baojingyanshiItem) {
-            throw std::runtime_error("$variable$baojingyanshi is not found");
+        tifeiyanshi1 = tifeiyanshi1Item->getValueAsDouble();
+        auto baojingyanshi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baojingyanshi1$"));
+        if (!baojingyanshi1Item) {
+            throw std::runtime_error("$variable$baojingyanshi1 is not found");
         }
-        baojingyanshi = baojingyanshiItem->getValueAsDouble();
-        auto tifeishijianItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tifeishijian$"));
-        if (!tifeishijianItem) {
-            throw std::runtime_error("$variable$tifeishijian is not found");
+        baojingyanshi1 = baojingyanshi1Item->getValueAsDouble();
+        auto tifeishijian1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tifeishijian1$"));
+        if (!tifeishijian1Item) {
+            throw std::runtime_error("$variable$tifeishijian1 is not found");
         }
-        tifeishijian = tifeishijianItem->getValueAsDouble();
-        auto baojingshijianItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baojingshijian$"));
-        if (!baojingshijianItem) {
-            throw std::runtime_error("$variable$baojingshijian is not found");
+        tifeishijian1 = tifeishijian1Item->getValueAsDouble();
+        auto baojingshijian1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$baojingshijian1$"));
+        if (!baojingshijian1Item) {
+            throw std::runtime_error("$variable$baojingshijian1 is not found");
         }
-        baojingshijian = baojingshijianItem->getValueAsDouble();
-        auto chuiqiyanshiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chuiqiyanshi$"));
-        if (!chuiqiyanshiItem) {
-            throw std::runtime_error("$variable$chuiqiyanshi is not found");
+        baojingshijian1 = baojingshijian1Item->getValueAsDouble();
+        auto chuiqiyanshi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chuiqiyanshi1$"));
+        if (!chuiqiyanshi1Item) {
+            throw std::runtime_error("$variable$chuiqiyanshi1 is not found");
         }
-        chuiqiyanshi = chuiqiyanshiItem->getValueAsDouble();
-        auto dudaiyanshiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$dudaiyanshi$"));
-        if (!dudaiyanshiItem) {
-            throw std::runtime_error("$variable$dudaiyanshi is not found");
+        chuiqiyanshi1 = chuiqiyanshi1Item->getValueAsDouble();
+        auto dudaiyanshi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$dudaiyanshi1$"));
+        if (!dudaiyanshi1Item) {
+            throw std::runtime_error("$variable$dudaiyanshi1 is not found");
         }
-        dudaiyanshi = dudaiyanshiItem->getValueAsDouble();
-        auto chuiqishijianItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chuiqishijian$"));
-        if (!chuiqishijianItem) {
-            throw std::runtime_error("$variable$chuiqishijian is not found");
+        dudaiyanshi1 = dudaiyanshi1Item->getValueAsDouble();
+        auto chuiqishijian1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chuiqishijian1$"));
+        if (!chuiqishijian1Item) {
+            throw std::runtime_error("$variable$chuiqishijian1 is not found");
         }
-        chuiqishijian = chuiqishijianItem->getValueAsDouble();
-        auto dudaishijianItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$dudaishijian$"));
-        if (!dudaishijianItem) {
-            throw std::runtime_error("$variable$dudaishijian is not found");
+        chuiqishijian1 = chuiqishijian1Item->getValueAsDouble();
+        auto dudaishijian1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$dudaishijian1$"));
+        if (!dudaishijian1Item) {
+            throw std::runtime_error("$variable$dudaishijian1 is not found");
         }
-        dudaishijian = dudaishijianItem->getValueAsDouble();
-        auto maichongxishuItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$maichongxishu$"));
-        if (!maichongxishuItem) {
-            throw std::runtime_error("$variable$maichongxishu is not found");
+        dudaishijian1 = dudaishijian1Item->getValueAsDouble();
+        auto maichongxishu1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$maichongxishu1$"));
+        if (!maichongxishu1Item) {
+            throw std::runtime_error("$variable$maichongxishu1 is not found");
         }
-        maichongxishu = maichongxishuItem->getValueAsDouble();
-        auto xiangjizengyiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiangjizengyi$"));
-        if (!xiangjizengyiItem) {
-            throw std::runtime_error("$variable$xiangjizengyi is not found");
+        maichongxishu1 = maichongxishu1Item->getValueAsDouble();
+        auto isxiangjizengyi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isxiangjizengyi1$"));
+        if (!isxiangjizengyi1Item) {
+            throw std::runtime_error("$variable$isxiangjizengyi1 is not found");
         }
-        xiangjizengyi = xiangjizengyiItem->getValueAsDouble();
-        auto houfenpinqiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$houfenpinqi$"));
-        if (!houfenpinqiItem) {
-            throw std::runtime_error("$variable$houfenpinqi is not found");
+        isxiangjizengyi1 = isxiangjizengyi1Item->getValueAsBool();
+        auto xiangjizengyi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiangjizengyi1$"));
+        if (!xiangjizengyi1Item) {
+            throw std::runtime_error("$variable$xiangjizengyi1 is not found");
         }
-        houfenpinqi = houfenpinqiItem->getValueAsDouble();
-        auto chengfaqiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chengfaqi$"));
-        if (!chengfaqiItem) {
-            throw std::runtime_error("$variable$chengfaqi is not found");
+        xiangjizengyi1 = xiangjizengyi1Item->getValueAsDouble();
+        auto houfenpinqi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$houfenpinqi1$"));
+        if (!houfenpinqi1Item) {
+            throw std::runtime_error("$variable$houfenpinqi1 is not found");
         }
-        chengfaqi = chengfaqiItem->getValueAsDouble();
-        auto qiedaoxianshangpingbiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiedaoxianshangpingbi$"));
-        if (!qiedaoxianshangpingbiItem) {
-            throw std::runtime_error("$variable$qiedaoxianshangpingbi is not found");
+        houfenpinqi1 = houfenpinqi1Item->getValueAsDouble();
+        auto chengfaqi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chengfaqi1$"));
+        if (!chengfaqi1Item) {
+            throw std::runtime_error("$variable$chengfaqi1 is not found");
         }
-        qiedaoxianshangpingbi = qiedaoxianshangpingbiItem->getValueAsDouble();
-        auto qiedaoxianxiapingbiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiedaoxianxiapingbi$"));
-        if (!qiedaoxianxiapingbiItem) {
-            throw std::runtime_error("$variable$qiedaoxianxiapingbi is not found");
+        chengfaqi1 = chengfaqi1Item->getValueAsDouble();
+        auto qiedaoxianshangpingbi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiedaoxianshangpingbi1$"));
+        if (!qiedaoxianshangpingbi1Item) {
+            throw std::runtime_error("$variable$qiedaoxianshangpingbi1 is not found");
         }
-        qiedaoxianxiapingbi = qiedaoxianxiapingbiItem->getValueAsDouble();
-        auto yansedailiangdufanweiminItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$yansedailiangdufanweimin$"));
-        if (!yansedailiangdufanweiminItem) {
-            throw std::runtime_error("$variable$yansedailiangdufanweimin is not found");
+        qiedaoxianshangpingbi1 = qiedaoxianshangpingbi1Item->getValueAsDouble();
+        auto qiedaoxianxiapingbi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiedaoxianxiapingbi1$"));
+        if (!qiedaoxianxiapingbi1Item) {
+            throw std::runtime_error("$variable$qiedaoxianxiapingbi1 is not found");
         }
-        yansedailiangdufanweimin = yansedailiangdufanweiminItem->getValueAsDouble();
-        auto yansedailiangdufanweimaxItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$yansedailiangdufanweimax$"));
-        if (!yansedailiangdufanweimaxItem) {
-            throw std::runtime_error("$variable$yansedailiangdufanweimax is not found");
+        qiedaoxianxiapingbi1 = qiedaoxianxiapingbi1Item->getValueAsDouble();
+        auto yansedailiangdufanweimin1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$yansedailiangdufanweimin1$"));
+        if (!yansedailiangdufanweimin1Item) {
+            throw std::runtime_error("$variable$yansedailiangdufanweimin1 is not found");
         }
-        yansedailiangdufanweimax = yansedailiangdufanweimaxItem->getValueAsDouble();
+        yansedailiangdufanweimin1 = yansedailiangdufanweimin1Item->getValueAsDouble();
+        auto yansedailiangdufanweimax1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$yansedailiangdufanweimax1$"));
+        if (!yansedailiangdufanweimax1Item) {
+            throw std::runtime_error("$variable$yansedailiangdufanweimax1 is not found");
+        }
+        yansedailiangdufanweimax1 = yansedailiangdufanweimax1Item->getValueAsDouble();
     }
 
     inline SetConfigSmartCroppingOfBags::SetConfigSmartCroppingOfBags(const SetConfigSmartCroppingOfBags& obj)
@@ -234,35 +240,36 @@ namespace cdm {
         tiqiantifei = obj.tiqiantifei;
         xiangjitiaoshi = obj.xiangjitiaoshi;
         qiyonger = obj.qiyonger;
-        isxiangjizengyi = obj.isxiangjizengyi;
+        jiange = obj.jiange;
         zidongpingbifanwei = obj.zidongpingbifanwei;
-        pingjunmaichong = obj.pingjunmaichong;
-        maichongxinhao = obj.maichongxinhao;
-        hanggao = obj.hanggao;
-        daichang = obj.daichang;
-        daichangxishu = obj.daichangxishu;
-        guasijuli = obj.guasijuli;
-        zuixiaodaichang = obj.zuixiaodaichang;
-        zuidadaichang = obj.zuidadaichang;
-        baisedailiangdufanweimin = obj.baisedailiangdufanweimin;
-        baisedailiangdufanweimax = obj.baisedailiangdufanweimax;
-        daokoudaoxiangjiluli = obj.daokoudaoxiangjiluli;
-        tifeiyanshi = obj.tifeiyanshi;
-        baojingyanshi = obj.baojingyanshi;
-        tifeishijian = obj.tifeishijian;
-        baojingshijian = obj.baojingshijian;
-        chuiqiyanshi = obj.chuiqiyanshi;
-        dudaiyanshi = obj.dudaiyanshi;
-        chuiqishijian = obj.chuiqishijian;
-        dudaishijian = obj.dudaishijian;
-        maichongxishu = obj.maichongxishu;
-        xiangjizengyi = obj.xiangjizengyi;
-        houfenpinqi = obj.houfenpinqi;
-        chengfaqi = obj.chengfaqi;
-        qiedaoxianshangpingbi = obj.qiedaoxianshangpingbi;
-        qiedaoxianxiapingbi = obj.qiedaoxianxiapingbi;
-        yansedailiangdufanweimin = obj.yansedailiangdufanweimin;
-        yansedailiangdufanweimax = obj.yansedailiangdufanweimax;
+        pingjunmaichong1 = obj.pingjunmaichong1;
+        maichongxinhao1 = obj.maichongxinhao1;
+        hanggao1 = obj.hanggao1;
+        daichang1 = obj.daichang1;
+        daichangxishu1 = obj.daichangxishu1;
+        guasijuli1 = obj.guasijuli1;
+        zuixiaodaichang1 = obj.zuixiaodaichang1;
+        zuidadaichang1 = obj.zuidadaichang1;
+        baisedailiangdufanweimin1 = obj.baisedailiangdufanweimin1;
+        baisedailiangdufanweimax1 = obj.baisedailiangdufanweimax1;
+        daokoudaoxiangjiluli1 = obj.daokoudaoxiangjiluli1;
+        tifeiyanshi1 = obj.tifeiyanshi1;
+        baojingyanshi1 = obj.baojingyanshi1;
+        tifeishijian1 = obj.tifeishijian1;
+        baojingshijian1 = obj.baojingshijian1;
+        chuiqiyanshi1 = obj.chuiqiyanshi1;
+        dudaiyanshi1 = obj.dudaiyanshi1;
+        chuiqishijian1 = obj.chuiqishijian1;
+        dudaishijian1 = obj.dudaishijian1;
+        maichongxishu1 = obj.maichongxishu1;
+        isxiangjizengyi1 = obj.isxiangjizengyi1;
+        xiangjizengyi1 = obj.xiangjizengyi1;
+        houfenpinqi1 = obj.houfenpinqi1;
+        chengfaqi1 = obj.chengfaqi1;
+        qiedaoxianshangpingbi1 = obj.qiedaoxianshangpingbi1;
+        qiedaoxianxiapingbi1 = obj.qiedaoxianxiapingbi1;
+        yansedailiangdufanweimin1 = obj.yansedailiangdufanweimin1;
+        yansedailiangdufanweimax1 = obj.yansedailiangdufanweimax1;
     }
 
     inline SetConfigSmartCroppingOfBags& SetConfigSmartCroppingOfBags::operator=(const SetConfigSmartCroppingOfBags& obj)
@@ -272,35 +279,36 @@ namespace cdm {
             tiqiantifei = obj.tiqiantifei;
             xiangjitiaoshi = obj.xiangjitiaoshi;
             qiyonger = obj.qiyonger;
-            isxiangjizengyi = obj.isxiangjizengyi;
+            jiange = obj.jiange;
             zidongpingbifanwei = obj.zidongpingbifanwei;
-            pingjunmaichong = obj.pingjunmaichong;
-            maichongxinhao = obj.maichongxinhao;
-            hanggao = obj.hanggao;
-            daichang = obj.daichang;
-            daichangxishu = obj.daichangxishu;
-            guasijuli = obj.guasijuli;
-            zuixiaodaichang = obj.zuixiaodaichang;
-            zuidadaichang = obj.zuidadaichang;
-            baisedailiangdufanweimin = obj.baisedailiangdufanweimin;
-            baisedailiangdufanweimax = obj.baisedailiangdufanweimax;
-            daokoudaoxiangjiluli = obj.daokoudaoxiangjiluli;
-            tifeiyanshi = obj.tifeiyanshi;
-            baojingyanshi = obj.baojingyanshi;
-            tifeishijian = obj.tifeishijian;
-            baojingshijian = obj.baojingshijian;
-            chuiqiyanshi = obj.chuiqiyanshi;
-            dudaiyanshi = obj.dudaiyanshi;
-            chuiqishijian = obj.chuiqishijian;
-            dudaishijian = obj.dudaishijian;
-            maichongxishu = obj.maichongxishu;
-            xiangjizengyi = obj.xiangjizengyi;
-            houfenpinqi = obj.houfenpinqi;
-            chengfaqi = obj.chengfaqi;
-            qiedaoxianshangpingbi = obj.qiedaoxianshangpingbi;
-            qiedaoxianxiapingbi = obj.qiedaoxianxiapingbi;
-            yansedailiangdufanweimin = obj.yansedailiangdufanweimin;
-            yansedailiangdufanweimax = obj.yansedailiangdufanweimax;
+            pingjunmaichong1 = obj.pingjunmaichong1;
+            maichongxinhao1 = obj.maichongxinhao1;
+            hanggao1 = obj.hanggao1;
+            daichang1 = obj.daichang1;
+            daichangxishu1 = obj.daichangxishu1;
+            guasijuli1 = obj.guasijuli1;
+            zuixiaodaichang1 = obj.zuixiaodaichang1;
+            zuidadaichang1 = obj.zuidadaichang1;
+            baisedailiangdufanweimin1 = obj.baisedailiangdufanweimin1;
+            baisedailiangdufanweimax1 = obj.baisedailiangdufanweimax1;
+            daokoudaoxiangjiluli1 = obj.daokoudaoxiangjiluli1;
+            tifeiyanshi1 = obj.tifeiyanshi1;
+            baojingyanshi1 = obj.baojingyanshi1;
+            tifeishijian1 = obj.tifeishijian1;
+            baojingshijian1 = obj.baojingshijian1;
+            chuiqiyanshi1 = obj.chuiqiyanshi1;
+            dudaiyanshi1 = obj.dudaiyanshi1;
+            chuiqishijian1 = obj.chuiqishijian1;
+            dudaishijian1 = obj.dudaishijian1;
+            maichongxishu1 = obj.maichongxishu1;
+            isxiangjizengyi1 = obj.isxiangjizengyi1;
+            xiangjizengyi1 = obj.xiangjizengyi1;
+            houfenpinqi1 = obj.houfenpinqi1;
+            chengfaqi1 = obj.chengfaqi1;
+            qiedaoxianshangpingbi1 = obj.qiedaoxianshangpingbi1;
+            qiedaoxianxiapingbi1 = obj.qiedaoxianxiapingbi1;
+            yansedailiangdufanweimin1 = obj.yansedailiangdufanweimin1;
+            yansedailiangdufanweimax1 = obj.yansedailiangdufanweimax1;
         }
         return *this;
     }
@@ -325,128 +333,132 @@ namespace cdm {
         qiyongerItem->setName("$variable$qiyonger$");
         qiyongerItem->setValueFromBool(qiyonger);
         assembly.addItem(qiyongerItem);
-        auto isxiangjizengyiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        isxiangjizengyiItem->setName("$variable$isxiangjizengyi$");
-        isxiangjizengyiItem->setValueFromBool(isxiangjizengyi);
-        assembly.addItem(isxiangjizengyiItem);
+        auto jiangeItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        jiangeItem->setName("$variable$jiange$");
+        jiangeItem->setValueFromDouble(jiange);
+        assembly.addItem(jiangeItem);
         auto zidongpingbifanweiItem = std::make_shared<rw::oso::ObjectStoreItem>();
         zidongpingbifanweiItem->setName("$variable$zidongpingbifanwei$");
         zidongpingbifanweiItem->setValueFromDouble(zidongpingbifanwei);
         assembly.addItem(zidongpingbifanweiItem);
-        auto pingjunmaichongItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        pingjunmaichongItem->setName("$variable$pingjunmaichong$");
-        pingjunmaichongItem->setValueFromDouble(pingjunmaichong);
-        assembly.addItem(pingjunmaichongItem);
-        auto maichongxinhaoItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        maichongxinhaoItem->setName("$variable$maichongxinhao$");
-        maichongxinhaoItem->setValueFromDouble(maichongxinhao);
-        assembly.addItem(maichongxinhaoItem);
-        auto hanggaoItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        hanggaoItem->setName("$variable$hanggao$");
-        hanggaoItem->setValueFromDouble(hanggao);
-        assembly.addItem(hanggaoItem);
-        auto daichangItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        daichangItem->setName("$variable$daichang$");
-        daichangItem->setValueFromDouble(daichang);
-        assembly.addItem(daichangItem);
-        auto daichangxishuItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        daichangxishuItem->setName("$variable$daichangxishu$");
-        daichangxishuItem->setValueFromDouble(daichangxishu);
-        assembly.addItem(daichangxishuItem);
-        auto guasijuliItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        guasijuliItem->setName("$variable$guasijuli$");
-        guasijuliItem->setValueFromDouble(guasijuli);
-        assembly.addItem(guasijuliItem);
-        auto zuixiaodaichangItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        zuixiaodaichangItem->setName("$variable$zuixiaodaichang$");
-        zuixiaodaichangItem->setValueFromDouble(zuixiaodaichang);
-        assembly.addItem(zuixiaodaichangItem);
-        auto zuidadaichangItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        zuidadaichangItem->setName("$variable$zuidadaichang$");
-        zuidadaichangItem->setValueFromDouble(zuidadaichang);
-        assembly.addItem(zuidadaichangItem);
-        auto baisedailiangdufanweiminItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        baisedailiangdufanweiminItem->setName("$variable$baisedailiangdufanweimin$");
-        baisedailiangdufanweiminItem->setValueFromDouble(baisedailiangdufanweimin);
-        assembly.addItem(baisedailiangdufanweiminItem);
-        auto baisedailiangdufanweimaxItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        baisedailiangdufanweimaxItem->setName("$variable$baisedailiangdufanweimax$");
-        baisedailiangdufanweimaxItem->setValueFromDouble(baisedailiangdufanweimax);
-        assembly.addItem(baisedailiangdufanweimaxItem);
-        auto daokoudaoxiangjiluliItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        daokoudaoxiangjiluliItem->setName("$variable$daokoudaoxiangjiluli$");
-        daokoudaoxiangjiluliItem->setValueFromDouble(daokoudaoxiangjiluli);
-        assembly.addItem(daokoudaoxiangjiluliItem);
-        auto tifeiyanshiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        tifeiyanshiItem->setName("$variable$tifeiyanshi$");
-        tifeiyanshiItem->setValueFromDouble(tifeiyanshi);
-        assembly.addItem(tifeiyanshiItem);
-        auto baojingyanshiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        baojingyanshiItem->setName("$variable$baojingyanshi$");
-        baojingyanshiItem->setValueFromDouble(baojingyanshi);
-        assembly.addItem(baojingyanshiItem);
-        auto tifeishijianItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        tifeishijianItem->setName("$variable$tifeishijian$");
-        tifeishijianItem->setValueFromDouble(tifeishijian);
-        assembly.addItem(tifeishijianItem);
-        auto baojingshijianItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        baojingshijianItem->setName("$variable$baojingshijian$");
-        baojingshijianItem->setValueFromDouble(baojingshijian);
-        assembly.addItem(baojingshijianItem);
-        auto chuiqiyanshiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        chuiqiyanshiItem->setName("$variable$chuiqiyanshi$");
-        chuiqiyanshiItem->setValueFromDouble(chuiqiyanshi);
-        assembly.addItem(chuiqiyanshiItem);
-        auto dudaiyanshiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        dudaiyanshiItem->setName("$variable$dudaiyanshi$");
-        dudaiyanshiItem->setValueFromDouble(dudaiyanshi);
-        assembly.addItem(dudaiyanshiItem);
-        auto chuiqishijianItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        chuiqishijianItem->setName("$variable$chuiqishijian$");
-        chuiqishijianItem->setValueFromDouble(chuiqishijian);
-        assembly.addItem(chuiqishijianItem);
-        auto dudaishijianItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        dudaishijianItem->setName("$variable$dudaishijian$");
-        dudaishijianItem->setValueFromDouble(dudaishijian);
-        assembly.addItem(dudaishijianItem);
-        auto maichongxishuItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        maichongxishuItem->setName("$variable$maichongxishu$");
-        maichongxishuItem->setValueFromDouble(maichongxishu);
-        assembly.addItem(maichongxishuItem);
-        auto xiangjizengyiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        xiangjizengyiItem->setName("$variable$xiangjizengyi$");
-        xiangjizengyiItem->setValueFromDouble(xiangjizengyi);
-        assembly.addItem(xiangjizengyiItem);
-        auto houfenpinqiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        houfenpinqiItem->setName("$variable$houfenpinqi$");
-        houfenpinqiItem->setValueFromDouble(houfenpinqi);
-        assembly.addItem(houfenpinqiItem);
-        auto chengfaqiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        chengfaqiItem->setName("$variable$chengfaqi$");
-        chengfaqiItem->setValueFromDouble(chengfaqi);
-        assembly.addItem(chengfaqiItem);
-        auto qiedaoxianshangpingbiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        qiedaoxianshangpingbiItem->setName("$variable$qiedaoxianshangpingbi$");
-        qiedaoxianshangpingbiItem->setValueFromDouble(qiedaoxianshangpingbi);
-        assembly.addItem(qiedaoxianshangpingbiItem);
-        auto qiedaoxianxiapingbiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        qiedaoxianxiapingbiItem->setName("$variable$qiedaoxianxiapingbi$");
-        qiedaoxianxiapingbiItem->setValueFromDouble(qiedaoxianxiapingbi);
-        assembly.addItem(qiedaoxianxiapingbiItem);
-        auto yansedailiangdufanweiminItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        yansedailiangdufanweiminItem->setName("$variable$yansedailiangdufanweimin$");
-        yansedailiangdufanweiminItem->setValueFromDouble(yansedailiangdufanweimin);
-        assembly.addItem(yansedailiangdufanweiminItem);
-        auto yansedailiangdufanweimaxItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        yansedailiangdufanweimaxItem->setName("$variable$yansedailiangdufanweimax$");
-        yansedailiangdufanweimaxItem->setValueFromDouble(yansedailiangdufanweimax);
-        assembly.addItem(yansedailiangdufanweimaxItem);
+        auto pingjunmaichong1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        pingjunmaichong1Item->setName("$variable$pingjunmaichong1$");
+        pingjunmaichong1Item->setValueFromDouble(pingjunmaichong1);
+        assembly.addItem(pingjunmaichong1Item);
+        auto maichongxinhao1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        maichongxinhao1Item->setName("$variable$maichongxinhao1$");
+        maichongxinhao1Item->setValueFromDouble(maichongxinhao1);
+        assembly.addItem(maichongxinhao1Item);
+        auto hanggao1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        hanggao1Item->setName("$variable$hanggao1$");
+        hanggao1Item->setValueFromDouble(hanggao1);
+        assembly.addItem(hanggao1Item);
+        auto daichang1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        daichang1Item->setName("$variable$daichang1$");
+        daichang1Item->setValueFromDouble(daichang1);
+        assembly.addItem(daichang1Item);
+        auto daichangxishu1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        daichangxishu1Item->setName("$variable$daichangxishu1$");
+        daichangxishu1Item->setValueFromDouble(daichangxishu1);
+        assembly.addItem(daichangxishu1Item);
+        auto guasijuli1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        guasijuli1Item->setName("$variable$guasijuli1$");
+        guasijuli1Item->setValueFromDouble(guasijuli1);
+        assembly.addItem(guasijuli1Item);
+        auto zuixiaodaichang1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        zuixiaodaichang1Item->setName("$variable$zuixiaodaichang1$");
+        zuixiaodaichang1Item->setValueFromDouble(zuixiaodaichang1);
+        assembly.addItem(zuixiaodaichang1Item);
+        auto zuidadaichang1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        zuidadaichang1Item->setName("$variable$zuidadaichang1$");
+        zuidadaichang1Item->setValueFromDouble(zuidadaichang1);
+        assembly.addItem(zuidadaichang1Item);
+        auto baisedailiangdufanweimin1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        baisedailiangdufanweimin1Item->setName("$variable$baisedailiangdufanweimin1$");
+        baisedailiangdufanweimin1Item->setValueFromDouble(baisedailiangdufanweimin1);
+        assembly.addItem(baisedailiangdufanweimin1Item);
+        auto baisedailiangdufanweimax1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        baisedailiangdufanweimax1Item->setName("$variable$baisedailiangdufanweimax1$");
+        baisedailiangdufanweimax1Item->setValueFromDouble(baisedailiangdufanweimax1);
+        assembly.addItem(baisedailiangdufanweimax1Item);
+        auto daokoudaoxiangjiluli1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        daokoudaoxiangjiluli1Item->setName("$variable$daokoudaoxiangjiluli1$");
+        daokoudaoxiangjiluli1Item->setValueFromDouble(daokoudaoxiangjiluli1);
+        assembly.addItem(daokoudaoxiangjiluli1Item);
+        auto tifeiyanshi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        tifeiyanshi1Item->setName("$variable$tifeiyanshi1$");
+        tifeiyanshi1Item->setValueFromDouble(tifeiyanshi1);
+        assembly.addItem(tifeiyanshi1Item);
+        auto baojingyanshi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        baojingyanshi1Item->setName("$variable$baojingyanshi1$");
+        baojingyanshi1Item->setValueFromDouble(baojingyanshi1);
+        assembly.addItem(baojingyanshi1Item);
+        auto tifeishijian1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        tifeishijian1Item->setName("$variable$tifeishijian1$");
+        tifeishijian1Item->setValueFromDouble(tifeishijian1);
+        assembly.addItem(tifeishijian1Item);
+        auto baojingshijian1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        baojingshijian1Item->setName("$variable$baojingshijian1$");
+        baojingshijian1Item->setValueFromDouble(baojingshijian1);
+        assembly.addItem(baojingshijian1Item);
+        auto chuiqiyanshi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        chuiqiyanshi1Item->setName("$variable$chuiqiyanshi1$");
+        chuiqiyanshi1Item->setValueFromDouble(chuiqiyanshi1);
+        assembly.addItem(chuiqiyanshi1Item);
+        auto dudaiyanshi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        dudaiyanshi1Item->setName("$variable$dudaiyanshi1$");
+        dudaiyanshi1Item->setValueFromDouble(dudaiyanshi1);
+        assembly.addItem(dudaiyanshi1Item);
+        auto chuiqishijian1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        chuiqishijian1Item->setName("$variable$chuiqishijian1$");
+        chuiqishijian1Item->setValueFromDouble(chuiqishijian1);
+        assembly.addItem(chuiqishijian1Item);
+        auto dudaishijian1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        dudaishijian1Item->setName("$variable$dudaishijian1$");
+        dudaishijian1Item->setValueFromDouble(dudaishijian1);
+        assembly.addItem(dudaishijian1Item);
+        auto maichongxishu1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        maichongxishu1Item->setName("$variable$maichongxishu1$");
+        maichongxishu1Item->setValueFromDouble(maichongxishu1);
+        assembly.addItem(maichongxishu1Item);
+        auto isxiangjizengyi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        isxiangjizengyi1Item->setName("$variable$isxiangjizengyi1$");
+        isxiangjizengyi1Item->setValueFromBool(isxiangjizengyi1);
+        assembly.addItem(isxiangjizengyi1Item);
+        auto xiangjizengyi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        xiangjizengyi1Item->setName("$variable$xiangjizengyi1$");
+        xiangjizengyi1Item->setValueFromDouble(xiangjizengyi1);
+        assembly.addItem(xiangjizengyi1Item);
+        auto houfenpinqi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        houfenpinqi1Item->setName("$variable$houfenpinqi1$");
+        houfenpinqi1Item->setValueFromDouble(houfenpinqi1);
+        assembly.addItem(houfenpinqi1Item);
+        auto chengfaqi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        chengfaqi1Item->setName("$variable$chengfaqi1$");
+        chengfaqi1Item->setValueFromDouble(chengfaqi1);
+        assembly.addItem(chengfaqi1Item);
+        auto qiedaoxianshangpingbi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        qiedaoxianshangpingbi1Item->setName("$variable$qiedaoxianshangpingbi1$");
+        qiedaoxianshangpingbi1Item->setValueFromDouble(qiedaoxianshangpingbi1);
+        assembly.addItem(qiedaoxianshangpingbi1Item);
+        auto qiedaoxianxiapingbi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        qiedaoxianxiapingbi1Item->setName("$variable$qiedaoxianxiapingbi1$");
+        qiedaoxianxiapingbi1Item->setValueFromDouble(qiedaoxianxiapingbi1);
+        assembly.addItem(qiedaoxianxiapingbi1Item);
+        auto yansedailiangdufanweimin1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        yansedailiangdufanweimin1Item->setName("$variable$yansedailiangdufanweimin1$");
+        yansedailiangdufanweimin1Item->setValueFromDouble(yansedailiangdufanweimin1);
+        assembly.addItem(yansedailiangdufanweimin1Item);
+        auto yansedailiangdufanweimax1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        yansedailiangdufanweimax1Item->setName("$variable$yansedailiangdufanweimax1$");
+        yansedailiangdufanweimax1Item->setValueFromDouble(yansedailiangdufanweimax1);
+        assembly.addItem(yansedailiangdufanweimax1Item);
         return assembly;
     }
 
     inline bool SetConfigSmartCroppingOfBags::operator==(const SetConfigSmartCroppingOfBags& obj) const
     {
-        return xiaopodong == obj.xiaopodong && tiqiantifei == obj.tiqiantifei && xiangjitiaoshi == obj.xiangjitiaoshi && qiyonger == obj.qiyonger && isxiangjizengyi == obj.isxiangjizengyi && zidongpingbifanwei == obj.zidongpingbifanwei && pingjunmaichong == obj.pingjunmaichong && maichongxinhao == obj.maichongxinhao && hanggao == obj.hanggao && daichang == obj.daichang && daichangxishu == obj.daichangxishu && guasijuli == obj.guasijuli && zuixiaodaichang == obj.zuixiaodaichang && zuidadaichang == obj.zuidadaichang && baisedailiangdufanweimin == obj.baisedailiangdufanweimin && baisedailiangdufanweimax == obj.baisedailiangdufanweimax && daokoudaoxiangjiluli == obj.daokoudaoxiangjiluli && tifeiyanshi == obj.tifeiyanshi && baojingyanshi == obj.baojingyanshi && tifeishijian == obj.tifeishijian && baojingshijian == obj.baojingshijian && chuiqiyanshi == obj.chuiqiyanshi && dudaiyanshi == obj.dudaiyanshi && chuiqishijian == obj.chuiqishijian && dudaishijian == obj.dudaishijian && maichongxishu == obj.maichongxishu && xiangjizengyi == obj.xiangjizengyi && houfenpinqi == obj.houfenpinqi && chengfaqi == obj.chengfaqi && qiedaoxianshangpingbi == obj.qiedaoxianshangpingbi && qiedaoxianxiapingbi == obj.qiedaoxianxiapingbi && yansedailiangdufanweimin == obj.yansedailiangdufanweimin && yansedailiangdufanweimax == obj.yansedailiangdufanweimax;
+        return xiaopodong == obj.xiaopodong && tiqiantifei == obj.tiqiantifei && xiangjitiaoshi == obj.xiangjitiaoshi && qiyonger == obj.qiyonger && jiange == obj.jiange && zidongpingbifanwei == obj.zidongpingbifanwei && pingjunmaichong1 == obj.pingjunmaichong1 && maichongxinhao1 == obj.maichongxinhao1 && hanggao1 == obj.hanggao1 && daichang1 == obj.daichang1 && daichangxishu1 == obj.daichangxishu1 && guasijuli1 == obj.guasijuli1 && zuixiaodaichang1 == obj.zuixiaodaichang1 && zuidadaichang1 == obj.zuidadaichang1 && baisedailiangdufanweimin1 == obj.baisedailiangdufanweimin1 && baisedailiangdufanweimax1 == obj.baisedailiangdufanweimax1 && daokoudaoxiangjiluli1 == obj.daokoudaoxiangjiluli1 && tifeiyanshi1 == obj.tifeiyanshi1 && baojingyanshi1 == obj.baojingyanshi1 && tifeishijian1 == obj.tifeishijian1 && baojingshijian1 == obj.baojingshijian1 && chuiqiyanshi1 == obj.chuiqiyanshi1 && dudaiyanshi1 == obj.dudaiyanshi1 && chuiqishijian1 == obj.chuiqishijian1 && dudaishijian1 == obj.dudaishijian1 && maichongxishu1 == obj.maichongxishu1 && isxiangjizengyi1 == obj.isxiangjizengyi1 && xiangjizengyi1 == obj.xiangjizengyi1 && houfenpinqi1 == obj.houfenpinqi1 && chengfaqi1 == obj.chengfaqi1 && qiedaoxianshangpingbi1 == obj.qiedaoxianshangpingbi1 && qiedaoxianxiapingbi1 == obj.qiedaoxianxiapingbi1 && yansedailiangdufanweimin1 == obj.yansedailiangdufanweimin1 && yansedailiangdufanweimax1 == obj.yansedailiangdufanweimax1;
     }
 
     inline bool SetConfigSmartCroppingOfBags::operator!=(const SetConfigSmartCroppingOfBags& obj) const

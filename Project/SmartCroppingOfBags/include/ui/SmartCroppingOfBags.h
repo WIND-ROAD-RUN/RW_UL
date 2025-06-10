@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include "ui_SmartCroppingOfBags.h"
 #include "DlgProductSet.h"
+#include "PictureViewerThumbnails.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCroppingOfBagsClass; };
@@ -17,7 +18,12 @@ public:
 	~SmartCroppingOfBags();
 
 public:
-	DlgProductSet* _dlgProductSet = nullptr;
+	DlgProductSetSmartCroppingOfBags* _dlgProductSet = nullptr;
+	/*DlgProductScore* _dlgProductScore = nullptr;
+	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;*/
+
+private:
+	PictureViewerThumbnails* _picturesViewer = nullptr;
 
 public:
 	void build_ui();

@@ -105,10 +105,10 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Software);
 			camera2->cameraIndex = 2;
 			camera2->setHeartbeatTime(5000);
-			setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
+			//setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
 			// ÉèÖÃÌÞ·ÏIOÊä³ö
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera2->setOutTriggerConfig(config);
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			return true;
 		}
