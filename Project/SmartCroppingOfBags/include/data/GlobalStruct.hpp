@@ -41,8 +41,6 @@ public slots:
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
-	std::atomic<bool> debug_isDisplayRec{ true };
-	std::atomic<bool> debug_isDisplayText{ true };
 
 public:
 	// 统计信息
@@ -51,9 +49,7 @@ public:
 		std::atomic_uint64_t produceCount{ 0 };
 		std::atomic_uint64_t wasteCount{ 0 };
 		std::atomic<double> productionYield{ 0 };
-		std::atomic<double> removeRate{ 0 };
-		std::atomic_uint64_t produceCount1{ 0 };
-		std::atomic_uint64_t produceCount2{ 0 };
+		std::atomic<double> averageBagLength{ 0 };
 	} statisticalInfo;
 
 public:
