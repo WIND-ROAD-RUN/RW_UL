@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	DlgProductSet w;
+	SmartCroppingOfBags w;
 	//w.showFullScreen();
 	w.setFixedSize(w.size());
 	w.show();

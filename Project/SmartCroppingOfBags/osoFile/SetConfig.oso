@@ -1,0 +1,43 @@
+#include <string>
+
+namespace cdm {
+	class SetConfigSmartCroppingOfBags
+	{
+	public:
+		xiaopodong : bool :default = false;
+		tiqiantifei : bool :default = false;
+		xiangjitiaoshi : bool :default = false;
+		qiyonger : bool :default = false;
+		isxiangjizengyi : bool :default = false;
+
+		zidongpingbifanwei : double :default = 0;
+		pingjunmaichong : double :default = 0;
+		maichongxinhao : double :default = 0;
+		hanggao : double :default = 0;
+		daichang : double :default = 0;
+		daichangxishu : double :default = 0;
+		guasijuli : double :default = 0;
+		zuixiaodaichang : double :default = 0;
+		zuidadaichang : double :default = 0;
+		baisedailiangdufanweimin : double :default = 0;
+		baisedailiangdufanweimax : double :default = 0;
+
+		daokoudaoxiangjiluli : double :default = 0;
+		tifeiyanshi : double :default = 0;
+		baojingyanshi : double :default = 0;
+		tifeishijian : double :default = 0;
+		baojingshijian : double :default = 0;
+		chuiqiyanshi : double :default = 0;
+		dudaiyanshi : double :default = 0;
+		chuiqishijian : double :default = 0;
+		dudaishijian : double :default = 0;
+		maichongxishu : double :default = 0;
+		xiangjizengyi : double :default = 0;
+		houfenpinqi : double :default = 0;
+		chengfaqi : double :default = 0;
+		qiedaoxianshangpingbi : double :default = 0;
+		qiedaoxianxiapingbi : double :default = 0;
+		yansedailiangdufanweimin : double :default = 0;
+		yansedailiangdufanweimax : double :default = 0;
+	};
+}
