@@ -6,10 +6,13 @@
 
 #include "GeneralConfig.hpp"
 #include "SetConfig.hpp"
+#include "Utilty.hpp"
 
 #include<chrono>
 #include <oso_StorageContext.hpp>
 
+#include "rqw_CameraObjectThread.hpp"
+#include "rqw_ImageSaveEngine.h"
 
 
 // 状态机
@@ -34,8 +37,8 @@ public:
 public:
 	GlobalStructDataSmartCroppingOfBags* detachDefectThreadZipper;
 public:
-	void build_DetachDefectThreadZipper();
-	void destroy_DetachDefectThreadZipper();
+	void build_DetachDefectThreadSmartCroppingOfBags();
+	void destroy_DetachDefectThreadSmartCroppingOfBags();
 public slots:
 	void onCameraReject(size_t index);
 
@@ -66,7 +69,7 @@ public:
 	GlobalStructDataSmartCroppingOfBags& operator=(const GlobalStructDataSmartCroppingOfBags&) = delete;
 private:
 	GlobalStructDataSmartCroppingOfBags();
-	~GlobalStructDataSmartCroppingOfBags() = default;
+	~GlobalStructDataSmartCroppingOfBags();
 public:
 	//void buildConfigManager(rw::oso::StorageType type);
 
@@ -81,7 +84,7 @@ public:
 	// 保存参数
 	void buildImageSaveEngine();
 	void destroyImageSaveEngine();
-	//std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
+	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
 
 	void saveGeneralConfig();
 	void saveDlgProductSetConfig();
@@ -100,8 +103,8 @@ public:
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
-	/*std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
-	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };*/
+	std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
+	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };
 
 	bool buildCamera1();
 	bool buildCamera2();
@@ -112,7 +115,7 @@ public:
 	void destroyCamera2();
 
 	bool isTargetCamera(const QString& cameraIndex, const QString& targetName);
-	//rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
+	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
 	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 
 public:
