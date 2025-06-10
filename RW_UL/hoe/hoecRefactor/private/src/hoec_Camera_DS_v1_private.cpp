@@ -295,6 +295,6 @@ namespace rw
 		void Camera_DS_Passive::ImageCallBackFunc()
 		{
 
-		}
+		}*/
 	}
 }
