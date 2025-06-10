@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include "ui_SmartCroppingOfBags.h"
+#include "DlgProductSet.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCroppingOfBagsClass; };
@@ -14,6 +15,21 @@ class SmartCroppingOfBags : public QMainWindow
 public:
 	SmartCroppingOfBags(QWidget *parent = nullptr);
 	~SmartCroppingOfBags();
+
+public:
+	DlgProductSet* _dlgProductSet = nullptr;
+
+public:
+	void build_ui();
+	void build_connect();
+	void build_camera();
+
+	void build_SmartCroppingOfBagsData();
+	void build_DlgProductSetData();
+	void build_DlgProductScore();
+
+	void build_imageProcessorModule();
+	void build_imageSaveEngine();
 
 private:
 	Ui::SmartCroppingOfBagsClass *ui;

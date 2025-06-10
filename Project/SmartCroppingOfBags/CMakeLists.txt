@@ -30,6 +30,7 @@ FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/src/data
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui
+	${CMAKE_CURRENT_SOURCE_DIR}/osoInclude
 )
 
 qt_add_executable(${PROJECT_NAME} 
@@ -44,6 +45,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/data
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/ui
+	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/osoInclude
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -52,9 +54,10 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE ${OpenCV_LIBS}
 )
 
-#target_link_libraries(${PROJECT_NAME} 
-#
-#)
+target_link_libraries(${PROJECT_NAME} 
+	PRIVATE rqw
+	PRIVATE oso
+)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${QT_PATH}/bin/windeployqt.exe --no-compiler-runtime --no-opengl-sw $<TARGET_FILE:${PROJECT_NAME}>

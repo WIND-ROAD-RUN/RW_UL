@@ -12,3 +12,13 @@ SmartCroppingOfBags::~SmartCroppingOfBags()
 	delete ui;
 }
 
+void SmartCroppingOfBags::build_ui()
+{
+
+}
+
+void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
+{
+
+}
+
