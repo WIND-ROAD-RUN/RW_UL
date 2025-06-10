@@ -17,9 +17,11 @@ namespace rw
 
 		class CameraFactory {
 		public:
-			static std::vector<CameraIP> checkAllCamera();
+			static std::vector<CameraIP> checkAllCamera(CameraProvider provider= CameraProvider::MVS);
 			static std::unique_ptr<CameraActive> CreateActiveCamera(CameraIP cameraIP, CameraTriggerMode triggerMode);
 			static std::unique_ptr<CameraPassive> CreatePassiveCamera(CameraIP cameraIP, CameraTriggerMode triggerMode, CameraPassive::UserToCallBack userToCallBack);
+			static std::unique_ptr<CameraActive> CreateActiveCameraDS(CameraIP cameraIP);
+			static std::unique_ptr<CameraPassive> CreatePassiveCameraDS(CameraIP cameraIP, CameraPassive::UserToCallBack userToCallBack);
 		};
 	}
 }
