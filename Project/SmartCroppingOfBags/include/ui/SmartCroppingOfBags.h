@@ -31,6 +31,12 @@ public:
 	void build_imageProcessorModule();
 	void build_imageSaveEngine();
 
+public:
+	void read_config();
+	void read_config_GeneralConfig();
+	void read_config_ScoreConfig();
+	void read_config_SetConfig();
+
 private:
 	Ui::SmartCroppingOfBagsClass *ui;
 };

@@ -19,6 +19,11 @@ GlobalStructDataSmartCroppingOfBags::~GlobalStructDataSmartCroppingOfBags()
 
 }
 
+void GlobalStructDataSmartCroppingOfBags::buildConfigManager(rw::oso::StorageType type)
+{
+	storeContext = std::make_unique<rw::oso::StorageContext>(type);
+}
+
 void GlobalStructDataSmartCroppingOfBags::buildImageSaveEngine()
 {
 	imageSaveEngine = std::make_unique<rw::rqw::ImageSaveEngine>(this, 2);

@@ -71,7 +71,7 @@ private:
 	GlobalStructDataSmartCroppingOfBags();
 	~GlobalStructDataSmartCroppingOfBags();
 public:
-	//void buildConfigManager(rw::oso::StorageType type);
+	void buildConfigManager(rw::oso::StorageType type);
 
 	void buildImageProcessorModules(const QString& path);
 	void destroyImageProcessingModule();
