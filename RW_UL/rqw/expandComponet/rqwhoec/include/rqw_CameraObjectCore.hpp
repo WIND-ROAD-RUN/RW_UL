@@ -2,6 +2,8 @@
 
 #include<QString>
 #include<QVector>
+#include <opencv2/core/mat.hpp>
+#include<QImage>
 
 namespace rw {
 	namespace hoec
@@ -10,6 +12,9 @@ namespace rw {
 	}
 
 	namespace rqw {
+		QImage cvMatToQImage(const cv::Mat& mat);
+        
+
 		struct OutTriggerConfig
 		{
 		public:

@@ -88,83 +88,28 @@ namespace rw
 			{
 				cv::Mat bayerImage(height, width, CV_8UC1, pData);
 
-				// Step 2: 创建一个用于存储 RGB 图像的 cv::Mat
 				cv::Mat rgbImage;
 
-				// Step 3: 使用 OpenCV 的 cvtColor 函数将 Bayer GB 8 转换为 RGB
 				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerGB2RGB);
 
 				return rgbImage;
 			}
-
-			int channels = 1; // 默认单通道
-
-			// 根据像素格式设置通道数
-			switch (frameInfo.enPixelType) {
-			case PixelType_Gvsp_Mono8:
-				channels = 1;
-				break;
-			case PixelType_Gvsp_Mono10:
-			case PixelType_Gvsp_Mono12:
-				channels = 1;
-				break;
-			case PixelType_Gvsp_RGB8_Packed:
-				channels = 3;
-				break;
-			case PixelType_Gvsp_YUV422_Packed:
-			case PixelType_Gvsp_YUV422_YUYV_Packed:
-				channels = 2;
-				break;
-			case PixelType_Gvsp_BayerGR8:
-			case PixelType_Gvsp_BayerGB8:
-			case PixelType_Gvsp_BayerGR10:
-			case PixelType_Gvsp_BayerGR12:
-			case PixelType_Gvsp_BayerGR10_Packed:
-			case PixelType_Gvsp_BayerGR12_Packed:
-				channels = 1;
-				break;
-			case PixelType_Gvsp_BayerRG8:
-				channels = 1;
-				break;
-			default:
-				std::cerr << "Unsupported pixel format which is " << frameInfo.enPixelType << std::endl;
-				return cv::Mat();
+			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG8) 
+			{
+				cv::Mat bayerImage(height, width, CV_8UC1, pData);
+				cv::Mat rgbImage;
+				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerRG2RGB);
+				return rgbImage;
+			}
+			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG10)
+			{
+				cv::Mat bayerImage(height, width, CV_16UC1, pData);
+				cv::Mat rgbImage;
+				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerRG2RGB);
+				return rgbImage;
 			}
 
-			// 创建cv::Mat对象
-			cv::Mat image(height, width, (channels == 1) ? CV_8UC1 : CV_8UC3, pData);
-
-			// 根据像素格式进行颜色转换
-			switch (frameInfo.enPixelType) {
-			case PixelType_Gvsp_RGB8_Packed:
-				cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
-				break;
-			case PixelType_Gvsp_YUV422_Packed:
-				cv::cvtColor(image, image, cv::COLOR_YUV2BGR_Y422);
-				break;
-			case PixelType_Gvsp_YUV422_YUYV_Packed:
-				cv::cvtColor(image, image, cv::COLOR_YUV2BGR_UYVY);
-				break;
-			case PixelType_Gvsp_BayerGR8:
-				cv::cvtColor(image, image, cv::COLOR_BayerGR2BGR);
-				break;
-			case PixelType_Gvsp_BayerGB8:
-				cv::cvtColor(image, image, cv::COLOR_BayerGB2BGR);
-				break;
-			case PixelType_Gvsp_BayerGR10:
-			case PixelType_Gvsp_BayerGR12:
-			case PixelType_Gvsp_BayerGR10_Packed:
-			case PixelType_Gvsp_BayerGR12_Packed:
-				cv::cvtColor(image, image, cv::COLOR_BayerGR2BGR);
-				break;
-			case PixelType_Gvsp_BayerRG8:
-				cv::cvtColor(image, image, cv::COLOR_BayerRG2BGR);
-				break;
-			default:
-				break;
-			}
-
-			return image;
+			return cv::Mat::zeros(height, width, CV_8UC3);
 		}
 	}
 }
