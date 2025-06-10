@@ -9,6 +9,10 @@
 #include<functional>
 #include<atomic>
 
+#include"DVPCamera.h"
+#include"dvpir.h"
+#include"dvpParam.h"
+
 
 namespace rw
 {
@@ -51,8 +55,28 @@ namespace rw
 			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
 			bool outTrigger() override;
 			bool outTrigger(bool isOpen) override;
+
+			//预分屏
+			bool setPreDivider(size_t number) ;
+
+			//乘法器
+			bool setMultiplier(size_t number);
+
+			//后分屏
+			bool setPostDivider(size_t number);
+
+			//获取脉冲
+
+			bool getEncoderNumber(size_t & number);
+
+			//设置行高
+
+
+
+
+
 		protected:
-			void* m_cameraHandle{ nullptr };
+			dvpHandle m_cameraHandle{};
 		protected:
 			bool _isMonitor{ false };
 			CameraTriggerMode triggerMode;
