@@ -1,2 +1,3 @@
 add_subdirectory(ButtonScanner)
 add_subdirectory(SmartCroppingOfBags)
+add_subdirectory(ZipperScanner)
