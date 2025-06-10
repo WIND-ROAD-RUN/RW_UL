@@ -13,7 +13,7 @@ demo::demo(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	auto camerList=rw::rqw::CheckCameraList();
+	auto camerList=rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
 	if (camerList.empty())
 	{
 		qDebug() << "No camera found!";

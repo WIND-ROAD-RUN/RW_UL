@@ -100,7 +100,7 @@ namespace rw
 			CameraPassive::UserToCallBack userToCallBack)
 		{
 			std::unique_ptr<CameraPassive> result;
-			if (cameraIP.provider == CameraProvider::MVS)
+			if (cameraIP.provider == CameraProvider::DS)
 			{
 				auto camera = new Camera_DS_Passive(userToCallBack);
 				result = std::make_unique<CameraPassive>(camera, camera, userToCallBack);
