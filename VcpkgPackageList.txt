@@ -5,3 +5,4 @@ sqlite3
 gtest
 spdlog
 hwloc
+pkgconf
