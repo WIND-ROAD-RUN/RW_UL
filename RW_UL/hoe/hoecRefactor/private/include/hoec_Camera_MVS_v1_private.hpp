@@ -53,6 +53,17 @@ namespace rw
 			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
 			bool outTrigger() override;
 			bool outTrigger(bool isOpen) override;
+		public:
+			bool disconnectCamera() override;
+			bool setFrameTriggered(bool state) override;
+			bool getFrameTriggered(bool& isGet) override;
+			bool setLineTriggered(bool state) override;
+			bool getLineTriggered(bool& isGet) override;
+			bool setPreDivider(size_t number) override;
+			bool setMultiplier(size_t number) override;
+			bool setPostDivider(size_t number) override;
+			bool getEncoderNumber(size_t& number) override;
+
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

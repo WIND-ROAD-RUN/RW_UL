@@ -1,7 +1,11 @@
-#include"hoec_Camera_core_v1_private.hpp"
+ï»¿#include"hoec_Camera_core_v1_private.hpp"
 
 #include "MvCameraControl.h"
 #include"opencv2/opencv.hpp"
+
+#include"DVPCamera.h"
+#include"dvpir.h"
+#include"dvpParam.h"
 
 namespace rw
 {
@@ -9,65 +13,65 @@ namespace rw
 	{
 		cv::Mat ImageFrameConvert::MVS_ConvertFrameToMat(const MV_FRAME_OUT& frameInfo)
 		{
-			// »ñÈ¡Í¼Ïñ¿í¶ÈºÍ¸ß¶È
+			// è·å–å›¾åƒå®½åº¦å’Œé«˜åº¦
 			int width = frameInfo.stFrameInfo.nWidth;
 			int height = frameInfo.stFrameInfo.nHeight;
 
-			// »ñÈ¡Í¼ÏñÊı¾İÖ¸Õë
+			// è·å–å›¾åƒæ•°æ®æŒ‡é’ˆ
 			unsigned char* data = frameInfo.pBufAddr;
 
-			// ¸ù¾İÍ¼ÏñÏñËØ¸ñÊ½´´½¨cv::Mat
+			// æ ¹æ®å›¾åƒåƒç´ æ ¼å¼åˆ›å»ºcv::Mat
 			cv::Mat image;
 			switch (frameInfo.stFrameInfo.enPixelType) {
 			case PixelType_Gvsp_BayerRG8:
-				// Bayer RG8¸ñÊ½Í¼Ïñ
+				// Bayer RG8æ ¼å¼å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC1, data);
 				cv::cvtColor(image, image, cv::COLOR_BayerRG2BGR);
 				break;
 			case PixelType_Gvsp_Mono8:
-				// µ¥Í¨µÀ»Ò¶ÈÍ¼Ïñ
+				// å•é€šé“ç°åº¦å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC1, data);
 				break;
 			case PixelType_Gvsp_Mono10:
 			case PixelType_Gvsp_Mono12:
-				// µ¥Í¨µÀ»Ò¶ÈÍ¼Ïñ£¬10Î»ºÍ12Î»ĞèÒª×ª»»Îª16Î»
+				// å•é€šé“ç°åº¦å›¾åƒï¼Œ10ä½å’Œ12ä½éœ€è¦è½¬æ¢ä¸º16ä½
 				image = cv::Mat(height, width, CV_16UC1, data);
 				break;
 			case PixelType_Gvsp_RGB8_Packed:
-				// ÈıÍ¨µÀRGBÍ¼Ïñ
+				// ä¸‰é€šé“RGBå›¾åƒ
 				image = cv::Mat(height, width, CV_8UC3, data);
-				// OpenCVÄ¬ÈÏµÄÑÕÉ«Ë³ĞòÊÇBGR£¬ĞèÒª×ª»»ÎªRGB
+				// OpenCVé»˜è®¤çš„é¢œè‰²é¡ºåºæ˜¯BGRï¼Œéœ€è¦è½¬æ¢ä¸ºRGB
 				cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
 				break;
 			case PixelType_Gvsp_YUV422_Packed:
-				// YUV422¸ñÊ½Í¼Ïñ
+				// YUV422æ ¼å¼å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC2, data);
 				cv::cvtColor(image, image, cv::COLOR_YUV2BGR_Y422);
 				break;
 			case PixelType_Gvsp_YUV422_YUYV_Packed:
-				// YUV422 UYVY¸ñÊ½Í¼Ïñ
+				// YUV422 UYVYæ ¼å¼å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC2, data);
 				cv::cvtColor(image, image, cv::COLOR_YUV2BGR_UYVY);
 				break;
 			case PixelType_Gvsp_BayerGR8:
-				// Bayer GR8¸ñÊ½Í¼Ïñ
+				// Bayer GR8æ ¼å¼å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC1, data);
 				cv::cvtColor(image, image, cv::COLOR_BayerGR2BGR);
 				break;
 			case PixelType_Gvsp_BayerGB8:
-				// Bayer GB8¸ñÊ½Í¼Ïñ
+				// Bayer GB8æ ¼å¼å›¾åƒ
 				image = cv::Mat(height, width, CV_8UC1, data);
 				cv::cvtColor(image, image, cv::COLOR_BayerGB2BGR);
 				break;
 			case PixelType_Gvsp_BayerGR10:
 			case PixelType_Gvsp_BayerGR12:
-				// Bayer GR10ºÍGR12¸ñÊ½Í¼Ïñ£¬10Î»ºÍ12Î»ĞèÒª×ª»»Îª16Î»
+				// Bayer GR10å’ŒGR12æ ¼å¼å›¾åƒï¼Œ10ä½å’Œ12ä½éœ€è¦è½¬æ¢ä¸º16ä½
 				image = cv::Mat(height, width, CV_16UC1, data);
 				cv::cvtColor(image, image, cv::COLOR_BayerGR2BGR);
 				break;
 			case PixelType_Gvsp_BayerGR10_Packed:
 			case PixelType_Gvsp_BayerGR12_Packed:
-				// Bayer GR10ºÍGR12 Packed¸ñÊ½Í¼Ïñ£¬10Î»ºÍ12Î»ĞèÒª×ª»»Îª16Î»
+				// Bayer GR10å’ŒGR12 Packedæ ¼å¼å›¾åƒï¼Œ10ä½å’Œ12ä½éœ€è¦è½¬æ¢ä¸º16ä½
 				image = cv::Mat(height, width, CV_16UC1, data);
 				cv::cvtColor(image, image, cv::COLOR_BayerGR2BGR);
 				break;
@@ -110,6 +114,49 @@ namespace rw
 			}
 
 			return cv::Mat::zeros(height, width, CV_8UC3);
+		}
+
+		cv::Mat ImageFrameConvert::DS_ConvertFrameToMat(const dvpFrame& frame, void* pBuffer)
+		{
+			int width = frame.iWidth;
+			int height = frame.iHeight;
+			unsigned char* data = static_cast<unsigned char*>(pBuffer);
+
+			cv::Mat image;
+
+			switch (frame.format) {
+			case FORMAT_MONO:
+				image = cv::Mat(height, width, CV_8UC1, data);
+				break;
+			case FORMAT_BGR24:
+				image = cv::Mat(height, width, CV_8UC3, data);
+				break;
+			case FORMAT_BGR32:
+				image = cv::Mat(height, width, CV_8UC4, data);
+				break;
+			case FORMAT_BGR48:
+				image = cv::Mat(height, width, CV_16UC3, data);
+				break;
+			case FORMAT_BGR64:
+				image = cv::Mat(height, width, CV_16UC4, data);
+				break;
+			case FORMAT_RGB24:
+				image = cv::Mat(height, width, CV_8UC3, data);
+				cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+				break;
+			case FORMAT_RGB32:
+				image = cv::Mat(height, width, CV_8UC4, data);
+				cv::cvtColor(image, image, cv::COLOR_RGBA2BGRA);
+				break;
+			case FORMAT_RGB48:
+				image = cv::Mat(height, width, CV_16UC3, data);
+				cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+				break;
+			default:
+				image = cv::Mat::zeros(height, width, CV_8UC3);
+				break;
+			}
+			return image;
 		}
 	}
 }

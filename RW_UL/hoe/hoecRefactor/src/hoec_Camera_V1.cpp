@@ -158,6 +158,51 @@ namespace rw
 			return _camera->outTrigger();
 		}
 
+		bool CameraActive::disconnectCamera()
+		{
+			return _camera->disconnectCamera();
+		}
+
+		bool CameraActive::setFrameTriggered(bool state)
+		{
+			return _camera->setFrameTriggered(state);
+		}
+
+		bool CameraActive::getFrameTriggered(bool& isGet)
+		{
+			return _camera->getFrameTriggered(isGet);
+		}
+
+		bool CameraActive::setLineTriggered(bool state)
+		{
+			return _camera->setLineTriggered(state);
+		}
+
+		bool CameraActive::getLineTriggered(bool& isGet)
+		{
+			return _camera->getLineTriggered(isGet);
+		}
+
+		bool CameraActive::setPreDivider(size_t number)
+		{
+			return _camera->setPreDivider(number);
+		}
+
+		bool CameraActive::setMultiplier(size_t number)
+		{
+			return _camera->setMultiplier(number);
+		}
+
+		bool CameraActive::setPostDivider(size_t number)
+		{
+			return _camera->setPostDivider(number);
+		}
+
+		bool CameraActive::getEncoderNumber(size_t& number)
+		{
+			return _camera->getEncoderNumber(number);
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -287,6 +332,51 @@ namespace rw
 		bool CameraPassive::outTrigger(bool isOpen)
 		{
 			return _camera->outTrigger(isOpen);
+		}
+
+		bool CameraPassive::disconnectCamera()
+		{
+			return _camera->disconnectCamera();
+		}
+
+		bool CameraPassive::setFrameTriggered(bool state)
+		{
+			return _camera->setFrameTriggered(state);
+		}
+
+		bool CameraPassive::getFrameTriggered(bool& isGet)
+		{
+			return _camera->getFrameTriggered(isGet);
+		}
+
+		bool CameraPassive::setLineTriggered(bool state)
+		{
+			return _camera->setLineTriggered(state);
+		}
+
+		bool CameraPassive::getLineTriggered(bool& isGet)
+		{
+			return _camera->getLineTriggered(isGet);
+		}
+
+		bool CameraPassive::setPreDivider(size_t number)
+		{
+			return _camera->setPreDivider(number);
+		}
+
+		bool CameraPassive::setMultiplier(size_t number)
+		{
+			return _camera->setMultiplier(number);
+		}
+
+		bool CameraPassive::setPostDivider(size_t number)
+		{
+			return _camera->setPostDivider(number);
+		}
+
+		bool CameraPassive::getEncoderNumber(size_t& number)
+		{
+			return _camera->getEncoderNumber(number);
 		}
 	}
 }

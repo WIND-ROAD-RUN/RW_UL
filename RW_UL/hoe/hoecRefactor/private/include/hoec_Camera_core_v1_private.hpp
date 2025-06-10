@@ -1,4 +1,5 @@
 #pragma once
+#include "DVPCamera.h"
 
 struct _MV_FRAME_OUT_;
 typedef struct _MV_FRAME_OUT_ MV_FRAME_OUT;
@@ -17,6 +18,7 @@ namespace rw
 		{
 			static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT& frameInfo);
 			static cv::Mat MVS_ConvertFrameToMat(const MV_FRAME_OUT_INFO_EX& frameInfo, unsigned char* pData);
+			static cv::Mat DS_ConvertFrameToMat(const dvpFrame& frame, void* pBuffer);
 		};
 	}
 }

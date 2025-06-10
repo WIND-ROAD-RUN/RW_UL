@@ -494,6 +494,65 @@ namespace rw
 			return result == MV_OK;
 		}
 
+		bool Camera_MVS::disconnectCamera()
+		{
+			if (!m_cameraHandle) {
+				return true;
+			}
+
+			if (_isMonitor) {
+				MV_CC_StopGrabbing(m_cameraHandle);
+				_isMonitor = false;
+			}
+
+			MV_CC_CloseDevice(m_cameraHandle);
+
+			MV_CC_DestroyHandle(m_cameraHandle);
+			m_cameraHandle = nullptr;
+
+			return true;
+		}
+
+		bool Camera_MVS::setFrameTriggered(bool state)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::getFrameTriggered(bool& isGet)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::setLineTriggered(bool state)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::getLineTriggered(bool& isGet)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::setPreDivider(size_t number)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::setMultiplier(size_t number)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::setPostDivider(size_t number)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::getEncoderNumber(size_t& number)
+		{
+			return false;
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

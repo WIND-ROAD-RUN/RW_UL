@@ -20,17 +20,12 @@ namespace rw
 	{
 		class Camera_DS :
 			public ICamera {
-		private:
-			static std::atomic<size_t> _cameraNum;
 		public:
 			Camera_DS();
 			~Camera_DS() override;
 		public:
-			static bool _isIniSDK;
 			static std::vector<std::string> getCameraIpList();
 			static std::vector<CameraInfo> getCameraInfoList();
-			static bool initSDK();
-			static bool unInitSDK();
 		public:
 			bool connectCamera() override;
 			bool getConnectState(bool& isGet)override;
@@ -55,25 +50,16 @@ namespace rw
 			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
 			bool outTrigger() override;
 			bool outTrigger(bool isOpen) override;
-
-			//预分屏
-			bool setPreDivider(size_t number) ;
-
-			//乘法器
-			bool setMultiplier(size_t number);
-
-			//后分屏
-			bool setPostDivider(size_t number);
-
-			//获取脉冲
-
-			bool getEncoderNumber(size_t & number);
-
-			//设置行高
-
-
-
-
+		public:
+			bool setFrameTriggered(bool state) override;
+			bool getFrameTriggered(bool& isGet) override;
+			bool setLineTriggered(bool state) override;
+			bool getLineTriggered(bool& isGet) override;
+			bool disconnectCamera() override;
+			bool setPreDivider(size_t number) override;
+			bool setMultiplier(size_t number) override;
+			bool setPostDivider(size_t number) override;
+			bool getEncoderNumber(size_t & number) override;
 
 		protected:
 			dvpHandle m_cameraHandle{};
@@ -81,6 +67,7 @@ namespace rw
 			bool _isMonitor{ false };
 			CameraTriggerMode triggerMode;
 		};
+
 
 		class Camera_DS_Active
 			:public Camera_DS, public ICameraActive {
@@ -106,7 +93,13 @@ namespace rw
 			bool RegisterCallBackFunc() override;
 		public:
 
-			static void __stdcall ImageCallBackFunc(/*unsigned char* pData, MV_FRAME_OUT_INFO_EX* pFrameInfo, void* pUser*/);
+			static dvpInt32 __stdcall ImageCallBackFunc(
+				dvpHandle handle,
+				dvpStreamEvent event,
+				void* pContext,
+				dvpFrame* pFrame,
+				void* pBuffer);
+	
 		};
 	}
 }

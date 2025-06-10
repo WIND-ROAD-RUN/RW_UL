@@ -28,6 +28,8 @@ namespace rw
 
 			virtual bool getConnectState(bool& isGet) = 0;
 
+			virtual bool disconnectCamera() = 0;
+
 		public:
 			virtual bool startMonitor() = 0;
 			virtual bool stopMonitor() = 0;
@@ -37,16 +39,26 @@ namespace rw
 			void setCameraInfo(const CameraInfo& cameraInfo);
 		public:
 			virtual bool setHeartbeatTime(size_t heartBeatTime) = 0;
-
 			virtual size_t getHeartbeatTime(bool& isGet) = 0;
-
 			virtual bool setFrameRate(float cameraFrameRate) = 0;
 			virtual float getFrameRate(bool& isGet) = 0;
-
 			virtual bool setExposureTime(size_t value) = 0;
 			virtual bool setGain(size_t value) = 0;
-			virtual bool setTriggerMode(CameraTriggerMode mode) = 0;
 			virtual bool setInTriggerLine(size_t lineIndex) = 0;
+		public:
+			//面阵相机用
+			virtual bool setTriggerMode(CameraTriggerMode mode) = 0;
+			//线阵相机用
+			virtual bool setFrameTriggered(bool state) = 0;
+			virtual bool getFrameTriggered(bool& isGet) = 0;
+			virtual bool setLineTriggered(bool state) = 0;
+			virtual bool getLineTriggered(bool& isGet) = 0;
+		public:
+			//线阵相机额外配置
+			virtual bool setPreDivider(size_t number) = 0 ;
+			virtual bool setMultiplier(size_t number) = 0 ;
+			virtual bool setPostDivider(size_t number) = 0;
+			virtual bool getEncoderNumber(size_t& number) = 0;
 
 		public:
 			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
@@ -120,9 +132,19 @@ namespace rw
 		public:
 			~CameraActive() override;
 		public:
-			virtual bool setOutTriggerConfig(const OutTriggerConfig& config) override;
-			virtual bool outTrigger() override;
-			virtual bool outTrigger(bool isOpen)override;
+			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
+			bool outTrigger() override;
+			bool outTrigger(bool isOpen)override;
+		public:
+			bool disconnectCamera() override;
+			bool setFrameTriggered(bool state) override;
+			bool getFrameTriggered(bool& isGet) override;
+			bool setLineTriggered(bool state) override;
+			bool getLineTriggered(bool& isGet) override;
+			bool setPreDivider(size_t number) override;
+			bool setMultiplier(size_t number) override;
+			bool setPostDivider(size_t number) override;
+			bool getEncoderNumber(size_t& number) override;
 		};
 
 		class CameraPassive
@@ -168,6 +190,16 @@ namespace rw
 			bool setOutTriggerConfig(const OutTriggerConfig& config) override;
 			bool outTrigger() override;
 			bool outTrigger(bool isOpen)override;
+		public:
+			bool disconnectCamera() override;
+			bool setFrameTriggered(bool state) override;
+			bool getFrameTriggered(bool& isGet) override;
+			bool setLineTriggered(bool state) override;
+			bool getLineTriggered(bool& isGet) override;
+			bool setPreDivider(size_t number) override;
+			bool setMultiplier(size_t number) override;
+			bool setPostDivider(size_t number) override;
+			bool getEncoderNumber(size_t& number) override;
 		};
 	}
 }
