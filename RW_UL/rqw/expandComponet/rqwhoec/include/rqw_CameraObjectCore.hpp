@@ -72,6 +72,12 @@ namespace rw {
 			Undefined
 		};
 
-		QVector<CameraMetaData> CheckCameraList();
+		enum class CameraProvider
+		{
+			MVS,
+			DS
+		};
+
+		QVector<CameraMetaData> CheckCameraList(CameraProvider provider= CameraProvider::MVS);
 	} // namespace rqw
 } // namespace rw

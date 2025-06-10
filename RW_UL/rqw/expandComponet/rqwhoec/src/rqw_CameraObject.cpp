@@ -153,20 +153,30 @@ namespace rw
 			hoecCameraIp.ip = cameraMetaData.ip.toStdString();
 			hoecCameraIp.provider = hoec_v1::from_string(cameraMetaData.provider.toStdString());
 
-			hoec_v1::CameraTriggerMode hoecTrigger;
-			if (triggerMode == CameraObjectTrigger::Hardware)
+			if (hoecCameraIp.provider==hoec_v1::CameraProvider::MVS)
 			{
-				hoecTrigger = hoec_v1::CameraTriggerMode::HardwareTriggered;
-			}
-			else
-			{
-				hoecTrigger = hoec_v1::CameraTriggerMode::SoftwareTriggered;
-			}
-
-			_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCamera(hoecCameraIp, hoecTrigger, [this](cv::Mat  mat)
+				hoec_v1::CameraTriggerMode hoecTrigger;
+				if (triggerMode == CameraObjectTrigger::Hardware)
 				{
-					emit frameCaptured(std::move(mat));
-				});
+					hoecTrigger = hoec_v1::CameraTriggerMode::HardwareTriggered;
+				}
+				else
+				{
+					hoecTrigger = hoec_v1::CameraTriggerMode::SoftwareTriggered;
+				}
+
+				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCamera(hoecCameraIp, hoecTrigger, [this](cv::Mat  mat)
+					{
+						emit frameCaptured(std::move(mat));
+					});
+			}
+			else if (hoecCameraIp.provider == hoec_v1::CameraProvider::DS)
+			{
+				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCameraDS(hoecCameraIp, [this](cv::Mat  mat)
+					{
+						emit frameCaptured(std::move(mat));
+					});
+			}
 
 			_cameraPassive->RegisterCallBackFunc();
 		}
