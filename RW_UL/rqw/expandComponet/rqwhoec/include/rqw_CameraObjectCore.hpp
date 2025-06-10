@@ -2,6 +2,8 @@
 
 #include<QString>
 #include<QVector>
+#include <opencv2/core/mat.hpp>
+#include<QImage>
 
 namespace rw {
 	namespace hoec
@@ -10,6 +12,9 @@ namespace rw {
 	}
 
 	namespace rqw {
+		QImage cvMatToQImage(const cv::Mat& mat);
+        
+
 		struct OutTriggerConfig
 		{
 		public:
@@ -67,6 +72,12 @@ namespace rw {
 			Undefined
 		};
 
-		QVector<CameraMetaData> CheckCameraList();
+		enum class CameraProvider
+		{
+			MVS,
+			DS
+		};
+
+		QVector<CameraMetaData> CheckCameraList(CameraProvider provider= CameraProvider::MVS);
 	} // namespace rqw
 } // namespace rw

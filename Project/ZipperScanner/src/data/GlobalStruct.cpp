@@ -222,7 +222,6 @@ bool GlobalStructDataZipper::buildCamera1()
 
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
 	// 剔废持续时间
 	long DurationTime = setConfig.tiFeiChiXuShiJian1 * 1000;
 
@@ -256,7 +255,6 @@ bool GlobalStructDataZipper::buildCamera2()
 
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
 	// 剔废持续时间
 	long DurationTime = setConfig.tiFeiChiXuShiJian2 * 1000;
 
