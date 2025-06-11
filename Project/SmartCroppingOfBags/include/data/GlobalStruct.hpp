@@ -6,6 +6,7 @@
 
 #include "GeneralConfig.hpp"
 #include "SetConfig.hpp"
+#include "DlgProductScore.h"
 #include "Utilty.hpp"
 
 #include<chrono>
@@ -13,6 +14,7 @@
 
 #include "rqw_CameraObjectThread.hpp"
 #include "rqw_ImageSaveEngine.h"
+#include <ScoreConfig.hpp>
 
 
 // 状态机
@@ -94,7 +96,7 @@ public:
 public:
 	// UI界面参数
 	cdm::GeneralConfigSmartCroppingOfBags generalConfig;
-	//cdm::ScoreConfig scoreConfig;
+	cdm::ScoreConfigSmartCroppingOfBags scoreConfig;
 	cdm::SetConfigSmartCroppingOfBags setConfig;
 
 public:

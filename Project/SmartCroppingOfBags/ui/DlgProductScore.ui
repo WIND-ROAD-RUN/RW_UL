@@ -1,0 +1,1771 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DlgProductScoreClass</class>
+ <widget class="QDialog" name="DlgProductScoreClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>1024</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DlgProductScore</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" rowstretch="1,8">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="7,1">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>638</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_close">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    padding: 8px 16px 8px 36px; 
+    font-size: 14px;
+    qproperty-icon: url(:/ButtonScanner/image/exit.png);  
+    qproperty-iconSize: 30px 30px;
+}
+
+QPushButton:hover {
+    background-color: #ff6666;
+}
+
+QPushButton:pressed {
+    background-color: #cc0000;
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: #F8F8F8;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+     </property>
+     <property name="title">
+      <string>缺陷参数设置</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_26" stretch="3,1,3">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_heiba">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>黑疤</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_heibascore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_heibaarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_shudang">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>疏档</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_shudangscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_shudangarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_huapo">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>划破</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_huaposcore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_huapoarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_jietou">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>接头</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_jietouscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_jietouarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_guasi">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>挂丝</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_guasiscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_guasiarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_podong">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>破洞</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_23">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_podongscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_24">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_podongarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_zangwu">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>脏污</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_25">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_zangwuscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_26">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_zangwuarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_noshudang">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>无疏档</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_27">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_noshudangscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_28">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_noshudangarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_heiba_15">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>小破洞</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_29">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_xiaopodongscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_30">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_xiaopodongarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_modian">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>墨点</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_35">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_modianscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_36">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_modianarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_loumo">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>漏膜</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_37">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_loumoscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_38">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_loumoarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_xishudang">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>稀疏档</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_xishudangscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_xishudangarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_erweima">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>二维码</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_41">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_erweimascore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_42">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_erweimaarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_damodian">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>大墨点</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_damodianscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_44">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_damodianarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_kongdong">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>孔洞</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_45">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_kongdongscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_46">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_kongdongarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_25" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_sebiao">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>色标</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_sebiaoscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_48">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_sebiaoarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_yinshuaquexian">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>印刷缺陷</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_33">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_yinshuaquexianscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_34">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_yinshuaquexianarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="2,1,2,0,2">
+          <item>
+           <widget class="QCheckBox" name="ckb_heiba_16">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+            </property>
+            <property name="text">
+             <string>胶带</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_31">
+            <property name="text">
+             <string>分数:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_jiaodaiscore">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>面积:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_jiaodaiarea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

@@ -33,7 +33,7 @@ void SmartCroppingOfBags::build_ui()
 {
 	build_SmartCroppingOfBagsData();
 	build_DlgProductSetData();
-	//build_DlgProductScore();
+	build_DlgProductScore();
 }
 
 void SmartCroppingOfBags::build_connect()
@@ -64,6 +64,8 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
 	QObject::connect(ui->btn_close, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::btn_close_clicked);
+	QObject::connect(ui->btn_normalParam,&QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_normalParam_clicked);
 }
 
 void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
@@ -102,6 +104,11 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 void SmartCroppingOfBags::build_DlgProductSetData()
 {
 	_dlgProductSet = new DlgProductSetSmartCroppingOfBags(this);
+}
+
+void SmartCroppingOfBags::build_DlgProductScore()
+{
+	_dlgProductScore = new DlgProductScoreSmartCroppingOfBags(this);
 }
 
 void SmartCroppingOfBags::destroyComponents()
@@ -241,6 +248,9 @@ void SmartCroppingOfBags::btn_baoguang_clicked()
 
 void SmartCroppingOfBags::btn_normalParam_clicked()
 {
+	_dlgProductScore->setFixedSize(this->width(), this->height());
+	_dlgProductScore->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	_dlgProductScore->exec();
 }
 
 void SmartCroppingOfBags::btn_setParam_clicked()

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QMainWindow>
-#include "ui_SmartCroppingOfBags.h"
+
+#include "DlgProductScore.h"
 #include "DlgProductSet.h"
+#include "ui_SmartCroppingOfBags.h"
 #include "PictureViewerThumbnails.h"
 
 QT_BEGIN_NAMESPACE
@@ -19,8 +21,8 @@ public:
 
 public:
 	DlgProductSetSmartCroppingOfBags* _dlgProductSet = nullptr;
-	/*DlgProductScore* _dlgProductScore = nullptr;
-	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;*/
+	DlgProductScoreSmartCroppingOfBags* _dlgProductScore = nullptr;
+	//DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
