@@ -9,8 +9,13 @@ find_package(cryptopp CONFIG REQUIRED)
 
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
-	${CMAKE_CURRENT_SOURCE_DIR}/include 
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/include/ActivationCodeModule 
+)
+
+FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ActivationCodeModule
 )
 
 group_interface_sources_and_headers(

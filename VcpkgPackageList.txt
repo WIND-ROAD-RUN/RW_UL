@@ -7,3 +7,4 @@ spdlog
 hwloc
 pkgconf
 cryptopp
+openssl

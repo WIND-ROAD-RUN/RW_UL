@@ -16,7 +16,7 @@ FIND_SOURCES_AND_HEADERS(SRC_LIST
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE cryptopp::cryptopp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE cla)
 
