@@ -25,6 +25,7 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 SmartCroppingOfBags::~SmartCroppingOfBags()
 {
+	destroyComponents();
 	delete ui;
 }
 
@@ -61,6 +62,8 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::ckb_huikan_checked);
 	QObject::connect(ui->ckb_yinshuazhiliangjiance, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
+	QObject::connect(ui->btn_close, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_close_clicked);
 }
 
 void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
@@ -99,6 +102,23 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 void SmartCroppingOfBags::build_DlgProductSetData()
 {
 	_dlgProductSet = new DlgProductSetSmartCroppingOfBags(this);
+}
+
+void SmartCroppingOfBags::destroyComponents()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	//销毁相机
+	globalStruct.destroyCamera();
+	// 销毁图像处理模块
+	//globalStruct.destroyImageProcessingModule();
+	// 销毁图像保存模块
+	globalStruct.destroyImageSaveEngine();
+	// 销毁异步剔废线程
+	//globalStruct.destroy_DetachDefectThreadZipper();
+	// 销毁剔废优先队列
+	//globalStruct.destroy_PriorityQueue();
+	// 保存参数
+	globalStruct.saveGeneralConfig();
 }
 
 void SmartCroppingOfBags::read_config()
@@ -175,6 +195,11 @@ void SmartCroppingOfBags::read_config_SetConfig()
 	{
 		globalStruct.setConfig = *globalStruct.storeContext->load(globalPath.setConfigPath.toStdString());
 	}
+}
+
+void SmartCroppingOfBags::btn_close_clicked()
+{
+	this->close();
 }
 
 void SmartCroppingOfBags::btn_pingbiquyu_clicked()
