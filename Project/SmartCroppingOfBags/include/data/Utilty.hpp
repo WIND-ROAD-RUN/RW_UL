@@ -53,9 +53,24 @@ public:
 
 struct ClassId
 {
-	/*static constexpr int Queya = 0;
-	static constexpr int Tangshang = 1;
-	static constexpr int Zangwu = 2;*/
+	static constexpr int Heiba = 0;
+	static constexpr int Shudang = 1;
+	static constexpr int Huapo = 2;
+	static constexpr int Jietou = 3;
+	static constexpr int Guasi = 4;
+	static constexpr int Podong = 5;
+	static constexpr int Zangwu = 6;
+	static constexpr int Noshudang = 7;
+	static constexpr int Xiaopodong = 8;
+	static constexpr int Jiaodai = 9;
+	static constexpr int Yinshuaquexian = 10;
+	static constexpr int Modian = 11;
+	static constexpr int Loumo = 12;
+	static constexpr int Xishudang = 13;
+	static constexpr int Erweima = 14;
+	static constexpr int Damodian = 15;
+	static constexpr int Kongdong = 16;
+	static constexpr int Sebiao = 17;
 };
 
 inline struct GlobalPath

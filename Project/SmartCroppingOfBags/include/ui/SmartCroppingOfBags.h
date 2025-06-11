@@ -43,6 +43,22 @@ public:
 	void read_config_ScoreConfig();
 	void read_config_SetConfig();
 
+private slots:
+	void btn_pingbiquyu_clicked();
+	void btn_chanliangqingling_clicked();
+	void btn_daizizhonglei_clicked();
+	void btn_down_clicked();
+	void btn_up_clicked();
+	void btn_baoguang_clicked();
+	void btn_normalParam_clicked();
+	void btn_setParam_clicked();
+
+	void ckb_zhinengcaiqie_checked();
+	void ckb_tifei_checked();
+	void ckb_huikan_checked();
+	void ckb_yinshuazhiliangjiance_checked();
+
+
 private:
 	Ui::SmartCroppingOfBagsClass *ui;
 };

@@ -5,6 +5,8 @@
 #include <GlobalStruct.hpp>
 #include <QMessageBox>
 
+#include "NumberKeyboard.h"
+
 SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::SmartCroppingOfBagsClass())
@@ -16,6 +18,9 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 	// 构建UI
 	build_ui();
+
+	// 连接槽函数
+	build_connect();
 }
 
 SmartCroppingOfBags::~SmartCroppingOfBags()
@@ -28,6 +33,34 @@ void SmartCroppingOfBags::build_ui()
 	build_SmartCroppingOfBagsData();
 	build_DlgProductSetData();
 	//build_DlgProductScore();
+}
+
+void SmartCroppingOfBags::build_connect()
+{
+	QObject::connect(ui->btn_pingbiquyu, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_pingbiquyu_clicked);
+	QObject::connect(ui->btn_chanliangqingling, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_chanliangqingling_clicked);
+	QObject::connect(ui->btn_daizizhonglei, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_daizizhonglei_clicked);
+	QObject::connect(ui->btn_down, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_down_clicked);
+	QObject::connect(ui->btn_baoguang, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_baoguang_clicked);
+	QObject::connect(ui->btn_up, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_up_clicked);
+	QObject::connect(ui->btn_normalParam, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_normalParam_clicked);
+	QObject::connect(ui->btn_setParam, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::btn_setParam_clicked);
+	QObject::connect(ui->ckb_zhinengcaiqie, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_zhinengcaiqie_checked);
+	QObject::connect(ui->ckb_tifei, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_tifei_checked);
+	QObject::connect(ui->ckb_huikan, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_huikan_checked);
+	QObject::connect(ui->ckb_yinshuazhiliangjiance, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
 }
 
 void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
@@ -142,4 +175,87 @@ void SmartCroppingOfBags::read_config_SetConfig()
 	{
 		globalStruct.setConfig = *globalStruct.storeContext->load(globalPath.setConfigPath.toStdString());
 	}
+}
+
+void SmartCroppingOfBags::btn_pingbiquyu_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_chanliangqingling_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_daizizhonglei_clicked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	// 0:白色袋
+	// 1:颜色袋
+	if (generalConfig.daizizhonglei == 0)
+	{
+		generalConfig.daizizhonglei = 1;
+		ui->btn_daizizhonglei->setText("颜色袋");
+	}
+	else if (generalConfig.daizizhonglei == 1)
+	{
+		generalConfig.daizizhonglei = 0;
+		ui->btn_daizizhonglei->setText("白色袋");
+	}
+}
+
+void SmartCroppingOfBags::btn_down_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_up_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_baoguang_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_normalParam_clicked()
+{
+}
+
+void SmartCroppingOfBags::btn_setParam_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		if (numKeyBord.getValue() == "1234") {
+			_dlgProductSet->setFixedSize(this->width(), this->height());
+			_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+			_dlgProductSet->exec();
+		}
+		else {
+			QMessageBox::warning(this, "Error", "密码错误，请重新输入");
+		}
+	}
+}
+
+void SmartCroppingOfBags::ckb_zhinengcaiqie_checked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.iszhinengcaiqie = ui->ckb_zhinengcaiqie->isChecked();
+}
+
+void SmartCroppingOfBags::ckb_tifei_checked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.istifei = ui->ckb_tifei->isChecked();
+}
+
+void SmartCroppingOfBags::ckb_huikan_checked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.ishuikan = ui->ckb_huikan->isChecked();
+}
+
+void SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.isyinshuazhiliangjiance = ui->ckb_yinshuazhiliangjiance->isChecked();
 }
