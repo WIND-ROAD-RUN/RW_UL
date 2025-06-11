@@ -6,3 +6,4 @@ gtest
 spdlog
 hwloc
 pkgconf
+cryptopp
