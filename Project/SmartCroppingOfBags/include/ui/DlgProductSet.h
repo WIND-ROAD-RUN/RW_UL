@@ -38,6 +38,7 @@ private slots:
 	void btn_daokoudaoxiangjijuli1_clicked();
 	void btn_tifeiyanshi1_clicked();
 	void btn_baojingyanshi1_clicked();
+	void btn_baojingshijian1_clicked();
 	void btn_tifeishijian1_clicked();
 	void btn_chuiqiyanshi1_clicked();
 	void btn_dudaiyanshi1_clicked();

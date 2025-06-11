@@ -102,7 +102,9 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 	QObject::connect(ui->btn_tifeiyanshi1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_tifeiyanshi1_clicked);
 	QObject::connect(ui->btn_baojingyanshi1, &QPushButton::clicked,
-		this, &DlgProductSetSmartCroppingOfBags::btn_baojingyanshi1_clicked);
+		this, &DlgProductSetSmartCroppingOfBags::btn_baojingyanshi1_clicked); 
+		QObject::connect(ui->btn_baojingshijian1, &QPushButton::clicked,
+			this, &DlgProductSetSmartCroppingOfBags::btn_baojingshijian1_clicked);
 	QObject::connect(ui->btn_tifeishijian1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_tifeishijian1_clicked);
 	QObject::connect(ui->btn_chuiqiyanshi1, &QPushButton::clicked, 
@@ -339,8 +341,8 @@ void DlgProductSetSmartCroppingOfBags::btn_zuidadaichang1_clicked()
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_zuixiaodaichang1->setText(value);
-		globalStructSetConfig.zuixiaodaichang1 = value.toDouble();
+		ui->btn_zuidadaichang1->setText(value);
+		globalStructSetConfig.zuidadaichang1 = value.toDouble();
 	}
 }
 
@@ -436,6 +438,25 @@ void DlgProductSetSmartCroppingOfBags::btn_baojingyanshi1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_baojingyanshi1->setText(value);
 		globalStructSetConfig.baojingyanshi1 = value.toDouble();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_baojingshijian1_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_baojingshijian1->setText(value);
+		globalStructSetConfig.baojingshijian1 = value.toDouble();
 	}
 }
 
