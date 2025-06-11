@@ -67,6 +67,12 @@ namespace cdm {
         bool yinshuaquexian{ false };
         double yinshuaquexianscore{ 0 };
         double yinshuaquexianarea{ 0 };
+        bool xiaopodong{ false };
+        double xiaopodongscore{ 0 };
+        double xiaopodongarea{ 0 };
+        bool jiaodai{ false };
+        double jiaodaiscore{ 0 };
+        double jiaodaiarea{ 0 };
     };
 
     inline ScoreConfigSmartCroppingOfBags::ScoreConfigSmartCroppingOfBags(const rw::oso::ObjectStoreAssembly& assembly)
@@ -316,6 +322,36 @@ namespace cdm {
             throw std::runtime_error("$variable$yinshuaquexianarea is not found");
         }
         yinshuaquexianarea = yinshuaquexianareaItem->getValueAsDouble();
+        auto xiaopodongItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiaopodong$"));
+        if (!xiaopodongItem) {
+            throw std::runtime_error("$variable$xiaopodong is not found");
+        }
+        xiaopodong = xiaopodongItem->getValueAsBool();
+        auto xiaopodongscoreItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiaopodongscore$"));
+        if (!xiaopodongscoreItem) {
+            throw std::runtime_error("$variable$xiaopodongscore is not found");
+        }
+        xiaopodongscore = xiaopodongscoreItem->getValueAsDouble();
+        auto xiaopodongareaItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiaopodongarea$"));
+        if (!xiaopodongareaItem) {
+            throw std::runtime_error("$variable$xiaopodongarea is not found");
+        }
+        xiaopodongarea = xiaopodongareaItem->getValueAsDouble();
+        auto jiaodaiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$jiaodai$"));
+        if (!jiaodaiItem) {
+            throw std::runtime_error("$variable$jiaodai is not found");
+        }
+        jiaodai = jiaodaiItem->getValueAsBool();
+        auto jiaodaiscoreItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$jiaodaiscore$"));
+        if (!jiaodaiscoreItem) {
+            throw std::runtime_error("$variable$jiaodaiscore is not found");
+        }
+        jiaodaiscore = jiaodaiscoreItem->getValueAsDouble();
+        auto jiaodaiareaItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$jiaodaiarea$"));
+        if (!jiaodaiareaItem) {
+            throw std::runtime_error("$variable$jiaodaiarea is not found");
+        }
+        jiaodaiarea = jiaodaiareaItem->getValueAsDouble();
     }
 
     inline ScoreConfigSmartCroppingOfBags::ScoreConfigSmartCroppingOfBags(const ScoreConfigSmartCroppingOfBags& obj)
@@ -368,6 +404,12 @@ namespace cdm {
         yinshuaquexian = obj.yinshuaquexian;
         yinshuaquexianscore = obj.yinshuaquexianscore;
         yinshuaquexianarea = obj.yinshuaquexianarea;
+        xiaopodong = obj.xiaopodong;
+        xiaopodongscore = obj.xiaopodongscore;
+        xiaopodongarea = obj.xiaopodongarea;
+        jiaodai = obj.jiaodai;
+        jiaodaiscore = obj.jiaodaiscore;
+        jiaodaiarea = obj.jiaodaiarea;
     }
 
     inline ScoreConfigSmartCroppingOfBags& ScoreConfigSmartCroppingOfBags::operator=(const ScoreConfigSmartCroppingOfBags& obj)
@@ -421,6 +463,12 @@ namespace cdm {
             yinshuaquexian = obj.yinshuaquexian;
             yinshuaquexianscore = obj.yinshuaquexianscore;
             yinshuaquexianarea = obj.yinshuaquexianarea;
+            xiaopodong = obj.xiaopodong;
+            xiaopodongscore = obj.xiaopodongscore;
+            xiaopodongarea = obj.xiaopodongarea;
+            jiaodai = obj.jiaodai;
+            jiaodaiscore = obj.jiaodaiscore;
+            jiaodaiarea = obj.jiaodaiarea;
         }
         return *this;
     }
@@ -621,12 +669,36 @@ namespace cdm {
         yinshuaquexianareaItem->setName("$variable$yinshuaquexianarea$");
         yinshuaquexianareaItem->setValueFromDouble(yinshuaquexianarea);
         assembly.addItem(yinshuaquexianareaItem);
+        auto xiaopodongItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        xiaopodongItem->setName("$variable$xiaopodong$");
+        xiaopodongItem->setValueFromBool(xiaopodong);
+        assembly.addItem(xiaopodongItem);
+        auto xiaopodongscoreItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        xiaopodongscoreItem->setName("$variable$xiaopodongscore$");
+        xiaopodongscoreItem->setValueFromDouble(xiaopodongscore);
+        assembly.addItem(xiaopodongscoreItem);
+        auto xiaopodongareaItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        xiaopodongareaItem->setName("$variable$xiaopodongarea$");
+        xiaopodongareaItem->setValueFromDouble(xiaopodongarea);
+        assembly.addItem(xiaopodongareaItem);
+        auto jiaodaiItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        jiaodaiItem->setName("$variable$jiaodai$");
+        jiaodaiItem->setValueFromBool(jiaodai);
+        assembly.addItem(jiaodaiItem);
+        auto jiaodaiscoreItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        jiaodaiscoreItem->setName("$variable$jiaodaiscore$");
+        jiaodaiscoreItem->setValueFromDouble(jiaodaiscore);
+        assembly.addItem(jiaodaiscoreItem);
+        auto jiaodaiareaItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        jiaodaiareaItem->setName("$variable$jiaodaiarea$");
+        jiaodaiareaItem->setValueFromDouble(jiaodaiarea);
+        assembly.addItem(jiaodaiareaItem);
         return assembly;
     }
 
     inline bool ScoreConfigSmartCroppingOfBags::operator==(const ScoreConfigSmartCroppingOfBags& obj) const
     {
-        return heiba == obj.heiba && heibascore == obj.heibascore && heibaarea == obj.heibaarea && shudang == obj.shudang && shudangscore == obj.shudangscore && shudangarea == obj.shudangarea && huapo == obj.huapo && huaposcore == obj.huaposcore && huapoarea == obj.huapoarea && jietou == obj.jietou && jietouscore == obj.jietouscore && jietouarea == obj.jietouarea && guasi == obj.guasi && guasiscore == obj.guasiscore && guasiarea == obj.guasiarea && podong == obj.podong && podongscore == obj.podongscore && podongarea == obj.podongarea && zangwu == obj.zangwu && zangwuscore == obj.zangwuscore && zangwuarea == obj.zangwuarea && noshudang == obj.noshudang && noshudangscore == obj.noshudangscore && noshudangarea == obj.noshudangarea && modian == obj.modian && modianscore == obj.modianscore && modianarea == obj.modianarea && loumo == obj.loumo && loumoscore == obj.loumoscore && loumoarea == obj.loumoarea && xishudang == obj.xishudang && xishudangscore == obj.xishudangscore && xishudangarea == obj.xishudangarea && erweima == obj.erweima && erweimascore == obj.erweimascore && erweimaarea == obj.erweimaarea && damodian == obj.damodian && damodianscore == obj.damodianscore && damodianarea == obj.damodianarea && kongdong == obj.kongdong && kongdongscore == obj.kongdongscore && kongdongarea == obj.kongdongarea && sebiao == obj.sebiao && sebiaoscore == obj.sebiaoscore && sebiaoarea == obj.sebiaoarea && yinshuaquexian == obj.yinshuaquexian && yinshuaquexianscore == obj.yinshuaquexianscore && yinshuaquexianarea == obj.yinshuaquexianarea;
+        return heiba == obj.heiba && heibascore == obj.heibascore && heibaarea == obj.heibaarea && shudang == obj.shudang && shudangscore == obj.shudangscore && shudangarea == obj.shudangarea && huapo == obj.huapo && huaposcore == obj.huaposcore && huapoarea == obj.huapoarea && jietou == obj.jietou && jietouscore == obj.jietouscore && jietouarea == obj.jietouarea && guasi == obj.guasi && guasiscore == obj.guasiscore && guasiarea == obj.guasiarea && podong == obj.podong && podongscore == obj.podongscore && podongarea == obj.podongarea && zangwu == obj.zangwu && zangwuscore == obj.zangwuscore && zangwuarea == obj.zangwuarea && noshudang == obj.noshudang && noshudangscore == obj.noshudangscore && noshudangarea == obj.noshudangarea && modian == obj.modian && modianscore == obj.modianscore && modianarea == obj.modianarea && loumo == obj.loumo && loumoscore == obj.loumoscore && loumoarea == obj.loumoarea && xishudang == obj.xishudang && xishudangscore == obj.xishudangscore && xishudangarea == obj.xishudangarea && erweima == obj.erweima && erweimascore == obj.erweimascore && erweimaarea == obj.erweimaarea && damodian == obj.damodian && damodianscore == obj.damodianscore && damodianarea == obj.damodianarea && kongdong == obj.kongdong && kongdongscore == obj.kongdongscore && kongdongarea == obj.kongdongarea && sebiao == obj.sebiao && sebiaoscore == obj.sebiaoscore && sebiaoarea == obj.sebiaoarea && yinshuaquexian == obj.yinshuaquexian && yinshuaquexianscore == obj.yinshuaquexianscore && yinshuaquexianarea == obj.yinshuaquexianarea && xiaopodong == obj.xiaopodong && xiaopodongscore == obj.xiaopodongscore && xiaopodongarea == obj.xiaopodongarea && jiaodai == obj.jiaodai && jiaodaiscore == obj.jiaodaiscore && jiaodaiarea == obj.jiaodaiarea;
     }
 
     inline bool ScoreConfigSmartCroppingOfBags::operator!=(const ScoreConfigSmartCroppingOfBags& obj) const

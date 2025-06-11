@@ -47,6 +47,12 @@ void GlobalStructDataSmartCroppingOfBags::saveDlgProductSetConfig()
 	storeContext->save(setConfig, setConfigPath);
 }
 
+void GlobalStructDataSmartCroppingOfBags::saveDlgProductScoreConfig()
+{
+	std::string scoreConfigPath = globalPath.scoreConfigPath.toStdString();
+	storeContext->save(scoreConfig, scoreConfigPath);
+}
+
 void GlobalStructDataSmartCroppingOfBags::buildCamera()
 {
 	buildCamera1();

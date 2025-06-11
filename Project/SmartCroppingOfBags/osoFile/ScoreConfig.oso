@@ -67,5 +67,13 @@ namespace cdm {
 		yinshuaquexian : bool :default = false;
 		yinshuaquexianscore : double :default = 0;
 		yinshuaquexianarea : double :default = 0;
+
+		xiaopodong : bool :default = false;
+		xiaopodongscore : double :default = 0;
+		xiaopodongarea : double :default = 0;
+
+		jiaodai : bool :default = false;
+		jiaodaiscore : double :default = 0;
+		jiaodaiarea : double :default = 0;
 	};
 }
