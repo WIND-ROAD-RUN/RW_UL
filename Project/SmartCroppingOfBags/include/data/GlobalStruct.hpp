@@ -17,6 +17,10 @@
 #include <ScoreConfig.hpp>
 
 
+#include "dsl_PriorityQueue.hpp"
+
+class DetachDefectThreadSmartCroppingOfBags;
+
 // ×´Ì¬»ú
 enum class RunningState
 {
@@ -31,13 +35,13 @@ class GlobalStructDataSmartCroppingOfBags
 {
 	Q_OBJECT
 public:
-	/*std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;*/
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
 public:
-	GlobalStructDataSmartCroppingOfBags* detachDefectThreadZipper;
+	DetachDefectThreadSmartCroppingOfBags *detachDefectThreadSmartCroppingOfBags;
 public:
 	void build_DetachDefectThreadSmartCroppingOfBags();
 	void destroy_DetachDefectThreadSmartCroppingOfBags();

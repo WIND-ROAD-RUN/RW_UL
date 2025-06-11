@@ -19,6 +19,19 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 构建UI
 	build_ui();
 
+	// 构建优先队列
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	globalStruct.build_PriorityQueue();
+
+	// 构建异步剔废线程
+	globalStruct.build_DetachDefectThreadSmartCroppingOfBags();
+
+	// 构建图像保存引擎
+	build_imageSaveEngine();
+
+	// 构建图像处理模块
+	build_imageProcessorModule();
+
 	// 连接槽函数
 	build_connect();
 }
@@ -107,6 +120,28 @@ void SmartCroppingOfBags::build_DlgProductSetData()
 void SmartCroppingOfBags::build_DlgProductScore()
 {
 	_dlgProductScore = new DlgProductScoreSmartCroppingOfBags(this);
+}
+
+void SmartCroppingOfBags::build_imageProcessorModule()
+{
+
+}
+
+void SmartCroppingOfBags::build_imageSaveEngine()
+{
+	QDir dir;
+	QString imageSavePath = globalPath.imageSaveRootPath;
+	//清理旧的数据
+
+	//获取当前日期并设置保存路径
+	QString currentDate = QDate::currentDate().toString("yyyy_MM_dd");
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	globalStruct.buildImageSaveEngine();
+	QString imageSaveEnginePath = imageSavePath + currentDate;
+
+	QString imagesFilePathFilePathFull = dir.absoluteFilePath(imageSaveEnginePath);
+	globalStruct.imageSaveEngine->setRootPath(imagesFilePathFilePathFull);
+	globalStruct.imageSaveEngine->startEngine();
 }
 
 void SmartCroppingOfBags::destroyComponents()
