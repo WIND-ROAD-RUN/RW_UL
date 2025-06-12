@@ -28,6 +28,8 @@ namespace cdm {
         bool isDebug{ false };
         bool isDefect{ false };
         bool isSaveImg{ false };
+        bool isshibiekuang{ true };
+        bool iswenzi{ true };
     };
 
     inline GeneralConfig::GeneralConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -82,6 +84,16 @@ namespace cdm {
             throw std::runtime_error("$variable$isSaveImg is not found");
         }
         isSaveImg = isSaveImgItem->getValueAsBool();
+        auto isshibiekuangItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isshibiekuang$"));
+        if (!isshibiekuangItem) {
+            throw std::runtime_error("$variable$isshibiekuang is not found");
+        }
+        isshibiekuang = isshibiekuangItem->getValueAsBool();
+        auto iswenziItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$iswenzi$"));
+        if (!iswenziItem) {
+            throw std::runtime_error("$variable$iswenzi is not found");
+        }
+        iswenzi = iswenziItem->getValueAsBool();
     }
 
     inline GeneralConfig::GeneralConfig(const GeneralConfig& obj)
@@ -95,6 +107,8 @@ namespace cdm {
         isDebug = obj.isDebug;
         isDefect = obj.isDefect;
         isSaveImg = obj.isSaveImg;
+        isshibiekuang = obj.isshibiekuang;
+        iswenzi = obj.iswenzi;
     }
 
     inline GeneralConfig& GeneralConfig::operator=(const GeneralConfig& obj)
@@ -109,6 +123,8 @@ namespace cdm {
             isDebug = obj.isDebug;
             isDefect = obj.isDefect;
             isSaveImg = obj.isSaveImg;
+            isshibiekuang = obj.isshibiekuang;
+            iswenzi = obj.iswenzi;
         }
         return *this;
     }
@@ -153,12 +169,20 @@ namespace cdm {
         isSaveImgItem->setName("$variable$isSaveImg$");
         isSaveImgItem->setValueFromBool(isSaveImg);
         assembly.addItem(isSaveImgItem);
+        auto isshibiekuangItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isshibiekuangItem->setName("$variable$isshibiekuang$");
+        isshibiekuangItem->setValueFromBool(isshibiekuang);
+        assembly.addItem(isshibiekuangItem);
+        auto iswenziItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        iswenziItem->setName("$variable$iswenzi$");
+        iswenziItem->setValueFromBool(iswenzi);
+        assembly.addItem(iswenziItem);
         return assembly;
     }
 
     inline bool GeneralConfig::operator==(const GeneralConfig& obj) const
     {
-        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang && isDebug == obj.isDebug && isDefect == obj.isDefect && isSaveImg == obj.isSaveImg;
+        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang && isDebug == obj.isDebug && isDefect == obj.isDefect && isSaveImg == obj.isSaveImg && isshibiekuang == obj.isshibiekuang && iswenzi == obj.iswenzi;
     }
 
     inline bool GeneralConfig::operator!=(const GeneralConfig& obj) const
