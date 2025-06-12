@@ -54,7 +54,7 @@ namespace cdm {
         double largeColorDifferenceDeviation{ 0 };
         bool grindStoneEnable{ false };
         double grindStoneEnableScore{ 0 };
-        double blockEyeEnable{ 0 };
+        bool blockEyeEnable{ false };
         double blockEyeEnableScore{ 0 };
         bool materialHeadEnable{ false };
         double materialHeadEnableScore{ 0 };
@@ -246,7 +246,7 @@ namespace cdm {
         if (!blockEyeEnableItem) {
             throw std::runtime_error("$variable$blockEyeEnable is not found");
         }
-        blockEyeEnable = blockEyeEnableItem->getValueAsDouble();
+        blockEyeEnable = blockEyeEnableItem->getValueAsBool();
         auto blockEyeEnableScoreItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$blockEyeEnableScore$"));
         if (!blockEyeEnableScoreItem) {
             throw std::runtime_error("$variable$blockEyeEnableScore is not found");
@@ -499,7 +499,7 @@ namespace cdm {
         assembly.addItem(grindStoneEnableScoreItem);
         auto blockEyeEnableItem = std::make_shared<rw::oso::ObjectStoreItem>();
         blockEyeEnableItem->setName("$variable$blockEyeEnable$");
-        blockEyeEnableItem->setValueFromDouble(blockEyeEnable);
+        blockEyeEnableItem->setValueFromBool(blockEyeEnable);
         assembly.addItem(blockEyeEnableItem);
         auto blockEyeEnableScoreItem = std::make_shared<rw::oso::ObjectStoreItem>();
         blockEyeEnableScoreItem->setName("$variable$blockEyeEnableScore$");

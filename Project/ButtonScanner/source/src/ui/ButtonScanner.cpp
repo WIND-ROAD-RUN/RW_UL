@@ -622,7 +622,7 @@ void ButtonScanner::read_config_productSetConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件dlgProdutSetConfig.xml");
 		}
-		globalStruct.dlgProductSetConfig = rw::cdm::ButtonScannerDlgProductSet();
+		globalStruct.dlgProductSetConfig = cdm::ButtonScannerDlgProductSet();
 		globalStruct.saveDlgProductSetConfig();
 		return;
 	}

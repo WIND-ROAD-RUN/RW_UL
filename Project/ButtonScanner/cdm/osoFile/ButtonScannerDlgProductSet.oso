@@ -52,7 +52,7 @@ namespace cdm{
 
         grindStoneEnable : bool : default = false;
         grindStoneEnableScore : double : default = 0;
-        blockEyeEnable : double : default = 0;
+        blockEyeEnable : bool : default = 0;
         blockEyeEnableScore : double : default = 0;
 
         materialHeadEnable : bool : default = false;
