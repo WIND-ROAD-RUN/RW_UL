@@ -1,0 +1,19 @@
+#include <string>
+
+namespace cdm{
+    class ButtonScannerDlgWarningManager0
+    {
+    public:
+        cameraDisconnect1 : bool : default = true;
+        cameraDisconnect2 : bool : default = true;
+        cameraDisconnect3 : bool : default = true;
+        cameraDisconnect4 : bool : default = true;
+
+        workTrigger1 : bool : default = true;
+        workTrigger2 : bool : default = true;
+        workTrigger3 : bool : default = true;
+        workTrigger4 : bool : default = true;
+
+        airPressure : bool : default = true;
+    };
+}

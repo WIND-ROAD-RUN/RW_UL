@@ -1,0 +1,68 @@
+#include <string>
+
+namespace cdm{
+    class ButtonScannerDlgProductSet
+    {
+    public:
+        outsideDiameterEnable : bool : default = false;
+        outsideDiameterValue : double : default = 0;
+        outsideDiameterDeviation : double : default = 0;
+
+        photography : double : default = 0;
+        blowTime : double : default = 0;
+
+        edgeDamageEnable : bool : default = false;
+        edgeDamageSimilarity : double : default = 0;
+
+        shieldingRangeEnable : bool : default = false;
+        outerRadius : double : default = 0;
+        innerRadius : double : default = 0;
+
+        poreEnable : bool : default = false;
+        poreEnableScore : double : default = 0;
+
+        paintEnable : bool : default = false;
+        paintEnableScore : double : default = 0;
+
+        holesCountEnable : bool : default = false;
+        holesCountValue : double : default = 0;
+
+        brokenEyeEnable : bool : default = false;
+        brokenEyeSimilarity : double : default = 0;
+
+        crackEnable : bool : default = false;
+        crackSimilarity : double : default = 0;
+
+        apertureEnable : bool : default = false;
+        apertureValue : double : default = 0;
+        apertureSimilarity : double : default = 0;
+
+        holeCenterDistanceEnable : bool : default = false;
+        holeCenterDistanceValue : double : default = 0;
+        holeCenterDistanceSimilarity : double : default = 0;
+
+        specifyColorDifferenceEnable : bool : default = false;
+        specifyColorDifferenceR : double : default = 0;
+        specifyColorDifferenceG : double : default = 0;
+        specifyColorDifferenceB : double : default = 0;
+        specifyColorDifferenceDeviation : double : default = 0;
+
+        largeColorDifferenceEnable : bool : default = false;
+        largeColorDifferenceDeviation : double : default = 0;
+
+        grindStoneEnable : bool : default = false;
+        grindStoneEnableScore : double : default = 0;
+        blockEyeEnable : double : default = 0;
+        blockEyeEnableScore : double : default = 0;
+
+        materialHeadEnable : bool : default = false;
+        materialHeadEnableScore : double : default = 0;
+
+    };
+}
+
+
+
+
+
+

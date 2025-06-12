@@ -1,0 +1,16 @@
+#include <string>
+
+namespace cdm{
+    class DlgHideScoreSet
+    {
+    public:
+        outsideDiameterScore : double : default = 0;
+        forAndAgainstScore : double : default = 0;
+    };
+}
+
+
+
+
+
+

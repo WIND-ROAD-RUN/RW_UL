@@ -1,0 +1,15 @@
+#include <string>
+
+namespace cdm{
+    class ButtonScannerDlgExposureTimeSet
+    {
+    public:
+        expousureTime : int : default = 0;
+    };
+}
+
+
+
+
+
+

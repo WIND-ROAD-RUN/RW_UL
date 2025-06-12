@@ -1,0 +1,26 @@
+#include <string>
+
+namespace cdm{
+    class ButtonScannerMainWindow
+    {
+    public:
+        totalProduction : long : default = 0;
+        totalWaste : long : default = 0;
+        passRate : double : default = 0;
+
+        isDebugMode : bool : default = false;
+        isTakePictures : bool : default = false;
+        isEliminating : bool : default = false;
+        scrappingRate : bool : default = false;
+
+        upLight : bool : default = false;
+        downLight : bool : default = false;
+        sideLight : bool : default = false;
+        strobeLight : bool : default = false;
+        speed : double : default = 0;
+        beltSpeed : double : default = 0;
+
+        isDefect : bool : default = false;
+        isPositive : bool : default = false;
+    };
+}
