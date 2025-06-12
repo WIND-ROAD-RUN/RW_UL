@@ -4,7 +4,7 @@ namespace cdm{
     class ButtonScannerDlgExposureTimeSet
     {
     public:
-        expousureTime : int : default = 0;
+        expousureTime : double : default = 0;
     };
 }
 

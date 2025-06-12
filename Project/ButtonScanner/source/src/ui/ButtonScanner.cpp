@@ -652,7 +652,7 @@ void ButtonScanner::read_config_exposureTimeSetConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件exposureTimeSetConfig.xml");
 		}
-		globalStruct.dlgExposureTimeSetConfig = rw::cdm::ButtonScannerDlgExposureTimeSet();
+		globalStruct.dlgExposureTimeSetConfig = cdm::ButtonScannerDlgExposureTimeSet();
 		globalStruct.saveDlgExposureTimeSetConfig();
 		return;
 	}

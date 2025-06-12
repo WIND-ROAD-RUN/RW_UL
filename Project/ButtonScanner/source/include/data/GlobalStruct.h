@@ -10,7 +10,7 @@
 #include"rqw_CameraObjectThreadZMotion.hpp"
 #include"cdm_ButtonScannerMainWindow.h"
 #include"cdm_ButtonScannerDlgProductSet.h"
-#include"cdm_ButtonScannerDlgExposureTimeSet.h"
+#include"ButtonScannerDlgExposureTimeSet.hpp"
 #include"cdm_ButtonScannerDlgWarningManager.h"
 #include "cdm_ButtonScannerProduceLineSet.h"
 #include"WarningIOSetConfig.hpp"
@@ -133,7 +133,7 @@ public:
 	rw::cdm::ButtonScannerMainWindow mainWindowConfig{};
 	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
 	rw::cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
-	rw::cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
+	cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
 	rw::cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
 	cdm::WarningIOSetConfig warningIOSetConfig{};
 	rw::cdm::ButtonScannerDlgWarningManager dlgWarningManagerConfig{};

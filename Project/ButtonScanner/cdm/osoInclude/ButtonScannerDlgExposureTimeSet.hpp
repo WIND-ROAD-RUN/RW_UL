@@ -19,7 +19,7 @@ namespace cdm {
         bool operator!=(const ButtonScannerDlgExposureTimeSet& obj) const;
 
     public:
-        int expousureTime{ 0 };
+        double expousureTime{ 0 };
     };
 
     inline ButtonScannerDlgExposureTimeSet::ButtonScannerDlgExposureTimeSet(const rw::oso::ObjectStoreAssembly& assembly)
@@ -33,7 +33,7 @@ namespace cdm {
         if (!expousureTimeItem) {
             throw std::runtime_error("$variable$expousureTime is not found");
         }
-        expousureTime = expousureTimeItem->getValueAsInt();
+        expousureTime = expousureTimeItem->getValueAsDouble();
     }
 
     inline ButtonScannerDlgExposureTimeSet::ButtonScannerDlgExposureTimeSet(const ButtonScannerDlgExposureTimeSet& obj)
@@ -55,7 +55,7 @@ namespace cdm {
         assembly.setName("$class$ButtonScannerDlgExposureTimeSet$");
         auto expousureTimeItem = std::make_shared<rw::oso::ObjectStoreItem>();
         expousureTimeItem->setName("$variable$expousureTime$");
-        expousureTimeItem->setValueFromInt(expousureTime);
+        expousureTimeItem->setValueFromDouble(expousureTime);
         assembly.addItem(expousureTimeItem);
         return assembly;
     }
