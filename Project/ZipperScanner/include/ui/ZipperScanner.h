@@ -62,6 +62,7 @@ private slots:
 	void rbtn_weakLight_checked(bool checked);
 	void pbtn_openSaveLocation_clicked();
 	void rbtn_takePicture_checked();
+	void rbtn_removeFunc_checked(bool checked);
 
 
 private slots:

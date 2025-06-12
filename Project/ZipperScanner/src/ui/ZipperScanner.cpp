@@ -94,6 +94,10 @@ void ZipperScanner::build_connect()
 	// 采图
 	QObject::connect(ui->rbtn_takePicture, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_takePicture_checked);
+
+	// 剔废功能
+	QObject::connect(ui->rbtn_removeFunc, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_removeFunc_checked);
 }
 
 // 构建相机
@@ -477,6 +481,24 @@ void ZipperScanner::rbtn_takePicture_checked()
 	}
 	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
 	generalConfig.isSaveImg = ui->rbtn_takePicture->isChecked();
+}
+
+void ZipperScanner::rbtn_removeFunc_checked(bool checked)
+{
+	if (checked)
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.runningState = RunningState::OpenRemoveFunc;
+		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+		ui->rbtn_debug->setChecked(false);
+		ui->ckb_shibiekuang->setVisible(false);
+		ui->ckb_wenzi->setVisible(false);
+	}
+	else
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.runningState = RunningState::Stop;
+	}
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

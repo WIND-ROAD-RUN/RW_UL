@@ -5,7 +5,7 @@
 #include "GlobalStruct.hpp"
 #include "NumberKeyboard.h"
 
-DlgProductSet::DlgProductSet(QWidget *parent)
+DlgProductSet::DlgProductSet(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DlgProductSetClass())
 {
@@ -413,14 +413,22 @@ void DlgProductSet::pbtn_qiangbaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到300的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
+
 		ui->pbtn_qiangbaoguang->setText(value);
 		globalStructSetConfig.qiangBaoGuang = value.toDouble();
+		if (globalStructGeneralConfig.qiangGuang == true)
+		{
+			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
+			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
+		}
 	}
 }
 
@@ -432,14 +440,21 @@ void DlgProductSet::pbtn_qiangzengyi_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到16的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
 		ui->pbtn_qiangzengyi->setText(value);
 		globalStructSetConfig.qiangZengYi = value.toDouble();
+		if (globalStructGeneralConfig.qiangGuang == true)
+		{
+			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
+			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
+		}
 	}
 }
 
@@ -451,14 +466,21 @@ void DlgProductSet::pbtn_zhongbaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到300的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
 		ui->pbtn_zhongbaoguang->setText(value);
 		globalStructSetConfig.zhongBaoGuang = value.toDouble();
+		if (globalStructGeneralConfig.zhongGuang == true)
+		{
+			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
+			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
+		}
 	}
 }
 
@@ -470,14 +492,21 @@ void DlgProductSet::pbtn_ruobaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到300的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
 		ui->pbtn_ruobaoguang->setText(value);
 		globalStructSetConfig.ruoBaoGuang = value.toDouble();
+		if (globalStructGeneralConfig.ruoGuang == true)
+		{
+			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
+			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
+		}
 	}
 }
 
@@ -489,14 +518,21 @@ void DlgProductSet::pbtn_zhongzengyi_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到16的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
 		ui->pbtn_zhongzengyi->setText(value);
 		globalStructSetConfig.zhongZengYi = value.toDouble();
+		if (globalStructGeneralConfig.zhongGuang == true)
+		{
+			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
+			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
+		}
 	}
 }
 
@@ -508,14 +544,21 @@ void DlgProductSet::pbtn_ruozengyi_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "请输入0到16的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
 		ui->pbtn_ruozengyi->setText(value);
 		globalStructSetConfig.ruoZengYi = value.toDouble();
+		if (globalStructGeneralConfig.ruoGuang == true)
+		{
+			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
+			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
+		}
 	}
 }
 
