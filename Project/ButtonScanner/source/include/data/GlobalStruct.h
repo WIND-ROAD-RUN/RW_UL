@@ -14,7 +14,7 @@
 #include"cdm_ButtonScannerDlgWarningManager.h"
 #include "cdm_ButtonScannerProduceLineSet.h"
 #include"WarningIOSetConfig.hpp"
-#include"cdm_ButtonScannerDlgHideScoreSet.h"
+#include"ButtonScannerDlgHideScoreSet.hpp"
 #include"dsl_PriorityQueue.hpp"
 #include"oso_StorageContext.hpp"
 #include"rqw_ImageSaveEngine.h"
@@ -134,7 +134,7 @@ public:
 	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
 	rw::cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
 	cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
-	rw::cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
+	cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
 	cdm::WarningIOSetConfig warningIOSetConfig{};
 	rw::cdm::ButtonScannerDlgWarningManager dlgWarningManagerConfig{};
 public:

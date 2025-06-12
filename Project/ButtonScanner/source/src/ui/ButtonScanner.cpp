@@ -682,7 +682,7 @@ void ButtonScanner::read_config_hideScoreSet()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件mainWindowConfig.xml");
 		}
-		globalStruct.dlgHideScoreSetConfig = rw::cdm::DlgHideScoreSet();
+		globalStruct.dlgHideScoreSetConfig = cdm::DlgHideScoreSet();
 		globalStruct.saveDlgHideScoreSetConfig();
 		return;
 	}
