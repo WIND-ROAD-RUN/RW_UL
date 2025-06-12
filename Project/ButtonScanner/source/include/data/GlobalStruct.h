@@ -12,7 +12,7 @@
 #include"ButtonScannerDlgProductSet.hpp"
 #include"ButtonScannerDlgExposureTimeSet.hpp"
 #include"cdm_ButtonScannerDlgWarningManager.h"
-#include "cdm_ButtonScannerProduceLineSet.h"
+#include "ButtonScannerProduceLineSet.hpp"
 #include"WarningIOSetConfig.hpp"
 #include"ButtonScannerDlgHideScoreSet.hpp"
 #include"dsl_PriorityQueue.hpp"
@@ -131,7 +131,7 @@ public:
 	QString warningIOSetConfigPath;
 	QString warningManagerFilePath;
 	cdm::ButtonScannerMainWindow mainWindowConfig{};
-	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
+	cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
 	cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
 	cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
 	cdm::DlgHideScoreSet dlgHideScoreSetConfig{};

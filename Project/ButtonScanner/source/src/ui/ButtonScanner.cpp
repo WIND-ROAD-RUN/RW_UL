@@ -592,7 +592,7 @@ void ButtonScanner::read_config_produceLineConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件dlgProduceLineSetConfig.xml");
 		}
-		globalStruct.dlgProduceLineSetConfig = rw::cdm::ButtonScannerProduceLineSet();
+		globalStruct.dlgProduceLineSetConfig = cdm::ButtonScannerProduceLineSet();
 		globalStruct.saveDlgProduceLineSetConfig();
 		return;
 	}
