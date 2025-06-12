@@ -131,16 +131,27 @@ void ImageProcessorZipper::run_debug(MatInfo& frame)
 	//绘制defect信息
 	auto qImage = cvMatToQImage(frame.image);
 
+	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
+
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayRec)
 	{
 		drawBoundariesLines(qImage);
-		drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
 
-		drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+
+		// 如果勾选主窗体识别框才会绘制识别框
+		if (generalConfig.isshibiekuang == true)
+		{
+			drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
+
+			drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+		}
 	}
 	if (GlobalStructDataZipper::getInstance().debug_isDisplayText)
 	{
-		drawZipperDefectInfoText_Debug(qImage, defectInfo);
+		if (generalConfig.iswenzi == true)
+		{
+			drawZipperDefectInfoText_Debug(qImage, defectInfo);
+		}
 	}
 
 	QPixmap pixmap = QPixmap::fromImage(qImage);
@@ -193,28 +204,29 @@ void ImageProcessorZipper::run_OpenRemoveFunc(MatInfo& frame)
 
 	QPixmap pixmap = QPixmap::fromImage(qImage);
 
+	// 显示图像
 	emit imageReady(pixmap);
+
+	// 显示NG图像
+	emit imageNGReady(pixmap, imageProcessingModuleIndex,_isbad);
 }
 
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info)
 {
 	_isbad = false; // 重置坏品标志
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
-	auto& isOpenDefect = globalStruct.generalConfig.isDefect;
 
-	if (isOpenDefect)
-	{
-		run_OpenRemoveFunc_process_defect_info_QueYa(info);
-		run_OpenRemoveFunc_process_defect_info_TangShang(info);
-		run_OpenRemoveFunc_process_defect_info_ZangWu(info);
-	}
+	run_OpenRemoveFunc_process_defect_info_QueYa(info);
+	run_OpenRemoveFunc_process_defect_info_TangShang(info);
+	run_OpenRemoveFunc_process_defect_info_ZangWu(info);
+
 }
 
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
-	auto& productScore = globalStruct.scoreConfig;
-	if (productScore.queYa)
+	auto& productSet = globalStruct.scoreConfig;
+	if (productSet.queYa)
 	{
 		auto& queya = info.queYaList;
 		if (queya.empty())
@@ -223,7 +235,7 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDe
 		}
 		for (const auto& item : queya)
 		{
-			if (item.score >= productScore.queYaScore)
+			if (item.score >= productSet.queYaScore && item.area >= productSet.queYaArea)
 			{
 				_isbad = true; // 有缺牙就认为是坏品
 				break; // 找到一个符合条件的缺牙就可以了
@@ -235,8 +247,8 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDe
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_TangShang(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
-	auto& productScore = globalStruct.scoreConfig;
-	if (productScore.tangShang)
+	auto& productSet = globalStruct.scoreConfig;
+	if (productSet.tangShang)
 	{
 		auto& tangshang = info.tangShangList;
 		if (tangshang.empty())
@@ -245,7 +257,7 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_TangShang(Zipp
 		}
 		for (const auto& item : tangshang)
 		{
-			if (item.score >= productScore.tangShangScore)
+			if (item.score >= productSet.tangShangScore && item.area >= productSet.tangShangArea)
 			{
 				_isbad = true; // 有烫伤就认为是坏品
 				break; // 找到一个符合条件的烫伤就可以了
@@ -257,9 +269,9 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_TangShang(Zipp
 void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectInfo& info)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
-	auto& productScore = globalStruct.scoreConfig;
+	auto& productSet = globalStruct.scoreConfig;
 
-	if (productScore.zangWu)
+	if (productSet.zangWu)
 	{
 		auto& Zangwu = info.zangWuList;
 		if (Zangwu.empty())
@@ -268,7 +280,7 @@ void ImageProcessorZipper::run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperD
 		}
 		for (const auto& item : Zangwu)
 		{
-			if (item.score >= productScore.zangWuScore)
+			if (item.score >= productSet.zangWuScore && item.area >= productSet.zangWuArea)
 			{
 				_isbad = true; // 有脏污就认为是坏品
 				break; // 找到一个符合条件的脏污就可以了
@@ -502,7 +514,7 @@ std::vector<std::vector<size_t>> ImageProcessorZipper::getClassIndex(const std::
 	std::vector<std::vector<size_t>> result;
 	result.resize(20);
 
-	for (int i = 0;i < info.size();i++)
+	for (int i = 0; i < info.size(); i++)
 	{
 		if (info[i].classId > result.size())
 		{
@@ -523,7 +535,7 @@ void ImageProcessorZipper::buildSegModelEngine(const QString& enginePath)
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.modelPath = enginePath.toStdString();
-	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
+	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 }
 
 std::vector<std::vector<size_t>> ImageProcessorZipper::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
@@ -640,7 +652,7 @@ void ImageProcessorZipper::appendQueyaDectInfo(QVector<QString>& textList, const
 		QString queyaText("缺牙:");
 		for (const auto& item : info.queYaList)
 		{
-			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		queyaText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.queYaScore)).arg(static_cast<int>(productScore.queYaArea)));
 		textList.push_back(queyaText);
@@ -655,7 +667,7 @@ void ImageProcessorZipper::appendTangshangDectInfo(QVector<QString>& textList, c
 		QString tangshangText("烫伤:");
 		for (const auto& item : info.tangShangList)
 		{
-			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		tangshangText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.tangShangScore)).arg(static_cast<int>(productScore.tangShangArea)));
 		textList.push_back(tangshangText);
@@ -670,7 +682,7 @@ void ImageProcessorZipper::appendZangwuDectInfo(QVector<QString>& textList, cons
 		QString zangwuText("脏污:");
 		for (const auto& item : info.zangWuList)
 		{
-			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		zangwuText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.zangWuScore)).arg(static_cast<int>(productScore.zangWuArea)));
 		textList.push_back(zangwuText);
@@ -729,7 +741,7 @@ void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const Z
 	if (!info.queYaList.empty()) {
 		QString queyaText("缺牙:");
 		for (const auto& item : info.queYaList) {
-			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			queyaText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(queyaText);
 	}
@@ -737,7 +749,7 @@ void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const Z
 	if (!info.tangShangList.empty()) {
 		QString tangshangText("烫伤:");
 		for (const auto& item : info.tangShangList) {
-			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			tangshangText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(tangshangText);
 	}
@@ -745,7 +757,7 @@ void ImageProcessorZipper::drawZipperDefectInfoText_Debug(QImage& image, const Z
 	if (!info.zangWuList.empty()) {
 		QString zangwuText("脏污:");
 		for (const auto& item : info.zangWuList) {
-			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2));
+			zangwuText.append(QString(" %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2));
 		}
 		textList.push_back(zangwuText);
 	}
@@ -773,7 +785,7 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 		if (!item.isDraw)
 		{
 			auto& queyaItem = processResult[item.index];
-			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, queyaItem, config);
 		}
 	}
@@ -784,7 +796,7 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 		if (!item.isDraw)
 		{
 			auto& tangshangItem = processResult[item.index];
-			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, tangshangItem, config);
 		}
 	}
@@ -795,7 +807,7 @@ void ImageProcessorZipper::drawDefectRec(QImage& image, const std::vector<rw::De
 		if (!item.isDraw)
 		{
 			auto& zangwuItem = processResult[item.index];
-			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, zangwuItem, config);
 		}
 	}
@@ -824,7 +836,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 		if (item.isDraw)
 		{
 			auto& queyaItem = processResult[item.index];
-			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("缺牙 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, queyaItem, config);
 		}
 	}
@@ -835,7 +847,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 		if (item.isDraw)
 		{
 			auto& tangshangItem = processResult[item.index];
-			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("烫伤 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, tangshangItem, config);
 		}
 	}
@@ -846,7 +858,7 @@ void ImageProcessorZipper::drawDefectRec_error(QImage& image, const std::vector<
 		if (item.isDraw)
 		{
 			auto& zangwuItem = processResult[item.index];
-			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 2).arg(item.area, 0, 'f', 2);
+			config.text = QString("脏污 %1 %2").arg(item.score, 0, 'f', 0).arg(item.area, 0, 'f', 2);
 			rw::rqw::ImagePainter::drawShapesOnSourceImg(image, zangwuItem, config);
 		}
 	}
@@ -877,6 +889,8 @@ void ImageProcessingModuleZipper::BuildModule()
 		processor->buildSegModelEngine(modelEnginePath);
 		processor->imageProcessingModuleIndex = index;
 		connect(processor, &ImageProcessorZipper::imageReady, this, &ImageProcessingModuleZipper::imageReady, Qt::QueuedConnection);
+		connect(processor, &ImageProcessorZipper::imageNGReady, this, &ImageProcessingModuleZipper::imageNGReady, Qt::QueuedConnection);
+
 		_processors.push_back(processor);
 		processor->start();
 	}
