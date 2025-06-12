@@ -31,6 +31,7 @@ namespace cdm {
         double innerRadius{ 0 };
         bool poreEnable{ false };
         double poreEnableScore{ 0 };
+        double poreEnableArea{ 0 };
         bool paintEnable{ false };
         double paintEnableScore{ 0 };
         bool holesCountEnable{ false };
@@ -127,6 +128,11 @@ namespace cdm {
             throw std::runtime_error("$variable$poreEnableScore is not found");
         }
         poreEnableScore = poreEnableScoreItem->getValueAsDouble();
+        auto poreEnableAreaItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$poreEnableArea$"));
+        if (!poreEnableAreaItem) {
+            throw std::runtime_error("$variable$poreEnableArea is not found");
+        }
+        poreEnableArea = poreEnableAreaItem->getValueAsDouble();
         auto paintEnableItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$paintEnable$"));
         if (!paintEnableItem) {
             throw std::runtime_error("$variable$paintEnable is not found");
@@ -278,6 +284,7 @@ namespace cdm {
         innerRadius = obj.innerRadius;
         poreEnable = obj.poreEnable;
         poreEnableScore = obj.poreEnableScore;
+        poreEnableArea = obj.poreEnableArea;
         paintEnable = obj.paintEnable;
         paintEnableScore = obj.paintEnableScore;
         holesCountEnable = obj.holesCountEnable;
@@ -322,6 +329,7 @@ namespace cdm {
             innerRadius = obj.innerRadius;
             poreEnable = obj.poreEnable;
             poreEnableScore = obj.poreEnableScore;
+            poreEnableArea = obj.poreEnableArea;
             paintEnable = obj.paintEnable;
             paintEnableScore = obj.paintEnableScore;
             holesCountEnable = obj.holesCountEnable;
@@ -405,6 +413,10 @@ namespace cdm {
         poreEnableScoreItem->setName("$variable$poreEnableScore$");
         poreEnableScoreItem->setValueFromDouble(poreEnableScore);
         assembly.addItem(poreEnableScoreItem);
+        auto poreEnableAreaItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        poreEnableAreaItem->setName("$variable$poreEnableArea$");
+        poreEnableAreaItem->setValueFromDouble(poreEnableArea);
+        assembly.addItem(poreEnableAreaItem);
         auto paintEnableItem = std::make_shared<rw::oso::ObjectStoreItem>();
         paintEnableItem->setName("$variable$paintEnable$");
         paintEnableItem->setValueFromBool(paintEnable);
@@ -518,7 +530,7 @@ namespace cdm {
 
     inline bool ButtonScannerDlgProductSet::operator==(const ButtonScannerDlgProductSet& obj) const
     {
-        return outsideDiameterEnable == obj.outsideDiameterEnable && outsideDiameterValue == obj.outsideDiameterValue && outsideDiameterDeviation == obj.outsideDiameterDeviation && photography == obj.photography && blowTime == obj.blowTime && edgeDamageEnable == obj.edgeDamageEnable && edgeDamageSimilarity == obj.edgeDamageSimilarity && shieldingRangeEnable == obj.shieldingRangeEnable && outerRadius == obj.outerRadius && innerRadius == obj.innerRadius && poreEnable == obj.poreEnable && poreEnableScore == obj.poreEnableScore && paintEnable == obj.paintEnable && paintEnableScore == obj.paintEnableScore && holesCountEnable == obj.holesCountEnable && holesCountValue == obj.holesCountValue && brokenEyeEnable == obj.brokenEyeEnable && brokenEyeSimilarity == obj.brokenEyeSimilarity && crackEnable == obj.crackEnable && crackSimilarity == obj.crackSimilarity && apertureEnable == obj.apertureEnable && apertureValue == obj.apertureValue && apertureSimilarity == obj.apertureSimilarity && holeCenterDistanceEnable == obj.holeCenterDistanceEnable && holeCenterDistanceValue == obj.holeCenterDistanceValue && holeCenterDistanceSimilarity == obj.holeCenterDistanceSimilarity && specifyColorDifferenceEnable == obj.specifyColorDifferenceEnable && specifyColorDifferenceR == obj.specifyColorDifferenceR && specifyColorDifferenceG == obj.specifyColorDifferenceG && specifyColorDifferenceB == obj.specifyColorDifferenceB && specifyColorDifferenceDeviation == obj.specifyColorDifferenceDeviation && largeColorDifferenceEnable == obj.largeColorDifferenceEnable && largeColorDifferenceDeviation == obj.largeColorDifferenceDeviation && grindStoneEnable == obj.grindStoneEnable && grindStoneEnableScore == obj.grindStoneEnableScore && blockEyeEnable == obj.blockEyeEnable && blockEyeEnableScore == obj.blockEyeEnableScore && materialHeadEnable == obj.materialHeadEnable && materialHeadEnableScore == obj.materialHeadEnableScore;
+        return outsideDiameterEnable == obj.outsideDiameterEnable && outsideDiameterValue == obj.outsideDiameterValue && outsideDiameterDeviation == obj.outsideDiameterDeviation && photography == obj.photography && blowTime == obj.blowTime && edgeDamageEnable == obj.edgeDamageEnable && edgeDamageSimilarity == obj.edgeDamageSimilarity && shieldingRangeEnable == obj.shieldingRangeEnable && outerRadius == obj.outerRadius && innerRadius == obj.innerRadius && poreEnable == obj.poreEnable && poreEnableScore == obj.poreEnableScore && poreEnableArea == obj.poreEnableArea && paintEnable == obj.paintEnable && paintEnableScore == obj.paintEnableScore && holesCountEnable == obj.holesCountEnable && holesCountValue == obj.holesCountValue && brokenEyeEnable == obj.brokenEyeEnable && brokenEyeSimilarity == obj.brokenEyeSimilarity && crackEnable == obj.crackEnable && crackSimilarity == obj.crackSimilarity && apertureEnable == obj.apertureEnable && apertureValue == obj.apertureValue && apertureSimilarity == obj.apertureSimilarity && holeCenterDistanceEnable == obj.holeCenterDistanceEnable && holeCenterDistanceValue == obj.holeCenterDistanceValue && holeCenterDistanceSimilarity == obj.holeCenterDistanceSimilarity && specifyColorDifferenceEnable == obj.specifyColorDifferenceEnable && specifyColorDifferenceR == obj.specifyColorDifferenceR && specifyColorDifferenceG == obj.specifyColorDifferenceG && specifyColorDifferenceB == obj.specifyColorDifferenceB && specifyColorDifferenceDeviation == obj.specifyColorDifferenceDeviation && largeColorDifferenceEnable == obj.largeColorDifferenceEnable && largeColorDifferenceDeviation == obj.largeColorDifferenceDeviation && grindStoneEnable == obj.grindStoneEnable && grindStoneEnableScore == obj.grindStoneEnableScore && blockEyeEnable == obj.blockEyeEnable && blockEyeEnableScore == obj.blockEyeEnableScore && materialHeadEnable == obj.materialHeadEnable && materialHeadEnableScore == obj.materialHeadEnableScore;
     }
 
     inline bool ButtonScannerDlgProductSet::operator!=(const ButtonScannerDlgProductSet& obj) const
