@@ -60,7 +60,14 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex, 10);
-	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+
+	auto& global = GlobalStructData::getInstance();
+
+	if (global.dlgProductSetConfig.shieldingRangeEnable)
+	{
+		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+	}
+
 	return processResultIndex;
 }
 
@@ -1391,7 +1398,13 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	if (GlobalStructData::getInstance().debug_isDisplayRec)
 	{
 		drawVerticalBoundaryLine(image);
-		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		auto& global = GlobalStructData::getInstance();
+
+		if (global.dlgProductSetConfig.shieldingRangeEnable)
+		{
+			drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		}
+
 		drawErrorRec(image, processResult, processResultIndex);
 		ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 		ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
