@@ -372,6 +372,11 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 		return;
 	}
 
+	if (info.edgeDamage1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
 	QString edgeDamageText("破边:");
 	for (const auto & item:info.edgeDamage1)
@@ -404,6 +409,11 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 		return;
 	}
 	if (!productSet.poreEnable)
+	{
+		return;
+	}
+
+	if (info.pore1.empty())
 	{
 		return;
 	}
@@ -445,6 +455,11 @@ void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const Butto
 		return;
 	}
 
+	if (info.paint1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.paintEnableScore);
 	QString edgeDamageText("油漆:");
 	for (const auto& item : info.paint1)
@@ -478,6 +493,10 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 		return;
 	}
 	if (!productSet.brokenEyeEnable)
+	{
+		return;
+	}
+	if (info.brokenEye1.empty())
 	{
 		return;
 	}
@@ -534,6 +553,10 @@ void ImageProcessor::appendCrackDectInfo(QVector<QString>& textList, const Butto
 	{
 		return;
 	}
+	if (info.crack1.empty())
+	{
+		return;
+	}
 
 	auto targetScore = static_cast<int>(productSet.crackSimilarity);
 	QString edgeDamageText("裂痕:");
@@ -568,6 +591,11 @@ void ImageProcessor::appendGrindStoneDectInfo(QVector<QString>& textList, const 
 		return;
 	}
 	if (!productSet.grindStoneEnable)
+	{
+		return;
+	}
+
+	if (info.grindStone1.empty())
 	{
 		return;
 	}
@@ -609,6 +637,11 @@ void ImageProcessor::appendBlockEyeDectInfo(QVector<QString>& textList, const Bu
 		return;
 	}
 
+	if (info.blockEye1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.blockEyeEnableScore);
 	QString edgeDamageText("堵眼:");
 	for (const auto& item : info.blockEye1)
@@ -642,6 +675,11 @@ void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, cons
 		return;
 	}
 	if (!productSet.materialHeadEnable)
+	{
+		return;
+	}
+
+	if (info.materialHead1.empty())
 	{
 		return;
 	}
