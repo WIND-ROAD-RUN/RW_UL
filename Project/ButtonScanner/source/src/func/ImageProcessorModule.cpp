@@ -2169,7 +2169,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	getPaintInfo(info, processResult, index[ClassId::mofa]);
+	//getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2381,6 +2381,7 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = edgeDamage;
+		itemDet.area = processResult[item].area;
 		info.edgeDamage1.emplace_back(itemDet);
 	}
 }
@@ -2398,6 +2399,7 @@ void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = pore;
+		itemDet.area = processResult[item].area;
 		info.pore1.emplace_back(itemDet);
 	}
 }
@@ -2415,6 +2417,7 @@ void ImageProcessor::getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = paint;
+		itemDet.area = processResult[item].area;
 		info.paint1.emplace_back(itemDet);
 	}
 }
@@ -2432,6 +2435,7 @@ void ImageProcessor::getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = brokenEye;
+		itemDet.area = processResult[item].area;
 		info.brokenEye1.emplace_back(itemDet);
 	}
 }
@@ -2449,6 +2453,7 @@ void ImageProcessor::getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = crack;
+		itemDet.area = processResult[item].area;
 		info.crack1.emplace_back(itemDet);
 	}
 }
@@ -2466,6 +2471,7 @@ void ImageProcessor::getGrindStoneInfo(ButtonDefectInfo& info, const std::vector
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = grindStone;
+		itemDet.area = processResult[item].area;
 		info.grindStone1.emplace_back(itemDet);
 	}
 }
@@ -2483,6 +2489,7 @@ void ImageProcessor::getBlockEyeInfo(ButtonDefectInfo& info, const std::vector<r
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = blockEye;
+		itemDet.area = processResult[item].area;
 		info.blockEye1.emplace_back(itemDet);
 	}
 }
@@ -2500,6 +2507,7 @@ void ImageProcessor::getMaterialHeadInfo(ButtonDefectInfo& info, const std::vect
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = materialHead;
+		itemDet.area = processResult[item].area;
 		info.materialHead1.emplace_back(itemDet);
 	}
 }

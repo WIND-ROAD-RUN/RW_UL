@@ -22,6 +22,7 @@ public:
 		size_t index{0};
 		double score{0};
 		bool isDraw{false};
+		double area{0};
 	}; 
 public:
 	QString time{};
