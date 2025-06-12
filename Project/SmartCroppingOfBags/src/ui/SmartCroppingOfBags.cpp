@@ -73,6 +73,8 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::ckb_tifei_checked);
 	QObject::connect(ui->ckb_huikan, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_huikan_checked);
+	QObject::connect(ui->ckb_cuntu, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_cuntu_checked);
 	QObject::connect(ui->ckb_yinshuazhiliangjiance, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
 	QObject::connect(ui->btn_close, &QPushButton::clicked,
@@ -93,6 +95,7 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	ui->lb_pingjundaichang->setText(QString::number(globalStruct.generalConfig.pingjundaichang));
 	ui->ckb_tifei->setChecked(globalStruct.generalConfig.istifei);
 	ui->ckb_huikan->setChecked(globalStruct.generalConfig.ishuikan);
+	ui->ckb_cuntu->setChecked(globalStruct.generalConfig.iscuntu);
 	ui->ckb_yinshuazhiliangjiance->setChecked(globalStruct.generalConfig.isyinshuazhiliangjiance);
 	ui->btn_baoguang->setText(QString::number(globalStruct.generalConfig.baoguang));
 	// 默认白色袋
@@ -156,7 +159,7 @@ void SmartCroppingOfBags::destroyComponents()
 	// 销毁异步剔废线程
 	//globalStruct.destroy_DetachDefectThreadZipper();
 	// 销毁剔废优先队列
-	//globalStruct.destroy_PriorityQueue();
+	globalStruct.destroy_PriorityQueue();
 	// 保存参数
 	globalStruct.saveGeneralConfig();
 }
@@ -354,6 +357,12 @@ void SmartCroppingOfBags::ckb_huikan_checked()
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	generalConfig.ishuikan = ui->ckb_huikan->isChecked();
+}
+
+void SmartCroppingOfBags::ckb_cuntu_checked()
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.iscuntu = ui->ckb_cuntu->isChecked();
 }
 
 void SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked()

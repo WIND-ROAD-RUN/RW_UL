@@ -149,9 +149,9 @@ signals:
 	void imageReady(QPixmap image);
 
 private:
-	// 调试模式下将对应的缺陷信息添加到ZipperDefectInfo中
+	// 调试模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
 	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
-	// 剔废模式下将对应的缺陷信息添加到ZipperDefectInfo中
+	// 剔废模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
 	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
 	// 抓取黑疤信息
@@ -239,7 +239,7 @@ public:
 public:
 	// 在指定位置画竖线
 	void drawVerticalLine_locate(QImage& image, size_t locate);
-	// 在指定位置画横线
+	// 画切刀线与屏蔽线
 	void drawBoundariesLines(QImage& image);
 	// 开启调试情况下绘制缺陷相关的信息
 	void drawSmartCroppingOfBagsDefectInfoText_Debug(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
@@ -264,7 +264,7 @@ public:
 };
 
 
-class ImageProcessingModuleZipper : public QObject {
+class ImageProcessingModuleSmartCroppingOfBags : public QObject {
 	Q_OBJECT
 public:
 	QString modelEnginePath;
@@ -272,9 +272,9 @@ public:
 	// 初始化图像处理模块
 	void BuildModule();
 public:
-	ImageProcessingModuleZipper(int numConsumers, QObject* parent = nullptr);
+	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
 
-	~ImageProcessingModuleZipper();
+	~ImageProcessingModuleSmartCroppingOfBags();
 
 public slots:
 	// 相机回调函数

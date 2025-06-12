@@ -26,6 +26,7 @@ namespace cdm {
         double pingjundaichang{ 0 };
         bool istifei{ false };
         bool ishuikan{ false };
+        bool iscuntu{ false };
         bool isyinshuazhiliangjiance{ false };
         double liangdu{ 0 };
         int daizizhonglei{ 0 };
@@ -74,6 +75,11 @@ namespace cdm {
             throw std::runtime_error("$variable$ishuikan is not found");
         }
         ishuikan = ishuikanItem->getValueAsBool();
+        auto iscuntuItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$iscuntu$"));
+        if (!iscuntuItem) {
+            throw std::runtime_error("$variable$iscuntu is not found");
+        }
+        iscuntu = iscuntuItem->getValueAsBool();
         auto isyinshuazhiliangjianceItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isyinshuazhiliangjiance$"));
         if (!isyinshuazhiliangjianceItem) {
             throw std::runtime_error("$variable$isyinshuazhiliangjiance is not found");
@@ -105,6 +111,7 @@ namespace cdm {
         pingjundaichang = obj.pingjundaichang;
         istifei = obj.istifei;
         ishuikan = obj.ishuikan;
+        iscuntu = obj.iscuntu;
         isyinshuazhiliangjiance = obj.isyinshuazhiliangjiance;
         liangdu = obj.liangdu;
         daizizhonglei = obj.daizizhonglei;
@@ -121,6 +128,7 @@ namespace cdm {
             pingjundaichang = obj.pingjundaichang;
             istifei = obj.istifei;
             ishuikan = obj.ishuikan;
+            iscuntu = obj.iscuntu;
             isyinshuazhiliangjiance = obj.isyinshuazhiliangjiance;
             liangdu = obj.liangdu;
             daizizhonglei = obj.daizizhonglei;
@@ -161,6 +169,10 @@ namespace cdm {
         ishuikanItem->setName("$variable$ishuikan$");
         ishuikanItem->setValueFromBool(ishuikan);
         assembly.addItem(ishuikanItem);
+        auto iscuntuItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        iscuntuItem->setName("$variable$iscuntu$");
+        iscuntuItem->setValueFromBool(iscuntu);
+        assembly.addItem(iscuntuItem);
         auto isyinshuazhiliangjianceItem = std::make_shared<rw::oso::ObjectStoreItem>();
         isyinshuazhiliangjianceItem->setName("$variable$isyinshuazhiliangjiance$");
         isyinshuazhiliangjianceItem->setValueFromBool(isyinshuazhiliangjiance);
@@ -182,7 +194,7 @@ namespace cdm {
 
     inline bool GeneralConfigSmartCroppingOfBags::operator==(const GeneralConfigSmartCroppingOfBags& obj) const
     {
-        return iszhinengcaiqie == obj.iszhinengcaiqie && shengchanzongliang == obj.shengchanzongliang && shengchanlianglv == obj.shengchanlianglv && feipinshuliang == obj.feipinshuliang && pingjundaichang == obj.pingjundaichang && istifei == obj.istifei && ishuikan == obj.ishuikan && isyinshuazhiliangjiance == obj.isyinshuazhiliangjiance && liangdu == obj.liangdu && daizizhonglei == obj.daizizhonglei && baoguang == obj.baoguang;
+        return iszhinengcaiqie == obj.iszhinengcaiqie && shengchanzongliang == obj.shengchanzongliang && shengchanlianglv == obj.shengchanlianglv && feipinshuliang == obj.feipinshuliang && pingjundaichang == obj.pingjundaichang && istifei == obj.istifei && ishuikan == obj.ishuikan && iscuntu == obj.iscuntu && isyinshuazhiliangjiance == obj.isyinshuazhiliangjiance && liangdu == obj.liangdu && daizizhonglei == obj.daizizhonglei && baoguang == obj.baoguang;
     }
 
     inline bool GeneralConfigSmartCroppingOfBags::operator!=(const GeneralConfigSmartCroppingOfBags& obj) const
