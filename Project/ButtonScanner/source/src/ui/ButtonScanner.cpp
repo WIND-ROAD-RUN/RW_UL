@@ -535,7 +535,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件mainWindowConfig.xml");
 		}
-		globalStruct.mainWindowConfig = rw::cdm::ButtonScannerMainWindow();
+		globalStruct.mainWindowConfig = cdm::ButtonScannerMainWindow();
 		globalStruct.saveMainWindowConfig();
 		return;
 	}

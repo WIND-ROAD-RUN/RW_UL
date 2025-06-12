@@ -8,7 +8,7 @@
 #include"scc_Motion.h"
 
 #include"rqw_CameraObjectThreadZMotion.hpp"
-#include"cdm_ButtonScannerMainWindow.h"
+#include"ButtonScannerMainWindow.hpp"
 #include"ButtonScannerDlgProductSet.hpp"
 #include"ButtonScannerDlgExposureTimeSet.hpp"
 #include"cdm_ButtonScannerDlgWarningManager.h"
@@ -130,7 +130,7 @@ public:
 	QString dlgHideScoreSetPath;
 	QString warningIOSetConfigPath;
 	QString warningManagerFilePath;
-	rw::cdm::ButtonScannerMainWindow mainWindowConfig{};
+	cdm::ButtonScannerMainWindow mainWindowConfig{};
 	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
 	cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
 	cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
