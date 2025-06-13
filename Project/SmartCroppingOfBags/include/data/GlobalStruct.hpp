@@ -18,6 +18,7 @@
 
 
 #include "dsl_PriorityQueue.hpp"
+#include "ImageProcessorModule.h"
 
 class DetachDefectThreadSmartCroppingOfBags;
 
@@ -84,8 +85,8 @@ public:
 	void buildImageProcessorModules(const QString& path);
 	void destroyImageProcessingModule();
 
-	/*std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
-	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;*/
+	std::unique_ptr<ImageProcessingModuleSmartCroppingOfBags> modelCamera1 = nullptr;
+	std::unique_ptr<ImageProcessingModuleSmartCroppingOfBags> modelCamera2 = nullptr;
 
 
 public:

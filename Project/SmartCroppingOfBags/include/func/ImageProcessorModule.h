@@ -147,6 +147,7 @@ private:
 
 signals:
 	void imageReady(QPixmap image);
+	void imageNGReady(QPixmap image, size_t index, bool isbad);
 
 private:
 	// 调试模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
@@ -282,6 +283,7 @@ public slots:
 
 signals:
 	void imageReady(QPixmap image);
+	void imageNGReady(QPixmap image, size_t index, bool isbad);
 
 public:
 	std::vector<ImageProcessorSmartCroppingOfBags*> getProcessors() const {

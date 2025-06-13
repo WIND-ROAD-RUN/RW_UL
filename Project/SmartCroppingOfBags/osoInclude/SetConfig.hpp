@@ -37,6 +37,7 @@ namespace cdm {
         double baisedailiangdufanweimin1{ 0 };
         double baisedailiangdufanweimax1{ 0 };
         double daokoudaoxiangjiluli1{ 0 };
+        double xiangjibaoguang1{ 0 };
         double tifeiyanshi1{ 0 };
         double baojingyanshi1{ 0 };
         double tifeishijian1{ 0 };
@@ -153,6 +154,11 @@ namespace cdm {
             throw std::runtime_error("$variable$daokoudaoxiangjiluli1 is not found");
         }
         daokoudaoxiangjiluli1 = daokoudaoxiangjiluli1Item->getValueAsDouble();
+        auto xiangjibaoguang1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$xiangjibaoguang1$"));
+        if (!xiangjibaoguang1Item) {
+            throw std::runtime_error("$variable$xiangjibaoguang1 is not found");
+        }
+        xiangjibaoguang1 = xiangjibaoguang1Item->getValueAsDouble();
         auto tifeiyanshi1Item = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tifeiyanshi1$"));
         if (!tifeiyanshi1Item) {
             throw std::runtime_error("$variable$tifeiyanshi1 is not found");
@@ -260,6 +266,7 @@ namespace cdm {
         baisedailiangdufanweimin1 = obj.baisedailiangdufanweimin1;
         baisedailiangdufanweimax1 = obj.baisedailiangdufanweimax1;
         daokoudaoxiangjiluli1 = obj.daokoudaoxiangjiluli1;
+        xiangjibaoguang1 = obj.xiangjibaoguang1;
         tifeiyanshi1 = obj.tifeiyanshi1;
         baojingyanshi1 = obj.baojingyanshi1;
         tifeishijian1 = obj.tifeishijian1;
@@ -300,6 +307,7 @@ namespace cdm {
             baisedailiangdufanweimin1 = obj.baisedailiangdufanweimin1;
             baisedailiangdufanweimax1 = obj.baisedailiangdufanweimax1;
             daokoudaoxiangjiluli1 = obj.daokoudaoxiangjiluli1;
+            xiangjibaoguang1 = obj.xiangjibaoguang1;
             tifeiyanshi1 = obj.tifeiyanshi1;
             baojingyanshi1 = obj.baojingyanshi1;
             tifeishijian1 = obj.tifeishijian1;
@@ -397,6 +405,10 @@ namespace cdm {
         daokoudaoxiangjiluli1Item->setName("$variable$daokoudaoxiangjiluli1$");
         daokoudaoxiangjiluli1Item->setValueFromDouble(daokoudaoxiangjiluli1);
         assembly.addItem(daokoudaoxiangjiluli1Item);
+        auto xiangjibaoguang1Item = std::make_shared<rw::oso::ObjectStoreItem>();
+        xiangjibaoguang1Item->setName("$variable$xiangjibaoguang1$");
+        xiangjibaoguang1Item->setValueFromDouble(xiangjibaoguang1);
+        assembly.addItem(xiangjibaoguang1Item);
         auto tifeiyanshi1Item = std::make_shared<rw::oso::ObjectStoreItem>();
         tifeiyanshi1Item->setName("$variable$tifeiyanshi1$");
         tifeiyanshi1Item->setValueFromDouble(tifeiyanshi1);
@@ -470,7 +482,7 @@ namespace cdm {
 
     inline bool SetConfigSmartCroppingOfBags::operator==(const SetConfigSmartCroppingOfBags& obj) const
     {
-        return xiaopodong == obj.xiaopodong && tiqiantifei == obj.tiqiantifei && xiangjitiaoshi == obj.xiangjitiaoshi && qiyonger == obj.qiyonger && yundongkongzhiqichonglian == obj.yundongkongzhiqichonglian && jiange == obj.jiange && zidongpingbifanwei == obj.zidongpingbifanwei && pingjunmaichong1 == obj.pingjunmaichong1 && maichongxinhao1 == obj.maichongxinhao1 && hanggao1 == obj.hanggao1 && daichang1 == obj.daichang1 && daichangxishu1 == obj.daichangxishu1 && guasijuli1 == obj.guasijuli1 && zuixiaodaichang1 == obj.zuixiaodaichang1 && zuidadaichang1 == obj.zuidadaichang1 && baisedailiangdufanweimin1 == obj.baisedailiangdufanweimin1 && baisedailiangdufanweimax1 == obj.baisedailiangdufanweimax1 && daokoudaoxiangjiluli1 == obj.daokoudaoxiangjiluli1 && tifeiyanshi1 == obj.tifeiyanshi1 && baojingyanshi1 == obj.baojingyanshi1 && tifeishijian1 == obj.tifeishijian1 && baojingshijian1 == obj.baojingshijian1 && chuiqiyanshi1 == obj.chuiqiyanshi1 && dudaiyanshi1 == obj.dudaiyanshi1 && chuiqishijian1 == obj.chuiqishijian1 && dudaishijian1 == obj.dudaishijian1 && maichongxishu1 == obj.maichongxishu1 && isxiangjizengyi1 == obj.isxiangjizengyi1 && xiangjizengyi1 == obj.xiangjizengyi1 && houfenpinqi1 == obj.houfenpinqi1 && chengfaqi1 == obj.chengfaqi1 && qiedaoxianshangpingbi1 == obj.qiedaoxianshangpingbi1 && qiedaoxianxiapingbi1 == obj.qiedaoxianxiapingbi1 && yansedailiangdufanweimin1 == obj.yansedailiangdufanweimin1 && yansedailiangdufanweimax1 == obj.yansedailiangdufanweimax1;
+        return xiaopodong == obj.xiaopodong && tiqiantifei == obj.tiqiantifei && xiangjitiaoshi == obj.xiangjitiaoshi && qiyonger == obj.qiyonger && yundongkongzhiqichonglian == obj.yundongkongzhiqichonglian && jiange == obj.jiange && zidongpingbifanwei == obj.zidongpingbifanwei && pingjunmaichong1 == obj.pingjunmaichong1 && maichongxinhao1 == obj.maichongxinhao1 && hanggao1 == obj.hanggao1 && daichang1 == obj.daichang1 && daichangxishu1 == obj.daichangxishu1 && guasijuli1 == obj.guasijuli1 && zuixiaodaichang1 == obj.zuixiaodaichang1 && zuidadaichang1 == obj.zuidadaichang1 && baisedailiangdufanweimin1 == obj.baisedailiangdufanweimin1 && baisedailiangdufanweimax1 == obj.baisedailiangdufanweimax1 && daokoudaoxiangjiluli1 == obj.daokoudaoxiangjiluli1 && xiangjibaoguang1 == obj.xiangjibaoguang1 && tifeiyanshi1 == obj.tifeiyanshi1 && baojingyanshi1 == obj.baojingyanshi1 && tifeishijian1 == obj.tifeishijian1 && baojingshijian1 == obj.baojingshijian1 && chuiqiyanshi1 == obj.chuiqiyanshi1 && dudaiyanshi1 == obj.dudaiyanshi1 && chuiqishijian1 == obj.chuiqishijian1 && dudaishijian1 == obj.dudaishijian1 && maichongxishu1 == obj.maichongxishu1 && isxiangjizengyi1 == obj.isxiangjizengyi1 && xiangjizengyi1 == obj.xiangjizengyi1 && houfenpinqi1 == obj.houfenpinqi1 && chengfaqi1 == obj.chengfaqi1 && qiedaoxianshangpingbi1 == obj.qiedaoxianshangpingbi1 && qiedaoxianxiapingbi1 == obj.qiedaoxianxiapingbi1 && yansedailiangdufanweimin1 == obj.yansedailiangdufanweimin1 && yansedailiangdufanweimax1 == obj.yansedailiangdufanweimax1;
     }
 
     inline bool SetConfigSmartCroppingOfBags::operator!=(const SetConfigSmartCroppingOfBags& obj) const

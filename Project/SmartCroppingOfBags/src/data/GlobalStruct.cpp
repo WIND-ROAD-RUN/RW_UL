@@ -53,6 +53,21 @@ void GlobalStructDataSmartCroppingOfBags::buildConfigManager(rw::oso::StorageTyp
 	storeContext = std::make_unique<rw::oso::StorageContext>(type);
 }
 
+void GlobalStructDataSmartCroppingOfBags::buildImageProcessorModules(const QString& path)
+{
+	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
+	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
+
+	modelCamera1->modelEnginePath = path;
+	modelCamera2->modelEnginePath = path;
+
+	modelCamera1->index = 1;
+	modelCamera2->index = 2;
+
+	modelCamera1->BuildModule();
+	modelCamera2->BuildModule();
+}
+
 void GlobalStructDataSmartCroppingOfBags::buildImageSaveEngine()
 {
 	imageSaveEngine = std::make_unique<rw::rqw::ImageSaveEngine>(this, 2);
@@ -96,21 +111,24 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	// 剔废持续时间
-	//long DurationTime = setConfig.tiFeiChiXuShiJian1 * 1000;
+	long DurationTime = setConfig.tifeishijian1 * 1000;
 
 	if (cameraMetaData1.ip != "0")
 	{
 		try
 		{
 			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
-			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Software);
+			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Hardware);
 			camera1->cameraIndex = 1;
+			camera1->setFrameRate(50);
 			camera1->setHeartbeatTime(5000);
-			//setCameraExposureTime(1, dlgExposureTimeSetConfig.exposureTime);
+			setCameraExposureTime(1, setConfig.xiangjibaoguang1);
 			camera1->startMonitor();
 			// 设置剔废IO输出
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			//camera1->setOutTriggerConfig(config);
+			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+				modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
 		catch (const std::exception&)
@@ -137,14 +155,17 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 		try
 		{
 			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
-			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Software);
+			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Hardware);
 			camera2->cameraIndex = 2;
+			camera1->setFrameRate(50);
 			camera2->setHeartbeatTime(5000);
-			//setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
+			setCameraExposureTime(2, setConfig.xiangjibaoguang1);
 			// 设置剔废IO输出
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
+			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
+				modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured, Qt::DirectConnection);
 			return true;
 		}
 		catch (const std::exception&)

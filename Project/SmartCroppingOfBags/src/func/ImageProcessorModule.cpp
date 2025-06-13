@@ -2269,8 +2269,60 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 }
 
 
+void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
+{
+	for (int i = 0; i < _numConsumers; ++i) {
+		static size_t workIndexCount = 0;
+		ImageProcessorSmartCroppingOfBags* processor = new ImageProcessorSmartCroppingOfBags(_queue, _mutex, _condition, workIndexCount, this);
+		workIndexCount++;
+		processor->buildSegModelEngine(modelEnginePath);
+		processor->imageProcessingModuleIndex = index;
+		connect(processor, &ImageProcessorSmartCroppingOfBags::imageReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageReady, Qt::QueuedConnection);
+		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
+		_processors.push_back(processor);
+		processor->start();
+	}
+}
+
+ImageProcessingModuleSmartCroppingOfBags::ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent)
+	: QObject(parent), _numConsumers(numConsumers) {
+
+}
+
+ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfBags()
+{
+	// 通知所有线程退出
+	for (auto processor : _processors) {
+		processor->requestInterruption();
+	}
+
+	// 唤醒所有等待的线程
+	{
+		QMutexLocker locker(&_mutex);
+		_condition.wakeAll();
+	}
+
+	// 等待所有线程退出
+	for (auto processor : _processors) {
+		if (processor->isRunning()) {
+			processor->wait(1000); // 使用超时机制，等待1秒
+		}
+		delete processor;
+	}
+}
+
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
+	if (frame.empty()) {
+		return; // 跳过空帧
+	}
 
+	QMutexLocker locker(&_mutex);
+	MatInfo mat;
+	mat.image = frame;
+	mat.index = index;
+	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
+	_queue.enqueue(mat);
+	_condition.wakeOne();
 }
 

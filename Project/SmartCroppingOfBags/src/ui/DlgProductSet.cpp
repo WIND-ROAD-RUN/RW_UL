@@ -51,6 +51,7 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	ui->btn_baisedailiangdufanweiMax1->setText(QString::number(globalConfig.baisedailiangdufanweimax1));
 
 	ui->btn_daokoudaoxiangjijuli1->setText(QString::number(globalConfig.daokoudaoxiangjiluli1));
+	ui->btn_xiangjibaoguang1->setText(QString::number(globalConfig.xiangjibaoguang1));
 	ui->btn_tifeiyanshi1->setText(QString::number(globalConfig.tifeiyanshi1));
 	ui->btn_tifeishijian1->setText(QString::number(globalConfig.tifeishijian1));
 	ui->btn_baojingyanshi1->setText(QString::number(globalConfig.baojingyanshi1));
@@ -403,6 +404,25 @@ void DlgProductSetSmartCroppingOfBags::btn_daokoudaoxiangjijuli1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_daokoudaoxiangjijuli1->setText(value);
 		globalStructSetConfig.daokoudaoxiangjiluli1 = value.toDouble();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_xiangjibaoguang1_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 300)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0小于300的数值");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_xiangjibaoguang1->setText(value);
+		globalStructSetConfig.xiangjibaoguang1 = value.toDouble();
 	}
 }
 

@@ -66,6 +66,17 @@ private slots:
 	void ckb_cuntu_checked();
 	void ckb_yinshuazhiliangjiance_checked();
 
+private slots:
+	void updateCameraLabelState(int cameraIndex, bool state);
+
+	void onCamera1Display(QPixmap image);
+	void onCamera2Display(QPixmap image);
+
+	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
+
+	//// ¸üÐÂUI
+	//void updateUiLabels(int index, bool isConnected);
+
 
 private:
 	Ui::SmartCroppingOfBagsClass *ui;

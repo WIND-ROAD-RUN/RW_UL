@@ -8,6 +8,7 @@
 #include "NumberKeyboard.h"
 
 #include"ImageCollage.hpp"
+#include "WarnUtilty.hpp"
 
 SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	: QMainWindow(parent)
@@ -34,6 +35,9 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 构建图像处理模块
 	build_imageProcessorModule();
 
+	// 连接相机
+	build_camera();
+
 	// 连接槽函数
 	build_connect();
 }
@@ -53,6 +57,8 @@ void SmartCroppingOfBags::build_ui()
 
 void SmartCroppingOfBags::build_connect()
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+
 	QObject::connect(ui->btn_pingbiquyu, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::btn_pingbiquyu_clicked);
 	QObject::connect(ui->btn_chanliangqingling, &QPushButton::clicked,
@@ -81,6 +87,44 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
 	QObject::connect(ui->btn_close, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::btn_close_clicked);
+
+	// 连接显示NG图像
+	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
+		this, &SmartCroppingOfBags::onCameraNGDisplay);
+	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
+		this, &SmartCroppingOfBags::onCameraNGDisplay);
+}
+
+void SmartCroppingOfBags::build_camera()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	globalStruct.cameraIp1 = "11";
+	globalStruct.cameraIp2 = "12";
+
+	auto build1Result = globalStruct.buildCamera1();
+	updateCameraLabelState(1, build1Result);
+	if (!build1Result)
+	{
+		rw::rqw::WarningInfo info;
+		info.message = "相机1连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm1;
+		info.type = rw::rqw::WarningType::Error;
+		//label_warningInfo->addWarning(info);
+	}
+	auto build2Result = false;
+	if (globalStruct.setConfig.qiyonger)
+	{
+		build2Result = globalStruct.buildCamera2();
+	}
+	updateCameraLabelState(2, build2Result);
+	if (!build2Result)
+	{
+		rw::rqw::WarningInfo info;
+		info.message = "相机2连接失败";
+		info.warningId = WarningId::ccameraDisconnectAlarm2;
+		info.type = rw::rqw::WarningType::Error;
+		//label_warningInfo->addWarning(info);
+	}
 }
 
 void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
@@ -129,6 +173,24 @@ void SmartCroppingOfBags::build_DlgProductScore()
 
 void SmartCroppingOfBags::build_imageProcessorModule()
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+
+	QDir dir;
+
+	QString enginePathFull = globalPath.modelPath;
+
+	QFileInfo engineFile(enginePathFull);
+
+	if (!engineFile.exists()) {
+		QMessageBox::critical(this, "Error", "Engine file or Name file does not exist. The application will now exit.");
+		QApplication::quit();
+		return;
+	}
+
+	globalStruct.buildImageProcessorModules(enginePathFull);
+
+	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::imageReady, this, &SmartCroppingOfBags::onCamera1Display);
+	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageReady, this, &SmartCroppingOfBags::onCamera2Display);
 
 }
 
@@ -371,4 +433,68 @@ void SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked()
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	generalConfig.isyinshuazhiliangjiance = ui->ckb_yinshuazhiliangjiance->isChecked();
+}
+
+void SmartCroppingOfBags::updateCameraLabelState(int cameraIndex, bool state)
+{
+	switch (cameraIndex)
+	{
+	case 1:
+		if (state) {
+			ui->lb_xiangjilianjiezhuangtai->setText("连接成功");
+			ui->lb_xiangjilianjiezhuangtai->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else {
+			ui->lb_xiangjilianjiezhuangtai->setText("连接失败");
+			ui->lb_xiangjilianjiezhuangtai->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机1断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm1;
+			//labelWarning->addWarning(info);
+		}
+		break;
+	//case 2:
+	//	if (state) {
+	//		ui->label_camera2State->setText("连接成功");
+	//		ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+	//	}
+	//	else {
+	//		ui->label_camera2State->setText("连接失败");
+	//		ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+	//		rw::rqw::WarningInfo info;
+	//		info.message = "相机2断连";
+	//		info.type = rw::rqw::WarningType::Error;
+	//		info.warningId = WarningId::ccameraDisconnectAlarm2;
+	//		//labelWarning->addWarning(info);
+	//	}
+	//	break;
+	default:
+		break;
+	}
+}
+
+void SmartCroppingOfBags::onCamera1Display(QPixmap image)
+{
+	ui->lb_show->setPixmap(image.scaled(ui->lb_show->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void SmartCroppingOfBags::onCamera2Display(QPixmap image)
+{
+
+}
+
+void SmartCroppingOfBags::onCameraNGDisplay(QPixmap image, size_t index, bool isbad)
+{
+	if (isbad)
+	{
+		if (index == 1)
+		{
+			ui->lb_Ngshow->setPixmap(image.scaled(ui->lb_Ngshow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		}
+		else if (index == 2)
+		{
+			//ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay_4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		}
+	}
 }
