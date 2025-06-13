@@ -71,6 +71,11 @@ void DlgProductSet::read_config()
 
 	// 调试模式默认为关闭
 	ui->cbox_debugMode->setChecked(globalConfig.debugMode);
+
+	// 相机与板卡
+	ui->cbox_qiyongerxiangji->setChecked(globalConfig.qiyongerxiangji);
+	ui->cbox_qiyongyundongkongzhiqi->setChecked(globalConfig.qiyongyundongkongzhiqi);
+	ui->cbox_yundongkongzhiqichonglian->setChecked(globalConfig.yundongkongzhiqichonglian);
 }
 
 void DlgProductSet::build_connect()
@@ -129,6 +134,12 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::cBox_takeCamera1Pictures_checked);
 	QObject::connect(ui->cBox_takeCamera2Pictures, &QCheckBox::clicked,
 		this, &DlgProductSet::cBox_takeCamera2Pictures_checked);
+	QObject::connect(ui->cbox_qiyongerxiangji, &QCheckBox::clicked,
+		this, &DlgProductSet::cbox_qiyongerxiangji_checked);
+	QObject::connect(ui->cbox_qiyongyundongkongzhiqi, &QCheckBox::clicked,
+		this, &DlgProductSet::cbox_qiyongyundongkongzhiqi_checked);
+	QObject::connect(ui->cbox_yundongkongzhiqichonglian, &QCheckBox::clicked,
+		this, &DlgProductSet::cbox_yundongkongzhiqichonglian_checked);
 }
 
 void DlgProductSet::pbtn_close_clicked()
@@ -635,5 +646,23 @@ void DlgProductSet::cBox_takeCamera2Pictures_checked()
 {
 	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
 	globalStructSetConfig.takeWork2Pictures = ui->cBox_takeCamera2Pictures->isChecked();
+}
+
+void DlgProductSet::cbox_qiyongerxiangji_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	globalStructSetConfig.qiyongerxiangji = ui->cbox_qiyongerxiangji->isChecked();
+}
+
+void DlgProductSet::cbox_qiyongyundongkongzhiqi_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	globalStructSetConfig.qiyongyundongkongzhiqi = ui->cbox_qiyongyundongkongzhiqi->isChecked();
+}
+
+void DlgProductSet::cbox_yundongkongzhiqichonglian_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	globalStructSetConfig.yundongkongzhiqichonglian = ui->cbox_yundongkongzhiqichonglian->isChecked();
 }
 

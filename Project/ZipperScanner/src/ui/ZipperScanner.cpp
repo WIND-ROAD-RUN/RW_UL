@@ -30,6 +30,9 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	// 构建异步剔废线程
 	globalStruct.build_DetachDefectThreadZipper();
 
+	// 构建相机与板卡重连线程
+	globalStruct.build_CameraAndCardStateThreadZipper();
+
 	// 构建图像保存引擎
 	build_imageSaveEngine();
 
@@ -118,6 +121,10 @@ void ZipperScanner::build_connect()
 	QObject::connect(GlobalStructDataZipper.modelCamera2.get(), &ImageProcessingModuleZipper::imageNGReady,
 		this, &ZipperScanner::onCameraNGDisplay);
 
+	// 连接UI更新
+	QObject::connect(&GlobalStructDataZipper.getInstance(), &GlobalStructDataZipper::emit_updateUiLabels,
+		this,&ZipperScanner::updateUiLabels);
+
 }
 
 // 构建相机
@@ -137,11 +144,11 @@ void ZipperScanner::build_camera()
 		info.type = rw::rqw::WarningType::Error;
 		//label_warningInfo->addWarning(info);
 	}
-	else
+	auto build2Result = false;
+	if (globalStruct.setConfig.qiyongerxiangji)
 	{
-		QObject::connect(globalStruct.camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured, globalStruct.modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured);
+		build2Result = globalStruct.buildCamera2();
 	}
-	auto build2Result = globalStruct.buildCamera2();
 	updateCameraLabelState(2, build2Result);
 	if (!build2Result)
 	{
@@ -151,12 +158,6 @@ void ZipperScanner::build_camera()
 		info.type = rw::rqw::WarningType::Error;
 		//label_warningInfo->addWarning(info);
 	}
-	else
-	{
-		QObject::connect(globalStruct.camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured, globalStruct.modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured);
-	}
-
-
 }
 
 // 加载ZipperScanner窗体数据
@@ -250,6 +251,8 @@ void ZipperScanner::build_threads()
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	// 启动异步剔废线程
 	globalStruct.detachDefectThreadZipper->startThread();
+	// 启动相机重连线程
+	globalStruct.cameraAndCardStateThreadZipper->startThread();
 }
 
 void ZipperScanner::destroyComponents()
@@ -583,6 +586,45 @@ void ZipperScanner::onCameraNGDisplay(QPixmap image, size_t index, bool isbad)
 		{
 			ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay_4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		}
+	}
+}
+
+void ZipperScanner::updateUiLabels(int index, bool isConnected)
+{
+	switch (index)
+	{
+	case 1:
+		if (isConnected) {
+			ui->label_camera1State->setText("连接成功");
+			ui->label_camera1State->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else {
+			ui->label_camera1State->setText("连接失败");
+			ui->label_camera1State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机1断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm1;
+			//labelWarning->addWarning(info);
+		}
+		break;
+	case 2:
+		if (isConnected) {
+			ui->label_camera2State->setText("连接成功");
+			ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else {
+			ui->label_camera2State->setText("连接失败");
+			ui->label_camera2State->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+			rw::rqw::WarningInfo info;
+			info.message = "相机2断连";
+			info.type = rw::rqw::WarningType::Error;
+			info.warningId = WarningId::ccameraDisconnectAlarm2;
+			//labelWarning->addWarning(info);
+		}
+		break;
+	default:
+		break;
 	}
 }
 

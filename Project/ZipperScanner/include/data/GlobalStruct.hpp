@@ -12,9 +12,10 @@
 #include "rqw_CameraObjectThread.hpp"
 #include "ZipperScannerDlgExposureTimeSet.hpp"
 #include "ImageProcessorModule.h"
-#include"dsl_PriorityQueue.hpp"
-#include"Utilty.hpp"
-#include<chrono>
+#include "dsl_PriorityQueue.hpp"
+#include "Utilty.hpp"
+#include "CameraAndCardStateThread.h"
+#include <chrono>
 
 
 class DetachDefectThreadZipper;
@@ -51,6 +52,20 @@ public:
 	void destroy_DetachDefectThreadZipper();
 public slots:
 	void onCameraReject(size_t index);
+public:
+	CameraAndCardStateThreadZipper* cameraAndCardStateThreadZipper;
+public:
+	void build_CameraAndCardStateThreadZipper();
+signals:
+	// 更新UI
+	void emit_updateUiLabels(int index, bool isConnected);
+public slots:
+	// 相机重连
+	void rebuild_Camera1();
+	void rebuild_Camera2();
+	void destroy_Camera1();
+	void destroy_Camera2();
+
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };

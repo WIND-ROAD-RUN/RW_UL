@@ -381,9 +381,15 @@ QPushButton:pressed {
           <layout class="QHBoxLayout" name="hLayout_produceTotal">
            <item>
             <widget class="QLabel" name="label_produceTotal">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="styleSheet">
               <string notr="true">QLabel {
-       font-size: 17px;        
+       font-size: 20px;        
        font-weight: bold;        
        color:  rgb(141, 141, 141);       
        padding: 5px 5px;     
@@ -394,7 +400,7 @@ QPushButton:pressed {
               <string>生产总量</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -422,7 +428,7 @@ QPushButton:pressed {
             <widget class="QLabel" name="label_wasteProducts">
              <property name="styleSheet">
               <string notr="true">QLabel {
-       font-size: 17px;        
+       font-size: 20px;        
        font-weight: bold;        
        color:  rgb(141, 141, 141);       
        padding: 5px 5px;     
@@ -433,7 +439,7 @@ QPushButton:pressed {
               <string>废品总量</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -461,7 +467,7 @@ QPushButton:pressed {
             <widget class="QLabel" name="label_productionYield">
              <property name="styleSheet">
               <string notr="true">QLabel {
-       font-size: 17px;        
+       font-size: 20px;        
        font-weight: bold;        
        color:  rgb(141, 141, 141);       
        padding: 5px 5px;     
@@ -472,7 +478,7 @@ QPushButton:pressed {
               <string>生产良率</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
             </widget>
            </item>

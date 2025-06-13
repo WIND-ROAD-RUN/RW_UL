@@ -50,6 +50,9 @@ private slots:
 	void cbox_debugMode_checked();
 	void cBox_takeCamera1Pictures_checked();
 	void cBox_takeCamera2Pictures_checked();
+	void cbox_qiyongerxiangji_checked();
+	void cbox_qiyongyundongkongzhiqi_checked();
+	void cbox_yundongkongzhiqichonglian_checked();
 
 private:
 	Ui::DlgProductSetClass *ui;

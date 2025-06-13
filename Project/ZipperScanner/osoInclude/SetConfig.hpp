@@ -45,6 +45,9 @@ namespace cdm {
         bool debugMode{ false };
         bool takeWork1Pictures{ false };
         bool takeWork2Pictures{ false };
+        bool qiyongerxiangji{ false };
+        bool qiyongyundongkongzhiqi{ false };
+        bool yundongkongzhiqichonglian{ false };
     };
 
     inline SetConfig::SetConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -184,6 +187,21 @@ namespace cdm {
             throw std::runtime_error("$variable$takeWork2Pictures is not found");
         }
         takeWork2Pictures = takeWork2PicturesItem->getValueAsBool();
+        auto qiyongerxiangjiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiyongerxiangji$"));
+        if (!qiyongerxiangjiItem) {
+            throw std::runtime_error("$variable$qiyongerxiangji is not found");
+        }
+        qiyongerxiangji = qiyongerxiangjiItem->getValueAsBool();
+        auto qiyongyundongkongzhiqiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qiyongyundongkongzhiqi$"));
+        if (!qiyongyundongkongzhiqiItem) {
+            throw std::runtime_error("$variable$qiyongyundongkongzhiqi is not found");
+        }
+        qiyongyundongkongzhiqi = qiyongyundongkongzhiqiItem->getValueAsBool();
+        auto yundongkongzhiqichonglianItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$yundongkongzhiqichonglian$"));
+        if (!yundongkongzhiqichonglianItem) {
+            throw std::runtime_error("$variable$yundongkongzhiqichonglian is not found");
+        }
+        yundongkongzhiqichonglian = yundongkongzhiqichonglianItem->getValueAsBool();
     }
 
     inline SetConfig::SetConfig(const SetConfig& obj)
@@ -214,6 +232,9 @@ namespace cdm {
         debugMode = obj.debugMode;
         takeWork1Pictures = obj.takeWork1Pictures;
         takeWork2Pictures = obj.takeWork2Pictures;
+        qiyongerxiangji = obj.qiyongerxiangji;
+        qiyongyundongkongzhiqi = obj.qiyongyundongkongzhiqi;
+        yundongkongzhiqichonglian = obj.yundongkongzhiqichonglian;
     }
 
     inline SetConfig& SetConfig::operator=(const SetConfig& obj)
@@ -245,6 +266,9 @@ namespace cdm {
             debugMode = obj.debugMode;
             takeWork1Pictures = obj.takeWork1Pictures;
             takeWork2Pictures = obj.takeWork2Pictures;
+            qiyongerxiangji = obj.qiyongerxiangji;
+            qiyongyundongkongzhiqi = obj.qiyongyundongkongzhiqi;
+            yundongkongzhiqichonglian = obj.yundongkongzhiqichonglian;
         }
         return *this;
     }
@@ -357,12 +381,24 @@ namespace cdm {
         takeWork2PicturesItem->setName("$variable$takeWork2Pictures$");
         takeWork2PicturesItem->setValueFromBool(takeWork2Pictures);
         assembly.addItem(takeWork2PicturesItem);
+        auto qiyongerxiangjiItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        qiyongerxiangjiItem->setName("$variable$qiyongerxiangji$");
+        qiyongerxiangjiItem->setValueFromBool(qiyongerxiangji);
+        assembly.addItem(qiyongerxiangjiItem);
+        auto qiyongyundongkongzhiqiItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        qiyongyundongkongzhiqiItem->setName("$variable$qiyongyundongkongzhiqi$");
+        qiyongyundongkongzhiqiItem->setValueFromBool(qiyongyundongkongzhiqi);
+        assembly.addItem(qiyongyundongkongzhiqiItem);
+        auto yundongkongzhiqichonglianItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        yundongkongzhiqichonglianItem->setName("$variable$yundongkongzhiqichonglian$");
+        yundongkongzhiqichonglianItem->setValueFromBool(yundongkongzhiqichonglian);
+        assembly.addItem(yundongkongzhiqichonglianItem);
         return assembly;
     }
 
     inline bool SetConfig::operator==(const SetConfig& obj) const
     {
-        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode && takeWork1Pictures == obj.takeWork1Pictures && takeWork2Pictures == obj.takeWork2Pictures;
+        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode && takeWork1Pictures == obj.takeWork1Pictures && takeWork2Pictures == obj.takeWork2Pictures && qiyongerxiangji == obj.qiyongerxiangji && qiyongyundongkongzhiqi == obj.qiyongyundongkongzhiqi && yundongkongzhiqichonglian == obj.yundongkongzhiqichonglian;
     }
 
     inline bool SetConfig::operator!=(const SetConfig& obj) const

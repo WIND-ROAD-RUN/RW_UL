@@ -25,6 +25,7 @@ FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include/data
 	${CMAKE_CURRENT_SOURCE_DIR}/include/func
 	${CMAKE_CURRENT_SOURCE_DIR}/include/DetachThread
+	${CMAKE_CURRENT_SOURCE_DIR}/include/CameraAndCardStateThread
 	${CMAKE_CURRENT_SOURCE_DIR}/osoInclude
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui
 	${CMAKE_CURRENT_SOURCE_DIR}/src/data
@@ -46,6 +47,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/data
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/func
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/DetachThread
+	${CMAKE_CURRENT_SOURCE_DIR}/include/CameraAndCardStateThread
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/osoInclude
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -61,7 +63,6 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE oso
 	PRIVATE hoec
 	PRIVATE rqwhoec
-	PRIVATE cdm
 	PRIVATE rqwime
 	PRIVATE scc
 	PRIVATE rqwm
