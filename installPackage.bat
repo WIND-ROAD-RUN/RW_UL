@@ -37,7 +37,11 @@ call "%VCPKG_ROOT%\vcpkg.exe" install %PACKAGES%
 REM Check installation result
 IF %ERRORLEVEL%==0 (
     echo Packages installed successfully.
+    pause
 ) ELSE (
     echo Package installation failed. Please check the error message.
+    pause
     exit /b 1
 )
+
+pause

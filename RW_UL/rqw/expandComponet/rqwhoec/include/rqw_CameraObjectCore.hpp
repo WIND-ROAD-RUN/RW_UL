@@ -2,6 +2,8 @@
 
 #include<QString>
 #include<QVector>
+#include <opencv2/core/mat.hpp>
+#include<QImage>
 
 namespace rw {
 	namespace hoec
@@ -10,6 +12,21 @@ namespace rw {
 	}
 
 	namespace rqw {
+		QImage cvMatToQImage(const cv::Mat& mat);
+        
+
+		struct OutTriggerConfig
+		{
+		public:
+			size_t lineSelector{ 0 };
+			size_t lineMode{ 0 };
+			size_t lineSource{ 0 };
+			long durationValue{ 0 };
+			size_t delayValue{ 0 };
+			size_t preDelayValue{ 0 };
+			bool strobeEnable = false;
+		};
+
 		struct CameraMetaData
 		{
 			QString ip{ "Undefined" };
@@ -55,6 +72,12 @@ namespace rw {
 			Undefined
 		};
 
-		QVector<CameraMetaData> CheckCameraList();
+		enum class CameraProvider
+		{
+			MVS,
+			DS
+		};
+
+		QVector<CameraMetaData> CheckCameraList(CameraProvider provider= CameraProvider::MVS);
 	} // namespace rqw
 } // namespace rw

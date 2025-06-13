@@ -1,0 +1,20 @@
+#include <string>
+
+namespace cdm {
+	class GeneralConfigSmartCroppingOfBags
+	{
+	public:
+		iszhinengcaiqie : bool :default = false;
+		shengchanzongliang : int :default = 0;
+		shengchanlianglv : double :default = 0;
+		feipinshuliang : int :default = 0;
+		pingjundaichang : double :default = 0;
+		istifei : bool :default = false;
+		ishuikan : bool :default = false;
+		iscuntu : bool :default = false;
+		isyinshuazhiliangjiance : bool :default = false;
+		liangdu : double :default = 0;
+		daizizhonglei : int :default = 0;
+		baoguang : double :default = 0;
+	};
+}

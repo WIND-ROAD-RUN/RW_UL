@@ -54,11 +54,6 @@ namespace rw
 			_cameraPassive->setGain(value);
 		}
 
-		void CameraPassiveObjectZMotion::setIOTime(size_t value) const
-		{
-			_cameraPassive->setIOTime(value);
-		}
-
 		void CameraPassiveObjectZMotion::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			hoec::CameraTriggerMode hoecTrigger;
@@ -75,7 +70,7 @@ namespace rw
 
 		void CameraPassiveObjectZMotion::setTriggerLine(size_t lineIndex) const
 		{
-			_cameraPassive->setTriggerLine(lineIndex);
+			_cameraPassive->setInTriggerLine(lineIndex);
 		}
 
 		size_t CameraPassiveObjectZMotion::getExposureTime() const
@@ -86,11 +81,6 @@ namespace rw
 		size_t CameraPassiveObjectZMotion::getGain() const
 		{
 			return _cameraPassive->getGain();
-		}
-
-		size_t CameraPassiveObjectZMotion::getIOTime() const
-		{
-			return _cameraPassive->getIOTime();
 		}
 
 		CameraObjectTrigger CameraPassiveObjectZMotion::getMonitorMode() const

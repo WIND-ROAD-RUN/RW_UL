@@ -1,0 +1,19 @@
+#include <string>
+
+namespace cdm {
+	class GeneralConfig
+	{
+	public:
+		totalProductionVolume : int :default = 0;
+		totalDefectiveVolume : int :default = 0;
+		productionYield : double :default = 0.0;
+		qiangGuang : bool :default = false;
+		zhongGuang : bool :default = false;
+		ruoGuang : bool :default = false;
+		isDebug : bool :default = false;
+		isDefect : bool :default = false;
+		isSaveImg : bool :default = false;
+		isshibiekuang : bool :default = true;
+		iswenzi : bool :default = true;
+	};
+}

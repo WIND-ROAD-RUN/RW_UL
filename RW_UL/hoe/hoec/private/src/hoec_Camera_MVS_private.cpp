@@ -270,16 +270,6 @@ namespace rw {
 			throw CameraSettingError("Failed to set gain");
 		}
 
-		void Camera_MVS::setIOTime(size_t value)
-		{
-			auto result = MV_CC_SetIntValue(m_cameraHandle, "LineDebouncerTime ", value);
-			if (result == MV_OK)
-			{
-				return;
-			}
-			throw CameraSettingError("Failed to set I/OTime");
-		}
-
 		size_t Camera_MVS::getExposureTime()
 		{
 			MVCC_FLOATVALUE exposureTime;
@@ -302,19 +292,6 @@ namespace rw {
 			}
 
 			throw CameraRetrievalError("Failed to get gain");
-		}
-
-		size_t Camera_MVS::getIOTime()
-		{
-			//TODO::获取IO时间
-			MVCC_INTVALUE ioTime;
-			memset(&ioTime, 0, sizeof(MVCC_INTVALUE));
-			auto result = MV_CC_GetIntValue(m_cameraHandle, "Gain", &ioTime);
-			if (result == MV_OK) {
-				return size_t();
-			}
-
-			throw CameraRetrievalError("Failed to get ioTime");
 		}
 
 		CameraTriggerMode Camera_MVS::getMonitorMode() {
@@ -348,7 +325,7 @@ namespace rw {
 			}
 		}
 
-		void Camera_MVS::setTriggerLine(size_t lineIndex)
+		void Camera_MVS::setInTriggerLine(size_t lineIndex)
 		{
 			unsigned int lineValue = static_cast <unsigned int> (lineIndex);
 			if (MV_CC_SetTriggerSource(m_cameraHandle, lineValue) == MV_OK)
@@ -369,6 +346,31 @@ namespace rw {
 			}
 
 			throw CameraRetrievalError("Failed to get trigger line");
+		}
+
+		void Camera_MVS::setOutTriggerConfig(const OutTriggerConfig& config)
+		{
+			if (!config.strobeEnable)
+			{
+				MV_CC_SetBoolValue(m_cameraHandle, "StrobeEnable", config.strobeEnable);
+				return;
+			}
+			MV_CC_SetEnumValue(m_cameraHandle, "LineSelector", config.lineSelector);
+			MV_CC_SetEnumValue(m_cameraHandle, "LineMode", config.lineMode);
+			MV_CC_SetEnumValue(m_cameraHandle, "LineSource", config.lineSource);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLineDuration", config.durationValue);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLineDelay", config.delayValue);
+			MV_CC_SetIntValue(m_cameraHandle, "StrobeLinePreDelay", config.preDelayValue);
+		}
+
+		void Camera_MVS::outTrigger()
+		{
+			MV_CC_SetCommandValue(m_cameraHandle, "LineTriggerSoftware");
+		}
+
+		void Camera_MVS::outTrigger(bool isOpen)
+		{
+			MV_CC_SetBoolValue(m_cameraHandle, "LineInverter", isOpen); 
 		}
 
 		Camera_MVS_Active::Camera_MVS_Active()
