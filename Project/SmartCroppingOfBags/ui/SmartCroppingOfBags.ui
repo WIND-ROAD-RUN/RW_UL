@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,1">
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="styleSheet">
@@ -97,851 +97,1126 @@ QGroupBox::title {
         <property name="title">
          <string/>
         </property>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>611</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_close">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>X</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>70</y>
-           <width>611</width>
-           <height>161</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QGroupBox {
-    border: 1px solid #DDD;
-    border-radius: 4px;
-    font: bold 18px;
-    color: #666;
-    background-color: #F8F8F8;
+        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="4,7,3,1,2,3">
+         <item>
+          <widget class="QGroupBox" name="groupBox_head">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(81, 81, 81);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    subcontrol-position: top left;
     left: 10px;
     padding: 0 5px;
+    color: #2c3e50;
 }</string>
-         </property>
-         <property name="title">
-          <string>连接状态</string>
-         </property>
-         <widget class="QWidget" name="layoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>30</y>
-            <width>591</width>
-            <height>121</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>相机连接状态:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lb_xiangjilianjiezhuangtai">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>连接失败</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>板卡连接状态:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lb_bankalianjiezhuangtai">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>连接失败</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>230</y>
-           <width>611</width>
-           <height>81</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,1">
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_pingbiquyu">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>屏蔽区域</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="layoutWidget_2">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>320</y>
-           <width>611</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="3,2,1">
-          <item>
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="ckb_zhinengcaiqie">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-            </property>
-            <property name="text">
-             <string>智能裁切</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_chanliangqingling">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>产量清零</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>370</y>
-           <width>611</width>
-           <height>241</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QGroupBox {
-    border: 1px solid #DDD;
-    border-radius: 4px;
-    font: bold 18px;
-    color: #666;
-    background-color: #F8F8F8;
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 10px;
-    padding: 0 5px;
-}</string>
-         </property>
-         <property name="title">
-          <string>生产状态</string>
-         </property>
-         <widget class="QWidget" name="layoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>12</x>
-            <y>32</y>
-            <width>591</width>
-            <height>201</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_8">
-               <item>
-                <widget class="QLabel" name="label_3">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>生产总量:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lb_shengchanzongliang">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Value</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <item>
-                <widget class="QLabel" name="label_5">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>良率:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lb_lianglv">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Value</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
-               <item>
-                <widget class="QLabel" name="label_4">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>废品数量:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lb_feipinshuliang">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Value</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
-               <item>
-                <widget class="QLabel" name="label_6">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>平均袋长:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lb_pingjundaichang">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Value</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="layoutWidget_5">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>620</y>
-           <width>611</width>
-           <height>81</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,0,0,0">
-          <item>
-           <widget class="QCheckBox" name="ckb_tifei">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>-1</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-            </property>
-            <property name="text">
-             <string>剔废功能</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="ckb_huikan">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>-1</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-            </property>
-            <property name="text">
-             <string>回看功能</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="ckb_cuntu">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>-1</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-            </property>
-            <property name="text">
-             <string>存图功能</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="ckb_yinshuazhiliangjiance">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>-1</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
-}
-
-QCheckBox::indicator {
-    /* 按钮的大小 */
-    width: 20px;
-    height: 20px;
-}
-
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
-}
-
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
-}
-
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
-}
-
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
-}</string>
-            </property>
-            <property name="text">
-             <string>印刷质量检测</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>710</y>
-           <width>611</width>
-           <height>151</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QGroupBox {
-    border: 1px solid #DDD;
-    border-radius: 4px;
-    font: bold 18px;
-    color: #666;
-    background-color: #F8F8F8;
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 10px;
-    padding: 0 5px;
-}</string>
-         </property>
-         <property name="title">
-          <string>亮度检测</string>
-         </property>
-         <widget class="QWidget" name="layoutWidget_6">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>80</y>
-            <width>581</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,0,0,0,0">
-           <item>
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_down">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>&lt;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_baoguang">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>btn</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_up">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>30</y>
-            <width>581</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="3,1,2">
-           <property name="rightMargin">
-            <number>10</number>
            </property>
-           <item>
-            <widget class="QLabel" name="lb_liangduzhuangtai">
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>亮度正常</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lb_liangdu">
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>0</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_daizizhonglei">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>白色袋</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>870</y>
-           <width>611</width>
-           <height>71</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="3,1">
-          <item>
-           <widget class="QPushButton" name="btn_normalParam">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>20</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>参数设置</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_setParam">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Set</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7" stretch="2,0,3">
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_title" stretch="3,2">
+              <item>
+               <widget class="QLabel" name="label_title">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 30px;        
+       font-weight: bold;        
+       color: rgb(255, 255, 255);         
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>废袋检测</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_close">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px 8px 36px; 
+    font-size: 14px;
+    qproperty-icon: url(:/ButtonScanner/image/close.png);  
+    qproperty-iconSize: 30px 30px;
+}
+
+QPushButton:hover {
+    background-color: #ff6666;
+}
+
+QPushButton:pressed {
+    background-color: #cc0000;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="shortcut">
+                 <string notr="true"/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line_2">
+              <property name="styleSheet">
+               <string notr="true">QLine {
+       color: rgb(194, 194, 194);       
+    }</string>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <layout class="QVBoxLayout" name="vLayout_cameraStates" stretch="3,2">
+                <item>
+                 <widget class="QLabel" name="label_cameraStateTitle">
+                  <property name="styleSheet">
+                   <string notr="true">QLabel {
+       font-size: 15px;        
+       font-weight: bold;        
+       color: rgb(232, 232, 232);         
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                  </property>
+                  <property name="text">
+                   <string>相机状态</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="gLayout_cameraStates">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lb_xiangjilianjiezhuangtai">
+                    <property name="text">
+                     <string>TextLabel</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="vLayout_cardState" stretch="3,2">
+                <item>
+                 <widget class="QLabel" name="label_cardStateTitle">
+                  <property name="styleSheet">
+                   <string notr="true">QLabel {
+       font-size: 15px;        
+       font-weight: bold;        
+       color: rgb(232, 232, 232);         
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                  </property>
+                  <property name="text">
+                   <string>板卡状态</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lb_bankalianjiezhuangtai">
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_infor">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_info" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="label_info">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>统计信息</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_chanliangqingling">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                </property>
+                <property name="text">
+                 <string>产量清零</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_produceTotal">
+              <item>
+               <widget class="QLabel" name="label_produceTotal">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>生产总量</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lb_shengchanzongliang">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:  rgb(89, 89, 89);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_wasteProducts">
+              <item>
+               <widget class="QLabel" name="label_wasteProducts">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>废品总量</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lb_feipinshuliang">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:   rgb(255, 0, 0);      
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_productionYield">
+              <item>
+               <widget class="QLabel" name="label_productionYield">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>生产良率</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lb_lianglv">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:  rgb(89, 89, 89);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0.00%</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="hLayout_productionYield_2">
+              <item>
+               <widget class="QLabel" name="label_productionYield_2">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>平均袋长</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lb_pingjundaichang">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:  rgb(89, 89, 89);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0.00</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QCheckBox" name="ckb_tifei">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>-1</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+                </property>
+                <property name="text">
+                 <string>剔废功能</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_removeRate">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 20px;        
+       font-weight: bold;        
+       color:  rgb(89, 89, 89);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0个/min</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(181, 181, 181);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QCheckBox" name="ckb_cuntu">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>-1</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+                </property>
+                <property name="text">
+                 <string>存图功能</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="ckb_huikan">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>-1</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+                </property>
+                <property name="text">
+                 <string>回看功能</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pbtn_openSaveLocation">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+              </property>
+              <property name="text">
+               <string>打开存储位置</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_produceSet">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(181, 181, 181);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QCheckBox" name="ckb_zhinengcaiqie">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+              </property>
+              <property name="text">
+               <string>智能裁切</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ckb_yinshuazhiliangjiance">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color: lightgray; /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(255, 152, 83); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+              </property>
+              <property name="text">
+               <string>印刷质量检测</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_set">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QPushButton" name="btn_normalParam">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+              </property>
+              <property name="text">
+               <string>参数设置</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_setParam">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+              </property>
+              <property name="text">
+               <string>Set</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_pingbiquyu">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+              </property>
+              <property name="text">
+               <string>屏蔽区域</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_set_2">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="3,1,2">
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lb_liangduzhuangtai">
+                <property name="font">
+                 <font>
+                  <pointsize>-1</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>亮度正常</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lb_liangdu">
+                <property name="font">
+                 <font>
+                  <pointsize>-1</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+       font-size: 17px;        
+       font-weight: bold;        
+       color:  rgb(141, 141, 141);       
+       padding: 5px 5px;     
+       border-bottom: 2px solid #cccccc; 
+    }</string>
+                </property>
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_daizizhonglei">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                </property>
+                <property name="text">
+                 <string>白色袋</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,0,0">
+              <item>
+               <widget class="QPushButton" name="btn_down">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                </property>
+                <property name="text">
+                 <string>&lt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_baoguang">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                </property>
+                <property name="text">
+                 <string>btn</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_up">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+    font-size: 15px; 
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                </property>
+                <property name="text">
+                 <string>&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
