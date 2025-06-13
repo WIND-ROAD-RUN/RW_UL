@@ -7,6 +7,8 @@
 
 #include "NumberKeyboard.h"
 
+#include"ImageCollage.hpp"
+
 SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::SmartCroppingOfBagsClass())

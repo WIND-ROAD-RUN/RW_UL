@@ -12,12 +12,15 @@ namespace rw
 		using Name = QString;
 		using Value = QString;
 
-		template < typename ImageType>
+		template < typename ElementType>
 		struct ElementInfo
 		{
 		public:
-			ImageType image;
+			ElementType element;
 			QMap<Name, Value> attribute;
+		public:
+			ElementInfo(const ElementType& img) : element(img) {}
+			ElementInfo() = default;
 		};
 
 		template <typename KeyType, typename ImageType>
@@ -36,14 +39,11 @@ namespace rw
 				imageCache.set(history, imageInfo);
 			}
 
-			inline ElementInfo< ImageType> getImage(const KeyType& history)
+			inline std::optional<ElementInfo<ImageType>> getImage(const KeyType& history)
 			{
 				auto result = imageCache.get(history);
-				if (!result.has_value())
-				{
-					return ElementInfo<ImageType>();
-				}
-				return result.value();
+
+				return result;
 			}
 
 			inline void setImage(const KeyType& history, const ElementInfo<ImageType>& imageInfo)
