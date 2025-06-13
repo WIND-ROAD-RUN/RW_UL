@@ -359,7 +359,7 @@ QGroupBox::title {
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,3,3,1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,3,3,3,1,1">
         <item>
          <widget class="QCheckBox" name="ckb_tiqiantifei">
           <property name="styleSheet">
@@ -482,7 +482,49 @@ QCheckBox::indicator:checked:hover {
 }</string>
           </property>
           <property name="text">
-           <string>启用二</string>
+           <string>启用二相机</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckb_yundongkongzhiqichonglian">
+          <property name="styleSheet">
+           <string notr="true">QCheckBox {
+    /* 默认样式 */
+    spacing: 10px; /* 文字和框框之间的间距 */
+    font-size: 14px; /* 字体大小 */
+}
+
+QCheckBox::indicator {
+    /* 按钮的大小 */
+    width: 20px;
+    height: 20px;
+}
+
+QCheckBox::indicator:unchecked {
+    /* 未选中状态的样式 */
+    background-color:rgb(255, 0, 0); /* 背景颜色 */
+    border: 1px solid darkgray; /* 边框颜色 */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    /* 未选中状态鼠标悬停时的样式 */
+    background-color: gray; /* 背景颜色 */
+}
+
+QCheckBox::indicator:checked {
+    /* 选中状态的样式 */
+    background-color: rgb(0, 255, 0); /* 背景颜色 */
+    border: 1px solid darkred; /* 边框颜色 */
+}
+
+QCheckBox::indicator:checked:hover {
+    /* 选中状态鼠标悬停时的样式 */
+    background-color: darkred; /* 背景颜色 */
+}</string>
+          </property>
+          <property name="text">
+           <string>运动控制器重连</string>
           </property>
          </widget>
         </item>

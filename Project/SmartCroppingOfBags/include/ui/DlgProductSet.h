@@ -57,6 +57,7 @@ private slots:
 	void ckb_tiqiantifei_checked();
 	void ckb_xiangjitiaoshi_checked();
 	void ckb_qiyonger_checked();
+	void ckb_yundongkongzhiqichonglian_checked();
 	void ckb_xiangjizengyi_checked();
 
 private:

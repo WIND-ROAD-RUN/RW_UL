@@ -8,6 +8,7 @@ namespace cdm {
 		tiqiantifei : bool :default = false;
 		xiangjitiaoshi : bool :default = false;
 		qiyonger : bool :default = false;
+		yundongkongzhiqichonglian : bool :default = false;
 		jiange : double :default = 0;
 		zidongpingbifanwei : double :default = 0;
 		

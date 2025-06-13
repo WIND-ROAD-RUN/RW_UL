@@ -35,6 +35,7 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	ui->ckb_tiqiantifei->setChecked(globalConfig.tiqiantifei);
 	ui->ckb_xiangjitiaoshi->setChecked(globalConfig.xiangjitiaoshi);
 	ui->ckb_qiyonger->setChecked(globalConfig.qiyonger);
+	ui->ckb_yundongkongzhiqichonglian->setChecked(globalConfig.yundongkongzhiqichonglian);
 	ui->btn_jiange->setText(QString::number(globalConfig.jiange));
 
 	// 1相机参数
@@ -141,6 +142,8 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::ckb_xiangjitiaoshi_checked);
 	QObject::connect(ui->ckb_qiyonger, &QCheckBox::clicked, 
 		this, &DlgProductSetSmartCroppingOfBags::ckb_qiyonger_checked);
+	QObject::connect(ui->ckb_yundongkongzhiqichonglian, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_yundongkongzhiqichonglian_checked);
 	QObject::connect(ui->ckb_xiangjizengyi, &QCheckBox::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked);
 
@@ -729,6 +732,12 @@ void DlgProductSetSmartCroppingOfBags::ckb_qiyonger_checked()
 {
 	auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	globalStructSetConfig.qiyonger = ui->ckb_qiyonger->isChecked();
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_yundongkongzhiqichonglian_checked()
+{
+	auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	globalStructSetConfig.yundongkongzhiqichonglian = ui->ckb_yundongkongzhiqichonglian->isChecked();
 }
 
 void DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked()
