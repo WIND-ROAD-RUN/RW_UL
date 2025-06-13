@@ -76,6 +76,9 @@ private slots:
 	void onCamera2Display(QPixmap image);
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
+
+	// ¸üÐÂUI
+	void updateUiLabels(int index, bool isConnected);
 private:
 	Ui::ZipperScannerClass *ui;
 };

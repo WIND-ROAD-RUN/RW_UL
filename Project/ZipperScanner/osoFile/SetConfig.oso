@@ -39,5 +39,9 @@ namespace cdm {
 
 		takeWork1Pictures : bool :default = false;
 		takeWork2Pictures : bool :default = false;
+
+		qiyongerxiangji : bool :default = false;
+		qiyongyundongkongzhiqi : bool :default = false;
+		yundongkongzhiqichonglian : bool :default = false;
 	};
 }

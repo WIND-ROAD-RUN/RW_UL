@@ -4181,7 +4181,7 @@ QGroupBox::title {
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_18">
              <item>
-              <widget class="QCheckBox" name="cbox_DIStart">
+              <widget class="QCheckBox" name="cbox_qiyongerxiangji">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4218,12 +4218,12 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>DI1</string>
+                <string>启用二相机</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="cbox_DIStop">
+              <widget class="QCheckBox" name="cbox_qiyongyundongkongzhiqi">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4260,12 +4260,12 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>DI2</string>
+                <string>启用运动控制器</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="cbox_DIShutdownComputer">
+              <widget class="QCheckBox" name="cbox_yundongkongzhiqichonglian">
                <property name="styleSheet">
                 <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4302,7 +4302,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                </property>
                <property name="text">
-                <string>DI3</string>
+                <string>运动控制器重连</string>
                </property>
               </widget>
              </item>
