@@ -429,6 +429,19 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 	}
 	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
 	textList.push_back(edgeDamageText);
+
+
+	auto targetAreaScore = static_cast<int>(productSet.poreEnableArea);
+	QString areaText("气孔面积:");
+	for (const auto& item : info.pore1)
+	{
+		if (item.isDraw)
+		{
+			edgeDamageText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+		}
+	}
+	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(edgeDamageText);
 }
 
 void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -1817,8 +1830,11 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInf
 		{
 			if (item.score > productSet.poreEnableScore)
 			{
-				_isbad = true;
-				item.isDraw = true;
+				if (item.area > productSet.poreEnableArea)
+				{
+					_isbad = true;
+					item.isDraw = true;
+				}
 			}
 		}
 	}
