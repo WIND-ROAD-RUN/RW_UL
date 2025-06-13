@@ -4,21 +4,7 @@
 
 QImage cvMatToQImage(const cv::Mat& mat)
 {
-	QImage result;
-	if (mat.type() == CV_8UC1) {
-		result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_Grayscale8);
-	}
-	else if (mat.type() == CV_8UC3) {
-		result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_RGB888).rgbSwapped();
-	}
-	else if (mat.type() == CV_8UC4) {
-		result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_RGBA8888);
-	}
-	else {
-		result = QImage();
-	}
-
-	return result;
+	return rw::rqw::cvMatToQImage(mat);
 }
 
 demo::demo(QWidget *parent)
@@ -27,7 +13,7 @@ demo::demo(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	auto camerList=rw::rqw::CheckCameraList();
+	auto camerList=rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
 	if (camerList.empty())
 	{
 		qDebug() << "No camera found!";
@@ -42,7 +28,7 @@ demo::demo(QWidget *parent)
 	config.modelPath = R"(C:\Users\zfkj\Desktop\best.engine)";
 	config.nms_threshold = 0.1;
 	config.conf_threshold = 0.1;
-	engine=rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
+	//engine=rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 
 }
 
@@ -57,8 +43,8 @@ void demo::displayImg(cv::Mat frame)
 	{
 		return;
 	}
-	auto result = engine->processImg(frame);
+	//auto result = engine->processImg(frame);
 	auto QImage = cvMatToQImage(frame);
-	rw::rqw::ImagePainter::drawShapesOnSourceImg(QImage, result);
+	//rw::rqw::ImagePainter::drawShapesOnSourceImg(QImage, result);
 	ui->label->setPixmap(QPixmap::fromImage(QImage).scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
