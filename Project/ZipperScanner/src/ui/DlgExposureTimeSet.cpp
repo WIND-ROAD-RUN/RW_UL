@@ -79,12 +79,12 @@ void DlgExposureTimeSet::pbtn_exposureTimeValue_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto newValue = numKeyBord.getValue().toInt();
-		if (newValue < 10) {
-			QMessageBox::warning(this, "错误", "曝光时间范围应设置为10~700");
+		if (newValue < 0) {
+			QMessageBox::warning(this, "错误", "曝光时间范围应设置为0~300");
 			return;
 		}
-		if (newValue > 700) {
-			QMessageBox::warning(this, "错误", "曝光时间范围应设置为100~700");
+		if (newValue > 300) {
+			QMessageBox::warning(this, "错误", "曝光时间范围应设置为0~300");
 			return;
 		}
 

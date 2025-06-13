@@ -43,6 +43,8 @@ public :
 	void build_imageProcessorModule();
 	void build_imageSaveEngine();
 
+	void build_threads();
+
 public:
 	void destroyComponents();
 
@@ -62,15 +64,18 @@ private slots:
 	void rbtn_weakLight_checked(bool checked);
 	void pbtn_openSaveLocation_clicked();
 	void rbtn_takePicture_checked();
+	void rbtn_removeFunc_checked(bool checked);
+	void ckb_shibiekuang_checked(bool checked);
+	void ckb_wenzi_checked(bool checked);
 
 
 private slots:
 	void updateCameraLabelState(int cameraIndex, bool state);
 
 	void onCamera1Display(QPixmap image);
-
 	void onCamera2Display(QPixmap image);
 
+	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 private:
 	Ui::ZipperScannerClass *ui;
 };

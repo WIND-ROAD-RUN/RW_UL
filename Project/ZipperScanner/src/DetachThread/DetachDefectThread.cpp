@@ -2,7 +2,7 @@
 
 DetachDefectThreadZipper::DetachDefectThreadZipper(QObject* parent)
 {
-
+	
 }
 
 DetachDefectThreadZipper::~DetachDefectThreadZipper()
@@ -82,7 +82,7 @@ void DetachDefectThreadZipper::run()
 	auto& priorityQueue2 = GlobalStructDataZipper::getInstance().priorityQueue2;
 
 	while (running) {
-		QThread::msleep(100);
+		QThread::msleep(10);
 		processQueue1(priorityQueue1);
 		processQueue2(priorityQueue2);
 	}
