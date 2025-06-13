@@ -46,7 +46,8 @@ void GlobalStructDataZipper::destroy_DetachDefectThreadZipper()
 
 void GlobalStructDataZipper::onCameraReject(size_t index)
 {
-	if (generalConfig.isDefect)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	if (globalStruct.runningState == RunningState::OpenRemoveFunc)
 	{
 		if (index == 1)
 		{
@@ -230,10 +231,25 @@ bool GlobalStructDataZipper::buildCamera1()
 		try
 		{
 			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
-			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Software);
+			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Hardware);
 			camera1->cameraIndex = 1;
+			camera1->setFrameRate(50);
 			camera1->setHeartbeatTime(5000);
-			setCameraExposureTime(1, dlgExposureTimeSetConfig.exposureTime);
+			if (generalConfig.qiangGuang == true)
+			{
+				// 强光照明
+				setLightLevel(LightLevel::StrongLight);
+			}
+			else if (generalConfig.zhongGuang == true)
+			{
+				// 中光照明
+				setLightLevel(LightLevel::MediumLight);
+			}
+			else if (generalConfig.ruoGuang == true)
+			{
+				// 弱光照明
+				setLightLevel(LightLevel::WeakLight);
+			}
 			camera1->startMonitor();
 			// 设置剔废IO输出
 			auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
@@ -263,10 +279,25 @@ bool GlobalStructDataZipper::buildCamera2()
 		try
 		{
 			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
-			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Software);
+			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Hardware);
 			camera2->cameraIndex = 2;
+			camera2->setFrameRate(50);
 			camera2->setHeartbeatTime(5000);
-			setCameraExposureTime(2, dlgExposureTimeSetConfig.exposureTime);
+			if (generalConfig.qiangGuang == true)
+			{
+				// 强光照明
+				setLightLevel(LightLevel::StrongLight);
+			}
+			else if (generalConfig.zhongGuang == true)
+			{
+				// 中光照明
+				setLightLevel(LightLevel::MediumLight);
+			}
+			else if (generalConfig.ruoGuang == true)
+			{
+				// 弱光照明
+				setLightLevel(LightLevel::WeakLight);
+			}
 			// 设置剔废IO输出
 			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			camera2->setOutTriggerConfig(config);

@@ -413,9 +413,9 @@ void DlgProductSet::pbtn_qiangbaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0 || value.toDouble() > 300)
+		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入0到300的数值");
+			QMessageBox::warning(this, "提示", "请输入11到300的数值");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -426,8 +426,14 @@ void DlgProductSet::pbtn_qiangbaoguang_clicked()
 		globalStructSetConfig.qiangBaoGuang = value.toDouble();
 		if (globalStructGeneralConfig.qiangGuang == true)
 		{
-			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
-			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.qiangBaoGuang));
+			}
 		}
 	}
 }
@@ -452,8 +458,14 @@ void DlgProductSet::pbtn_qiangzengyi_clicked()
 		globalStructSetConfig.qiangZengYi = value.toDouble();
 		if (globalStructGeneralConfig.qiangGuang == true)
 		{
-			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
-			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.qiangZengYi));
+			}
 		}
 	}
 }
@@ -466,9 +478,9 @@ void DlgProductSet::pbtn_zhongbaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0 || value.toDouble() > 300)
+		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入0到300的数值");
+			QMessageBox::warning(this, "提示", "请输入11到300的数值");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -478,8 +490,14 @@ void DlgProductSet::pbtn_zhongbaoguang_clicked()
 		globalStructSetConfig.zhongBaoGuang = value.toDouble();
 		if (globalStructGeneralConfig.zhongGuang == true)
 		{
-			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
-			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.zhongBaoGuang));
+			}
 		}
 	}
 }
@@ -492,9 +510,9 @@ void DlgProductSet::pbtn_ruobaoguang_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0 || value.toDouble() > 300)
+		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "提示", "请输入0到300的数值");
+			QMessageBox::warning(this, "提示", "请输入11到300的数值");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -504,8 +522,15 @@ void DlgProductSet::pbtn_ruobaoguang_clicked()
 		globalStructSetConfig.ruoBaoGuang = value.toDouble();
 		if (globalStructGeneralConfig.ruoGuang == true)
 		{
-			globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
-			globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
+
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setExposureTime(static_cast<size_t>(globalStructSetConfig.ruoBaoGuang));
+			}
 		}
 	}
 }
@@ -530,8 +555,15 @@ void DlgProductSet::pbtn_zhongzengyi_clicked()
 		globalStructSetConfig.zhongZengYi = value.toDouble();
 		if (globalStructGeneralConfig.zhongGuang == true)
 		{
-			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
-			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
+
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.zhongZengYi));
+			}
 		}
 	}
 }
@@ -556,8 +588,15 @@ void DlgProductSet::pbtn_ruozengyi_clicked()
 		globalStructSetConfig.ruoZengYi = value.toDouble();
 		if (globalStructGeneralConfig.ruoGuang == true)
 		{
-			globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
-			globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
+			if (globalStruct.camera1)
+			{
+				globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
+
+			}
+			if (globalStruct.camera2)
+			{
+				globalStruct.camera2->setGain(static_cast<size_t>(globalStructSetConfig.ruoZengYi));
+			}
 		}
 	}
 }
