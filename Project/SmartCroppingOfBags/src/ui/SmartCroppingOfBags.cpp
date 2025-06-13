@@ -1,4 +1,4 @@
-#include "SmartCroppingOfBags.h"
+ï»¿#include "SmartCroppingOfBags.h"
 
 #include "oso_StorageContext.hpp"
 #include "ui_SmartCroppingOfBags.h"
@@ -13,26 +13,26 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	// ¶ÁÈ¡²ÎÊı
+	// è¯»å–å‚æ•°
 	read_config();
 
-	// ¹¹½¨UI
+	// æ„å»ºUI
 	build_ui();
 
-	// ¹¹½¨ÓÅÏÈ¶ÓÁĞ
+	// æ„å»ºä¼˜å…ˆé˜Ÿåˆ—
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	globalStruct.build_PriorityQueue();
 
-	// ¹¹½¨Òì²½ÌŞ·ÏÏß³Ì
+	// æ„å»ºå¼‚æ­¥å‰”åºŸçº¿ç¨‹
 	globalStruct.build_DetachDefectThreadSmartCroppingOfBags();
 
-	// ¹¹½¨Í¼Ïñ±£´æÒıÇæ
+	// æ„å»ºå›¾åƒä¿å­˜å¼•æ“
 	build_imageSaveEngine();
 
-	// ¹¹½¨Í¼Ïñ´¦ÀíÄ£¿é
+	// æ„å»ºå›¾åƒå¤„ç†æ¨¡å—
 	build_imageProcessorModule();
 
-	// Á¬½Ó²Ûº¯Êı
+	// è¿æ¥æ§½å‡½æ•°
 	build_connect();
 }
 
@@ -86,8 +86,8 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& smartCroppingOfBagsConfig = globalStruct.generalConfig;
 
-	// ³õÊ¼»¯È«¾ÖÊı¾İ
-	// ¼ÓÔØÖ÷´°ÌåUIµÄÉèÖÃ
+	// åˆå§‹åŒ–å…¨å±€æ•°æ®
+	// åŠ è½½ä¸»çª—ä½“UIçš„è®¾ç½®
 	ui->ckb_zhinengcaiqie->setChecked(globalStruct.generalConfig.iszhinengcaiqie);
 	ui->lb_shengchanzongliang->setText(QString::number(globalStruct.generalConfig.shengchanzongliang));
 	ui->lb_lianglv->setText(QString::number(globalStruct.generalConfig.shengchanlianglv));
@@ -98,20 +98,20 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	ui->ckb_cuntu->setChecked(globalStruct.generalConfig.iscuntu);
 	ui->ckb_yinshuazhiliangjiance->setChecked(globalStruct.generalConfig.isyinshuazhiliangjiance);
 	ui->btn_baoguang->setText(QString::number(globalStruct.generalConfig.baoguang));
-	// Ä¬ÈÏ°×É«´ü
-	ui->btn_daizizhonglei->setText("°×É«´ü");
+	// é»˜è®¤ç™½è‰²è¢‹
+	ui->btn_daizizhonglei->setText("ç™½è‰²è¢‹");
 
-	// È¥µô±êÌâÀ¸
+	// å»æ‰æ ‡é¢˜æ 
 	this->setWindowFlags(Qt::FramelessWindowHint);
 
-	// Ôİ²»ÆôÓÃ"Ó¡Ë¢ÖÊÁ¿¼ì²â"
+	// æš‚ä¸å¯ç”¨"å°åˆ·è´¨é‡æ£€æµ‹"
 	ui->ckb_yinshuazhiliangjiance->setVisible(false);
 	ui->ckb_yinshuazhiliangjiance->setChecked(false);
 	smartCroppingOfBagsConfig.isyinshuazhiliangjiance = false;
 
 	globalStruct.buildImageSaveEngine();
 
-	// ³õÊ¼»¯Í¼Ïñ²é¿´Æ÷
+	// åˆå§‹åŒ–å›¾åƒæŸ¥çœ‹å™¨
 	_picturesViewer = new PictureViewerThumbnails(this);
 }
 
@@ -134,9 +134,9 @@ void SmartCroppingOfBags::build_imageSaveEngine()
 {
 	QDir dir;
 	QString imageSavePath = globalPath.imageSaveRootPath;
-	//ÇåÀí¾ÉµÄÊı¾İ
+	//æ¸…ç†æ—§çš„æ•°æ®
 
-	//»ñÈ¡µ±Ç°ÈÕÆÚ²¢ÉèÖÃ±£´æÂ·¾¶
+	//è·å–å½“å‰æ—¥æœŸå¹¶è®¾ç½®ä¿å­˜è·¯å¾„
 	QString currentDate = QDate::currentDate().toString("yyyy_MM_dd");
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	globalStruct.buildImageSaveEngine();
@@ -150,17 +150,17 @@ void SmartCroppingOfBags::build_imageSaveEngine()
 void SmartCroppingOfBags::destroyComponents()
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
-	//Ïú»ÙÏà»ú
+	//é”€æ¯ç›¸æœº
 	globalStruct.destroyCamera();
-	// Ïú»ÙÍ¼Ïñ´¦ÀíÄ£¿é
+	// é”€æ¯å›¾åƒå¤„ç†æ¨¡å—
 	//globalStruct.destroyImageProcessingModule();
-	// Ïú»ÙÍ¼Ïñ±£´æÄ£¿é
+	// é”€æ¯å›¾åƒä¿å­˜æ¨¡å—
 	globalStruct.destroyImageSaveEngine();
-	// Ïú»ÙÒì²½ÌŞ·ÏÏß³Ì
+	// é”€æ¯å¼‚æ­¥å‰”åºŸçº¿ç¨‹
 	//globalStruct.destroy_DetachDefectThreadZipper();
-	// Ïú»ÙÌŞ·ÏÓÅÏÈ¶ÓÁĞ
+	// é”€æ¯å‰”åºŸä¼˜å…ˆé˜Ÿåˆ—
 	globalStruct.destroy_PriorityQueue();
-	// ±£´æ²ÎÊı
+	// ä¿å­˜å‚æ•°
 	globalStruct.saveGeneralConfig();
 }
 
@@ -182,7 +182,7 @@ void SmartCroppingOfBags::read_config_GeneralConfig()
 
 	QFileInfo generalConfigFile(generalConfigPath);
 
-	// Èç¹ûÎÄ¼ş²»´æÔÚ
+	// å¦‚æœæ–‡ä»¶ä¸å­˜åœ¨
 	if (!generalConfigFile.exists())
 	{
 		QDir configDir = QFileInfo(generalConfigPath).absoluteDir();
@@ -197,7 +197,7 @@ void SmartCroppingOfBags::read_config_GeneralConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎŞ·¨´´½¨ÅäÖÃÎÄ¼şgeneralConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶generalConfig.xml");
 		}
 		globalStruct.generalConfig = cdm::GeneralConfigSmartCroppingOfBags();
 		globalStruct.storeContext->save(globalStruct.generalConfig, globalPath.generalConfigPath.toStdString());
@@ -231,7 +231,7 @@ void SmartCroppingOfBags::read_config_ScoreConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎŞ·¨´´½¨ÅäÖÃÎÄ¼şscoreConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶scoreConfig.xml");
 		}
 		globalStruct.scoreConfig = cdm::ScoreConfigSmartCroppingOfBags();
 		globalStruct.storeContext->save(globalStruct.scoreConfig, globalPath.scoreConfigPath.toStdString());
@@ -262,7 +262,7 @@ void SmartCroppingOfBags::read_config_SetConfig()
 		}
 		else
 		{
-			QMessageBox::critical(this, "Error", "ÎŞ·¨´´½¨ÅäÖÃÎÄ¼şsetConfig.xml");
+			QMessageBox::critical(this, "Error", "æ— æ³•åˆ›å»ºé…ç½®æ–‡ä»¶setConfig.xml");
 		}
 		globalStruct.setConfig = cdm::SetConfigSmartCroppingOfBags();
 		globalStruct.storeContext->save(globalStruct.setConfig, globalPath.setConfigPath.toStdString());
@@ -290,17 +290,17 @@ void SmartCroppingOfBags::btn_chanliangqingling_clicked()
 void SmartCroppingOfBags::btn_daizizhonglei_clicked()
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	// 0:°×É«´ü
-	// 1:ÑÕÉ«´ü
+	// 0:ç™½è‰²è¢‹
+	// 1:é¢œè‰²è¢‹
 	if (generalConfig.daizizhonglei == 0)
 	{
 		generalConfig.daizizhonglei = 1;
-		ui->btn_daizizhonglei->setText("ÑÕÉ«´ü");
+		ui->btn_daizizhonglei->setText("é¢œè‰²è¢‹");
 	}
 	else if (generalConfig.daizizhonglei == 1)
 	{
 		generalConfig.daizizhonglei = 0;
-		ui->btn_daizizhonglei->setText("°×É«´ü");
+		ui->btn_daizizhonglei->setText("ç™½è‰²è¢‹");
 	}
 }
 
@@ -336,7 +336,7 @@ void SmartCroppingOfBags::btn_setParam_clicked()
 			_dlgProductSet->exec();
 		}
 		else {
-			QMessageBox::warning(this, "Error", "ÃÜÂë´íÎó£¬ÇëÖØĞÂÊäÈë");
+			QMessageBox::warning(this, "Error", "å¯†ç é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥");
 		}
 	}
 }
