@@ -436,6 +436,14 @@ void ZipperScanner::rbtn_debug_checked(bool checked)
 			_dlgExposureTimeSet->SetCamera(); // 设置相机为实时采集
 			//GlobalStructData.generalConfig.isDebug = checked;
 			GlobalStructData.runningState = RunningState::Debug;
+			if (GlobalStructData.camera1)
+			{
+				GlobalStructData.camera1->setFrameRate(5);
+			}
+			if (GlobalStructData.camera2)
+			{
+				GlobalStructData.camera2->setFrameRate(5);
+			}
 			//GlobalThread.strobeLightThread->startThread();
 			ui->rbtn_takePicture->setChecked(false);
 			//rbtn_takePicture_checked(false);
@@ -522,6 +530,14 @@ void ZipperScanner::rbtn_removeFunc_checked(bool checked)
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
 		globalStruct.runningState = RunningState::OpenRemoveFunc;
 		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+		if (globalStruct.camera1)
+		{
+			globalStruct.camera1->setFrameRate(50);
+		}
+		if (globalStruct.camera2)
+		{
+			globalStruct.camera2->setFrameRate(50);
+		}
 		ui->rbtn_debug->setChecked(false);
 		ui->ckb_shibiekuang->setVisible(false);
 		ui->ckb_wenzi->setVisible(false);

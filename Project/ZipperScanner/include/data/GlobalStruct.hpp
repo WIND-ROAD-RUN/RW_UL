@@ -92,6 +92,7 @@ public:
 	void buildImageProcessorModules(const QString& path);
 	void destroyImageProcessingModule();
 
+	// Í¼Ïñ´¦ÀíÄ£¿é
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 

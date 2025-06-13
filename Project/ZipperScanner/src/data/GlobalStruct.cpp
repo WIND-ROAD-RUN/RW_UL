@@ -233,6 +233,7 @@ bool GlobalStructDataZipper::buildCamera1()
 			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
 			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Hardware);
 			camera1->cameraIndex = 1;
+			camera1->setFrameRate(50);
 			camera1->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
@@ -280,6 +281,7 @@ bool GlobalStructDataZipper::buildCamera2()
 			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
 			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Hardware);
 			camera2->cameraIndex = 2;
+			camera2->setFrameRate(50);
 			camera2->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
