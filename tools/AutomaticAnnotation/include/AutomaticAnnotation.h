@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QMainWindow>
-#include "ui_AutomaticAnnotation.h"
 
 #include"PicturesViewer.h"
 #include"AutomaticAnnotationThread.h"

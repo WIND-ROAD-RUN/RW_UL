@@ -4,6 +4,8 @@
 
 #include"rqw_ImagePainter.h"
 
+#include "ui_AutomaticAnnotation.h"
+
 #include<QMessageBox>
 #include<QFileDialog>
 #include<QDirIterator>
