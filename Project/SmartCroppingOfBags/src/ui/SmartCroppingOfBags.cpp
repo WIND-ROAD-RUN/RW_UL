@@ -159,6 +159,11 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 
 	// 初始化图像查看器
 	_picturesViewer = new PictureViewerThumbnails(this);
+
+	this->_carouselWidget = new CarouselWidget(this);
+	auto layout=ui->gBox_main->layout();
+	layout->replaceWidget(ui->pushButton, _carouselWidget);
+	_carouselWidget->setSize(10);
 }
 
 void SmartCroppingOfBags::build_DlgProductSetData()

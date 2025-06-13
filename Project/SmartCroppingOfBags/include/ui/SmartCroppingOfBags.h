@@ -6,6 +6,7 @@
 #include "DlgProductSet.h"
 #include "ui_SmartCroppingOfBags.h"
 #include "PictureViewerThumbnails.h"
+#include"rqw_CarouselWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCroppingOfBagsClass; };
@@ -14,7 +15,8 @@ QT_END_NAMESPACE
 class SmartCroppingOfBags : public QMainWindow
 {
 	Q_OBJECT
-
+private:
+	CarouselWidget* _carouselWidget = nullptr;
 public:
 	SmartCroppingOfBags(QWidget *parent = nullptr);
 	~SmartCroppingOfBags();
