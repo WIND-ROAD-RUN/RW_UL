@@ -33,6 +33,7 @@ void CarouselWidget::flaskGbox()
 		QPushButton* pbtn = new QPushButton(this);
 		setStandardItemStyle(pbtn, 0);
 		pbtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+		pbtn->setEnabled(false);
 		ui->gbox_CarouselWidgetBar->layout()->addWidget(pbtn);
 	}
 }
