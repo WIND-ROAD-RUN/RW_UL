@@ -1,14 +1,12 @@
 #pragma once
 #include <QImage>
 #include <QString>
-#include <QDir>
 #include <QMutex>
 #include <QThread>
 #include <QQueue>
 #include <QWaitCondition>
 #include <QDateTime>
 #include <atomic>
-#include <iostream>
 #include <vector>
 
 namespace rw {
