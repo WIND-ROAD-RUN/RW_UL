@@ -59,6 +59,8 @@ private slots:
 	void pbtn_blockEyeScore_clicked();
 	void pbtn_materialHeadScore_clicked();
 
+	void pbtn_poreEnableArea_clicked();
+
 private slots:
 	void rbtn_outsideDiameterEnable_checked(bool checked);
 	void rbtn_edgeDamageEnable_checked(bool checked);

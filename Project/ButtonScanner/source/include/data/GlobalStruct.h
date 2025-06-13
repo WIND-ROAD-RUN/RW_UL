@@ -8,13 +8,13 @@
 #include"scc_Motion.h"
 
 #include"rqw_CameraObjectThreadZMotion.hpp"
-#include"cdm_ButtonScannerMainWindow.h"
-#include"cdm_ButtonScannerDlgProductSet.h"
-#include"cdm_ButtonScannerDlgExposureTimeSet.h"
+#include"ButtonScannerMainWindow.hpp"
+#include"ButtonScannerDlgProductSet.hpp"
+#include"ButtonScannerDlgExposureTimeSet.hpp"
 #include"cdm_ButtonScannerDlgWarningManager.h"
-#include "cdm_ButtonScannerProduceLineSet.h"
+#include "ButtonScannerProduceLineSet.hpp"
 #include"WarningIOSetConfig.hpp"
-#include"cdm_ButtonScannerDlgHideScoreSet.h"
+#include"ButtonScannerDlgHideScoreSet.hpp"
 #include"dsl_PriorityQueue.hpp"
 #include"oso_StorageContext.hpp"
 #include"rqw_ImageSaveEngine.h"
@@ -130,11 +130,11 @@ public:
 	QString dlgHideScoreSetPath;
 	QString warningIOSetConfigPath;
 	QString warningManagerFilePath;
-	rw::cdm::ButtonScannerMainWindow mainWindowConfig{};
-	rw::cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
-	rw::cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
-	rw::cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
-	rw::cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
+	cdm::ButtonScannerMainWindow mainWindowConfig{};
+	cdm::ButtonScannerProduceLineSet dlgProduceLineSetConfig{};
+	cdm::ButtonScannerDlgProductSet dlgProductSetConfig{};
+	cdm::ButtonScannerDlgExposureTimeSet dlgExposureTimeSetConfig{};
+	cdm::DlgHideScoreSet dlgHideScoreSetConfig{};
 	cdm::WarningIOSetConfig warningIOSetConfig{};
 	rw::cdm::ButtonScannerDlgWarningManager dlgWarningManagerConfig{};
 public:

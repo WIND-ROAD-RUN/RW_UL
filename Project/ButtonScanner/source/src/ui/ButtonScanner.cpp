@@ -535,7 +535,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件mainWindowConfig.xml");
 		}
-		globalStruct.mainWindowConfig = rw::cdm::ButtonScannerMainWindow();
+		globalStruct.mainWindowConfig = cdm::ButtonScannerMainWindow();
 		globalStruct.saveMainWindowConfig();
 		return;
 	}
@@ -592,7 +592,7 @@ void ButtonScanner::read_config_produceLineConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件dlgProduceLineSetConfig.xml");
 		}
-		globalStruct.dlgProduceLineSetConfig = rw::cdm::ButtonScannerProduceLineSet();
+		globalStruct.dlgProduceLineSetConfig = cdm::ButtonScannerProduceLineSet();
 		globalStruct.saveDlgProduceLineSetConfig();
 		return;
 	}
@@ -622,7 +622,7 @@ void ButtonScanner::read_config_productSetConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件dlgProdutSetConfig.xml");
 		}
-		globalStruct.dlgProductSetConfig = rw::cdm::ButtonScannerDlgProductSet();
+		globalStruct.dlgProductSetConfig = cdm::ButtonScannerDlgProductSet();
 		globalStruct.saveDlgProductSetConfig();
 		return;
 	}
@@ -652,7 +652,7 @@ void ButtonScanner::read_config_exposureTimeSetConfig()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件exposureTimeSetConfig.xml");
 		}
-		globalStruct.dlgExposureTimeSetConfig = rw::cdm::ButtonScannerDlgExposureTimeSet();
+		globalStruct.dlgExposureTimeSetConfig = cdm::ButtonScannerDlgExposureTimeSet();
 		globalStruct.saveDlgExposureTimeSetConfig();
 		return;
 	}
@@ -682,7 +682,7 @@ void ButtonScanner::read_config_hideScoreSet()
 		else {
 			QMessageBox::critical(this, "Error", "无法创建配置文件mainWindowConfig.xml");
 		}
-		globalStruct.dlgHideScoreSetConfig = rw::cdm::DlgHideScoreSet();
+		globalStruct.dlgHideScoreSetConfig = cdm::DlgHideScoreSet();
 		globalStruct.saveDlgHideScoreSetConfig();
 		return;
 	}

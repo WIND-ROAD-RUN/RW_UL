@@ -1,5 +1,8 @@
 #include"rqw_ImageSaveEngine.h"
 
+#include <iostream>
+#include <QDir>
+
 namespace rw {
 	namespace rqw {
 		ImageSaveEngine::ImageSaveEngine(QObject* parent, int threadCount)

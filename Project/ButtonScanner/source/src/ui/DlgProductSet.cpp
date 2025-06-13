@@ -86,6 +86,7 @@ void DlgProductSet::readConfig()
 	ui->pbtn_holeCenterDistanceSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceSimilarity));
 
 	ui->pbtn_specifyColorDifferenceDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceDeviation));
+	ui->pbtn_poreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableArea));
 }
 
 float DlgProductSet::get_blowTime()
@@ -196,6 +197,9 @@ void DlgProductSet::build_connect()
 
 	QObject::connect(_clickedLabel, &rw::rqw::ClickableLabel::clicked,
 		this, &DlgProductSet::clickedLabel_clicked);
+
+	QObject::connect(ui->pbtn_poreEnableArea, &QRadioButton::clicked,
+		this, &DlgProductSet::pbtn_poreEnableArea_clicked);
 }
 
 void DlgProductSet::build_radioButton()
@@ -662,6 +666,25 @@ void DlgProductSet::pbtn_materialHeadScore_clicked()
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_materialHeadScore->setText(value);
 		GlobalStructData.dlgProductSetConfig.materialHeadEnableScore = value.toDouble();
+	}
+}
+
+void DlgProductSet::pbtn_poreEnableArea_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 200000)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-200000之间的值");
+			return;
+		}
+		auto& GlobalStructData = GlobalStructData::getInstance();
+		ui->pbtn_poreEnableArea->setText(value);
+		GlobalStructData.dlgProductSetConfig.poreEnableArea = value.toDouble();
 	}
 }
 

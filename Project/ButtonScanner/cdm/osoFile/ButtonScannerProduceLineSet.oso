@@ -1,0 +1,63 @@
+#include <string>
+
+namespace cdm{
+    class ButtonScannerProduceLineSet
+    {
+    public:
+        takeNgPictures : bool : default = true;
+        takeMaskPictures : bool : default = true;
+        takeOkPictures : bool : default = true;
+        takePicturesLong : bool : default = false;
+
+        takeWork1Pictures : bool : default = true;
+        takeWork2Pictures : bool : default = true;
+        takeWork3Pictures : bool : default = true;
+        takeWork4Pictures : bool : default = true;
+
+        drawRec : bool : default = false;
+        drawCircle : bool : default = true;
+
+        blowingEnable1 : bool : default = false;
+        blowingEnable2 : bool : default = false;
+        blowingEnable3 : bool : default = false;
+        blowingEnable4 : bool : default = false;
+
+        blowDistance1 : double : default = 0;
+        blowDistance2 : double : default = 0;
+        blowDistance3 : double : default = 0;
+        blowDistance4 : double : default = 0;
+
+        blowTime1 : double : default = 0;
+        blowTime2 : double : default = 0;
+        blowTime3 : double : default = 0;
+        blowTime4 : double : default = 0;
+
+        pixelEquivalent1 : double : default = 0;
+        pixelEquivalent2 : double : default = 0;
+        pixelEquivalent3 : double : default = 0;
+        pixelEquivalent4 : double : default = 0;
+
+        limit1 : double : default = 0;
+        limit2 : double : default = 0;
+        limit3 : double : default = 0;
+        limit4 : double : default = 0;
+
+        minBrightness : double : default = 0;
+        maxBrightness : double : default = 0;
+
+        powerOn : bool : default = false;
+        none : bool : default = false;
+        run : bool : default = false;
+        alarm : bool : default = false;
+
+        workstationProtection12 : bool : default = false;
+        workstationProtection34 : bool : default = false;
+        debugMode : bool : default = false;
+
+        motorSpeed : double : default = 0;
+        beltReductionRatio : double : default = 0;
+        accelerationAndDeceleration : double : default = 0;
+        codeWheel : double : default = 0;
+        pulseFactor : double : default = 0;
+    };
+}

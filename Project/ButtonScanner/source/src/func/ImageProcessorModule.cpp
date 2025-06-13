@@ -60,7 +60,14 @@ std::vector<std::vector<size_t>> ImageProcessor::filterEffectiveIndexes_debug(st
 	auto processResultIndex = ImageProcessUtilty::getClassIndex(info);
 	processResultIndex = getIndexInBoundary(info, processResultIndex);
 	processResultIndex = ImageProcessUtilty::getAllIndexInMaxBody(info, processResultIndex, 10);
-	processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+
+	auto& global = GlobalStructData::getInstance();
+
+	if (global.dlgProductSetConfig.shieldingRangeEnable)
+	{
+		processResultIndex = getIndexInShieldingRange(info, processResultIndex);
+	}
+
 	return processResultIndex;
 }
 
@@ -365,6 +372,11 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 		return;
 	}
 
+	if (info.edgeDamage1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
 	QString edgeDamageText("破边:");
 	for (const auto & item:info.edgeDamage1)
@@ -401,6 +413,11 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 		return;
 	}
 
+	if (info.pore1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.poreEnableScore);
 	QString edgeDamageText("气孔:");
 	for (const auto& item : info.pore1)
@@ -408,6 +425,19 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 		if (item.isDraw)
 		{
 			edgeDamageText.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+		}
+	}
+	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(edgeDamageText);
+
+
+	auto targetAreaScore = static_cast<int>(productSet.poreEnableArea);
+	QString areaText("气孔面积:");
+	for (const auto& item : info.pore1)
+	{
+		if (item.isDraw)
+		{
+			edgeDamageText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
 		}
 	}
 	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
@@ -434,6 +464,11 @@ void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const Butto
 		return;
 	}
 	if (!productSet.paintEnable)
+	{
+		return;
+	}
+
+	if (info.paint1.empty())
 	{
 		return;
 	}
@@ -471,6 +506,10 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 		return;
 	}
 	if (!productSet.brokenEyeEnable)
+	{
+		return;
+	}
+	if (info.brokenEye1.empty())
 	{
 		return;
 	}
@@ -527,6 +566,10 @@ void ImageProcessor::appendCrackDectInfo(QVector<QString>& textList, const Butto
 	{
 		return;
 	}
+	if (info.crack1.empty())
+	{
+		return;
+	}
 
 	auto targetScore = static_cast<int>(productSet.crackSimilarity);
 	QString edgeDamageText("裂痕:");
@@ -561,6 +604,11 @@ void ImageProcessor::appendGrindStoneDectInfo(QVector<QString>& textList, const 
 		return;
 	}
 	if (!productSet.grindStoneEnable)
+	{
+		return;
+	}
+
+	if (info.grindStone1.empty())
 	{
 		return;
 	}
@@ -602,6 +650,11 @@ void ImageProcessor::appendBlockEyeDectInfo(QVector<QString>& textList, const Bu
 		return;
 	}
 
+	if (info.blockEye1.empty())
+	{
+		return;
+	}
+
 	auto targetScore = static_cast<int>(productSet.blockEyeEnableScore);
 	QString edgeDamageText("堵眼:");
 	for (const auto& item : info.blockEye1)
@@ -635,6 +688,11 @@ void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, cons
 		return;
 	}
 	if (!productSet.materialHeadEnable)
+	{
+		return;
+	}
+
+	if (info.materialHead1.empty())
 	{
 		return;
 	}
@@ -1391,7 +1449,13 @@ void ImageProcessor::run_debug(MatInfo& frame)
 	if (GlobalStructData::getInstance().debug_isDisplayRec)
 	{
 		drawVerticalBoundaryLine(image);
-		drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		auto& global = GlobalStructData::getInstance();
+
+		if (global.dlgProductSetConfig.shieldingRangeEnable)
+		{
+			drawShieldingRange(image, processResult, processResultIndex[ClassId::Body]);
+		}
+
 		drawErrorRec(image, processResult, processResultIndex);
 		ImageProcessUtilty::drawHole(image, processResult, processResultIndex[ClassId::Hole]);
 		ImageProcessUtilty::drawBody(image, processResult, processResultIndex[ClassId::Body]);
@@ -1766,8 +1830,11 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInf
 		{
 			if (item.score > productSet.poreEnableScore)
 			{
-				_isbad = true;
-				item.isDraw = true;
+				if (item.area > productSet.poreEnableArea)
+				{
+					_isbad = true;
+					item.isDraw = true;
+				}
 			}
 		}
 	}
@@ -2118,7 +2185,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	getPaintInfo(info, processResult, index[ClassId::mofa]);
+	//getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2330,6 +2397,7 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = edgeDamage;
+		itemDet.area = processResult[item].area;
 		info.edgeDamage1.emplace_back(itemDet);
 	}
 }
@@ -2347,6 +2415,7 @@ void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = pore;
+		itemDet.area = processResult[item].area;
 		info.pore1.emplace_back(itemDet);
 	}
 }
@@ -2364,6 +2433,7 @@ void ImageProcessor::getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = paint;
+		itemDet.area = processResult[item].area;
 		info.paint1.emplace_back(itemDet);
 	}
 }
@@ -2381,6 +2451,7 @@ void ImageProcessor::getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = brokenEye;
+		itemDet.area = processResult[item].area;
 		info.brokenEye1.emplace_back(itemDet);
 	}
 }
@@ -2398,6 +2469,7 @@ void ImageProcessor::getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = crack;
+		itemDet.area = processResult[item].area;
 		info.crack1.emplace_back(itemDet);
 	}
 }
@@ -2415,6 +2487,7 @@ void ImageProcessor::getGrindStoneInfo(ButtonDefectInfo& info, const std::vector
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = grindStone;
+		itemDet.area = processResult[item].area;
 		info.grindStone1.emplace_back(itemDet);
 	}
 }
@@ -2432,6 +2505,7 @@ void ImageProcessor::getBlockEyeInfo(ButtonDefectInfo& info, const std::vector<r
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = blockEye;
+		itemDet.area = processResult[item].area;
 		info.blockEye1.emplace_back(itemDet);
 	}
 }
@@ -2449,6 +2523,7 @@ void ImageProcessor::getMaterialHeadInfo(ButtonDefectInfo& info, const std::vect
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = materialHead;
+		itemDet.area = processResult[item].area;
 		info.materialHead1.emplace_back(itemDet);
 	}
 }
