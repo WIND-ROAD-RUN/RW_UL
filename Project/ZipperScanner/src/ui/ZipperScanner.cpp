@@ -9,6 +9,7 @@
 #include "Utilty.hpp"
 #include "WarnUtilty.hpp"
 #include "rqw_CameraObjectThread.hpp"
+#include "DetachDefectThread.h"
 
 ZipperScanner::ZipperScanner(QWidget* parent)
 	: QMainWindow(parent)
@@ -40,6 +41,9 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 
 	// 连接槽函数
 	build_connect();
+
+	// 启用所有后台线程
+	build_threads();
 }
 
 ZipperScanner::~ZipperScanner()
@@ -61,6 +65,7 @@ void ZipperScanner::build_ui()
 // 连接槽函数
 void ZipperScanner::build_connect()
 {
+	auto& GlobalStructDataZipper = GlobalStructDataZipper::getInstance();
 	// 退出
 	QObject::connect(ui->pbtn_exit, &QPushButton::clicked,
 		this, &ZipperScanner::pbtn_exit_clicked);
@@ -94,6 +99,25 @@ void ZipperScanner::build_connect()
 	// 采图
 	QObject::connect(ui->rbtn_takePicture, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_takePicture_checked);
+
+	// 剔废功能
+	QObject::connect(ui->rbtn_removeFunc, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_removeFunc_checked);
+
+	// 是否识别框
+	QObject::connect(ui->ckb_shibiekuang, &QCheckBox::clicked,
+		this, &ZipperScanner::ckb_shibiekuang_checked);
+
+	// 是否文字
+	QObject::connect(ui->ckb_wenzi, &QCheckBox::clicked,
+		this, &ZipperScanner::ckb_wenzi_checked);
+
+	// 连接显示NG图像
+	QObject::connect(GlobalStructDataZipper.modelCamera1.get(), &ImageProcessingModuleZipper::imageNGReady,
+		this, &ZipperScanner::onCameraNGDisplay);
+	QObject::connect(GlobalStructDataZipper.modelCamera2.get(), &ImageProcessingModuleZipper::imageNGReady,
+		this, &ZipperScanner::onCameraNGDisplay);
+
 }
 
 // 构建相机
@@ -221,6 +245,13 @@ void ZipperScanner::build_imageSaveEngine()
 	globalStruct.imageSaveEngine->startEngine();
 }
 
+void ZipperScanner::build_threads()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	// 启动异步剔废线程
+	globalStruct.detachDefectThreadZipper->startThread();
+}
+
 void ZipperScanner::destroyComponents()
 {
 	// 销毁相机
@@ -283,6 +314,9 @@ void ZipperScanner::read_config_GeneralConfig()
 	{
 		globalStruct.generalConfig = *globalStruct.storeContext->load(globalPath.generalConfigPath.toStdString());
 		// 加载主窗体UI的设置
+		globalStruct.generalConfig.isDefect = true; // 默认开启剔废模式
+		rbtn_removeFunc_checked(true);
+		ui->rbtn_removeFunc->setChecked(globalStruct.generalConfig.isDefect);
 		ui->rbtn_strongLight->setChecked(globalStruct.generalConfig.qiangGuang);
 		ui->rbtn_mediumLight->setChecked(globalStruct.generalConfig.zhongGuang);
 		ui->rbtn_weakLight->setChecked(globalStruct.generalConfig.ruoGuang);
@@ -476,7 +510,39 @@ void ZipperScanner::rbtn_takePicture_checked()
 		ui->rbtn_takePicture->setChecked(false);
 	}
 	auto& generalConfig = GlobalStructDataZipper::getInstance().generalConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	generalConfig.isSaveImg = ui->rbtn_takePicture->isChecked();
+	globalStruct.isTakePictures = ui->rbtn_takePicture->isChecked();
+}
+
+void ZipperScanner::rbtn_removeFunc_checked(bool checked)
+{
+	if (checked)
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.runningState = RunningState::OpenRemoveFunc;
+		_dlgExposureTimeSet->ResetCamera(); // 重置相机为硬件触发
+		ui->rbtn_debug->setChecked(false);
+		ui->ckb_shibiekuang->setVisible(false);
+		ui->ckb_wenzi->setVisible(false);
+	}
+	else
+	{
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		globalStruct.runningState = RunningState::Stop;
+	}
+}
+
+void ZipperScanner::ckb_shibiekuang_checked(bool checked)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.generalConfig.isshibiekuang = ui->ckb_shibiekuang->isChecked();
+}
+
+void ZipperScanner::ckb_wenzi_checked(bool checked)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.generalConfig.iswenzi = ui->ckb_wenzi->isChecked();
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)
@@ -486,7 +552,22 @@ void ZipperScanner::onCamera1Display(QPixmap image)
 
 void ZipperScanner::onCamera2Display(QPixmap image)
 {
-	ui->label_imgDisplay_2->setPixmap(image.scaled(ui->label_imgDisplay_2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	ui->label_imgDisplay_3->setPixmap(image.scaled(ui->label_imgDisplay_1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void ZipperScanner::onCameraNGDisplay(QPixmap image, size_t index, bool isbad)
+{
+	if (isbad)
+	{
+		if (index == 1)
+		{
+			ui->label_imgDisplay_2->setPixmap(image.scaled(ui->label_imgDisplay_2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		}
+		else if (index == 2)
+		{
+			ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay_4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		}
+	}
 }
 
 void ZipperScanner::updateCameraLabelState(int cameraIndex, bool state)

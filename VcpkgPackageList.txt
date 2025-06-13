@@ -5,3 +5,6 @@ sqlite3
 gtest
 spdlog
 hwloc
+pkgconf
+cryptopp
+openssl
