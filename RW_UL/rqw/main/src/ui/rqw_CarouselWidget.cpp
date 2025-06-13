@@ -18,6 +18,7 @@ CarouselWidget::~CarouselWidget()
 void CarouselWidget::setSize(size_t size)
 {
 	_size = size;
+	flaskGbox();
 }
 
 void CarouselWidget::flaskGbox()
