@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME}  PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE rqw hoec)
+target_link_libraries(${PROJECT_NAME} PRIVATE rqw)
 target_include_directories(${PROJECT_NAME} 
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
@@ -39,6 +39,5 @@ add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
-
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h)
