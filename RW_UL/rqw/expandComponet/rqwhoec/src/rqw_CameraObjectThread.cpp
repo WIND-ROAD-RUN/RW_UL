@@ -213,6 +213,78 @@ namespace rw
 			return 0;
 		}
 
+		bool CameraPassiveThread::setFrameTriggered(bool state)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setFrameTriggered(state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::getFrameTriggered(bool& isGet)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getFrameTriggered(isGet);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setLineTriggered(bool state)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setLineTriggered(state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::getLineTriggered(bool& isGet)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getLineTriggered(isGet);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setPreDivider(size_t number)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setPreDivider(number);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setMultiplier(size_t number)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setMultiplier(number);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setPostDivider(size_t number)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setPostDivider(number);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::getEncoderNumber(size_t& number)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getEncoderNumber(number);
+			}
+			return false;
+		}
+
 		size_t CameraPassiveThread::getExposureTime() const
 		{
 			if (_cameraObject)

@@ -39,12 +39,10 @@ namespace rw {
 			bool setGain(size_t value) const;
 			bool setTriggerMode(CameraObjectTrigger mode) const;
 			bool setTriggerLine(size_t lineIndex)const;
-			bool setLineHeight(size_t number);
-			size_t getLineHeight(bool& isGet) ;
 		public:
 			size_t getHeartbeatTime(bool& isGet) const;
 			float getFrameRate(bool& isGet) const;
-			[[nodiscard]] size_t getExposureTime(bool & isGet) const;
+			[[nodiscard]] size_t getExposureTime(bool& isGet) const;
 			[[nodiscard]] size_t getGain(bool& isGet) const;
 			[[nodiscard]] CameraObjectTrigger getMonitorMode(bool& isGet) const;
 			[[nodiscard]] size_t getTriggerLine(bool& isGet) const;
@@ -60,9 +58,23 @@ namespace rw {
 			bool getConnectState(bool& isGet);
 			bool getConnectState();
 		public:
-			void setOutTriggerConfig(const OutTriggerConfig& config) ;
-			void outTrigger() ;
+			void setOutTriggerConfig(const OutTriggerConfig& config);
+			void outTrigger();
 			void outTrigger(bool isOpen);
+		public:
+			//线阵相机用
+			bool setLineHeight(size_t number);
+			size_t getLineHeight(bool& isGet);
+			bool setFrameTriggered(bool state);
+			bool getFrameTriggered(bool& isGet);
+			bool setLineTriggered(bool state);
+			bool getLineTriggered(bool& isGet);
+		public:
+			//线阵相机额外配置
+			bool setPreDivider(size_t number);
+			bool setMultiplier(size_t number);
+			bool setPostDivider(size_t number);
+			bool getEncoderNumber(size_t& number);
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};
