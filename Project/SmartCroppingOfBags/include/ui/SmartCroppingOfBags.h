@@ -32,6 +32,8 @@ private:
 public:
 	void build_ui();
 	void build_connect();
+	void build_motion();
+	void destroy_motion();
 	void build_camera();
 
 	void build_SmartCroppingOfBagsData();
@@ -76,7 +78,7 @@ private slots:
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 
-
+	void updateCardLabelState(bool state);
 
 private:
 	Ui::SmartCroppingOfBagsClass *ui;

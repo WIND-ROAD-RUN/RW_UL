@@ -43,6 +43,9 @@ class GlobalStructDataSmartCroppingOfBags
 public:
 	std::unique_ptr<zwy::scc::Motion> motion;
 public:
+	bool build_motion();
+	void destroy_motion();
+public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
 public:

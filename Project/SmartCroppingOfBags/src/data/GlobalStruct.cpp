@@ -5,6 +5,17 @@
 #include "rqw_CameraObjectCore.hpp"
 #include "DetachDefectThread.h"
 
+bool GlobalStructDataSmartCroppingOfBags::build_motion()
+{
+	motion = std::make_unique<zwy::scc::Motion>();
+	return motion->OpenBoard((char*)"192.168.0.11");
+}
+
+void GlobalStructDataSmartCroppingOfBags::destroy_motion()
+{
+	motion.reset();
+}
+
 void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 {
 	auto compareNodeEqual = [](const Time& a, const Time& b) {

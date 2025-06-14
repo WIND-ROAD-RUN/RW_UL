@@ -919,7 +919,7 @@ QRadioButton::indicator:pressed {
 }</string>
               </property>
               <property name="text">
-               <string>印刷检测</string>
+               <string>印刷带</string>
               </property>
              </widget>
             </item>

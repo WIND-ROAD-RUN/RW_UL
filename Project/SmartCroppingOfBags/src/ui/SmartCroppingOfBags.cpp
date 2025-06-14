@@ -22,6 +22,9 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 构建UI
 	build_ui();
 
+	//构建运动控制器
+	build_motion();
+
 	// 构建优先队列
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	globalStruct.build_PriorityQueue();
@@ -94,6 +97,21 @@ void SmartCroppingOfBags::build_connect()
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
 		this, &SmartCroppingOfBags::onCameraNGDisplay);
 
+}
+
+void SmartCroppingOfBags::build_motion()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto buildResult=globalStruct.build_motion();
+
+	updateCardLabelState(buildResult);
+
+}
+
+void SmartCroppingOfBags::destroy_motion()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	globalStruct.destroy_motion();
 }
 
 void SmartCroppingOfBags::build_camera()
@@ -236,6 +254,9 @@ void SmartCroppingOfBags::destroyComponents()
 	globalStruct.destroyImageSaveEngine();
 	// 销毁异步剔废线程
 	//globalStruct.destroy_DetachDefectThreadZipper();
+
+	//销毁板卡
+	destroy_motion();
 	// 销毁剔废优先队列
 	globalStruct.destroy_PriorityQueue();
 	// 保存参数
@@ -538,5 +559,17 @@ void SmartCroppingOfBags::onCameraNGDisplay(QPixmap image, size_t index, bool is
 		{
 			//ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay_4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		}
+	}
+}
+
+void SmartCroppingOfBags::updateCardLabelState(bool state)
+{
+	if (state) {
+		ui->lb_bankalianjiezhuangtai->setText("连接成功");
+		ui->lb_bankalianjiezhuangtai->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+	}
+	else {
+		ui->lb_bankalianjiezhuangtai->setText("连接失败");
+		ui->lb_bankalianjiezhuangtai->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
 	}
 }
