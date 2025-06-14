@@ -110,7 +110,7 @@ void ImageProcessorSmartCroppingOfBags::run()
 
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-
+	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image)));
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
