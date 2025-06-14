@@ -4,7 +4,6 @@
 #include <QThread>
 
 #include"Utilty.hpp"
-#include"GlobalStruct.hpp"
 
 class MonitorIOSmartCroppingOfBags : public QThread
 {
@@ -15,8 +14,6 @@ public:
 
 	// IO点位状态
 	bool state = false;
-	// 脉冲位置
-	double location = 0;
 public:
 	explicit MonitorIOSmartCroppingOfBags(QObject* parent = nullptr);
 
@@ -32,4 +29,6 @@ protected:
 	void run() override;
 private:
 	std::atomic<bool> running; // 使用原子变量保证线程安全
+public:
+	std::atomic<float> location;
 };

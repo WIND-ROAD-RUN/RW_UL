@@ -2401,6 +2401,8 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 	Time currentTime = std::chrono::system_clock::now();
 	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+	auto nowLocation=GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
+	imagePart.attribute.insert("Location", nowLocation);
 
 	imageCollage->pushImage(imagePart, currentTime);
 	times.push_back(currentTime);

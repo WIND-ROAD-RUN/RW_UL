@@ -31,6 +31,7 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 	// 构建异步剔废线程
 	globalStruct.build_DetachDefectThreadSmartCroppingOfBags();
+	globalStruct.build_MonitorIOSmartCroppingOfBags();
 
 	// 构建图像保存引擎
 	build_imageSaveEngine();
@@ -254,6 +255,7 @@ void SmartCroppingOfBags::destroyComponents()
 	globalStruct.destroyImageSaveEngine();
 	// 销毁异步剔废线程
 	//globalStruct.destroy_DetachDefectThreadZipper();
+	globalStruct.destroy_MonitorIOSmartCroppingOfBags();
 
 	//销毁板卡
 	destroy_motion();

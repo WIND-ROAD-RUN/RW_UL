@@ -19,6 +19,7 @@
 
 #include "dsl_PriorityQueue.hpp"
 #include "ImageProcessorModule.h"
+#include"MonitorIO.h"
 #include"scc_motion.h"
 
 class DetachDefectThreadSmartCroppingOfBags;
@@ -45,6 +46,10 @@ public:
 public:
 	bool build_motion();
 	void destroy_motion();
+public:
+	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags;
+	void build_MonitorIOSmartCroppingOfBags();
+	void destroy_MonitorIOSmartCroppingOfBags();
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;

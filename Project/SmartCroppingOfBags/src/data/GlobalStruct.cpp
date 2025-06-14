@@ -16,6 +16,16 @@ void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 	motion.reset();
 }
 
+void GlobalStructDataSmartCroppingOfBags::build_MonitorIOSmartCroppingOfBags()
+{
+	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
+}
+
+void GlobalStructDataSmartCroppingOfBags::destroy_MonitorIOSmartCroppingOfBags()
+{
+	monitorIOSmartCroppingOfBags.reset();
+}
+
 void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 {
 	auto compareNodeEqual = [](const Time& a, const Time& b) {

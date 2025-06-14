@@ -9,10 +9,7 @@ namespace rw
 {
 	namespace rqw
 	{
-		using Name = QString;
-		using Value = QString;
-
-		template < typename ElementType>
+		template <typename ElementType, typename Name = QString, typename Value = double>
 		struct ElementInfo
 		{
 		public:
