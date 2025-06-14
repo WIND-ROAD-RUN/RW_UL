@@ -96,7 +96,7 @@ void ImageProcessorSmartCroppingOfBags::run()
 		case RunningState::Debug:
 			run_debug(frame);
 			break;
-		case RunningState::OpenRemoveFunc:
+		case RunningState::SmartCrop:
 			run_OpenRemoveFunc(frame);
 			break;
 			/*case RunningState::Monitor:

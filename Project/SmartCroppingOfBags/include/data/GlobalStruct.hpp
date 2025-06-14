@@ -28,7 +28,8 @@ enum class RunningState
 {
 	Debug,
 	Monitor,
-	OpenRemoveFunc,
+	SmartCrop,
+	PrintingInspection,
 	Stop
 };
 
