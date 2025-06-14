@@ -16,19 +16,19 @@ void ImageCollage::iniCache(size_t capacity)
 
 bool ImageCollage::pushImage(const rw::rqw::ElementInfo<cv::Mat>& image, const Time& time)
 {
-	 auto getResult=_imageManager->getImage(time);
+	 auto getResult=_imageManager->getElement(time);
 	if (getResult.has_value())
 	{
 		return false;
 	}
-	_imageManager->insertImage(time, image);
+	_imageManager->insertElement(time, image);
 	return true;
 }
 
 
 std::optional<rw::rqw::ElementInfo<cv::Mat>> ImageCollage::getImage(const Time& time)
 {
-	return _imageManager->getImage(time);
+	return _imageManager->getElement(time);
 }
 
 ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>& times, bool& hasNull)
@@ -40,7 +40,7 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
     
     for (const auto& time : times)
     {
-        auto result = _imageManager->getImage(time);
+        auto result = _imageManager->getElement(time);
         if (result.has_value())
         {
             images.push_back(result.value().element);
