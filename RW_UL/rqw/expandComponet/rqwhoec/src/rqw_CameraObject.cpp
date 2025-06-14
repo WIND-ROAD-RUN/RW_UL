@@ -83,6 +83,46 @@ namespace rw
 			return _cameraPassive->getLineHeight(isGet);
 		}
 
+		bool CameraPassiveObject::setFrameTriggered(bool state)
+		{
+			return _cameraPassive->setFrameTriggered(state);
+		}
+
+		bool CameraPassiveObject::getFrameTriggered(bool& isGet)
+		{
+			return _cameraPassive->getFrameTriggered(isGet);
+		}
+
+		bool CameraPassiveObject::setLineTriggered(bool state)
+		{
+			return _cameraPassive->setLineTriggered(state);
+		}
+
+		bool CameraPassiveObject::getLineTriggered(bool& isGet)
+		{
+			return _cameraPassive->getLineTriggered(isGet);
+		}
+
+		bool CameraPassiveObject::setPreDivider(size_t number)
+		{
+			return _cameraPassive->setPreDivider(number);
+		}
+
+		bool CameraPassiveObject::setMultiplier(size_t number)
+		{
+			return _cameraPassive->setMultiplier(number);
+		}
+
+		bool CameraPassiveObject::setPostDivider(size_t number)
+		{
+			return _cameraPassive->setPostDivider(number);
+		}
+
+		bool CameraPassiveObject::getEncoderNumber(size_t& number)
+		{
+			return _cameraPassive->getEncoderNumber(number);
+		}
+
 		size_t CameraPassiveObject::getExposureTime(bool& isGet) const
 		{
 			return _cameraPassive->getExposureTime(isGet);
