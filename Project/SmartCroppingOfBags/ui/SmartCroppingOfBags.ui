@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1087</height>
+    <width>1192</width>
+    <height>894</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -504,55 +504,73 @@ QPushButton:pressed {
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QCheckBox" name="ckb_tifei">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>-1</pointsize>
-                 </font>
-                </property>
+               <widget class="QRadioButton" name="rbtn_removeFunc">
                 <property name="styleSheet">
-                 <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
+                 <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;        
+    color:  rgb(0, 0, 0);       
+
 }
 
-QCheckBox::indicator {
-    /* 按钮的大小 */
+/* 未选中状态 */
+QRadioButton::indicator {
     width: 20px;
     height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
 }
 
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
 }
 
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #2196F3;
 }
 
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #2196F3,
+        stop:1 transparent
+    );
 }
 
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
+/* 禁用状态 */
+QRadioButton::indicator:disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 选中时的文字颜色 */
+QRadioButton:checked {
+    color: #2196F3;
+    font-weight: 500;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #1565C0;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #BBDEFB,
+        stop:1 transparent
+    );
 }</string>
                 </property>
                 <property name="text">
-                 <string>剔废功能</string>
+                 <string>剔除功能</string>
                 </property>
                </widget>
               </item>
@@ -770,46 +788,66 @@ QGroupBox::title {
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QCheckBox" name="ckb_zhinengcaiqie">
+             <widget class="QRadioButton" name="rbtn_zhinengcaiqie">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
+               <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
 }
 
-QCheckBox::indicator {
-    /* 按钮的大小 */
+/* 未选中状态 */
+QRadioButton::indicator {
     width: 20px;
     height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
 }
 
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
 }
 
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
 }
 
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
 }
 
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
 }</string>
               </property>
               <property name="text">
@@ -818,55 +856,70 @@ QCheckBox::indicator:checked:hover {
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="ckb_yinshuazhiliangjiance">
+             <widget class="QRadioButton" name="rbtn_yinshuazhiliangjiance">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="font">
-               <font>
-                <pointsize>-1</pointsize>
-               </font>
-              </property>
               <property name="styleSheet">
-               <string notr="true">QCheckBox {
-    /* 默认样式 */
-    spacing: 10px; /* 文字和框框之间的间距 */
-    font-size: 14px; /* 字体大小 */
+               <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
 }
 
-QCheckBox::indicator {
-    /* 按钮的大小 */
+/* 未选中状态 */
+QRadioButton::indicator {
     width: 20px;
     height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
 }
 
-QCheckBox::indicator:unchecked {
-    /* 未选中状态的样式 */
-    background-color: lightgray; /* 背景颜色 */
-    border: 1px solid darkgray; /* 边框颜色 */
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
 }
 
-QCheckBox::indicator:unchecked:hover {
-    /* 未选中状态鼠标悬停时的样式 */
-    background-color: gray; /* 背景颜色 */
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
 }
 
-QCheckBox::indicator:checked {
-    /* 选中状态的样式 */
-    background-color: rgb(255, 152, 83); /* 背景颜色 */
-    border: 1px solid darkred; /* 边框颜色 */
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
 }
 
-QCheckBox::indicator:checked:hover {
-    /* 选中状态鼠标悬停时的样式 */
-    background-color: darkred; /* 背景颜色 */
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
 }</string>
               </property>
               <property name="text">
-               <string>印刷质量检测</string>
+               <string>印刷检测</string>
               </property>
              </widget>
             </item>
@@ -1223,25 +1276,6 @@ QPushButton:pressed {
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1920</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

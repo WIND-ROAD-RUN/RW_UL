@@ -23,14 +23,17 @@
 
 class DetachDefectThreadSmartCroppingOfBags;
 
-// 状态机
 enum class RunningState
 {
 	Debug,
-	Monitor,
-	SmartCrop,
-	PrintingInspection,
+	openRemove,
 	Stop
+};
+
+enum class RemoveState
+{
+	SmartCrop,
+	PrintingInspection
 };
 
 class GlobalStructDataSmartCroppingOfBags
@@ -55,7 +58,7 @@ public slots:
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
-
+	std::atomic<RemoveState> removeState{ RemoveState::SmartCrop };
 public:
 	// 统计信息
 	struct StatisticalInfo

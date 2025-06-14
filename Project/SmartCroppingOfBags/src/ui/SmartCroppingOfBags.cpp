@@ -75,24 +75,25 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::btn_normalParam_clicked);
 	QObject::connect(ui->btn_setParam, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::btn_setParam_clicked);
-	QObject::connect(ui->ckb_zhinengcaiqie, &QCheckBox::clicked,
-		this, &SmartCroppingOfBags::ckb_zhinengcaiqie_checked);
-	QObject::connect(ui->ckb_tifei, &QCheckBox::clicked,
+	QObject::connect(ui->rbtn_removeFunc, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_tifei_checked);
 	QObject::connect(ui->ckb_debug, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_Debug_checked);
 	QObject::connect(ui->ckb_cuntu, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_cuntu_checked);
-	QObject::connect(ui->ckb_yinshuazhiliangjiance, &QCheckBox::clicked,
-		this, &SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked);
 	QObject::connect(ui->btn_close, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::btn_close_clicked);
+	QObject::connect(ui->rbtn_yinshuazhiliangjiance, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked);
+	QObject::connect(ui->rbtn_zhinengcaiqie, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::rbtn_zhinengcaiqie_clicked);
 
 	// 连接显示NG图像
 	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
 		this, &SmartCroppingOfBags::onCameraNGDisplay);
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
 		this, &SmartCroppingOfBags::onCameraNGDisplay);
+
 }
 
 void SmartCroppingOfBags::build_camera()
@@ -132,28 +133,31 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& smartCroppingOfBagsConfig = globalStruct.generalConfig;
 
-	// 初始化全局数据
-	// 加载主窗体UI的设置
-	ui->ckb_zhinengcaiqie->setChecked(globalStruct.generalConfig.iszhinengcaiqie);
 	ui->lb_shengchanzongliang->setText(QString::number(globalStruct.generalConfig.shengchanzongliang));
 	ui->lb_lianglv->setText(QString::number(globalStruct.generalConfig.shengchanlianglv));
 	ui->lb_feipinshuliang->setText(QString::number(globalStruct.generalConfig.feipinshuliang));
 	ui->lb_pingjundaichang->setText(QString::number(globalStruct.generalConfig.pingjundaichang));
-	ui->ckb_tifei->setChecked(globalStruct.generalConfig.istifei);
+	ui->rbtn_removeFunc->setChecked(globalStruct.generalConfig.istifei);
 	ui->ckb_debug->setChecked(globalStruct.generalConfig.isDebug);
 	ui->ckb_cuntu->setChecked(globalStruct.generalConfig.iscuntu);
-	ui->ckb_yinshuazhiliangjiance->setChecked(globalStruct.generalConfig.isyinshuazhiliangjiance);
 	ui->btn_baoguang->setText(QString::number(globalStruct.generalConfig.baoguang));
+	ui->rbtn_yinshuazhiliangjiance->setChecked(globalStruct.generalConfig.isyinshuajiance);
+	ui->rbtn_zhinengcaiqie->setChecked(globalStruct.generalConfig.iszhinengcaiqie);
+
+	if (globalStruct.generalConfig.isyinshuajiance)
+	{
+		globalStruct.removeState = RemoveState::PrintingInspection;
+	}
+	if (globalStruct.generalConfig.iszhinengcaiqie)
+	{
+		globalStruct.removeState = RemoveState::SmartCrop;
+	}
+
 	// 默认白色袋
 	ui->btn_daizizhonglei->setText("白色袋");
 
 	// 去掉标题栏
 	this->setWindowFlags(Qt::FramelessWindowHint);
-
-	// 暂不启用"印刷质量检测"
-	ui->ckb_yinshuazhiliangjiance->setVisible(false);
-	ui->ckb_yinshuazhiliangjiance->setChecked(false);
-	smartCroppingOfBagsConfig.isyinshuazhiliangjiance = false;
 
 	// 开机默认关闭调试模式
 	ui->ckb_debug->setChecked(false);
@@ -415,16 +419,11 @@ void SmartCroppingOfBags::btn_setParam_clicked()
 	}
 }
 
-void SmartCroppingOfBags::ckb_zhinengcaiqie_checked()
-{
-	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.iszhinengcaiqie = ui->ckb_zhinengcaiqie->isChecked();
-}
 
 void SmartCroppingOfBags::ckb_tifei_checked()
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.istifei = ui->ckb_tifei->isChecked();
+	generalConfig.istifei = ui->rbtn_removeFunc->isChecked();
 
 	if (generalConfig.istifei)
 	{
@@ -438,7 +437,7 @@ void SmartCroppingOfBags::ckb_Debug_checked(bool checked)
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	generalConfig.isDebug = ui->ckb_debug->isChecked();
 
-	auto isRuning = ui->ckb_tifei->isChecked();
+	auto isRuning = ui->rbtn_removeFunc->isChecked();
 
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 	if (!isRuning) {
@@ -463,11 +462,20 @@ void SmartCroppingOfBags::ckb_cuntu_checked()
 	generalConfig.iscuntu = ui->ckb_cuntu->isChecked();
 }
 
-void SmartCroppingOfBags::ckb_yinshuazhiliangjiance_checked()
+void SmartCroppingOfBags::rbtn_zhinengcaiqie_clicked(bool checked)
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.isyinshuazhiliangjiance = ui->ckb_yinshuazhiliangjiance->isChecked();
+	generalConfig.isyinshuajiance = false;
+	generalConfig.iszhinengcaiqie = checked;
 }
+
+void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
+{
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.iszhinengcaiqie = false;
+	generalConfig.isyinshuajiance = checked;
+}
+
 
 void SmartCroppingOfBags::updateCameraLabelState(int cameraIndex, bool state)
 {
