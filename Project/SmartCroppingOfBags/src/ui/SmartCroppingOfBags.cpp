@@ -155,6 +155,10 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	ui->ckb_yinshuazhiliangjiance->setChecked(false);
 	smartCroppingOfBagsConfig.isyinshuazhiliangjiance = false;
 
+	// 开机默认关闭调试模式
+	ui->ckb_debug->setChecked(false);
+	globalStruct.generalConfig.isDebug = false;
+
 	globalStruct.buildImageSaveEngine();
 
 	// 初始化图像查看器

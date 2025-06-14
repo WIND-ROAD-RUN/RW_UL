@@ -19,6 +19,7 @@
 
 #include "dsl_PriorityQueue.hpp"
 #include "ImageProcessorModule.h"
+#include"scc_motion.h"
 
 class DetachDefectThreadSmartCroppingOfBags;
 
@@ -35,6 +36,8 @@ class GlobalStructDataSmartCroppingOfBags
 	:public QObject
 {
 	Q_OBJECT
+public:
+	std::unique_ptr<zwy::scc::Motion> motion;
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;

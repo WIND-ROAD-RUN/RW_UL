@@ -638,9 +638,60 @@ void ImageProcessorSmartCroppingOfBags::save_image_work(rw::rqw::ImageInfo& imag
 	}
 }
 
+//void ImageProcessorSmartCroppingOfBags::monitorIO()
+//{
+//	auto& motion = GlobalStructDataSmartCroppingOfBags::getInstance().motion;
+//	while (true)
+//	{
+//
+//		//运动控制卡获得io
+//		bool nowstate = motion->GetIOIn(0);
+//		//上升延
+//		//说明下切刀了
+//		//出图信号
+//		//或得这个时间点的脉冲信号,location
+//		double nowlocation = location;
+//
+//		if (nowstate == true && state == false)
+//		{
+//
+//
+//			//拼接前面所有图片为一张
+//
+//
+//
+//			//求5个袋子的平均袋长
+//			//1通过像素求
+//			//2通过脉冲去求
+//
+//
+//
+//
+//
+//			//在这张图片上画缺陷
+//
+//			//画切刀线
+//
+//
+//			//进行一次判断,判断这个袋子上面是否有缺陷
+//
+//
+//
+//
+//
+//
+//
+//
+//		}
+//
+//		state = nowstate;
+//
+//	}
+//}
+
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info,
-	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
-	const cv::Mat& mat)
+                                                                 const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+                                                                 const cv::Mat& mat)
 {
 	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
 	getShudangInfo(info, processResult, index[ClassId::Shudang]);
@@ -2312,6 +2363,35 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 		delete processor;
 	}
 }
+
+////监控io线程
+//
+//bool state = false;
+//double lastlocation = 0;
+//
+////全局变量location
+//double location = 0;
+//void getlocation()
+//{
+//
+//	auto& camera1 = GlobalStructDataSmartCroppingOfBags::getInstance().camera1;
+//	//获得编码器的位置
+//	while (true)
+//	{
+//		//location = camera1->getEncoderNumber();
+//
+//	}
+//
+//
+//
+//}
+
+
+
+
+
+
+
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
