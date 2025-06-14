@@ -572,7 +572,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const M
 		++globalStruct.statisticalInfo.produceCount2;
 	}
 
-	if (_isbad)
+	/*if (_isbad)
 	{
 		switch (imageProcessingModuleIndex)
 		{
@@ -585,7 +585,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const M
 		default:
 			break;
 		}
-	}
+	}*/
 }
 
 void ImageProcessorSmartCroppingOfBags::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -2271,6 +2271,8 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 
 void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 {
+	imageCollage = std::make_unique<ImageCollage>();
+	imageCollage->iniCache(75);
 	for (int i = 0; i < _numConsumers; ++i) {
 		static size_t workIndexCount = 0;
 		ImageProcessorSmartCroppingOfBags* processor = new ImageProcessorSmartCroppingOfBags(_queue, _mutex, _condition, workIndexCount, this);
@@ -2317,12 +2319,29 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 		return; // 跳过空帧
 	}
 
-	QMutexLocker locker(&_mutex);
-	MatInfo mat;
-	mat.image = frame;
-	mat.index = index;
-	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
-	_queue.enqueue(mat);
-	_condition.wakeOne();
+	Time currentTime = std::chrono::system_clock::now();
+	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+
+	imageCollage->pushImage(imagePart, currentTime);
+	times.push_back(currentTime);
+
+	if (times.size()== collageImagesNum)
+	{
+		auto resultMat = imageCollage->getCollageImage(times);
+		LastTimes = times;
+		times.clear();
+
+		{
+			QMutexLocker locker(&_mutex);
+			MatInfo mat;
+			mat.collageImage = resultMat;
+			mat.image = resultMat.mat;
+			mat.index = index;
+			_queue.enqueue(mat);
+			_condition.wakeOne();
+		}
+	}
+
+	
 }
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include"ime_ModelEngineFactory.h"
 
@@ -12,48 +12,50 @@
 #include <QPixmap>
 #include <rqw_ImageSaveEngine.h>
 
+#include"ImageCollage.hpp"
 
-// ÖÇÄÜ²ÃÇĞ¶Ö´ü¼ì²âĞÅÏ¢
+
+// æ™ºèƒ½è£åˆ‡å¨è¢‹æ£€æµ‹ä¿¡æ¯
 struct SmartCroppingOfBagsDefectInfo
 {
 public:
-	// AIÔËĞĞ¼ÆÊ±
+	// AIè¿è¡Œè®¡æ—¶
 	QString time;
 
 public:
-	// È±Ïİ
+	// ç¼ºé™·
 	struct DetectItem
 	{
 	public:
-		double score = 0;	// ·ÖÊı
-		double area = 0;	// Ãæ»ı
-		int index = -1;		// ÔÚprocessResultÖĞµÄË÷ÒıÎ»ÖÃ
-		bool isDraw = false;	// ÊÇ·ñÂú×ãÌŞ·ÏÌõ¼ş»æ»­ºì¿ò
+		double score = 0;	// åˆ†æ•°
+		double area = 0;	// é¢ç§¯
+		int index = -1;		// åœ¨processResultä¸­çš„ç´¢å¼•ä½ç½®
+		bool isDraw = false;	// æ˜¯å¦æ»¡è¶³å‰”åºŸæ¡ä»¶ç»˜ç”»çº¢æ¡†
 	};
 
-	std::vector<DetectItem> heibaList;         // ºÚ°Ì
-	std::vector<DetectItem> shudangList;       // Êèµµ
-	std::vector<DetectItem> huapoList;         // »®ÆÆ
-	std::vector<DetectItem> jietouList;        // ½ÓÍ·
-	std::vector<DetectItem> guasiList;         // ¹ÒË¿
-	std::vector<DetectItem> podongList;        // ÆÆ¶´
-	std::vector<DetectItem> zangwuList;        // ÔàÎÛ
-	std::vector<DetectItem> noshudangList;     // ÎŞÊèµµ
-	std::vector<DetectItem> modianList;        // Ä«µã
-	std::vector<DetectItem> loumoList;         // Â©Ä¤
-	std::vector<DetectItem> xishudangList;     // Ï¡Êèµµ
-	std::vector<DetectItem> erweimaList;       // ¶şÎ¬Âë
-	std::vector<DetectItem> damodianList;      // ´óÄ«µã
-	std::vector<DetectItem> kongdongList;      // ¿×¶´
-	std::vector<DetectItem> sebiaoList;        // É«±ê
-	std::vector<DetectItem> yinshuaquexianList;// Ó¡Ë¢È±Ïİ
-	std::vector<DetectItem> xiaopodongList;    // Ğ¡ÆÆ¶´
-	std::vector<DetectItem> jiaodaiList;       // ½º´ø
+	std::vector<DetectItem> heibaList;         // é»‘ç–¤
+	std::vector<DetectItem> shudangList;       // ç–æ¡£
+	std::vector<DetectItem> huapoList;         // åˆ’ç ´
+	std::vector<DetectItem> jietouList;        // æ¥å¤´
+	std::vector<DetectItem> guasiList;         // æŒ‚ä¸
+	std::vector<DetectItem> podongList;        // ç ´æ´
+	std::vector<DetectItem> zangwuList;        // è„æ±¡
+	std::vector<DetectItem> noshudangList;     // æ— ç–æ¡£
+	std::vector<DetectItem> modianList;        // å¢¨ç‚¹
+	std::vector<DetectItem> loumoList;         // æ¼è†œ
+	std::vector<DetectItem> xishudangList;     // ç¨€ç–æ¡£
+	std::vector<DetectItem> erweimaList;       // äºŒç»´ç 
+	std::vector<DetectItem> damodianList;      // å¤§å¢¨ç‚¹
+	std::vector<DetectItem> kongdongList;      // å­”æ´
+	std::vector<DetectItem> sebiaoList;        // è‰²æ ‡
+	std::vector<DetectItem> yinshuaquexianList;// å°åˆ·ç¼ºé™·
+	std::vector<DetectItem> xiaopodongList;    // å°ç ´æ´
+	std::vector<DetectItem> jiaodaiList;       // èƒ¶å¸¦
 
 
 };
 
-// Í¼Æ¬»­Í¼Ä£¿é
+// å›¾ç‰‡ç”»å›¾æ¨¡å—
 struct ImagePainter
 {
 	enum Color {
@@ -72,11 +74,11 @@ struct ImagePainter
 	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
 };
 
-// Í¼Æ¬ĞÅÏ¢
+// å›¾ç‰‡ä¿¡æ¯
 struct MatInfo {
-	cv::Mat image;	// Í¼Æ¬ÄÚÈİ
-	std::chrono::system_clock::time_point time;	// ¼ÇÂ¼ÅÄÕÕË²¼äµÄÊ±¼äµã
-	size_t index;	// ÅÄÕÕµÄÏà»úµÄÏÂ±ê
+	ImageCollage::CollageImage collageImage;
+	cv::Mat image;	// å›¾ç‰‡å†…å®¹
+	size_t index;	// æ‹ç…§çš„ç›¸æœºçš„ä¸‹æ ‡
 };
 
 
@@ -95,53 +97,53 @@ protected:
 	void run() override;
 
 private:
-	void run_debug(MatInfo& frame);				// ²»¿ªÌŞ·ÏÊ±ºòµÄµ÷ÊÔÄ£Ê½
-	void run_monitor(MatInfo& frame);			// µ¥´¿µÄÏÔÊ¾Ä£Ê½
+	void run_debug(MatInfo& frame);				// ä¸å¼€å‰”åºŸæ—¶å€™çš„è°ƒè¯•æ¨¡å¼
+	void run_monitor(MatInfo& frame);			// å•çº¯çš„æ˜¾ç¤ºæ¨¡å¼
 
 private:
-	void run_OpenRemoveFunc(MatInfo& frame);	// ¿ªÆôÌŞ·Ï¹¦ÄÜÊ±µÄ´¦ÀíÄ£Ê½
-	// ´¦ÀíÀ­Á´È±ÏİĞÅÏ¢
+	void run_OpenRemoveFunc(MatInfo& frame);	// å¼€å¯å‰”åºŸåŠŸèƒ½æ—¶çš„å¤„ç†æ¨¡å¼
+	// å¤„ç†æ‹‰é“¾ç¼ºé™·ä¿¡æ¯
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíºÚ°Ì
+	// å¤„ç†é»‘ç–¤
 	void run_OpenRemoveFunc_process_defect_info_Heiba(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÊèµµ
+	// å¤„ç†ç–æ¡£
 	void run_OpenRemoveFunc_process_defect_info_Shudang(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí»®ÆÆ
+	// å¤„ç†åˆ’ç ´
 	void run_OpenRemoveFunc_process_defect_info_Huapo(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí½ÓÍ·
+	// å¤„ç†æ¥å¤´
 	void run_OpenRemoveFunc_process_defect_info_Jietou(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí¹ÒË¿
+	// å¤„ç†æŒ‚ä¸
 	void run_OpenRemoveFunc_process_defect_info_Guasi(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÆÆ¶´
+	// å¤„ç†ç ´æ´
 	void run_OpenRemoveFunc_process_defect_info_Podong(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÔàÎÛ
+	// å¤„ç†è„æ±¡
 	void run_OpenRemoveFunc_process_defect_info_Zangwu(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÎŞÊèµµ
+	// å¤„ç†æ— ç–æ¡£
 	void run_OpenRemoveFunc_process_defect_info_Noshudang(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÄ«µã
+	// å¤„ç†å¢¨ç‚¹
 	void run_OpenRemoveFunc_process_defect_info_Modian(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÂ©Ä¤
+	// å¤„ç†æ¼è†œ
 	void run_OpenRemoveFunc_process_defect_info_Loumo(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÏ¡Êèµµ
+	// å¤„ç†ç¨€ç–æ¡£
 	void run_OpenRemoveFunc_process_defect_info_Xishudang(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí¶şÎ¬Âë
+	// å¤„ç†äºŒç»´ç 
 	void run_OpenRemoveFunc_process_defect_info_Erweima(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí´óÄ«µã
+	// å¤„ç†å¤§å¢¨ç‚¹
 	void run_OpenRemoveFunc_process_defect_info_Damodian(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí¿×¶´
+	// å¤„ç†å­”æ´
 	void run_OpenRemoveFunc_process_defect_info_Kongdong(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÉ«±ê
+	// å¤„ç†è‰²æ ‡
 	void run_OpenRemoveFunc_process_defect_info_Sebiao(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíÓ¡Ë¢È±Ïİ
+	// å¤„ç†å°åˆ·ç¼ºé™·
 	void run_OpenRemoveFunc_process_defect_info_Yinshuaquexian(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦ÀíĞ¡ÆÆ¶´
+	// å¤„ç†å°ç ´æ´
 	void run_OpenRemoveFunc_process_defect_info_Xiaopodong(SmartCroppingOfBagsDefectInfo& info);
-	// ´¦Àí½º´ø
+	// å¤„ç†èƒ¶å¸¦
 	void run_OpenRemoveFunc_process_defect_info_Jiaodai(SmartCroppingOfBagsDefectInfo& info);
-	// ¼ì²âµ½È±Ïİºó·¢³ö´íÎóĞÅÏ¢
+	// æ£€æµ‹åˆ°ç¼ºé™·åå‘å‡ºé”™è¯¯ä¿¡æ¯
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 
-	// ´æÍ¼
+	// å­˜å›¾
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 
@@ -150,73 +152,73 @@ signals:
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
 
 private:
-	// µ÷ÊÔÄ£Ê½ÏÂ½«¶ÔÓ¦µÄÈ±ÏİĞÅÏ¢Ìí¼Óµ½SmartCroppingOfBagsDefectInfoÖĞ
+	// è°ƒè¯•æ¨¡å¼ä¸‹å°†å¯¹åº”çš„ç¼ºé™·ä¿¡æ¯æ·»åŠ åˆ°SmartCroppingOfBagsDefectInfoä¸­
 	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
-	// ÌŞ·ÏÄ£Ê½ÏÂ½«¶ÔÓ¦µÄÈ±ÏİĞÅÏ¢Ìí¼Óµ½SmartCroppingOfBagsDefectInfoÖĞ
+	// å‰”åºŸæ¨¡å¼ä¸‹å°†å¯¹åº”çš„ç¼ºé™·ä¿¡æ¯æ·»åŠ åˆ°SmartCroppingOfBagsDefectInfoä¸­
 	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
-	// ×¥È¡ºÚ°ÌĞÅÏ¢
+	// æŠ“å–é»‘ç–¤ä¿¡æ¯
 	void getHeibaInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÊèµµĞÅÏ¢
+	// æŠ“å–ç–æ¡£ä¿¡æ¯
 	void getShudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡»®ÆÆĞÅÏ¢
+	// æŠ“å–åˆ’ç ´ä¿¡æ¯
 	void getHuapoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡½ÓÍ·ĞÅÏ¢
+	// æŠ“å–æ¥å¤´ä¿¡æ¯
 	void getJietouInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡¹ÒË¿ĞÅÏ¢
+	// æŠ“å–æŒ‚ä¸ä¿¡æ¯
 	void getGuasiInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÆÆ¶´ĞÅÏ¢
+	// æŠ“å–ç ´æ´ä¿¡æ¯
 	void getPodongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÔàÎÛĞÅÏ¢
+	// æŠ“å–è„æ±¡ä¿¡æ¯
 	void getZangwuInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÎŞÊèµµĞÅÏ¢
+	// æŠ“å–æ— ç–æ¡£ä¿¡æ¯
 	void getNoshudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡Ä«µãĞÅÏ¢
+	// æŠ“å–å¢¨ç‚¹ä¿¡æ¯
 	void getModianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡Â©Ä¤ĞÅÏ¢
+	// æŠ“å–æ¼è†œä¿¡æ¯
 	void getLoumoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡Ï¡ÊèµµĞÅÏ¢
+	// æŠ“å–ç¨€ç–æ¡£ä¿¡æ¯
 	void getXishudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡¶şÎ¬ÂëĞÅÏ¢
+	// æŠ“å–äºŒç»´ç ä¿¡æ¯
 	void getErweimaInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡´óÄ«µãĞÅÏ¢
+	// æŠ“å–å¤§å¢¨ç‚¹ä¿¡æ¯
 	void getDamodianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡¿×¶´ĞÅÏ¢
+	// æŠ“å–å­”æ´ä¿¡æ¯
 	void getKongdongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡É«±êĞÅÏ¢
+	// æŠ“å–è‰²æ ‡ä¿¡æ¯
 	void getSebiaoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡Ó¡Ë¢È±ÏİĞÅÏ¢
+	// æŠ“å–å°åˆ·ç¼ºé™·ä¿¡æ¯
 	void getYinshuaquexianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡Ğ¡ÆÆ¶´ĞÅÏ¢
+	// æŠ“å–å°ç ´æ´ä¿¡æ¯
 	void getXiaopodongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡½º´øĞÅÏ¢
+	// æŠ“å–èƒ¶å¸¦ä¿¡æ¯
 	void getJiaodaiInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 
 	static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
 
 private:
-	// AIÄ£ĞÍ²ÎÊı
+	// AIæ¨¡å‹å‚æ•°
 	std::unique_ptr<rw::ModelEngine> _modelEngine;
 public:
-	// ¹¹½¨Ä£ĞÍÒıÇæ
-	void buildSegModelEngine(const QString& enginePath);		// Segmentation Ä£ĞÍ
+	// æ„å»ºæ¨¡å‹å¼•æ“
+	void buildSegModelEngine(const QString& enginePath);		// Segmentation æ¨¡å‹
 
 private:
-	// ²»¿ªÆôÌŞ·ÏÊ±, ¹ıÂË³öÓĞĞ§Ë÷Òı
+	// ä¸å¼€å¯å‰”åºŸæ—¶, è¿‡æ»¤å‡ºæœ‰æ•ˆç´¢å¼•
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
-	// ¿ªÆôÌŞ·ÏÊ±, ¹ıÂË³öÓĞĞ§Ë÷Òı
+	// å¼€å¯å‰”åºŸæ—¶, è¿‡æ»¤å‡ºæœ‰æ•ˆç´¢å¼•
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
 
-	// É¸Ñ¡³öÔÚÉÏÏÂ×óÓÒÏŞÎ»ÄÚµÄÈ±ÏİµÄÏÂ±ê
+	// ç­›é€‰å‡ºåœ¨ä¸Šä¸‹å·¦å³é™ä½å†…çš„ç¼ºé™·çš„ä¸‹æ ‡
 	std::vector<std::vector<size_t>> getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
-	// ÅĞ¶ÏÊÇ·ñÔÚÉÏÏÂ×óÓÒÏŞÎ»ÄÚ
+	// åˆ¤æ–­æ˜¯å¦åœ¨ä¸Šä¸‹å·¦å³é™ä½å†…
 	bool isInBoundary(const rw::DetectionRectangleInfo& info);
 
 
 public:
-	// ¿ªÆôÌŞ·ÏÇé¿öÏÂ»æÖÆÈ±ÏİÏà¹ØµÄĞÅÏ¢(·ûºÏÌõ¼şµÄÈ±Ïİ»áÓÃºìÉ«ÏÔÊ¾)
+	// å¼€å¯å‰”åºŸæƒ…å†µä¸‹ç»˜åˆ¶ç¼ºé™·ç›¸å…³çš„ä¿¡æ¯(ç¬¦åˆæ¡ä»¶çš„ç¼ºé™·ä¼šç”¨çº¢è‰²æ˜¾ç¤º)
 	void drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
-	// Ìí¼Ó¸÷¸öÈ±ÏİĞÅÏ¢µ½ÎÄ±¾ÁĞ±íÖĞ
+	// æ·»åŠ å„ä¸ªç¼ºé™·ä¿¡æ¯åˆ°æ–‡æœ¬åˆ—è¡¨ä¸­
 	void appendHeibaDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
 	void appendShudangDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
 	void appendHuapoDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
@@ -238,19 +240,19 @@ public:
 
 
 public:
-	// ÔÚÖ¸¶¨Î»ÖÃ»­ÊúÏß
+	// åœ¨æŒ‡å®šä½ç½®ç”»ç«–çº¿
 	void drawVerticalLine_locate(QImage& image, size_t locate);
-	// »­ÇĞµ¶ÏßÓëÆÁ±ÎÏß
+	// ç”»åˆ‡åˆ€çº¿ä¸å±è”½çº¿
 	void drawBoundariesLines(QImage& image);
-	// ¿ªÆôµ÷ÊÔÇé¿öÏÂ»æÖÆÈ±ÏİÏà¹ØµÄĞÅÏ¢
+	// å¼€å¯è°ƒè¯•æƒ…å†µä¸‹ç»˜åˆ¶ç¼ºé™·ç›¸å…³çš„ä¿¡æ¯
 	void drawSmartCroppingOfBagsDefectInfoText_Debug(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
-	// »æ»­ÂÌÉ«µÄ¼ì²â¿ò
+	// ç»˜ç”»ç»¿è‰²çš„æ£€æµ‹æ¡†
 	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
-	// »æ»­ºìÉ«µÄ¼ì²â¿ò
+	// ç»˜ç”»çº¢è‰²çš„æ£€æµ‹æ¡†
 	void drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
 
 private:
-	// ÅĞ¶ÏÊÇ·ñÓĞÈ±Ïİ
+	// åˆ¤æ–­æ˜¯å¦æœ‰ç¼ºé™·
 	bool _isbad{ false };
 
 private:
@@ -269,8 +271,14 @@ class ImageProcessingModuleSmartCroppingOfBags : public QObject {
 	Q_OBJECT
 public:
 	QString modelEnginePath;
+private:
+	std::unique_ptr<ImageCollage> imageCollage;
+	//è¿™ä¸ªæ—¶é—´çš„é•¿åº¦ï¼Œè¦å‘å¤–æä¾›æ¥å£ï¼Œè®¾ç½®timesæ•°ç»„çš„é•¿åº¦ï¼Œä»è€Œå†³å®šäº†æ‹¼æˆçš„å¼ æ•°
+	std::vector<Time> times;
+	std::vector<Time> LastTimes;
+	size_t collageImagesNum=5;
 public:
-	// ³õÊ¼»¯Í¼Ïñ´¦ÀíÄ£¿é
+	// åˆå§‹åŒ–å›¾åƒå¤„ç†æ¨¡å—
 	void BuildModule();
 public:
 	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
@@ -278,7 +286,7 @@ public:
 	~ImageProcessingModuleSmartCroppingOfBags();
 
 public slots:
-	// Ïà»ú»Øµ÷º¯Êı
+	// ç›¸æœºå›è°ƒå‡½æ•°
 	void onFrameCaptured(cv::Mat frame, size_t index);
 
 signals:
