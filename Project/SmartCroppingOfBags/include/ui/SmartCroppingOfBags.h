@@ -64,7 +64,7 @@ private slots:
 
 	void ckb_zhinengcaiqie_checked();
 	void ckb_tifei_checked();
-	void ckb_huikan_checked();
+	void ckb_Debug_checked(bool checked);
 	void ckb_cuntu_checked();
 	void ckb_yinshuazhiliangjiance_checked();
 

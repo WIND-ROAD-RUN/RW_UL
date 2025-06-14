@@ -79,8 +79,8 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::ckb_zhinengcaiqie_checked);
 	QObject::connect(ui->ckb_tifei, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_tifei_checked);
-	QObject::connect(ui->ckb_huikan, &QCheckBox::clicked,
-		this, &SmartCroppingOfBags::ckb_huikan_checked);
+	QObject::connect(ui->ckb_debug, &QCheckBox::clicked,
+		this, &SmartCroppingOfBags::ckb_Debug_checked);
 	QObject::connect(ui->ckb_cuntu, &QCheckBox::clicked,
 		this, &SmartCroppingOfBags::ckb_cuntu_checked);
 	QObject::connect(ui->ckb_yinshuazhiliangjiance, &QCheckBox::clicked,
@@ -140,7 +140,7 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	ui->lb_feipinshuliang->setText(QString::number(globalStruct.generalConfig.feipinshuliang));
 	ui->lb_pingjundaichang->setText(QString::number(globalStruct.generalConfig.pingjundaichang));
 	ui->ckb_tifei->setChecked(globalStruct.generalConfig.istifei);
-	ui->ckb_huikan->setChecked(globalStruct.generalConfig.ishuikan);
+	ui->ckb_debug->setChecked(globalStruct.generalConfig.isDebug);
 	ui->ckb_cuntu->setChecked(globalStruct.generalConfig.iscuntu);
 	ui->ckb_yinshuazhiliangjiance->setChecked(globalStruct.generalConfig.isyinshuazhiliangjiance);
 	ui->btn_baoguang->setText(QString::number(globalStruct.generalConfig.baoguang));
@@ -164,6 +164,7 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	auto layout=ui->gBox_main->layout();
 	layout->replaceWidget(ui->pushButton, _carouselWidget);
 	_carouselWidget->setSize(10);
+	delete ui->pushButton;
 }
 
 void SmartCroppingOfBags::build_DlgProductSetData()
@@ -420,12 +421,36 @@ void SmartCroppingOfBags::ckb_tifei_checked()
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	generalConfig.istifei = ui->ckb_tifei->isChecked();
+
+	if (generalConfig.istifei)
+	{
+		ui->ckb_debug->setChecked(false);
+		generalConfig.isDebug = false;
+	}
 }
 
-void SmartCroppingOfBags::ckb_huikan_checked()
+void SmartCroppingOfBags::ckb_Debug_checked(bool checked)
 {
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.ishuikan = ui->ckb_huikan->isChecked();
+	generalConfig.isDebug = ui->ckb_debug->isChecked();
+
+	auto isRuning = ui->ckb_tifei->isChecked();
+
+	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
+	if (!isRuning) {
+		if (checked) {
+			GlobalStructData.setCameraDebugMod(); // 设置相机为实时采集
+			GlobalStructData.runningState = RunningState::Debug;
+			ui->ckb_cuntu->setChecked(false);
+		}
+		else {
+			GlobalStructData.setCameraDefectMod(); // 重置相机为硬件触发
+			GlobalStructData.runningState = RunningState::Stop;
+		}
+	}
+	else {
+		ui->ckb_debug->setChecked(false);
+	}
 }
 
 void SmartCroppingOfBags::ckb_cuntu_checked()
