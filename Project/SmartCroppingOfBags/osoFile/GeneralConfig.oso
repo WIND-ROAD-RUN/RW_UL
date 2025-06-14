@@ -10,7 +10,7 @@ namespace cdm {
 		feipinshuliang : int :default = 0;
 		pingjundaichang : double :default = 0;
 		istifei : bool :default = false;
-		ishuikan : bool :default = false;
+		isDebug : bool :default = false;
 		iscuntu : bool :default = false;
 		isyinshuazhiliangjiance : bool :default = false;
 		liangdu : double :default = 0;

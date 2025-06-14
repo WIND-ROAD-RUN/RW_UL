@@ -127,6 +127,9 @@ public:
 	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
 	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 
+	void setCameraDebugMod();
+	void setCameraDefectMod();
+
 public:
 	std::unique_ptr<rw::oso::StorageContext> storeContext{ nullptr };
 };

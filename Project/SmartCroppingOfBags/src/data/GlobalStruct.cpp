@@ -105,7 +105,7 @@ void GlobalStructDataSmartCroppingOfBags::buildCamera()
 
 bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 {
-	auto cameraList = rw::rqw::CheckCameraList();
+	auto cameraList = rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
 
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
@@ -142,7 +142,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 
 bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 {
-	auto cameraList = rw::rqw::CheckCameraList();
+	auto cameraList = rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
 
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
@@ -247,5 +247,35 @@ void GlobalStructDataSmartCroppingOfBags::setCameraExposureTime(int cameraIndex,
 		break;
 	default:
 		break;
+	}
+}
+
+void GlobalStructDataSmartCroppingOfBags::setCameraDebugMod()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	if (globalStruct.camera1) {
+		globalStruct.camera1->setTriggerMode(rw::rqw::CameraObjectTrigger::Software);
+		globalStruct.camera1->setFrameRate(5);
+	}
+
+	if (globalStruct.camera2) {
+		globalStruct.camera2->setTriggerMode(rw::rqw::CameraObjectTrigger::Software);
+		globalStruct.camera2->setFrameRate(5);
+	}
+}
+
+void GlobalStructDataSmartCroppingOfBags::setCameraDefectMod()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+
+	if (globalStruct.camera1)
+	{
+		globalStruct.camera1->setTriggerMode(rw::rqw::CameraObjectTrigger::Hardware);
+		globalStruct.camera1->setFrameRate(50);
+	}
+	if (globalStruct.camera2)
+	{
+		globalStruct.camera2->setTriggerMode(rw::rqw::CameraObjectTrigger::Hardware);
+		globalStruct.camera2->setFrameRate(50);
 	}
 }
