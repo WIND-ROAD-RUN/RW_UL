@@ -59,6 +59,8 @@ namespace rw
 			virtual bool setMultiplier(size_t number) = 0 ;
 			virtual bool setPostDivider(size_t number) = 0;
 			virtual bool getEncoderNumber(size_t& number) = 0;
+			virtual bool setLineHeight(size_t number) = 0;
+			virtual size_t getLineHeight(bool& isGet) = 0;
 
 		public:
 			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
@@ -145,6 +147,8 @@ namespace rw
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
 			bool getEncoderNumber(size_t& number) override;
+			bool setLineHeight(size_t number) override;
+			size_t getLineHeight(bool& isGet) override;
 		};
 
 		class CameraPassive
@@ -200,6 +204,9 @@ namespace rw
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
 			bool getEncoderNumber(size_t& number) override;
+			bool setLineHeight(size_t number) override;
+			size_t getLineHeight(bool& isGet) override;
 		};
+
 	}
 }

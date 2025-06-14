@@ -1,5 +1,6 @@
-#include "rqw_DlgVersion.h"
 #include "ui_rqw_DlgVersion.h"
+
+#include "rqw_DlgVersion.h"
 #include <QDir>
 
 DlgVersion::DlgVersion(QWidget *parent)
