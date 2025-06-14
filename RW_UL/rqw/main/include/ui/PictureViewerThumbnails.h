@@ -67,6 +67,10 @@ private:
 	QQueue<QListWidgetItem*> disCacheImageItem;
 	QMutex disCacheImageItemMutex;
 	QSet<QString> loadingSet;
+public:
+	void setPositive(bool ispositive);
+private:
+	bool isPositive = true;
 private:
 	ThumbnailLoaderThread* m_loaderThread = nullptr;
 private:
@@ -127,6 +131,8 @@ private slots:
 	void pbtn_nextPicture_clicked();
 	void pbtn_bigger_clicked();
 	void pbtn_smaller_clicked();
+
+	void updateImagesPaths(QVector<QString> imagesPaths);
 private slots:
 	void onThumbnailDoubleClicked(QListWidgetItem* item);
 private slots:

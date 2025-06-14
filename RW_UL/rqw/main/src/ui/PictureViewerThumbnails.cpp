@@ -103,6 +103,11 @@ void PictureViewerThumbnails::stopAsyncLoadQueue()
 	}
 }
 
+void PictureViewerThumbnails::setPositive(bool ispositive)
+{
+	isPositive = ispositive;
+}
+
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::PictureViewerThumbnailsClass())
@@ -219,6 +224,9 @@ void PictureViewerThumbnails::build_connect()
 
 	connect(_listWidget, &QListWidget::itemDoubleClicked,
 		this, &PictureViewerThumbnails::onThumbnailDoubleClicked);
+
+	connect(pictureViewerUtilty, &PictureViewerUtilty::imagesDeleted,
+		this, &PictureViewerThumbnails::updateImagesPaths);
 }
 
 void PictureViewerThumbnails::loadImageList()
@@ -619,10 +627,53 @@ void PictureViewerThumbnails::pbtn_smaller_clicked()
 	setSize(m_thumbnailSize);
 }
 
+void PictureViewerThumbnails::updateImagesPaths(QVector<QString> imagesPaths)
+{
+	stopAsyncLoadQueue();
+
+	for (const auto & pathItem : imagesPaths)
+	{
+		QString imagePath = pathItem;
+
+		// 删除文件
+		QFile::remove(imagePath);
+
+		// 从 m_imageFiles 移除
+		m_imageFiles.removeAll(imagePath);
+
+		// 从 m_categoryImageCache 移除
+		for (auto it = m_categoryImageCache.begin(); it != m_categoryImageCache.end(); ++it) {
+			it.value().removeAll(imagePath);
+		}
+
+		// 从 disCacheImageItem 移除
+		{
+			QMutexLocker locker(&disCacheImageItemMutex);
+			for (int i = disCacheImageItem.size() - 1; i >= 0; --i) {
+				QListWidgetItem* cacheItem = disCacheImageItem[i];
+				if (cacheItem && cacheItem->data(Qt::UserRole).toString() == imagePath) {
+					disCacheImageItem.removeAt(i);
+				}
+			}
+		}
+
+		// 从 UI 移除
+		for (int i = _listWidget->count() - 1; i >= 0; --i) {
+			QListWidgetItem* item = _listWidget->item(i);
+			if (item && item->data(Qt::UserRole).toString() == imagePath) {
+				delete _listWidget->takeItem(i);
+			}
+		}
+	}
+
+	startAsyncLoadQueue();
+}
+
 void PictureViewerThumbnails::onThumbnailDoubleClicked(QListWidgetItem* item)
 {
 	if (!item) return;
 	QString imagePath = item->data(Qt::UserRole).toString();
+	pictureViewerUtilty->setPositive(isPositive);
 	pictureViewerUtilty->setImgPath(imagePath);
 	pictureViewerUtilty->show();
 }

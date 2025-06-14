@@ -20,10 +20,24 @@ protected:
 	void showEvent(QShowEvent* event) override;
 public:
 	void setImgPath(const QString & imgPath);
+	void setAllImgPath(const QString& imgPath,bool isPositive);
+	void setPositive(bool ispositive);
+	int getCurrentImageIndex();
 private:
 	QString path;
+	QVector<QString> imagePaths;
+	QVector<QString> deletedImagePaths;
+	bool isPositive = true;
+	int currentImageIndex = 0;
 private:
 	Ui::PictureViewerUtiltyClass *ui;
+
+signals:
+	void imagesDeleted(QVector<QString> ImagePaths);
+
 private slots:
 	void pbtn_exit_clicked();
+	void pbtn_previousimage_clicked();
+	void pbtn_nextimage_clicked();
+	void pbtn_delete_clicked();
 };
