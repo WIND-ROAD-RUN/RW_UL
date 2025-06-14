@@ -27,28 +27,28 @@ namespace rw
 		class HistoricalElementManager
 		{
 		private:
-			rw::dsl::CacheFIFO<KeyType, ElementInfo< ImageType>> imageCache;
+			rw::dsl::CacheFIFO<KeyType, ElementInfo< ImageType>> elementCache;
 		public:
 			HistoricalElementManager(size_t capacity = 100)
-				: imageCache(capacity)
+				: elementCache(capacity)
 			{
 			}
 
-			inline void insertImage(const KeyType& history, const ElementInfo< ImageType>& imageInfo)
+			inline void insertElement(const KeyType& history, const ElementInfo< ImageType>& imageInfo)
 			{
-				imageCache.set(history, imageInfo);
+				elementCache.set(history, imageInfo);
 			}
 
-			inline std::optional<ElementInfo<ImageType>> getImage(const KeyType& history)
+			inline std::optional<ElementInfo<ImageType>> getElement(const KeyType& history)
 			{
-				auto result = imageCache.get(history);
+				auto result = elementCache.get(history);
 
 				return result;
 			}
 
-			inline void setImage(const KeyType& history, const ElementInfo<ImageType>& imageInfo)
+			inline void setElement(const KeyType& history, const ElementInfo<ImageType>& imageInfo)
 			{
-				imageCache.set(history, imageInfo);
+				elementCache.set(history, imageInfo);
 			}
 		};
 
