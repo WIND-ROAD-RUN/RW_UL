@@ -73,6 +73,16 @@ namespace rw
 			return _cameraPassive->setInTriggerLine(lineIndex);
 		}
 
+		bool CameraPassiveObject::setLineHeight(size_t number)
+		{
+			return _cameraPassive->setLineHeight(number);
+		}
+
+		size_t CameraPassiveObject::getLineHeight(bool& isGet)
+		{
+			return _cameraPassive->getLineHeight(isGet);
+		}
+
 		size_t CameraPassiveObject::getExposureTime(bool& isGet) const
 		{
 			return _cameraPassive->getExposureTime(isGet);

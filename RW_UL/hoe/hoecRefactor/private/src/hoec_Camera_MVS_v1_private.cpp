@@ -553,6 +553,17 @@ namespace rw
 			return false;
 		}
 
+		bool Camera_MVS::setLineHeight(size_t number)
+		{
+			return false;
+		}
+
+		size_t Camera_MVS::getLineHeight(bool& isGet)
+		{
+			isGet = false;
+			return 0;
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

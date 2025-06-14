@@ -63,6 +63,8 @@ namespace rw
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
 			bool getEncoderNumber(size_t& number) override;
+			bool setLineHeight(size_t number) override;
+			size_t getLineHeight(bool& isGet) override;
 
 		protected:
 			void* m_cameraHandle{ nullptr };

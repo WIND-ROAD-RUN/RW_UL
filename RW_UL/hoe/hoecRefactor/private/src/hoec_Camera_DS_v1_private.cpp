@@ -565,11 +565,43 @@ namespace rw
 			return true;
 		}
 
-		
+		bool Camera_DS::setLineHeight(size_t number)
+		{
+			if (!m_cameraHandle) {
+				return false; 
+			}
 
-		
+			dvpStatus status = dvpSetConfigString(m_cameraHandle, "LineHeight", std::to_string(number).c_str());
+			if (status == DVP_STATUS_OK) {
+				return true; 
+			}
+			else {
+				return false; 
+			}
+		}
+
+		size_t Camera_DS::getLineHeight(bool& isGet)
+		{
+			if (!m_cameraHandle) {
+				isGet = false; 
+				return 0;
+			}
+
+			const char* szValue = nullptr;
+			dvpStatus status = dvpGetConfigString(m_cameraHandle, "LineHeight", &szValue);
+			if (status == DVP_STATUS_OK && szValue) {
+				isGet = true;
+				return static_cast<size_t>(std::strtoull(szValue, nullptr, 10));
+			}
+			else {
+				isGet = false; 
+				return 0;
+			}
+		}
+
 		Camera_DS_Active::Camera_DS_Active()
 		{
+
 		}
 
 		Camera_DS_Active::~Camera_DS_Active()

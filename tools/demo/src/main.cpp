@@ -1,17 +1,13 @@
 
 #include <QtWidgets/QApplication>
-#include"rqw_CarouselWidget.h"
+#include"rqw_DlgVersion.h"
 
 
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
-	CarouselWidget w;
-	w.appendItem(1);
-	w.appendItem(1);
-	w.appendItem(2);
-	w.appendItem(1);
-	w.dequeItem();
+	DlgVersion w;
+	w.loadVersionPath(R"(D:\zfkjData\SmartCroppingOfBags\Version\Version.txt)");
 	w.show();
 
 	return a.exec();

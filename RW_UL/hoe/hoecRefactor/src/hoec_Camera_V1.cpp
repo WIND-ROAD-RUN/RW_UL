@@ -203,6 +203,16 @@ namespace rw
 			return _camera->getEncoderNumber(number);
 		}
 
+		bool CameraActive::setLineHeight(size_t number)
+		{
+			return _camera->setLineHeight(number);
+		}
+
+		size_t CameraActive::getLineHeight(bool& isGet)
+		{
+			return _camera->getLineHeight(isGet);
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -377,6 +387,16 @@ namespace rw
 		bool CameraPassive::getEncoderNumber(size_t& number)
 		{
 			return _camera->getEncoderNumber(number);
+		}
+
+		bool CameraPassive::setLineHeight(size_t number)
+		{
+			return _camera->setLineHeight(number);
+		}
+
+		size_t CameraPassive::getLineHeight(bool& isGet)
+		{
+			return _camera->getLineHeight(isGet);
 		}
 	}
 }

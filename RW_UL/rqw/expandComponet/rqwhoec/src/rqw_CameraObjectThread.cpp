@@ -195,6 +195,24 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveThread::setLineHeight(size_t number) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setTriggerLine(number);
+			}
+			return false;
+		}
+
+		size_t CameraPassiveThread::getLineHeight(bool& isGet) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getLineHeight(isGet);
+			}
+			return 0;
+		}
+
 		size_t CameraPassiveThread::getExposureTime() const
 		{
 			if (_cameraObject)

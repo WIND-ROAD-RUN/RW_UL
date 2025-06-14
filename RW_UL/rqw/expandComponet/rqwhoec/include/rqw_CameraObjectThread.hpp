@@ -37,6 +37,8 @@ namespace rw {
 			bool setGain(size_t value) const;
 			bool setTriggerMode(CameraObjectTrigger mode) const;
 			bool setTriggerLine(size_t lineIndex)const;
+			bool setLineHeight(size_t number) const;
+			size_t getLineHeight(bool& isGet) const;
 		public:
 			[[nodiscard]] size_t getExposureTime() const;
 			[[nodiscard]] size_t getGain() const;
