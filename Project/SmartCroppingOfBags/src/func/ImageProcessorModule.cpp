@@ -247,91 +247,129 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	auto fifthImage = _imageCollage->getImage(fiveImageTimes[4]).value().element;
 
 	// 抓取五张图片的识别框
-	auto fiveImageDetects = _historyResult->queryWithTime(frame.time, 5);
+	auto fiveImageDetect = _historyResult->queryWithTime(frame.time, 5);
 
-	if (fiveImageDetects.size() >= 5) {
-		auto firstImageDetects = fiveImageDetects[0].processResult;
-		auto secondImageDetects = fiveImageDetects[1].processResult;
-		auto thirdImageDetects = fiveImageDetects[2].processResult;
-		auto fourthImageDetects = fiveImageDetects[3].processResult;
-		auto fifthImageDetects = fiveImageDetects[4].processResult;
+	std::vector<rw::DetectionRectangleInfo> firstImageDetects;
+	std::vector<rw::DetectionRectangleInfo> secondImageDetects;
+	std::vector<rw::DetectionRectangleInfo> thirdImageDetects;
+	std::vector<rw::DetectionRectangleInfo> fourthImageDetects;
+	std::vector<rw::DetectionRectangleInfo> fifthImageDetects;
+
+	if (fiveImageDetect.size() >= 5) {
+		firstImageDetects = fiveImageDetect[0].processResult;
+		secondImageDetects = fiveImageDetect[1].processResult;
+		thirdImageDetects = fiveImageDetect[2].processResult;
+		fourthImageDetects = fiveImageDetect[3].processResult;
+		fifthImageDetects = fiveImageDetect[4].processResult;
 	}
 
-	// 手动添加几个缺陷进行测试
-	{
-		// 黑疤缺陷
-		rw::DetectionRectangleInfo heiba;
-		heiba.leftTop = { 10, 10 };
-		heiba.rightTop = { 60, 10 };
-		heiba.leftBottom = { 10, 60 };
-		heiba.rightBottom = { 60, 60 };
-		heiba.center_x = 35;
-		heiba.center_y = 35;
-		heiba.width = 50;
-		heiba.height = 50;
-		heiba.area = 2500;
-		heiba.classId = ClassId::Heiba;
-		heiba.score = 0.95;
-		processResult.push_back(heiba);
+	//// 手动添加几个缺陷进行测试
+	//{
+	//	// 黑疤缺陷
+	//	rw::DetectionRectangleInfo heiba;
+	//	heiba.leftTop = { 10, 10 };
+	//	heiba.rightTop = { 60, 10 };
+	//	heiba.leftBottom = { 10, 60 };
+	//	heiba.rightBottom = { 60, 60 };
+	//	heiba.center_x = 35;
+	//	heiba.center_y = 35;
+	//	heiba.width = 50;
+	//	heiba.height = 50;
+	//	heiba.area = 2500;
+	//	heiba.classId = ClassId::Heiba;
+	//	heiba.score = 0.95;
+	//	processResult.push_back(heiba);
 
-		// 疏档缺陷
-		rw::DetectionRectangleInfo shudang;
-		shudang.leftTop = { 100, 20 };
-		shudang.rightTop = { 140, 20 };
-		shudang.leftBottom = { 100, 60 };
-		shudang.rightBottom = { 140, 60 };
-		shudang.center_x = 120;
-		shudang.center_y = 40;
-		shudang.width = 40;
-		shudang.height = 40;
-		shudang.area = 1600;
-		shudang.classId = ClassId::Shudang;
-		shudang.score = 0.88;
-		processResult.push_back(shudang);
+	//	// 疏档缺陷
+	//	rw::DetectionRectangleInfo shudang;
+	//	shudang.leftTop = { 100, 20 };
+	//	shudang.rightTop = { 140, 20 };
+	//	shudang.leftBottom = { 100, 60 };
+	//	shudang.rightBottom = { 140, 60 };
+	//	shudang.center_x = 120;
+	//	shudang.center_y = 40;
+	//	shudang.width = 40;
+	//	shudang.height = 40;
+	//	shudang.area = 1600;
+	//	shudang.classId = ClassId::Shudang;
+	//	shudang.score = 0.88;
+	//	processResult.push_back(shudang);
 
-		// 划破缺陷
-		rw::DetectionRectangleInfo huapo;
-		huapo.leftTop = { 200, 30 };
-		huapo.rightTop = { 230, 30 };
-		huapo.leftBottom = { 200, 60 };
-		huapo.rightBottom = { 230, 60 };
-		huapo.center_x = 215;
-		huapo.center_y = 45;
-		huapo.width = 30;
-		huapo.height = 30;
-		huapo.area = 900;
-		huapo.classId = ClassId::Huapo;
-		huapo.score = 0.92;
-		processResult.push_back(huapo);
-	}
+	//	// 划破缺陷
+	//	rw::DetectionRectangleInfo huapo;
+	//	huapo.leftTop = { 200, 30 };
+	//	huapo.rightTop = { 230, 30 };
+	//	huapo.leftBottom = { 200, 60 };
+	//	huapo.rightBottom = { 230, 60 };
+	//	huapo.center_x = 215;
+	//	huapo.center_y = 45;
+	//	huapo.width = 30;
+	//	huapo.height = 30;
+	//	huapo.area = 900;
+	//	huapo.classId = ClassId::Huapo;
+	//	huapo.score = 0.92;
+	//	processResult.push_back(huapo);
+	//}
 	
 
 
-	//过滤出有效索引
-	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
-	//获取到当前图像的缺陷信息
-	getEliminationInfo_debug(defectInfo, processResult, processResultIndex, resultImage.mat);
+	////过滤出有效索引
+	//auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+	////获取到当前图像的缺陷信息
+	//getEliminationInfo_debug(defectInfo, processResult, processResultIndex, resultImage.mat);
 
-	//绘制defect信息
-	auto qImage = rw::rqw::cvMatToQImage(resultImage.mat);
+	////绘制defect信息
+	//auto qImage = rw::rqw::cvMatToQImage(resultImage.mat);
 
-	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	//auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 
-	//drawBoundariesLines(qImage);
+	////drawBoundariesLines(qImage);
 
-	drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
+	//drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
 
-	drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+	//drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
 
-	drawSmartCroppingOfBagsDefectInfoText_Debug(qImage, defectInfo);
-
-	
-
+	////drawSmartCroppingOfBagsDefectInfoText_Debug(qImage, defectInfo);
+	///
 
 
-	QPixmap pixmap = QPixmap::fromImage(qImage);
+	// 组装 fiveImages 和 fiveImageDetects
+	std::vector<cv::Mat> fiveImages = {
+		firstImage, secondImage, thirdImage, fourthImage, fifthImage
+	};
+	std::vector<std::vector<rw::DetectionRectangleInfo>> fiveImageDetects = {
+		firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects
+	};
 
-	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage.mat)));
+	// 依次处理五张图片及其识别框
+	for (size_t i = 0; i < 5; ++i) {
+		// 过滤出有效索引
+		auto processResultIndex = filterEffectiveIndexes_debug(fiveImageDetects[i]);
+		// 获取当前图像的缺陷信息
+		SmartCroppingOfBagsDefectInfo defectInfo;
+		getEliminationInfo_debug(defectInfo, fiveImageDetects[i], processResultIndex, fiveImages[i]);
+
+		// 转换为QImage
+		QImage qImage = rw::rqw::cvMatToQImage(fiveImages[i]);
+
+		// 可选：绘制边界线
+		// drawBoundariesLines(qImage);
+
+		// 绘制缺陷框
+		drawDefectRec(qImage, fiveImageDetects[i], processResultIndex, defectInfo);
+		drawDefectRec_error(qImage, fiveImageDetects[i], processResultIndex, defectInfo);
+
+		// 可选：保存、显示或进一步处理qImage
+		// 例如：emit imageReady(QPixmap::fromImage(qImage));
+	}
+
+	auto finalImage = _imageCollage->verticalConcat(fiveImages);
+
+	auto qimageFinalImage = rw::rqw::cvMatToQImage(finalImage);
+
+	QPixmap pixmap = QPixmap::fromImage(qimageFinalImage);
+
+	emit imageReady(pixmap);
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
