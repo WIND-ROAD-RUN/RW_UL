@@ -83,55 +83,75 @@ public:
 
         std::vector<T> result;
         if (count <= 0) {
-            return result; // 返回空结果
+            return result;
         }
 
-        // 首先将输入参数 time 作为一个元素加入结果
-        result.emplace_back(time);
-        --count;
+        // 查找 time 对应的数据
+        auto timeIt = std::find_if(_cache.begin(), _cache.end(), [&time](const std::pair<Time, T>& entry) {
+            return entry.first == time;
+            });
 
-        if (count <= 0) {
-            return result; // 如果 count 为 1，直接返回包含 time 的结果
-        }
+        // 先收集目标数据
+        std::vector<T> temp;
+        int remain = count - 1; // 除了 time 本身，还要查找 count-1 个
 
         if (isBefore) {
             if (ascending) {
-                // 查询先于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first < time) { // 不包括指定时间点
-                        result.emplace_back(it->second);
-                        --count;
+                // 先查找比 time 小的
+                for (auto it = _cache.begin(); it != _cache.end() && remain > 0; ++it) {
+                    if (it->first < time) {
+                        temp.push_back(it->second);
+                        --remain;
                     }
                 }
+                // 再加 time 对应数据
+                if (timeIt != _cache.end()) {
+                    temp.push_back(timeIt->second);
+                }
+                // 如果没找到 time，则不加
+                result = temp;
             }
             else {
-                // 查询先于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first < time) { // 不包括指定时间点
-                        result.emplace_back(it->second);
-                        --count;
+                // 先加 time 对应数据
+                if (timeIt != _cache.end()) {
+                    result.push_back(timeIt->second);
+                }
+                // 再查找比 time 小的，逆序
+                for (auto it = _cache.rbegin(); it != _cache.rend() && remain > 0; ++it) {
+                    if (it->first < time) {
+                        result.push_back(it->second);
+                        --remain;
                     }
                 }
             }
         }
         else {
             if (ascending) {
-                // 查询晚于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first > time) { // 不包括指定时间点
-                        result.emplace_back(it->second);
-                        --count;
+                // 先加 time 对应数据
+                if (timeIt != _cache.end()) {
+                    result.push_back(timeIt->second);
+                }
+                // 再查找比 time 大的
+                for (auto it = _cache.begin(); it != _cache.end() && remain > 0; ++it) {
+                    if (it->first > time) {
+                        result.push_back(it->second);
+                        --remain;
                     }
                 }
             }
             else {
-                // 查询晚于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first > time) { // 不包括指定时间点
-                        result.emplace_back(it->second);
-                        --count;
+                // 先查找比 time 大的，逆序
+                for (auto it = _cache.rbegin(); it != _cache.rend() && remain > 0; ++it) {
+                    if (it->first > time) {
+                        temp.push_back(it->second);
+                        --remain;
                     }
                 }
+                // 再加 time 对应数据
+                if (timeIt != _cache.end()) {
+                    temp.push_back(timeIt->second);
+                }
+                result = temp;
             }
         }
 
