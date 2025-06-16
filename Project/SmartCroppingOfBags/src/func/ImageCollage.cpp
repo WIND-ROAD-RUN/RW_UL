@@ -1,6 +1,8 @@
 #include"ImageCollage.hpp"
 #include"rqw_HistoricalElementManager.hpp"
 
+#include<QPainter>
+
 ImageCollage::ImageCollage()
 {
 }
@@ -118,6 +120,37 @@ cv::Mat ImageCollage::verticalConcat(const std::vector<cv::Mat>& images)
         img.copyTo(result.rowRange(currentY, currentY + img.rows));
         currentY += img.rows;
     }
+    return result;
+}
+
+QImage ImageCollage::verticalConcat(const QVector<QImage>& images)
+{
+    if (images.isEmpty()) return QImage();
+
+    int width = images[0].width();
+    int totalHeight = 0;
+
+    // 检查所有图片宽度是否一致，并计算总高度
+    for (const auto& img : images) {
+        if (img.isNull() || img.width() != width) {
+            // 尺寸不一致或图片无效，返回空
+            return QImage();
+        }
+        totalHeight += img.height();
+    }
+
+    // 创建目标QImage，使用ARGB32格式以兼容性最佳
+    QImage result(width, totalHeight, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
+
+    QPainter painter(&result);
+    int currentY = 0;
+    for (const auto& img : images) {
+        painter.drawImage(0, currentY, img);
+        currentY += img.height();
+    }
+    painter.end();
+
     return result;
 }
 

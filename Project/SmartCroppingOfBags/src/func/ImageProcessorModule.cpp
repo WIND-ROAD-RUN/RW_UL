@@ -2,6 +2,8 @@
 
 #include <qcolor.h>
 #include <QPainter>
+#include <random>
+
 #include "GlobalStruct.hpp"
 #include"rqw_ImagePainter.h"
 #include "Utilty.hpp"
@@ -161,6 +163,44 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
 	auto processResult = _modelEngine->processImg(resultImage.mat);
+
+
+
+	// 随机生成检测框用于测试
+	{
+		int imgWidth = resultImage.mat.cols;
+		int imgHeight = resultImage.mat.rows;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> xDist(0, imgWidth - 60);
+		std::uniform_int_distribution<> yDist(0, imgHeight - 60);
+		std::uniform_int_distribution<> wDist(30, 100);
+		std::uniform_int_distribution<> hDist(30, 100);
+		std::uniform_int_distribution<> classDist(0, 5); // 假设有6类
+		std::uniform_real_distribution<> scoreDist(0.7, 1.0);
+
+		for (int i = 0; i < 5; ++i) {
+			int x = xDist(gen);
+			int y = yDist(gen);
+			int w = wDist(gen);
+			int h = hDist(gen);
+			rw::DetectionRectangleInfo rect;
+			rect.leftTop = { x, y };
+			rect.rightTop = { x + w, y };
+			rect.leftBottom = { x, y + h };
+			rect.rightBottom = { x + w, y + h };
+			rect.center_x = x + w / 2;
+			rect.center_y = y + h / 2;
+			rect.width = w;
+			rect.height = h;
+			rect.area = w * h;
+			rect.classId = classDist(gen); // 随机类别
+			rect.score = scoreDist(gen);   // 随机分数
+			processResult.push_back(rect);
+		}
+	}
+
+
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
@@ -342,6 +382,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	};
 
 	// 依次处理五张图片及其识别框
+	QVector<QImage> fiveQImages;
 	for (size_t i = 0; i < 5; ++i) {
 		// 过滤出有效索引
 		auto processResultIndex = filterEffectiveIndexes_debug(fiveImageDetects[i]);
@@ -359,15 +400,15 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 		drawDefectRec(qImage, fiveImageDetects[i], processResultIndex, defectInfo);
 		drawDefectRec_error(qImage, fiveImageDetects[i], processResultIndex, defectInfo);
 
+		fiveQImages.push_back(qImage);
+
 		// 可选：保存、显示或进一步处理qImage
 		// 例如：emit imageReady(QPixmap::fromImage(qImage));
 	}
 
-	auto finalImage = _imageCollage->verticalConcat(fiveImages);
+	auto finalImage = _imageCollage->verticalConcat(fiveQImages);
 
-	auto qimageFinalImage = rw::rqw::cvMatToQImage(finalImage);
-
-	QPixmap pixmap = QPixmap::fromImage(qimageFinalImage);
+	QPixmap pixmap = QPixmap::fromImage(finalImage);
 
 	emit imageReady(pixmap);
 }

@@ -52,6 +52,7 @@ public:
 	CollageImage getCollageImage(const std::vector<Time>& times);
 
 	static cv::Mat verticalConcat(const std::vector<cv::Mat>& images);
+	static QImage verticalConcat(const QVector<QImage>& images);
 	
 };
 
