@@ -118,19 +118,19 @@ title: 图像处理模块中的debug调用流程
 -- -
 %% {init: { "flowchart": {"htmlLabels": false} } }%%
 flowchart TB
-start(["给定输入参数 MatInfo& frame"])
-getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
-getCurrentWithBeforeTimeCollageTime["获取当前时间点和上一次时间点拼接之后的图像调用_imageCollage->getCollageImage(times);"]
-processCollageImage["AI识别拼接之后的图像调用_modelEngine->processImg(cv::mat)"]
-splitRecognitionBox["将识别的图像分割成两部分，当前时间节点的行高，和上一次的行高"]
-regularizedTwoRecognitionBox["将识别出来的processResult框的集合分别规整到拆分到的两次行高,上也即重新映射到两张图片上"]
-mergeCurrentProcessLastResultWithLastProcessResult["将拆分到的上一次行高的识别框与上一次的行高的识别框的集合直接合并"]
-addCurrentResultToHistoryResult["将拆分后这一次识别的行高的添加到历史的行高识别框中调用_historyResult->inseart()"]
-getCurrentWithBeforeFourTimes["获取当前以及当前之前的供5个时间点"]
-getFiveTimesSouceImage["根据五个时间点获取总共5个原图像"]
-getFiveHistoyProcessResult["根据五个时间点获取总共5个识别信息"]
-drawMaskInfo[分别绘制5个mask图像]
-collageMaskImage[合并绘制之后的图像]
+	start(["给定输入参数 MatInfo& frame"])
+	getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
+	getCurrentWithBeforeTimeCollageTime["获取当前时间点和上一次时间点拼接之后的图像调用_imageCollage->getCollageImage(times);"]
+	processCollageImage["AI识别拼接之后的图像调用_modelEngine->processImg(cv::mat)"]
+	splitRecognitionBox["将识别的图像分割成两部分，当前时间节点的行高，和上一次的行高"]
+	regularizedTwoRecognitionBox["将识别出来的processResult框的集合分别规整到拆分到的两次行高,上也即重新映射到两张图片上"]
+	mergeCurrentProcessLastResultWithLastProcessResult["将拆分到的上一次行高的识别框与上一次的行高的识别框的集合直接合并"]
+	addCurrentResultToHistoryResult["将拆分后这一次识别的行高的添加到历史的行高识别框中调用_historyResult->inseart()"]
+	getCurrentWithBeforeFourTimes["获取当前以及当前之前的供5个时间点"]
+	getFiveTimesSouceImage["根据五个时间点获取总共5个原图像"]
+	getFiveHistoyProcessResult["根据五个时间点获取总共5个识别信息"]
+	drawMaskInfo[分别绘制5个mask图像]
+	collageMaskImage[合并绘制之后的图像]
 
 start-- > getTimesWithCurrentTime
 getTimesWithCurrentTime-- > getCurrentWithBeforeTimeCollageTime
