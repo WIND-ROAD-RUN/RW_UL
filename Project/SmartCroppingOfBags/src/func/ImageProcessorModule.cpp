@@ -63,6 +63,7 @@ ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatI
 	_historyTimes = std::make_unique<TimeBasedCache<Time>>(50);
 	_imageCollage = std::make_unique<ImageCollage>();
 	_imageCollage->iniCache(50);
+	_historyResult = std::make_unique<TimeBasedCache<HistoryDetectInfo>>(50);
 }
 
 void ImageProcessorSmartCroppingOfBags::run()
@@ -90,7 +91,7 @@ void ImageProcessorSmartCroppingOfBags::run()
 			continue; // 跳过空帧
 		}
 		_historyTimes->insert(frame.time, frame.time);
-		_imageCollage->pushImage(frame.image,frame.time);
+		_imageCollage->pushImage(frame.image, frame.time);
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
@@ -113,8 +114,98 @@ void ImageProcessorSmartCroppingOfBags::run()
 
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-	auto times=_historyTimes->queryWithTime(frame.time, _collageNum, true);
+	auto times = _historyTimes->queryWithTime(frame.time, 1, true);
+
 	auto resultImage = _imageCollage->getCollageImage(times);
+
+	//AI开始识别
+	SmartCroppingOfBagsDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto processResult = _modelEngine->processImg(resultImage.mat);
+
+	//TODO:过滤上一张的detectInfo
+	_historyResult->insert(frame.time, HistoryDetectInfo(processResult));
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+
+	// 手动添加几个缺陷进行测试
+	{
+		// 黑疤缺陷
+		rw::DetectionRectangleInfo heiba;
+		heiba.leftTop = { 10, 10 };
+		heiba.rightTop = { 60, 10 };
+		heiba.leftBottom = { 10, 60 };
+		heiba.rightBottom = { 60, 60 };
+		heiba.center_x = 35;
+		heiba.center_y = 35;
+		heiba.width = 50;
+		heiba.height = 50;
+		heiba.area = 2500;
+		heiba.classId = ClassId::Heiba;
+		heiba.score = 0.95;
+		processResult.push_back(heiba);
+
+		// 疏档缺陷
+		rw::DetectionRectangleInfo shudang;
+		shudang.leftTop = { 100, 20 };
+		shudang.rightTop = { 140, 20 };
+		shudang.leftBottom = { 100, 60 };
+		shudang.rightBottom = { 140, 60 };
+		shudang.center_x = 120;
+		shudang.center_y = 40;
+		shudang.width = 40;
+		shudang.height = 40;
+		shudang.area = 1600;
+		shudang.classId = ClassId::Shudang;
+		shudang.score = 0.88;
+		processResult.push_back(shudang);
+
+		// 划破缺陷
+		rw::DetectionRectangleInfo huapo;
+		huapo.leftTop = { 200, 30 };
+		huapo.rightTop = { 230, 30 };
+		huapo.leftBottom = { 200, 60 };
+		huapo.rightBottom = { 230, 60 };
+		huapo.center_x = 215;
+		huapo.center_y = 45;
+		huapo.width = 30;
+		huapo.height = 30;
+		huapo.area = 900;
+		huapo.classId = ClassId::Huapo;
+		huapo.score = 0.92;
+		processResult.push_back(huapo);
+	}
+	
+
+
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes_debug(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo_debug(defectInfo, processResult, processResultIndex, resultImage.mat);
+
+	//绘制defect信息
+	auto qImage = rw::rqw::cvMatToQImage(resultImage.mat);
+
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+
+	//drawBoundariesLines(qImage);
+
+	drawDefectRec(qImage, processResult, processResultIndex, defectInfo);
+
+	drawDefectRec_error(qImage, processResult, processResultIndex, defectInfo);
+
+	drawSmartCroppingOfBagsDefectInfoText_Debug(qImage, defectInfo);
+
+	
+
+
+
+	QPixmap pixmap = QPixmap::fromImage(qImage);
+
 	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage.mat)));
 }
 
@@ -1397,7 +1488,7 @@ std::vector<std::vector<size_t>> ImageProcessorSmartCroppingOfBags::getIndexInBo
 
 bool ImageProcessorSmartCroppingOfBags::isInBoundary(const rw::DetectionRectangleInfo& info)
 {
-	return false;
+	return true;
 }
 
 void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image,
@@ -2347,7 +2438,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 
 void ImageProcessingModuleSmartCroppingOfBags::setCollageImageNum(size_t num)
 {
-	for (auto & item: _processors)
+	for (auto& item : _processors)
 	{
 		item->setCollageImageNum(num);
 	}
@@ -2424,7 +2515,7 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 		MatInfo matInfo(imagePart);
 		matInfo.location = nowLocation;
 		matInfo.index = index;
-		matInfo.time=currentTime;
+		matInfo.time = currentTime;
 		_queue.enqueue(matInfo);
 		_condition.wakeOne();
 	}

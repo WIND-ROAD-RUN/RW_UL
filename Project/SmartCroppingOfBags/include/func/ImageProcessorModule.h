@@ -108,10 +108,29 @@ public:
 class ImageProcessorSmartCroppingOfBags : public QThread
 {
 	Q_OBJECT
+public:
+	struct HistoryDetectInfo
+	{
+		std::vector<rw::DetectionRectangleInfo> processResult;
+	public:
+		HistoryDetectInfo() = default;
+		HistoryDetectInfo(const std::vector<rw::DetectionRectangleInfo>& result) : processResult(result) {}
+		// 拷贝构造函数
+		HistoryDetectInfo(const HistoryDetectInfo& other) : processResult(other.processResult) {}
+		// 拷贝赋值运算符
+		HistoryDetectInfo& operator=(const HistoryDetectInfo& other) {
+			if (this != &other) {
+				processResult = other.processResult;
+			}
+			return *this;
+		}
+	};
 private:
 	std::unique_ptr<ImageCollage> _imageCollage=nullptr;
 	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
 	std::unique_ptr<TimeBasedCache<Time>> _historyTimes=nullptr;
+
+	std::unique_ptr<TimeBasedCache<HistoryDetectInfo>> _historyResult = nullptr;
 	size_t collageImagesNum = 5;
 public:
 	ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue,
@@ -288,7 +307,8 @@ private:
 public:
 	void setCollageImageNum(size_t num);
 private:
-	size_t _collageNum{5};
+	size_t _collageNum{ 5 };
+	size_t imagesCount{ 0 };
 private:
 	QQueue<MatInfo>& _queue;
 	QMutex& _mutex;

@@ -92,3 +92,32 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
     return getCollageImage(times, hasNull);
 }
 
+cv::Mat ImageCollage::verticalConcat(const std::vector<cv::Mat>& images)
+{
+    if (images.empty()) return cv::Mat();
+
+    // 检查所有图片宽度是否一致
+    int width = images[0].cols;
+    for (const auto& img : images) {
+        if (img.empty() || img.cols != width) {
+            // 尺寸不一致，返回空
+            return cv::Mat();
+        }
+    }
+
+    // 计算总高度
+    int totalHeight = 0;
+    for (const auto& img : images) {
+        totalHeight += img.rows;
+    }
+
+    // 创建输出图像
+    cv::Mat result(totalHeight, width, images[0].type());
+    int currentY = 0;
+    for (const auto& img : images) {
+        img.copyTo(result.rowRange(currentY, currentY + img.rows));
+        currentY += img.rows;
+    }
+    return result;
+}
+
