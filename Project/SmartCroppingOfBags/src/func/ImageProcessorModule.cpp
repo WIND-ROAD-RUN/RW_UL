@@ -149,28 +149,113 @@ drawMaskInfo-- > collageMaskImage
 */
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-	auto times = _historyTimes->queryWithTime(frame.time, 3, true);
-	auto times3 = _historyTimes->query(frame.time, 3, true);
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	auto times = _historyTimes->queryWithTime(frame.time, 2, true);
 
-
-	auto times1 = _historyTimes->queryWithTimeToMap(frame.time, 3, true);
-	auto times4 = _historyTimes->queryToMap(frame.time, 3, true);
-
+	// 获得当前图像与上一张图像拼接而成的图像
 	auto resultImage = _imageCollage->getCollageImage(times);
 
 	//AI开始识别
 	SmartCroppingOfBagsDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
+	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
 	auto processResult = _modelEngine->processImg(resultImage.mat);
-
-	//TODO:过滤上一张的detectInfo
-	_historyResult->insert(frame.time, HistoryDetectInfo(processResult));
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
+
+	if (times.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
+	auto previousImage = _imageCollage->getImage(times[0]);
+
+	if (!previousImage.has_value())
+	{
+		return;
+	}
+
+	// 获取上一张cv::Mat图像
+	auto previousMat = previousImage.value().element;
+
+	// 获取上一张图像的高度
+	auto previousMatHeight = previousMat.rows;
+
+	// 获取上一张图像的检测信息
+	auto previousDetectInfo = _historyResult->query(frame.time, 1);
+
+	// 1. 找出属于上一张图片的检测框
+	std::vector<rw::DetectionRectangleInfo> belongToPrevious;
+	auto it = std::remove_if(processResult.begin(), processResult.end(),
+		[previousMatHeight, &belongToPrevious](const rw::DetectionRectangleInfo& rect) {
+			bool inPrev = rect.leftTop.second < previousMatHeight &&
+				rect.rightTop.second < previousMatHeight &&
+				rect.leftBottom.second < previousMatHeight &&
+				rect.rightBottom.second < previousMatHeight;
+			if (inPrev) {
+				belongToPrevious.push_back(rect);
+			}
+			return inPrev;
+		});
+	processResult.erase(it, processResult.end());
+
+	// 2. 添加到上一张图片的识别信息
+	if (!previousDetectInfo.empty()) {
+		previousDetectInfo.front().processResult.insert(
+			previousDetectInfo.front().processResult.end(),
+			belongToPrevious.begin(),
+			belongToPrevious.end()
+		);
+	}
+
+	// 3. 剩余检测框的四个顶点y坐标减去上一张图片高度
+	for (auto& rect : processResult) {
+		rect.leftTop.second -= previousMatHeight;
+		rect.rightTop.second -= previousMatHeight;
+		rect.leftBottom.second -= previousMatHeight;
+		rect.rightBottom.second -= previousMatHeight;
+		rect.center_y -= previousMatHeight;
+	}
+
+	// 将属于当前图片的检测结果添加到当前图像的识别信息中
+	_historyResult->insert(frame.time, HistoryDetectInfo(processResult));
+
+	// 抓取五张图片
+	auto fiveImageTimes = _historyTimes->queryWithTime(frame.time, 5, true);
+
+	if (fiveImageTimes.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
+	if (!_imageCollage->getImage(fiveImageTimes[0]).has_value() || 
+		!_imageCollage->getImage(fiveImageTimes[1]).has_value() || 
+		!_imageCollage->getImage(fiveImageTimes[2]).has_value() ||
+		!_imageCollage->getImage(fiveImageTimes[3]).has_value() ||
+		!_imageCollage->getImage(fiveImageTimes[4]).has_value())
+	{
+		return;
+	}
+
+	// 获得五张图片原图
+	auto firstImage = _imageCollage->getImage(fiveImageTimes[0]).value().element;
+	auto secondImage = _imageCollage->getImage(fiveImageTimes[1]).value().element;
+	auto thirdImage = _imageCollage->getImage(fiveImageTimes[2]).value().element;
+	auto fourthImage = _imageCollage->getImage(fiveImageTimes[3]).value().element;
+	auto fifthImage = _imageCollage->getImage(fiveImageTimes[4]).value().element;
+
+	// 抓取五张图片的识别框
+	auto fiveImageDetects = _historyResult->queryWithTime(frame.time, 5);
+
+	if (fiveImageDetects.size() >= 5) {
+		auto firstImageDetects = fiveImageDetects[0].processResult;
+		auto secondImageDetects = fiveImageDetects[1].processResult;
+		auto thirdImageDetects = fiveImageDetects[2].processResult;
+		auto fourthImageDetects = fiveImageDetects[3].processResult;
+		auto fifthImageDetects = fiveImageDetects[4].processResult;
+	}
 
 	// 手动添加几个缺陷进行测试
 	{
