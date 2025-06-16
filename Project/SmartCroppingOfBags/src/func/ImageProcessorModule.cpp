@@ -339,6 +339,58 @@ void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
 
 }
 
+/*
+ ---
+title: 图像处理模块中的剔除模块smartCrop调用流程
+---
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
+flowchart TB
+    start(["给定输入参数 MatInfo& frame"])
+    getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
+    getCurrentWithBeforeTimeCollageTime["获取当前时间点和上一次时间点拼接之后的图像调用_imageCollage->getCollageImage(times);"]
+    processCollageImage["AI识别拼接之后的图像调用_modelEngine->processImg(cv::mat)"]
+
+    getClassIdIndex["获取每一个缺陷的index集合类型std::vector<std::vector<size_t>>"]
+    filterValidIndex["获取有效的索引也即将将屏蔽内的识别框过滤掉"]
+    getDetectInfo["获取所有的识别信息放到自定义的结构体中"]
+    getBottomRec["计算detectInfo自定义的结构体中满足score\窗口中score或其他设置条件的最底部的识别框也即y轴坐标最低,同时将isDraw计算出来"]
+    getBottomLocation["将上一步的最底部识别框的y轴坐标转换为location,根据frame.location和脉冲系数去和像素当量算出检测框最底部的location"]
+    emitErrorLocation["将错误的location发送到剔废队列中"]
+
+    splitRecognitionBox["将识别的图像分割成两部分，当前时间节点的行高，和上一次的行高"]
+    regularizedTwoRecognitionBox["将识别出来的processResult框的集合分别规整到拆分到的两次行高,上也即重新映射到两张图片上"]
+    mergeCurrentProcessLastResultWithLastProcessResult["将拆分到的上一次行高的识别框与上一次的行高的识别框的集合直接合并"]
+    addCurrentResultToHistoryResult["将拆分后这一次识别的行高的添加到历史的行高识别框中调用_historyResult->inseart()"]
+    getCurrentWithBeforeFourTimes["获取当前以及当前之前的供5个时间点"]
+    getFiveTimesSouceImage["根据五个时间点获取总共5个原图像"]
+    getFiveHistoyProcessResult["根据五个时间点获取总共5个识别信息"]
+    drawMaskInfo[分别绘制5个mask图像]
+    collageMaskImage[合并绘制之后的图像]
+    emitResultImage(["发送绘制好的mask图"])
+
+start --> getTimesWithCurrentTime
+getTimesWithCurrentTime -->getCurrentWithBeforeTimeCollageTime
+getCurrentWithBeforeTimeCollageTime-->processCollageImage
+processCollageImage-->getClassIdIndex
+getClassIdIndex-->filterValidIndex
+filterValidIndex-->getDetectInfo
+getDetectInfo-->getBottomRec
+getBottomRec-->getBottomLocation
+getBottomLocation-->emitErrorLocation
+emitErrorLocation-->splitRecognitionBox
+splitRecognitionBox-->regularizedTwoRecognitionBox
+regularizedTwoRecognitionBox-->mergeCurrentProcessLastResultWithLastProcessResult
+regularizedTwoRecognitionBox-->addCurrentResultToHistoryResult
+mergeCurrentProcessLastResultWithLastProcessResult-->getCurrentWithBeforeFourTimes
+addCurrentResultToHistoryResult-->getCurrentWithBeforeFourTimes
+getCurrentWithBeforeFourTimes-->getFiveTimesSouceImage
+getCurrentWithBeforeFourTimes-->getFiveHistoyProcessResult
+getFiveTimesSouceImage-->drawMaskInfo
+getFiveHistoyProcessResult-->drawMaskInfo
+drawMaskInfo-->collageMaskImage
+collageMaskImage-->emitResultImage
+
+ */
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 {
 
