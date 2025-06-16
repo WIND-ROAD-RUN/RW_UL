@@ -116,6 +116,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
 	auto times = _historyTimes->queryWithTime(frame.time, 3, true);
 	auto times3 = _historyTimes->query(frame.time, 3, true);
+
+
 	auto times1 = _historyTimes->queryWithTimeToMap(frame.time, 3, true);
 	auto times4 = _historyTimes->queryToMap(frame.time, 3, true);
 

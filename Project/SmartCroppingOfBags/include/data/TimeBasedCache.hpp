@@ -5,6 +5,7 @@
 #include <chrono>
 #include <mutex>
 #include <unordered_map>
+#include<algorithm>
 
 using Time = std::chrono::system_clock::time_point;
 
@@ -26,260 +27,181 @@ public:
         _cache.emplace_back(time, data);
     }
 
-    std::vector<T> query(const Time& time, int count, bool isBefore=true, bool ascending = true) const {
+    std::vector<T> query(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
         std::lock_guard<std::mutex> lock(_mutex);
 
-        std::vector<T> result;
-        if (count <= 0) {
-            return result; // 返回空结果
+        if (count <= 0) return {};
+
+        // 1. 先筛选方向
+        std::vector<std::pair<Time, T>> candidates;
+        for (const auto& entry : _cache) {
+            if (isBefore && entry.first < time) {
+                candidates.push_back(entry);
+            }
+            if (!isBefore && entry.first > time) {
+                candidates.push_back(entry);
+            }
         }
 
-        if (isBefore) {
-            if (ascending) {
-                // 查询先于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first < time) {
-                        result.push_back(it->second);
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询先于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first < time) {
-                        result.push_back(it->second);
-                        --count;
-                    }
-                }
-            }
+        // 2. 按与 time 的距离排序
+        std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+            return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
+            });
+
+        // 3. 取前 count 个
+        if (candidates.size() > static_cast<size_t>(count)) {
+            candidates.resize(count);
+        }
+
+        // 4. 按时间排序
+        if (ascending) {
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first < b.first;
+                });
         }
         else {
-            if (ascending) {
-                // 查询晚于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first > time) {
-                        result.push_back(it->second);
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询晚于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first > time) {
-                        result.push_back(it->second);
-                        --count;
-                    }
-                }
-            }
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first > b.first;
+                });
         }
 
+        // 5. 只返回数据部分
+        std::vector<T> result;
+        for (const auto& entry : candidates) {
+            result.push_back(entry.second);
+        }
         return result;
     }
 
     std::vector<T> queryWithTime(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
         std::lock_guard<std::mutex> lock(_mutex);
 
-        std::vector<T> result;
-        if (count <= 0) {
-            return result;
+        if (count <= 0) return {};
+
+        // 收集所有与 time 的距离
+        std::vector<std::pair<Time, T>> candidates;
+        for (const auto& entry : _cache) {
+            if (isBefore && entry.first > time) continue;
+            if (!isBefore && entry.first < time) continue;
+            candidates.push_back(entry);
         }
 
-        // 查找 time 对应的数据
-        auto timeIt = std::find_if(_cache.begin(), _cache.end(), [&time](const std::pair<Time, T>& entry) {
-            return entry.first == time;
+        // 按距离排序
+        std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+            return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
             });
 
-        // 先收集目标数据
-        std::vector<T> temp;
-        int remain = count - 1; // 除了 time 本身，还要查找 count-1 个
+        // 取前 count 个
+        if (candidates.size() > static_cast<size_t>(count)) {
+            candidates.resize(count);
+        }
 
-        if (isBefore) {
-            if (ascending) {
-                // 先查找比 time 小的
-                for (auto it = _cache.begin(); it != _cache.end() && remain > 0; ++it) {
-                    if (it->first < time) {
-                        temp.push_back(it->second);
-                        --remain;
-                    }
-                }
-                // 再加 time 对应数据
-                if (timeIt != _cache.end()) {
-                    temp.push_back(timeIt->second);
-                }
-                // 如果没找到 time，则不加
-                result = temp;
-            }
-            else {
-                // 先加 time 对应数据
-                if (timeIt != _cache.end()) {
-                    result.push_back(timeIt->second);
-                }
-                // 再查找比 time 小的，逆序
-                for (auto it = _cache.rbegin(); it != _cache.rend() && remain > 0; ++it) {
-                    if (it->first < time) {
-                        result.push_back(it->second);
-                        --remain;
-                    }
-                }
-            }
+        // 按时间排序
+        if (ascending) {
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first < b.first;
+                });
         }
         else {
-            if (ascending) {
-                // 先加 time 对应数据
-                if (timeIt != _cache.end()) {
-                    result.push_back(timeIt->second);
-                }
-                // 再查找比 time 大的
-                for (auto it = _cache.begin(); it != _cache.end() && remain > 0; ++it) {
-                    if (it->first > time) {
-                        result.push_back(it->second);
-                        --remain;
-                    }
-                }
-            }
-            else {
-                // 先查找比 time 大的，逆序
-                for (auto it = _cache.rbegin(); it != _cache.rend() && remain > 0; ++it) {
-                    if (it->first > time) {
-                        temp.push_back(it->second);
-                        --remain;
-                    }
-                }
-                // 再加 time 对应数据
-                if (timeIt != _cache.end()) {
-                    temp.push_back(timeIt->second);
-                }
-                result = temp;
-            }
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first > b.first;
+                });
         }
 
+        // 只返回数据部分
+        std::vector<T> result;
+        for (const auto& entry : candidates) {
+            result.push_back(entry.second);
+        }
         return result;
     }
 
-    // 返回哈希表，基于 query 的逻辑
     std::unordered_map<Time, T> queryToMap(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
         std::lock_guard<std::mutex> lock(_mutex);
 
-        std::unordered_map<Time, T> result;
-        if (count <= 0) {
-            return result; // 返回空结果
+        if (count <= 0) return {};
+
+        // 1. 先筛选方向
+        std::vector<std::pair<Time, T>> candidates;
+        for (const auto& entry : _cache) {
+            if (isBefore && entry.first < time) {
+                candidates.push_back(entry);
+            }
+            if (!isBefore && entry.first > time) {
+                candidates.push_back(entry);
+            }
         }
 
-        if (isBefore) {
-            if (ascending) {
-                // 查询先于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first < time) {
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询先于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first < time) {
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
+        // 2. 按与 time 的距离排序
+        std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+            return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
+            });
+
+        // 3. 取前 count 个
+        if (candidates.size() > static_cast<size_t>(count)) {
+            candidates.resize(count);
+        }
+
+        // 4. 按时间排序
+        if (ascending) {
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first < b.first;
+                });
         }
         else {
-            if (ascending) {
-                // 查询晚于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first > time) {
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询晚于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first > time) {
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first > b.first;
+                });
         }
 
+        // 5. 返回map
+        std::unordered_map<Time, T> result;
+        for (const auto& entry : candidates) {
+            result[entry.first] = entry.second;
+        }
         return result;
     }
 
-    // 返回哈希表，基于 queryWithTime 的逻辑
     std::unordered_map<Time, T> queryWithTimeToMap(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
         std::lock_guard<std::mutex> lock(_mutex);
 
-        std::unordered_map<Time, T> result;
-        if (count <= 0) {
-            return result; // 返回空结果
+        if (count <= 0) return {};
+
+        // 收集所有与 time 的距离
+        std::vector<std::pair<Time, T>> candidates;
+        for (const auto& entry : _cache) {
+            if (isBefore && entry.first > time) continue;
+            if (!isBefore && entry.first < time) continue;
+            candidates.push_back(entry);
         }
 
-        // 检查 _cache 中是否存在输入参数 time
-        auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const std::pair<Time, T>& entry) {
-            return entry.first == time;
+        // 按距离排序
+        std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+            return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
             });
 
-        if (it != _cache.end()) {
-            // 如果存在，将其加入结果
-            result[time] = it->second;
+        // 取前 count 个
+        if (candidates.size() > static_cast<size_t>(count)) {
+            candidates.resize(count);
+        }
+
+        // 按时间排序
+        if (ascending) {
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first < b.first;
+                });
         }
         else {
-            // 如果不存在，使用默认构造的 T 值
-            result[time] = T(); // 假设 T 类型有默认构造函数
-        }
-        --count;
-
-        if (count <= 0) {
-            return result; // 如果 count 为 1，直接返回包含 time 的结果
+            std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                return a.first > b.first;
+                });
         }
 
-        if (isBefore) {
-            if (ascending) {
-                // 查询先于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first < time) { // 不包括指定时间点
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询先于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first < time) { // 不包括指定时间点
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
+        // 返回map
+        std::unordered_map<Time, T> result;
+        for (const auto& entry : candidates) {
+            result[entry.first] = entry.second;
         }
-        else {
-            if (ascending) {
-                // 查询晚于指定时间点的数据，按时间从前往后
-                for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first > time) { // 不包括指定时间点
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
-            else {
-                // 查询晚于指定时间点的数据，按时间从后往前
-                for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first > time) { // 不包括指定时间点
-                        result[it->first] = it->second;
-                        --count;
-                    }
-                }
-            }
-        }
-
         return result;
     }
 
