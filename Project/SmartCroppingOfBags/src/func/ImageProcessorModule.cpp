@@ -113,10 +113,10 @@ void ImageProcessorSmartCroppingOfBags::run()
 }
 
 /*
--- -
+---
 title: 图像处理模块中的debug调用流程
--- -
-%% {init: { "flowchart": {"htmlLabels": false} } }%%
+---
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart TB
 	start(["给定输入参数 MatInfo& frame"])
 	getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
@@ -132,20 +132,20 @@ flowchart TB
 	drawMaskInfo[分别绘制5个mask图像]
 	collageMaskImage[合并绘制之后的图像]
 
-start-- > getTimesWithCurrentTime
-getTimesWithCurrentTime-- > getCurrentWithBeforeTimeCollageTime
-getCurrentWithBeforeTimeCollageTime-- > processCollageImage
-processCollageImage-- > splitRecognitionBox
-splitRecognitionBox-- > regularizedTwoRecognitionBox
-regularizedTwoRecognitionBox-- > mergeCurrentProcessLastResultWithLastProcessResult
-regularizedTwoRecognitionBox-- > addCurrentResultToHistoryResult
-mergeCurrentProcessLastResultWithLastProcessResult-- > getCurrentWithBeforeFourTimes
-addCurrentResultToHistoryResult-- > getCurrentWithBeforeFourTimes
-getCurrentWithBeforeFourTimes-- > getFiveTimesSouceImage
-getCurrentWithBeforeFourTimes-- > getFiveHistoyProcessResult
-getFiveTimesSouceImage-- > drawMaskInfo
-getFiveHistoyProcessResult-- > drawMaskInfo
-drawMaskInfo-- > collageMaskImage
+start --> getTimesWithCurrentTime
+getTimesWithCurrentTime -->getCurrentWithBeforeTimeCollageTime
+getCurrentWithBeforeTimeCollageTime-->processCollageImage
+processCollageImage-->splitRecognitionBox
+splitRecognitionBox-->regularizedTwoRecognitionBox
+regularizedTwoRecognitionBox-->mergeCurrentProcessLastResultWithLastProcessResult
+regularizedTwoRecognitionBox-->addCurrentResultToHistoryResult
+mergeCurrentProcessLastResultWithLastProcessResult-->getCurrentWithBeforeFourTimes
+addCurrentResultToHistoryResult-->getCurrentWithBeforeFourTimes
+getCurrentWithBeforeFourTimes-->getFiveTimesSouceImage
+getCurrentWithBeforeFourTimes-->getFiveHistoyProcessResult
+getFiveTimesSouceImage-->drawMaskInfo
+getFiveHistoyProcessResult-->drawMaskInfo
+drawMaskInfo-->collageMaskImage
 */
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
