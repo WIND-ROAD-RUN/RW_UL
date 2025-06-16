@@ -13,6 +13,7 @@
 #include <rqw_ImageSaveEngine.h>
 
 #include"ImageCollage.hpp"
+#include"TimeBasedCache.hpp"
 
 
 // 智能裁切吨袋检测信息
@@ -76,16 +77,42 @@ struct ImagePainter
 
 // 图片信息
 struct MatInfo {
-	ImageCollage::CollageImage collageImage;
-	cv::Mat image;	// 图片内容
-	size_t index;	// 拍照的相机的下标
+	rw::rqw::ElementInfo<cv::Mat> image;
+	size_t index{};	// 拍照的相机的下标
+	Time time;
+	double location{};
+public:
+	// 默认构造函数
+	MatInfo() = default;
+
+	// 参数化构造函数
+	MatInfo(const rw::rqw::ElementInfo<cv::Mat>& element) : image(element) {}
+
+	// 拷贝构造函数
+	MatInfo(const MatInfo& other)
+		: image(other.image), index(other.index), time(other.time) {
+	}
+
+	// 拷贝赋值运算符（可选）
+	MatInfo& operator=(const MatInfo& other) {
+		if (this != &other) {
+			image = other.image;
+			index = other.index;
+			time = other.time;
+		}
+		return *this;
+	}
 };
 
 
 class ImageProcessorSmartCroppingOfBags : public QThread
 {
 	Q_OBJECT
-
+private:
+	std::unique_ptr<ImageCollage> _imageCollage=nullptr;
+	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
+	std::unique_ptr<TimeBasedCache<Time>> _historyTimes=nullptr;
+	size_t collageImagesNum = 5;
 public:
 	ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue,
 		QMutex& mutex,
@@ -258,6 +285,10 @@ private:
 	// 判断是否有缺陷
 	bool _isbad{ false };
 
+public:
+	void setCollageImageNum(size_t num);
+private:
+	size_t _collageNum{5};
 private:
 	QQueue<MatInfo>& _queue;
 	QMutex& _mutex;
@@ -274,15 +305,10 @@ class ImageProcessingModuleSmartCroppingOfBags : public QObject {
 	Q_OBJECT
 public:
 	QString modelEnginePath;
-private:
-	std::unique_ptr<ImageCollage> imageCollage;
-	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
-	std::vector<Time> times;
-	std::vector<Time> LastTimes;
-	size_t collageImagesNum=5;
 public:
 	// 初始化图像处理模块
 	void BuildModule();
+	void setCollageImageNum(size_t num);
 public:
 	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
 

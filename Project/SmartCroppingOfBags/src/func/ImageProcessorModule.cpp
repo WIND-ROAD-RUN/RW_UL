@@ -60,7 +60,9 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
-
+	_historyTimes = std::make_unique<TimeBasedCache<Time>>(50);
+	_imageCollage = std::make_unique<ImageCollage>();
+	_imageCollage->iniCache(50);
 }
 
 void ImageProcessorSmartCroppingOfBags::run()
@@ -84,10 +86,11 @@ void ImageProcessorSmartCroppingOfBags::run()
 		}
 
 		// 检查 frame 是否有效
-		if (frame.image.empty()) {
+		if (frame.image.element.empty()) {
 			continue; // 跳过空帧
 		}
-
+		_historyTimes->insert(frame.time, frame.time);
+		_imageCollage->pushImage(frame.image,frame.time);
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
@@ -110,7 +113,9 @@ void ImageProcessorSmartCroppingOfBags::run()
 
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image)));
+	auto times=_historyTimes->queryWithTime(frame.time, _collageNum, true);
+	auto resultImage = _imageCollage->getCollageImage(times);
+	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage.mat)));
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
@@ -690,8 +695,8 @@ void ImageProcessorSmartCroppingOfBags::save_image_work(rw::rqw::ImageInfo& imag
 //}
 
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info,
-                                                                 const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
-                                                                 const cv::Mat& mat)
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
 {
 	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
 	getShudangInfo(info, processResult, index[ClassId::Shudang]);
@@ -1396,7 +1401,7 @@ bool ImageProcessorSmartCroppingOfBags::isInBoundary(const rw::DetectionRectangl
 }
 
 void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image,
-                                                                                     const SmartCroppingOfBagsDefectInfo& info)
+	const SmartCroppingOfBagsDefectInfo& info)
 {
 	QVector<QString> textList;
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
@@ -2319,11 +2324,14 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	}
 }
 
+void ImageProcessorSmartCroppingOfBags::setCollageImageNum(size_t num)
+{
+	_collageNum = num;
+}
+
 
 void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 {
-	imageCollage = std::make_unique<ImageCollage>();
-	imageCollage->iniCache(75);
 	for (int i = 0; i < _numConsumers; ++i) {
 		static size_t workIndexCount = 0;
 		ImageProcessorSmartCroppingOfBags* processor = new ImageProcessorSmartCroppingOfBags(_queue, _mutex, _condition, workIndexCount, this);
@@ -2334,6 +2342,14 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
 		processor->start();
+	}
+}
+
+void ImageProcessingModuleSmartCroppingOfBags::setCollageImageNum(size_t num)
+{
+	for (auto & item: _processors)
+	{
+		item->setCollageImageNum(num);
 	}
 }
 
@@ -2401,29 +2417,16 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 	Time currentTime = std::chrono::system_clock::now();
 	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
-	auto nowLocation=GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
-	imagePart.attribute.insert("Location", nowLocation);
+	auto nowLocation = GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
 
-	imageCollage->pushImage(imagePart, currentTime);
-	times.push_back(currentTime);
-
-	if (times.size()== collageImagesNum)
 	{
-		auto resultMat = imageCollage->getCollageImage(times);
-		LastTimes = times;
-		times.clear();
-
-		{
-			QMutexLocker locker(&_mutex);
-			MatInfo mat;
-			mat.collageImage = resultMat;
-			mat.image = resultMat.mat;
-			mat.index = index;
-			_queue.enqueue(mat);
-			_condition.wakeOne();
-		}
+		QMutexLocker locker(&_mutex);
+		MatInfo matInfo(imagePart);
+		matInfo.location = nowLocation;
+		matInfo.index = index;
+		matInfo.time=currentTime;
+		_queue.enqueue(matInfo);
+		_condition.wakeOne();
 	}
-
-	
 }
 
