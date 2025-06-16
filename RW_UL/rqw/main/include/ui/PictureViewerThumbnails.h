@@ -92,6 +92,7 @@ public:
 
 	void setSize(const QSize& size);
 	void setSizeRange(const QSize & sizeSmall, const QSize& sizeBig);
+	void setViewerNum(size_t num = 0);
 private:
 	QSize small{100,100};
 	QSize big{ 500,500 };
@@ -119,6 +120,7 @@ private:
 	QString m_rootPath;
 	QSize m_thumbnailSize{ 128, 128 };
 	QStringList m_imageFiles;
+	size_t m_viewerNum{ 0 };
 private:
 	QStandardItemModel* _categoryModel;
 	DraggableListWidget* _listWidget = nullptr;
