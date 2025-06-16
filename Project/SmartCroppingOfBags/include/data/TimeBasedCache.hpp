@@ -86,11 +86,19 @@ public:
             return result; // 返回空结果
         }
 
+        // 首先将输入参数 time 作为一个元素加入结果
+        result.emplace_back(time);
+        --count;
+
+        if (count <= 0) {
+            return result; // 如果 count 为 1，直接返回包含 time 的结果
+        }
+
         if (isBefore) {
             if (ascending) {
                 // 查询先于指定时间点的数据，按时间从前往后
                 for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first <= time) { // 包括指定时间点
+                    if (it->first < time) { // 不包括指定时间点
                         result.emplace_back(it->second);
                         --count;
                     }
@@ -99,7 +107,7 @@ public:
             else {
                 // 查询先于指定时间点的数据，按时间从后往前
                 for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first <= time) { // 包括指定时间点
+                    if (it->first < time) { // 不包括指定时间点
                         result.emplace_back(it->second);
                         --count;
                     }
@@ -110,7 +118,7 @@ public:
             if (ascending) {
                 // 查询晚于指定时间点的数据，按时间从前往后
                 for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first >= time) { // 包括指定时间点
+                    if (it->first > time) { // 不包括指定时间点
                         result.emplace_back(it->second);
                         --count;
                     }
@@ -119,7 +127,7 @@ public:
             else {
                 // 查询晚于指定时间点的数据，按时间从后往前
                 for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first >= time) { // 包括指定时间点
+                    if (it->first > time) { // 不包括指定时间点
                         result.emplace_back(it->second);
                         --count;
                     }
@@ -192,11 +200,30 @@ public:
             return result; // 返回空结果
         }
 
+        // 检查 _cache 中是否存在输入参数 time
+        auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const std::pair<Time, T>& entry) {
+            return entry.first == time;
+            });
+
+        if (it != _cache.end()) {
+            // 如果存在，将其加入结果
+            result[time] = it->second;
+        }
+        else {
+            // 如果不存在，使用默认构造的 T 值
+            result[time] = T(); // 假设 T 类型有默认构造函数
+        }
+        --count;
+
+        if (count <= 0) {
+            return result; // 如果 count 为 1，直接返回包含 time 的结果
+        }
+
         if (isBefore) {
             if (ascending) {
                 // 查询先于指定时间点的数据，按时间从前往后
                 for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first <= time) { // 包括指定时间点
+                    if (it->first < time) { // 不包括指定时间点
                         result[it->first] = it->second;
                         --count;
                     }
@@ -205,7 +232,7 @@ public:
             else {
                 // 查询先于指定时间点的数据，按时间从后往前
                 for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first <= time) { // 包括指定时间点
+                    if (it->first < time) { // 不包括指定时间点
                         result[it->first] = it->second;
                         --count;
                     }
@@ -216,7 +243,7 @@ public:
             if (ascending) {
                 // 查询晚于指定时间点的数据，按时间从前往后
                 for (auto it = _cache.begin(); it != _cache.end() && count > 0; ++it) {
-                    if (it->first >= time) { // 包括指定时间点
+                    if (it->first > time) { // 不包括指定时间点
                         result[it->first] = it->second;
                         --count;
                     }
@@ -225,7 +252,7 @@ public:
             else {
                 // 查询晚于指定时间点的数据，按时间从后往前
                 for (auto it = _cache.rbegin(); it != _cache.rend() && count > 0; ++it) {
-                    if (it->first >= time) { // 包括指定时间点
+                    if (it->first > time) { // 不包括指定时间点
                         result[it->first] = it->second;
                         --count;
                     }
