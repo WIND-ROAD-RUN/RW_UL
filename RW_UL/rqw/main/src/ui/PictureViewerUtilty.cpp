@@ -42,9 +42,6 @@ void PictureViewerUtilty::showEvent(QShowEvent* event)
 	QFileInfo fileInfo(path);
 	QString parentDir = fileInfo.dir().absolutePath();
 
-	// 默认为正序显示图片
-	setPositive(true);
-
 	// 获取图片文件夹所有的图片路径
 	setAllImgPath(parentDir, isPositive);
 

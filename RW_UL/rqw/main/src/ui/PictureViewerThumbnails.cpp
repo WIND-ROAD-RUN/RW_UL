@@ -162,7 +162,6 @@ void PictureViewerThumbnails::setViewerNum(size_t num)
 
 void PictureViewerThumbnails::showEvent(QShowEvent* event)
 {
-	setViewerNum();
 	_loadingDialog->updateMessage("加载图片中");
 	_loadingDialog->show();
 	updateCategoryList();
