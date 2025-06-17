@@ -552,15 +552,10 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& setConfig = globalStruct.setConfig;
 
-	/*size_t nowMaichong = 0;
-	globalStruct.camera1->getEncoderNumber(nowMaichong);*/
-
-	//frame.location = nowMaichong * setConfig.maichongxishu1;
-
 	auto times = getTimesWithCurrentTime_Defect(frame.time, 2);
 
 	auto collageImage = getCurrentWithBeforeTimeCollageTime_Defect(times);
-	
+
 	//AI开始识别
 	SmartCroppingOfBagsDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
@@ -613,7 +608,13 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 
 	// bottomItem即为最底部的识别框（如果存在）
 	if (bottomItem) {
+		auto nowImageHeight = frame.image.element.rows;
 
+		auto heightRatio = maxBottomY / nowImageHeight; // 计算高度比例
+
+		auto lastImage = _imageCollage->getImage(times[0])->element;
+
+		auto nowImageLocation = frame.location * heightRatio; // 根据高度比例计算位置
 		
 	}
 

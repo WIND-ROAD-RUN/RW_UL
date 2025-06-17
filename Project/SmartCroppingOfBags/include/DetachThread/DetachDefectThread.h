@@ -22,8 +22,8 @@ public:
 
 	void stopThread();
 
-	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue);
-	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue);
+	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue);
+	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue);
 
 signals:
 	void findIsBad(size_t index);
