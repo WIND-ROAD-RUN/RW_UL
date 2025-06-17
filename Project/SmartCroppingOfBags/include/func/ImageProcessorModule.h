@@ -149,7 +149,7 @@ private:
 
 private:
 	// 调试模式用的封装函数
-	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	// 获得当前图像的时间戳与前count张图像的时间戳的集合
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true, bool ascending = true);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
@@ -179,6 +179,24 @@ private:
 	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
 	// 随机添加五个检测框
 	void getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec); // 获取随机的检测框
+
+private:
+	// 剔废模式下的处理函数
+	// 获得当前图像的时间戳与前count张图像的时间戳的集合
+	std::vector<std::chrono::time_point<std::chrono::system_clock>> getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	// 获取一个时间集合拼接而成的图像
+	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_Defect(const std::vector<Time>& times);
+	// AI模型处理拼接图像
+	std::vector<rw::DetectionRectangleInfo> processCollageImage_Defect(const cv::Mat& mat);
+	// 获取上个时间戳的图像的高度
+	int splitRecognitionBox_Defect(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time);
+	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
+	void regularizedTwoRecognitionBox_Defect(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
+	// 将属于上一张图像的识别框合并到上一次的图像识别框中
+	void mergeCurrentProcessLastResultWithLastProcessResult_Defect(const int& previousMatHeight, const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
+	// 将属于当前图像的识别框重新计算Y轴并合并到当前图像识别框中
+	void addCurrentResultToHistoryResult_Defect(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
+
 
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);	// 开启剔废功能时的处理模式

@@ -127,6 +127,8 @@ public:
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
+	double pulse{ 0 };
+
 	std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
 	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };
 

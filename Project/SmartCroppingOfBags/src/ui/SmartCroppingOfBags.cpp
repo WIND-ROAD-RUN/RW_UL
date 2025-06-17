@@ -445,6 +445,7 @@ void SmartCroppingOfBags::btn_setParam_clicked()
 
 void SmartCroppingOfBags::ckb_tifei_checked()
 {
+	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	generalConfig.istifei = ui->rbtn_removeFunc->isChecked();
 
@@ -452,6 +453,11 @@ void SmartCroppingOfBags::ckb_tifei_checked()
 	{
 		ui->ckb_debug->setChecked(false);
 		generalConfig.isDebug = false;
+		GlobalStructData.runningState = RunningState::openRemove;
+	}
+	else
+	{
+		GlobalStructData.runningState = RunningState::Stop;
 	}
 }
 
