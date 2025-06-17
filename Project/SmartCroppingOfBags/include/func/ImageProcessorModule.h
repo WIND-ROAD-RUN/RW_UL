@@ -146,6 +146,40 @@ private:
 	void run_debug(MatInfo& frame);				// 不开剔废时候的调试模式
 	void run_monitor(MatInfo& frame);			// 单纯的显示模式
 
+
+private:
+	// 调试模式用的封装函数
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	std::vector<std::chrono::time_point<std::chrono::system_clock>> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	// 获取一个时间集合拼接而成的图像
+	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
+	// AI模型处理拼接图像
+	std::vector<rw::DetectionRectangleInfo> processCollageImage_debug(const cv::Mat& mat);
+	// 获取上个时间戳的图像的高度
+	int splitRecognitionBox_debug(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time);
+	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
+	void regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
+	// 将属于上一张图像的识别框合并到上一次的图像识别框中
+	void mergeCurrentProcessLastResultWithLastProcessResult_debug(const int& previousMatHeight, const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
+	// 将属于当前图像的识别框重新计算Y轴并合并到当前图像识别框中
+	void addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
+	// 返回包含当前时间点的count个时间戳集合
+	std::vector<std::chrono::time_point<std::chrono::system_clock>> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	// 获得五次时间集合对应的五张图像
+	void getFiveTimesSouceImage_debug(std::vector<std::chrono::time_point<std::chrono::system_clock>> fiveTimes,
+		cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat);
+	// 获得五次时间集合对应的五张图像的检测结果
+	void getFiveHistoyProcessResult_debug(const Time& time, int count,std::vector<rw::DetectionRectangleInfo>& firstDetectRec,
+		std::vector<rw::DetectionRectangleInfo>& secondDetectRec, std::vector<rw::DetectionRectangleInfo>& thirdDetectRec,
+		std::vector<rw::DetectionRectangleInfo>& fourthDetectRec, std::vector<rw::DetectionRectangleInfo>& fifthDetectRec,
+		bool isBefore = true, bool ascending = true);
+	// 对五张图像进行绘画检测框操作
+	QVector<QImage> drawFiveMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects);
+	// 拼接绘画好的五张图像
+	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
+	// 随机添加五个检测框
+	void getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec); // 获取随机的检测框
+
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);	// 开启剔废功能时的处理模式
 	// 处理拉链缺陷信息
