@@ -46,6 +46,11 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	build_connect();
 
 	globalStruct.startDetachUtiltyThreadSmartCroppingOfBags();
+
+
+	//与后台线程连接
+	QObject::connect(GlobalStructDataSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::updateCurrentPulse,
+		_dlgProductSet, &DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse);
 }
 
 SmartCroppingOfBags::~SmartCroppingOfBags()

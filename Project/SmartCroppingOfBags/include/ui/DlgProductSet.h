@@ -19,7 +19,8 @@ public:
 	void build_ui();
 	void read_config();
 	void build_connect();
-
+public slots:
+	void onUpdateCurrentPulse(double pulse);
 private slots:
 	void pbtn_close_clicked();
 

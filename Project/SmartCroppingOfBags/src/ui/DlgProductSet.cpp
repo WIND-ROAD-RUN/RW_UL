@@ -153,6 +153,11 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::pbtn_close_clicked);
 }
 
+void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
+{
+	ui->btn_maichongxinhao1->setText(QString::number(pulse, 'f', 2));
+}
+
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()
 {
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
