@@ -26,23 +26,4 @@ void MonitorIOSmartCroppingOfBags::stopThread()
 
 void MonitorIOSmartCroppingOfBags::run()
 {
-	//while (running) {
-	//	// 这里可以添加监控IO的逻辑
-
-	//	//运动控制卡获得当前IO状态
-	//	bool nowstate = motion->GetIOIn(0);
-
-	//	// 上升延
-	//	if (nowstate == true && state == false)
-	//	{
-	//		//求5个袋子的平均袋长
-	//		//1通过像素求
-	//		//2通过脉冲去求
-
-	//	}
-
-	//	QThread::usleep(10);
-	//}
-	//// 线程结束时可以进行清理工作
-	//qDebug() << "MonitorIOSmartCroppingOfBags thread stopped.";
 }

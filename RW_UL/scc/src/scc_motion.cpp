@@ -27,14 +27,28 @@ namespace zwy {
 				return true;
 			}
 		}
-		void Motion::CloseBoared()
+
+		bool Motion::OpenBoard(const std::string& ipAdress)
+		{
+			return OpenBoard(ipAdress.c_str());
+		}
+
+		bool Motion::CloseBoared()
 		{
 			if (g_handle != nullptr)
 			{
-				ZAux_Close(g_handle);
+				auto reuslt=ZAux_Close(g_handle);
 				//关闭连接
+				if (reuslt==ERROR_OK)
+				{
+					g_handle = nullptr;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 
-				g_handle = nullptr;
 			}
 		}
 		//bool Motion::GetBoardStatue()
