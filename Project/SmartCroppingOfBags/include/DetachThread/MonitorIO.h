@@ -11,9 +11,6 @@ class MonitorIOSmartCroppingOfBags : public QThread
 public:
 	std::atomic_bool isProcessing{ false };
 	std::atomic_bool isProcessFinish{ false };
-
-	// IOµãÎ»×´Ì¬
-	bool state = false;
 public:
 	explicit MonitorIOSmartCroppingOfBags(QObject* parent = nullptr);
 
