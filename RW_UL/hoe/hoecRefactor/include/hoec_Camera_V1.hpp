@@ -58,7 +58,7 @@ namespace rw
 			virtual bool setPreDivider(size_t number) = 0 ;
 			virtual bool setMultiplier(size_t number) = 0 ;
 			virtual bool setPostDivider(size_t number) = 0;
-			virtual bool getEncoderNumber(size_t& number) = 0;
+			virtual bool getEncoderNumber(double& number) = 0;
 			virtual bool setLineHeight(size_t number) = 0;
 			virtual size_t getLineHeight(bool& isGet) = 0;
 
@@ -146,7 +146,7 @@ namespace rw
 			bool setPreDivider(size_t number) override;
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
-			bool getEncoderNumber(size_t& number) override;
+			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 		};
@@ -203,7 +203,7 @@ namespace rw
 			bool setPreDivider(size_t number) override;
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
-			bool getEncoderNumber(size_t& number) override;
+			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 		};

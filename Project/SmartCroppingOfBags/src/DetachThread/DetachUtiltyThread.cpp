@@ -32,7 +32,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	static size_t s = 0;
 	while (running) {
 		QThread::sleep(1);
-		processTrigger(s);
+		getMaiChongXinhao(s);
 		++s;
 		if (s == 300)
 		{
@@ -41,10 +41,29 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	}
 }
 
-void DetachUtiltyThreadSmartCroppingOfBags::processTrigger(size_t s)
+void DetachUtiltyThreadSmartCroppingOfBags::getMaiChongXinhao(size_t s)
 {
-	
+	if (s%1==0)
+	{
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		if (!globalStruct.camera1)
+		{
+			return;
+		}
+
+		if (!globalStruct.camera1->getConnectState())
+		{
+			return;
+		}
+
+		/*size_t
+		globalStruct.camera1->getEncoderNumber();*/
+
+
+
+	}
 }
+
 
 
 

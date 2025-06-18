@@ -548,7 +548,7 @@ namespace rw
 			return false;
 		}
 
-		bool Camera_MVS::getEncoderNumber(size_t& number)
+		bool Camera_MVS::getEncoderNumber(double& number)
 		{
 			return false;
 		}

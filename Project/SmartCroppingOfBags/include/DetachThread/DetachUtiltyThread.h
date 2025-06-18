@@ -21,7 +21,7 @@ public:
 protected:
 	void run() override;
 private:
-	void processTrigger(size_t s);
+	void getMaiChongXinhao(size_t s);
 private:
 	std::atomic<bool> running; 
 };
