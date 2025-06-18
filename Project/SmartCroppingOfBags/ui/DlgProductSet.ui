@@ -694,11 +694,11 @@ QTabBar::tab:hover {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
-       <string>参数页1</string>
+       <string>基本参数</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
@@ -4254,7 +4254,12 @@ QPushButton:pressed {
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>参数页2</string>
+       <string>IO监控</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="IO">
+      <attribute name="title">
+       <string>IO接口设置</string>
       </attribute>
      </widget>
     </widget>

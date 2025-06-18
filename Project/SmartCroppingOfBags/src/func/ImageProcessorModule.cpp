@@ -217,6 +217,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	auto pixmap = collageMaskImage_debug(fiveQImages);
 
 	emit imageReady(pixmap);
+
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
@@ -2947,6 +2948,8 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
+	static size_t count{0};
+
 	if (frame.empty()) {
 		return; // 跳过空帧
 	}
@@ -2954,8 +2957,10 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	Time currentTime = std::chrono::system_clock::now();
 	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
 	
-	auto nowLocation = GlobalStructThreadSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
+	double nowLocation=0;
+	GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(nowLocation);
 	imagePart.attribute.insert("location", nowLocation);
+
 	{
 		QMutexLocker locker(&_mutex);
 		MatInfo matInfo(imagePart);
@@ -2965,5 +2970,6 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 		_queue.enqueue(matInfo);
 		_condition.wakeOne();
 	}
+	count++;
 }
 
