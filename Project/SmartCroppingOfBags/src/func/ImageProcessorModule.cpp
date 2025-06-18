@@ -2,6 +2,8 @@
 
 #include <qcolor.h>
 #include <QPainter>
+#include <random>
+
 #include "GlobalStruct.hpp"
 #include"rqw_ImagePainter.h"
 #include "Utilty.hpp"
@@ -60,7 +62,10 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
-
+	_historyTimes = std::make_unique<TimeBasedCache<Time>>(50);
+	_imageCollage = std::make_unique<ImageCollage>();
+	_imageCollage->iniCache(50);
+	_historyResult = std::make_unique<TimeBasedCache<HistoryDetectInfo>>(50);
 }
 
 void ImageProcessorSmartCroppingOfBags::run()
@@ -84,10 +89,11 @@ void ImageProcessorSmartCroppingOfBags::run()
 		}
 
 		// 检查 frame 是否有效
-		if (frame.image.empty()) {
+		if (frame.image.element.empty()) {
 			continue; // 跳过空帧
 		}
-
+		_historyTimes->insert(frame.time, frame.time);
+		_imageCollage->pushImage(frame.image, frame.time);
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
@@ -96,7 +102,7 @@ void ImageProcessorSmartCroppingOfBags::run()
 		case RunningState::Debug:
 			run_debug(frame);
 			break;
-		case RunningState::OpenRemoveFunc:
+		case RunningState::openRemove:
 			run_OpenRemoveFunc(frame);
 			break;
 			/*case RunningState::Monitor:
@@ -108,9 +114,106 @@ void ImageProcessorSmartCroppingOfBags::run()
 	}
 }
 
+/*
+---
+title: 图像处理模块中的debug调用流程
+---
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
+flowchart TB
+	start(["给定输入参数 MatInfo& frame"])
+	getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
+	getCurrentWithBeforeTimeCollageTime["获取当前时间点和上一次时间点拼接之后的图像调用_imageCollage->getCollageImage(times);"]
+	processCollageImage["AI识别拼接之后的图像调用_modelEngine->processImg(cv::mat)"]
+	splitRecognitionBox["将识别的图像分割成两部分，当前时间节点的行高，和上一次的行高"]
+	regularizedTwoRecognitionBox["将识别出来的processResult框的集合分别规整到拆分到的两次行高,上也即重新映射到两张图片上"]
+	mergeCurrentProcessLastResultWithLastProcessResult["将拆分到的上一次行高的识别框与上一次的行高的识别框的集合直接合并"]
+	addCurrentResultToHistoryResult["将拆分后这一次识别的行高的添加到历史的行高识别框中调用_historyResult->inseart()"]
+	getCurrentWithBeforeFourTimes["获取当前以及当前之前的供5个时间点"]
+	getFiveTimesSouceImage["根据五个时间点获取总共5个原图像"]
+	getFiveHistoyProcessResult["根据五个时间点获取总共5个识别信息"]
+	drawMaskInfo[分别绘制5个mask图像]
+	collageMaskImage[合并绘制之后的图像]
+
+start --> getTimesWithCurrentTime
+getTimesWithCurrentTime -->getCurrentWithBeforeTimeCollageTime
+getCurrentWithBeforeTimeCollageTime-->processCollageImage
+processCollageImage-->splitRecognitionBox
+splitRecognitionBox-->regularizedTwoRecognitionBox
+regularizedTwoRecognitionBox-->mergeCurrentProcessLastResultWithLastProcessResult
+regularizedTwoRecognitionBox-->addCurrentResultToHistoryResult
+mergeCurrentProcessLastResultWithLastProcessResult-->getCurrentWithBeforeFourTimes
+addCurrentResultToHistoryResult-->getCurrentWithBeforeFourTimes
+getCurrentWithBeforeFourTimes-->getFiveTimesSouceImage
+getCurrentWithBeforeFourTimes-->getFiveHistoyProcessResult
+getFiveTimesSouceImage-->drawMaskInfo
+getFiveHistoyProcessResult-->drawMaskInfo
+drawMaskInfo-->collageMaskImage
+*/
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
+	// 获得当前图像与上一张图像拼接而成的图像
+	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
+
+	//AI开始识别
+	SmartCroppingOfBagsDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
+	auto processResult = processCollageImage_debug(resultImage.mat);
+
+	// 随机添加检测框用于测试
+	getRandomDetecionRec_debug(resultImage, processResult);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+
+	if (times.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
+
+	// 获取上一张图像的行高
+	auto previousMatHeight = splitRecognitionBox_debug(times);
+
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
+
+	// 抓取五张图片的时间戳
+	auto fiveImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, 5, true);
+
+	if (fiveImageTimes.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
+
+	// 获取五张图片的原图像
+	cv::Mat firstImage, secondImage, thirdImage, fourthImage, fifthImage;
+	getFiveTimesSouceImage_debug(fiveImageTimes, firstImage, secondImage, thirdImage, fourthImage, fifthImage);
+	
+	std::vector<rw::DetectionRectangleInfo> firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects;
+
+	// 获得五张图片的识别结果
+	getFiveHistoyProcessResult_debug(frame.time, 5, firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects, true, true);
+
+	// 组装 fiveImages 和 fiveImageDetects
+	std::vector<cv::Mat> fiveImages = {
+		firstImage, secondImage, thirdImage, fourthImage, fifthImage
+	};
+	std::vector<std::vector<rw::DetectionRectangleInfo>> fiveImageDetects = {
+		firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects
+	};
+
+	// 依次处理五张图片及其识别框
+	QVector<QImage> fiveQImages = drawFiveMatMaskInfo_debug(fiveImages, fiveImageDetects);
+
+	auto pixmap = collageMaskImage_debug(fiveQImages);
+
+	emit imageReady(pixmap);
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
@@ -118,9 +221,410 @@ void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
 
 }
 
+std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore, bool ascending)
+{
+	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
+}
+
+ImageCollage::CollageImage ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeTimeCollageTime_debug(
+	const std::vector<Time>& times)
+{
+	auto collageImage = _imageCollage->getCollageImage(times);
+	
+	return collageImage;
+}
+
+std::vector<rw::DetectionRectangleInfo> ImageProcessorSmartCroppingOfBags::processCollageImage_debug(const cv::Mat& mat)
+{
+	return _modelEngine->processImg(mat);
+}
+
+int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_debug(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time)
+{
+	// 获得上个时间戳的cv::Mat图片
+	auto previousMat = _imageCollage->getImage(time[0]).value().element;
+
+	// 获取上个时间戳的图像的高度
+	auto previousMatHeight = previousMat.rows;
+
+	return previousMatHeight;
+}
+
+void ImageProcessorSmartCroppingOfBags::regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
+{
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	mergeCurrentProcessLastResultWithLastProcessResult_debug(previousMatHeight, previousTime, allDetectRec);
+
+	addCurrentResultToHistoryResult_debug(previousMatHeight, allDetectRec, nowTime);
+}
+
+void ImageProcessorSmartCroppingOfBags::mergeCurrentProcessLastResultWithLastProcessResult_debug(const int& previousMatHeight,const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
+{
+	// 获取上一张图像的检测信息
+	auto previousDetectInfo = _historyResult->query(time, 1);
+
+	// 1. 找出属于上一张图片的检测框
+	std::vector<rw::DetectionRectangleInfo> belongToPrevious;
+	auto it = std::remove_if(allDetectRec.begin(), allDetectRec.end(),
+		[previousMatHeight, &belongToPrevious](const rw::DetectionRectangleInfo& rect) {
+			bool inPrev = rect.leftTop.second < previousMatHeight &&
+				rect.rightTop.second < previousMatHeight &&
+				rect.leftBottom.second < previousMatHeight &&
+				rect.rightBottom.second < previousMatHeight;
+			if (inPrev) {
+				belongToPrevious.push_back(rect);
+			}
+			return inPrev;
+		});
+	allDetectRec.erase(it, allDetectRec.end());
+
+	// 2. 添加到上一张图片的识别信息
+	if (!previousDetectInfo.empty()) {
+		previousDetectInfo.front().processResult.insert(
+			previousDetectInfo.front().processResult.end(),
+			belongToPrevious.begin(),
+			belongToPrevious.end()
+		);
+	}
+}
+
+void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(const int& previousMatHeight,std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime)
+{
+	// 剩余检测框的四个顶点y坐标减去上一张图片高度
+	for (auto& rect : nowDetectRec) {
+		rect.leftTop.second -= previousMatHeight;
+		rect.rightTop.second -= previousMatHeight;
+		rect.leftBottom.second -= previousMatHeight;
+		rect.rightBottom.second -= previousMatHeight;
+		rect.center_y -= previousMatHeight;
+	}
+
+	// 将属于当前图片的检测结果添加到当前图像的识别信息中
+	_historyResult->insert(nowTime, HistoryDetectInfo(nowDetectRec));
+}
+
+std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore, bool ascending)
+{
+	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
+}
+
+void ImageProcessorSmartCroppingOfBags::getFiveTimesSouceImage_debug(std::vector<std::chrono::time_point<std::chrono::system_clock>> fiveTimes,
+	cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat)
+{
+	// 检查是否有足够的图像
+	if (!_imageCollage->getImage(fiveTimes[0]).has_value() ||
+		!_imageCollage->getImage(fiveTimes[1]).has_value() ||
+		!_imageCollage->getImage(fiveTimes[2]).has_value() ||
+		!_imageCollage->getImage(fiveTimes[3]).has_value() ||
+		!_imageCollage->getImage(fiveTimes[4]).has_value())
+	{
+		return;
+	}
+
+	firstMat = _imageCollage->getImage(fiveTimes[0]).value().element;
+	secondMat = _imageCollage->getImage(fiveTimes[1]).value().element;
+	thirdMat = _imageCollage->getImage(fiveTimes[2]).value().element;
+	fourthMat = _imageCollage->getImage(fiveTimes[3]).value().element;
+	fifthMat = _imageCollage->getImage(fiveTimes[4]).value().element;
+}
+
+void ImageProcessorSmartCroppingOfBags::getFiveHistoyProcessResult_debug(const Time& time, int count, std::vector<rw::DetectionRectangleInfo>& firstDetectRec,
+	std::vector<rw::DetectionRectangleInfo>& secondDetectRec, std::vector<rw::DetectionRectangleInfo>& thirdDetectRec,
+	std::vector<rw::DetectionRectangleInfo>& fourthDetectRec, std::vector<rw::DetectionRectangleInfo>& fifthDetectRec,
+	bool isBefore, bool ascending)
+{
+	// 抓取五张图片的识别框
+	auto fiveImageDetect = _historyResult->queryWithTime(time, count, isBefore, ascending);
+
+	if (fiveImageDetect.size() >= 5) {
+		firstDetectRec = fiveImageDetect[0].processResult;
+		secondDetectRec = fiveImageDetect[1].processResult;
+		thirdDetectRec = fiveImageDetect[2].processResult;
+		fourthDetectRec = fiveImageDetect[3].processResult;
+		fifthDetectRec = fiveImageDetect[4].processResult;
+	}
+}
+
+QVector<QImage> ImageProcessorSmartCroppingOfBags::drawFiveMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects)
+{
+	// 依次处理五张图片及其识别框
+	QVector<QImage> fiveQImages;
+	for (size_t i = 0; i < 5; ++i) {
+		// 过滤出有效索引
+		auto processResultIndex = filterEffectiveIndexes_debug(fiveMatDetects[i]);
+		// 获取当前图像的缺陷信息
+		SmartCroppingOfBagsDefectInfo defectInfo;
+		getEliminationInfo_debug(defectInfo, fiveMatDetects[i], processResultIndex, fiveMats[i]);
+
+		// 转换为QImage
+		QImage qImage = rw::rqw::cvMatToQImage(fiveMats[i]);
+
+		// 可选：绘制边界线
+		// drawBoundariesLines(qImage);
+
+		// 绘制缺陷框
+		drawDefectRec(qImage, fiveMatDetects[i], processResultIndex, defectInfo);
+		drawDefectRec_error(qImage, fiveMatDetects[i], processResultIndex, defectInfo);
+
+		fiveQImages.push_back(qImage);
+	}
+	return fiveQImages;
+}
+
+QPixmap ImageProcessorSmartCroppingOfBags::collageMaskImage_debug(const QVector<QImage>& fiveQImages)
+{
+	auto finalImage = _imageCollage->verticalConcat(fiveQImages);
+
+	return QPixmap::fromImage(finalImage);
+}
+
+void ImageProcessorSmartCroppingOfBags::getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec)
+{
+	// 随机生成检测框用于测试
+	{
+		int imgWidth = collageImage.mat.cols;
+		int imgHeight = collageImage.mat.rows;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> xDist(0, imgWidth - 60);
+		std::uniform_int_distribution<> yDist(0, imgHeight - 60);
+		std::uniform_int_distribution<> wDist(30, 100);
+		std::uniform_int_distribution<> hDist(30, 100);
+		std::uniform_int_distribution<> classDist(0, 5); // 假设有6类
+		std::uniform_real_distribution<> scoreDist(0.7, 1.0);
+
+		for (int i = 0; i < 5; ++i) {
+			int x = xDist(gen);
+			int y = yDist(gen);
+			int w = wDist(gen);
+			int h = hDist(gen);
+			rw::DetectionRectangleInfo rect;
+			rect.leftTop = { x, y };
+			rect.rightTop = { x + w, y };
+			rect.leftBottom = { x, y + h };
+			rect.rightBottom = { x + w, y + h };
+			rect.center_x = x + w / 2;
+			rect.center_y = y + h / 2;
+			rect.width = w;
+			rect.height = h;
+			rect.area = w * h;
+			rect.classId = classDist(gen); // 随机类别
+			rect.score = scoreDist(gen);   // 随机分数
+			detectionRec.push_back(rect);
+		}
+	}
+}
+
+std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore, bool ascending)
+{
+	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
+}
+
+ImageCollage::CollageImage ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeTimeCollageTime_Defect(
+	const std::vector<Time>& times)
+{
+	return _imageCollage->getCollageImage(times);
+}
+
+std::vector<rw::DetectionRectangleInfo> ImageProcessorSmartCroppingOfBags::processCollageImage_Defect(const cv::Mat& mat)
+{
+	return _modelEngine->processImg(mat);
+}
+
+int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_Defect(
+	const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time)
+{
+	// 获得上个时间戳的cv::Mat图片
+	auto previousMat = _imageCollage->getImage(time[0]).value().element;
+
+	// 获取上个时间戳的图像的高度
+	auto previousMatHeight = previousMat.rows;
+
+	return previousMatHeight;
+}
+
+void ImageProcessorSmartCroppingOfBags::regularizedTwoRecognitionBox_Defect(const int& previousMatHeight,
+	const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
+{
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	mergeCurrentProcessLastResultWithLastProcessResult_Defect(previousMatHeight, previousTime, allDetectRec);
+	addCurrentResultToHistoryResult_Defect(previousMatHeight, allDetectRec, nowTime);
+}
+
+void ImageProcessorSmartCroppingOfBags::mergeCurrentProcessLastResultWithLastProcessResult_Defect(
+	const int& previousMatHeight, const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
+{
+	// 获取上一张图像的检测信息
+	auto previousDetectInfo = _historyResult->query(time, 1);
+	// 1. 找出属于上一张图片的检测框
+	std::vector<rw::DetectionRectangleInfo> belongToPrevious;
+	auto it = std::remove_if(allDetectRec.begin(), allDetectRec.end(),
+		[previousMatHeight, &belongToPrevious](const rw::DetectionRectangleInfo& rect) {
+			bool inPrev = rect.leftTop.second < previousMatHeight &&
+				rect.rightTop.second < previousMatHeight &&
+				rect.leftBottom.second < previousMatHeight &&
+				rect.rightBottom.second < previousMatHeight;
+			if (inPrev) {
+				belongToPrevious.push_back(rect);
+			}
+			return inPrev;
+		});
+	allDetectRec.erase(it, allDetectRec.end());
+	// 2. 添加到上一张图片的识别信息
+	if (!previousDetectInfo.empty()) {
+		previousDetectInfo.front().processResult.insert(
+			previousDetectInfo.front().processResult.end(),
+			belongToPrevious.begin(),
+			belongToPrevious.end()
+		);
+	}
+}
+
+void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_Defect(const int& previousMatHeight,
+	std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime)
+{
+	// 剩余检测框的四个顶点y坐标减去上一张图片高度
+	for (auto& rect : nowDetectRec) {
+		rect.leftTop.second -= previousMatHeight;
+		rect.rightTop.second -= previousMatHeight;
+		rect.leftBottom.second -= previousMatHeight;
+		rect.rightBottom.second -= previousMatHeight;
+		rect.center_y -= previousMatHeight;
+	}
+	// 将属于当前图片的检测结果添加到当前图像的识别信息中
+	_historyResult->insert(nowTime, HistoryDetectInfo(nowDetectRec));
+}
+
+/*
+---
+title: 图像处理模块中的剔除模块smartCrop调用流程
+---
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
+flowchart TB
+    start(["给定输入参数 MatInfo& frame"])
+    getTimesWithCurrentTime["获取当前时间点和上一次时间点集合，调用_historyTimes->queryWithTime(frame.time,2);"]
+    getCurrentWithBeforeTimeCollageTime["获取当前时间点和上一次时间点拼接之后的图像调用_imageCollage->getCollageImage(times);"]
+    processCollageImage["AI识别拼接之后的图像调用_modelEngine->processImg(cv::mat)"]
+
+    getClassIdIndex["获取每一个缺陷的index集合类型std::vector<std::vector<size_t>>"]
+    filterValidIndex["获取有效的索引也即将将屏蔽内的识别框过滤掉"]
+    getDetectInfo["获取所有的识别信息放到自定义的结构体中"]
+    getBottomRec["计算detectInfo自定义的结构体中满足score\窗口中score或其他设置条件的最底部的识别框也即y轴坐标最低,同时将isDraw计算出来"]
+    getBottomLocation["将上一步的最底部识别框的y轴坐标转换为location,根据frame.location和脉冲系数去和像素当量算出检测框最底部的location"]
+    emitErrorLocation["将错误的location发送到剔废队列中"]
+
+    splitRecognitionBox["将识别的图像分割成两部分，当前时间节点的行高，和上一次的行高"]
+    regularizedTwoRecognitionBox["将识别出来的processResult框的集合分别规整到拆分到的两次行高,上也即重新映射到两张图片上"]
+    mergeCurrentProcessLastResultWithLastProcessResult["将拆分到的上一次行高的识别框与上一次的行高的识别框的集合直接合并"]
+    addCurrentResultToHistoryResult["将拆分后这一次识别的行高的添加到历史的行高识别框中调用_historyResult->inseart()"]
+    getCurrentWithBeforeFourTimes["获取当前以及当前之前的供5个时间点"]
+    getFiveTimesSouceImage["根据五个时间点获取总共5个原图像"]
+    getFiveHistoyProcessResult["根据五个时间点获取总共5个识别信息"]
+    drawMaskInfo[分别绘制5个mask图像]
+    collageMaskImage[合并绘制之后的图像]
+    emitResultImage(["发送绘制好的mask图"])
+
+start --> getTimesWithCurrentTime
+getTimesWithCurrentTime -->getCurrentWithBeforeTimeCollageTime
+getCurrentWithBeforeTimeCollageTime-->processCollageImage
+processCollageImage-->getClassIdIndex
+getClassIdIndex-->filterValidIndex
+filterValidIndex-->getDetectInfo
+getDetectInfo-->getBottomRec
+getBottomRec-->getBottomLocation
+getBottomLocation-->emitErrorLocation
+emitErrorLocation-->splitRecognitionBox
+splitRecognitionBox-->regularizedTwoRecognitionBox
+regularizedTwoRecognitionBox-->mergeCurrentProcessLastResultWithLastProcessResult
+regularizedTwoRecognitionBox-->addCurrentResultToHistoryResult
+mergeCurrentProcessLastResultWithLastProcessResult-->getCurrentWithBeforeFourTimes
+addCurrentResultToHistoryResult-->getCurrentWithBeforeFourTimes
+getCurrentWithBeforeFourTimes-->getFiveTimesSouceImage
+getCurrentWithBeforeFourTimes-->getFiveHistoyProcessResult
+getFiveTimesSouceImage-->drawMaskInfo
+getFiveHistoyProcessResult-->drawMaskInfo
+drawMaskInfo-->collageMaskImage
+collageMaskImage-->emitResultImage
+
+ */
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 
+	auto times = getTimesWithCurrentTime_Defect(frame.time, 2);
+
+	auto collageImage = getCurrentWithBeforeTimeCollageTime_Defect(times);
+
+	//AI开始识别
+	SmartCroppingOfBagsDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
+	auto processResult = processCollageImage_Defect(collageImage.mat);
+
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
+
+	auto previousMatHeight = splitRecognitionBox_Defect(times);
+
+	regularizedTwoRecognitionBox_Defect(previousMatHeight, times[0], frame.time, processResult);
+
+	//过滤出有效索引
+	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
+	//获取到当前图像的缺陷信息
+	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image.element);
+
+
+	// 遍历所有缺陷类型，找出isDraw为true的最底部识别框（以下两个顶点的y最大值为准）
+	const SmartCroppingOfBagsDefectInfo::DetectItem* bottomItem = nullptr;
+	double maxBottomY = std::numeric_limits<double>::min();
+
+	// 所有缺陷类型的列表指针
+	std::vector<const std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>*> defectLists = {
+		&defectInfo.heibaList, &defectInfo.shudangList, &defectInfo.huapoList, &defectInfo.jietouList,
+		&defectInfo.guasiList, &defectInfo.podongList, &defectInfo.zangwuList, &defectInfo.noshudangList,
+		&defectInfo.modianList, &defectInfo.loumoList, &defectInfo.xishudangList, &defectInfo.erweimaList,
+		&defectInfo.damodianList, &defectInfo.kongdongList, &defectInfo.sebiaoList, &defectInfo.yinshuaquexianList,
+		&defectInfo.xiaopodongList, &defectInfo.jiaodaiList
+	};
+
+	for (const auto* list : defectLists) {
+		for (const auto& item : *list) {
+			if (item.isDraw && item.index >= 0 && item.index < processResult.size()) {
+				const auto& rect = processResult[item.index];
+				double bottomY1 = rect.leftBottom.second;
+				double bottomY2 = rect.rightBottom.second;
+				double curMaxY = std::max(bottomY1, bottomY2);
+				if (curMaxY > maxBottomY) {
+					maxBottomY = curMaxY;
+					bottomItem = &item;
+				}
+			}
+		}
+	}
+
+	// bottomItem即为最底部的识别框（如果存在）
+	if (bottomItem) {
+		auto nowImageHeight = frame.image.element.rows;
+
+		auto heightRatio = maxBottomY / nowImageHeight; // 计算高度比例
+
+		auto lastImage = _imageCollage->getImage(times[0]).value();
+
+		auto lastImagePulse = lastImage.attribute["location"];
+
+		auto nowImagePulse = frame.location * heightRatio; // 根据高度比例计算位置
+		
+		auto pulseDifference = nowImagePulse - lastImagePulse;
+	}
+
+	// 剔除逻辑获取_isbad以及绘制defect错误信息
+	run_OpenRemoveFunc_process_defect_info(defectInfo);
+	//如果_isbad为true，将错误信息发送到剔除队列中
+	//run_OpenRemoveFunc_emitErrorInfo(frame);
 }
 
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info)
@@ -572,7 +1076,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const M
 		++globalStruct.statisticalInfo.produceCount2;
 	}
 
-	if (_isbad)
+	/*if (_isbad)
 	{
 		switch (imageProcessingModuleIndex)
 		{
@@ -585,7 +1089,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const M
 		default:
 			break;
 		}
-	}
+	}*/
 }
 
 void ImageProcessorSmartCroppingOfBags::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -638,6 +1142,57 @@ void ImageProcessorSmartCroppingOfBags::save_image_work(rw::rqw::ImageInfo& imag
 	}
 }
 
+//void ImageProcessorSmartCroppingOfBags::monitorIO()
+//{
+//	auto& motion = GlobalStructDataSmartCroppingOfBags::getInstance().motion;
+//	while (true)
+//	{
+//
+//		//运动控制卡获得io
+//		bool nowstate = motion->GetIOIn(0);
+//		//上升延
+//		//说明下切刀了
+//		//出图信号
+//		//或得这个时间点的脉冲信号,location
+//		double nowlocation = location;
+//
+//		if (nowstate == true && state == false)
+//		{
+//
+//
+//			//拼接前面所有图片为一张
+//
+//
+//
+//			//求5个袋子的平均袋长
+//			//1通过像素求
+//			//2通过脉冲去求
+//
+//
+//
+//
+//
+//			//在这张图片上画缺陷
+//
+//			//画切刀线
+//
+//
+//			//进行一次判断,判断这个袋子上面是否有缺陷
+//
+//
+//
+//
+//
+//
+//
+//
+//		}
+//
+//		state = nowstate;
+//
+//	}
+//}
+
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
 	const cv::Mat& mat)
@@ -662,8 +1217,32 @@ void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOf
 	getJiaodaiInfo(info, processResult, index[ClassId::Jiaodai]);
 }
 
+void ImageProcessorSmartCroppingOfBags::getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
+	const cv::Mat& mat)
+{
+	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
+	getShudangInfo(info, processResult, index[ClassId::Shudang]);
+	getHuapoInfo(info, processResult, index[ClassId::Huapo]);
+	getJietouInfo(info, processResult, index[ClassId::Jietou]);
+	getGuasiInfo(info, processResult, index[ClassId::Guasi]);
+	getPodongInfo(info, processResult, index[ClassId::Podong]);
+	getZangwuInfo(info, processResult, index[ClassId::Zangwu]);
+	getNoshudangInfo(info, processResult, index[ClassId::Noshudang]);
+	getModianInfo(info, processResult, index[ClassId::Modian]);
+	getLoumoInfo(info, processResult, index[ClassId::Loumo]);
+	getXishudangInfo(info, processResult, index[ClassId::Xishudang]);
+	getErweimaInfo(info, processResult, index[ClassId::Erweima]);
+	getDamodianInfo(info, processResult, index[ClassId::Damodian]);
+	getKongdongInfo(info, processResult, index[ClassId::Kongdong]);
+	getSebiaoInfo(info, processResult, index[ClassId::Sebiao]);
+	getYinshuaquexianInfo(info, processResult, index[ClassId::Yinshuaquexian]);
+	getXiaopodongInfo(info, processResult, index[ClassId::Xiaopodong]);
+	getJiaodaiInfo(info, processResult, index[ClassId::Jiaodai]);
+}
+
 void ImageProcessorSmartCroppingOfBags::getHeibaInfo(SmartCroppingOfBagsDefectInfo& info,
-	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+                                                     const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
 	{
@@ -1321,6 +1900,16 @@ std::vector<std::vector<size_t>> ImageProcessorSmartCroppingOfBags::filterEffect
 	return processIndex;
 }
 
+std::vector<std::vector<size_t>> ImageProcessorSmartCroppingOfBags::filterEffectiveIndexes_defect(
+	std::vector<rw::DetectionRectangleInfo> info)
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+
+	auto processIndex = getClassIndex(info);
+	//processIndex = getIndexInBoundary(info, processIndex);
+	return processIndex;
+}
+
 std::vector<std::vector<size_t>> ImageProcessorSmartCroppingOfBags::getIndexInBoundary(
 	const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index)
 {
@@ -1341,11 +1930,11 @@ std::vector<std::vector<size_t>> ImageProcessorSmartCroppingOfBags::getIndexInBo
 
 bool ImageProcessorSmartCroppingOfBags::isInBoundary(const rw::DetectionRectangleInfo& info)
 {
-	return false;
+	return true;
 }
 
 void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image,
-                                                                                     const SmartCroppingOfBagsDefectInfo& info)
+	const SmartCroppingOfBagsDefectInfo& info)
 {
 	QVector<QString> textList;
 	std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
@@ -2268,6 +2857,11 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	}
 }
 
+void ImageProcessorSmartCroppingOfBags::setCollageImageNum(size_t num)
+{
+	_collageNum = num;
+}
+
 
 void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 {
@@ -2281,6 +2875,14 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
 		processor->start();
+	}
+}
+
+void ImageProcessingModuleSmartCroppingOfBags::setCollageImageNum(size_t num)
+{
+	for (auto& item : _processors)
+	{
+		item->setCollageImageNum(num);
 	}
 }
 
@@ -2311,18 +2913,54 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 	}
 }
 
+////监控io线程
+//
+//bool state = false;
+//double lastlocation = 0;
+//
+////全局变量location
+//double location = 0;
+//void getlocation()
+//{
+//
+//	auto& camera1 = GlobalStructDataSmartCroppingOfBags::getInstance().camera1;
+//	//获得编码器的位置
+//	while (true)
+//	{
+//		//location = camera1->getEncoderNumber();
+//
+//	}
+//
+//
+//
+//}
+
+
+
+
+
+
+
+
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
 	if (frame.empty()) {
 		return; // 跳过空帧
 	}
 
-	QMutexLocker locker(&_mutex);
-	MatInfo mat;
-	mat.image = frame;
-	mat.index = index;
-	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
-	_queue.enqueue(mat);
-	_condition.wakeOne();
+	Time currentTime = std::chrono::system_clock::now();
+	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+	
+	auto nowLocation = GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
+	imagePart.attribute.insert("location", nowLocation);
+	{
+		QMutexLocker locker(&_mutex);
+		MatInfo matInfo(imagePart);
+		matInfo.location = nowLocation;
+		matInfo.index = index;
+		matInfo.time = currentTime;
+		_queue.enqueue(matInfo);
+		_condition.wakeOne();
+	}
 }
 

@@ -32,6 +32,8 @@ private:
 public:
 	void build_ui();
 	void build_connect();
+	void build_motion();
+	void destroy_motion();
 	void build_camera();
 
 	void build_SmartCroppingOfBagsData();
@@ -62,11 +64,11 @@ private slots:
 	void btn_normalParam_clicked();
 	void btn_setParam_clicked();
 
-	void ckb_zhinengcaiqie_checked();
 	void ckb_tifei_checked();
-	void ckb_huikan_checked();
+	void ckb_Debug_checked(bool checked);
 	void ckb_cuntu_checked();
-	void ckb_yinshuazhiliangjiance_checked();
+	void rbtn_zhinengcaiqie_clicked(bool checked);
+	void rbtn_yinshuazhiliangjiance_clicked(bool checked);
 
 private slots:
 	void updateCameraLabelState(int cameraIndex, bool state);
@@ -76,9 +78,7 @@ private slots:
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 
-	//// ¸üÐÂUI
-	//void updateUiLabels(int index, bool isConnected);
-
+	void updateCardLabelState(bool state);
 
 private:
 	Ui::SmartCroppingOfBagsClass *ui;

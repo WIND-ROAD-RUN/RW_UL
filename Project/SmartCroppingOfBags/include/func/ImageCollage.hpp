@@ -50,6 +50,10 @@ public:
 	std::optional<rw::rqw::ElementInfo<cv::Mat>> getImage(const Time& time);
 	CollageImage getCollageImage(const std::vector<Time> & times,bool & hasNull);
 	CollageImage getCollageImage(const std::vector<Time>& times);
+
+	static cv::Mat verticalConcat(const std::vector<cv::Mat>& images);
+	static QImage verticalConcat(const QVector<QImage>& images);
+	
 };
 
 

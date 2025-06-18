@@ -62,7 +62,7 @@ namespace rw
 			bool setPreDivider(size_t number) override;
 			bool setMultiplier(size_t number) override;
 			bool setPostDivider(size_t number) override;
-			bool getEncoderNumber(size_t& number) override;
+			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 

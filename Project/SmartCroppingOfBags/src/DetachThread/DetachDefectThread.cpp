@@ -24,12 +24,34 @@ void DetachDefectThreadSmartCroppingOfBags::stopThread()
 	running = false; // 停止线程
 }
 
-void DetachDefectThreadSmartCroppingOfBags::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadSmartCroppingOfBags::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue)
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 
+	double prePulse,nowPulse;
+	try
+	{
+		prePulse = queue->peek();
+		double tempPulse = 0;
+		globalStruct.camera1->getEncoderNumber(tempPulse);
+		nowPulse = static_cast<double>(tempPulse);
+
+		// 计算脉冲差
+		auto duration = nowPulse - prePulse;
+
+		if (false)
+		{
+			queue->top(); // 取出队首元素
+			emit findIsBad(1);
+		}
+	}
+	catch (const std::runtime_error&)
+	{
+		return;
+	}
 }
 
-void DetachDefectThreadSmartCroppingOfBags::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadSmartCroppingOfBags::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue)
 {
 
 }

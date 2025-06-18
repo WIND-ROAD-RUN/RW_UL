@@ -19,22 +19,37 @@
 
 #include "dsl_PriorityQueue.hpp"
 #include "ImageProcessorModule.h"
+#include"MonitorIO.h"
+#include"scc_motion.h"
 
 class DetachDefectThreadSmartCroppingOfBags;
 
-// 状态机
 enum class RunningState
 {
 	Debug,
-	Monitor,
-	OpenRemoveFunc,
+	openRemove,
 	Stop
+};
+
+enum class RemoveState
+{
+	SmartCrop,
+	PrintingInspection
 };
 
 class GlobalStructDataSmartCroppingOfBags
 	:public QObject
 {
 	Q_OBJECT
+public:
+	std::unique_ptr<zwy::scc::Motion> motion;
+public:
+	bool build_motion();
+	void destroy_motion();
+public:
+	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags;
+	void build_MonitorIOSmartCroppingOfBags();
+	void destroy_MonitorIOSmartCroppingOfBags();
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
@@ -51,7 +66,7 @@ public slots:
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
-
+	std::atomic<RemoveState> removeState{ RemoveState::SmartCrop };
 public:
 	// 统计信息
 	struct StatisticalInfo
@@ -112,6 +127,8 @@ public:
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
+	double pulse{ 0 };
+
 	std::unique_ptr<rw::rqw::CameraPassiveThread> camera1{ nullptr };
 	std::unique_ptr<rw::rqw::CameraPassiveThread> camera2{ nullptr };
 
@@ -126,6 +143,9 @@ public:
 	bool isTargetCamera(const QString& cameraIndex, const QString& targetName);
 	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
 	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
+
+	void setCameraDebugMod();
+	void setCameraDefectMod();
 
 public:
 	std::unique_ptr<rw::oso::StorageContext> storeContext{ nullptr };

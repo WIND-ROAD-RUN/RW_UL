@@ -74,7 +74,7 @@ namespace rw {
 			bool setPreDivider(size_t number);
 			bool setMultiplier(size_t number);
 			bool setPostDivider(size_t number);
-			bool getEncoderNumber(size_t& number);
+			bool getEncoderNumber(double& number);
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};
