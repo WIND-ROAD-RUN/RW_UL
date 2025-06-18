@@ -79,10 +79,6 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::btn_zidongpingbifanwei_clicked);
 	QObject::connect(ui->btn_jiange, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_jiange_clicked);
-	QObject::connect(ui->btn_pingjunmaichong1, &QPushButton::clicked,
-		this, &DlgProductSetSmartCroppingOfBags::btn_pingjunmaichong1_clicked);
-	QObject::connect(ui->btn_maichongxinhao1, &QPushButton::clicked,
-		this, &DlgProductSetSmartCroppingOfBags::btn_maichongxinhao1_clicked);
 	QObject::connect(ui->btn_hanggao1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_hanggao1_clicked);
 	QObject::connect(ui->btn_daichang1, &QPushButton::clicked,
@@ -133,6 +129,8 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::btn_yansedailiangdufanweiMin1_clicked);
 	QObject::connect(ui->btn_yansedailiangdufanweiMax1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_yansedailiangdufanweiMax1_clicked);
+	QObject::connect(ui->btn_xiangjibaoguang1, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_xiangjibaoguang1_clicked);
 
 	// 复选框勾选信号连接
 	QObject::connect(ui->ckb_xiaopodong, &QCheckBox::clicked,
@@ -203,43 +201,6 @@ void DlgProductSetSmartCroppingOfBags::btn_jiange_clicked()
 	}
 }
 
-void DlgProductSetSmartCroppingOfBags::btn_pingjunmaichong1_clicked()
-{
-	NumberKeyboard numKeyBord;
-	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	auto isAccept = numKeyBord.exec();
-	if (isAccept == QDialog::Accepted)
-	{
-		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
-		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
-			return;
-		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_pingjunmaichong1->setText(value);
-		globalStructSetConfig.pingjunmaichong1 = value.toDouble();
-	}
-}
-
-void DlgProductSetSmartCroppingOfBags::btn_maichongxinhao1_clicked()
-{
-	NumberKeyboard numKeyBord;
-	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	auto isAccept = numKeyBord.exec();
-	if (isAccept == QDialog::Accepted)
-	{
-		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
-		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
-			return;
-		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_maichongxinhao1->setText(value);
-		globalStructSetConfig.maichongxinhao1 = value.toDouble();
-	}
-}
 
 void DlgProductSetSmartCroppingOfBags::btn_hanggao1_clicked()
 {
@@ -420,12 +381,14 @@ void DlgProductSetSmartCroppingOfBags::btn_xiangjibaoguang1_clicked()
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0 || value.toDouble() > 300)
+		if (value.toDouble() < 0 || value.toDouble() > 500)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0小于300的数值");
+			QMessageBox::warning(this, "提示", "请输入大于0小于500的数值");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		globalStruct.camera1->setExposureTime(value.toDouble());
 		ui->btn_xiangjibaoguang1->setText(value);
 		globalStructSetConfig.xiangjibaoguang1 = value.toDouble();
 	}

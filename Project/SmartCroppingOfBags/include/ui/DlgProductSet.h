@@ -26,8 +26,6 @@ private slots:
 
 	void btn_zidongpingbifanwei_clicked();
 	void btn_jiange_clicked();
-	void btn_pingjunmaichong1_clicked();
-	void btn_maichongxinhao1_clicked();
 	void btn_hanggao1_clicked();
 	void btn_daichang1_clicked();
 	void btn_daichangxishu1_clicked();

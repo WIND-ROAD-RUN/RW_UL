@@ -104,6 +104,44 @@ public:
 	}
 };
 
+class ImageProcessorSmartCroppingOfBags;
+
+class ImageProcessingModuleSmartCroppingOfBags : public QObject {
+	Q_OBJECT
+public:
+	QString modelEnginePath;
+public:
+	// 初始化图像处理模块
+	void BuildModule();
+	void setCollageImageNum(size_t num);
+public:
+	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
+
+	~ImageProcessingModuleSmartCroppingOfBags();
+
+public slots:
+	// 相机回调函数
+	void onFrameCaptured(cv::Mat frame, size_t index);
+
+signals:
+	void imageReady(QPixmap image);
+	void imageNGReady(QPixmap image, size_t index, bool isbad);
+
+public:
+	std::vector<ImageProcessorSmartCroppingOfBags*> getProcessors() const {
+		return _processors;
+	}
+
+private:
+	QQueue<MatInfo> _queue;
+	QMutex _mutex;
+	QWaitCondition _condition;
+	std::vector<ImageProcessorSmartCroppingOfBags*> _processors;
+	int _numConsumers;
+public:
+	size_t index;
+};
+
 
 class ImageProcessorSmartCroppingOfBags : public QThread
 {
@@ -373,38 +411,3 @@ public:
 };
 
 
-class ImageProcessingModuleSmartCroppingOfBags : public QObject {
-	Q_OBJECT
-public:
-	QString modelEnginePath;
-public:
-	// 初始化图像处理模块
-	void BuildModule();
-	void setCollageImageNum(size_t num);
-public:
-	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
-
-	~ImageProcessingModuleSmartCroppingOfBags();
-
-public slots:
-	// 相机回调函数
-	void onFrameCaptured(cv::Mat frame, size_t index);
-
-signals:
-	void imageReady(QPixmap image);
-	void imageNGReady(QPixmap image, size_t index, bool isbad);
-
-public:
-	std::vector<ImageProcessorSmartCroppingOfBags*> getProcessors() const {
-		return _processors;
-	}
-
-private:
-	QQueue<MatInfo> _queue;
-	QMutex _mutex;
-	QWaitCondition _condition;
-	std::vector<ImageProcessorSmartCroppingOfBags*> _processors;
-	int _numConsumers;
-public:
-	size_t index;
-};
