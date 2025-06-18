@@ -1,6 +1,8 @@
 #ifndef MOTION_H
 #define MOTION_H
 
+#include <string>
+
 #include"zauxdll2.h"
 #include"zmotion.h"
 
@@ -13,8 +15,9 @@ namespace zwy {
 
 			//打开控制器
 			bool OpenBoard(char* ipAdress);
+			bool OpenBoard(const std::string & ipAdress);
 			//关闭板卡
-			void CloseBoared();
+			bool CloseBoared();
 			//    //获取板卡连接状态
 			//    bool GetBoardStatue( );
 				//设置轴的类型

@@ -67,6 +67,10 @@ private:
 	QQueue<QListWidgetItem*> disCacheImageItem;
 	QMutex disCacheImageItemMutex;
 	QSet<QString> loadingSet;
+public:
+	void setPositive(bool ispositive);
+private:
+	bool isPositive = true;
 private:
 	ThumbnailLoaderThread* m_loaderThread = nullptr;
 private:
@@ -88,6 +92,7 @@ public:
 
 	void setSize(const QSize& size);
 	void setSizeRange(const QSize & sizeSmall, const QSize& sizeBig);
+	void setViewerNum(size_t num = 0);
 private:
 	QSize small{100,100};
 	QSize big{ 500,500 };
@@ -115,6 +120,7 @@ private:
 	QString m_rootPath;
 	QSize m_thumbnailSize{ 128, 128 };
 	QStringList m_imageFiles;
+	size_t m_viewerNum{ 0 };
 private:
 	QStandardItemModel* _categoryModel;
 	DraggableListWidget* _listWidget = nullptr;
@@ -127,6 +133,8 @@ private slots:
 	void pbtn_nextPicture_clicked();
 	void pbtn_bigger_clicked();
 	void pbtn_smaller_clicked();
+
+	void updateImagesPaths(QVector<QString> imagesPaths);
 private slots:
 	void onThumbnailDoubleClicked(QListWidgetItem* item);
 private slots:

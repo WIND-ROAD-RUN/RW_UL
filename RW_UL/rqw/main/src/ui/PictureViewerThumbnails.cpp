@@ -21,7 +21,7 @@ ThumbnailLoaderThread::ThumbnailLoaderThread(QQueue<QListWidgetItem*>* queue, QM
 	, m_thumbSize(thumbSize)
 	, m_uiReceiver(uiReceiver)
 {
-	
+
 }
 
 ThumbnailLoaderThread::~ThumbnailLoaderThread()
@@ -84,7 +84,7 @@ void PictureViewerThumbnails::startAsyncLoadQueue()
 		&disCacheImageItem,
 		&disCacheImageItemMutex,
 		_thumbnailCache.get(),
-		big, 
+		big,
 		this
 	);
 	connect(m_loaderThread, &ThumbnailLoaderThread::iconReady
@@ -101,6 +101,11 @@ void PictureViewerThumbnails::stopAsyncLoadQueue()
 		delete m_loaderThread;
 		m_loaderThread = nullptr;
 	}
+}
+
+void PictureViewerThumbnails::setPositive(bool ispositive)
+{
+	isPositive = ispositive;
 }
 
 PictureViewerThumbnails::PictureViewerThumbnails(QWidget* parent)
@@ -150,11 +155,16 @@ void PictureViewerThumbnails::setSizeRange(const QSize& sizeSmall, const QSize& 
 	big = sizeBig;
 }
 
+void PictureViewerThumbnails::setViewerNum(size_t num)
+{
+	m_viewerNum = num;
+}
+
 void PictureViewerThumbnails::showEvent(QShowEvent* event)
 {
 	_loadingDialog->updateMessage("加载图片中");
 	_loadingDialog->show();
-	updateCategoryList(); 
+	updateCategoryList();
 
 	QDir rootDir(m_rootPath);
 
@@ -215,10 +225,13 @@ void PictureViewerThumbnails::build_connect()
 		this, &PictureViewerThumbnails::pbtn_smaller_clicked);
 
 	connect(ui->treeView_categoryTree->selectionModel(), &QItemSelectionModel::currentChanged,
-		this,&PictureViewerThumbnails::treeView_categoryTree_changed);
+		this, &PictureViewerThumbnails::treeView_categoryTree_changed);
 
 	connect(_listWidget, &QListWidget::itemDoubleClicked,
 		this, &PictureViewerThumbnails::onThumbnailDoubleClicked);
+
+	connect(pictureViewerUtilty, &PictureViewerUtilty::imagesDeleted,
+		this, &PictureViewerThumbnails::updateImagesPaths);
 }
 
 void PictureViewerThumbnails::loadImageList()
@@ -231,7 +244,7 @@ void PictureViewerThumbnails::loadImageList()
 		//保证SetIcon槽函数全部执行完毕
 		QCoreApplication::processEvents();
 		disCacheImageItem.clear();
-	    _listWidget->clear();
+		_listWidget->clear();
 		m_imageFiles.clear();
 	}
 
@@ -248,7 +261,12 @@ void PictureViewerThumbnails::loadImageList()
 	// 只加载当前目录下的图片
 	QStringList imageList = m_categoryImageCache.value(dirPath);
 
+	size_t count = 0;
 	for (const QString& imagePath : imageList) {
+		if (m_viewerNum != 0 && count >= m_viewerNum)
+		{
+			break;
+		}
 		m_imageFiles << imagePath;
 		QFileInfo fileInfo(imagePath);
 		QListWidgetItem* item = new QListWidgetItem();
@@ -264,6 +282,7 @@ void PictureViewerThumbnails::loadImageList()
 			{
 				QMutexLocker locker(&disCacheImageItemMutex);
 				disCacheImageItem.append(item);
+				++count;
 			}
 		}
 		_listWidget->addItem(item);
@@ -619,10 +638,53 @@ void PictureViewerThumbnails::pbtn_smaller_clicked()
 	setSize(m_thumbnailSize);
 }
 
+void PictureViewerThumbnails::updateImagesPaths(QVector<QString> imagesPaths)
+{
+	stopAsyncLoadQueue();
+
+	for (const auto& pathItem : imagesPaths)
+	{
+		QString imagePath = pathItem;
+
+		// 删除文件
+		QFile::remove(imagePath);
+
+		// 从 m_imageFiles 移除
+		m_imageFiles.removeAll(imagePath);
+
+		// 从 m_categoryImageCache 移除
+		for (auto it = m_categoryImageCache.begin(); it != m_categoryImageCache.end(); ++it) {
+			it.value().removeAll(imagePath);
+		}
+
+		// 从 disCacheImageItem 移除
+		{
+			QMutexLocker locker(&disCacheImageItemMutex);
+			for (int i = disCacheImageItem.size() - 1; i >= 0; --i) {
+				QListWidgetItem* cacheItem = disCacheImageItem[i];
+				if (cacheItem && cacheItem->data(Qt::UserRole).toString() == imagePath) {
+					disCacheImageItem.removeAt(i);
+				}
+			}
+		}
+
+		// 从 UI 移除
+		for (int i = _listWidget->count() - 1; i >= 0; --i) {
+			QListWidgetItem* item = _listWidget->item(i);
+			if (item && item->data(Qt::UserRole).toString() == imagePath) {
+				delete _listWidget->takeItem(i);
+			}
+		}
+	}
+
+	startAsyncLoadQueue();
+}
+
 void PictureViewerThumbnails::onThumbnailDoubleClicked(QListWidgetItem* item)
 {
 	if (!item) return;
 	QString imagePath = item->data(Qt::UserRole).toString();
+	pictureViewerUtilty->setPositive(isPositive);
 	pictureViewerUtilty->setImgPath(imagePath);
 	pictureViewerUtilty->show();
 }

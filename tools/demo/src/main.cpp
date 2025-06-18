@@ -1,13 +1,13 @@
 
 #include <QtWidgets/QApplication>
-#include"rqw_DlgVersion.h"
+#include"PictureViewerThumbnails.h"
 
 
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
-	DlgVersion w;
-	w.loadVersionPath(R"(D:\zfkjData\SmartCroppingOfBags\Version\Version.txt)");
+	PictureViewerThumbnails w;
+	w.setRootPath(R"(C:\Users\rw\Desktop\temp2)");
 	w.show();
 
 	return a.exec();
