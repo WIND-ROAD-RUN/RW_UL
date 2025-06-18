@@ -98,6 +98,7 @@ public:
 
 public:
 	std::atomic_bool isTakePictures{ false };
+	std::atomic_bool isViewIO{ false };
 
 public:
 	static GlobalStructDataSmartCroppingOfBags& getInstance()

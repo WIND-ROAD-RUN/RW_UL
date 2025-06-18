@@ -15,6 +15,11 @@ public:
 	DlgProductSetSmartCroppingOfBags(QWidget *parent = nullptr);
 	~DlgProductSetSmartCroppingOfBags();
 
+private:
+	std::vector<std::vector<int>> DOFindAllDuplicateIndices();
+	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
+	void setDOErrorInfo(int index);
+
 public:
 	void build_ui();
 	void read_config();
@@ -59,6 +64,12 @@ private slots:
 	void ckb_qiyonger_checked();
 	void ckb_yundongkongzhiqichonglian_checked();
 	void ckb_xiangjizengyi_checked();
+
+	void btn_qiedao_clicked();
+	void btn_chuiqi_clicked();
+	void btn_baojinghongdeng_clicked();
+	void btn_yadai_clicked();
+	void btn_tifei_clicked();
 
 private:
 	Ui::DlgProductSetClass *ui;

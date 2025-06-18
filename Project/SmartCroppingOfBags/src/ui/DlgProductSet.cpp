@@ -1,8 +1,9 @@
-#include "DlgProductSet.h"
+Ôªø#include "DlgProductSet.h"
 
 #include "GlobalStruct.hpp"
 #include <NumberKeyboard.h>
 #include <QMessageBox>
+#include "Utilty.hpp"
 
 DlgProductSetSmartCroppingOfBags::DlgProductSetSmartCroppingOfBags(QWidget *parent)
 	: QDialog(parent)
@@ -20,16 +21,90 @@ DlgProductSetSmartCroppingOfBags::~DlgProductSetSmartCroppingOfBags()
 	delete ui;
 }
 
+std::vector<std::vector<int>> DlgProductSetSmartCroppingOfBags::DOFindAllDuplicateIndices()
+{
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	std::vector<int> values = {
+		setConfig.chuiqiOUT,
+		setConfig.baojinghongdengOUT,
+		setConfig.yadaiOUT,
+		setConfig.tifeiOUT
+	};
+
+	std::unordered_map<int, std::vector<int>> valueToIndices;
+	for (size_t i = 0; i < values.size(); ++i) {
+		valueToIndices[values[i]].push_back(static_cast<int>(i));
+	}
+
+	std::vector<std::vector<int>> result;
+	std::set<int> used; // Èò≤Ê≠¢ÈáçÂ§çÂàÜÁªÑ
+	for (const auto& pair : valueToIndices) {
+		if (pair.second.size() > 1) {
+			// Âè™Êî∂ÈõÜÊú™Ë¢´Êî∂ÂΩïËøáÁöÑindexÁªÑ
+			bool alreadyUsed = false;
+			for (int idx : pair.second) {
+				if (used.count(idx)) {
+					alreadyUsed = true;
+					break;
+				}
+			}
+			if (!alreadyUsed) {
+				result.push_back(pair.second);
+				used.insert(pair.second.begin(), pair.second.end());
+			}
+		}
+	}
+	return result;
+}
+
+void DlgProductSetSmartCroppingOfBags::setDOErrorInfo(const std::vector<std::vector<int>>& index)
+{
+	ui->lb_chuiqi->clear();
+	ui->lb_baojinghongdeng->clear();
+	ui->lb_yadai->clear();
+	ui->lb_tifei->clear();
+
+	for (const auto& classic : index)
+	{
+		for (const auto& item : classic)
+		{
+			setDOErrorInfo(item);
+		}
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::setDOErrorInfo(int index)
+{
+	QString text = "ÈáçÂ§çÊï∞ÂÄº";
+	switch (index)
+	{
+	case 0:
+		ui->lb_chuiqi->setText(text);
+		break;
+	case 1:
+		ui->lb_baojinghongdeng->setText(text);
+		break;
+	case 2:
+		ui->lb_yadai->setText(text);
+		break;
+	case 3:
+		ui->lb_tifei->setText(text);
+		break;
+	}
+}
+
 void DlgProductSetSmartCroppingOfBags::build_ui()
 {
 	read_config();
+	auto indicesDO = DOFindAllDuplicateIndices();
+	setDOErrorInfo(indicesDO);
 }
 
 void DlgProductSetSmartCroppingOfBags::read_config()
 {
 	auto& globalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 
-	// π´π≤≤Œ ˝
+	// ÂÖ¨ÂÖ±ÂèÇÊï∞
 	ui->btn_zidongpingbifanwei->setText(QString::number(globalConfig.zidongpingbifanwei));
 	ui->ckb_xiaopodong->setChecked(globalConfig.xiaopodong);
 	ui->ckb_tiqiantifei->setChecked(globalConfig.tiqiantifei);
@@ -38,7 +113,7 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	ui->ckb_yundongkongzhiqichonglian->setChecked(globalConfig.yundongkongzhiqichonglian);
 	ui->btn_jiange->setText(QString::number(globalConfig.jiange));
 
-	// 1œ‡ª˙≤Œ ˝
+	// 1Áõ∏Êú∫ÂèÇÊï∞
 	ui->btn_pingjunmaichong1->setText(QString::number(globalConfig.pingjunmaichong1));
 	ui->btn_maichongxinhao1->setText(QString::number(globalConfig.maichongxinhao1));
 	ui->btn_hanggao1->setText(QString::number(globalConfig.hanggao1));
@@ -69,12 +144,22 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	ui->btn_qiedaoxianxiapingbi1->setText(QString::number(globalConfig.qiedaoxianxiapingbi1));
 	ui->btn_yansedailiangdufanweiMin1->setText(QString::number(globalConfig.yansedailiangdufanweimin1));
 	ui->btn_yansedailiangdufanweiMax1->setText(QString::number(globalConfig.yansedailiangdufanweimax1));
+
+	// IOÊé•Âè£ËÆæÁΩÆÂèÇÊï∞
+	// ËæìÂÖ•
+	ui->btn_qiedao->setText(QString::number(globalConfig.qiedaoIN));
+	// ËæìÂá∫
+	ui->btn_chuiqi->setText(QString::number(globalConfig.chuiqiOUT));
+	ui->btn_baojinghongdeng->setText(QString::number(globalConfig.baojinghongdengOUT));
+	ui->btn_yadai->setText(QString::number(globalConfig.yadaiOUT));
+	ui->btn_tifei->setText(QString::number(globalConfig.tifeiOUT));
+
 }
 
 void DlgProductSetSmartCroppingOfBags::build_connect()
 {
-	// ¡¨Ω”≤€∫Ø ˝
-	// ∞¥≈•µ„ª˜–≈∫≈¡¨Ω”
+	// ËøûÊé•ÊßΩÂáΩÊï∞
+	// ÊåâÈíÆÁÇπÂáª‰ø°Âè∑ËøûÊé•
 	QObject::connect(ui->btn_zidongpingbifanwei, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_zidongpingbifanwei_clicked);
 	QObject::connect(ui->btn_jiange, &QPushButton::clicked,
@@ -132,7 +217,7 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 	QObject::connect(ui->btn_xiangjibaoguang1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_xiangjibaoguang1_clicked);
 
-	// ∏¥—°øÚπ¥—°–≈∫≈¡¨Ω”
+	// Â§çÈÄâÊ°ÜÂãæÈÄâ‰ø°Âè∑ËøûÊé•
 	QObject::connect(ui->ckb_xiaopodong, &QCheckBox::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::ckb_xiaopodong_checked);
 	QObject::connect(ui->ckb_tiqiantifei, &QCheckBox::clicked,
@@ -146,9 +231,20 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 	QObject::connect(ui->ckb_xiangjizengyi, &QCheckBox::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked);
 
-	// ¡¨Ω”πÿ±’∞¥≈•
+	// ËøûÊé•ÂÖ≥Èó≠ÊåâÈíÆ
 	QObject::connect(ui->pbtn_close, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::pbtn_close_clicked);
+
+	QObject::connect(ui->btn_qiedao, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_qiedao_clicked);
+	QObject::connect(ui->btn_chuiqi, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_chuiqi_clicked);
+	QObject::connect(ui->btn_baojinghongdeng, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_baojinghongdeng_clicked);
+	QObject::connect(ui->btn_yadai, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_yadai_clicked);
+	QObject::connect(ui->btn_tifei, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_tifei_clicked);
 }
 
 void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
@@ -173,7 +269,7 @@ void DlgProductSetSmartCroppingOfBags::btn_zidongpingbifanwei_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -192,7 +288,7 @@ void DlgProductSetSmartCroppingOfBags::btn_jiange_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -212,7 +308,7 @@ void DlgProductSetSmartCroppingOfBags::btn_hanggao1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -231,7 +327,7 @@ void DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -250,7 +346,7 @@ void DlgProductSetSmartCroppingOfBags::btn_daichangxishu1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -269,7 +365,7 @@ void DlgProductSetSmartCroppingOfBags::btn_guasijuli1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -288,7 +384,7 @@ void DlgProductSetSmartCroppingOfBags::btn_zuixiaodaichang1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -307,7 +403,7 @@ void DlgProductSetSmartCroppingOfBags::btn_zuidadaichang1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -326,7 +422,7 @@ void DlgProductSetSmartCroppingOfBags::btn_baisedailiangdufanweiMin1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -345,7 +441,7 @@ void DlgProductSetSmartCroppingOfBags::btn_baisedailiangdufanweiMax1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -364,7 +460,7 @@ void DlgProductSetSmartCroppingOfBags::btn_daokoudaoxiangjijuli1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -383,7 +479,7 @@ void DlgProductSetSmartCroppingOfBags::btn_xiangjibaoguang1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0 || value.toDouble() > 500)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0–°”⁄500µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0Â∞è‰∫é500ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -404,7 +500,7 @@ void DlgProductSetSmartCroppingOfBags::btn_tifeiyanshi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -423,7 +519,7 @@ void DlgProductSetSmartCroppingOfBags::btn_baojingyanshi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -442,7 +538,7 @@ void DlgProductSetSmartCroppingOfBags::btn_baojingshijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -461,7 +557,7 @@ void DlgProductSetSmartCroppingOfBags::btn_tifeishijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -480,7 +576,7 @@ void DlgProductSetSmartCroppingOfBags::btn_chuiqiyanshi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -499,7 +595,7 @@ void DlgProductSetSmartCroppingOfBags::btn_dudaiyanshi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -518,7 +614,7 @@ void DlgProductSetSmartCroppingOfBags::btn_chuiqishijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -537,7 +633,7 @@ void DlgProductSetSmartCroppingOfBags::btn_dudaishijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -556,7 +652,7 @@ void DlgProductSetSmartCroppingOfBags::btn_maichongxishu1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -575,7 +671,7 @@ void DlgProductSetSmartCroppingOfBags::btn_xiangjizengyi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -594,7 +690,7 @@ void DlgProductSetSmartCroppingOfBags::btn_houfenpinqi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -613,7 +709,7 @@ void DlgProductSetSmartCroppingOfBags::btn_chengfaqi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -632,7 +728,7 @@ void DlgProductSetSmartCroppingOfBags::btn_qiedaoxianshangpingbi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -651,7 +747,7 @@ void DlgProductSetSmartCroppingOfBags::btn_qiedaoxianxiapingbi1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -670,7 +766,7 @@ void DlgProductSetSmartCroppingOfBags::btn_yansedailiangdufanweiMin1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -689,7 +785,7 @@ void DlgProductSetSmartCroppingOfBags::btn_yansedailiangdufanweiMax1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
@@ -732,5 +828,114 @@ void DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked()
 {
 	auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	globalStructSetConfig.isxiangjizengyi1 = ui->ckb_xiangjizengyi->isChecked();
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_qiedao_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_qiedao->setText(value);
+		globalStructSetConfig.qiedaoIN = value.toDouble();
+		ControlLines::qiedaoIn = value.toUInt();
+
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_chuiqi_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_chuiqi->setText(value);
+		globalStructSetConfig.chuiqiOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		ControlLines::chuiqiOut = value.toUInt();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_baojinghongdeng_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_baojinghongdeng->setText(value);
+		globalStructSetConfig.baojinghongdengOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		ControlLines::baojinghongdengOUT = value.toUInt();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_yadai_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_yadai->setText(value);
+		globalStructSetConfig.yadaiOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		ControlLines::yadaiOut = value.toUInt();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_tifei_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_tifei->setText(value);
+		globalStructSetConfig.tifeiOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		ControlLines::tifeiOut = value.toUInt();
+	}
 }
 

@@ -42,5 +42,11 @@ namespace cdm {
 		qiedaoxianxiapingbi1 : double :default = 0;
 		yansedailiangdufanweimin1 : double :default = 0;
 		yansedailiangdufanweimax1 : double :default = 0;
+
+		qiedaoIN : int :default = -1;
+		chuiqiOUT : int :default = -1;
+		baojinghongdengOUT : int :default = -1;
+		yadaiOUT : int :default = -1;
+		tifeiOUT : int :default = -1;
 	};
 }
