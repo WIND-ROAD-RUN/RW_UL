@@ -189,7 +189,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// 抓取五张图片的时间戳
 	auto fiveImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, 5, true);
 
-	if (fiveImageTimes.empty())
+	if (fiveImageTimes.size() != 5)
 	{
 		return; // 如果没有时间戳，直接返回
 	}
