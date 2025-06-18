@@ -612,10 +612,13 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 
 		auto heightRatio = maxBottomY / nowImageHeight; // 计算高度比例
 
-		auto lastImage = _imageCollage->getImage(times[0])->element;
+		auto lastImage = _imageCollage->getImage(times[0]).value();
 
-		auto nowImageLocation = frame.location * heightRatio; // 根据高度比例计算位置
+		auto lastImagePulse = lastImage.attribute["location"];
+
+		auto nowImagePulse = frame.location * heightRatio; // 根据高度比例计算位置
 		
+		auto pulseDifference = nowImagePulse - lastImagePulse;
 	}
 
 	// 剔除逻辑获取_isbad以及绘制defect错误信息
@@ -2947,8 +2950,9 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 	Time currentTime = std::chrono::system_clock::now();
 	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+	
 	auto nowLocation = GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
-
+	imagePart.attribute.insert("location", nowLocation);
 	{
 		QMutexLocker locker(&_mutex);
 		MatInfo matInfo(imagePart);
