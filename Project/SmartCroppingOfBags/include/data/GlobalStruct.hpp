@@ -38,6 +38,28 @@ enum class RemoveState
 	PrintingInspection
 };
 
+class GlobalStructThreadSmartCroppingOfBags
+	:public QObject
+{
+	Q_OBJECT
+public:
+	void buildDetachThread();
+	void destroyDetachThread();
+public:
+	static GlobalStructThreadSmartCroppingOfBags& getInstance()
+	{
+		static GlobalStructThreadSmartCroppingOfBags instance;
+		return instance;
+	}
+
+	GlobalStructThreadSmartCroppingOfBags(const GlobalStructThreadSmartCroppingOfBags&) = delete;
+	GlobalStructThreadSmartCroppingOfBags& operator=(const GlobalStructThreadSmartCroppingOfBags&) = delete;
+
+private:
+	GlobalStructThreadSmartCroppingOfBags()=default;
+	~GlobalStructThreadSmartCroppingOfBags() = default;
+};
+
 class GlobalStructDataSmartCroppingOfBags
 	:public QObject
 {
