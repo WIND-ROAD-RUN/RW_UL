@@ -16,14 +16,14 @@
 #include "rqw_ImageSaveEngine.h"
 #include <ScoreConfig.hpp>
 
-
-#include "DetachUtiltyThread.h"
 #include "dsl_PriorityQueue.hpp"
 #include "ImageProcessorModule.h"
+#include"DetachDefectThread.h"
+#include "DetachUtiltyThread.h"
 #include"MonitorIO.h"
+
 #include"scc_motion.h"
 
-class DetachDefectThreadSmartCroppingOfBags;
 
 enum class RunningState
 {
@@ -43,9 +43,6 @@ class GlobalStructThreadSmartCroppingOfBags
 {
 	Q_OBJECT
 public:
-	void buildDetachThread();
-	void destroyDetachThread();
-public:
 	static GlobalStructThreadSmartCroppingOfBags& getInstance()
 	{
 		static GlobalStructThreadSmartCroppingOfBags instance;
@@ -58,6 +55,14 @@ public:
 private:
 	GlobalStructThreadSmartCroppingOfBags()=default;
 	~GlobalStructThreadSmartCroppingOfBags() = default;
+public:
+	std::unique_ptr<DetachUtiltyThreadSmartCroppingOfBags> _detachUtiltyThreadSmartCroppingOfBags{ nullptr };
+	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags{ nullptr };
+	std::unique_ptr<DetachDefectThreadSmartCroppingOfBags> detachDefectThreadSmartCroppingOfBags{ nullptr };
+public:
+	void build_detachThread();
+	void destroy_detachThread();
+	void start_detachThread();
 };
 
 class GlobalStructDataSmartCroppingOfBags
@@ -65,32 +70,16 @@ class GlobalStructDataSmartCroppingOfBags
 {
 	Q_OBJECT
 public:
-	std::unique_ptr<DetachUtiltyThreadSmartCroppingOfBags> _detachUtiltyThreadSmartCroppingOfBags{ nullptr };
-	void buildDetachUtiltyThreadSmartCroppingOfBags();
-	void destoryDetachUtiltyThreadSmartCroppingOfBags();
-	void startDetachUtiltyThreadSmartCroppingOfBags();
-public:
 	std::unique_ptr<zwy::scc::Motion> motion;
 public:
 	bool build_motion();
 	void destroy_motion();
-public:
-	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags;
-	void build_MonitorIOSmartCroppingOfBags();
-	void destroy_MonitorIOSmartCroppingOfBags();
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
-public:
-	DetachDefectThreadSmartCroppingOfBags *detachDefectThreadSmartCroppingOfBags;
-public:
-	void build_DetachDefectThreadSmartCroppingOfBags();
-	void destroy_DetachDefectThreadSmartCroppingOfBags();
-public slots:
-	void onCameraReject(size_t index);
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };

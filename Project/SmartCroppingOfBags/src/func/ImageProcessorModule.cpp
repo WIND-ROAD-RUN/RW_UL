@@ -7,6 +7,9 @@
 #include "GlobalStruct.hpp"
 #include"rqw_ImagePainter.h"
 #include "Utilty.hpp"
+#include"DetachDefectThread.h"
+#include "DetachUtiltyThread.h"
+#include"MonitorIO.h"
 
 QColor ImagePainter::ColorToQColor(Color c)
 {
@@ -2951,7 +2954,7 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	Time currentTime = std::chrono::system_clock::now();
 	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
 	
-	auto nowLocation = GlobalStructDataSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
+	auto nowLocation = GlobalStructThreadSmartCroppingOfBags::getInstance().monitorIOSmartCroppingOfBags->location.load();
 	imagePart.attribute.insert("location", nowLocation);
 	{
 		QMutexLocker locker(&_mutex);

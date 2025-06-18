@@ -5,6 +5,7 @@
 #include <GlobalStruct.hpp>
 #include <QMessageBox>
 
+#include "DetachUtiltyThread.h"
 #include "NumberKeyboard.h"
 
 #include"ImageCollage.hpp"
@@ -28,10 +29,9 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 构建优先队列
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	globalStruct.build_PriorityQueue();
-	globalStruct.buildDetachUtiltyThreadSmartCroppingOfBags();
-	// 构建异步剔废线程
-	globalStruct.build_DetachDefectThreadSmartCroppingOfBags();
-	globalStruct.build_MonitorIOSmartCroppingOfBags();
+
+	// 构建异步线程
+	GlobalStructThreadSmartCroppingOfBags::getInstance().build_detachThread();
 
 	// 构建图像保存引擎
 	build_imageSaveEngine();
@@ -45,11 +45,11 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 连接槽函数
 	build_connect();
 
-	globalStruct.startDetachUtiltyThreadSmartCroppingOfBags();
+	GlobalStructThreadSmartCroppingOfBags::getInstance().start_detachThread();
 
 
 	//与后台线程连接
-	QObject::connect(GlobalStructDataSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::updateCurrentPulse,
+	QObject::connect(GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::updateCurrentPulse,
 		_dlgProductSet, &DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse);
 }
 
@@ -260,11 +260,9 @@ void SmartCroppingOfBags::destroyComponents()
 	//globalStruct.destroyImageProcessingModule();
 	// 销毁图像保存模块
 	globalStruct.destroyImageSaveEngine();
-	// 销毁异步剔废线程
-	//globalStruct.destroy_DetachDefectThreadZipper();
-	globalStruct.destroy_MonitorIOSmartCroppingOfBags();
-	//globalStruct.destroy_DetachDefectThreadSmartCroppingOfBags();
-	globalStruct.destoryDetachUtiltyThreadSmartCroppingOfBags();
+
+	// 销毁异步线程
+	GlobalStructThreadSmartCroppingOfBags::getInstance().destroy_detachThread();
 
 	//销毁板卡
 	destroy_motion();

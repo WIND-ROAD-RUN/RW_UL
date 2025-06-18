@@ -5,6 +5,10 @@
 #include "rqw_CameraObjectCore.hpp"
 #include "DetachDefectThread.h"
 
+#include"DetachDefectThread.h"
+#include "DetachUtiltyThread.h"
+#include"MonitorIO.h"
+
 bool GlobalStructDataSmartCroppingOfBags::build_motion()
 {
 	motion = std::make_unique<zwy::scc::Motion>();
@@ -16,15 +20,6 @@ void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 	motion.reset();
 }
 
-void GlobalStructDataSmartCroppingOfBags::build_MonitorIOSmartCroppingOfBags()
-{
-	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
-}
-
-void GlobalStructDataSmartCroppingOfBags::destroy_MonitorIOSmartCroppingOfBags()
-{
-	monitorIOSmartCroppingOfBags.reset();
-}
 
 void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 {
@@ -38,39 +33,34 @@ void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
 	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
 }
-void GlobalStructDataSmartCroppingOfBags::buildDetachUtiltyThreadSmartCroppingOfBags()
+
+void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags = std::make_unique<DetachUtiltyThreadSmartCroppingOfBags>();
+	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
+	detachDefectThreadSmartCroppingOfBags = std::make_unique<DetachDefectThreadSmartCroppingOfBags>();
 }
 
-void GlobalStructDataSmartCroppingOfBags::destoryDetachUtiltyThreadSmartCroppingOfBags()
+void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags.reset();
+	monitorIOSmartCroppingOfBags.reset();
+	detachDefectThreadSmartCroppingOfBags.reset();
 }
 
-void GlobalStructDataSmartCroppingOfBags::startDetachUtiltyThreadSmartCroppingOfBags()
+void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags->startThread();
+	monitorIOSmartCroppingOfBags->startThread();
+	detachDefectThreadSmartCroppingOfBags->startThread();
 }
+
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()
 {
 	priorityQueue1.reset();
 	priorityQueue2.reset();
 }
 
-void GlobalStructDataSmartCroppingOfBags::build_DetachDefectThreadSmartCroppingOfBags()
-{
-	detachDefectThreadSmartCroppingOfBags = new DetachDefectThreadSmartCroppingOfBags;
-
-	// 连接剔废功能
-	QObject::connect(detachDefectThreadSmartCroppingOfBags, &DetachDefectThreadSmartCroppingOfBags::findIsBad
-		, this, &GlobalStructDataSmartCroppingOfBags::onCameraReject);
-}
-
-void GlobalStructDataSmartCroppingOfBags::onCameraReject(size_t index)
-{
-
-}
 
 GlobalStructDataSmartCroppingOfBags::GlobalStructDataSmartCroppingOfBags()
 {
@@ -242,7 +232,7 @@ bool GlobalStructDataSmartCroppingOfBags::isTargetCamera(const QString& cameraIn
 }
 
 rw::rqw::CameraMetaData GlobalStructDataSmartCroppingOfBags::cameraMetaDataCheck(const QString& cameraIndex,
-                                                                                 const QVector<rw::rqw::CameraMetaData>& cameraInfo)
+	const QVector<rw::rqw::CameraMetaData>& cameraInfo)
 {
 	for (const auto& cameraMetaData : cameraInfo) {
 		if (isTargetCamera(cameraIndex, cameraMetaData.ip)) {

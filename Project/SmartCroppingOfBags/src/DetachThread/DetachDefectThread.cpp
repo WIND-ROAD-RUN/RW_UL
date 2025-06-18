@@ -1,5 +1,7 @@
 #include "DetachDefectThread.h"
 
+#include "GlobalStruct.hpp"
+
 DetachDefectThreadSmartCroppingOfBags::DetachDefectThreadSmartCroppingOfBags(QObject* parent)
 {
 
@@ -58,6 +60,13 @@ void DetachDefectThreadSmartCroppingOfBags::processQueue2(std::unique_ptr<rw::ds
 
 void DetachDefectThreadSmartCroppingOfBags::run()
 {
-	QThread::run();
-
+	static size_t s = 0;
+	while (running) {
+		QThread::sleep(1);
+		++s;
+		if (s == 300)
+		{
+			s = 0;
+		}
+	}
 }

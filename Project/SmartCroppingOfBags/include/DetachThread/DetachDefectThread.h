@@ -5,7 +5,6 @@
 
 #include "dsl_PriorityQueue.hpp"
 #include"Utilty.hpp"
-#include"GlobalStruct.hpp"
 
 class DetachDefectThreadSmartCroppingOfBags : public QThread
 {
