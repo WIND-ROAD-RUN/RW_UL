@@ -3,6 +3,8 @@
 #include "GlobalStruct.hpp"
 #include "scc_motion.h"
 
+
+
 DetachUtiltyThreadSmartCroppingOfBags::DetachUtiltyThreadSmartCroppingOfBags(QObject* parent)
 	: QThread(parent), running(false) {
 
@@ -32,7 +34,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	static size_t s = 0;
 	while (running) {
 		QThread::sleep(1);
-		processTrigger(s);
+		getMaiChongXinhao(s);
 		++s;
 		if (s == 300)
 		{
@@ -41,10 +43,31 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	}
 }
 
-void DetachUtiltyThreadSmartCroppingOfBags::processTrigger(size_t s)
+void DetachUtiltyThreadSmartCroppingOfBags::getMaiChongXinhao(size_t s)
 {
-	
+	if (s%1==0)
+	{
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		if (!globalStruct.camera1)
+		{
+			return;
+		}
+
+		if (!globalStruct.camera1->getConnectState())
+		{
+			return;
+		}
+
+		double pulse{0};
+		auto isGet=globalStruct.camera1->getEncoderNumber(pulse);
+		std::cout << "pulse: " << std::fixed << std::setprecision(2) << pulse << std::endl; // 修改输出格式
+		if (isGet)
+		{
+			emit updateCurrentPulse(pulse);
+		}
+	}
 }
+
 
 
 

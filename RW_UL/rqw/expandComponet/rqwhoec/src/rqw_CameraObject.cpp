@@ -118,7 +118,7 @@ namespace rw
 			return _cameraPassive->setPostDivider(number);
 		}
 
-		bool CameraPassiveObject::getEncoderNumber(size_t& number)
+		bool CameraPassiveObject::getEncoderNumber(double& number)
 		{
 			return _cameraPassive->getEncoderNumber(number);
 		}

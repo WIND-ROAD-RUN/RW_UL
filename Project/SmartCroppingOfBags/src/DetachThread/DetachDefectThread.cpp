@@ -32,7 +32,7 @@ void DetachDefectThreadSmartCroppingOfBags::processQueue1(std::unique_ptr<rw::ds
 	try
 	{
 		prePulse = queue->peek();
-		size_t tempPulse = 0;
+		double tempPulse = 0;
 		globalStruct.camera1->getEncoderNumber(tempPulse);
 		nowPulse = static_cast<double>(tempPulse);
 

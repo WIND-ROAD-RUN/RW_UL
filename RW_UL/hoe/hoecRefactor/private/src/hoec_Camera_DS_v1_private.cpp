@@ -540,7 +540,7 @@ namespace rw
 			}
 		}
 
-		bool Camera_DS::getEncoderNumber(size_t& number)
+		bool Camera_DS::getEncoderNumber(double& number)
 		{
 			char const* szValue;
 			char const* szValue1;

@@ -38,7 +38,20 @@ void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
 	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
 }
+void GlobalStructDataSmartCroppingOfBags::buildDetachUtiltyThreadSmartCroppingOfBags()
+{
+	_detachUtiltyThreadSmartCroppingOfBags = std::make_unique<DetachUtiltyThreadSmartCroppingOfBags>();
+}
 
+void GlobalStructDataSmartCroppingOfBags::destoryDetachUtiltyThreadSmartCroppingOfBags()
+{
+	_detachUtiltyThreadSmartCroppingOfBags.reset();
+}
+
+void GlobalStructDataSmartCroppingOfBags::startDetachUtiltyThreadSmartCroppingOfBags()
+{
+	_detachUtiltyThreadSmartCroppingOfBags->startThread();
+}
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()
 {
 	priorityQueue1.reset();

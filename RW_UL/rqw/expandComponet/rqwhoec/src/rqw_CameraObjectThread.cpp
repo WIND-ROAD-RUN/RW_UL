@@ -276,7 +276,7 @@ namespace rw
 			return false;
 		}
 
-		bool CameraPassiveThread::getEncoderNumber(size_t& number)
+		bool CameraPassiveThread::getEncoderNumber(double& number)
 		{
 			if (_cameraObject)
 			{

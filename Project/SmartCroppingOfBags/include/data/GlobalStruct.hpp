@@ -17,6 +17,7 @@
 #include <ScoreConfig.hpp>
 
 
+#include "DetachUtiltyThread.h"
 #include "dsl_PriorityQueue.hpp"
 #include "ImageProcessorModule.h"
 #include"MonitorIO.h"
@@ -41,6 +42,11 @@ class GlobalStructDataSmartCroppingOfBags
 	:public QObject
 {
 	Q_OBJECT
+public:
+	std::unique_ptr<DetachUtiltyThreadSmartCroppingOfBags> _detachUtiltyThreadSmartCroppingOfBags{ nullptr };
+	void buildDetachUtiltyThreadSmartCroppingOfBags();
+	void destoryDetachUtiltyThreadSmartCroppingOfBags();
+	void startDetachUtiltyThreadSmartCroppingOfBags();
 public:
 	std::unique_ptr<zwy::scc::Motion> motion;
 public:

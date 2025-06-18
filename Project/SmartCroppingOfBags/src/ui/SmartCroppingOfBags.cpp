@@ -28,7 +28,7 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 	// 构建优先队列
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	globalStruct.build_PriorityQueue();
-
+	globalStruct.buildDetachUtiltyThreadSmartCroppingOfBags();
 	// 构建异步剔废线程
 	globalStruct.build_DetachDefectThreadSmartCroppingOfBags();
 	globalStruct.build_MonitorIOSmartCroppingOfBags();
@@ -44,6 +44,8 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 	// 连接槽函数
 	build_connect();
+
+	globalStruct.startDetachUtiltyThreadSmartCroppingOfBags();
 }
 
 SmartCroppingOfBags::~SmartCroppingOfBags()
@@ -256,6 +258,8 @@ void SmartCroppingOfBags::destroyComponents()
 	// 销毁异步剔废线程
 	//globalStruct.destroy_DetachDefectThreadZipper();
 	globalStruct.destroy_MonitorIOSmartCroppingOfBags();
+	//globalStruct.destroy_DetachDefectThreadSmartCroppingOfBags();
+	globalStruct.destoryDetachUtiltyThreadSmartCroppingOfBags();
 
 	//销毁板卡
 	destroy_motion();
