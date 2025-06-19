@@ -98,8 +98,10 @@ void ImageProcessorSmartCroppingOfBags::run()
 
 		static size_t count = 1;
 		std::cout << "count:" << count << std::endl;
+		std::cout << "Current thread ID: " << std::this_thread::get_id() << std::endl;
 		std::cout << "_historyTimesSize:" << _historyTimes->size()<<std::endl;
 		std::cout << "_imageCollageSize:" << _imageCollage->size() << std::endl;
+		std::cout << "--------------------------------------" << std::endl;
 		count++;
 
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
