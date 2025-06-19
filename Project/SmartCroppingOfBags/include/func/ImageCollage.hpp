@@ -63,6 +63,8 @@ public:
 
 	static cv::Mat verticalConcat(const std::vector<cv::Mat>& images);
 	static QImage verticalConcat(const QVector<QImage>& images);
+public:
+	size_t size();
 	
 };
 

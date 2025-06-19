@@ -153,3 +153,8 @@ QImage ImageCollage::verticalConcat(const QVector<QImage>& images)
     return result;
 }
 
+size_t ImageCollage::size()
+{
+    return _imageManager->size();
+}
+

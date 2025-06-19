@@ -91,12 +91,17 @@ void ImageProcessorSmartCroppingOfBags::run()
 			}
 		}
 
-		// 检查 frame 是否有效
-		if (frame.image.element.empty()) {
-			continue; // 跳过空帧
-		}
 		_historyTimes->insert(frame.time, frame.time);
 		_imageCollage->pushImage(frame.image, frame.time);
+
+		printTimeWithMilliseconds(frame.time);
+
+		static size_t count = 1;
+		std::cout << "count:" << count << std::endl;
+		std::cout << "_historyTimesSize:" << _historyTimes->size()<<std::endl;
+		std::cout << "_imageCollageSize:" << _imageCollage->size() << std::endl;
+		count++;
+
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();

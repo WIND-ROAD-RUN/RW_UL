@@ -47,6 +47,11 @@ namespace rw
 			{
 				elementCache.set(history, imageInfo);
 			}
+
+			inline size_t size()
+			{
+				return elementCache.size();
+			}
 		};
 
 	}

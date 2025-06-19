@@ -1,9 +1,24 @@
 #pragma once
 
+#include <iostream>
 #include <QString>
 #include "smartCroppingOfBags.h"
 
 using Time = std::chrono::system_clock::time_point;
+
+inline void printTimeWithMilliseconds(const std::chrono::system_clock::time_point& timePoint) {
+	// 转换为 time_t 类型
+	std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint);
+
+	// 获取毫秒部分
+	auto duration = timePoint.time_since_epoch();
+	auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration) % 1000;
+
+	// 格式化输出时间
+	std::cout << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S")
+		<< '.' << std::setfill('0') << std::setw(3) << milliseconds.count()
+		<< std::endl;
+}
 
 struct WarningId
 {
