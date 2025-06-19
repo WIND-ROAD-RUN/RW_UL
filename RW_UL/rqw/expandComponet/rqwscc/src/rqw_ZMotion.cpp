@@ -114,5 +114,38 @@ namespace rw
 			_zMotion->SetIOOut(portNum, state);
 			return true;
 		}
+
+		bool ZMotion::SetIOOut(int axis, int ioNUm, bool state, int iotime)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			_zMotion->SetIOOut(axis, ioNUm, state, iotime);
+			return true;
+		}
+
+		bool ZMotion::setAxisPulse(int axis, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			_zMotion->SetAxisPulse(axis, value);
+			return true;
+		}
+
+		bool ZMotion::setAxisRunSpeed(int axis, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			_zMotion->SetAxisRunSpeed(axis, value);
+			return true;
+		}
 	}
 }
