@@ -1,5 +1,7 @@
 #include"dsl_TimeBasedCache_t.hpp"
 
+#include <chrono>
+
 
 namespace dsl_TimeBasedCache
 {
@@ -155,5 +157,18 @@ namespace dsl_TimeBasedCache
 
 		result = cache.queryWithTime(125, 2, true, true);
 		ASSERT_EQ(result.size(), 2);
+	}
+
+	TEST(TimeDouble, insertTime)
+	{
+		using KeyType = std::chrono::system_clock::time_point; 
+		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
+
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::now(); 
+			cache.insert(key, i);
+		}
+
+		ASSERT_EQ(cache.size(), 30);
 	}
 }
