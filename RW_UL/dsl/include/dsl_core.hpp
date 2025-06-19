@@ -8,6 +8,19 @@
 #define MAKE_FRIEND_TEST_CLASS(ClassName) friend class ClassName;
 #define FORWARD_DECLARE_TEST_CLASS(ClassName) class ClassName;
 
+#include <chrono>
+#include <functional>
+
+namespace std {
+	template <>
+	struct hash<std::chrono::system_clock::time_point> {
+		size_t operator()(const std::chrono::system_clock::time_point& timePoint) const {
+			auto duration = timePoint.time_since_epoch();
+			return std::hash<std::chrono::system_clock::duration::rep>()(duration.count());
+		}
+	};
+}
+
 namespace rw {
 	namespace dsl {
 		using String = std::string;
