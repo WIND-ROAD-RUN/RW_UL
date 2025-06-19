@@ -233,7 +233,8 @@ void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
 
 }
 
-std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore, bool ascending)
+std::vector<Time> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_debug(
+	const Time& time, int count, bool isBefore, bool ascending)
 {
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
 }
@@ -251,7 +252,7 @@ std::vector<rw::DetectionRectangleInfo> ImageProcessorSmartCroppingOfBags::proce
 	return _modelEngine->processImg(mat);
 }
 
-int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_debug(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time)
+int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_debug(const std::vector<Time>& time)
 {
 	// 获得上个时间戳的cv::Mat图片
 	auto previousMat = _imageCollage->getImage(time[0]).value().element;
@@ -315,13 +316,14 @@ void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(co
 	_historyResult->insert(nowTime, HistoryDetectInfo(nowDetectRec));
 }
 
-std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore, bool ascending)
+std::vector<Time> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTimes_debug(
+	const Time& time, int count, bool isBefore, bool ascending)
 {
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
 }
 
-void ImageProcessorSmartCroppingOfBags::getFiveTimesSouceImage_debug(std::vector<std::chrono::time_point<std::chrono::system_clock>> fiveTimes,
-	cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat)
+void ImageProcessorSmartCroppingOfBags::getFiveTimesSouceImage_debug(std::vector<Time> fiveTimes,
+                                                                     cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat)
 {
 	// 检查是否有足够的图像
 	if (!_imageCollage->getImage(fiveTimes[0]).has_value() ||
@@ -427,7 +429,8 @@ void ImageProcessorSmartCroppingOfBags::getRandomDetecionRec_debug(const ImageCo
 	}
 }
 
-std::vector<std::chrono::time_point<std::chrono::system_clock>> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore, bool ascending)
+std::vector<Time> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_Defect(
+	const Time& time, int count, bool isBefore, bool ascending)
 {
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
 }
@@ -444,7 +447,7 @@ std::vector<rw::DetectionRectangleInfo> ImageProcessorSmartCroppingOfBags::proce
 }
 
 int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_Defect(
-	const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time)
+	const std::vector<Time>& time)
 {
 	// 获得上个时间戳的cv::Mat图片
 	auto previousMat = _imageCollage->getImage(time[0]).value().element;

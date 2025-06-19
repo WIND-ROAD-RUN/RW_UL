@@ -189,13 +189,14 @@ private:
 private:
 	// 调试模式用的封装函数
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
-	std::vector<std::chrono::time_point<std::chrono::system_clock>> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	std::vector<Time> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true,
+	                                                bool ascending = true);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
 	// AI模型处理拼接图像
 	std::vector<rw::DetectionRectangleInfo> processCollageImage_debug(const cv::Mat& mat);
 	// 获取上个时间戳的图像的高度
-	int splitRecognitionBox_debug(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time);
+	int splitRecognitionBox_debug(const std::vector<Time>& time);
 	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
 	void regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
 	// 将属于上一张图像的识别框合并到上一次的图像识别框中
@@ -203,10 +204,11 @@ private:
 	// 将属于当前图像的识别框重新计算Y轴并合并到当前图像识别框中
 	void addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
 	// 返回包含当前时间点的count个时间戳集合
-	std::vector<std::chrono::time_point<std::chrono::system_clock>> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	std::vector<Time> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true,
+	                                                      bool ascending = true);
 	// 获得五次时间集合对应的五张图像
-	void getFiveTimesSouceImage_debug(std::vector<std::chrono::time_point<std::chrono::system_clock>> fiveTimes,
-		cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat);
+	void getFiveTimesSouceImage_debug(std::vector<Time> fiveTimes,
+	                                  cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat);
 	// 获得五次时间集合对应的五张图像的检测结果
 	void getFiveHistoyProcessResult_debug(const Time& time, int count,std::vector<rw::DetectionRectangleInfo>& firstDetectRec,
 		std::vector<rw::DetectionRectangleInfo>& secondDetectRec, std::vector<rw::DetectionRectangleInfo>& thirdDetectRec,
@@ -222,13 +224,14 @@ private:
 private:
 	// 剔废模式下的处理函数
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
-	std::vector<std::chrono::time_point<std::chrono::system_clock>> getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore = true, bool ascending = true);
+	std::vector<Time> getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore = true,
+	                                                 bool ascending = true);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_Defect(const std::vector<Time>& times);
 	// AI模型处理拼接图像
 	std::vector<rw::DetectionRectangleInfo> processCollageImage_Defect(const cv::Mat& mat);
 	// 获取上个时间戳的图像的高度
-	int splitRecognitionBox_Defect(const std::vector<std::chrono::time_point<std::chrono::system_clock>>& time);
+	int splitRecognitionBox_Defect(const std::vector<Time>& time);
 	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
 	void regularizedTwoRecognitionBox_Defect(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
 	// 将属于上一张图像的识别框合并到上一次的图像识别框中
