@@ -45,6 +45,7 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
         auto result = _imageManager->getElement(time);
         if (result.has_value())
         {
+            //std::cout << result.value().attribute["location"]<<std::endl;
             images.push_back(result.value().element);
             timesResult.emplace_back(time);
         }

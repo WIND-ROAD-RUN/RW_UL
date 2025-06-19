@@ -65,10 +65,6 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
-	_historyTimes = std::make_unique<rw::dsl::TimeBasedCache<Time,Time>>(50);
-	_imageCollage = std::make_unique<ImageCollage>();
-	_imageCollage->iniCache(50);
-	_historyResult = std::make_unique<rw::dsl::TimeBasedCache<Time,HistoryDetectInfo>>(50);
 }
 
 void ImageProcessorSmartCroppingOfBags::run()
@@ -91,8 +87,6 @@ void ImageProcessorSmartCroppingOfBags::run()
 			}
 		}
 
-		_historyTimes->insert(frame.time, frame.time);
-		_imageCollage->pushImage(frame.image, frame.time);
 
 		printTimeWithMilliseconds(frame.time);
 
@@ -101,7 +95,6 @@ void ImageProcessorSmartCroppingOfBags::run()
 		std::cout << "Current thread ID: " << std::this_thread::get_id() << std::endl;
 		std::cout << "_historyTimesSize:" << _historyTimes->size()<<std::endl;
 		std::cout << "_imageCollageSize:" << _imageCollage->size() << std::endl;
-		std::cout << "--------------------------------------" << std::endl;
 		count++;
 
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -121,6 +114,8 @@ void ImageProcessorSmartCroppingOfBags::run()
 		default:
 			break;
 		}
+
+		std::cout << "--------------------------------------" << std::endl;
 	}
 }
 
@@ -2887,6 +2882,11 @@ void ImageProcessorSmartCroppingOfBags::setCollageImageNum(size_t num)
 
 void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 {
+	_historyTimes = std::make_shared<rw::dsl::TimeBasedCache<Time, Time>>(50);
+	_imageCollage = std::make_shared<ImageCollage>();
+	_imageCollage->iniCache(50);
+	_historyResult = std::make_shared<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>>(50);
+
 	for (int i = 0; i < _numConsumers; ++i) {
 		static size_t workIndexCount = 0;
 		ImageProcessorSmartCroppingOfBags* processor = new ImageProcessorSmartCroppingOfBags(_queue, _mutex, _condition, workIndexCount, this);
@@ -2896,6 +2896,11 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageReady, Qt::QueuedConnection);
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
+
+		processor->_historyResult = _historyResult;
+		processor->_imageCollage = _imageCollage;
+		processor->_historyTimes= _historyTimes;
+
 		processor->start();
 	}
 }
@@ -2978,6 +2983,30 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	double nowLocation=0;
 	GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(nowLocation);
 	imagePart.attribute.insert("location", nowLocation);
+
+	_historyTimes->insert(currentTime, currentTime);
+
+
+
+	static int colorIndex = 0; // 用于生成随机颜色的计数器
+	// 创建一个 200x200 的纯色图像
+	cv::Mat coloredImage(200, 200, CV_8UC3); // 200x200 大小，3 通道（BGR）
+
+	// 使用随机数生成器生成随机颜色
+	std::random_device rd; // 随机数种子
+	std::mt19937 gen(rd()); // 随机数生成器
+	std::uniform_int_distribution<> dis(0, 255); // 生成 0 到 255 的随机数
+
+	// 随机生成 BGR 三个通道的颜色值
+	int blue = dis(gen);
+	int green = dis(gen);
+	int red = dis(gen);
+
+	// 设置图像为随机颜色
+	coloredImage.setTo(cv::Scalar(blue, green, red));
+
+	// 将生成的纯色图像添加到 _imageCollage
+	_imageCollage->pushImage(coloredImage, currentTime);
 
 	{
 		QMutexLocker locker(&_mutex);

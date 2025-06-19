@@ -82,8 +82,8 @@ void GlobalStructDataSmartCroppingOfBags::buildConfigManager(rw::oso::StorageTyp
 
 void GlobalStructDataSmartCroppingOfBags::buildImageProcessorModules(const QString& path)
 {
-	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
-	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
+	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
+	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
 
 	modelCamera1->modelEnginePath = path;
 	modelCamera2->modelEnginePath = path;
