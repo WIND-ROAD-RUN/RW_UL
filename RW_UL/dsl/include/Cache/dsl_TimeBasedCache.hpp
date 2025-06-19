@@ -217,5 +217,69 @@ namespace rw {
             size_t _capacity;          // 缓存容量
             std::deque<std::pair<Time, T>> _cache; // 缓存数据，存储时间点和数据的键值对
         };
+
+        template <typename T>
+        class TimeBasedCache<std::chrono::system_clock::time_point, T> {
+        public:
+            explicit TimeBasedCache(size_t capacity) : _capacity(capacity) {}
+
+            void insert(const std::chrono::system_clock::time_point& time, const T& data) {
+                std::lock_guard<std::mutex> lock(_mutex);
+                if (_cache.size() >= _capacity) {
+                    _cache.pop_front();
+                }
+                _cache.emplace_back(time, data);
+            }
+
+            std::vector<T> query(const std::chrono::system_clock::time_point& time, int count, bool isBefore = true, bool ascending = true) const {
+                std::lock_guard<std::mutex> lock(_mutex);
+                if (count <= 0) return {};
+
+                std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
+                for (const auto& entry : _cache) {
+                    if (isBefore && entry.first < time) {
+                        candidates.push_back(entry);
+                    }
+                    if (!isBefore && entry.first > time) {
+                        candidates.push_back(entry);
+                    }
+                }
+
+                std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+                    return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
+                    });
+
+                if (candidates.size() > static_cast<size_t>(count)) {
+                    candidates.resize(count);
+                }
+
+                if (ascending) {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first < b.first;
+                        });
+                }
+                else {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first > b.first;
+                        });
+                }
+
+                std::vector<T> result;
+                for (const auto& entry : candidates) {
+                    result.push_back(entry.second);
+                }
+                return result;
+            }
+
+            size_t size() const {
+                std::lock_guard<std::mutex> lock(_mutex);
+                return _cache.size();
+            }
+
+        private:
+            mutable std::mutex _mutex;
+            size_t _capacity;
+            std::deque<std::pair<std::chrono::system_clock::time_point, T>> _cache;
+        };
     }
 }
