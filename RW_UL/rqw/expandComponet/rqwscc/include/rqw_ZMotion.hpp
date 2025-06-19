@@ -27,25 +27,25 @@ namespace rw
 			void setIp(const QString & ip);
 			QString getIp(const QString& ip);
 		public:
-			bool connect();
+			[[nodiscard]] bool connect();
 
-			bool getConnectState(bool &isGet);
-			bool getConnectState();
+			[[nodiscard]] bool getConnectState(bool &isGet);
+			[[nodiscard]] bool getConnectState();
 
-			bool disConnect(bool& isGet);
-			bool disConnect();
+			[[nodiscard]] bool disConnect(bool& isGet);
+			[[nodiscard]] bool disConnect();
 		public:
-			bool getIOIn(int portNum);
-			bool getIOIn(int portNum, bool& isGet);
+			[[nodiscard]] bool getIOIn(int portNum);
+			[[nodiscard]] bool getIOIn(int portNum, bool& isGet);
 
-			bool getIOOut(int portNum);
-			bool getIOOut(int portNum, bool& isGet);
+			[[nodiscard]] bool getIOOut(int portNum);
+			[[nodiscard]] bool getIOOut(int portNum, bool& isGet);
 
-			bool setIOOut(int portNum, bool state);
-			bool SetIOOut(int axis, int ioNUm, bool state, int iotime);
+			[[nodiscard]] bool setIOOut(int portNum, bool state);
+			[[nodiscard]] bool SetIOOut(int axis, int ioNUm, bool state, int iotime);
 		public:
-			bool setAxisPulse(int axis, float value);
-			bool setAxisRunSpeed(int axis, float value);
+			[[nodiscard]] bool setAxisPulse(int axis, float value);
+			[[nodiscard]] bool setAxisRunSpeed(int axis, float value);
 		};
 
 	}	
