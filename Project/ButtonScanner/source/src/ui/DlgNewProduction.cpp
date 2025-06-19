@@ -111,7 +111,7 @@ void DlgNewProduction::set_motionRun(bool isRun)
 		double speed = GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed;
 		motionPtr->SetAxisRunSpeed(0, speed);
 		// pidaimove->start(100);
-		motionPtr->AxisRun(0, -1);
+		motionPtr->SetAxisRun(0, -1);
 		motionPtr->SetIOOut(7, true);
 	}
 	else

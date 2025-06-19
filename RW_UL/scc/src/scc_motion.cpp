@@ -54,56 +54,90 @@ namespace zwy {
 		//bool Motion::GetBoardStatue()
 		//{
 		//}
-		void Motion::AxisRun(int axis, float value)
+		bool Motion::SetAxisRun(int axis, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			ZAux_Direct_Single_Vmove(g_handle, axis, -value);
+			return true;
 		}
 
 		//设置轴的类型
 		//1为脉冲方向方式的步进或伺服
 		//2为模拟型号控制伺服
-		void Motion::SetAxisType(int axis, int value)
+		bool Motion::SetAxisType(int axis, int value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				int ret = ZAux_Direct_SetAtype(g_handle, axis, value);
+				return true;
 			}
 		}
 		//设置脉冲当量
-		void Motion::SetAxisPulse(int axis, float value)
+		bool Motion::SetAxisPulse(int axis, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				int  ret = ZAux_Direct_SetUnits(g_handle, axis, value);
+				return true;
 			}
 		}
 		//设置轴的运动速度
-		void Motion::SetAxisRunSpeed(int axis, float value)
+		bool Motion::SetAxisRunSpeed(int axis, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				ZAux_Direct_SetSpeed(g_handle, axis, value);
+				return true;
 			}
 		}
 
 		//获取当前轴的位置
-		void Motion::GetAxisLocation(int axis, float& value)
+		bool Motion::GetAxisLocation(int axis, float& value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				ZAux_Direct_GetDpos(g_handle, axis, &value);
+				return true;
 			}
 		}
 
-		void  Motion::SetModbus(uint16 adress, uint16 num, uint8 value)
+		bool Motion::SetModbus(uint16 adress, uint16 num, uint8 value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			uint8 v;
 			v = value;
 			int ret = ZAux_Modbus_Set0x(g_handle, adress, num, &v);
+			return true;
 		}
 
-		void Motion::SetIOOut(int axis, int ioNUm, bool state, int iotime)
+		bool Motion::SetIOOut(int axis, int ioNUm, bool state, int iotime)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				int s = -1;
@@ -111,18 +145,25 @@ namespace zwy {
 				{
 					s = 1;
 					ZAux_Direct_MoveOp2(g_handle, axis, ioNUm, s, iotime);
+
 				}
 				else
 				{
 					s = 0;
 					ZAux_Direct_MoveOp2(g_handle, axis, ioNUm, s, iotime);
 				}
+
+				return true;
 			}
 		}
 
 		//获取输入IO状态
 		bool  Motion::GetIOIn(int portNum)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				unsigned int in_value;
@@ -140,6 +181,10 @@ namespace zwy {
 		//获取输出IO状态
 		bool  Motion::GetIOOut(int portNum)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				unsigned int out_value;
@@ -155,8 +200,12 @@ namespace zwy {
 			}
 		}
 		//设置输出IO状态
-		void Motion::SetIOOut(int portNum, bool state)
+		bool Motion::SetIOOut(int portNum, bool state)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				int s = -1;
@@ -164,41 +213,62 @@ namespace zwy {
 				{
 					s = 1;
 					int ret = ZAux_Direct_SetOp(g_handle, portNum, s);
+					return true;
 				}
 				else
 				{
 					s = 0;
 					int ret = ZAux_Direct_SetOp(g_handle, portNum, s);
+					return true;
 				}
 			}
 		}
 
 		//单轴停止运动
-		void Motion::Single_Stop(int axis)
+		bool Motion::Single_Stop(int axis)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
+				return true;
 			}
 		}
 		//所有轴停止运动
-		void Motion::StopAllAxis()
+		bool Motion::StopAllAxis()
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle != nullptr)
 			{
 				ZAux_Direct_Single_Cancel(g_handle, 0, 2);
+				return true;
 			}
 		}
 		//单轴运动
-		void Motion::Single_Move(int axis, double dir)
+		bool Motion::Single_Move(int axis, double dir)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle)
 			{
-				int     ret = ZAux_Direct_Single_Move(g_handle, axis, dir);
+				int ret = ZAux_Direct_Single_Move(g_handle, axis, dir);
+				return true;
 			}
 		}
 		//单轴运动
-		void  Motion::Single_Move(int axis, int dir, float speed, float acc, float dec, float Units)
+		bool Motion::Single_Move(int axis, int dir, float speed, float acc, float dec, float Units)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle)
 			{
 				if (dir > 0)
@@ -216,20 +286,30 @@ namespace zwy {
 				ret = ZAux_Direct_SetDecel(g_handle, axis, dec); //设置轴 0 减速度为 2000units/s/s
 				ret = ZAux_Direct_SetSramp(g_handle, axis, 100); //设置轴 0 S曲线时间 100(梯形加减速)
 				ret = ZAux_Direct_Single_Vmove(g_handle, axis, dir);
+				return true;
 			}
 		}
 
 		//轴位置清零
-		void  Motion::SetLocationZero(int axis)
+		bool Motion::SetLocationZero(int axis)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			if (g_handle)
 			{
 				int ret = ZAux_Direct_SetDpos(g_handle, axis, 0);
+				return true;
 			}
 		}
 
 		bool Motion::getBoardState()
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			uint8 state = -1;
 			if (g_handle)
 			{
@@ -245,44 +325,72 @@ namespace zwy {
 			}
 		}
 
-		float Motion::getAxisSpeed(int axis)
+		bool Motion::getAxisSpeed(int axis, float& speed)
 		{
-			float speed = 0;
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			ZAux_Direct_GetVpSpeed(g_handle, axis, &speed);
-			return speed;
+			return true;
 		}
 
 		//  设置轴运动加速度
-		void Motion::SetAxisAcc(int axis, float value)
+		bool Motion::SetAxisAcc(int axis, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			ZAux_Direct_SetAccel(g_handle, axis, value);
+			return true;
 		}
 		//  设置轴运动减速度
-		void Motion::SetAxisDec(int axis, float value)
+		bool Motion::SetAxisDec(int axis, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			ZAux_Direct_SetDecel(g_handle, axis, value);
+			return true;
 		}
 
 		bool Motion::GetAllIOIN(int portNum)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			ZAux_Direct_GetInMulti(g_handle, 8, 11, &portNum);
-			return 1;
+			return true;
 		}
 
-		void  Motion::SetModbus(uint16 adress, uint16 num, float value)
+		bool Motion::SetModbus(uint16 adress, uint16 num, float value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			float v;
 			v = value;
 			// int ret = ZAux_Modbus_Set0x(g_handle, adress, num,  &v);
 			int ret = ZAux_Modbus_Set4x_Float(g_handle, adress, num, &v);
+			return true;
 		}
-		void  Motion::GetModbus(uint16 adress, uint16 num, float& value)
+
+		bool Motion::GetModbus(uint16 adress, uint16 num, float& value)
 		{
+			if (g_handle == nullptr)
+			{
+				return false;
+			}
 			float v;
 			v = value;
 			// int ret = ZAux_Modbus_Set0x(g_handle, adress, num,  &v);
 			int ret = ZAux_Modbus_Get4x_Float(g_handle, adress, num, &v);
 			value = v;
+			return true;
 		}
 	}
 }
