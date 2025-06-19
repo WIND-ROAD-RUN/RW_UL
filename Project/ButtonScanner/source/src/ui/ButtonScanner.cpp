@@ -1103,7 +1103,7 @@ void ButtonScanner::build_ioThread()
 						double speed = GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed;
 						motionPtr->SetAxisRunSpeed(ControlLines::beltAsis, speed);
 						// pidaimove->start(100);
-						motionPtr->AxisRun(ControlLines::beltAsis, -1);
+						motionPtr->SetAxisRun(ControlLines::beltAsis, -1);
 						motionPtr->SetIOOut(ControlLines::warnGreenOut, true);
 						});
 				}

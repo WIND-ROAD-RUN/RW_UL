@@ -787,7 +787,7 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 	}
 	if (ischeck)
 	{
-		zwy::scc::GlobalMotion::getInstance().motionPtr.get()->AxisRun(ControlLines::beltAsis, -1);
+		zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetAxisRun(ControlLines::beltAsis, -1);
 	}
 	else
 	{
