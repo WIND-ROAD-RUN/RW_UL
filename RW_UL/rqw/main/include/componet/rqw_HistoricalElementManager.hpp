@@ -20,32 +20,37 @@ namespace rw
 			ElementInfo() = default;
 		};
 
-		template <typename KeyType, typename ImageType>
+		template <typename KeyType, typename ValueType>
 		class HistoricalElementManager
 		{
 		private:
-			rw::dsl::CacheFIFO<KeyType, ElementInfo< ImageType>> elementCache;
+			rw::dsl::CacheFIFO<KeyType, ElementInfo< ValueType>> elementCache;
 		public:
 			HistoricalElementManager(size_t capacity = 100)
 				: elementCache(capacity)
 			{
 			}
 
-			inline void insertElement(const KeyType& history, const ElementInfo< ImageType>& imageInfo)
+			inline void insertElement(const KeyType& history, const ElementInfo< ValueType>& imageInfo)
 			{
 				elementCache.set(history, imageInfo);
 			}
 
-			inline std::optional<ElementInfo<ImageType>> getElement(const KeyType& history)
+			inline std::optional<ElementInfo<ValueType>> getElement(const KeyType& history)
 			{
 				auto result = elementCache.get(history);
 
 				return result;
 			}
 
-			inline void setElement(const KeyType& history, const ElementInfo<ImageType>& imageInfo)
+			inline void setElement(const KeyType& history, const ElementInfo<ValueType>& imageInfo)
 			{
 				elementCache.set(history, imageInfo);
+			}
+
+			inline size_t size()
+			{
+				return elementCache.size();
 			}
 		};
 
