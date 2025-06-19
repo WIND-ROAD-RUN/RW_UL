@@ -114,5 +114,16 @@ namespace rw
 			_zMotion->SetIOOut(portNum, state);
 			return true;
 		}
+
+		bool ZMotion::SetIOOut(int axis, int ioNUm, bool state, int iotime)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			_zMotion->SetIOOut(axis, ioNUm, state, iotime);
+			return true;
+		}
 	}
 }
