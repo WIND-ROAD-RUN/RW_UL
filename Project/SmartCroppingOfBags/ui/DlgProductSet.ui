@@ -694,7 +694,7 @@ QTabBar::tab:hover {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -4291,6 +4291,9 @@ QGroupBox::title {
                 <layout class="QHBoxLayout" name="horizontalLayout_19">
                  <item>
                   <widget class="QCheckBox" name="ckb_qiedao">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4344,6 +4347,9 @@ QCheckBox::indicator:checked:hover {
                   <layout class="QVBoxLayout" name="verticalLayout_2">
                    <item>
                     <widget class="QCheckBox" name="ckb_chuiqi">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4386,6 +4392,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="ckb_baojinghongdeng">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4428,6 +4437,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="ckb_yadai">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -4470,6 +4482,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="ckb_tifei">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */

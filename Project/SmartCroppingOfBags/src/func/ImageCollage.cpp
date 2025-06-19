@@ -53,7 +53,6 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
             hasNull = true; 
         }
     }
-
     
     if (images.empty())
     {

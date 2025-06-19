@@ -188,10 +188,6 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::btn_zidongpingbifanwei_clicked);
 	QObject::connect(ui->btn_jiange, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_jiange_clicked);
-	QObject::connect(ui->btn_hanggao1, &QPushButton::clicked,
-		this, &DlgProductSetSmartCroppingOfBags::btn_hanggao1_clicked);
-	QObject::connect(ui->btn_daichang1, &QPushButton::clicked,
-		this, &DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked);
 	QObject::connect(ui->btn_daichangxishu1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_daichangxishu1_clicked);
 	QObject::connect(ui->btn_guasijuli1, &QPushButton::clicked,
@@ -337,45 +333,6 @@ void DlgProductSetSmartCroppingOfBags::btn_jiange_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_jiange->setText(value);
 		globalStructSetConfig.jiange = value.toDouble();
-	}
-}
-
-
-void DlgProductSetSmartCroppingOfBags::btn_hanggao1_clicked()
-{
-	NumberKeyboard numKeyBord;
-	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	auto isAccept = numKeyBord.exec();
-	if (isAccept == QDialog::Accepted)
-	{
-		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
-		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
-			return;
-		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_hanggao1->setText(value);
-		globalStructSetConfig.hanggao1 = value.toDouble();
-	}
-}
-
-void DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked()
-{
-	NumberKeyboard numKeyBord;
-	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	auto isAccept = numKeyBord.exec();
-	if (isAccept == QDialog::Accepted)
-	{
-		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
-		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
-			return;
-		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_daichang1->setText(value);
-		globalStructSetConfig.daichang1 = value.toDouble();
 	}
 }
 
@@ -736,7 +693,9 @@ void DlgProductSetSmartCroppingOfBags::btn_houfenpinqi1_clicked()
 			QMessageBox::warning(this, "提示", "请输入大于0的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		globalStruct.camera1->setPostDivider(value.toInt());
 		ui->btn_houfenpinqi1->setText(value);
 		globalStructSetConfig.houfenpinqi1 = value.toDouble();
 	}
@@ -755,7 +714,9 @@ void DlgProductSetSmartCroppingOfBags::btn_chengfaqi1_clicked()
 			QMessageBox::warning(this, "提示", "请输入大于0的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		globalStruct.camera1->setMultiplier(value.toInt());
 		ui->btn_chengfaqi1->setText(value);
 		globalStructSetConfig.chengfaqi1 = value.toDouble();
 	}

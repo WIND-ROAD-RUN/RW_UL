@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include<algorithm>
 
+#include<iostream>
+
 using Time = std::chrono::system_clock::time_point;
 
 template <typename T>
@@ -113,6 +115,7 @@ public:
         for (const auto& entry : candidates) {
             result.push_back(entry.second);
         }
+        std::cout << result.size()<<std::endl;
         return result;
     }
 
