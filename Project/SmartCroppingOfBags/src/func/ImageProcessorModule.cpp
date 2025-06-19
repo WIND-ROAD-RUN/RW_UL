@@ -65,10 +65,10 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
-	_historyTimes = std::make_unique<TimeBasedCache<Time>>(50);
+	_historyTimes = std::make_unique<rw::dsl::TimeBasedCache<Time,Time>>(50);
 	_imageCollage = std::make_unique<ImageCollage>();
 	_imageCollage->iniCache(50);
-	_historyResult = std::make_unique<TimeBasedCache<HistoryDetectInfo>>(50);
+	_historyResult = std::make_unique<rw::dsl::TimeBasedCache<Time,HistoryDetectInfo>>(50);
 }
 
 void ImageProcessorSmartCroppingOfBags::run()

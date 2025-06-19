@@ -13,7 +13,7 @@
 #include <rqw_ImageSaveEngine.h>
 
 #include"ImageCollage.hpp"
-#include"TimeBasedCache.hpp"
+#include"dsl_TimeBasedCache.hpp"
 
 
 // 智能裁切吨袋检测信息
@@ -167,9 +167,9 @@ public:
 private:
 	std::unique_ptr<ImageCollage> _imageCollage=nullptr;
 	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
-	std::unique_ptr<TimeBasedCache<Time>> _historyTimes=nullptr;
+	std::unique_ptr<rw::dsl::TimeBasedCache<Time,Time>> _historyTimes=nullptr;
 
-	std::unique_ptr<TimeBasedCache<HistoryDetectInfo>> _historyResult = nullptr;
+	std::unique_ptr<rw::dsl::TimeBasedCache<Time,HistoryDetectInfo>> _historyResult = nullptr;
 	size_t collageImagesNum = 5;
 public:
 	ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue,
