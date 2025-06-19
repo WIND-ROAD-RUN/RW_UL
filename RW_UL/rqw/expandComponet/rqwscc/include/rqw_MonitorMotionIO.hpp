@@ -17,7 +17,7 @@ namespace rw
         public:
             explicit MonitorZMotionIOStateThread(QObject* parent = nullptr);
 
-            void startRunning(bool running);
+            void setRunning(bool running);
 
             void destroyThread();
         public:

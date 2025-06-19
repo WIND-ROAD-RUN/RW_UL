@@ -9,7 +9,7 @@ namespace rw
 
         }
 
-        void MonitorZMotionIOStateThread::startRunning(bool running)
+        void MonitorZMotionIOStateThread::setRunning(bool running)
         {
             QMutexLocker locker(&m_mutex);
             m_running = running;
