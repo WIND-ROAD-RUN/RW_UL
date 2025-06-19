@@ -34,7 +34,7 @@ namespace rw
 
 			bool disConnect(bool& isGet);
 			bool disConnect();
-
+		public:
 			bool getIOIn(int portNum);
 			bool getIOIn(int portNum, bool& isGet);
 
@@ -43,6 +43,9 @@ namespace rw
 
 			bool setIOOut(int portNum, bool state);
 			bool SetIOOut(int axis, int ioNUm, bool state, int iotime);
+		public:
+			bool setAxisPulse(int axis, float value);
+			bool setAxisRunSpeed(int axis, float value);
 		};
 
 	}	
