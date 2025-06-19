@@ -363,6 +363,46 @@ namespace rw {
                 return result;
             }
 
+            std::vector<T> query(const std::chrono::system_clock::time_point& time, int count, bool isBefore = true, bool ascending = true) const {
+                std::lock_guard<std::mutex> lock(_mutex);
+                if (count <= 0) return {};
+
+                std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
+                for (const auto& entry : _cache) {
+                    if (isBefore && entry.first < time) {
+                        candidates.push_back(entry);
+                    }
+                    if (!isBefore && entry.first > time) {
+                        candidates.push_back(entry);
+                    }
+                }
+
+                std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+                    return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
+                    });
+
+                if (candidates.size() > static_cast<size_t>(count)) {
+                    candidates.resize(count);
+                }
+
+                if (ascending) {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first < b.first;
+                        });
+                }
+                else {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first > b.first;
+                        });
+                }
+
+                std::vector<T> result;
+                for (const auto& entry : candidates) {
+                    result.push_back(entry.second);
+                }
+                return result;
+            }
+
             size_t size() const {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
