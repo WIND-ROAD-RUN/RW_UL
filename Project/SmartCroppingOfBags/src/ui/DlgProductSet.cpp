@@ -674,7 +674,12 @@ void DlgProductSetSmartCroppingOfBags::btn_xiangjizengyi1_clicked()
 			QMessageBox::warning(this, "提示", "请输入大于0的数值");
 			return;
 		}
-		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		auto& globalStructSetConfig = globalStruct.setConfig;
+		if (globalStructSetConfig.isxiangjizengyi1)
+		{
+			globalStruct.camera1->setGain(value.toDouble());
+		}
 		ui->btn_xiangjizengyi1->setText(value);
 		globalStructSetConfig.xiangjizengyi1 = value.toDouble();
 	}
