@@ -20,12 +20,12 @@ struct WarningId
 struct ControlLines
 {
 public:
-	static int qiedaoIn;
+	static size_t qiedaoIn;
 public:
-	static int chuiqiOut;
-	static int baojinghongdengOUT;
-	static int yadaiOut;
-	static int tifeiOut;
+	static size_t chuiqiOut;
+	static size_t baojinghongdengOUT;
+	static size_t yadaiOut;
+	static size_t tifeiOut;
 };
 
 struct ClassId

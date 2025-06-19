@@ -113,7 +113,6 @@ void SmartCroppingOfBags::build_motion()
 	auto buildResult=globalStruct.build_motion();
 
 	updateCardLabelState(buildResult);
-
 }
 
 void SmartCroppingOfBags::destroy_motion()

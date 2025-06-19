@@ -3,6 +3,16 @@
 #include <QDialog>
 #include "ui_DlgProductSet.h"
 
+
+namespace rw
+{
+	namespace rqw
+	{
+		class MonitorZMotionIOStateThread;
+	}
+
+}
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgProductSetClass; };
 QT_END_NAMESPACE
@@ -14,7 +24,8 @@ class DlgProductSetSmartCroppingOfBags : public QDialog
 public:
 	DlgProductSetSmartCroppingOfBags(QWidget *parent = nullptr);
 	~DlgProductSetSmartCroppingOfBags();
-
+private:
+	std::unique_ptr<rw::rqw::MonitorZMotionIOStateThread> _monitorZmotion;
 private:
 	std::vector<std::vector<int>> DOFindAllDuplicateIndices();
 	void setDOErrorInfo(const std::vector<std::vector<int>>& index);

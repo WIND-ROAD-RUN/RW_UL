@@ -30,7 +30,7 @@ namespace zwy {
 
 		bool Motion::OpenBoard(const std::string& ipAdress)
 		{
-			return OpenBoard(ipAdress.c_str());
+			return OpenBoard(const_cast<char*>(ipAdress.c_str()));
 		}
 
 		bool Motion::CloseBoared()

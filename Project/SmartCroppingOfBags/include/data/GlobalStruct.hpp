@@ -21,6 +21,7 @@
 #include"DetachDefectThread.h"
 #include "DetachUtiltyThread.h"
 #include"MonitorIO.h"
+#include"rqw_ZMotion.hpp"
 
 #include"scc_motion.h"
 
@@ -70,7 +71,7 @@ class GlobalStructDataSmartCroppingOfBags
 {
 	Q_OBJECT
 public:
-	std::unique_ptr<zwy::scc::Motion> motion;
+	rw::rqw::ZMotion zMotion;
 public:
 	bool build_motion();
 	void destroy_motion();

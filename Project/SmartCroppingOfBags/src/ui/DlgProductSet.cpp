@@ -4,6 +4,7 @@
 #include <NumberKeyboard.h>
 #include <QMessageBox>
 #include "Utilty.hpp"
+#include"rqw_MonitorMotionIO.hpp"
 
 DlgProductSetSmartCroppingOfBags::DlgProductSetSmartCroppingOfBags(QWidget *parent)
 	: QDialog(parent)
@@ -18,6 +19,7 @@ DlgProductSetSmartCroppingOfBags::DlgProductSetSmartCroppingOfBags(QWidget *pare
 
 DlgProductSetSmartCroppingOfBags::~DlgProductSetSmartCroppingOfBags()
 {
+	_monitorZmotion->destroyThread();
 	delete ui;
 }
 
@@ -98,6 +100,11 @@ void DlgProductSetSmartCroppingOfBags::build_ui()
 	read_config();
 	auto indicesDO = DOFindAllDuplicateIndices();
 	setDOErrorInfo(indicesDO);
+
+	_monitorZmotion = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
+	_monitorZmotion->setMonitorIList({ControlLines::qiedaoIn});
+	_monitorZmotion->setMonitorOList({ ControlLines::baojinghongdengOUT,ControlLines ::chuiqiOut,ControlLines ::tifeiOut,ControlLines ::yadaiOut});
+	_monitorZmotion->start();
 }
 
 void DlgProductSetSmartCroppingOfBags::read_config()

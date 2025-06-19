@@ -1,5 +1,7 @@
 #include"rqw_MonitorMotionIO.hpp"
 
+#include<QSet>
+
 namespace rw
 {
     namespace rqw
@@ -39,19 +41,25 @@ namespace rw
 
         void MonitorZMotionIOStateThread::setMonitorIList(const QVector<size_t>& monitorIList)
         {
-            _monitorIList = monitorIList;
+            QMutexLocker locker(&m_mutex); // 加锁
+            QSet<size_t> uniqueSet(monitorIList.begin(), monitorIList.end());
+            _monitorIList = QVector<size_t>(uniqueSet.begin(), uniqueSet.end());
         }
 
         void MonitorZMotionIOStateThread::setMonitorOList(const QVector<size_t>& monitorOList)
         {
-            _monitorOList = monitorOList;
+            QMutexLocker locker(&m_mutex); // 加锁
+            QSet<size_t> uniqueSet(monitorOList.begin(), monitorOList.end());
+            _monitorOList = QVector<size_t>(uniqueSet.begin(), uniqueSet.end());
         }
 
         void MonitorZMotionIOStateThread::setMonitorIOList(const QVector<size_t>& monitorIList,
 	        const QVector<size_t>& monitorOList)
         {
+            QMutexLocker locker(&m_mutex); // 加锁
             _monitorIList = monitorIList;
             _monitorOList = monitorOList;
+
         }
 
 
@@ -81,29 +89,39 @@ namespace rw
 
         void MonitorZMotionIOStateThread::monitorDIState()
         {
+            QVector<size_t> monitorIListCopy;
+            {
+                QMutexLocker locker(&m_mutex); // 加锁
+                monitorIListCopy = _monitorIList; // 复制 _monitorIList
+            }
+
             if (!_monitorObject)
             {
                 return;
             }
 
-            for (const auto & item: _monitorIList)
+            for (const auto& item : monitorIListCopy)
             {
                 emit DIState(item, _monitorObject->getIOIn(item));
-
             }
         }
 
         void MonitorZMotionIOStateThread::monitorDOState()
         {
+            QVector<size_t> monitorOListCopy;
+            {
+                QMutexLocker locker(&m_mutex); // 加锁
+                monitorOListCopy = _monitorOList; // 复制 _monitorOList
+            }
+
             if (!_monitorObject)
             {
                 return;
             }
 
-        	for (const auto& item : _monitorIList)
+            for (const auto& item : monitorOListCopy)
             {
-                emit DIState(item, _monitorObject->getIOIn(item));
-
+                emit DOState(item, _monitorObject->getIOOut(item));
             }
         }
     }

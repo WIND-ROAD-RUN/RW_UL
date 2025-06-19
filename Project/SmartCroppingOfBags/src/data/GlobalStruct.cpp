@@ -11,13 +11,16 @@
 
 bool GlobalStructDataSmartCroppingOfBags::build_motion()
 {
-	motion = std::make_unique<zwy::scc::Motion>();
-	return motion->OpenBoard((char*)"192.168.0.11");
+	//motion = std::make_unique<zwy::scc::Motion>();
+	//return motion->OpenBoard((char*)"192.168.0.11");
+
+	zMotion.setIp("192.168.0.11");
+	return zMotion.connect();
 }
 
 void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 {
-	motion.reset();
+	zMotion.disConnect();
 }
 
 

@@ -58,7 +58,9 @@ namespace rw
 				return false;
 			}
 			isGet = true;
-			return _zMotion->CloseBoared();
+			auto result= _zMotion->CloseBoared();
+			_zMotion.reset();
+			return result;
 		}
 
 		bool ZMotion::disConnect()
