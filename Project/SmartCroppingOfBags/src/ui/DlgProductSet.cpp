@@ -95,6 +95,13 @@ void DlgProductSetSmartCroppingOfBags::setDOErrorInfo(int index)
 	}
 }
 
+void DlgProductSetSmartCroppingOfBags::showEvent(QShowEvent* showEvent)
+{
+	QDialog::showEvent(showEvent);
+	_monitorZmotion->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
+	_monitorZmotion->setRunning(true);
+}
+
 void DlgProductSetSmartCroppingOfBags::build_ui()
 {
 	read_config();
@@ -102,6 +109,8 @@ void DlgProductSetSmartCroppingOfBags::build_ui()
 	setDOErrorInfo(indicesDO);
 
 	_monitorZmotion = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
+	_monitorZmotion->setRunning(false);
+	_monitorZmotion->setMonitorFrequency(100);
 	_monitorZmotion->setMonitorIList({ControlLines::qiedaoIn});
 	_monitorZmotion->setMonitorOList({ ControlLines::baojinghongdengOUT,ControlLines ::chuiqiOut,ControlLines ::tifeiOut,ControlLines ::yadaiOut});
 	_monitorZmotion->start();
@@ -155,11 +164,19 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	// IO接口设置参数
 	// 输入
 	ui->btn_qiedao->setText(QString::number(globalConfig.qiedaoIN));
+	ControlLines::qiedaoIn = globalConfig.qiedaoIN;
 	// 输出
 	ui->btn_chuiqi->setText(QString::number(globalConfig.chuiqiOUT));
+	ControlLines::chuiqiOut = globalConfig.chuiqiOUT;
+
 	ui->btn_baojinghongdeng->setText(QString::number(globalConfig.baojinghongdengOUT));
+	ControlLines::baojinghongdengOUT = globalConfig.baojinghongdengOUT;
+
 	ui->btn_yadai->setText(QString::number(globalConfig.yadaiOUT));
+	ControlLines::yadaiOut = globalConfig.yadaiOUT;
+
 	ui->btn_tifei->setText(QString::number(globalConfig.tifeiOUT));
+	ControlLines::tifeiOut = globalConfig.tifeiOUT;
 
 }
 
@@ -252,6 +269,24 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::btn_yadai_clicked);
 	QObject::connect(ui->btn_tifei, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_tifei_clicked);
+
+	QObject::connect(ui->ckb_baojinghongdeng, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_baojinghongdeng_checked);
+	QObject::connect(ui->ckb_qiedao, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_qiedao_checked);
+	QObject::connect(ui->ckb_chuiqi, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_chuiqi_checked);
+	QObject::connect(ui->ckb_yadai, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_yadai_checked);
+	QObject::connect(ui->ckb_tifei, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_tifei_checked);
+	QObject::connect(ui->ckb_debugIO, &QCheckBox::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::ckb_debugIO_checked);
+
+	QObject::connect(_monitorZmotion.get(), &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, &DlgProductSetSmartCroppingOfBags::onDIState);
+	QObject::connect(_monitorZmotion.get(), &rw::rqw::MonitorZMotionIOStateThread::DOState,
+		this, &DlgProductSetSmartCroppingOfBags::onDOState);
 }
 
 void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
@@ -261,6 +296,7 @@ void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
 
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()
 {
+	_monitorZmotion->setRunning(false);
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 	GlobalStructData.saveDlgProductSetConfig();
 	this->close();
@@ -945,4 +981,113 @@ void DlgProductSetSmartCroppingOfBags::btn_tifei_clicked()
 		ControlLines::tifeiOut = value.toUInt();
 	}
 }
+
+void DlgProductSetSmartCroppingOfBags::ckb_debugIO_checked(bool ischecked)
+{
+	isDebugIO = ischecked;
+	if (isDebugIO)
+	{
+		ui->ckb_qiedao->setChecked(false);
+		ui->ckb_chuiqi->setChecked(false);
+		ui->ckb_baojinghongdeng->setChecked(false);
+		ui->ckb_yadai->setChecked(false);
+		ui->ckb_tifei->setChecked(false);
+
+		ui->ckb_qiedao->setEnabled(true);
+		ui->ckb_chuiqi->setEnabled(true);
+		ui->ckb_baojinghongdeng->setEnabled(true);
+		ui->ckb_yadai->setEnabled(true);
+		ui->ckb_tifei->setEnabled(true);
+	}
+	else
+	{
+		ui->ckb_qiedao->setChecked(false);
+		ui->ckb_chuiqi->setChecked(false);
+		ui->ckb_baojinghongdeng->setChecked(false);
+		ui->ckb_yadai->setChecked(false);
+		ui->ckb_tifei->setChecked(false);
+
+		ui->ckb_qiedao->setEnabled(false);
+		ui->ckb_chuiqi->setEnabled(false);
+		ui->ckb_baojinghongdeng->setEnabled(false);
+		ui->ckb_yadai->setEnabled(false);
+		ui->ckb_tifei->setEnabled(false);
+	}
+	_monitorZmotion->setRunning(!ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_qiedao_checked(bool ischecked)
+{
+	return;
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_chuiqi_checked(bool ischecked)
+{
+	if (!isDebugIO)
+	{
+		return;
+	}
+	auto& ZMotion = GlobalStructDataSmartCroppingOfBags::getInstance().zMotion;
+	ZMotion.setIOOut(ControlLines::chuiqiOut, ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_baojinghongdeng_checked(bool ischecked)
+{
+	if (!isDebugIO)
+	{
+		return;
+	}
+	auto& ZMotion = GlobalStructDataSmartCroppingOfBags::getInstance().zMotion;
+	ZMotion.setIOOut(ControlLines::baojinghongdengOUT, ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_yadai_checked(bool ischecked)
+{
+	if (!isDebugIO)
+	{
+		return;
+	}
+	auto& ZMotion = GlobalStructDataSmartCroppingOfBags::getInstance().zMotion;
+	ZMotion.setIOOut(ControlLines::yadaiOut, ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::ckb_tifei_checked(bool ischecked)
+{
+	if (!isDebugIO)
+	{
+		return;
+	}
+	auto& ZMotion = GlobalStructDataSmartCroppingOfBags::getInstance().zMotion;
+	ZMotion.setIOOut(ControlLines::tifeiOut, ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::onDIState(size_t index, bool state)
+{
+	if (index == ControlLines::qiedaoIn)
+	{
+		ui->ckb_qiedao->setChecked(state);
+	}
+
+}
+
+void DlgProductSetSmartCroppingOfBags::onDOState(size_t index, bool state)
+{
+	if (index == ControlLines::baojinghongdengOUT)
+	{
+		ui->ckb_baojinghongdeng->setChecked(state);
+	}
+	else if (index == ControlLines::chuiqiOut)
+	{
+		ui->ckb_chuiqi->setChecked(state);
+	}
+	else if (index == ControlLines::tifeiOut)
+	{
+		ui->ckb_tifei->setChecked(state);
+	}
+	else if (index == ControlLines::yadaiOut)
+	{
+		ui->ckb_yadai->setChecked(state);
+	}
+}
+
 

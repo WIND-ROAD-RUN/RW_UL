@@ -103,5 +103,16 @@ namespace rw
 			isGet = true;
 			return _zMotion->GetIOOut(portNum);
 		}
+
+		bool ZMotion::setIOOut(int portNum, bool state)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			_zMotion->SetIOOut(portNum, state);
+			return true;
+		}
 	}
 }

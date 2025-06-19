@@ -10,7 +10,8 @@ namespace std {
 	template <>
 	struct hash<std::chrono::system_clock::time_point> {
 		size_t operator()(const std::chrono::system_clock::time_point& timePoint) const noexcept {
-			return std::hash<int64_t>()(std::chrono::duration_cast<std::chrono::microseconds>(timePoint.time_since_epoch()).count());
+			// 使用纳秒级别的时间戳进行哈希
+			return std::hash<int64_t>()(std::chrono::duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count());
 		}
 	};
 }

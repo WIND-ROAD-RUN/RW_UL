@@ -217,6 +217,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	auto pixmap = collageMaskImage_debug(fiveQImages);
 
 	emit imageReady(pixmap);
+	
+	//emit imageReady(frame.image);
 
 }
 

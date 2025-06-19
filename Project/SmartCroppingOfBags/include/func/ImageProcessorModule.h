@@ -99,6 +99,7 @@ public:
 			image = other.image;
 			index = other.index;
 			time = other.time;
+			location = other.location;
 		}
 		return *this;
 	}

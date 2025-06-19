@@ -30,7 +30,11 @@ private:
 	std::vector<std::vector<int>> DOFindAllDuplicateIndices();
 	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
 	void setDOErrorInfo(int index);
-
+private:
+	// IO监控页面的调试模式
+	bool isDebugIO{ false };
+protected:
+	void showEvent(QShowEvent*) override;
 public:
 	void build_ui();
 	void read_config();
@@ -82,7 +86,18 @@ private slots:
 	void btn_yadai_clicked();
 	void btn_tifei_clicked();
 
+	void ckb_debugIO_checked(bool ischecked);
+	void ckb_qiedao_checked(bool ischecked);
+	void ckb_chuiqi_checked(bool ischecked);
+	void ckb_baojinghongdeng_checked(bool ischecked);
+	void ckb_yadai_checked(bool ischecked);
+	void ckb_tifei_checked(bool ischecked);
+
 private:
 	Ui::DlgProductSetClass *ui;
+public slots:
+	void onDIState(size_t index, bool state);
+	void onDOState(size_t index, bool state);
 };
+
 

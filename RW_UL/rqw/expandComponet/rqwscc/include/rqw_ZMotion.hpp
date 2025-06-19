@@ -40,6 +40,8 @@ namespace rw
 
 			bool getIOOut(int portNum);
 			bool getIOOut(int portNum, bool& isGet);
+
+			bool setIOOut(int portNum, bool state);
 		};
 
 	}	
