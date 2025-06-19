@@ -1,7 +1,9 @@
 #include"dsl_TimeBasedCache_t.hpp"
+#include"dsl_core.hpp"
 
 #include <chrono>
 
+using Time = std::chrono::system_clock::time_point;
 
 namespace dsl_TimeBasedCache
 {
@@ -93,11 +95,11 @@ namespace dsl_TimeBasedCache
 		cache.insert(128, 128);
 
 		auto result = cache.queryToMap(125, 2, true, true);
-		std::unordered_map<double,double> standard = {{ 123,123},{124,124} };
+		std::unordered_map<double, double> standard = { { 123,123},{124,124} };
 		ASSERT_EQ(result, standard);
 
 		auto result1 = cache.queryToMap(125, 2, true, false);
-		standard = { {124,124},{123,123}};
+		standard = { {124,124},{123,123} };
 		ASSERT_EQ(result1, standard);
 
 		auto result2 = cache.queryToMap(125, 2, false, true);
@@ -105,7 +107,7 @@ namespace dsl_TimeBasedCache
 		ASSERT_EQ(result2, standard);
 
 		auto result3 = cache.queryToMap(125, 2, false, false);
-		standard = { {127,127},{126,126}};
+		standard = { {127,127},{126,126} };
 		ASSERT_EQ(result3, standard);
 	}
 
@@ -161,14 +163,182 @@ namespace dsl_TimeBasedCache
 
 	TEST(TimeDouble, insertTime)
 	{
-		using KeyType = std::chrono::system_clock::time_point; 
+		using KeyType = std::chrono::system_clock::time_point;
 		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
 
 		for (int i = 0; i < 30; i++) {
-			KeyType key = std::chrono::system_clock::now(); 
+			KeyType key = std::chrono::system_clock::now();
 			cache.insert(key, i);
 		}
 
 		ASSERT_EQ(cache.size(), 30);
+	}
+
+	TEST(TimeDouble, queryTime)
+	{
+		using KeyType = std::chrono::system_clock::time_point;
+		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
+
+		std::vector<KeyType> keys;
+		KeyType time{};
+
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::now() + std::chrono::milliseconds(i);
+			if (i == 15) {
+				time = key;
+			}
+			cache.insert(key, i);
+			keys.push_back(key);
+		}
+
+		auto result = cache.query(time, 10, true, true);
+		std::vector<double> expected = { 5,6,7,8,9,10,11,12,13,14 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.query(time, 10, false, true);
+		expected = { 16,17,18,19,20,21,22,23,24,25 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.query(time, 10, true, false);
+		expected = { 14,13,12,11,10,9,8,7,6,5 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.query(time, 10, false, false);
+		expected = { 25,24,23,22,21,20,19,18,17,16 };
+		ASSERT_EQ(result, expected);
+	}
+
+	TEST(TimeDouble, queryWithTimeTime)
+	{
+		using KeyType = std::chrono::system_clock::time_point;
+		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
+
+		std::vector<KeyType> keys;
+		KeyType time{};
+
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::now() + std::chrono::milliseconds(i);
+			if (i == 15) {
+				time = key;
+			}
+			cache.insert(key, i);
+			keys.push_back(key);
+		}
+
+		auto result = cache.queryWithTime(time, 10, true, true);
+		std::vector<double> expected = { 6,7,8,9,10,11,12,13,14,15 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTime(time, 10, true, false);
+		expected = { 15,14,13,12,11,10,9,8,7,6 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTime(time, 10, false, true);
+		expected = { 15,16,17,18,19,20,21,22,23,24 };
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTime(time, 10, false, false);
+		expected = { 24,23,22,21,20,19,18,17,16,15 };
+		ASSERT_EQ(result, expected);
+	}
+
+	TEST(TimeDouble, queryToMapTime)
+	{
+		using KeyType = std::chrono::system_clock::time_point;
+		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
+
+		std::vector<KeyType> keys;
+		KeyType time{};
+
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::time_point(std::chrono::milliseconds(1000 + i * 10));
+			if (i == 15) {
+				time = key;
+			}
+			cache.insert(key, i);
+			keys.push_back(key);
+		}
+
+		auto result = cache.queryToMap(time, 3, true, true);
+		std::unordered_map<Time, double> expected = {
+	{ Time(std::chrono::milliseconds(1120)), 12 },
+	{ Time(std::chrono::milliseconds(1130)), 13 },
+	{ Time(std::chrono::milliseconds(1140)), 14 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryToMap(time, 3, true, false);
+		expected = {
+			 {Time(std::chrono::milliseconds(1140)), 14 },
+			 {Time(std::chrono::milliseconds(1130)), 13 },
+			 {Time(std::chrono::milliseconds(1120)), 12 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryToMap(time, 3, false, true);
+		expected = {
+			 {Time(std::chrono::milliseconds(1160)), 16 },
+			 {Time(std::chrono::milliseconds(1170)), 17 },
+			 {Time(std::chrono::milliseconds(1180)), 18 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryToMap(time, 3, false, false);
+		expected = {
+			 {Time(std::chrono::milliseconds(1180)), 18 },
+			 {Time(std::chrono::milliseconds(1170)), 17 },
+			 {Time(std::chrono::milliseconds(1160)), 16 }
+		};
+		ASSERT_EQ(result, expected);
+	}
+
+	TEST(TimeDouble, queryWithTimeToMapTime)
+	{
+		using KeyType = std::chrono::system_clock::time_point;
+		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
+
+		std::vector<KeyType> keys;
+		KeyType time{};
+
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::time_point(std::chrono::milliseconds(1000 + i * 10));
+			if (i == 15) {
+				time = key;
+			}
+			cache.insert(key, i);
+			keys.push_back(key);
+		}
+
+		auto result = cache.queryWithTimeToMap(time, 3, true, true);
+		std::unordered_map<Time, double> expected = {
+	{ Time(std::chrono::milliseconds(1130)), 13 },
+	{ Time(std::chrono::milliseconds(1140)), 14 },
+	{ Time(std::chrono::milliseconds(1150)), 15 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTimeToMap(time, 3, true, false);
+		expected = {
+			 {Time(std::chrono::milliseconds(1150)), 15 },
+			 {Time(std::chrono::milliseconds(1140)), 14 },
+			 {Time(std::chrono::milliseconds(1130)), 13 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTimeToMap(time, 3, false, true);
+		expected = {
+			 {Time(std::chrono::milliseconds(1150)), 15 },
+			 {Time(std::chrono::milliseconds(1160)), 16 },
+			 {Time(std::chrono::milliseconds(1170)), 17 }
+		};
+		ASSERT_EQ(result, expected);
+
+		result = cache.queryWithTimeToMap(time, 3, false, false);
+		expected = {
+			 {Time(std::chrono::milliseconds(1170)), 17 },
+			 {Time(std::chrono::milliseconds(1160)), 16 },
+			 {Time(std::chrono::milliseconds(1150)), 15 }
+		};
+		ASSERT_EQ(result, expected);
 	}
 }
