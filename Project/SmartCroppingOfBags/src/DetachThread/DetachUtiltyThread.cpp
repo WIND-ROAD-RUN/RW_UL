@@ -60,14 +60,19 @@ void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 
 void DetachUtiltyThreadSmartCroppingOfBags::getMainWindowRunningState(size_t s)
 {
+	auto& info = GlobalStructDataSmartCroppingOfBags::getInstance().statisticalInfo;
 	if (s%1==0)
 	{
-		
+		info.productionYield = info.goodCount / info.produceCount;
+		info.averageBagLength = daichangAverageFromPulse;
+		updateMainWindowInfo(1);
 	}
 
 	if (s%30==0)
 	{
-		
+		double defectDifference = (info.wasteCount - lastDefectCount) * 2;
+		lastDefectCount = info.wasteCount;
+		updateMainWindowInfo(30);
 	}
 }
 
