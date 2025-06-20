@@ -86,7 +86,8 @@ double DetachUtiltyThreadSmartCroppingOfBags::getPulse(bool& isGet)
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulse(bool& isGet)
 {
-	return 0;
+	isGet = true;
+	return pulseAverage;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
@@ -106,7 +107,11 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
+	// 累加所有历史脉冲
+	pulseSum += pulse;
+	++pulseCount;
 
+	pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
 }
 
 
