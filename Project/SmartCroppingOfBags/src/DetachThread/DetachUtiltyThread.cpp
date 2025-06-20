@@ -95,12 +95,17 @@ double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	double maichongxishu = setConfig.maichongxishu1;
 	isGet = true;
-	return maichongxishu * pulseAverage;
+	daichangAverageFromPulse = maichongxishu * pulseAverage;
+	return daichangAverageFromPulse;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
 {
-	return 0;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double daichangxishu = setConfig.daichangxishu1;
+	isGet = true;
+	daichangAverageFromPixel = daichangxishu * daichangAverageFromPulse;
+	return daichangAverageFromPixel;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
@@ -110,8 +115,9 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	lastPulse = pulse; // 更新上次脉冲值
 	pulse = pulse - lastPulse; // 计算当前脉冲与上次脉冲的差值
+	lastPulse = pulse; // 更新上次脉冲值
+
 	// 累加所有历史脉冲差值
 	pulseSum += pulse;
 	++pulseCount;
