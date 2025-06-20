@@ -694,9 +694,9 @@ QTabBar::tab:hover {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
-     <widget class="QWidget" name="tab_1">
+     <widget class="QWidget" name="tab_0">
       <attribute name="title">
        <string>基本参数</string>
       </attribute>
@@ -3440,7 +3440,7 @@ QPushButton:pressed {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab_1">
       <attribute name="title">
        <string>处理逻辑微调</string>
       </attribute>
@@ -4944,7 +4944,7 @@ QPushButton:pressed {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="IO">
+     <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>IO接口设置</string>
       </attribute>

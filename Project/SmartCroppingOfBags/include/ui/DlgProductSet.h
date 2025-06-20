@@ -91,6 +91,8 @@ private slots:
 	void ckb_yadai_checked(bool ischecked);
 	void ckb_tifei_checked(bool ischecked);
 
+	void tabWidget_indexChanged(int index);
+
 private:
 	Ui::DlgProductSetClass *ui;
 public slots:
