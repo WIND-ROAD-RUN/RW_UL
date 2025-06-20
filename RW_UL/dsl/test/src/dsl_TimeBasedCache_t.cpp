@@ -63,7 +63,7 @@ namespace dsl_TimeBasedCache
 		cache.insert(125, 125);
 		cache.insert(126, 126);
 		cache.insert(127, 127);
-		cache.insert(128, 1278);
+		cache.insert(128, 128);
 
 		auto result = cache.query(125, 2, true, true);
 		std::vector<double> standard{ 123,124 };
@@ -80,6 +80,46 @@ namespace dsl_TimeBasedCache
 
 		auto result3 = cache.query(125, 2, true, false);
 		standard = { 124,123 };
+		ASSERT_EQ(result3, standard);
+	}
+
+	TEST(Timetime, newQuery)
+	{
+		using Time = std::chrono::system_clock::time_point;
+		rw::dsl::TimeBasedCache<Time, double> cache(50);
+
+		// 构造一组递增的时间点
+		Time base = std::chrono::system_clock::now();
+		std::vector<Time> times;
+		for (int i = 0; i < 9; ++i) {
+			times.push_back(base + std::chrono::seconds(i));
+		}
+
+		cache.insert(times[0], 120);
+		cache.insert(times[1], 121);
+		cache.insert(times[2], 122);
+		cache.insert(times[3], 123);
+		cache.insert(times[4], 124);
+		cache.insert(times[5], 125);
+		cache.insert(times[6], 126);
+		cache.insert(times[7], 127);
+		cache.insert(times[8], 128);
+
+		// 查询时用 times[5] 代表“125”
+		auto result = cache.queryWithTime(times[5], 2, true, true);
+		std::vector<double> standard{ 123, 124 };
+		ASSERT_EQ(result, standard);
+
+		auto result1 = cache.queryWithTime(times[5], 2, false, true);
+		standard = { 126, 127 };
+		ASSERT_EQ(result1, standard);
+
+		auto result2 = cache.queryWithTime(times[5], 2, false, false);
+		standard = { 127, 126 };
+		ASSERT_EQ(result2, standard);
+
+		auto result3 = cache.queryWithTime(times[5], 2, true, false);
+		standard = { 124, 123 };
 		ASSERT_EQ(result3, standard);
 	}
 

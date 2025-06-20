@@ -443,6 +443,43 @@ namespace rw {
                 return result;
             }
 
+            std::vector<T> query(const std::chrono::system_clock::time_point& beginTime, const std::chrono::system_clock::time_point& endTime, bool hasLeft = true, bool hasRight = true, bool ascending = true) const {
+                std::lock_guard<std::mutex> lock(_mutex);
+
+                std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
+                for (const auto& entry : _cache) {
+                    if (entry.first >= beginTime && entry.first <= endTime) {
+                        candidates.push_back(entry);
+                    }
+                }
+
+                // 按时间排序
+                if (ascending) {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first < b.first;
+                        });
+                }
+                else {
+                    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                        return a.first > b.first;
+                        });
+                }
+
+                // 处理 hasLeft/hasRight
+                if (!candidates.empty() && !hasLeft && candidates.front().first == beginTime) {
+                    candidates.erase(candidates.begin());
+                }
+                if (!candidates.empty() && !hasRight && candidates.back().first == endTime) {
+                    candidates.pop_back();
+                }
+
+                std::vector<T> result;
+                for (const auto& entry : candidates) {
+                    result.push_back(entry.second);
+                }
+                return result;
+            }
+
             size_t size() const {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
