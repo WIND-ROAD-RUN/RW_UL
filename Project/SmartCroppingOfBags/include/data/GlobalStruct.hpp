@@ -107,6 +107,7 @@ public:
 		std::atomic_uint64_t wasteCount{ 0 };
 		std::atomic<double> productionYield{ 0 };
 		std::atomic<double> averageBagLength{ 0 };
+		std::atomic_uint64_t removeRate{ 0 };
 	} statisticalInfo;
 
 public:

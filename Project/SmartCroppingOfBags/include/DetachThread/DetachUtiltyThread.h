@@ -24,6 +24,7 @@ protected:
 	void run() override;
 private:
 	void getRunningState(size_t s);
+	void getMainWindowRunningState(size_t s);
 private:
 	double getPulse(bool & isGet);
 	double getAveragePulse(bool& isGet);
@@ -32,6 +33,7 @@ private:
 	double getLineHeight(bool& isGet);
 signals:
 	void updateMonitorRunningStateInfo(MonitorRunningStateInfo info);
+	void updateMainWindowInfo(int i);
 public slots:
 	void onAppendPulse(double pulse);
 	void onAppendPixel(double pixel);

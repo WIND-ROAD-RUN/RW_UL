@@ -1086,14 +1086,6 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const M
 		++globalStruct.statisticalInfo.produceCount;
 	}
 
-	if (imageProcessingModuleIndex == 1)
-	{
-		++globalStruct.statisticalInfo.produceCount1;
-	}
-	else if (imageProcessingModuleIndex == 2)
-	{
-		++globalStruct.statisticalInfo.produceCount2;
-	}
 
 	/*if (_isbad)
 	{

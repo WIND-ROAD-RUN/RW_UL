@@ -58,6 +58,19 @@ void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 	}
 }
 
+void DetachUtiltyThreadSmartCroppingOfBags::getMainWindowRunningState(size_t s)
+{
+	if (s%1==0)
+	{
+		
+	}
+
+	if (s%30==0)
+	{
+		
+	}
+}
+
 double DetachUtiltyThreadSmartCroppingOfBags::getPulse(bool& isGet)
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
