@@ -52,6 +52,8 @@ private:
 
 	double daichangAverageFromPulse = 0.0;	// 根据平均脉冲求平均袋长
 	double daichangAverageFromPixel = 0.0;	// 根据平均像素求平均袋长
+
+	int lastDefectCount = 0;			// 上次剔废计数
 };
 
 
