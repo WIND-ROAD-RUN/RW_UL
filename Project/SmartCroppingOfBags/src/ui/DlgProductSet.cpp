@@ -290,9 +290,12 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged);
 }
 
-void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
+void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRunningStateInfo info)
 {
-	ui->btn_maichongxinhao1->setText(QString::number(pulse, 'f', 2));
+	if (info.isGetCurrentPulse)
+	{
+		ui->btn_maichongxinhao1->setText(QString::number(info.currentPulse, 'f', 2));
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()

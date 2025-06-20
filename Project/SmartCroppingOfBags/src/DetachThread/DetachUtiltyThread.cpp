@@ -74,8 +74,8 @@ double DetachUtiltyThreadSmartCroppingOfBags::getPulse(bool& isGet)
 	}
 
 	double pulse{ 0 };
-	auto isGet = globalStruct.camera1->getEncoderNumber(pulse);
-	if (isGet)
+	auto isGetPulse = globalStruct.camera1->getEncoderNumber(pulse);
+	if (isGetPulse)
 	{
 		isGet = true;
 		return pulse;
@@ -86,20 +86,22 @@ double DetachUtiltyThreadSmartCroppingOfBags::getPulse(bool& isGet)
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulse(bool& isGet)
 {
-
-
+	return 0;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
 {
+	return 0;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
 {
+	return 0;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 {
+	return 0;
 }
 
 

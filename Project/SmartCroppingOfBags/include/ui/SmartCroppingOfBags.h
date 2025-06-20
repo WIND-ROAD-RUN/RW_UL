@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QMainWindow>
 
@@ -22,7 +22,7 @@ public:
 	~SmartCroppingOfBags();
 
 public:
-	DlgProductSetSmartCroppingOfBags* _dlgProductSet = nullptr;
+	DlgProductSetSmartCroppingOfBags * _dlgProductSet = nullptr;
 	DlgProductScoreSmartCroppingOfBags* _dlgProductScore = nullptr;
 	//DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 

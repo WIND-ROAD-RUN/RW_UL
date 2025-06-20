@@ -31,7 +31,6 @@ private:
 	double getAveragePixelBag(bool& isGet);
 	double getLineHeight(bool& isGet);
 signals:
-	void updateCurrentPulse(double pulse);
 	void updateMonitorRunningStateInfo(MonitorRunningStateInfo info);
 private:
 	std::atomic<bool> running; 

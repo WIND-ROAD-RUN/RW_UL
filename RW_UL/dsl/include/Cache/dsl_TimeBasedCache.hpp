@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <deque>
 #include <vector>
@@ -14,16 +14,16 @@ namespace rw {
         public:
             explicit TimeBasedCache(size_t capacity) : _capacity(capacity) {}
 
-            // ²åÈëÊı¾İ
+            // æ’å…¥æ•°æ®
             void insert(const Time& time, const T& data) {
                 std::lock_guard<std::mutex> lock(_mutex);
 
-                // Èç¹û»º´æÒÑÂú£¬É¾³ı×î¾ÉµÄÊı¾İ
+                // å¦‚æœç¼“å­˜å·²æ»¡ï¼Œåˆ é™¤æœ€æ—§çš„æ•°æ®
                 if (_cache.size() >= _capacity) {
                     _cache.pop_front();
                 }
 
-                // ²åÈëĞÂÊı¾İ
+                // æ’å…¥æ–°æ•°æ®
                 _cache.emplace_back(time, data);
             }
 
@@ -32,7 +32,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 1. ÏÈÉ¸Ñ¡·½Ïò
+                // 1. å…ˆç­›é€‰æ–¹å‘
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -43,17 +43,17 @@ namespace rw {
                     }
                 }
 
-                // 2. °´Óë time µÄ¾àÀëÅÅĞò
+                // 2. æŒ‰ä¸ time çš„è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 3. È¡Ç° count ¸ö
+                // 3. å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 4. °´Ê±¼äÅÅĞò
+                // 4. æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -65,7 +65,7 @@ namespace rw {
                         });
                 }
 
-                // 5. Ö»·µ»ØÊı¾İ²¿·Ö
+                // 5. åªè¿”å›æ•°æ®éƒ¨åˆ†
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -78,7 +78,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // ÊÕ¼¯ËùÓĞÓë time µÄ¾àÀë
+                // æ”¶é›†æ‰€æœ‰ä¸ time çš„è·ç¦»
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -86,17 +86,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // °´¾àÀëÅÅĞò
+                // æŒ‰è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // È¡Ç° count ¸ö
+                // å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // °´Ê±¼äÅÅĞò
+                // æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -108,7 +108,7 @@ namespace rw {
                         });
                 }
 
-                // Ö»·µ»ØÊı¾İ²¿·Ö
+                // åªè¿”å›æ•°æ®éƒ¨åˆ†
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -122,7 +122,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 1. ÏÈÉ¸Ñ¡·½Ïò
+                // 1. å…ˆç­›é€‰æ–¹å‘
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -133,17 +133,17 @@ namespace rw {
                     }
                 }
 
-                // 2. °´Óë time µÄ¾àÀëÅÅĞò
+                // 2. æŒ‰ä¸ time çš„è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 3. È¡Ç° count ¸ö
+                // 3. å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 4. °´Ê±¼äÅÅĞò
+                // 4. æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -155,7 +155,7 @@ namespace rw {
                         });
                 }
 
-                // 5. ·µ»Ø map
+                // 5. è¿”å› map
                 std::unordered_map<Time, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -168,7 +168,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // ÊÕ¼¯ËùÓĞÓë time µÄ¾àÀë
+                // æ”¶é›†æ‰€æœ‰ä¸ time çš„è·ç¦»
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -176,17 +176,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // °´¾àÀëÅÅĞò
+                // æŒ‰è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // È¡Ç° count ¸ö
+                // å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // °´Ê±¼äÅÅĞò
+                // æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -198,7 +198,7 @@ namespace rw {
                         });
                 }
 
-                // ·µ»Ø map
+                // è¿”å› map
                 std::unordered_map<Time, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -206,16 +206,16 @@ namespace rw {
                 return result;
             }
 
-            // »ñÈ¡»º´æ´óĞ¡
+            // è·å–ç¼“å­˜å¤§å°
             size_t size() const {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
             }
 
         private:
-            mutable std::mutex _mutex; // ±£»¤»º´æµÄÏß³Ì°²È«
-            size_t _capacity;          // »º´æÈİÁ¿
-            std::deque<std::pair<Time, T>> _cache; // »º´æÊı¾İ£¬´æ´¢Ê±¼äµãºÍÊı¾İµÄ¼üÖµ¶Ô
+            mutable std::mutex _mutex; // ä¿æŠ¤ç¼“å­˜çš„çº¿ç¨‹å®‰å…¨
+            size_t _capacity;          // ç¼“å­˜å®¹é‡
+            std::deque<std::pair<Time, T>> _cache; // ç¼“å­˜æ•°æ®ï¼Œå­˜å‚¨æ—¶é—´ç‚¹å’Œæ•°æ®çš„é”®å€¼å¯¹
         };
 
         template <typename T>
@@ -236,7 +236,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // ÊÕ¼¯ËùÓĞÓë time µÄ¾àÀë
+                // æ”¶é›†æ‰€æœ‰ä¸ time çš„è·ç¦»
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -244,17 +244,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // °´¾àÀëÅÅĞò
+                // æŒ‰è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // È¡Ç° count ¸ö
+                // å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // °´Ê±¼äÅÅĞò
+                // æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -266,7 +266,7 @@ namespace rw {
                         });
                 }
 
-                // Ö»·µ»ØÊı¾İ²¿·Ö
+                // åªè¿”å›æ•°æ®éƒ¨åˆ†
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -279,7 +279,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // ÊÕ¼¯ËùÓĞÓë time µÄ¾àÀë
+                // æ”¶é›†æ‰€æœ‰ä¸ time çš„è·ç¦»
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -290,17 +290,17 @@ namespace rw {
                     }
                 }
 
-                // °´¾àÀëÅÅĞò
+                // æŒ‰è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // È¡Ç° count ¸ö
+                // å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // °´Ê±¼äÅÅĞò
+                // æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -312,7 +312,7 @@ namespace rw {
                         });
                 }
 
-                // ·µ»Ø map
+                // è¿”å› map
                 std::unordered_map<std::chrono::system_clock::time_point, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -325,7 +325,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // ÊÕ¼¯ËùÓĞÓë time µÄ¾àÀë
+                // æ”¶é›†æ‰€æœ‰ä¸ time çš„è·ç¦»
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -333,17 +333,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // °´¾àÀëÅÅĞò
+                // æŒ‰è·ç¦»æ’åº
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // È¡Ç° count ¸ö
+                // å–å‰ count ä¸ª
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // °´Ê±¼äÅÅĞò
+                // æŒ‰æ—¶é—´æ’åº
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -355,7 +355,7 @@ namespace rw {
                         });
                 }
 
-                // ·µ»Ø map
+                // è¿”å› map
                 std::unordered_map<std::chrono::system_clock::time_point, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;

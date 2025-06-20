@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include "ui_DlgProductSet.h"
+#include "Utilty.hpp"
 
 
 namespace rw
@@ -40,7 +41,7 @@ public:
 	void read_config();
 	void build_connect();
 public slots:
-	void onUpdateCurrentPulse(double pulse);
+	void onUpdateMonitorRunningStateInfo(MonitorRunningStateInfo info);
 private slots:
 	void pbtn_close_clicked();
 
