@@ -18,8 +18,8 @@ namespace cdm {
 		daichang1 : double :default = 0;
 		daichangxishu1 : double :default = 0;
 		guasijuli1 : double :default = 0;
-		zuixiaodaichang1 : double :default = 0;
-		zuidadaichang1 : double :default = 0;
+		zuixiaochutu1 : double :default = 0;
+		zuidachutu1 : double :default = 0;
 		baisedailiangdufanweimin1 : double :default = 0;
 		baisedailiangdufanweimax1 : double :default = 0;
 
