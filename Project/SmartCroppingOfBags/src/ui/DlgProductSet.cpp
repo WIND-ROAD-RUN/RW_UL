@@ -108,6 +108,8 @@ void DlgProductSetSmartCroppingOfBags::build_ui()
 	auto indicesDO = DOFindAllDuplicateIndices();
 	setDOErrorInfo(indicesDO);
 
+	ui->tabWidget->setCurrentIndex(0);
+
 	_monitorZmotion = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
 	_monitorZmotion->setRunning(false);
 	_monitorZmotion->setMonitorFrequency(100);
@@ -283,6 +285,9 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::onDIState);
 	QObject::connect(_monitorZmotion.get(), &rw::rqw::MonitorZMotionIOStateThread::DOState,
 		this, &DlgProductSetSmartCroppingOfBags::onDOState);
+
+	QObject::connect(ui->tabWidget, &QTabWidget::currentChanged,
+		this, &DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged);
 }
 
 void DlgProductSetSmartCroppingOfBags::onUpdateCurrentPulse(double pulse)
@@ -1025,6 +1030,33 @@ void DlgProductSetSmartCroppingOfBags::ckb_tifei_checked(bool ischecked)
 	}
 	auto& ZMotion = GlobalStructDataSmartCroppingOfBags::getInstance().zMotion;
 	ZMotion.setIOOut(ControlLines::tifeiOut, ischecked);
+}
+
+void DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged(int index)
+{
+	// 这里可以根据 index 做不同的处理
+	// 例如：切换不同参数页时刷新内容
+	// 示例：qDebug() << "Tab changed to index:" << index;
+
+	// 如果需要根据 index 刷新内容，可以这样写
+	switch (index) {
+	case 0:
+		// 刷新第一个tab的数据
+		read_config();
+		break;
+	case 1:
+		// 刷新第二个tab的数据
+		// 例如：read_other_config();
+		break;
+	case 2:
+		std::cout << "Tab 2 selected, you can add your logic here." << std::endl;
+		break;
+	case 3:
+
+		break;
+	default:
+		break;
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::onDIState(size_t index, bool state)
