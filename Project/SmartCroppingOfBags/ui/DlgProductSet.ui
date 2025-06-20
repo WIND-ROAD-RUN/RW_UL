@@ -1351,7 +1351,7 @@ QLabel.icon {
 }</string>
                      </property>
                      <property name="text">
-                      <string>平局像素当量袋长</string>
+                      <string>平均像素当量袋长</string>
                      </property>
                     </widget>
                    </item>
@@ -1744,7 +1744,7 @@ QLabel.icon {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="btn_zuixiaodaichang1">
+                    <widget class="QPushButton" name="btn_zuixiaochutu1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                        <horstretch>0</horstretch>
@@ -1872,7 +1872,7 @@ QLabel.icon {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="btn_zuidadaichang1">
+                    <widget class="QPushButton" name="btn_zuidachutu1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                        <horstretch>0</horstretch>

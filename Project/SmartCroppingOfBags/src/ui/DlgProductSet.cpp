@@ -136,8 +136,8 @@ void DlgProductSetSmartCroppingOfBags::read_config()
 	ui->btn_daichang1->setText(QString::number(globalConfig.daichang1));
 	ui->btn_daichangxishu1->setText(QString::number(globalConfig.daichangxishu1));
 	ui->btn_guasijuli1->setText(QString::number(globalConfig.guasijuli1));
-	ui->btn_zuixiaodaichang1->setText(QString::number(globalConfig.zuixiaodaichang1));
-	ui->btn_zuidadaichang1->setText(QString::number(globalConfig.zuidadaichang1));
+	ui->btn_zuixiaochutu1->setText(QString::number(globalConfig.zuixiaochutu1));
+	ui->btn_zuidachutu1->setText(QString::number(globalConfig.zuidachutu1));
 	ui->btn_baisedailiangdufanweiMin1->setText(QString::number(globalConfig.baisedailiangdufanweimin1));
 	ui->btn_baisedailiangdufanweiMax1->setText(QString::number(globalConfig.baisedailiangdufanweimax1));
 
@@ -192,9 +192,9 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 		this, &DlgProductSetSmartCroppingOfBags::btn_daichangxishu1_clicked);
 	QObject::connect(ui->btn_guasijuli1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_guasijuli1_clicked);
-	QObject::connect(ui->btn_zuixiaodaichang1, &QPushButton::clicked,
+	QObject::connect(ui->btn_zuixiaochutu1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_zuixiaodaichang1_clicked);
-	QObject::connect(ui->btn_zuidadaichang1, &QPushButton::clicked,
+	QObject::connect(ui->btn_zuidachutu1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_zuidadaichang1_clicked);
 	QObject::connect(ui->btn_baisedailiangdufanweiMin1, &QPushButton::clicked,
 		this, &DlgProductSetSmartCroppingOfBags::btn_baisedailiangdufanweiMin1_clicked);
@@ -388,8 +388,8 @@ void DlgProductSetSmartCroppingOfBags::btn_zuixiaodaichang1_clicked()
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_zuixiaodaichang1->setText(value);
-		globalStructSetConfig.zuixiaodaichang1 = value.toDouble();
+		ui->btn_zuixiaochutu1->setText(value);
+		globalStructSetConfig.zuixiaochutu1 = value.toDouble();
 	}
 }
 
@@ -407,8 +407,8 @@ void DlgProductSetSmartCroppingOfBags::btn_zuidadaichang1_clicked()
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		ui->btn_zuidadaichang1->setText(value);
-		globalStructSetConfig.zuidadaichang1 = value.toDouble();
+		ui->btn_zuidachutu1->setText(value);
+		globalStructSetConfig.zuidachutu1 = value.toDouble();
 	}
 }
 
