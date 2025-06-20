@@ -60,7 +60,6 @@ void DetachUtiltyThreadSmartCroppingOfBags::getMaiChongXinhao(size_t s)
 
 		double pulse{0};
 		auto isGet=globalStruct.camera1->getEncoderNumber(pulse);
-		//std::cout << "pulse: " << std::fixed << std::setprecision(2) << pulse << std::endl; // 修改输出格式
 		if (isGet)
 		{
 			emit updateCurrentPulse(pulse);
