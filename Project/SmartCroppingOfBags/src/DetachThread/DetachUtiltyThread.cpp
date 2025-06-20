@@ -128,9 +128,6 @@ void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
 {
-	pixel = pixel - lastPixel; // 计算当前像素与上次像素的差值
-	lastPixel = pixel; // 更新上次像素值
-
 	pixelSum += pixel; // 累加所有历史像素差值
 	++pixelCount;
 
