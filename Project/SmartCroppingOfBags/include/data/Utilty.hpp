@@ -20,6 +20,25 @@ inline void printTimeWithMilliseconds(const std::chrono::system_clock::time_poin
 		<< std::endl;
 }
 
+
+struct MonitorRunningStateInfo
+{
+	double averagePulse{0};
+	bool isGetAveragePulse{false};
+
+	double currentPulse{0};
+	bool isGetCurrentPulse{ false };
+
+	double averagePulseBag{0};
+	bool isGetAveragePulseBag{ false };
+
+	double averagePixelBag{0};
+	bool isGetAveragePixelBag{ false };
+
+	double lineHeight{0};
+	bool isGetLineHeight{ false };
+};
+
 struct WarningId
 {
 	static constexpr int cairPressureAlarm = 0;

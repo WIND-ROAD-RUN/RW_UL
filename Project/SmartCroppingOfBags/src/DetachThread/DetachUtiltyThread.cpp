@@ -34,7 +34,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	static size_t s = 0;
 	while (running) {
 		QThread::sleep(1);
-		getMaiChongXinhao(s);
+		getRunningState(s);
 		++s;
 		if (s == 300)
 		{
@@ -43,30 +43,64 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	}
 }
 
-void DetachUtiltyThreadSmartCroppingOfBags::getMaiChongXinhao(size_t s)
+
+void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 {
-	if (s%1==0)
+	if (s % 1 == 0)
 	{
-		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
-		if (!globalStruct.camera1)
-		{
-			return;
-		}
-
-		if (!globalStruct.camera1->getConnectState())
-		{
-			return;
-		}
-
-		double pulse{0};
-		auto isGet=globalStruct.camera1->getEncoderNumber(pulse);
-		if (isGet)
-		{
-			emit updateCurrentPulse(pulse);
-		}
+		MonitorRunningStateInfo info;
+		info.currentPulse = getPulse(info.isGetCurrentPulse);
+		info.averagePixelBag = getAveragePixelBag(info.isGetAveragePixelBag);
+		info.averagePulse = getAveragePulse(info.isGetAveragePulse);
+		info.averagePulseBag = getAveragePulseBag(info.isGetAveragePulseBag);
+		info.lineHeight = getLineHeight(info.isGetLineHeight);
+		emit updateMonitorRunningStateInfo(info);
 	}
 }
 
+double DetachUtiltyThreadSmartCroppingOfBags::getPulse(bool& isGet)
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	if (!globalStruct.camera1)
+	{
+		isGet = false;
+		return 0;
+	}
+
+	if (!globalStruct.camera1->getConnectState())
+	{
+		isGet = false;
+		return 0;
+	}
+
+	double pulse{ 0 };
+	auto isGet = globalStruct.camera1->getEncoderNumber(pulse);
+	if (isGet)
+	{
+		isGet = true;
+		return pulse;
+	}
+	isGet = false;
+	return 0;
+}
+
+double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulse(bool& isGet)
+{
+
+
+}
+
+double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
+{
+}
+
+double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
+{
+}
+
+double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
+{
+}
 
 
 
