@@ -92,7 +92,10 @@ double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulse(bool& isGet)
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
 {
-	return 0;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double maichongxishu = setConfig.maichongxishu1;
+	isGet = true;
+	return maichongxishu * pulseAverage;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
@@ -107,7 +110,9 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	// 累加所有历史脉冲
+	lastPulse = pulse; // 更新上次脉冲值
+	pulse = pulse - lastPulse; // 计算当前脉冲与上次脉冲的差值
+	// 累加所有历史脉冲差值
 	pulseSum += pulse;
 	++pulseCount;
 
