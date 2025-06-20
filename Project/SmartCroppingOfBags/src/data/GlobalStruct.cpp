@@ -41,15 +41,25 @@ void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags = std::make_unique<DetachUtiltyThreadSmartCroppingOfBags>();
+	connect(this, &GlobalStructThreadSmartCroppingOfBags::appendPulse,
+		_detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse);
+
+
 	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
 	detachDefectThreadSmartCroppingOfBags = std::make_unique<DetachDefectThreadSmartCroppingOfBags>();
+
+
+
+
 	monitorZMotionIOStateThread = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
+	monitorZMotionIOStateThread->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
 	monitorZMotionIOStateThread->setMonitorFrequency(20);
 	monitorZMotionIOStateThread->setMonitorIList({ ControlLines::qiedaoIn });
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->start();
 	connect(monitorZMotionIOStateThread.get(), &rw::rqw::MonitorZMotionIOStateThread::DIState,
 		this, &GlobalStructThreadSmartCroppingOfBags::getQieDaoDI);
+
 }
 
 void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
@@ -67,11 +77,26 @@ void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 	_detachUtiltyThreadSmartCroppingOfBags->startThread();
 	monitorIOSmartCroppingOfBags->startThread();
 	detachDefectThreadSmartCroppingOfBags->startThread();
+	monitorZMotionIOStateThread->setRunning(true);
 }
 
 void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state)
 {
-
+	//ÏÂ½µÑØ
+	if (_qiedaoPre)
+	{
+		if (state==false)
+		{
+			isQieDao = true;
+			currentQieDaoTime = std::chrono::system_clock::now();
+			double pulse{0};
+			if (GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(pulse))
+			{
+				emit appendPulse(pulse);
+			}
+		}
+	}
+	_qiedaoPre = state;
 }
 
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()

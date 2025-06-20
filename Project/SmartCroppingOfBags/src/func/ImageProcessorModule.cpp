@@ -89,6 +89,10 @@ void ImageProcessorSmartCroppingOfBags::run()
 		}
 
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
+		auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
+
+		_qieDaoTime = globalThreadData.currentQieDaoTime;
+		_isQieDao = globalThreadData.isQieDao;
 
 		auto currentRunningState = globalData.runningState.load();
 		switch (currentRunningState)
@@ -103,7 +107,6 @@ void ImageProcessorSmartCroppingOfBags::run()
 			break;
 		}
 
-		std::cout << "--------------------------------------" << std::endl;
 	}
 }
 
@@ -209,12 +212,21 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	////emit imageReady(pixmap);
 
-	QApplication::processEvents();
+	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
+	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
-	auto times5 = _historyTimes->queryWithTime(frame.time, 5);
-	auto resultImage5 = _imageCollage->getCollageImage(times5);
+	if (_isQieDao)
+	{
+		if (frame.time>_qieDaoTime)
+		{
+			auto times5 = _historyTimes->queryWithTime(frame.time, 2);
+			auto resultImage5 = _imageCollage->getCollageImage(times5);
 
-	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage5.mat)));
+			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage5.mat)));
+
+			globalThreadData.isQieDao = false;
+		}
+	}
 
 }
 

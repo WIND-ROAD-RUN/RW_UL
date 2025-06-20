@@ -183,7 +183,10 @@ public:
 		QWaitCondition& condition,
 		int workIndex,
 		QObject* parent = nullptr);
-
+private:
+	Time _lastQieDaoTime{};
+	Time _qieDaoTime{};
+	bool _isQieDao{};
 protected:
 	void run() override;
 
