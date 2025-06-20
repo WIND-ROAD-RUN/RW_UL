@@ -34,6 +34,7 @@ signals:
 	void updateMonitorRunningStateInfo(MonitorRunningStateInfo info);
 public slots:
 	void onAppendPulse(double pulse);
+	void onAppendPixel(double pixel);
 	
 private:
 	std::atomic<bool> running;
