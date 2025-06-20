@@ -114,5 +114,10 @@ void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 	pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
 }
 
+void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
+{
+
+}
+
 
 
