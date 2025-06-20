@@ -36,7 +36,10 @@ public slots:
 	void onAppendPulse(double pulse);
 	
 private:
-	std::atomic<bool> running; 
+	std::atomic<bool> running;
+	double pulseSum = 0.0;      // 累计和
+	size_t pulseCount = 0;		// 累计计数
+	double pulseAverage = 0.0;  // 脉冲平均值
 };
 
 
