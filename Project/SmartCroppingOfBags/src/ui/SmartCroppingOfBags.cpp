@@ -231,6 +231,10 @@ void SmartCroppingOfBags::build_imageProcessorModule()
 	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::imageReady, this, &SmartCroppingOfBags::onCamera1Display);
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageReady, this, &SmartCroppingOfBags::onCamera2Display);
 
+	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::appendPixel,
+		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel);
+	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::appendPixel,
+		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel);
 }
 
 void SmartCroppingOfBags::build_imageSaveEngine()

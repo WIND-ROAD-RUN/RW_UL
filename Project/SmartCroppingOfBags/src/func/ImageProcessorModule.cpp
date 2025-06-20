@@ -225,6 +225,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage5.mat)));
 
 			globalThreadData.isQieDao = false;
+
+			emit appendPixel(resultImage5.mat.cols);
 		}
 	}
 
@@ -2896,6 +2898,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageReady, Qt::QueuedConnection);
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
+		connect(processor, &ImageProcessorSmartCroppingOfBags::appendPixel, this, &ImageProcessingModuleSmartCroppingOfBags::appendPixel, Qt::QueuedConnection);
 
 		processor->_historyResult = _historyResult;
 		processor->_imageCollage = _imageCollage;
