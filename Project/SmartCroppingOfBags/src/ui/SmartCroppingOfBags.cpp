@@ -499,16 +499,31 @@ void SmartCroppingOfBags::ckb_cuntu_checked()
 
 void SmartCroppingOfBags::rbtn_zhinengcaiqie_clicked(bool checked)
 {
-	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	auto& global = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& generalConfig = global.generalConfig;
+	auto& setConfig = global.setConfig;
 	generalConfig.isyinshuajiance = false;
 	generalConfig.iszhinengcaiqie = checked;
+	auto lineHeight = setConfig.daichang1 / setConfig.maichongxishu1;
+
+
+	global.camera1->setFrameTriggered(false);
+	global.camera1->setLineTriggered(true);
+	global.camera1->setLineHeight(lineHeight);
+
 }
 
 void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
 {
-	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.iszhinengcaiqie = false;
+	auto& global = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& generalConfig = global.generalConfig;
+	auto& setConfig = global.setConfig;
 	generalConfig.isyinshuajiance = checked;
+	generalConfig.iszhinengcaiqie = false;
+
+	global.camera1->setFrameTriggered(true);
+	global.camera1->setLineTriggered(true);
+	global.camera1->setLineHeight(16000);
 }
 
 
