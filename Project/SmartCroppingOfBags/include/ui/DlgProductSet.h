@@ -71,6 +71,7 @@ private slots:
 	void btn_qiedaoxianxiapingbi1_clicked();
 	void btn_yansedailiangdufanweiMin1_clicked();
 	void btn_yansedailiangdufanweiMax1_clicked();
+	void btn_daichang1_clicked();
 
 	void ckb_xiaopodong_checked();
 	void ckb_tiqiantifei_checked();

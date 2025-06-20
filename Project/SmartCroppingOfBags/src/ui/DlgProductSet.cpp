@@ -288,6 +288,8 @@ void DlgProductSetSmartCroppingOfBags::build_connect()
 
 	QObject::connect(ui->tabWidget, &QTabWidget::currentChanged,
 		this, &DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged);
+	QObject::connect(ui->btn_daichang1, &QPushButton::clicked,
+		this, &DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked);
 }
 
 void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRunningStateInfo info)
@@ -808,6 +810,25 @@ void DlgProductSetSmartCroppingOfBags::btn_yansedailiangdufanweiMax1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_yansedailiangdufanweiMax1->setText(value);
 		globalStructSetConfig.yansedailiangdufanweimax1 = value.toDouble();
+	}
+}
+
+void DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
+		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+		ui->btn_daichang1->setText(value);
+		globalStructSetConfig.daichang1 = value.toDouble();
 	}
 }
 

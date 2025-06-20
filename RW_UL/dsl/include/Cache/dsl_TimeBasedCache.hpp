@@ -76,7 +76,45 @@ namespace rw {
             std::vector<T> query(const Time& beginTime, const Time& endTime, bool hasLeft = true, bool hasRight = true,
                                  bool ascending = true) const
             {
+                //// 1. 先筛选方向
+                //std::vector<std::pair<Time, T>> candidates;
+                //for (const auto& entry : _cache) {
+                //    if (entry.first < time) {
+                //        candidates.push_back(entry);
+                //    }
+                //    if (entry.first > time) {
+                //        candidates.push_back(entry);
+                //    }
+                //}
 
+                //// 2. 按与 time 的距离排序
+                //std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
+                //    return std::abs(a.first - time) < std::abs(b.first - time);
+                //    });
+
+                //// 3. 取前 count 个
+                //if (candidates.size() > static_cast<size_t>(count)) {
+                //    candidates.resize(count);
+                //}
+
+                //// 4. 按时间排序
+                //if (ascending) {
+                //    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                //        return a.first < b.first;
+                //        });
+                //}
+                //else {
+                //    std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
+                //        return a.first > b.first;
+                //        });
+                //}
+
+                //// 5. 只返回数据部分
+                //std::vector<T> result;
+                //for (const auto& entry : candidates) {
+                //    result.push_back(entry.second);
+                //}
+                //return result;
             }
 
             std::vector<T> queryWithTime(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
