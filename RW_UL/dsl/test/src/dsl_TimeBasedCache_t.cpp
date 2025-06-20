@@ -29,6 +29,40 @@ namespace dsl_TimeBasedCache
 		cache.insert(125, 125);
 		cache.insert(126, 126);
 		cache.insert(127, 127);
+		cache.insert(128, 128);
+
+		auto result = cache.query(125, 127, true, true,true);
+		std::vector<double> standard{ 125,126,127 };
+		ASSERT_EQ(result, standard);
+
+		result = cache.query(125, 127, false, true, true);
+		standard = {126,127 };
+		ASSERT_EQ(result, standard);
+
+		result = cache.query(125, 127, false, false, true);
+		standard = { 126 };
+		ASSERT_EQ(result, standard);
+
+		result = cache.query(125, 127, true, false, true);
+		standard = { 125,126 };
+		ASSERT_EQ(result, standard);
+
+		result = cache.query(125, 127, true, true, false);
+		standard = { 127,126,125 };
+		ASSERT_EQ(result, standard);
+	}
+
+	TEST(TimeDouble, newQuery)
+	{
+		rw::dsl::TimeBasedCache<double, double> cache(50);
+		cache.insert(120, 120);
+		cache.insert(121, 121);
+		cache.insert(122, 122);
+		cache.insert(123, 123);
+		cache.insert(124, 124);
+		cache.insert(125, 125);
+		cache.insert(126, 126);
+		cache.insert(127, 127);
 		cache.insert(128, 1278);
 
 		auto result = cache.query(125, 2, true, true);
