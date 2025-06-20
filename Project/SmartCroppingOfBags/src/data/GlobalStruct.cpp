@@ -49,7 +49,7 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->start();
 	connect(monitorZMotionIOStateThread.get(), &rw::rqw::MonitorZMotionIOStateThread::DIState,
-		this, GlobalStructThreadSmartCroppingOfBags::getQieDaoDI);
+		this, &GlobalStructThreadSmartCroppingOfBags::getQieDaoDI);
 }
 
 void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
