@@ -65,6 +65,7 @@ void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
+
 }
 
 void ImageProcessorSmartCroppingOfBags::run()
@@ -87,16 +88,6 @@ void ImageProcessorSmartCroppingOfBags::run()
 			}
 		}
 
-
-		printTimeWithMilliseconds(frame.time);
-
-		static size_t count = 1;
-		std::cout << "count:" << count << std::endl;
-		std::cout << "Current thread ID: " << std::this_thread::get_id() << std::endl;
-		std::cout << "_historyTimesSize:" << _historyTimes->size()<<std::endl;
-		std::cout << "_imageCollageSize:" << _imageCollage->size() << std::endl;
-		count++;
-
 		auto& globalData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
 		auto currentRunningState = globalData.runningState.load();
@@ -108,9 +99,6 @@ void ImageProcessorSmartCroppingOfBags::run()
 		case RunningState::openRemove:
 			run_OpenRemoveFunc(frame);
 			break;
-			/*case RunningState::Monitor:
-				run_monitor(frame);
-				break;*/
 		default:
 			break;
 		}
@@ -223,7 +211,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	QApplication::processEvents();
 
-	auto times5 = _historyTimes->queryWithTime(frame.time, 10);
+	auto times5 = _historyTimes->queryWithTime(frame.time, 5);
 	auto resultImage5 = _imageCollage->getCollageImage(times5);
 
 	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage5.mat)));
@@ -2988,25 +2976,25 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 
 
-	static int colorIndex = 0; // 用于生成随机颜色的计数器
-	// 创建一个 200x200 的纯色图像
-	cv::Mat coloredImage(200, 200, CV_8UC3); // 200x200 大小，3 通道（BGR）
+	//static int colorIndex = 0; // 用于生成随机颜色的计数器
+	//// 创建一个 200x200 的纯色图像
+	//cv::Mat coloredImage(200, 200, CV_8UC3); // 200x200 大小，3 通道（BGR）
 
-	// 使用随机数生成器生成随机颜色
-	std::random_device rd; // 随机数种子
-	std::mt19937 gen(rd()); // 随机数生成器
-	std::uniform_int_distribution<> dis(0, 255); // 生成 0 到 255 的随机数
+	//// 使用随机数生成器生成随机颜色
+	//std::random_device rd; // 随机数种子
+	//std::mt19937 gen(rd()); // 随机数生成器
+	//std::uniform_int_distribution<> dis(0, 255); // 生成 0 到 255 的随机数
 
-	// 随机生成 BGR 三个通道的颜色值
-	int blue = dis(gen);
-	int green = dis(gen);
-	int red = dis(gen);
+	//// 随机生成 BGR 三个通道的颜色值
+	//int blue = dis(gen);
+	//int green = dis(gen);
+	//int red = dis(gen);
 
-	// 设置图像为随机颜色
-	coloredImage.setTo(cv::Scalar(blue, green, red));
+	//// 设置图像为随机颜色
+	//coloredImage.setTo(cv::Scalar(blue, green, red));
 
 	// 将生成的纯色图像添加到 _imageCollage
-	_imageCollage->pushImage(coloredImage, currentTime);
+	_imageCollage->pushImage(imagePart, currentTime);
 
 	{
 		QMutexLocker locker(&_mutex);

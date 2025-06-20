@@ -22,6 +22,7 @@
 #include "DetachUtiltyThread.h"
 #include"MonitorIO.h"
 #include"rqw_ZMotion.hpp"
+#include"rqw_MonitorMotionIO.hpp"
 
 #include"scc_motion.h"
 
@@ -60,6 +61,7 @@ public:
 	std::unique_ptr<DetachUtiltyThreadSmartCroppingOfBags> _detachUtiltyThreadSmartCroppingOfBags{ nullptr };
 	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags{ nullptr };
 	std::unique_ptr<DetachDefectThreadSmartCroppingOfBags> detachDefectThreadSmartCroppingOfBags{ nullptr };
+	std::unique_ptr<rw::rqw::MonitorZMotionIOStateThread> monitorZMotionIOStateThread{ nullptr };
 public:
 	void build_detachThread();
 	void destroy_detachThread();
@@ -124,7 +126,6 @@ public:
 
 
 public:
-	// ±£´æ²ÎÊý
 	void buildImageSaveEngine();
 	void destroyImageSaveEngine();
 	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };

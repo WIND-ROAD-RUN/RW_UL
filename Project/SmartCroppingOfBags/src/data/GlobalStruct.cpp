@@ -9,6 +9,7 @@
 #include "DetachUtiltyThread.h"
 #include"MonitorIO.h"
 
+
 bool GlobalStructDataSmartCroppingOfBags::build_motion()
 {
 	//motion = std::make_unique<zwy::scc::Motion>();
@@ -42,6 +43,11 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 	_detachUtiltyThreadSmartCroppingOfBags = std::make_unique<DetachUtiltyThreadSmartCroppingOfBags>();
 	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
 	detachDefectThreadSmartCroppingOfBags = std::make_unique<DetachDefectThreadSmartCroppingOfBags>();
+	monitorZMotionIOStateThread = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
+	monitorZMotionIOStateThread->setMonitorFrequency(20);
+	monitorZMotionIOStateThread->setMonitorIList({ ControlLines::qiedaoIn });
+	monitorZMotionIOStateThread->setRunning(false);
+	monitorZMotionIOStateThread->start();
 }
 
 void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
@@ -49,6 +55,9 @@ void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
 	_detachUtiltyThreadSmartCroppingOfBags.reset();
 	monitorIOSmartCroppingOfBags.reset();
 	detachDefectThreadSmartCroppingOfBags.reset();
+	monitorZMotionIOStateThread->setRunning(false);
+	monitorZMotionIOStateThread->destroyThread();
+	monitorZMotionIOStateThread.reset();
 }
 
 void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
@@ -137,8 +146,11 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	auto& mainConfig= GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	// 剔废持续时间
 	long DurationTime = setConfig.tifeishijian1 * 1000;
+
+	auto lineHeight = setConfig.daichang1/setConfig.maichongxishu1;
 
 	if (cameraMetaData1.ip != "0")
 	{
@@ -147,13 +159,22 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 			camera1 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
 			camera1->initCamera(cameraMetaData1, rw::rqw::CameraObjectTrigger::Hardware);
 			camera1->cameraIndex = 1;
-			camera1->setFrameRate(50);
-			camera1->setHeartbeatTime(5000);
+
+			if (mainConfig.iszhinengcaiqie)
+			{
+				camera1->setFrameTriggered(false);
+				camera1->setLineTriggered(true);
+				camera1->setLineHeight(lineHeight);
+			}
+			else if (mainConfig.isyinshuajiance)
+			{
+				camera1->setFrameTriggered(true);
+				camera1->setLineTriggered(true);
+				camera1->setLineHeight(16000);
+			}
+	
 			setCameraExposureTime(1, setConfig.xiangjibaoguang1);
 			camera1->startMonitor();
-			// 设置剔废IO输出
-			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			//camera1->setOutTriggerConfig(config);
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured, Qt::DirectConnection);
 			return true;
@@ -174,8 +195,8 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-	// 剔废持续时间
-	//long DurationTime = setConfig.tiFeiChiXuShiJian2 * 1000;
+	auto& mainConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	auto lineHeight = setConfig.daichang1 / setConfig.maichongxishu1;
 
 	if (cameraMetaData2.ip != "0")
 	{
@@ -184,8 +205,18 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 			camera2 = std::make_unique<rw::rqw::CameraPassiveThread>(this);
 			camera2->initCamera(cameraMetaData2, rw::rqw::CameraObjectTrigger::Hardware);
 			camera2->cameraIndex = 2;
-			camera1->setFrameRate(50);
-			camera2->setHeartbeatTime(5000);
+			if (mainConfig.iszhinengcaiqie)
+			{
+				camera1->setFrameTriggered(false);
+				camera1->setLineTriggered(true);
+				camera1->setLineHeight(lineHeight);
+			}
+			else if (mainConfig.isyinshuajiance)
+			{
+				camera1->setFrameTriggered(true);
+				camera1->setLineTriggered(true);
+				camera1->setLineHeight(16000);
+			}
 			setCameraExposureTime(2, setConfig.xiangjibaoguang1);
 			// 设置剔废IO输出
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
