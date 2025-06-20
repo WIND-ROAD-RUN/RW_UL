@@ -31,12 +31,12 @@ namespace dsl_TimeBasedCache
 		cache.insert(127, 127);
 		cache.insert(128, 128);
 
-		auto result = cache.query(125, 127, true, true,true);
+		auto result = cache.query(125, 127, true, true, true);
 		std::vector<double> standard{ 125,126,127 };
 		ASSERT_EQ(result, standard);
 
 		result = cache.query(125, 127, false, true, true);
-		standard = {126,127 };
+		standard = { 126,127 };
 		ASSERT_EQ(result, standard);
 
 		result = cache.query(125, 127, false, false, true);
@@ -106,21 +106,25 @@ namespace dsl_TimeBasedCache
 		cache.insert(times[8], 128);
 
 		// 查询时用 times[5] 代表“125”
-		auto result = cache.queryWithTime(times[5], 2, true, true);
-		std::vector<double> standard{ 123, 124 };
+		auto result = cache.query(times[5], times[7], true, true, true);
+		std::vector<double> standard{ 125, 126,127 };
 		ASSERT_EQ(result, standard);
 
-		auto result1 = cache.queryWithTime(times[5], 2, false, true);
-		standard = { 126, 127 };
-		ASSERT_EQ(result1, standard);
+		result = cache.query(times[5], times[7], false, true, true);
+		standard = { 126,127 };
+		ASSERT_EQ(result, standard);
 
-		auto result2 = cache.queryWithTime(times[5], 2, false, false);
-		standard = { 127, 126 };
-		ASSERT_EQ(result2, standard);
+		result = cache.query(times[5], times[7], false, false, true);
+		standard = { 126};
+		ASSERT_EQ(result, standard);
 
-		auto result3 = cache.queryWithTime(times[5], 2, true, false);
-		standard = { 124, 123 };
-		ASSERT_EQ(result3, standard);
+		result = cache.query(times[5], times[7], true, false, true);
+		standard = { 125,126 };
+		ASSERT_EQ(result, standard);
+
+		result = cache.query(times[5], times[7], true, true, false);
+		standard = { 127,126,125 };
+		ASSERT_EQ(result, standard);
 	}
 
 	TEST(TimeDouble, queryWithTime)
@@ -167,11 +171,11 @@ namespace dsl_TimeBasedCache
 		cache.insert(128, 128);
 
 		auto result = cache.queryToMap(125, 2, true, true);
-		std::unordered_map<double,double> standard = {{ 123,123},{124,124} };
+		std::unordered_map<double, double> standard = { { 123,123},{124,124} };
 		ASSERT_EQ(result, standard);
 
 		auto result1 = cache.queryToMap(125, 2, true, false);
-		standard = { {124,124},{123,123}};
+		standard = { {124,124},{123,123} };
 		ASSERT_EQ(result1, standard);
 
 		auto result2 = cache.queryToMap(125, 2, false, true);
@@ -179,7 +183,7 @@ namespace dsl_TimeBasedCache
 		ASSERT_EQ(result2, standard);
 
 		auto result3 = cache.queryToMap(125, 2, false, false);
-		standard = { {127,127},{126,126}};
+		standard = { {127,127},{126,126} };
 		ASSERT_EQ(result3, standard);
 	}
 
@@ -235,11 +239,11 @@ namespace dsl_TimeBasedCache
 
 	TEST(TimeDouble, insertTime)
 	{
-		using KeyType = std::chrono::system_clock::time_point; 
+		using KeyType = std::chrono::system_clock::time_point;
 		rw::dsl::TimeBasedCache<KeyType, double> cache(50);
 
 		for (int i = 0; i < 30; i++) {
-			KeyType key = std::chrono::system_clock::now(); 
+			KeyType key = std::chrono::system_clock::now();
 			cache.insert(key, i);
 		}
 
