@@ -42,7 +42,8 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags = std::make_unique<DetachUtiltyThreadSmartCroppingOfBags>();
 	connect(this, &GlobalStructThreadSmartCroppingOfBags::appendPulse,
-		_detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse);
+		_detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse,
+		Qt::QueuedConnection);
 
 
 	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
