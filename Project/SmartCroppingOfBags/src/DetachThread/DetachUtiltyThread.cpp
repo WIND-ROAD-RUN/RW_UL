@@ -95,23 +95,30 @@ double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	double maichongxishu = setConfig.maichongxishu1;
 	isGet = true;
-	return maichongxishu * pulseAverage;
+	daichangAverageFromPulse = maichongxishu * pulseAverage;
+	return daichangAverageFromPulse;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
 {
-	return 0;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double daichangxishu = setConfig.daichangxishu1;
+	isGet = true;
+	daichangAverageFromPixel = daichangxishu * pixelAverage;
+	return daichangAverageFromPixel;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 {
-	return 0;
+	isGet = true;
+	return pixelAverage;
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	lastPulse = pulse; // 更新上次脉冲值
 	pulse = pulse - lastPulse; // 计算当前脉冲与上次脉冲的差值
+	lastPulse = pulse; // 更新上次脉冲值
+
 	// 累加所有历史脉冲差值
 	pulseSum += pulse;
 	++pulseCount;
@@ -121,7 +128,13 @@ void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
 {
+	pixel = pixel - lastPixel; // 计算当前像素与上次像素的差值
+	lastPixel = pixel; // 更新上次像素值
 
+	pixelSum += pixel; // 累加所有历史像素差值
+	++pixelCount;
+
+	pixelAverage = (pixelCount == 0) ? 0.0 : (pixelSum / pixelCount);
 }
 
 

@@ -38,10 +38,18 @@ public slots:
 	
 private:
 	std::atomic<bool> running;
-	double lastPulse = 0.0;		// 上次脉冲值
-	double pulseSum = 0.0;      // 累计和
-	size_t pulseCount = 0;		// 累计计数
-	double pulseAverage = 0.0;  // 脉冲平均值
+	double lastPulse = 0.0;			// 上次脉冲值
+	double pulseSum = 0.0;			// 累计和
+	size_t pulseCount = 0;			// 累计计数
+	double pulseAverage = 0.0;		// 脉冲平均值
+
+	double lastPixel = 0.0;			// 上次像素值
+	double pixelSum = 0.0;			// 累计和
+	double pixelCount = 0;			// 累计计数
+	double pixelAverage = 0.0;		// 像素平均值
+
+	double daichangAverageFromPulse = 0.0;	// 根据平均脉冲求平均袋长
+	double daichangAverageFromPixel = 0.0;	// 根据平均像素求平均袋长
 };
 
 
