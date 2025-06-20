@@ -107,7 +107,9 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	// 累加所有历史脉冲
+	lastPulse = pulse; // 更新上次脉冲值
+	pulse = pulse - lastPulse; // 计算当前脉冲与上次脉冲的差值
+	// 累加所有历史脉冲差值
 	pulseSum += pulse;
 	++pulseCount;
 

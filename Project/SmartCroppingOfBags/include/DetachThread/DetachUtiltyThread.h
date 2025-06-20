@@ -37,6 +37,7 @@ public slots:
 	
 private:
 	std::atomic<bool> running;
+	double lastPulse = 0.0;		// 上次脉冲值
 	double pulseSum = 0.0;      // 累计和
 	size_t pulseCount = 0;		// 累计计数
 	double pulseAverage = 0.0;  // 脉冲平均值
