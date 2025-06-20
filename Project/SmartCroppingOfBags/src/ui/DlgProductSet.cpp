@@ -310,7 +310,7 @@ void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRu
 	}
 	if (info.isGetAveragePulseBag)
 	{
-		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePulseBag, 'f', 2));
+		ui->btn_pingjunmaichongdaichang->setText(QString::number(info.averagePulseBag, 'f', 2));
 
 	}
 	if (info.isGetAveragePulse)
