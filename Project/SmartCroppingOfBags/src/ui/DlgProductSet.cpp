@@ -100,6 +100,11 @@ void DlgProductSetSmartCroppingOfBags::showEvent(QShowEvent* showEvent)
 	QDialog::showEvent(showEvent);
 	_monitorZmotion->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
 	_monitorZmotion->setRunning(true);
+	if (ui->tabWidget->currentIndex()==2)
+	{
+		auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
+		_isUpdateMonitorInfo = true;
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::build_ui()
@@ -298,10 +303,31 @@ void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRu
 	{
 		ui->btn_maichongxinhao1->setText(QString::number(info.currentPulse, 'f', 2));
 	}
+	if (info.isGetAveragePixelBag)
+	{
+		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePixelBag, 'f', 2));
+
+	}
+	if (info.isGetAveragePulseBag)
+	{
+		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePulseBag, 'f', 2));
+
+	}
+	if (info.isGetAveragePulse)
+	{
+		ui->btn_pingjunmaichong1->setText(QString::number(info.averagePulse, 'f', 2));
+
+	}
+	if (info.isGetLineHeight)
+	{
+		ui->btn_hanggao1->setText(QString::number(info.lineHeight, 'f', 2));
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()
 {
+	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
+	_isUpdateMonitorInfo = false;
 	_monitorZmotion->setRunning(false);
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 	GlobalStructData.saveDlgProductSetConfig();
@@ -1058,27 +1084,22 @@ void DlgProductSetSmartCroppingOfBags::ckb_tifei_checked(bool ischecked)
 
 void DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged(int index)
 {
-	// 这里可以根据 index 做不同的处理
-	// 例如：切换不同参数页时刷新内容
-	// 示例：qDebug() << "Tab changed to index:" << index;
-
-	// 如果需要根据 index 刷新内容，可以这样写
+	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
 	switch (index) {
 	case 0:
-		// 刷新第一个tab的数据
-		read_config();
+		_isUpdateMonitorInfo = false;
 		break;
 	case 1:
-		// 刷新第二个tab的数据
-		// 例如：read_other_config();
+		_isUpdateMonitorInfo = false;
 		break;
 	case 2:
-		std::cout << "Tab 2 selected, you can add your logic here." << std::endl;
+		_isUpdateMonitorInfo = true;
 		break;
 	case 3:
-
+		_isUpdateMonitorInfo = false;
 		break;
 	default:
+		_isUpdateMonitorInfo = false;
 		break;
 	}
 }

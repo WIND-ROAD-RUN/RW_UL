@@ -46,7 +46,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 
 void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 {
-	if (s % 1 == 0)
+	if (s % 1 == 0 &&GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
 	{
 		MonitorRunningStateInfo info;
 		info.currentPulse = getPulse(info.isGetCurrentPulse);
