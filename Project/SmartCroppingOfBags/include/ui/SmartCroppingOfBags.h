@@ -79,8 +79,10 @@ private slots:
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 
 	void updateCardLabelState(bool state);
-
+private slots:
+	void onUpdateMainWindowInfo(int i);
 private:
 	Ui::SmartCroppingOfBagsClass *ui;
 };
+
 
