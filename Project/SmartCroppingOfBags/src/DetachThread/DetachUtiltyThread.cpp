@@ -92,7 +92,10 @@ double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulse(bool& isGet)
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePulseBag(bool& isGet)
 {
-	return 0;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double maichongxishu = setConfig.maichongxishu1;
+	isGet = true;
+	return maichongxishu * pulseAverage;
 }
 
 double DetachUtiltyThreadSmartCroppingOfBags::getAveragePixelBag(bool& isGet)
