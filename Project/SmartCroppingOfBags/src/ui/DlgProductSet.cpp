@@ -298,6 +298,25 @@ void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRu
 	{
 		ui->btn_maichongxinhao1->setText(QString::number(info.currentPulse, 'f', 2));
 	}
+	if (info.isGetAveragePixelBag)
+	{
+		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePixelBag, 'f', 2));
+
+	}
+	if (info.isGetAveragePulseBag)
+	{
+		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePulseBag, 'f', 2));
+
+	}
+	if (info.isGetAveragePulse)
+	{
+		ui->btn_pinjunxiangsudangliangdaichang->setText(QString::number(info.averagePulse, 'f', 2));
+
+	}
+	if (info.isGetLineHeight)
+	{
+		ui->btn_hanggao1->setText(QString::number(info.lineHeight, 'f', 2));
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()
