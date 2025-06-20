@@ -68,9 +68,14 @@ public:
 	void start_detachThread();
 public slots:
 	void getQieDaoDI(size_t index, bool state);
+signals:
+	void appendPulse(double currentPulse);
+private:
+	bool _qiedaoPre{false};
+	bool _qieDaoLast{ false };
 public:
-	bool isQieDao{};
-	Time currentQieDaoTime{};
+	std::atomic_bool isQieDao{false};
+	std::atomic<Time> currentQieDaoTime;
 };
 
 class GlobalStructDataSmartCroppingOfBags
@@ -138,7 +143,6 @@ public:
 	void saveGeneralConfig();
 	void saveDlgProductSetConfig();
 	void saveDlgProductScoreConfig();
-	void saveDlgExposureTimeSetConfig();
 
 public:
 	// UI界面参数

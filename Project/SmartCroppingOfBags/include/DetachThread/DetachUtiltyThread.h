@@ -32,6 +32,9 @@ private:
 	double getLineHeight(bool& isGet);
 signals:
 	void updateMonitorRunningStateInfo(MonitorRunningStateInfo info);
+public slots:
+	void onAppendPulse(double pulse);
+	
 private:
 	std::atomic<bool> running; 
 };

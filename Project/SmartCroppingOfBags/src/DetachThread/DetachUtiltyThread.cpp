@@ -104,5 +104,10 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 	return 0;
 }
 
+void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
+{
+
+}
+
 
 
