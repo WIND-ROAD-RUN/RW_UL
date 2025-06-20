@@ -73,6 +73,12 @@ namespace rw {
                 return result;
             }
 
+            std::vector<T> query(const Time& beginTime, const Time& endTime, bool hasLeft = true, bool hasRight = true,
+                                 bool ascending = true) const
+            {
+
+            }
+
             std::vector<T> queryWithTime(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
                 std::lock_guard<std::mutex> lock(_mutex);
 

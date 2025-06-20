@@ -48,6 +48,8 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 	monitorZMotionIOStateThread->setMonitorIList({ ControlLines::qiedaoIn });
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->start();
+	connect(monitorZMotionIOStateThread.get(), &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, GlobalStructThreadSmartCroppingOfBags::getQieDaoDI);
 }
 
 void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
@@ -65,6 +67,11 @@ void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 	_detachUtiltyThreadSmartCroppingOfBags->startThread();
 	monitorIOSmartCroppingOfBags->startThread();
 	detachDefectThreadSmartCroppingOfBags->startThread();
+}
+
+void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state)
+{
+
 }
 
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()

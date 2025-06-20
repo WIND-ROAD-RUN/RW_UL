@@ -66,6 +66,11 @@ public:
 	void build_detachThread();
 	void destroy_detachThread();
 	void start_detachThread();
+public slots:
+	void getQieDaoDI(size_t index, bool state);
+public:
+	bool isQieDao{};
+	Time currentQieDaoTime{};
 };
 
 class GlobalStructDataSmartCroppingOfBags
