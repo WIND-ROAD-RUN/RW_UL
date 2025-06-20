@@ -8,6 +8,11 @@ using Time = std::chrono::system_clock::time_point;
 namespace dsl_TimeBasedCache
 {
 
+	TEST_F(TimeBasedCache_T,demo)
+	{
+		ASSERT_EQ(testObj->size(), 9);
+	}
+
 	TEST(TimeDouble, insert)
 	{
 		rw::dsl::TimeBasedCache<double, double> cache(50);
