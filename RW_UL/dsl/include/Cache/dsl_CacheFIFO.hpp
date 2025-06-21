@@ -1,10 +1,12 @@
 #pragma once
 
 #include "dsl_Cache.hpp"
+#include"dsl_core.hpp"
 
 #include <unordered_map>
 #include <queue>
 #include <memory>
+#include <chrono> // For time-related types
 
 namespace rw {
 	namespace dsl {
@@ -65,5 +67,72 @@ namespace rw {
 			std::unordered_map<Key, Value> _cache;
 			std::queue<Key> _fifo;
 		};
+
+		// Specialization for std::chrono::time_point as Key
+		template <typename Value>
+		class CacheFIFO<std::chrono::time_point<std::chrono::system_clock>, Value> final
+			: public ICache<std::chrono::time_point<std::chrono::system_clock>, Value> {
+		public:
+			using Key = std::chrono::time_point<std::chrono::system_clock>;
+			using CacheNode = typename ICache<Key, Value>::CacheNode;
+
+			explicit CacheFIFO(size_t capacity) : ICache<Key, Value>(capacity) {}
+
+			std::optional<Value> get(const Key& key) override {
+				auto it = _cache.find(key);
+				if (it == _cache.end()) {
+					return std::nullopt;
+				}
+				return it->second;
+			}
+
+			bool set(const Key& key, const Value& value) override {
+				auto it = _cache.find(key);
+				if (it != _cache.end()) {
+					it->second = value;
+					return false;
+				}
+				if (_cache.size() >= this->_capacity) {
+					_cache.erase(_fifo.front());
+					_fifo.pop();
+				}
+				_cache.insert({ key, value });
+				_fifo.push(key);
+				return true;
+			}
+
+			[[nodiscard]] size_t size() const override {
+				return _cache.size();
+			}
+
+			void clear() override {
+				_cache.clear();
+				while (!_fifo.empty()) {
+					_fifo.pop();
+				}
+			}
+
+			bool resizeCapacity(size_t capacity) override {
+				if (capacity < this->_capacity) {
+					while (_cache.size() > capacity) {
+						_cache.erase(_fifo.front());
+						_fifo.pop();
+					}
+				}
+				this->_capacity = capacity;
+				return true;
+			}
+
+		private:
+			std::unordered_map<Key, Value> _cache;
+			std::queue<Key> _fifo;
+		};
+
+		// Add equality operator for std::chrono::time_point if needed
+		inline bool operator==(const std::chrono::time_point<std::chrono::system_clock>& lhs,
+							   const std::chrono::time_point<std::chrono::system_clock>& rhs) {
+			return lhs.time_since_epoch() == rhs.time_since_epoch();
+		}
+
 	} // namespace dsl
 } // namespace rw
