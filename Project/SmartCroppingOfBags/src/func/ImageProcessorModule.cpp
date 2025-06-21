@@ -219,17 +219,28 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	{
 		if (frame.time>_qieDaoTime)
 		{
-			auto times5 = _historyTimes->queryWithTime(frame.time, 2);
-			auto resultImage5 = _imageCollage->getCollageImage(times5);
+			//这里第一个时间点可能是上一次的
+			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
+			duringTimes = getValidTime(duringTimes);
+			auto collageImage = _imageCollage->getCollageImage(duringTimes);
 
-			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(resultImage5.mat)));
+			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage.mat)));
 
 			globalThreadData.isQieDao = false;
 
-			emit appendPixel(resultImage5.mat.cols);
+			emit appendPixel(collageImage.mat.cols);
+			_lastQieDaoTime = _qieDaoTime;
 		}
 	}
 
+}
+
+std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
+{
+	std::vector<Time> result;
+
+
+	return result;
 }
 
 void ImageProcessorSmartCroppingOfBags::run_monitor(MatInfo& frame)
@@ -2880,6 +2891,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 	_imageCollage = std::make_shared<ImageCollage>();
 	_imageCollage->iniCache(50);
 	_historyResult = std::make_shared<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>>(50);
+	_timeBool = std::make_shared<rw::dsl::ThreadSafeFIFO<Time, bool>>(50);
 
 	for (int i = 0; i < _numConsumers; ++i) {
 		static size_t workIndexCount = 0;
@@ -2895,7 +2907,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		processor->_historyResult = _historyResult;
 		processor->_imageCollage = _imageCollage;
 		processor->_historyTimes= _historyTimes;
-
+		processor->_timeBool = _timeBool;
 		processor->start();
 	}
 }
@@ -2980,27 +2992,8 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	imagePart.attribute.insert("location", nowLocation);
 
 	_historyTimes->insert(currentTime, currentTime);
+	_timeBool->set(currentTime, false);
 
-
-
-	//static int colorIndex = 0; // 用于生成随机颜色的计数器
-	//// 创建一个 200x200 的纯色图像
-	//cv::Mat coloredImage(200, 200, CV_8UC3); // 200x200 大小，3 通道（BGR）
-
-	//// 使用随机数生成器生成随机颜色
-	//std::random_device rd; // 随机数种子
-	//std::mt19937 gen(rd()); // 随机数生成器
-	//std::uniform_int_distribution<> dis(0, 255); // 生成 0 到 255 的随机数
-
-	//// 随机生成 BGR 三个通道的颜色值
-	//int blue = dis(gen);
-	//int green = dis(gen);
-	//int red = dis(gen);
-
-	//// 设置图像为随机颜色
-	//coloredImage.setTo(cv::Scalar(blue, green, red));
-
-	// 将生成的纯色图像添加到 _imageCollage
 	_imageCollage->pushImage(imagePart, currentTime);
 
 	{
