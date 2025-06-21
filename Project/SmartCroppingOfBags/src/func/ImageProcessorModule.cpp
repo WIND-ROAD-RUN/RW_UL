@@ -161,7 +161,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	auto processResult = processCollageImage_debug(resultImage.mat);
 
 	// 随机添加检测框用于测试
-	getRandomDetecionRec_debug(resultImage, processResult);
+	//getRandomDetecionRec_debug(resultImage, processResult);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
@@ -186,7 +186,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	{
 		if (frame.time>_qieDaoTime)
 		{
-			_lastQieDaoTime = _qieDaoTime;
+			globalThreadData.isQieDao = false;
+
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
@@ -220,12 +221,12 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			emit imageReady(QPixmap::fromImage(collageImage));
 
-			globalThreadData.isQieDao = false;
-
 			emit appendPixel(collageImage.height());
+
+			_lastQieDaoTime = _qieDaoTime;
 		}
 	}
-
+	//emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image.element)));
 }
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
