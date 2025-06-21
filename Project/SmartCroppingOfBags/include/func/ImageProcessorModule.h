@@ -195,7 +195,7 @@ protected:
 
 private:
 	void run_debug(MatInfo& frame);				// 不开剔废时候的调试模式
-	std::vector<Time> getValidTime(const std::vector<Time> &times);
+	std::vector<Time> getValidTime(const std::vector<Time>& times);
 
 
 	void run_monitor(MatInfo& frame);			// 单纯的显示模式
@@ -205,7 +205,7 @@ private:
 	// 调试模式用的封装函数
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
 	std::vector<Time> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true,
-	                                                bool ascending = true);
+		bool ascending = true);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
 	// AI模型处理拼接图像
@@ -220,17 +220,14 @@ private:
 	void addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
 	// 返回包含当前时间点的count个时间戳集合
 	std::vector<Time> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true,
-	                                                      bool ascending = true);
-	// 获得五次时间集合对应的五张图像
-	void getFiveTimesSouceImage_debug(std::vector<Time> fiveTimes,
-	                                  cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat);
+		bool ascending = true);
+	// 获得时间集合对应的图像
+	void getUnprocessedSouceImage_debug(std::vector<Time> fiveTimes, std::vector<cv::Mat>& images);
 	// 获得五次时间集合对应的五张图像的检测结果
-	void getFiveHistoyProcessResult_debug(const Time& time, int count,std::vector<rw::DetectionRectangleInfo>& firstDetectRec,
-		std::vector<rw::DetectionRectangleInfo>& secondDetectRec, std::vector<rw::DetectionRectangleInfo>& thirdDetectRec,
-		std::vector<rw::DetectionRectangleInfo>& fourthDetectRec, std::vector<rw::DetectionRectangleInfo>& fifthDetectRec,
+	void getUnprocessedHistoyProcessResult_debug(const Time& time, int count, std::vector<std::vector<rw::DetectionRectangleInfo>>& detectRecs,
 		bool isBefore = true, bool ascending = true);
 	// 对五张图像进行绘画检测框操作
-	QVector<QImage> drawFiveMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects);
+	QVector<QImage> drawUnprocessedMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects);
 	// 拼接绘画好的五张图像
 	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
 	// 随机添加五个检测框
@@ -240,7 +237,7 @@ private:
 	// 剔废模式下的处理函数
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
 	std::vector<Time> getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore = true,
-	                                                 bool ascending = true);
+		bool ascending = true);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_Defect(const std::vector<Time>& times);
 	// AI模型处理拼接图像

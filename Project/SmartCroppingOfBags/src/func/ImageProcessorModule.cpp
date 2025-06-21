@@ -147,70 +147,37 @@ drawMaskInfo-->collageMaskImage
 */
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-	//// 获得当前图像的时间戳与上一张图像的时间戳的集合
-	//auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
-	//// 获得当前图像与上一张图像拼接而成的图像
-	//auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
+	// 获得当前图像与上一张图像拼接而成的图像
+	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
 
-	////AI开始识别
-	//SmartCroppingOfBagsDefectInfo defectInfo;
-	//auto startTime = std::chrono::high_resolution_clock::now();
+	//AI开始识别
+	SmartCroppingOfBagsDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
 
-	//// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
-	//auto processResult = processCollageImage_debug(resultImage.mat);
+	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
+	auto processResult = processCollageImage_debug(resultImage.mat);
 
-	//// 随机添加检测框用于测试
-	//getRandomDetecionRec_debug(resultImage, processResult);
+	// 随机添加检测框用于测试
+	getRandomDetecionRec_debug(resultImage, processResult);
 
-	//auto endTime = std::chrono::high_resolution_clock::now();
-	//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	//defectInfo.time = QString("处理时间: %1 ms").arg(duration);
-	////AI识别完成
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
 
-	//if (times.empty())
-	//{
-	//	return; // 如果没有时间戳，直接返回
-	//}
+	if (times.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
 
-	//// 获取上一张图像的行高
-	//auto previousMatHeight = splitRecognitionBox_debug(times);
+	// 获取上一张图像的行高
+	auto previousMatHeight = splitRecognitionBox_debug(times);
 
-	//// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
-	//regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
-
-	//// 抓取五张图片的时间戳
-	//auto fiveImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, 5, true);
-
-	//if (fiveImageTimes.size() != 5)
-	//{
-	//	return; // 如果没有时间戳，直接返回
-	//}
-
-	//// 获取五张图片的原图像
-	//cv::Mat firstImage, secondImage, thirdImage, fourthImage, fifthImage;
-	//getFiveTimesSouceImage_debug(fiveImageTimes, firstImage, secondImage, thirdImage, fourthImage, fifthImage);
-	//
-	//std::vector<rw::DetectionRectangleInfo> firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects;
-
-	//// 获得五张图片的识别结果
-	//getFiveHistoyProcessResult_debug(frame.time, 5, firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects, true, true);
-
-	//// 组装 fiveImages 和 fiveImageDetects
-	//std::vector<cv::Mat> fiveImages = {
-	//	firstImage, secondImage, thirdImage, fourthImage, fifthImage
-	//};
-	//std::vector<std::vector<rw::DetectionRectangleInfo>> fiveImageDetects = {
-	//	firstImageDetects, secondImageDetects, thirdImageDetects, fourthImageDetects, fifthImageDetects
-	//};
-
-	//// 依次处理五张图片及其识别框
-	//QVector<QImage> fiveQImages = drawFiveMatMaskInfo_debug(fiveImages, fiveImageDetects);
-
-	//auto pixmap = collageMaskImage_debug(fiveQImages);
-
-
-	////emit imageReady(pixmap);
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
 
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -222,15 +189,40 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			_lastQieDaoTime = _qieDaoTime;
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
-			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图
+			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
-			auto collageImage = _imageCollage->getCollageImage(duringTimes);
 
-			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage.mat)));
+			// 获取有多少张图片没有拼过
+			size_t count = duringTimes.size();
+
+			// 抓取没拼过的图片的时间戳
+			auto unprocessedImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, count, true);
+
+			if (unprocessedImageTimes.size() != count)
+			{
+				return; // 如果没有时间戳，直接返回
+			}
+
+			// 获取没拼过的图片的原图像
+			std::vector<cv::Mat> unprocessedimages(count);
+
+			getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
+
+			// 获得未处理的图片的识别结果
+			std::vector<std::vector<rw::DetectionRectangleInfo>> unprocessedImageDetects(count);
+
+			getUnprocessedHistoyProcessResult_debug(frame.time, count, unprocessedImageDetects, true, true);
+
+			// 处理图片及其识别框
+			QVector<QImage> fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages, unprocessedImageDetects);
+
+			auto collageImage = _imageCollage->verticalConcat(fiveQImages);
+
+			emit imageReady(QPixmap::fromImage(collageImage));
 
 			globalThreadData.isQieDao = false;
 
-			emit appendPixel(collageImage.mat.cols);
+			emit appendPixel(collageImage.height());
 		}
 	}
 
@@ -351,48 +343,47 @@ std::vector<Time> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTim
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
 }
 
-void ImageProcessorSmartCroppingOfBags::getFiveTimesSouceImage_debug(std::vector<Time> fiveTimes,
-                                                                     cv::Mat& firstMat, cv::Mat& secondMat, cv::Mat& thirdMat, cv::Mat& fourthMat, cv::Mat& fifthMat)
+void ImageProcessorSmartCroppingOfBags::getUnprocessedSouceImage_debug(std::vector<Time> fiveTimes, std::vector<cv::Mat>& images)
 {
-	// 检查是否有足够的图像
-	if (!_imageCollage->getImage(fiveTimes[0]).has_value() ||
-		!_imageCollage->getImage(fiveTimes[1]).has_value() ||
-		!_imageCollage->getImage(fiveTimes[2]).has_value() ||
-		!_imageCollage->getImage(fiveTimes[3]).has_value() ||
-		!_imageCollage->getImage(fiveTimes[4]).has_value())
-	{
-		return;
-	}
+	int count = fiveTimes.size();
+	images.resize(count);
 
-	firstMat = _imageCollage->getImage(fiveTimes[0]).value().element;
-	secondMat = _imageCollage->getImage(fiveTimes[1]).value().element;
-	thirdMat = _imageCollage->getImage(fiveTimes[2]).value().element;
-	fourthMat = _imageCollage->getImage(fiveTimes[3]).value().element;
-	fifthMat = _imageCollage->getImage(fiveTimes[4]).value().element;
-}
-
-void ImageProcessorSmartCroppingOfBags::getFiveHistoyProcessResult_debug(const Time& time, int count, std::vector<rw::DetectionRectangleInfo>& firstDetectRec,
-	std::vector<rw::DetectionRectangleInfo>& secondDetectRec, std::vector<rw::DetectionRectangleInfo>& thirdDetectRec,
-	std::vector<rw::DetectionRectangleInfo>& fourthDetectRec, std::vector<rw::DetectionRectangleInfo>& fifthDetectRec,
-	bool isBefore, bool ascending)
-{
-	// 抓取五张图片的识别框
-	auto fiveImageDetect = _historyResult->queryWithTime(time, count, isBefore, ascending);
-
-	if (fiveImageDetect.size() >= 5) {
-		firstDetectRec = fiveImageDetect[0].processResult;
-		secondDetectRec = fiveImageDetect[1].processResult;
-		thirdDetectRec = fiveImageDetect[2].processResult;
-		fourthDetectRec = fiveImageDetect[3].processResult;
-		fifthDetectRec = fiveImageDetect[4].processResult;
+	for (int i = 0; i < count; ++i) {
+		auto imgOpt = _imageCollage->getImage(fiveTimes[i]);
+		if (imgOpt.has_value()) {
+			images[i] = imgOpt.value().element;
+		}
+		else {
+			images[i] = cv::Mat();
+		}
 	}
 }
 
-QVector<QImage> ImageProcessorSmartCroppingOfBags::drawFiveMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects)
+void ImageProcessorSmartCroppingOfBags::getUnprocessedHistoyProcessResult_debug(
+	const Time& time,
+	int count,
+	std::vector<std::vector<rw::DetectionRectangleInfo>>& detectRecs,
+	bool isBefore,
+	bool ascending)
 {
-	// 依次处理五张图片及其识别框
+	// 查询历史检测结果
+	auto imageDetects = _historyResult->queryWithTime(time, count, isBefore, ascending);
+
+	detectRecs.clear();
+	detectRecs.reserve(count);
+
+	for (int i = 0; i < count && i < static_cast<int>(imageDetects.size()); ++i) {
+		detectRecs.push_back(imageDetects[i].processResult);
+	}
+}
+
+QVector<QImage> ImageProcessorSmartCroppingOfBags::drawUnprocessedMatMaskInfo_debug(
+	const std::vector<cv::Mat>& fiveMats,
+	const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects)
+{
 	QVector<QImage> fiveQImages;
-	for (size_t i = 0; i < 5; ++i) {
+	size_t count = std::min(fiveMats.size(), fiveMatDetects.size());
+	for (size_t i = 0; i < count; ++i) {
 		// 过滤出有效索引
 		auto processResultIndex = filterEffectiveIndexes_debug(fiveMatDetects[i]);
 		// 获取当前图像的缺陷信息
