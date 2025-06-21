@@ -53,6 +53,19 @@ namespace rw
 			return binaryStream.str();
 		}
 
+		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
+		{
+			if (str.empty() || str.find_first_not_of("01234567") != std::string::npos)
+				throw std::invalid_argument("输入的字符串不是有效的八进制字符串");
+
+			std::ostringstream binaryStream;
+			for (char octChar : str) {
+				unsigned char byte = static_cast<unsigned char>(std::stoi(std::string(1, octChar), nullptr, 8));
+				binaryStream << std::bitset<3>(byte);
+			}
+			return binaryStream.str();
+		}
+
 		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str, size_t size )
 		{
 			if (str.empty() || str.find_first_not_of("01234567") != std::string::npos)
@@ -97,7 +110,7 @@ namespace rw
 			}
 
 			// 将八进制字符串转换为二进制字符串
-			ActivationString binaryStr = switchOctTOBinary(str);
+			ActivationString binaryStr = switchOctTOBinary(str,str.size());
 
 			// 将二进制字符串转换为十六进制字符串
 			ActivationString hexStr = switchBinaryTOHex(binaryStr);

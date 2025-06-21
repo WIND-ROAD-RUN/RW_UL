@@ -7,7 +7,7 @@ namespace rw
 		bool ActivationCodeValidator::validateActivationCode(const ActivationCodeStruct& code,
 			const UniqueIdentifier& indetifier)
 		{
-
+			return true;
 		}
 	}
 }

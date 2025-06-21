@@ -27,7 +27,8 @@ namespace rw
 		{
 			static ActivationString switchBinaryTOHex(const ActivationString& str);
 			static ActivationString switchHexTOBinary(const ActivationString& str);
-			static ActivationString switchOctTOBinary(const ActivationString& str,size_t size= str.size());
+			static ActivationString switchOctTOBinary(const ActivationString& str);
+			static ActivationString switchOctTOBinary(const ActivationString& str,size_t size);
 			static ActivationString switchBinaryTOOct(const ActivationString& str);
 			static ActivationString switchOctTOHex(const ActivationString& str);
 			static ActivationString switchHexTOOct(const ActivationString& str);

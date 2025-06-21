@@ -24,7 +24,7 @@ namespace cla_ActivationBitsConvert
 
 			// 2to8
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
-			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, testObj.size());
 			ASSERT_EQ(num, testObj);
 		}
 	}
