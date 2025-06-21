@@ -79,6 +79,11 @@ namespace rw
 			return binaryStream.str();
 		}
 
+		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
+		{
+
+		}
+
 		ActivationString ActivationBitsConvert::switchBinaryTOOct(const ActivationString& str)
 		{
 			if (str.empty() || str.find_first_not_of("01") != std::string::npos)
