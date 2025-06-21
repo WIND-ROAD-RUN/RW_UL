@@ -97,7 +97,7 @@ QGroupBox::title {
         <property name="title">
          <string/>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="4,7,3,1,2,3">
+        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="4,7,3,1,2,3,0">
          <item>
           <widget class="QGroupBox" name="groupBox_head">
            <property name="styleSheet">
@@ -1265,6 +1265,39 @@ QPushButton:pressed {
                </widget>
               </item>
              </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_set_3">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QLabel" name="lb_version">
+              <property name="text">
+               <string>Ver：</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

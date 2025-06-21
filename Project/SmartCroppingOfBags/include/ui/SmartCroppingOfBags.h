@@ -7,6 +7,7 @@
 #include "ui_SmartCroppingOfBags.h"
 #include "PictureViewerThumbnails.h"
 #include"rqw_CarouselWidget.h"
+#include "rqw_DlgVersion.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCroppingOfBagsClass; };
