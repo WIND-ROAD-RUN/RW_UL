@@ -1,6 +1,6 @@
 #include"cla_ActivationConfig_t.hpp"
 
-namespace cla_ActivationConfig
+namespace cla_ActivationCodeModule
 {
 	TEST(ActivationConfigStruct, serialize)
 	{
