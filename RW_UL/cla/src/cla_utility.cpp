@@ -78,7 +78,7 @@ namespace rw
 
 		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
 		{
-
+			return "";
 		}
 
 		ActivationString ActivationBitsConvert::switchBinaryTOOct(const ActivationString& str)
