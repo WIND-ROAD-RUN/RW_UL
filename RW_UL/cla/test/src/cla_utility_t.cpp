@@ -13,10 +13,19 @@ namespace cla_ActivationBitsConvert
 {
 	TEST_F(ActivationBitsConvert_T,b)
 	{
-		for (int i=0;i<100;i++)
+		for (int i=0;i<1000;i++)
 		{
 			generate();
-			std::cout << testObj << std::endl;
+			auto num = testObj;
+			//// 2to16
+			//testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
+			//testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj);
+			//ASSERT_EQ(num, testObj);
+
+			// 2to8
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, testObj.size());
+			ASSERT_EQ(num, testObj);
 		}
 	}
 
