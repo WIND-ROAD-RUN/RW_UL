@@ -14,7 +14,7 @@
 
 #include"ImageCollage.hpp"
 #include"dsl_TimeBasedCache.hpp"
-#include"ThreadSafeFIFO.hpp"
+#include"dsl_CacheFIFOThreadSafe.hpp"
 
 
 // 智能裁切吨袋检测信息
@@ -134,7 +134,7 @@ private:
 	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, Time>> _historyTimes = nullptr;
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>> _historyResult = nullptr;
-	std::shared_ptr<rw::dsl::ThreadSafeFIFO<Time, bool>> _timeBool = nullptr;
+	std::shared_ptr<rw::dsl::CacheFIFOThreadSafe<Time, bool>> _timeBool = nullptr;
 public:
 	// 初始化图像处理模块
 	void BuildModule();
@@ -178,7 +178,7 @@ public:
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, Time>> _historyTimes = nullptr;
 
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>> _historyResult = nullptr;
-	std::shared_ptr<rw::dsl::ThreadSafeFIFO<Time, bool>> _timeBool = nullptr;
+	std::shared_ptr<rw::dsl::CacheFIFOThreadSafe<Time, bool>> _timeBool = nullptr;
 	size_t collageImagesNum = 5;
 public:
 	ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue,
