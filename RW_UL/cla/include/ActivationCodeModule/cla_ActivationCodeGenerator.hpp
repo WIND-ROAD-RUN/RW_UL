@@ -19,7 +19,7 @@ namespace rw
 			ActivationCodeGenerator()=default;
 			~ActivationCodeGenerator()=default;
 		public:
-			ActivationString generateActivationCode(const UniqueIdentifier & indetifier);
+			ActivationString generateActivationBinaryCode(const UniqueIdentifier & indetifier);
 
 		};
 	}

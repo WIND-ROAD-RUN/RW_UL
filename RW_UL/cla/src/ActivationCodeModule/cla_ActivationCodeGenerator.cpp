@@ -3,6 +3,8 @@
 #include <openssl/sha.h>
 #include <iomanip>
 #include <sstream>
+#include <vector>
+#include <bitset>
 
 namespace rw
 {
@@ -23,7 +25,7 @@ namespace rw
 		{
 		}
 
-		ActivationString ActivationCodeGenerator::generateActivationCode(const UniqueIdentifier& indetifier)
+		ActivationString ActivationCodeGenerator::generateActivationBinaryCode(const UniqueIdentifier& indetifier)
 		{
 			// 序列化配置字符串
 			auto configStr = ActivationConfig::serialize(_config);
@@ -35,16 +37,16 @@ namespace rw
 			unsigned char hash[SHA256_DIGEST_LENGTH];
 			SHA256(reinterpret_cast<const unsigned char*>(combinedData.c_str()), combinedData.size(), hash);
 
-			// 将哈希值转换为十六进制字符串
-			std::ostringstream activationCodeStream;
+			// 将哈希值转换为二进制字符串
+			std::ostringstream binaryActivationCodeStream;
 			for (unsigned char byte : hash)
 			{
-				activationCodeStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+				// 使用 std::bitset 将每个字节转换为二进制字符串
+				binaryActivationCodeStream << std::bitset<8>(byte);
 			}
 
-			// 返回生成的激活码
-			return activationCodeStream.str();
-
+			// 返回生成的二进制激活码
+			return binaryActivationCodeStream.str();
 		}
 	}
 }
