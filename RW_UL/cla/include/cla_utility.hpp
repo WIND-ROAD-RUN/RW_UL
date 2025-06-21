@@ -26,6 +26,7 @@ namespace rw
 		struct ActivationBitsConvert
 		{
 			static ActivationString switchBinaryTOHex(const ActivationString& str);
+			static ActivationString switchHexTOBinary(const ActivationString& str, size_t size);
 			static ActivationString switchHexTOBinary(const ActivationString& str);
 			static ActivationString switchOctTOBinary(const ActivationString& str,size_t size);
 			static ActivationString switchOctTOBinary(const ActivationString& str);
