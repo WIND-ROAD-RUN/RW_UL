@@ -21,6 +21,8 @@ namespace rw
 		public:
 			ActivationString generateActivationBinaryCode(const UniqueIdentifier & indetifier);
 
+		public:
+			ActivationCodeStruct generateActivationCode(const UniqueIdentifier& indetifier,ActivationBits type= ActivationBits::Hexadecimal);
 		};
 	}
 }
