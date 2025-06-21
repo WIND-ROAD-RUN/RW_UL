@@ -76,6 +76,11 @@ namespace rw
 			return binaryStream.str();
 		}
 
+		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
+		{
+
+		}
+
 		ActivationString ActivationBitsConvert::switchBinaryTOOct(const ActivationString& str)
 		{
 			// 检查输入是否为有效的二进制字符串
