@@ -567,13 +567,20 @@ namespace rw
 
 		bool Camera_DS::setLineHeight(size_t number)
 		{
+			dvpRegion temp;
 			if (!m_cameraHandle) {
 				return false; 
 			}
+			auto getStates=dvpGetRoi(m_cameraHandle, &temp);
 
-			dvpStatus status = dvpSetConfigString(m_cameraHandle, "LineHeight", std::to_string(number).c_str());
-			if (status == DVP_STATUS_OK) {
-				return true; 
+			if (getStates == DVP_STATUS_OK) {
+				temp.H = number;
+				auto setLineHeightState = dvpSetRoi(m_cameraHandle, temp);
+				if (setLineHeightState== DVP_STATUS_OK)
+				{
+					return true;
+				}
+				return false;
 			}
 			else {
 				return false; 

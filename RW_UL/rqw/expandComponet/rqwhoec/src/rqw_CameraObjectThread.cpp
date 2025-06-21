@@ -199,7 +199,7 @@ namespace rw
 		{
 			if (_cameraObject)
 			{
-				return _cameraObject->setTriggerLine(number);
+				return _cameraObject->setLineHeight(number);
 			}
 			return false;
 		}
