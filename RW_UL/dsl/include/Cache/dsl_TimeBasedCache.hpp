@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <iostream>
-#include <chrono>
+#include<chrono>
 
 namespace rw {
     namespace dsl {
@@ -15,16 +15,16 @@ namespace rw {
         public:
             explicit TimeBasedCache(size_t capacity) : _capacity(capacity) {}
 
-            // 插入数据
+            // ��������
             void insert(const Time& time, const T& data) {
                 std::lock_guard<std::mutex> lock(_mutex);
 
-                // 如果缓存已满，删除最旧的数据
+                // �������������ɾ����ɵ�����
                 if (_cache.size() >= _capacity) {
                     _cache.pop_front();
                 }
 
-                // 插入新数据
+                // ����������
                 _cache.emplace_back(time, data);
             }
 
@@ -33,7 +33,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 1. 先筛选方向
+                // 1. ��ɸѡ����
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -44,17 +44,17 @@ namespace rw {
                     }
                 }
 
-                // 2. 按与 time 的距离排序
+                // 2. ���� time �ľ�������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 3. 取前 count 个
+                // 3. ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 4. 按时间排序
+                // 4. ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -66,7 +66,7 @@ namespace rw {
                         });
                 }
 
-                // 5. 只返回数据部分
+                // 5. ֻ�������ݲ���
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -86,7 +86,7 @@ namespace rw {
                     }
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -98,7 +98,7 @@ namespace rw {
                         });
                 }
 
-                // 处理 hasLeft/hasRight
+                // ���� hasLeft/hasRight
                 if (!candidates.empty() && !hasLeft && candidates.front().first == beginTime) {
                     candidates.erase(candidates.begin());
                 }
@@ -118,7 +118,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 收集所有与 time 的距离
+                // �ռ������� time �ľ���
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -126,17 +126,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // 按距离排序
+                // ����������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 取前 count 个
+                // ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -148,7 +148,7 @@ namespace rw {
                         });
                 }
 
-                // 只返回数据部分
+                // ֻ�������ݲ���
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -162,7 +162,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 1. 先筛选方向
+                // 1. ��ɸѡ����
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -173,17 +173,17 @@ namespace rw {
                     }
                 }
 
-                // 2. 按与 time 的距离排序
+                // 2. ���� time �ľ�������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 3. 取前 count 个
+                // 3. ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 4. 按时间排序
+                // 4. ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -195,7 +195,7 @@ namespace rw {
                         });
                 }
 
-                // 5. 返回 map
+                // 5. ���� map
                 std::unordered_map<Time, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -208,7 +208,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 收集所有与 time 的距离
+                // �ռ������� time �ľ���
                 std::vector<std::pair<Time, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -216,17 +216,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // 按距离排序
+                // ����������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs(a.first - time) < std::abs(b.first - time);
                     });
 
-                // 取前 count 个
+                // ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -238,7 +238,7 @@ namespace rw {
                         });
                 }
 
-                // 返回 map
+                // ���� map
                 std::unordered_map<Time, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -246,16 +246,16 @@ namespace rw {
                 return result;
             }
 
-            // 获取缓存大小
+            // ��ȡ�����С
             size_t size() const {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
             }
 
         private:
-            mutable std::mutex _mutex; // 保护缓存的线程安全
-            size_t _capacity;          // 缓存容量
-            std::deque<std::pair<Time, T>> _cache; // 缓存数据，存储时间点和数据的键值对
+            mutable std::mutex _mutex; // ����������̰߳�ȫ
+            size_t _capacity;          // ��������
+            std::deque<std::pair<Time, T>> _cache; // �������ݣ��洢ʱ�������ݵļ�ֵ��
         };
 
         template <typename T>
@@ -276,7 +276,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 收集所有与 time 的距离
+                // �ռ������� time �ľ���
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -284,17 +284,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // 按距离排序
+                // ����������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // 取前 count 个
+                // ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -306,7 +306,7 @@ namespace rw {
                         });
                 }
 
-                // 只返回数据部分
+                // ֻ�������ݲ���
                 std::vector<T> result;
                 for (const auto& entry : candidates) {
                     result.push_back(entry.second);
@@ -319,7 +319,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 收集所有与 time 的距离
+                // �ռ������� time �ľ���
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first < time) {
@@ -330,17 +330,17 @@ namespace rw {
                     }
                 }
 
-                // 按距离排序
+                // ����������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // 取前 count 个
+                // ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -352,7 +352,7 @@ namespace rw {
                         });
                 }
 
-                // 返回 map
+                // ���� map
                 std::unordered_map<std::chrono::system_clock::time_point, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -365,7 +365,7 @@ namespace rw {
 
                 if (count <= 0) return {};
 
-                // 收集所有与 time 的距离
+                // �ռ������� time �ľ���
                 std::vector<std::pair<std::chrono::system_clock::time_point, T>> candidates;
                 for (const auto& entry : _cache) {
                     if (isBefore && entry.first > time) continue;
@@ -373,17 +373,17 @@ namespace rw {
                     candidates.push_back(entry);
                 }
 
-                // 按距离排序
+                // ����������
                 std::sort(candidates.begin(), candidates.end(), [&time](const auto& a, const auto& b) {
                     return std::abs((a.first - time).count()) < std::abs((b.first - time).count());
                     });
 
-                // 取前 count 个
+                // ȡǰ count ��
                 if (candidates.size() > static_cast<size_t>(count)) {
                     candidates.resize(count);
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -395,7 +395,7 @@ namespace rw {
                         });
                 }
 
-                // 返回 map
+                // ���� map
                 std::unordered_map<std::chrono::system_clock::time_point, T> result;
                 for (const auto& entry : candidates) {
                     result[entry.first] = entry.second;
@@ -453,7 +453,7 @@ namespace rw {
                     }
                 }
 
-                // 按时间排序
+                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -465,7 +465,7 @@ namespace rw {
                         });
                 }
 
-                // 处理 hasLeft/hasRight
+                // ���� hasLeft/hasRight
                 if (!candidates.empty() && !hasLeft && candidates.front().first == beginTime) {
                     candidates.erase(candidates.begin());
                 }

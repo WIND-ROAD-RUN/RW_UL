@@ -9,46 +9,98 @@
 #include"cryptopp/aes.h"
 #include"cryptopp/hex.h"
 
-namespace cla_utility
+namespace cla_ActivationBitsConvert
 {
-	TEST(a,b)
+	// 2to16，16to2
+	TEST_F(ActivationBitsConvert_T,a)
 	{
-		// 测试输入
-		std::string input = "Hello, Crypto++!";
-		std::string key = "1234567890123456"; 
-		std::string iv = "6543210987654321"; 
-
-		// 加密结果
-		std::string encrypted;
-
-		try
+		for (int i=0;i<1000;i++)
 		{
-			// 使用Crypto++进行AES加密
-			CryptoPP::AES::Encryption aesEncryption(reinterpret_cast<const unsigned char*>(key.data()), key.size());
-			CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, reinterpret_cast<const unsigned char*>(iv.data()));
-
-			CryptoPP::StringSource ss(input, true,
-				new CryptoPP::StreamTransformationFilter(cbcEncryption,
-					new CryptoPP::StringSink(encrypted)));
-
-			// 将加密结果转换为十六进制字符串
-			std::string hexEncoded;
-			CryptoPP::StringSource hexSource(encrypted, true,
-				new CryptoPP::HexEncoder(
-					new CryptoPP::StringSink(hexEncoded)));
-
-			// 输出加密结果
-			std::cout << "Encrypted (Hex): " << hexEncoded << std::endl;
-
-			// 检查加密结果是否非空
-			ASSERT_FALSE(encrypted.empty());
-		}
-		catch (const CryptoPP::Exception& e)
-		{
-			// 如果加密失败，测试失败
-			FAIL() << "Encryption failed: " << e.what();
+			generate();
+			auto num = testObj;
+			
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj);
+			ASSERT_EQ(num, testObj);
 		}
 	}
 
+	// 2to8,8to2
+	TEST_F(ActivationBitsConvert_T, b)
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			generate();
+			auto num = testObj;
 
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, num.size());
+			ASSERT_EQ(num, testObj);
+		}
+	}
+
+	// 2to16,16to8,8to2
+	TEST_F(ActivationBitsConvert_T, c)
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			generate();
+			auto num = testObj;
+			
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, num.size());
+			ASSERT_EQ(num, testObj);
+		}
+	}
+
+	// 2to8,8to16,16to2
+	TEST_F(ActivationBitsConvert_T, d)
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			generate();
+			auto num = testObj;
+
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj,num.size());
+			ASSERT_EQ(num, testObj);
+		}
+	}
+
+	// 2to16,16to8,8to16,16to8,8to2
+	TEST_F(ActivationBitsConvert_T, e)
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			generate();
+			auto num = testObj;
+
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj,num.size());
+			ASSERT_EQ(num, testObj);
+		}
+	}
+
+	// 2to8,8to2,2to16,16to8,8to16,16to2
+	TEST_F(ActivationBitsConvert_T, f)
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			generate();
+			auto num = testObj;
+
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj,num.size());
+			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj,num.size());
+			ASSERT_EQ(num, testObj);
+		}
+	}
 }
