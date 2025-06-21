@@ -219,8 +219,10 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	{
 		if (frame.time>_qieDaoTime)
 		{
+			_lastQieDaoTime = _qieDaoTime;
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
+			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图
 			duringTimes = getValidTime(duringTimes);
 			auto collageImage = _imageCollage->getCollageImage(duringTimes);
 
@@ -229,7 +231,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			globalThreadData.isQieDao = false;
 
 			emit appendPixel(collageImage.mat.cols);
-			_lastQieDaoTime = _qieDaoTime;
 		}
 	}
 
@@ -237,8 +238,21 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
 {
-	std::vector<Time> result;
-
+	std::vector<Time> result = times;
+	for (const auto& item : result)
+	{
+		if (_timeBool->get(item).has_value())
+		{
+			if (_timeBool->get(item).value() == true)
+			{
+				result.erase(std::remove(result.begin(), result.end(), item), result.end());
+			}
+			else if (_timeBool->get(item).value() == false)
+			{
+				_timeBool->set(item,true);
+			}
+		}
+	}
 
 	return result;
 }
