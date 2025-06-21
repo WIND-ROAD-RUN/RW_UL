@@ -32,6 +32,8 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 	// 构建异步线程
 	GlobalStructThreadSmartCroppingOfBags::getInstance().build_detachThread();
+	connect(GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::updateMainWindowInfo,
+		this,&SmartCroppingOfBags::onUpdateMainWindowInfo);
 
 	// 构建图像保存引擎
 	build_imageSaveEngine();
@@ -605,4 +607,22 @@ void SmartCroppingOfBags::updateCardLabelState(bool state)
 		ui->lb_bankalianjiezhuangtai->setText("连接失败");
 		ui->lb_bankalianjiezhuangtai->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
 	}
+}
+
+void SmartCroppingOfBags::onUpdateMainWindowInfo(int i)
+{
+	auto& info = GlobalStructDataSmartCroppingOfBags::getInstance().statisticalInfo;
+	if (i==1)
+	{
+		ui->label_produceTotal->setText(QString::number(info.produceCount));
+		ui->label_wasteProducts->setText(QString::number(info.wasteCount));
+		ui->lb_lianglv->setText(QString::number(info.productionYield));
+		ui->lb_pingjundaichang->setText(QString::number(info.averageBagLength));
+	}
+	if (i == 30)
+	{
+		ui->label_removeRate->setText(QString::number(info.removeRate));
+	}
+	
+	
 }
