@@ -1,6 +1,6 @@
 #include"cla_ActivationCodeGenerator_t.hpp"
 
-namespace cla_ActivationCodeGenerator
+namespace cla_ActivationCodeModule
 {
 
 	TEST(ActivationCodeGenerator, construct)

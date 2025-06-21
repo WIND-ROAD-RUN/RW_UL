@@ -2905,7 +2905,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 	_imageCollage = std::make_shared<ImageCollage>();
 	_imageCollage->iniCache(50);
 	_historyResult = std::make_shared<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>>(50);
-	_timeBool = std::make_shared<rw::dsl::ThreadSafeFIFO<Time, bool>>(50);
+	_timeBool = std::make_shared<rw::dsl::CacheFIFOThreadSafe<Time, bool>>(50);
 
 	for (int i = 0; i < _numConsumers; ++i) {
 		static size_t workIndexCount = 0;
