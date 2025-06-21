@@ -48,5 +48,29 @@ namespace rw
 			// 返回生成的二进制激活码
 			return binaryActivationCodeStream.str();
 		}
+
+		ActivationCodeStruct ActivationCodeGenerator::generateActivationCode(const UniqueIdentifier& indetifier,
+			ActivationBits type)
+		{
+			auto binaryStr = generateActivationBinaryCode(indetifier);
+			ActivationCodeStruct result;
+
+			switch (type)
+			{
+			case ActivationBits::Binary:
+				result.type = ActivationBits::Binary;
+				result.str = binaryStr;
+				break;
+			case ActivationBits::Hexadecimal:
+				result.type = ActivationBits::Hexadecimal;
+				result.str = ActivationBitsConvert::switchBinaryTOHex(binaryStr);
+				break;
+			case ActivationBits::Octal:
+				result.type = ActivationBits::Octal;
+				result.str = ActivationBitsConvert::switchBinaryTOOct(binaryStr);
+				break;
+			}
+			return result;
+		}
 	}
 }

@@ -53,7 +53,7 @@ namespace rw
 			return binaryStream.str();
 		}
 
-		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
+		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str, size_t size )
 		{
 			if (str.empty() || str.find_first_not_of("01234567") != std::string::npos)
 				throw std::invalid_argument("输入的字符串不是有效的八进制字符串");
