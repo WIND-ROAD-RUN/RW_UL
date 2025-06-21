@@ -55,56 +55,36 @@ namespace rw
 
 		ActivationString ActivationBitsConvert::switchOctTOBinary(const ActivationString& str)
 		{
-			// 检查输入是否为有效的八进制字符串
 			if (str.empty() || str.find_first_not_of("01234567") != std::string::npos)
-			{
 				throw std::invalid_argument("输入的字符串不是有效的八进制字符串");
-			}
 
-			// 将八进制字符串转换为二进制字符串
 			std::ostringstream binaryStream;
-			for (char octChar : str)
-			{
-				// 将每个八进制字符转换为整数
+			for (char octChar : str) {
 				unsigned char byte = static_cast<unsigned char>(std::stoi(std::string(1, octChar), nullptr, 8));
-
-				// 使用 std::bitset 将整数转换为 3 位二进制字符串
 				binaryStream << std::bitset<3>(byte);
 			}
-
-			// 返回生成的二进制字符串
 			return binaryStream.str();
 		}
 
 		ActivationString ActivationBitsConvert::switchBinaryTOOct(const ActivationString& str)
 		{
-			// 检查输入是否为有效的二进制字符串
 			if (str.empty() || str.find_first_not_of("01") != std::string::npos)
-			{
 				throw std::invalid_argument("输入的字符串不是有效的二进制字符串");
+
+			// 先补齐到3的倍数
+			std::string bin = str;
+			while (bin.size() % 3 != 0) {
+				bin = "0" + bin;
 			}
 
-			// 将二进制字符串分割为每 3 位一组
 			std::ostringstream octStream;
-			for (size_t i = 0; i < str.size(); i += 3)
-			{
-				// 提取 3 位二进制子串
-				std::string bitStr = str.substr(i, 3);
-
-				// 如果不足 3 位，补充 0
-				while (bitStr.size() < 3)
-				{
-					bitStr = "0" + bitStr;
-				}
-
-				// 将二进制子串转换为整数
+			for (size_t i = 0; i < bin.size(); i += 3) {
+				std::string bitStr = bin.substr(i, 3);
 				unsigned char byte = static_cast<unsigned char>(std::bitset<3>(bitStr).to_ulong());
-
-				// 将整数转换为八进制字符
-				octStream << static_cast<int>(byte);
+				octStream << static_cast<char>('0' + byte);
 			}
 
-			// 返回生成的八进制字符串
+			// 不去除前导0，直接返回
 			return octStream.str();
 		}
 
