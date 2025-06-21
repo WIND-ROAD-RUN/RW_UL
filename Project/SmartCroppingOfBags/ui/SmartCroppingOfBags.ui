@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1097</width>
-    <height>805</height>
+    <height>847</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1270,7 +1270,7 @@ QPushButton:pressed {
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="gBox_set_3">
+          <widget class="QGroupBox" name="gBox_version">
            <property name="styleSheet">
             <string notr="true">QGroupBox {
     font-size: 20px;

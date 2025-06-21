@@ -69,6 +69,11 @@ struct ClassId
 	static constexpr int Sebiao = 17;
 };
 
+struct Version
+{
+	inline static const QString version = "0.0.20250621";
+};
+
 inline struct GlobalPath
 {
 public:

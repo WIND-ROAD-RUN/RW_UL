@@ -107,6 +107,9 @@ void SmartCroppingOfBags::build_connect()
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
 		this, &SmartCroppingOfBags::onCameraNGDisplay);
 
+	QObject::connect(_clickableVersionLabel ,&rw::rqw::ClickableLabel::clicked,
+		this, &SmartCroppingOfBags::lb_version_clicked);
+
 }
 
 void SmartCroppingOfBags::build_motion()
@@ -200,6 +203,17 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	layout->replaceWidget(ui->pushButton, _carouselWidget);
 	_carouselWidget->setSize(10);
 	delete ui->pushButton;
+
+	// 初始化版本显示label
+	_clickableVersionLabel = new rw::rqw::ClickableLabel(this);
+
+	this->_dlgVersion = new DlgVersion(this);
+	this->_dlgVersion->loadVersionPath(R"(D:\zfkjData\SmartCroppingOfBags\Version\Version.txt)");
+	this->_dlgVersion->hide();
+	auto layoutVersion = ui->gBox_version->layout();
+	layoutVersion->replaceWidget(ui->lb_version, _clickableVersionLabel);
+	delete ui->lb_version;
+	_clickableVersionLabel->setText(Version::version);
 }
 
 void SmartCroppingOfBags::build_DlgProductSetData()
@@ -530,6 +544,19 @@ void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
 	global.camera1->setFrameTriggered(true);
 	global.camera1->setLineTriggered(true);
 	global.camera1->setLineHeight(16000);
+}
+
+void SmartCroppingOfBags::lb_version_clicked()
+{
+	if (_dlgVersion)
+	{
+		_dlgVersion->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+		_dlgVersion->show();
+	}
+	else
+	{
+		qDebug() << "版本对话框未初始化";
+	}
 }
 
 

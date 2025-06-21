@@ -8,6 +8,7 @@
 #include "PictureViewerThumbnails.h"
 #include"rqw_CarouselWidget.h"
 #include "rqw_DlgVersion.h"
+#include "rqw_LabelClickable.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SmartCroppingOfBagsClass; };
@@ -18,6 +19,7 @@ class SmartCroppingOfBags : public QMainWindow
 	Q_OBJECT
 private:
 	CarouselWidget* _carouselWidget = nullptr;
+	DlgVersion* _dlgVersion = nullptr;
 public:
 	SmartCroppingOfBags(QWidget *parent = nullptr);
 	~SmartCroppingOfBags();
@@ -29,6 +31,7 @@ public:
 
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
+	rw::rqw::ClickableLabel* _clickableVersionLabel = nullptr;
 
 public:
 	void build_ui();
@@ -70,6 +73,8 @@ private slots:
 	void ckb_cuntu_checked();
 	void rbtn_zhinengcaiqie_clicked(bool checked);
 	void rbtn_yinshuazhiliangjiance_clicked(bool checked);
+
+	void lb_version_clicked();
 
 private slots:
 	void updateCameraLabelState(int cameraIndex, bool state);
