@@ -23,4 +23,9 @@ namespace hoei_HardwareInfo
 			std::cout << item.type << std::endl;
 		}
 	}
+
+	TEST(MotherBoardInfo, getMotherBoardInfo)
+	{
+		std::cout << "MotherboardUniqueID:" <<  rw::hoei::MotherBoardInfo::GetMotherboardUniqueID() << std::endl;
+	}
 }

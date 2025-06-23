@@ -35,8 +35,17 @@ namespace rw {
 			};
 			std::vector<Topology> topology;
 			static std::vector<Topology> GeyTopology();
-		public:
+		};
 
+
+		struct MotherBoardInfo
+		{
+		public:
+			MotherBoardInfo();
+		public:
+			std::string UUID{};
+		public:
+			static std::string GetMotherboardUniqueID();
 		};
 	}
 }
