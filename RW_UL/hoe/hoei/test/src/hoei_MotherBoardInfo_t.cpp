@@ -6,6 +6,8 @@ namespace hoei_HardwareInfo
 {
 	TEST(MotherBoardInfo, getMotherBoardInfo)
 	{
-		std::cout << "MotherboardUniqueID:" << rw::hoei::MotherBoardInfo::GetMotherboardUniqueID() << std::endl;
+		rw::hoei::MotherBoardInfo info;
+		info.getCurrentContextInfo();
+		std::cout << "MotherboardUniqueID:" << info.UUID << std::endl;
 	}
 }

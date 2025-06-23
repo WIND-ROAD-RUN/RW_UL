@@ -7,13 +7,7 @@ namespace rw
 {
 	namespace hoei
 	{
-		MotherBoardInfo::MotherBoardInfo()
-		{
-			UUID = MotherBoardInfo::GetMotherboardUniqueID();
-		}
-
-
-		std::string MotherBoardInfo::GetMotherboardUniqueID()
+		std::string MotherBoardInfoFactory::GetMotherboardUniqueID()
 		{
 			//#if defined(_WIN32)
 						// Windows-specific implementation using WMI
@@ -56,6 +50,43 @@ namespace rw
 			//#else
 			//			throw std::runtime_error("Unsupported platform for retrieving motherboard UUID.");
 			//#endif
+		}
+
+		MotherBoardInfo::MotherBoardInfo(const MotherBoardInfo& other)
+			: UUID(other.UUID) {
+		}
+
+		MotherBoardInfo::MotherBoardInfo(MotherBoardInfo&& other) noexcept
+			: UUID(std::move(other.UUID)) {
+		}
+
+		MotherBoardInfo& MotherBoardInfo::operator=(const MotherBoardInfo& other)
+		{
+			if (this != &other) {
+				UUID = other.UUID;
+			}
+			return *this;
+		}
+
+		MotherBoardInfo& MotherBoardInfo::operator=(MotherBoardInfo&& other) noexcept
+		{
+			if (this != &other) {
+				UUID = std::move(other.UUID);
+			}
+			return *this;
+		}
+
+		void MotherBoardInfo::getCurrentContextInfo()
+		{
+			auto info = MotherBoardInfoFactory::createMotherBoardInfo();
+			*this = info;
+		}
+
+		MotherBoardInfo MotherBoardInfoFactory::createMotherBoardInfo()
+		{
+			MotherBoardInfo info;
+			info.UUID = MotherBoardInfoFactory::GetMotherboardUniqueID();
+			return info;
 		}
 	}
 }

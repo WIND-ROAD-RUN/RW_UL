@@ -8,19 +8,14 @@ namespace rw {
 		struct CPUInfo
 		{
 		public:
-			// 默认构造函数
 			CPUInfo()=default;
 
-			// 拷贝构造函数
 			CPUInfo(const CPUInfo& other);
 
-			// 移动构造函数
 			CPUInfo(CPUInfo&& other) noexcept;
 
-			// 拷贝赋值运算符
 			CPUInfo& operator=(const CPUInfo& other);
 
-			// 移动赋值运算符
 			CPUInfo& operator=(CPUInfo&& other) noexcept;
 		public:
 			void getCurrentContextInfo();
