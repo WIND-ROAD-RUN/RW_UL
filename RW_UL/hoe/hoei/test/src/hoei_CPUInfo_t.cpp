@@ -7,7 +7,7 @@ namespace hoei_HardwareInfo
 	TEST(CPUInfo, getCpuInfo)
 	{
 		rw::hoei::CPUInfo  cpuInfo;
-
+		cpuInfo.getCurrentContextInfo();
 		std::cout << "CpuModel:" << cpuInfo.cpuModel << std::endl;
 		std::cout << "BaseClockSpeed:" << cpuInfo.baseClockSpeed << " MHz" << std::endl;
 		std::cout << "CoreCount:" << cpuInfo.coreCount << std::endl;

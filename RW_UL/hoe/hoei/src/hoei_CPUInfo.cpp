@@ -6,17 +6,63 @@ namespace rw
 {
 	namespace hoei
 	{
-		CPUInfo::CPUInfo()
-		{
-			cpuModel = CPUInfo::GetCPUModel();
-			coreCount = CPUInfo::GetCoreCount();
-			logicCoreCount = CPUInfo::GetLogicCount();
-			threadCount = CPUInfo::GetThreadCount();
-			baseClockSpeed = CPUInfo::GetBaseClockSpeed();
-			topology = CPUInfo::GeyTopology();
+		
+
+		CPUInfo::CPUInfo(const CPUInfo& other)
+			: cpuModel(other.cpuModel), coreCount(other.coreCount), logicCoreCount(other.logicCoreCount),
+			threadCount(other.threadCount), baseClockSpeed(other.baseClockSpeed), topology(other.topology) {
 		}
 
-		std::string CPUInfo::GetCPUModel()
+		CPUInfo::CPUInfo(CPUInfo&& other) noexcept
+			: cpuModel(std::move(other.cpuModel)), coreCount(other.coreCount), logicCoreCount(other.logicCoreCount),
+			threadCount(other.threadCount), baseClockSpeed(other.baseClockSpeed), topology(std::move(other.topology)) {
+		}
+
+		CPUInfo& CPUInfo::operator=(const CPUInfo& other)
+		{
+			if (this != &other) {
+				cpuModel = other.cpuModel;
+				coreCount = other.coreCount;
+				logicCoreCount = other.logicCoreCount;
+				threadCount = other.threadCount;
+				baseClockSpeed = other.baseClockSpeed;
+				topology = other.topology;
+			}
+			return *this;
+		}
+
+		CPUInfo& CPUInfo::operator=(CPUInfo&& other) noexcept
+		{
+			if (this != &other) {
+				cpuModel = std::move(other.cpuModel);
+				coreCount = other.coreCount;
+				logicCoreCount = other.logicCoreCount;
+				threadCount = other.threadCount;
+				baseClockSpeed = other.baseClockSpeed;
+				topology = std::move(other.topology);
+			}
+			return *this;
+		}
+
+		void CPUInfo::getCurrentContextInfo()
+		{
+			auto info = CPUInfoFactory::createCPUInfo();
+			*this = info;
+		}
+
+		CPUInfo CPUInfoFactory::createCPUInfo()
+		{
+			CPUInfo info;
+			info.cpuModel = CPUInfoFactory::GetCPUModel();
+			info.coreCount = CPUInfoFactory::GetCoreCount();
+			info.logicCoreCount = CPUInfoFactory::GetLogicCount();
+			info.threadCount = CPUInfoFactory::GetThreadCount();
+			info.baseClockSpeed = CPUInfoFactory::GetBaseClockSpeed();
+			info.topology = CPUInfoFactory::GeyTopology();
+			return info;
+		}
+
+		std::string CPUInfoFactory::GetCPUModel()
 		{
 			char cpuInfo[0x40] = { 0 };
 			int cpuInfoData[4] = { 0 };
@@ -33,7 +79,7 @@ namespace rw
 			return std::string(cpuInfo);
 		}
 
-		size_t CPUInfo::GetCoreCount() {
+		size_t CPUInfoFactory::GetCoreCount() {
 			// 初始化 hwloc 拓扑
 			hwloc_topology_t topology;
 			hwloc_topology_init(&topology);
@@ -54,7 +100,7 @@ namespace rw
 			return coreCount;
 		}
 
-		size_t CPUInfo::GetLogicCount() {
+		size_t CPUInfoFactory::GetLogicCount() {
 			// 初始化 hwloc 拓扑
 			hwloc_topology_t topology;
 			hwloc_topology_init(&topology);
@@ -75,12 +121,12 @@ namespace rw
 			return logicCount;
 		}
 
-		size_t CPUInfo::GetThreadCount() {
+		size_t CPUInfoFactory::GetThreadCount() {
 			// 使用 hwloc 获取逻辑处理器数作为线程数
 			return GetLogicCount();
 		}
 
-		double CPUInfo::GetBaseClockSpeed()
+		double CPUInfoFactory::GetBaseClockSpeed()
 		{
 			HKEY hKey;
 			DWORD data;
@@ -101,9 +147,9 @@ namespace rw
 		}
 
 
-		std::vector<CPUInfo::Topology> CPUInfo::GeyTopology()
+		std::vector<CPUInfo::Topology> CPUInfoFactory::GeyTopology()
 		{
-			std::vector<Topology> topology;
+			std::vector<CPUInfo::Topology> topology;
 
 			// 初始化 hwloc 拓扑
 			hwloc_topology_t hwTopology;
@@ -117,7 +163,7 @@ namespace rw
 				for (int i = 0; i < numObjects; ++i) {
 					hwloc_obj_t obj = hwloc_get_obj_by_depth(hwTopology, d, i);
 
-					Topology topo;
+					CPUInfo::Topology topo;
 					topo.type = hwloc_obj_type_string(obj->type); // 获取类型名称
 					topo.depth = d;
 					topo.index = i;

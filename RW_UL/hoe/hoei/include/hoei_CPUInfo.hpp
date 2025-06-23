@@ -4,26 +4,37 @@
 
 namespace rw {
 	namespace hoei {
+
 		struct CPUInfo
 		{
 		public:
-			CPUInfo();
+			// 默认构造函数
+			CPUInfo()=default;
+
+			// 拷贝构造函数
+			CPUInfo(const CPUInfo& other);
+
+			// 移动构造函数
+			CPUInfo(CPUInfo&& other) noexcept;
+
+			// 拷贝赋值运算符
+			CPUInfo& operator=(const CPUInfo& other);
+
+			// 移动赋值运算符
+			CPUInfo& operator=(CPUInfo&& other) noexcept;
+		public:
+			void getCurrentContextInfo();
 		public:
 			std::string cpuModel{};
-			static std::string GetCPUModel();
 		public:
 			size_t coreCount{};
-			static size_t GetCoreCount();
 		public:
 			size_t logicCoreCount{};
-			static size_t GetLogicCount();
 		public:
 			size_t threadCount{};
-			static size_t GetThreadCount();
 		public:
 			//MHz
 			double baseClockSpeed{};
-			static double GetBaseClockSpeed();
 		public:
 			struct Topology {
 				std::string type; // 类型，例如 "L1 Cache", "Core", "NUMA Node"
@@ -33,7 +44,19 @@ namespace rw {
 				std::string description; // 描述信息
 			};
 			std::vector<Topology> topology;
-			static std::vector<Topology> GeyTopology();
+		};
+
+		class CPUInfoFactory
+		{
+		public:
+			static CPUInfo createCPUInfo();
+		public:
+			static std::string GetCPUModel();
+			static size_t GetCoreCount();
+			static size_t GetLogicCount();
+			static size_t GetThreadCount();
+			static double GetBaseClockSpeed();
+			static std::vector<CPUInfo::Topology> GeyTopology();
 		};
 	
 	}
