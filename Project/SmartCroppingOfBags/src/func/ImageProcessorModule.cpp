@@ -1,4 +1,4 @@
-﻿#include "ImageProcessorModule.h"
+#include "ImageProcessorModule.h"
 
 #include <qcolor.h>
 #include <QPainter>
@@ -228,33 +228,41 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	//}
 
 
-	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
-	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
-	if (_isQieDao)
-	{
-		if (frame.time > _qieDaoTime)
-		{
-			globalThreadData.isQieDao = false;
+	//auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
+	//auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
+	//if (_isQieDao)
+	//{
+	//	if (frame.time > _qieDaoTime)
+	//	{
+	//		globalThreadData.isQieDao = false;
 
-			//这里第一个时间点可能是上一次的
-			auto duringTimes = _historyTimes->query(_lastQieDaoTime, frame.time);
+	//		//这里第一个时间点可能是上一次的
+	//		auto duringTimes = _historyTimes->query(frame.time, 10);
 
-			std::cout << duringTimes.size()<<std::endl;
+	//		std::cout << duringTimes.size()<<std::endl;
 
-			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
-			duringTimes = getValidTime(duringTimes);
+	//		// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
+	//		//duringTimes = getValidTime(duringTimes);
 
-			auto collageImage = _imageCollage->getCollageImage(duringTimes);
+	//		auto collageImage = _imageCollage->getCollageImage(duringTimes);
 
-			emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage.mat)));
+	//		emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage.mat)));
 
-			_lastQieDaoTime = _qieDaoTime;
-		}
-	}
-	else
-	{
-		_lastQieDaoTime = _qieDaoTime;
-	}
+	//		_lastQieDaoTime = _qieDaoTime;
+	//	}
+	//}
+	//else
+	//{
+	//	_lastQieDaoTime = _qieDaoTime;
+	//}
+
+	//emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image.element)));
+
+	std::vector<cv::Mat> mats(4);
+	static size_t count{0};
+	mats[count % 4] = frame.image.element;
+	auto collageImage = ImageCollage::verticalConcat(mats);
+	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage)));
 }
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
@@ -3027,6 +3035,12 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 	_historyTimes->insert(currentTime, currentTime);
 	_timeBool->set(currentTime, false);
+
+	std::cout << count << std::endl;
+
+	// 打印时间戳
+	std::time_t timeT = std::chrono::system_clock::to_time_t(currentTime);
+	std::cout << "当前时间: " << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S") << std::endl;
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
