@@ -10,7 +10,7 @@
 //	template <>
 //	struct hash<std::chrono::system_clock::time_point> {
 //		size_t operator()(const std::chrono::system_clock::time_point& timePoint) const noexcept {
-//			// ½« timePoint ×ª»»Îª¾«È·µ½ÄÉÃëµÄ×Ö·û´®
+//			// å°† timePoint è½¬æ¢ä¸ºç²¾ç¡®åˆ°çº³ç§’çš„å­—ç¬¦ä¸²
 //			std::ostringstream oss;
 //			std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint);
 //			auto duration = timePoint.time_since_epoch();
@@ -19,7 +19,7 @@
 //			oss << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S")
 //				<< '.' << std::setfill('0') << std::setw(9) << nanoseconds.count();
 //
-//			// ¶Ô×Ö·û´®½øĞĞ¹şÏ£´¦Àí
+//			// å¯¹å­—ç¬¦ä¸²è¿›è¡Œå“ˆå¸Œå¤„ç†
 //			return std::hash<std::string>()(oss.str());
 //		}
 //	};

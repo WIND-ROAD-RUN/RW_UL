@@ -1,4 +1,4 @@
-#include "rqw_CarouselWidget.h"
+ï»¿#include "rqw_CarouselWidget.h"
 
 #include "ui_CarouselWidget.h"
 
@@ -29,7 +29,7 @@ void CarouselWidget::flaskGbox()
 		delete item;
 	}
 
-	// Ìí¼Ó _size ¸ö QPushButton
+	// æ·»åŠ  _size ä¸ª QPushButton
 	for (size_t i = 0; i < _size; ++i) {
 		QPushButton* pbtn = new QPushButton(this);
 		setStandardItemStyle(pbtn, 0);
@@ -41,12 +41,12 @@ void CarouselWidget::flaskGbox()
 
 void CarouselWidget::appendItem(int state)
 {
-	// »ñÈ¡ gbox_CarouselWidgetBar µÄ²¼¾Ö
+	// è·å– gbox_CarouselWidgetBar çš„å¸ƒå±€
 	QLayout* layout = ui->gbox_CarouselWidgetBar->layout();
 	int count = layout->count();
 
 	if (count > 0) {
-		// ½«ËùÓĞ°´Å¥µÄÑùÊ½±íÏòÓÒÒÆ¶¯Ò»Î»
+		// å°†æ‰€æœ‰æŒ‰é’®çš„æ ·å¼è¡¨å‘å³ç§»åŠ¨ä¸€ä½
 		for (int i = count - 1; i > 0; --i) {
 			QWidget* currentWidget = layout->itemAt(i)->widget();
 			QWidget* previousWidget = layout->itemAt(i - 1)->widget();
@@ -61,7 +61,7 @@ void CarouselWidget::appendItem(int state)
 			}
 		}
 
-		// ÉèÖÃ×î×ó±ß°´Å¥µÄÑùÊ½±í
+		// è®¾ç½®æœ€å·¦è¾¹æŒ‰é’®çš„æ ·å¼è¡¨
 		QWidget* firstWidget = layout->itemAt(0)->widget();
 		if (firstWidget) {
 			QPushButton* firstButton = qobject_cast<QPushButton*>(firstWidget);
@@ -76,12 +76,12 @@ void CarouselWidget::appendItem(int state)
 
 void CarouselWidget::dequeItem()
 {
-	// »ñÈ¡ gbox_CarouselWidgetBar µÄ²¼¾Ö
+	// è·å– gbox_CarouselWidgetBar çš„å¸ƒå±€
 	QLayout* layout = ui->gbox_CarouselWidgetBar->layout();
 	int count = layout->count();
 
 	if (count > 0) {
-		// ½«ËùÓĞ°´Å¥µÄÑùÊ½±íÏòÓÒÒÆ¶¯Ò»Î»
+		// å°†æ‰€æœ‰æŒ‰é’®çš„æ ·å¼è¡¨å‘å³ç§»åŠ¨ä¸€ä½
 		for (int i = count - 1; i > 0; --i) {
 			QWidget* currentWidget = layout->itemAt(i)->widget();
 			QWidget* previousWidget = layout->itemAt(i - 1)->widget();
@@ -114,17 +114,17 @@ void CarouselWidget::setStandardItemStyle(QPushButton* pbtn, int i)
 	}
 	else
 	{
-		// ¼ì²éÓ³Éä±íÖĞÊÇ·ñÒÑÓĞ¶ÔÓ¦ÑÕÉ«
+		// æ£€æŸ¥æ˜ å°„è¡¨ä¸­æ˜¯å¦å·²æœ‰å¯¹åº”é¢œè‰²
 		if (colorMap.find(i) == colorMap.end())
 		{
-			// Èç¹ûÃ»ÓĞ£¬ÔòÉú³ÉËæ»úÑÕÉ«²¢´æ´¢
+			// å¦‚æœæ²¡æœ‰ï¼Œåˆ™ç”Ÿæˆéšæœºé¢œè‰²å¹¶å­˜å‚¨
 			int r = rand() % 256;
 			int g = rand() % 256;
 			int b = rand() % 256;
 			colorMap[i] = QColor(r, g, b);
 		}
 
-		// »ñÈ¡¶ÔÓ¦ÑÕÉ«
+		// è·å–å¯¹åº”é¢œè‰²
 		QColor color = colorMap[i];
 
 		QString styleSheet = QString(
