@@ -147,131 +147,89 @@ drawMaskInfo-->collageMaskImage
 */
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
-	//// 获得当前图像的时间戳与上一张图像的时间戳的集合
-	//auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
-	//// 获得当前图像与上一张图像拼接而成的图像
-	//auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
+	// 获得当前图像与上一张图像拼接而成的图像
+	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
 
-	////AI开始识别
-	//SmartCroppingOfBagsDefectInfo defectInfo;
-	//auto startTime = std::chrono::high_resolution_clock::now();
+	//AI开始识别
+	SmartCroppingOfBagsDefectInfo defectInfo;
+	auto startTime = std::chrono::high_resolution_clock::now();
 
-	//// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
-	//auto processResult = processCollageImage_debug(resultImage.mat);
+	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
+	auto processResult = processCollageImage_debug(resultImage.mat);
 
-	//// 随机添加检测框用于测试
-	////getRandomDetecionRec_debug(resultImage, processResult);
+	// 随机添加检测框用于测试
+	//getRandomDetecionRec_debug(resultImage, processResult);
 
-	//auto endTime = std::chrono::high_resolution_clock::now();
-	//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	//defectInfo.time = QString("处理时间: %1 ms").arg(duration);
-	////AI识别完成
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//AI识别完成
 
-	//if (times.empty())
-	//{
-	//	return; // 如果没有时间戳，直接返回
-	//}
-
-	//// 获取上一张图像的行高
-	//auto previousMatHeight = splitRecognitionBox_debug(times);
-
-	//// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
-	//regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
-
-	//auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
-	//auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
-
-	//if (_isQieDao)
-	//{
-	//	if (frame.time>_qieDaoTime)
-	//	{
-	//		globalThreadData.isQieDao = false;
-
-	//		//这里第一个时间点可能是上一次的
-	//		auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
-	//		// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
-	//		duringTimes = getValidTime(duringTimes);
-
-	//		// 获取有多少张图片没有拼过
-	//		size_t count = duringTimes.size();
-
-	//		// 抓取没拼过的图片的时间戳
-	//		auto unprocessedImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, count, true);
-
-	//		if (unprocessedImageTimes.size() != count)
-	//		{
-	//			return; // 如果没有时间戳，直接返回
-	//		}
-
-	//		// 获取没拼过的图片的原图像
-	//		std::vector<cv::Mat> unprocessedimages(count);
-
-	//		getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
-
-	//		// 获得未处理的图片的识别结果
-	//		std::vector<std::vector<rw::DetectionRectangleInfo>> unprocessedImageDetects(count);
-
-	//		getUnprocessedHistoyProcessResult_debug(frame.time, count, unprocessedImageDetects, true, true);
-
-	//		// 处理图片及其识别框
-	//		QVector<QImage> fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages, unprocessedImageDetects);
-
-	//		auto collageImage = _imageCollage->verticalConcat(fiveQImages);
-
-	//		emit imageReady(QPixmap::fromImage(collageImage));
-
-	//		emit appendPixel(collageImage.height());
-
-	//		_lastQieDaoTime = _qieDaoTime;
-	//	}
-	//}
-
-
-	//auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
-	//auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
-	//if (_isQieDao)
-	//{
-	//	if (frame.time > _qieDaoTime)
-	//	{
-	//		globalThreadData.isQieDao = false;
-
-	//		//这里第一个时间点可能是上一次的
-	//		auto duringTimes = _historyTimes->query(frame.time, 10);
-
-	//		std::cout << duringTimes.size()<<std::endl;
-
-	//		// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
-	//		//duringTimes = getValidTime(duringTimes);
-
-	//		auto collageImage = _imageCollage->getCollageImage(duringTimes);
-
-	//		emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage.mat)));
-
-	//		_lastQieDaoTime = _qieDaoTime;
-	//	}
-	//}
-	//else
-	//{
-	//	_lastQieDaoTime = _qieDaoTime;
-	//}
-
-	//emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image.element)));
-
-	static std::vector<cv::Mat> mats;
-	static size_t count{0};
-	mats.emplace_back(frame.image.element);
-	auto collageImage = ImageCollage::verticalConcat(mats);
-	for (size_t i = 0; i < mats.size(); ++i) {
-		std::cout << "Image " << i << ": Address = " << &mats[i]
-			<< ", Size = " << mats[i].rows << "x" << mats[i].cols << std::endl;
-	}
-	count++;
-	if (mats.size()==15)
+	if (times.empty())
 	{
-		mats.clear();
+		return; // 如果没有时间戳，直接返回
 	}
-	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage)));
+
+	// 获取上一张图像的行高
+	auto previousMatHeight = splitRecognitionBox_debug(times);
+
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
+
+	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
+	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
+
+	if (_isQieDao)
+	{
+		if (frame.time>_qieDaoTime)
+		{
+			globalThreadData.isQieDao = false;
+
+			//这里第一个时间点可能是上一次的
+			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
+
+			std::cout <<"1"<< duringTimes.size()<<std::endl;
+			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
+			duringTimes = getValidTime(duringTimes);
+			std::cout << "2"<< duringTimes.size() << std::endl;
+
+			// 获取有多少张图片没有拼过
+			size_t count = duringTimes.size();
+
+			// 抓取没拼过的图片的时间戳
+			auto unprocessedImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, count, true);
+
+			if (unprocessedImageTimes.size() != count)
+			{
+				return; // 如果没有时间戳，直接返回
+			}
+
+			// 获取没拼过的图片的原图像
+			std::vector<cv::Mat> unprocessedimages(count);
+
+			getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
+
+			// 获得未处理的图片的识别结果
+			std::vector<std::vector<rw::DetectionRectangleInfo>> unprocessedImageDetects(count);
+
+			getUnprocessedHistoyProcessResult_debug(frame.time, count, unprocessedImageDetects, true, true);
+
+			// 处理图片及其识别框
+			QVector<QImage> fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages, unprocessedImageDetects);
+
+			auto collageImage = _imageCollage->verticalConcat(fiveQImages);
+
+			emit imageReady(QPixmap::fromImage(collageImage));
+
+			emit appendPixel(collageImage.height());
+
+		}
+	}
+	_lastQieDaoTime = _qieDaoTime;
+
 }
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
@@ -3029,7 +2987,7 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
-	static size_t count{0};
+
 
 	if (frame.empty()) {
 		return; // 跳过空帧
@@ -3046,11 +3004,6 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	_historyTimes->insert(currentTime, currentTime);
 	_timeBool->set(currentTime, false);
 
-	std::cout << count << std::endl;
-
-	// 打印时间戳
-	std::time_t timeT = std::chrono::system_clock::to_time_t(currentTime);
-	std::cout << "当前时间: " << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S") << std::endl;
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
@@ -3063,6 +3016,5 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 		_queue.enqueue(matInfo);
 		_condition.wakeOne();
 	}
-	count++;
 }
 
