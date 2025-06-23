@@ -54,6 +54,7 @@ public:
 
 	//std::vector<double> pore;
 	std::vector<ButtonDefectInfoItem>pore1;
+	std::vector<ButtonDefectInfoItem> smallPore1;
 	//bool isDrawpore{ false };
 
 	//std::vector<double> paint;
@@ -168,6 +169,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 	void run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_smallPore(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_paint(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectInfo& info);
@@ -193,6 +195,7 @@ private:
 		cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getSmallPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -232,6 +235,7 @@ public:
 	void appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendSmallPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPositiveDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);

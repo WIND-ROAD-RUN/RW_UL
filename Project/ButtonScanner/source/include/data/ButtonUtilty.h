@@ -78,6 +78,7 @@ struct ClassId
 	static constexpr int mofa = 11;
 	static constexpr int xiaopobian = 12;
 	static constexpr int baibian = 13;
+	static constexpr int smallPore = 14;
 };
 
 struct ClassIdPositive
