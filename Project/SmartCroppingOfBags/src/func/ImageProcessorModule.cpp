@@ -191,10 +191,10 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
 
-			std::cout <<"1"<< duringTimes.size()<<std::endl;
+			std::cout <<"1 "<< duringTimes.size()<<std::endl;
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
-			std::cout << "2"<< duringTimes.size() << std::endl;
+			std::cout << "2 "<< duringTimes.size() << std::endl;
 
 			// 获取有多少张图片没有拼过
 			size_t count = duringTimes.size();

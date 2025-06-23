@@ -83,14 +83,30 @@ void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 
 void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state)
 {
-	//ÏÂ½µÑØ
-	if (_qiedaoPre)
+	//ä¸‹é™æ²¿
+	/*if (_qiedaoPre)
 	{
 		if (state==false)
 		{
 			isQieDao = true;
 			currentQieDaoTime = std::chrono::system_clock::now();
 			double pulse{0};
+			if (GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(pulse))
+			{
+				emit appendPulse(pulse);
+			}
+		}
+	}
+	_qiedaoPre = state;*/
+
+	//ä¸Šå‡æ²¿
+	if (!_qiedaoPre)
+	{
+		if (state == true)
+		{
+			isQieDao = true;
+			currentQieDaoTime = std::chrono::system_clock::now();
+			double pulse{ 0 };
 			if (GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(pulse))
 			{
 				emit appendPulse(pulse);
@@ -180,7 +196,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 
 	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 	auto& mainConfig= GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	// ÌÞ·Ï³ÖÐøÊ±¼ä
+	// å‰”åºŸæŒç»­æ—¶é—´
 	long DurationTime = setConfig.tifeishijian1 * 1000;
 
 	auto lineHeight = setConfig.daichang1/setConfig.maichongxishu1;
@@ -251,7 +267,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 				camera1->setLineHeight(16000);
 			}
 			setCameraExposureTime(2, setConfig.xiangjibaoguang1);
-			// ÉèÖÃÌÞ·ÏIOÊä³ö
+			// è®¾ç½®å‰”åºŸIOè¾“å‡º
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
