@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <deque>
 #include <vector>
@@ -453,7 +453,6 @@ namespace rw {
                     }
                 }
 
-                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -465,7 +464,6 @@ namespace rw {
                         });
                 }
 
-                // ���� hasLeft/hasRight
                 if (!candidates.empty() && !hasLeft && candidates.front().first == beginTime) {
                     candidates.erase(candidates.begin());
                 }

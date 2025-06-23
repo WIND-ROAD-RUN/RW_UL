@@ -235,19 +235,28 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
 {
 	std::vector<Time> result = times;
-	for (const auto& item : result)
+
+	std::vector<Time> itemsToRemove;
+
+	for (size_t i = 0; i < result.size(); ++i)
 	{
-		if (_timeBool->get(item).has_value())
+		if (_timeBool->get(result[i]).has_value())
 		{
-			if (_timeBool->get(item).value() == true)
+			if (_timeBool->get(result[i]).value() == true)
 			{
-				result.erase(std::remove(result.begin(), result.end(), item), result.end());
+				itemsToRemove.push_back(result[i]); // 记录需要删除的元素
 			}
-			else if (_timeBool->get(item).value() == false)
+			else if (_timeBool->get(result[i]).value() == false)
 			{
-				_timeBool->set(item,true);
+				_timeBool->set(result[i], true); // 更新状态
 			}
 		}
+	}
+
+	// 删除记录的元素
+	for (const auto& item : itemsToRemove)
+	{
+		result.erase(std::remove(result.begin(), result.end(), item), result.end());
 	}
 
 	return result;
