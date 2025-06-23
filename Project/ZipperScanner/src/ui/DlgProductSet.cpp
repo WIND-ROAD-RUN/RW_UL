@@ -1,4 +1,4 @@
-#include "DlgProductSet.h"
+Ôªø#include "DlgProductSet.h"
 
 #include <QMessageBox>
 
@@ -24,42 +24,48 @@ DlgProductSet::~DlgProductSet()
 void DlgProductSet::build_ui()
 {
 	read_config();
+
+	// Êü•ÁúãÊòØÂê¶ÊúâÁõ∏ÂêåÁöÑËæìÂÖ•ËæìÂá∫IO
+	auto indicesDO = DOFindAllDuplicateIndices();
+	setDOErrorInfo(indicesDO);
+	auto indicesDI = DIFindAllDuplicateIndices();
+	setDIErrorInfo(indicesDI);
 }
 
 void DlgProductSet::read_config()
 {
 	auto& globalConfig = GlobalStructDataZipper::getInstance().setConfig;
 
-	// Ãﬁ∑œ ±º‰
+	// ÂâîÂ∫üÊó∂Èó¥
 	ui->pbtn_tifeichixushijian1->setText(QString::number(globalConfig.tiFeiChiXuShiJian1));
 	ui->pbtn_yanchitifeishijian1->setText(QString::number(globalConfig.yanChiTiFeiShiJian1));
 	ui->pbtn_tifeichixushijian2->setText(QString::number(globalConfig.tiFeiChiXuShiJian2));
 	ui->pbtn_yanchitifeishijian2->setText(QString::number(globalConfig.yanChiTiFeiShiJian2));
 
-	// ≤…Õº
+	// ÈááÂõæ
 	ui->cBox_takeCamera1Pictures->setChecked(globalConfig.takeWork1Pictures);
 	ui->cBox_takeCamera2Pictures->setChecked(globalConfig.takeWork2Pictures);
 
-	// ¥ÊÕº
+	// Â≠òÂõæ
 	ui->cBox_takeNgPictures->setChecked(globalConfig.saveNGImg);
 	ui->cBox_takeMaskPictures->setChecked(globalConfig.saveMaskImg);
 	ui->cBox_takeOkPictures->setChecked(globalConfig.saveOKImg);
 
-	// “ªπ§ŒªµƒœﬁŒª”ÎœÒÀÿµ±¡ø
+	// ‰∏ÄÂ∑•‰ΩçÁöÑÈôê‰Ωç‰∏éÂÉèÁ¥†ÂΩìÈáè
 	ui->pbtn_shangxianwei1->setText(QString::number(globalConfig.shangXianWei1));
 	ui->pbtn_xiaxianwei1->setText(QString::number(globalConfig.xiaXianWei1));
 	ui->pbtn_zuoxianwei1->setText(QString::number(globalConfig.zuoXianWei1));
 	ui->pbtn_youxianwei1->setText(QString::number(globalConfig.youXianWei1));
 	ui->pbtn_xiangsudangliang1->setText(QString::number(globalConfig.xiangSuDangLiang1));
 
-	// ∂˛π§ŒªµƒœﬁŒª”ÎœÒÀÿµ±¡ø
+	// ‰∫åÂ∑•‰ΩçÁöÑÈôê‰Ωç‰∏éÂÉèÁ¥†ÂΩìÈáè
 	ui->pbtn_shangxianwei2->setText(QString::number(globalConfig.shangXianWei2));
 	ui->pbtn_xiaxianwei2->setText(QString::number(globalConfig.xiaXianWei2));
 	ui->pbtn_zuoxianwei2->setText(QString::number(globalConfig.zuoXianWei2));
 	ui->pbtn_youxianwei2->setText(QString::number(globalConfig.youXianWei2));
 	ui->pbtn_xiangsudangliang2->setText(QString::number(globalConfig.xiangSuDangLiang2));
 
-	// π‚‘¥
+	// ÂÖâÊ∫ê
 	ui->pbtn_qiangbaoguang->setText(QString::number(globalConfig.qiangBaoGuang));
 	ui->pbtn_qiangzengyi->setText(QString::number(globalConfig.qiangZengYi));
 
@@ -69,15 +75,15 @@ void DlgProductSet::read_config()
 	ui->pbtn_ruobaoguang->setText(QString::number(globalConfig.ruoBaoGuang));
 	ui->pbtn_ruozengyi->setText(QString::number(globalConfig.ruoZengYi));
 
-	// µ˜ ‘ƒ£ Ωƒ¨»œŒ™πÿ±’
+	// Ë∞ÉËØïÊ®°ÂºèÈªòËÆ§‰∏∫ÂÖ≥Èó≠
 	ui->cbox_debugMode->setChecked(globalConfig.debugMode);
 
-	// ª˘±æπ¶ƒ‹
+	// Âü∫Êú¨ÂäüËÉΩ
 	ui->cbox_qiyongerxiangji->setChecked(globalConfig.qiyongerxiangji);
 	ui->cbox_qiyongyundongkongzhiqi->setChecked(globalConfig.qiyongyundongkongzhiqi);
 	ui->cbox_yundongkongzhiqichonglian->setChecked(globalConfig.yundongkongzhiqichonglian);
 
-	// ª˘±æ≤Œ ˝
+	// Âü∫Êú¨ÂèÇÊï∞
 	ui->btn_shedingladaichangdu->setText(QString::number(globalConfig.shedingladaichangdu));
 	ui->btn_chongkongjishu->setText(QString::number(globalConfig.chongkongjishu));
 	ui->btn_dangqianchangdu->setText(QString::number(globalConfig.dangqianchangdu));
@@ -91,13 +97,13 @@ void DlgProductSet::read_config()
 	ui->btn_zidongladaisudu->setText(QString::number(globalConfig.zidongladaisudu));
 	ui->btn_shedingzhouchang->setText(QString::number(globalConfig.shedingzhouchang));
 
-	// …Ë÷√IO
-	ui->btn_setqidonganniu->setText(QString::number(globalConfig.setqidonganniu));
-	ui->btn_setlalianlawan->setText(QString::number(globalConfig.setlalianlawan));
-	ui->btn_setjiting->setText(QString::number(globalConfig.setjiting));
-	ui->btn_setbujindianjimaichong->setText(QString::number(globalConfig.setbujindianjimaichong));
-	ui->btn_setchongkong->setText(QString::number(globalConfig.setchongkong));
-	ui->btn_settuoji->setText(QString::number(globalConfig.settuoji));
+	// ËÆæÁΩÆIO
+	ui->btn_setqidonganniu->setText(QString::number(globalConfig.qidonganniuIN));
+	ui->btn_setlalianlawan->setText(QString::number(globalConfig.lalianlawanIN));
+	ui->btn_setjiting->setText(QString::number(globalConfig.jitingIN));
+	ui->btn_setbujindianjimaichong->setText(QString::number(globalConfig.bujindianjimaichongOUT));
+	ui->btn_setchongkong->setText(QString::number(globalConfig.chongkongOUT));
+	ui->btn_settuoji->setText(QString::number(globalConfig.tuojiOUT));
 }
 
 void DlgProductSet::build_connect()
@@ -163,7 +169,7 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->cbox_yundongkongzhiqichonglian, &QCheckBox::clicked,
 		this, &DlgProductSet::cbox_yundongkongzhiqichonglian_checked);
 
-	// ª˘±æ≤Œ ˝
+	// Âü∫Êú¨ÂèÇÊï∞
 	QObject::connect(ui->btn_shedingladaichangdu, &QPushButton::clicked,
 		this, &DlgProductSet::btn_shedingladaichangdu_clicked);
 	QObject::connect(ui->btn_xiangjichufachangdu, &QPushButton::clicked,
@@ -197,7 +203,7 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->btn_jiajiansushijian, &QPushButton::clicked,
 		this, &DlgProductSet::btn_jiajiansushijian_clicked);
 
-	// º‡øÿIO
+	// ÁõëÊéßIO
 	QObject::connect(ui->cbox_DIqidonganniu, &QPushButton::clicked,
 		this, &DlgProductSet::cbox_DIqidonganniu_clicked);
 	QObject::connect(ui->cbox_DIjiting, &QPushButton::clicked,
@@ -211,7 +217,7 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->cbox_DOtuoji, &QPushButton::clicked,
 		this, &DlgProductSet::cbox_DOtuoji_clicked);
 
-	// …Ë÷√IO
+	// ËÆæÁΩÆIO
 	QObject::connect(ui->btn_setqidonganniu, &QPushButton::clicked,
 		this, &DlgProductSet::btn_setqidonganniu_clicked);
 	QObject::connect(ui->btn_setlalianlawan, &QPushButton::clicked,
@@ -224,6 +230,140 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::btn_setchongkong_clicked);
 	QObject::connect(ui->btn_settuoji, &QPushButton::clicked,
 		this, &DlgProductSet::btn_settuoji_clicked);
+}
+
+std::vector<std::vector<int>> DlgProductSet::DOFindAllDuplicateIndices()
+{
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	std::vector<int> values = {
+		setConfig.bujindianjimaichongOUT,
+		setConfig.chongkongOUT,
+		setConfig.tuojiOUT
+	};
+
+	std::unordered_map<int, std::vector<int>> valueToIndices;
+	for (size_t i = 0; i < values.size(); ++i) {
+		valueToIndices[values[i]].push_back(static_cast<int>(i));
+	}
+
+	std::vector<std::vector<int>> result;
+	std::set<int> used; // Èò≤Ê≠¢ÈáçÂ§çÂàÜÁªÑ
+	for (const auto& pair : valueToIndices) {
+		if (pair.second.size() > 1) {
+			// Âè™Êî∂ÈõÜÊú™Ë¢´Êî∂ÂΩïËøáÁöÑindexÁªÑ
+			bool alreadyUsed = false;
+			for (int idx : pair.second) {
+				if (used.count(idx)) {
+					alreadyUsed = true;
+					break;
+				}
+			}
+			if (!alreadyUsed) {
+				result.push_back(pair.second);
+				used.insert(pair.second.begin(), pair.second.end());
+			}
+		}
+	}
+	return result;
+}
+
+void DlgProductSet::setDIErrorInfo(const std::vector<std::vector<int>>& index)
+{
+	ui->lb_qidonganniu->clear();
+	ui->lb_lalianlawan->clear();
+	ui->lb_jiting->clear();
+
+	for (const auto& classic : index)
+	{
+		for (const auto& item : classic)
+		{
+			setDIErrorInfo(item);
+		}
+	}
+}
+
+void DlgProductSet::setDIErrorInfo(int index)
+{
+	QString text = "ÈáçÂ§çÊï∞ÂÄº";
+	switch (index)
+	{
+	case 0:
+		ui->lb_qidonganniu->setText(text);
+		break;
+	case 1:
+		ui->lb_lalianlawan->setText(text);
+		break;
+	case 2:
+		ui->lb_jiting->setText(text);
+		break;
+	}
+}
+
+void DlgProductSet::setDOErrorInfo(const std::vector<std::vector<int>>& index)
+{
+	ui->lb_bujindianjimaichong->clear();
+	ui->lb_chongkong->clear();
+	ui->lb_tuoji->clear();
+
+	for (const auto& classic : index)
+	{
+		for (const auto& item : classic)
+		{
+			setDOErrorInfo(item);
+		}
+	}
+}
+
+void DlgProductSet::setDOErrorInfo(int index)
+{
+	QString text = "ÈáçÂ§çÊï∞ÂÄº";
+	switch (index)
+	{
+	case 0:
+		ui->lb_bujindianjimaichong->setText(text);
+		break;
+	case 1:
+		ui->lb_chongkong->setText(text);
+		break;
+	case 2:
+		ui->lb_tuoji->setText(text);
+		break;
+	}
+}
+
+std::vector<std::vector<int>> DlgProductSet::DIFindAllDuplicateIndices()
+{
+	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	std::vector<int> values = {
+		setConfig.qidonganniuIN,
+		setConfig.lalianlawanIN,
+		setConfig.jitingIN
+	};
+
+	std::unordered_map<int, std::vector<int>> valueToIndices;
+	for (size_t i = 0; i < values.size(); ++i) {
+		valueToIndices[values[i]].push_back(static_cast<int>(i));
+	}
+
+	std::vector<std::vector<int>> result;
+	std::set<int> used; // Èò≤Ê≠¢ÈáçÂ§çÂàÜÁªÑ
+	for (const auto& pair : valueToIndices) {
+		if (pair.second.size() > 1) {
+			// Âè™Êî∂ÈõÜÊú™Ë¢´Êî∂ÂΩïËøáÁöÑindexÁªÑ
+			bool alreadyUsed = false;
+			for (int idx : pair.second) {
+				if (used.count(idx)) {
+					alreadyUsed = true;
+					break;
+				}
+			}
+			if (!alreadyUsed) {
+				result.push_back(pair.second);
+				used.insert(pair.second.begin(), pair.second.end());
+			}
+		}
+	}
+	return result;
 }
 
 void DlgProductSet::pbtn_close_clicked()
@@ -244,7 +384,7 @@ void DlgProductSet::pbtn_tifeichixushijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -263,7 +403,7 @@ void DlgProductSet::pbtn_yanchitifeishijian1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -282,7 +422,7 @@ void DlgProductSet::pbtn_tifeichixushijian2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -301,7 +441,7 @@ void DlgProductSet::pbtn_yanchitifeishijian2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -320,7 +460,7 @@ void DlgProductSet::pbtn_shangxianwei1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -339,7 +479,7 @@ void DlgProductSet::pbtn_xiaxianwei1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -358,7 +498,7 @@ void DlgProductSet::pbtn_zuoxianwei1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -377,7 +517,7 @@ void DlgProductSet::pbtn_youxianwei1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -396,7 +536,7 @@ void DlgProductSet::pbtn_xiangsudangliang1_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -415,7 +555,7 @@ void DlgProductSet::pbtn_shangxianwei2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -434,7 +574,7 @@ void DlgProductSet::pbtn_xiaxianwei2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -453,7 +593,7 @@ void DlgProductSet::pbtn_zuoxianwei2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -472,7 +612,7 @@ void DlgProductSet::pbtn_youxianwei2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -491,7 +631,7 @@ void DlgProductSet::pbtn_xiangsudangliang2_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
@@ -510,7 +650,7 @@ void DlgProductSet::pbtn_qiangbaoguang_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î11µΩ300µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•11Âà∞300ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -543,7 +683,7 @@ void DlgProductSet::pbtn_qiangzengyi_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î0µΩ16µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•0Âà∞16ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -575,7 +715,7 @@ void DlgProductSet::pbtn_zhongbaoguang_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î11µΩ300µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•11Âà∞300ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -607,7 +747,7 @@ void DlgProductSet::pbtn_ruobaoguang_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 11 || value.toDouble() > 300)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î11µΩ300µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•11Âà∞300ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -640,7 +780,7 @@ void DlgProductSet::pbtn_zhongzengyi_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î0µΩ16µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•0Âà∞16ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -673,7 +813,7 @@ void DlgProductSet::pbtn_ruozengyi_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0 || value.toDouble() > 16)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î0µΩ16µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•0Âà∞16ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -714,10 +854,41 @@ void DlgProductSet::cBox_takeOkPictures_checked()
 	globalStructSetConfig.saveOKImg = ui->cBox_takeOkPictures->isChecked();
 }
 
-void DlgProductSet::cbox_debugMode_checked()
+void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	globalStructSetConfig.debugMode = ui->cbox_debugMode->isChecked();
+	isDebugIO = ischecked;
+	if (isDebugIO)
+	{
+		ui->cbox_DIqidonganniu->setChecked(false);
+		ui->cbox_DIjiting->setChecked(false);
+		ui->cbox_DIlalianlawan->setChecked(false);
+		ui->cbox_DObujindianjimaichong->setChecked(false);
+		ui->cbox_DOchongkong->setChecked(false);
+		ui->cbox_DOtuoji->setChecked(false);
+
+		ui->cbox_DIqidonganniu->setEnabled(true);
+		ui->cbox_DIjiting->setEnabled(true);
+		ui->cbox_DIlalianlawan->setEnabled(true);
+		ui->cbox_DObujindianjimaichong->setEnabled(true);
+		ui->cbox_DOchongkong->setEnabled(true);
+		ui->cbox_DOtuoji->setEnabled(true);
+	}
+	else
+	{
+		ui->cbox_DIqidonganniu->setChecked(false);
+		ui->cbox_DIjiting->setChecked(false);
+		ui->cbox_DIlalianlawan->setChecked(false);
+		ui->cbox_DObujindianjimaichong->setChecked(false);
+		ui->cbox_DOchongkong->setChecked(false);
+		ui->cbox_DOtuoji->setChecked(false);
+
+		ui->cbox_DIqidonganniu->setEnabled(false);
+		ui->cbox_DIjiting->setEnabled(false);
+		ui->cbox_DIlalianlawan->setEnabled(false);
+		ui->cbox_DObujindianjimaichong->setEnabled(false);
+		ui->cbox_DOchongkong->setEnabled(false);
+		ui->cbox_DOtuoji->setEnabled(false);
+	}
 }
 
 void DlgProductSet::cBox_takeCamera1Pictures_checked()
@@ -761,7 +932,7 @@ void DlgProductSet::btn_shedingladaichangdu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_shedingladaichangdu->setText(value);
@@ -780,7 +951,7 @@ void DlgProductSet::btn_xiangjichufachangdu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_xiangjichufachangdu->setText(value);
@@ -833,7 +1004,7 @@ void DlgProductSet::btn_shoudongsudu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_shoudongsudu->setText(value);
@@ -852,7 +1023,7 @@ void DlgProductSet::btn_meizhuanmaichongshu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_meizhuanmaichongshu->setText(value);
@@ -871,7 +1042,7 @@ void DlgProductSet::btn_zidongladaisudu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_zidongladaisudu->setText(value);
@@ -890,7 +1061,7 @@ void DlgProductSet::btn_shedingzhouchang_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_shedingzhouchang->setText(value);
@@ -909,7 +1080,7 @@ void DlgProductSet::btn_yanshichongkong_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_yanshichongkong->setText(value);
@@ -928,7 +1099,7 @@ void DlgProductSet::btn_chongkongshijian_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_chongkongshijian->setText(value);
@@ -947,7 +1118,7 @@ void DlgProductSet::btn_yanshiziqi_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_yanshiziqi->setText(value);
@@ -966,7 +1137,7 @@ void DlgProductSet::btn_jiajiansushijian_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_jiajiansushijian->setText(value);
@@ -1039,11 +1210,15 @@ void DlgProductSet::btn_setqidonganniu_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_setqidonganniu->setText(value);
-		globalStructSetConfig.setqidonganniu = value.toDouble();
+		globalStructSetConfig.qidonganniuIN = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
 	}
 }
 
@@ -1058,11 +1233,15 @@ void DlgProductSet::btn_setlalianlawan_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_setlalianlawan->setText(value);
-		globalStructSetConfig.setlalianlawan = value.toDouble();
+		globalStructSetConfig.lalianlawanIN = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
 	}
 }
 
@@ -1077,11 +1256,15 @@ void DlgProductSet::btn_setjiting_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_setjiting->setText(value);
-		globalStructSetConfig.setjiting = value.toDouble();
+		globalStructSetConfig.jitingIN = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
 	}
 }
 
@@ -1096,11 +1279,15 @@ void DlgProductSet::btn_setbujindianjimaichong_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_setbujindianjimaichong->setText(value);
-		globalStructSetConfig.setbujindianjimaichong = value.toDouble();
+		globalStructSetConfig.bujindianjimaichongOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
 	}
 }
 
@@ -1115,11 +1302,15 @@ void DlgProductSet::btn_setchongkong_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_setchongkong->setText(value);
-		globalStructSetConfig.setchongkong = value.toDouble();
+		globalStructSetConfig.chongkongOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
 	}
 }
 
@@ -1134,11 +1325,37 @@ void DlgProductSet::btn_settuoji_clicked()
 		auto value = numKeyBord.getValue();
 		if (value.toDouble() < 0)
 		{
-			QMessageBox::warning(this, "Ã· æ", "«Î ‰»Î¥Û”⁄0µƒ ˝÷µ");
+			QMessageBox::warning(this, "ÊèêÁ§∫", "ËØ∑ËæìÂÖ•Â§ß‰∫é0ÁöÑÊï∞ÂÄº");
 			return;
 		}
 		ui->btn_settuoji->setText(value);
-		globalStructSetConfig.settuoji = value.toDouble();
+		globalStructSetConfig.tuojiOUT = value.toDouble();
+		auto indicesDO = DOFindAllDuplicateIndices();
+		setDOErrorInfo(indicesDO);
+		auto indicesDI = DIFindAllDuplicateIndices();
+		setDIErrorInfo(indicesDI);
+	}
+}
+
+void DlgProductSet::tabWidget_indexChanged(int index)
+{
+	auto& _isUpdateMonitorInfo = GlobalStructDataZipper::getInstance()._isUpdateMonitorInfo;
+	switch (index) {
+	case 0:
+		_isUpdateMonitorInfo = false;
+		break;
+	case 1:
+		_isUpdateMonitorInfo = false;
+		break;
+	case 2:
+		_isUpdateMonitorInfo = true;
+		break;
+	case 3:
+		_isUpdateMonitorInfo = false;
+		break;
+	default:
+		_isUpdateMonitorInfo = false;
+		break;
 	}
 }
 

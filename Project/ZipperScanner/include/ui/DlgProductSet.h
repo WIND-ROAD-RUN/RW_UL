@@ -20,6 +20,18 @@ public:
 	void read_config();
 	void build_connect();
 
+private:
+	std::vector<std::vector<int>> DOFindAllDuplicateIndices();
+	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
+	void setDOErrorInfo(int index);
+	std::vector<std::vector<int>> DIFindAllDuplicateIndices();
+	void setDIErrorInfo(const std::vector<std::vector<int>>& index);
+	void setDIErrorInfo(int index);
+
+private:
+	// IO监控页面的调试模式
+	bool isDebugIO{ false };
+
 private slots:
 	void pbtn_close_clicked();
 
@@ -47,7 +59,6 @@ private slots:
 	void cBox_takeNgPictures_checked();
 	void cBox_takeMaskPictures_checked();
 	void cBox_takeOkPictures_checked();
-	void cbox_debugMode_checked();
 	void cBox_takeCamera1Pictures_checked();
 	void cBox_takeCamera2Pictures_checked();
 	void cbox_qiyongerxiangji_checked();
@@ -79,6 +90,8 @@ private slots:
 	void cbox_DObujindianjimaichong_clicked();
 	void cbox_DOchongkong_clicked();
 	void cbox_DOtuoji_clicked();
+	void cbox_debugMode_checked(bool ischecked);
+
 
 	// 设置IO
 	void btn_setqidonganniu_clicked();
@@ -87,6 +100,8 @@ private slots:
 	void btn_setbujindianjimaichong_clicked();
 	void btn_setchongkong_clicked();
 	void btn_settuoji_clicked();
+
+	void tabWidget_indexChanged(int index);
 
 private:
 	Ui::DlgProductSetClass *ui;

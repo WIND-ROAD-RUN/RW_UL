@@ -60,12 +60,12 @@ namespace cdm {
         double chongkongshijian{ 0 };
         double yanshiziqi{ 0 };
         double jiajiansushijian{ 0 };
-        int setqidonganniu{ 0 };
-        int setlalianlawan{ 0 };
-        int setjiting{ 0 };
-        int setbujindianjimaichong{ 0 };
-        int setchongkong{ 0 };
-        int settuoji{ 0 };
+        int qidonganniuIN{ 0 };
+        int lalianlawanIN{ 0 };
+        int jitingIN{ 0 };
+        int bujindianjimaichongOUT{ 0 };
+        int chongkongOUT{ 0 };
+        int tuojiOUT{ 0 };
     };
 
     inline SetConfig::SetConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -280,36 +280,36 @@ namespace cdm {
             throw std::runtime_error("$variable$jiajiansushijian is not found");
         }
         jiajiansushijian = jiajiansushijianItem->getValueAsDouble();
-        auto setqidonganniuItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$setqidonganniu$"));
-        if (!setqidonganniuItem) {
-            throw std::runtime_error("$variable$setqidonganniu is not found");
+        auto qidonganniuINItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$qidonganniuIN$"));
+        if (!qidonganniuINItem) {
+            throw std::runtime_error("$variable$qidonganniuIN is not found");
         }
-        setqidonganniu = setqidonganniuItem->getValueAsInt();
-        auto setlalianlawanItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$setlalianlawan$"));
-        if (!setlalianlawanItem) {
-            throw std::runtime_error("$variable$setlalianlawan is not found");
+        qidonganniuIN = qidonganniuINItem->getValueAsInt();
+        auto lalianlawanINItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$lalianlawanIN$"));
+        if (!lalianlawanINItem) {
+            throw std::runtime_error("$variable$lalianlawanIN is not found");
         }
-        setlalianlawan = setlalianlawanItem->getValueAsInt();
-        auto setjitingItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$setjiting$"));
-        if (!setjitingItem) {
-            throw std::runtime_error("$variable$setjiting is not found");
+        lalianlawanIN = lalianlawanINItem->getValueAsInt();
+        auto jitingINItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$jitingIN$"));
+        if (!jitingINItem) {
+            throw std::runtime_error("$variable$jitingIN is not found");
         }
-        setjiting = setjitingItem->getValueAsInt();
-        auto setbujindianjimaichongItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$setbujindianjimaichong$"));
-        if (!setbujindianjimaichongItem) {
-            throw std::runtime_error("$variable$setbujindianjimaichong is not found");
+        jitingIN = jitingINItem->getValueAsInt();
+        auto bujindianjimaichongOUTItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$bujindianjimaichongOUT$"));
+        if (!bujindianjimaichongOUTItem) {
+            throw std::runtime_error("$variable$bujindianjimaichongOUT is not found");
         }
-        setbujindianjimaichong = setbujindianjimaichongItem->getValueAsInt();
-        auto setchongkongItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$setchongkong$"));
-        if (!setchongkongItem) {
-            throw std::runtime_error("$variable$setchongkong is not found");
+        bujindianjimaichongOUT = bujindianjimaichongOUTItem->getValueAsInt();
+        auto chongkongOUTItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$chongkongOUT$"));
+        if (!chongkongOUTItem) {
+            throw std::runtime_error("$variable$chongkongOUT is not found");
         }
-        setchongkong = setchongkongItem->getValueAsInt();
-        auto settuojiItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$settuoji$"));
-        if (!settuojiItem) {
-            throw std::runtime_error("$variable$settuoji is not found");
+        chongkongOUT = chongkongOUTItem->getValueAsInt();
+        auto tuojiOUTItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$tuojiOUT$"));
+        if (!tuojiOUTItem) {
+            throw std::runtime_error("$variable$tuojiOUT is not found");
         }
-        settuoji = settuojiItem->getValueAsInt();
+        tuojiOUT = tuojiOUTItem->getValueAsInt();
     }
 
     inline SetConfig::SetConfig(const SetConfig& obj)
@@ -355,12 +355,12 @@ namespace cdm {
         chongkongshijian = obj.chongkongshijian;
         yanshiziqi = obj.yanshiziqi;
         jiajiansushijian = obj.jiajiansushijian;
-        setqidonganniu = obj.setqidonganniu;
-        setlalianlawan = obj.setlalianlawan;
-        setjiting = obj.setjiting;
-        setbujindianjimaichong = obj.setbujindianjimaichong;
-        setchongkong = obj.setchongkong;
-        settuoji = obj.settuoji;
+        qidonganniuIN = obj.qidonganniuIN;
+        lalianlawanIN = obj.lalianlawanIN;
+        jitingIN = obj.jitingIN;
+        bujindianjimaichongOUT = obj.bujindianjimaichongOUT;
+        chongkongOUT = obj.chongkongOUT;
+        tuojiOUT = obj.tuojiOUT;
     }
 
     inline SetConfig& SetConfig::operator=(const SetConfig& obj)
@@ -407,12 +407,12 @@ namespace cdm {
             chongkongshijian = obj.chongkongshijian;
             yanshiziqi = obj.yanshiziqi;
             jiajiansushijian = obj.jiajiansushijian;
-            setqidonganniu = obj.setqidonganniu;
-            setlalianlawan = obj.setlalianlawan;
-            setjiting = obj.setjiting;
-            setbujindianjimaichong = obj.setbujindianjimaichong;
-            setchongkong = obj.setchongkong;
-            settuoji = obj.settuoji;
+            qidonganniuIN = obj.qidonganniuIN;
+            lalianlawanIN = obj.lalianlawanIN;
+            jitingIN = obj.jitingIN;
+            bujindianjimaichongOUT = obj.bujindianjimaichongOUT;
+            chongkongOUT = obj.chongkongOUT;
+            tuojiOUT = obj.tuojiOUT;
         }
         return *this;
     }
@@ -585,36 +585,36 @@ namespace cdm {
         jiajiansushijianItem->setName("$variable$jiajiansushijian$");
         jiajiansushijianItem->setValueFromDouble(jiajiansushijian);
         assembly.addItem(jiajiansushijianItem);
-        auto setqidonganniuItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        setqidonganniuItem->setName("$variable$setqidonganniu$");
-        setqidonganniuItem->setValueFromInt(setqidonganniu);
-        assembly.addItem(setqidonganniuItem);
-        auto setlalianlawanItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        setlalianlawanItem->setName("$variable$setlalianlawan$");
-        setlalianlawanItem->setValueFromInt(setlalianlawan);
-        assembly.addItem(setlalianlawanItem);
-        auto setjitingItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        setjitingItem->setName("$variable$setjiting$");
-        setjitingItem->setValueFromInt(setjiting);
-        assembly.addItem(setjitingItem);
-        auto setbujindianjimaichongItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        setbujindianjimaichongItem->setName("$variable$setbujindianjimaichong$");
-        setbujindianjimaichongItem->setValueFromInt(setbujindianjimaichong);
-        assembly.addItem(setbujindianjimaichongItem);
-        auto setchongkongItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        setchongkongItem->setName("$variable$setchongkong$");
-        setchongkongItem->setValueFromInt(setchongkong);
-        assembly.addItem(setchongkongItem);
-        auto settuojiItem = std::make_shared<rw::oso::ObjectStoreItem>();
-        settuojiItem->setName("$variable$settuoji$");
-        settuojiItem->setValueFromInt(settuoji);
-        assembly.addItem(settuojiItem);
+        auto qidonganniuINItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        qidonganniuINItem->setName("$variable$qidonganniuIN$");
+        qidonganniuINItem->setValueFromInt(qidonganniuIN);
+        assembly.addItem(qidonganniuINItem);
+        auto lalianlawanINItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        lalianlawanINItem->setName("$variable$lalianlawanIN$");
+        lalianlawanINItem->setValueFromInt(lalianlawanIN);
+        assembly.addItem(lalianlawanINItem);
+        auto jitingINItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        jitingINItem->setName("$variable$jitingIN$");
+        jitingINItem->setValueFromInt(jitingIN);
+        assembly.addItem(jitingINItem);
+        auto bujindianjimaichongOUTItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        bujindianjimaichongOUTItem->setName("$variable$bujindianjimaichongOUT$");
+        bujindianjimaichongOUTItem->setValueFromInt(bujindianjimaichongOUT);
+        assembly.addItem(bujindianjimaichongOUTItem);
+        auto chongkongOUTItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        chongkongOUTItem->setName("$variable$chongkongOUT$");
+        chongkongOUTItem->setValueFromInt(chongkongOUT);
+        assembly.addItem(chongkongOUTItem);
+        auto tuojiOUTItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        tuojiOUTItem->setName("$variable$tuojiOUT$");
+        tuojiOUTItem->setValueFromInt(tuojiOUT);
+        assembly.addItem(tuojiOUTItem);
         return assembly;
     }
 
     inline bool SetConfig::operator==(const SetConfig& obj) const
     {
-        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode && takeWork1Pictures == obj.takeWork1Pictures && takeWork2Pictures == obj.takeWork2Pictures && qiyongerxiangji == obj.qiyongerxiangji && qiyongyundongkongzhiqi == obj.qiyongyundongkongzhiqi && yundongkongzhiqichonglian == obj.yundongkongzhiqichonglian && shedingladaichangdu == obj.shedingladaichangdu && chongkongjishu == obj.chongkongjishu && dangqianchangdu == obj.dangqianchangdu && xiangjichufachangdu == obj.xiangjichufachangdu && shoudongsudu == obj.shoudongsudu && meizhuanmaichongshu == obj.meizhuanmaichongshu && zidongladaisudu == obj.zidongladaisudu && shedingzhouchang == obj.shedingzhouchang && yanshichongkong == obj.yanshichongkong && chongkongshijian == obj.chongkongshijian && yanshiziqi == obj.yanshiziqi && jiajiansushijian == obj.jiajiansushijian && setqidonganniu == obj.setqidonganniu && setlalianlawan == obj.setlalianlawan && setjiting == obj.setjiting && setbujindianjimaichong == obj.setbujindianjimaichong && setchongkong == obj.setchongkong && settuoji == obj.settuoji;
+        return tiFeiChiXuShiJian1 == obj.tiFeiChiXuShiJian1 && yanChiTiFeiShiJian1 == obj.yanChiTiFeiShiJian1 && tiFeiChiXuShiJian2 == obj.tiFeiChiXuShiJian2 && yanChiTiFeiShiJian2 == obj.yanChiTiFeiShiJian2 && shangXianWei1 == obj.shangXianWei1 && xiaXianWei1 == obj.xiaXianWei1 && zuoXianWei1 == obj.zuoXianWei1 && youXianWei1 == obj.youXianWei1 && xiangSuDangLiang1 == obj.xiangSuDangLiang1 && shangXianWei2 == obj.shangXianWei2 && xiaXianWei2 == obj.xiaXianWei2 && zuoXianWei2 == obj.zuoXianWei2 && youXianWei2 == obj.youXianWei2 && xiangSuDangLiang2 == obj.xiangSuDangLiang2 && qiangBaoGuang == obj.qiangBaoGuang && qiangZengYi == obj.qiangZengYi && zhongBaoGuang == obj.zhongBaoGuang && zhongZengYi == obj.zhongZengYi && ruoBaoGuang == obj.ruoBaoGuang && ruoZengYi == obj.ruoZengYi && saveNGImg == obj.saveNGImg && saveMaskImg == obj.saveMaskImg && saveOKImg == obj.saveOKImg && debugMode == obj.debugMode && takeWork1Pictures == obj.takeWork1Pictures && takeWork2Pictures == obj.takeWork2Pictures && qiyongerxiangji == obj.qiyongerxiangji && qiyongyundongkongzhiqi == obj.qiyongyundongkongzhiqi && yundongkongzhiqichonglian == obj.yundongkongzhiqichonglian && shedingladaichangdu == obj.shedingladaichangdu && chongkongjishu == obj.chongkongjishu && dangqianchangdu == obj.dangqianchangdu && xiangjichufachangdu == obj.xiangjichufachangdu && shoudongsudu == obj.shoudongsudu && meizhuanmaichongshu == obj.meizhuanmaichongshu && zidongladaisudu == obj.zidongladaisudu && shedingzhouchang == obj.shedingzhouchang && yanshichongkong == obj.yanshichongkong && chongkongshijian == obj.chongkongshijian && yanshiziqi == obj.yanshiziqi && jiajiansushijian == obj.jiajiansushijian && qidonganniuIN == obj.qidonganniuIN && lalianlawanIN == obj.lalianlawanIN && jitingIN == obj.jitingIN && bujindianjimaichongOUT == obj.bujindianjimaichongOUT && chongkongOUT == obj.chongkongOUT && tuojiOUT == obj.tuojiOUT;
     }
 
     inline bool SetConfig::operator!=(const SetConfig& obj) const

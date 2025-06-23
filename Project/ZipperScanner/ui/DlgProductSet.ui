@@ -6605,6 +6605,9 @@ QGroupBox::title {
                   <layout class="QHBoxLayout" name="horizontalLayout_29">
                    <item>
                     <widget class="QCheckBox" name="cbox_DIqidonganniu">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -6647,6 +6650,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="cbox_DIjiting">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -6689,6 +6695,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="cbox_DIlalianlawan">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -6958,6 +6967,9 @@ QCheckBox::indicator:checked:hover {
                   <layout class="QHBoxLayout" name="horizontalLayout_30">
                    <item>
                     <widget class="QCheckBox" name="cbox_DObujindianjimaichong">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -7000,6 +7012,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="cbox_DOchongkong">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -7042,6 +7057,9 @@ QCheckBox::indicator:checked:hover {
                    </item>
                    <item>
                     <widget class="QCheckBox" name="cbox_DOtuoji">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -7721,7 +7739,7 @@ QPushButton:pressed {
                        <property name="styleSheet">
                         <string notr="true">/* 基础标签样式 */
 QLabel {
-    color: rgb(0, 0, 0);          /* 主文字色 */
+    color: rgb(255, 0, 0);          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
     background: transparent; /* 透明背景 */
     padding: 2px 4px;        /* 基础内边距 */
@@ -7942,7 +7960,7 @@ QPushButton:pressed {
                        <property name="styleSheet">
                         <string notr="true">/* 基础标签样式 */
 QLabel {
-    color: rgb(0, 0, 0);          /* 主文字色 */
+    color: rgb(255, 0, 0);          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
     background: transparent; /* 透明背景 */
     padding: 2px 4px;        /* 基础内边距 */
@@ -8163,7 +8181,7 @@ QPushButton:pressed {
                        <property name="styleSheet">
                         <string notr="true">/* 基础标签样式 */
 QLabel {
-    color: rgb(0, 0, 0);          /* 主文字色 */
+    color: rgb(255, 0, 0);          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
     background: transparent; /* 透明背景 */
     padding: 2px 4px;        /* 基础内边距 */

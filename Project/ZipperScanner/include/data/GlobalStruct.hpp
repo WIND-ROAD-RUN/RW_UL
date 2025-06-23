@@ -72,6 +72,8 @@ public:
 	std::atomic<bool> debug_isDisplayRec{ true };
 	std::atomic<bool> debug_isDisplayText{ true };
 
+	std::atomic_bool _isUpdateMonitorInfo{ false };
+
 public:
 	// 统计信息
 	struct StatisticalInfo

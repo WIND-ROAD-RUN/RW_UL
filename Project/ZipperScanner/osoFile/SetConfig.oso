@@ -57,11 +57,11 @@ namespace cdm {
 		yanshiziqi : double :default = 0;
 		jiajiansushijian : double :default = 0;
 
-		setqidonganniu : int :default = 0;
-		setlalianlawan : int :default = 0;
-		setjiting : int :default = 0;
-		setbujindianjimaichong : int :default = 0;
-		setchongkong : int :default = 0;
-		settuoji : int :default = 0;
+		qidonganniuIN : int :default = 0;
+		lalianlawanIN : int :default = 0;
+		jitingIN : int :default = 0;
+		bujindianjimaichongOUT : int :default = 0;
+		chongkongOUT : int :default = 0;
+		tuojiOUT : int :default = 0;
 	};
 }
