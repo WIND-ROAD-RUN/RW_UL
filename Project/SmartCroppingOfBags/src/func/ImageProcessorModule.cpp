@@ -3036,7 +3036,8 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	}
 
 	Time currentTime = std::chrono::system_clock::now();
-	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+	rw::rqw::ElementInfo<cv::Mat> imagePart;
+	frame.copyTo(imagePart.element );
 	
 	double nowLocation=0;
 	GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(nowLocation);

@@ -10,6 +10,7 @@ set(CMAKE_AUTORCC ON)
 #set(CMAKE_AUTOUIC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(OpenCV REQUIRED)
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include/ui
@@ -29,7 +30,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
-
+target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC dsl
 )

@@ -4,6 +4,7 @@
 #include <QDateTime>
 
 #include"dsl_CacheFIFO.hpp"
+#include"opencv2/opencv.hpp"
 
 namespace rw
 {
@@ -18,6 +19,28 @@ namespace rw
 		public:
 			ElementInfo(const ElementType& img) : element(img) {}
 			ElementInfo() = default;
+		};
+
+		template <typename Name, typename Value>
+		struct ElementInfo<cv::Mat, Name, Value>
+		{
+		public:
+			cv::Mat element; 
+			QMap<Name, Value> attribute;
+
+		public:
+			ElementInfo(const cv::Mat& img) : element(img.clone()) {}
+			ElementInfo() = default;
+
+			ElementInfo& operator=(const ElementInfo& other) {
+				if (this != &other) {
+					element = other.element.clone(); 
+					attribute = other.attribute;
+				}
+				return *this;
+			}
+
+			ElementInfo(const ElementInfo& other) : element(other.element.clone()), attribute(other.attribute) {}
 		};
 
 		template <typename KeyType, typename ValueType>
