@@ -96,31 +96,30 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
 
 cv::Mat ImageCollage::verticalConcat(const std::vector<cv::Mat>& images)
 {
-    if (images.empty()) return cv::Mat();
+	if (images.empty()) {
+		return cv::Mat(); // 如果列表为空，返回空的 Mat
+	}
 
-    // 检查所有图片宽度是否一致
-    int width = images[0].cols;
-    for (const auto& img : images) {
-        if (img.empty() || img.cols != width) {
-            // 尺寸不一致，返回空
-            return cv::Mat();
-        }
-    }
+	// 计算拼接后图像的总高度和最大宽度
+	int totalHeight = 0;
+	int maxWidth = 0;
+	for (const auto& img : images) {
+		totalHeight += img.rows; // 累加每张图片的高度
+		maxWidth = std::max(maxWidth, img.cols); // 找到最大的宽度
+	}
 
-    // 计算总高度
-    int totalHeight = 0;
-    for (const auto& img : images) {
-        totalHeight += img.rows;
-    }
+	// 创建拼接后的图像，初始化为黑色背景
+	cv::Mat result(totalHeight, maxWidth, images[0].type(), cv::Scalar(0, 0, 0));
 
-    // 创建输出图像
-    cv::Mat result(totalHeight, width, images[0].type());
-    int currentY = 0;
-    for (const auto& img : images) {
-        img.copyTo(result.rowRange(currentY, currentY + img.rows));
-        currentY += img.rows;
-    }
-    return result;
+	// 按顺序将每张图片拷贝到拼接图像中
+	int currentY = 0;
+	for (const auto& img : images) {
+		cv::Rect roi(0, currentY, img.cols, img.rows); // 定义拷贝区域
+		img.copyTo(result(roi)); // 拷贝图像到结果图像的指定区域
+		currentY += img.rows; // 更新当前 Y 坐标
+	}
+
+	return result; // 返回拼接后的图像
 }
 
 QImage ImageCollage::verticalConcat(const QVector<QImage>& images)

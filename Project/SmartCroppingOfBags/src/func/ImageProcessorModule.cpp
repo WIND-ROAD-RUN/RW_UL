@@ -258,10 +258,19 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	//emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(frame.image.element)));
 
-	std::vector<cv::Mat> mats(4);
+	static std::vector<cv::Mat> mats;
 	static size_t count{0};
-	mats[count % 4] = frame.image.element;
+	mats.emplace_back(frame.image.element);
 	auto collageImage = ImageCollage::verticalConcat(mats);
+	for (size_t i = 0; i < mats.size(); ++i) {
+		std::cout << "Image " << i << ": Address = " << &mats[i]
+			<< ", Size = " << mats[i].rows << "x" << mats[i].cols << std::endl;
+	}
+	count++;
+	if (mats.size()==15)
+	{
+		mats.clear();
+	}
 	emit imageReady(QPixmap::fromImage(rw::rqw::cvMatToQImage(collageImage)));
 }
 
