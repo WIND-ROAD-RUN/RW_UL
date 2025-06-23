@@ -318,6 +318,7 @@ void ZipperScanner::read_config_GeneralConfig()
 		globalStruct.generalConfig = *globalStruct.storeContext->load(globalPath.generalConfigPath.toStdString());
 		// 加载主窗体UI的设置
 		globalStruct.generalConfig.isDefect = true; // 默认开启剔废模式
+		rbtn_stop_clicked(true); // 默认停止
 		rbtn_removeFunc_checked(true);
 		ui->rbtn_removeFunc->setChecked(globalStruct.generalConfig.isDefect);
 		ui->rbtn_strongLight->setChecked(globalStruct.generalConfig.qiangGuang);
@@ -562,6 +563,36 @@ void ZipperScanner::ckb_wenzi_checked(bool checked)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	globalStruct.generalConfig.iswenzi = ui->ckb_wenzi->isChecked();
+}
+
+void ZipperScanner::rbtn_start_clicked(bool checked)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	if (checked)
+	{
+		globalStruct.generalConfig.isStart = true;
+		globalStruct.generalConfig.isStop = false;
+	}
+	else
+	{
+		globalStruct.generalConfig.isStart = false;
+		globalStruct.generalConfig.isStop = true;
+	}
+}
+
+void ZipperScanner::rbtn_stop_clicked(bool checked)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	if (checked)
+	{
+		globalStruct.generalConfig.isStart = false;
+		globalStruct.generalConfig.isStop = true;
+	}
+	else
+	{
+		globalStruct.generalConfig.isStart = true;
+		globalStruct.generalConfig.isStop = false;
+	}
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

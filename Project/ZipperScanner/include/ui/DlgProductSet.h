@@ -54,6 +54,40 @@ private slots:
 	void cbox_qiyongyundongkongzhiqi_checked();
 	void cbox_yundongkongzhiqichonglian_checked();
 
+	// 基本参数
+	void btn_shedingladaichangdu_clicked();
+	void btn_xiangjichufachangdu_clicked();
+	void btn_jishuqingling_clicked();
+	void btn_changduqingling_clicked();
+	void btn_shoudongladai_clicked();
+	void btn_shoudongchongkong_clicked();
+	void btn_tuoji_clicked();
+	void btn_xiangjichufa_clicked();
+	void btn_shoudongsudu_clicked();
+	void btn_meizhuanmaichongshu_clicked();
+	void btn_zidongladaisudu_clicked();
+	void btn_shedingzhouchang_clicked();
+	void btn_yanshichongkong_clicked();
+	void btn_chongkongshijian_clicked();
+	void btn_yanshiziqi_clicked();
+	void btn_jiajiansushijian_clicked();
+
+	// 监控IO
+	void cbox_DIqidonganniu_clicked();
+	void cbox_DIjiting_clicked();
+	void cbox_DIlalianlawan_clicked();
+	void cbox_DObujindianjimaichong_clicked();
+	void cbox_DOchongkong_clicked();
+	void cbox_DOtuoji_clicked();
+
+	// 设置IO
+	void btn_setqidonganniu_clicked();
+	void btn_setlalianlawan_clicked();
+	void btn_setjiting_clicked();
+	void btn_setbujindianjimaichong_clicked();
+	void btn_setchongkong_clicked();
+	void btn_settuoji_clicked();
+
 private:
 	Ui::DlgProductSetClass *ui;
 };

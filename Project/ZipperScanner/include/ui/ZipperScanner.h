@@ -67,6 +67,8 @@ private slots:
 	void rbtn_removeFunc_checked(bool checked);
 	void ckb_shibiekuang_checked(bool checked);
 	void ckb_wenzi_checked(bool checked);
+	void rbtn_start_clicked(bool checked);
+	void rbtn_stop_clicked(bool checked);
 
 
 private slots:

@@ -15,5 +15,7 @@ namespace cdm {
 		isSaveImg : bool :default = false;
 		isshibiekuang : bool :default = true;
 		iswenzi : bool :default = true;
+		isStart : bool :default = false;
+		isStop : bool :default = false;
 	};
 }
