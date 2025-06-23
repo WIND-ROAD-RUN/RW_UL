@@ -87,6 +87,11 @@ void DlgProductSet::readConfig()
 
 	ui->pbtn_specifyColorDifferenceDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceDeviation));
 	ui->pbtn_poreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableArea));
+
+	ui->pbtn_smallPoreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.smallPoreEnableArea));
+	ui->pbtn_smallPoreEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.smallPoreEnableScore));
+	ui->rbtn_smallPoreEnable->setChecked(GlobalStructData.dlgProductSetConfig.smallPoreEnable);
+
 }
 
 float DlgProductSet::get_blowTime()
@@ -200,6 +205,13 @@ void DlgProductSet::build_connect()
 
 	QObject::connect(ui->pbtn_poreEnableArea, &QRadioButton::clicked,
 		this, &DlgProductSet::pbtn_poreEnableArea_clicked);
+
+	QObject::connect(ui->pbtn_smallPoreEnableArea, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_smallPoreEnableArea_clicked);
+	QObject::connect(ui->pbtn_smallPoreEnableScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_smallPoreEnableScore_clicked);
+	QObject::connect(ui->rbtn_smallPoreEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_smallPoreEnable_checked);
 }
 
 void DlgProductSet::build_radioButton()
@@ -593,6 +605,44 @@ void DlgProductSet::pbtn_poreEnableScore_clicked()
 	}
 }
 
+void DlgProductSet::pbtn_smallPoreEnableScore_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
+		auto& GlobalStructData = GlobalStructData::getInstance();
+		ui->pbtn_smallPoreEnableScore->setText(value);
+		GlobalStructData.dlgProductSetConfig.smallPoreEnableScore = value.toDouble();
+	}
+}
+
+void DlgProductSet::pbtn_smallPoreEnableArea_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 200000)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-200000之间的值");
+			return;
+		}
+		auto& GlobalStructData = GlobalStructData::getInstance();
+		ui->pbtn_smallPoreEnableArea->setText(value);
+		GlobalStructData.dlgProductSetConfig.smallPoreEnableArea = value.toDouble();
+	}
+}
+
 void DlgProductSet::pbtn_paintEnableScore_clicked()
 {
 	NumberKeyboard numKeyBord;
@@ -710,6 +760,12 @@ void DlgProductSet::rbtn_poreEnable_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
 	GlobalStructData.dlgProductSetConfig.poreEnable = checked;
+}
+
+void DlgProductSet::rbtn_smallPoreEnable_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProductSetConfig.smallPoreEnable = checked;
 }
 
 void DlgProductSet::rbtn_paintEnable_checked(bool checked)
