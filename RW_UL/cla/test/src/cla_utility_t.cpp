@@ -11,22 +11,22 @@
 
 namespace cla_ActivationBitsConvert
 {
-	// 2to16£¬16to2
-	TEST_F(ActivationBitsConvert_T,a)
+	// Binary to Hex and back
+	TEST_F(ActivationBitsConvert_T, BinaryToHexAndBack)
 	{
-		for (int i=0;i<1000;i++)
+		for (int i = 0; i < 1000; i++)
 		{
 			generate();
 			auto num = testObj;
-			
+
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj);
 			ASSERT_EQ(num, testObj);
 		}
 	}
 
-	// 2to8,8to2
-	TEST_F(ActivationBitsConvert_T, b)
+	// Binary to Oct and back
+	TEST_F(ActivationBitsConvert_T, BinaryToOctAndBack)
 	{
 		for (int i = 0; i < 1000; i++)
 		{
@@ -39,14 +39,14 @@ namespace cla_ActivationBitsConvert
 		}
 	}
 
-	// 2to16,16to8,8to2
-	TEST_F(ActivationBitsConvert_T, c)
+	// Binary to Hex to Oct to Binary
+	TEST_F(ActivationBitsConvert_T, BinaryToHexToOctToBinary)
 	{
 		for (int i = 0; i < 1000; i++)
 		{
 			generate();
 			auto num = testObj;
-			
+
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, num.size());
@@ -54,8 +54,8 @@ namespace cla_ActivationBitsConvert
 		}
 	}
 
-	// 2to8,8to16,16to2
-	TEST_F(ActivationBitsConvert_T, d)
+	// Binary to Oct to Hex to Binary
+	TEST_F(ActivationBitsConvert_T, BinaryToOctToHexToBinary)
 	{
 		for (int i = 0; i < 1000; i++)
 		{
@@ -64,13 +64,13 @@ namespace cla_ActivationBitsConvert
 
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
-			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj,num.size());
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj, num.size());
 			ASSERT_EQ(num, testObj);
 		}
 	}
 
-	// 2to16,16to8,8to16,16to8,8to2
-	TEST_F(ActivationBitsConvert_T, e)
+	// Binary to Hex to Oct to Hex to Oct to Binary
+	TEST_F(ActivationBitsConvert_T, BinaryToHexToOctToHexToOctToBinary)
 	{
 		for (int i = 0; i < 1000; i++)
 		{
@@ -81,13 +81,13 @@ namespace cla_ActivationBitsConvert
 			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
-			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj,num.size());
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, num.size());
 			ASSERT_EQ(num, testObj);
 		}
 	}
 
-	// 2to8,8to2,2to16,16to8,8to16,16to2
-	TEST_F(ActivationBitsConvert_T, f)
+	// Binary to Oct to Binary to Hex to Oct to Hex to Binary
+	TEST_F(ActivationBitsConvert_T, BinaryToOctToBinaryToHexToOctToHexToBinary)
 	{
 		for (int i = 0; i < 1000; i++)
 		{
@@ -95,11 +95,11 @@ namespace cla_ActivationBitsConvert
 			auto num = testObj;
 
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOOct(testObj);
-			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj,num.size());
+			testObj = rw::cla::ActivationBitsConvert::switchOctTOBinary(testObj, num.size());
 			testObj = rw::cla::ActivationBitsConvert::switchBinaryTOHex(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchHexTOOct(testObj);
 			testObj = rw::cla::ActivationBitsConvert::switchOctTOHex(testObj);
-			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj,num.size());
+			testObj = rw::cla::ActivationBitsConvert::switchHexTOBinary(testObj, num.size());
 			ASSERT_EQ(num, testObj);
 		}
 	}
