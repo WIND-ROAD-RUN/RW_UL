@@ -599,6 +599,9 @@ void ButtonScanner::read_config_produceLineConfig()
 	else {
 		globalStruct.ReadDlgProduceLineSetConfig();
 	}
+	globalStruct.dlgProduceLineSetConfig.takeNgPictures = true;
+	globalStruct.dlgProduceLineSetConfig.takeMaskPictures = true;
+	globalStruct.dlgProduceLineSetConfig.takeOkPictures = true;
 }
 
 void ButtonScanner::read_config_productSetConfig()
