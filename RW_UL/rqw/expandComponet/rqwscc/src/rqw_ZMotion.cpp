@@ -21,12 +21,7 @@ namespace rw
 		{
 			if (_zMotion)
 			{
-				auto connectState=_zMotion->getBoardState();
-				if (connectState)
-				{
-					_zMotion->CloseBoared();
-				}
-				delete _zMotion;
+				disConnect();
 			}
 		}
 
@@ -73,6 +68,7 @@ namespace rw
 			isGet = true;
 			auto result= _zMotion->CloseBoared();
 			delete _zMotion;
+			_zMotion = nullptr;
 			return result;
 		}
 
