@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include"ime_ModelEngineFactory.h"
 
@@ -15,6 +15,11 @@
 #include"ImageCollage.hpp"
 #include"dsl_TimeBasedCache.hpp"
 #include"dsl_CacheFIFOThreadSafe.hpp"
+
+
+inline std::optional<std::chrono::system_clock::time_point> findTimeInterval(
+	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
+	const std::chrono::system_clock::time_point& timePoint);
 
 
 // 智能裁切吨袋检测信息

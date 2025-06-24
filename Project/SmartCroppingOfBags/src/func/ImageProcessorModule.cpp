@@ -11,6 +11,26 @@
 #include "DetachUtiltyThread.h"
 #include"MonitorIO.h"
 
+std::optional<std::chrono::system_clock::time_point> findTimeInterval(
+	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
+	const std::chrono::system_clock::time_point& timePoint)
+{
+	if (timeCollection.empty()) {
+		return std::nullopt; 
+	}
+
+	std::vector<std::chrono::system_clock::time_point> sortedTimes = timeCollection;
+	std::sort(sortedTimes.begin(), sortedTimes.end());
+
+	for (size_t i = 0; i < sortedTimes.size() - 1; ++i) {
+		if (timePoint >= sortedTimes[i] && timePoint < sortedTimes[i + 1]) {
+			return sortedTimes[i];
+		}
+	}
+
+	return std::nullopt;
+}
+
 QColor ImagePainter::ColorToQColor(Color c)
 {
 	switch (c) {
@@ -188,6 +208,18 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
+
+			auto qiedaoTimeFrame = findTimeInterval(duringTimes, _qieDaoTime);
+			if (qiedaoTimeFrame.has_value())
+			{
+				auto qiedaoFrame = _imageCollage->getImage(qiedaoTimeFrame.value());
+				auto frameLocation = qiedaoFrame.value().attribute["location"];
+				std::cout << frameLocation << std::endl;
+				auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+				auto daichang = frameLocation * setConfig.maichongxishu1;
+				auto xiangsu = daichang / setConfig.daichangxishu1;
+				std::cout << "像素:" << static_cast<int>(xiangsu) << std::endl;
+			}
 
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
