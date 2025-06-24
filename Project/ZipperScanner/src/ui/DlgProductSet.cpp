@@ -104,6 +104,9 @@ void DlgProductSet::read_config()
 	ui->btn_setbujindianjimaichong->setText(QString::number(globalConfig.bujindianjimaichongOUT));
 	ui->btn_setchongkong->setText(QString::number(globalConfig.chongkongOUT));
 	ui->btn_settuoji->setText(QString::number(globalConfig.tuojiOUT));
+
+	// 默认显示第一个
+	ui->tabWidget->setCurrentIndex(0);
 }
 
 void DlgProductSet::build_connect()
