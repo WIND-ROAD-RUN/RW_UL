@@ -2,7 +2,7 @@
 
 namespace rw {
 	namespace cla {
-		struct EncrypyConfig
+		struct EncryptConfig
 		{
 			
 		};
