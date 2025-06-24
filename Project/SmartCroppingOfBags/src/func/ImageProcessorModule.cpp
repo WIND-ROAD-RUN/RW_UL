@@ -1,4 +1,4 @@
-﻿#include "ImageProcessorModule.h"
+#include "ImageProcessorModule.h"
 
 #include <qcolor.h>
 #include <QPainter>
@@ -161,7 +161,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	auto processResult = processCollageImage_debug(resultImage.mat);
 
 	// 随机添加检测框用于测试
-	getRandomDetecionRec_debug(resultImage, processResult);
+	//getRandomDetecionRec_debug(resultImage, processResult);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
@@ -186,11 +186,15 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	{
 		if (frame.time>_qieDaoTime)
 		{
-			_lastQieDaoTime = _qieDaoTime;
+			globalThreadData.isQieDao = false;
+
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
+
+			std::cout <<"1 "<< duringTimes.size()<<std::endl;
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
+			std::cout << "2 "<< duringTimes.size() << std::endl;
 
 			// 获取有多少张图片没有拼过
 			size_t count = duringTimes.size();
@@ -220,11 +224,11 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			emit imageReady(QPixmap::fromImage(collageImage));
 
-			globalThreadData.isQieDao = false;
-
 			emit appendPixel(collageImage.height());
+
 		}
 	}
+	_lastQieDaoTime = _qieDaoTime;
 
 }
 
@@ -2983,14 +2987,15 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
-	static size_t count{0};
+
 
 	if (frame.empty()) {
 		return; // 跳过空帧
 	}
 
 	Time currentTime = std::chrono::system_clock::now();
-	rw::rqw::ElementInfo<cv::Mat> imagePart(frame);
+	rw::rqw::ElementInfo<cv::Mat> imagePart;
+	frame.copyTo(imagePart.element );
 	
 	double nowLocation=0;
 	GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(nowLocation);
@@ -2998,6 +3003,7 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 
 	_historyTimes->insert(currentTime, currentTime);
 	_timeBool->set(currentTime, false);
+
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
@@ -3010,6 +3016,5 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 		_queue.enqueue(matInfo);
 		_condition.wakeOne();
 	}
-	count++;
 }
 

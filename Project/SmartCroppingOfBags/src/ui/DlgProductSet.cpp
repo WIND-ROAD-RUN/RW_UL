@@ -861,6 +861,12 @@ void DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_daichang1->setText(value);
 		globalStructSetConfig.daichang1 = value.toDouble();
+
+		if (GlobalStructDataSmartCroppingOfBags::getInstance().removeState == RemoveState::SmartCrop)
+		{
+			auto lineHeight = globalStructSetConfig.daichang1 / globalStructSetConfig.maichongxishu1;
+			GlobalStructDataSmartCroppingOfBags::getInstance().camera1->setLineHeight(lineHeight);
+		}
 	}
 }
 

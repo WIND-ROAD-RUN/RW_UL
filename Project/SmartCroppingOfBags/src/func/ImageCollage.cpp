@@ -70,13 +70,13 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
     }
 
     
-    cv::Mat collageImage(totalHeight, maxWidth, images[0].type(), cv::Scalar(0, 0, 0)); // ³õÊ¼»¯ÎªºÚÉ«±³¾°
+    cv::Mat collageImage(totalHeight, maxWidth, images[0].type(), cv::Scalar(0, 0, 0)); // åˆå§‹åŒ–ä¸ºé»‘è‰²èƒŒæ™¯
 
     
     int currentY = 0;
     for (const auto& img : images)
     {
-        img.copyTo(collageImage(cv::Rect(0, currentY, img.cols, img.rows))); // ½«Í¼Æ¬¿½±´µ½Æ´½ÓÍ¼ÏñÖĞ
+        img.copyTo(collageImage(cv::Rect(0, currentY, img.cols, img.rows))); // å°†å›¾ç‰‡æ‹·è´åˆ°æ‹¼æ¥å›¾åƒä¸­
         currentY += img.rows; 
     }
 
@@ -96,31 +96,30 @@ ImageCollage::CollageImage ImageCollage::getCollageImage(const std::vector<Time>
 
 cv::Mat ImageCollage::verticalConcat(const std::vector<cv::Mat>& images)
 {
-    if (images.empty()) return cv::Mat();
+	if (images.empty()) {
+		return cv::Mat(); // å¦‚æœåˆ—è¡¨ä¸ºç©ºï¼Œè¿”å›ç©ºçš„ Mat
+	}
 
-    // ¼ì²éËùÓĞÍ¼Æ¬¿í¶ÈÊÇ·ñÒ»ÖÂ
-    int width = images[0].cols;
-    for (const auto& img : images) {
-        if (img.empty() || img.cols != width) {
-            // ³ß´ç²»Ò»ÖÂ£¬·µ»Ø¿Õ
-            return cv::Mat();
-        }
-    }
+	// è®¡ç®—æ‹¼æ¥åå›¾åƒçš„æ€»é«˜åº¦å’Œæœ€å¤§å®½åº¦
+	int totalHeight = 0;
+	int maxWidth = 0;
+	for (const auto& img : images) {
+		totalHeight += img.rows; // ç´¯åŠ æ¯å¼ å›¾ç‰‡çš„é«˜åº¦
+		maxWidth = std::max(maxWidth, img.cols); // æ‰¾åˆ°æœ€å¤§çš„å®½åº¦
+	}
 
-    // ¼ÆËã×Ü¸ß¶È
-    int totalHeight = 0;
-    for (const auto& img : images) {
-        totalHeight += img.rows;
-    }
+	// åˆ›å»ºæ‹¼æ¥åçš„å›¾åƒï¼Œåˆå§‹åŒ–ä¸ºé»‘è‰²èƒŒæ™¯
+	cv::Mat result(totalHeight, maxWidth, images[0].type(), cv::Scalar(0, 0, 0));
 
-    // ´´½¨Êä³öÍ¼Ïñ
-    cv::Mat result(totalHeight, width, images[0].type());
-    int currentY = 0;
-    for (const auto& img : images) {
-        img.copyTo(result.rowRange(currentY, currentY + img.rows));
-        currentY += img.rows;
-    }
-    return result;
+	// æŒ‰é¡ºåºå°†æ¯å¼ å›¾ç‰‡æ‹·è´åˆ°æ‹¼æ¥å›¾åƒä¸­
+	int currentY = 0;
+	for (const auto& img : images) {
+		cv::Rect roi(0, currentY, img.cols, img.rows); // å®šä¹‰æ‹·è´åŒºåŸŸ
+		img.copyTo(result(roi)); // æ‹·è´å›¾åƒåˆ°ç»“æœå›¾åƒçš„æŒ‡å®šåŒºåŸŸ
+		currentY += img.rows; // æ›´æ–°å½“å‰ Y åæ ‡
+	}
+
+	return result; // è¿”å›æ‹¼æ¥åçš„å›¾åƒ
 }
 
 QImage ImageCollage::verticalConcat(const QVector<QImage>& images)
@@ -130,16 +129,16 @@ QImage ImageCollage::verticalConcat(const QVector<QImage>& images)
     int width = images[0].width();
     int totalHeight = 0;
 
-    // ¼ì²éËùÓĞÍ¼Æ¬¿í¶ÈÊÇ·ñÒ»ÖÂ£¬²¢¼ÆËã×Ü¸ß¶È
+    // æ£€æŸ¥æ‰€æœ‰å›¾ç‰‡å®½åº¦æ˜¯å¦ä¸€è‡´ï¼Œå¹¶è®¡ç®—æ€»é«˜åº¦
     for (const auto& img : images) {
         if (img.isNull() || img.width() != width) {
-            // ³ß´ç²»Ò»ÖÂ»òÍ¼Æ¬ÎŞĞ§£¬·µ»Ø¿Õ
+            // å°ºå¯¸ä¸ä¸€è‡´æˆ–å›¾ç‰‡æ— æ•ˆï¼Œè¿”å›ç©º
             return QImage();
         }
         totalHeight += img.height();
     }
 
-    // ´´½¨Ä¿±êQImage£¬Ê¹ÓÃARGB32¸ñÊ½ÒÔ¼æÈİĞÔ×î¼Ñ
+    // åˆ›å»ºç›®æ ‡QImageï¼Œä½¿ç”¨ARGB32æ ¼å¼ä»¥å…¼å®¹æ€§æœ€ä½³
     QImage result(width, totalHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 

@@ -6,6 +6,24 @@
 #include "rqw_HistoricalElementManager.hpp"
 #include"Utilty.hpp"
 
+//namespace std {
+//	template <>
+//	struct hash<std::chrono::system_clock::time_point> {
+//		size_t operator()(const std::chrono::system_clock::time_point& timePoint) const noexcept {
+//			// 将 timePoint 转换为精确到纳秒的字符串
+//			std::ostringstream oss;
+//			std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint);
+//			auto duration = timePoint.time_since_epoch();
+//			auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(duration) % 1000000000;
+//
+//			oss << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S")
+//				<< '.' << std::setfill('0') << std::setw(9) << nanoseconds.count();
+//
+//			// 对字符串进行哈希处理
+//			return std::hash<std::string>()(oss.str());
+//		}
+//	};
+//}
 
 namespace rw
 {

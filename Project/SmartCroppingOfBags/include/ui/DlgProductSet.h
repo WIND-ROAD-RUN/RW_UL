@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QDialog>
 #include "ui_DlgProductSet.h"
@@ -32,7 +32,7 @@ private:
 	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
 	void setDOErrorInfo(int index);
 private:
-	// IO¼à¿ØÒ³ÃæµÄµ÷ÊÔÄ£Ê½
+	// IOç›‘æ§é¡µé¢çš„è°ƒè¯•æ¨¡å¼
 	bool isDebugIO{ false };
 protected:
 	void showEvent(QShowEvent*) override;

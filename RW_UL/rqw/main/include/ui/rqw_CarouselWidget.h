@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QPushButton>
 #include <QWidget>
@@ -23,10 +23,10 @@ private:
 private:
 	void flaskGbox();
 public:
-	//0 ¿ÕÍ¼Ïñ
-	//1 ÂÌÉ«
-	//2ºìÉ«
-	//ÆäËûËæ»ú
+	//0 ç©ºå›¾åƒ
+	//1 ç»¿è‰²
+	//2çº¢è‰²
+	//å…¶ä»–éšæœº
 	void appendItem(int state);
 	void dequeItem();
 private:

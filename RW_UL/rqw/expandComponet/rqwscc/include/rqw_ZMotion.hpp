@@ -46,6 +46,25 @@ namespace rw
 		public:
 			[[nodiscard]] bool setAxisPulse(int axis, float value);
 			[[nodiscard]] bool setAxisRunSpeed(int axis, float value);
+
+			[[nodiscard]] bool setAxisAcc(int axis, float value);
+
+			[[nodiscard]] bool setAxisDec(int axis, float value);
+
+			[[nodiscard]] bool setAxisRun(int axis, float value);
+
+			[[nodiscard]] bool stopAllAxis();
+
+			[[nodiscard]] float getAxisLocation(int axis, bool & isGet);
+			[[nodiscard]] float getAxisLocation(int axis);
+
+			[[nodiscard]] bool singleStop(int axis);
+
+			[[nodiscard]] bool singleMove(int axis, int dir, float speed = 20, float acc = 1000, float dec = 1000, float units = 0);
+
+			[[nodiscard]] bool SingleMove(int axis, double dir);
+
+			[[nodiscard]] bool setLocationZero(int axis);
 		};
 
 	}	
