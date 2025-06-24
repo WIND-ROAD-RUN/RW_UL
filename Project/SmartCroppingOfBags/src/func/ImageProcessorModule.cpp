@@ -347,10 +347,10 @@ void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time
 				return;
 			}
 
-			auto info = _historyResult->get(frame.time);
-			info.value().hasCut = true;
-			info.value().cutLocate = cutLineLocate;
-			_historyResult->set(frame.time, info.value());
+			auto info = _historyResult->get(frame.time).value();
+			info.hasCut = true;
+			info.cutLocate = cutLineLocate;
+			_historyResult->set(frame.time, info);
 		}
 	}
 }

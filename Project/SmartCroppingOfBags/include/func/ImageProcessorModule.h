@@ -122,11 +122,14 @@ public:
 	HistoryDetectInfo() = default;
 	HistoryDetectInfo(const std::vector<rw::DetectionRectangleInfo>& result) : processResult(result) {}
 	// 拷贝构造函数
-	HistoryDetectInfo(const HistoryDetectInfo& other) : processResult(other.processResult) {}
+	HistoryDetectInfo(const HistoryDetectInfo& other)
+	: processResult(other.processResult),hasCut(other.hasCut),cutLocate(other.cutLocate) {}
 	// 拷贝赋值运算符
 	HistoryDetectInfo& operator=(const HistoryDetectInfo& other) {
 		if (this != &other) {
 			processResult = other.processResult;
+			hasCut = other.hasCut;
+			cutLocate = other.cutLocate;
 		}
 		return *this;
 	}
