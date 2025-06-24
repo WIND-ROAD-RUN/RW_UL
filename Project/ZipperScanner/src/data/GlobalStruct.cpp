@@ -41,15 +41,15 @@ void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
 
 void GlobalStructDataZipper::build_PriorityQueue()
 {
-	auto compareNodeEqual = [](const Time& a, const Time& b) {
+	auto compareNodeEqual = [](const DefectValueInfo& a, const DefectValueInfo& b) {
 		return a == b;
 		};
-	auto compareNodePriority = [](const Time& a, const Time& b) {
+	auto compareNodePriority = [](const DefectValueInfo& a, const DefectValueInfo& b) {
 		return a < b;
 		};
 
-	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
-	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
+	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> >(compareNodeEqual, compareNodePriority);
+	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> >(compareNodeEqual, compareNodePriority);
 }
 
 void GlobalStructDataZipper::destroy_PriorityQueue()

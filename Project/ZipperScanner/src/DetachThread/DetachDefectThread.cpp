@@ -24,11 +24,11 @@ void DetachDefectThreadZipper::stopThread()
 	running = false; // 停止线程
 }
 
-void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
 {
 	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
 
-	Time preTime;
+	DefectValueInfo preTime;
 	try
 	{
 		//emit findIsBad(1);
@@ -39,11 +39,11 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 	}
 }
 
-void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
 {
 	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
 
-	Time preTime;
+	DefectValueInfo preTime;
 	try
 	{
 
