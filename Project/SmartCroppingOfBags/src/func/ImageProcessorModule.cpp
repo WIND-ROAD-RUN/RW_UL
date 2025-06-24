@@ -488,6 +488,8 @@ void ImageProcessorSmartCroppingOfBags::drawCutLine(const std::vector<Time>& tim
 		auto itemValue = item.value();
 		rw::rqw::ImagePainter::PainterConfig config;
 		config.color = ImagePainter::Color::Red;
+		config.textColor= ImagePainter::Color::Red;
+		config.thickness = 20;
 		if (itemValue.hasCut)
 		{
 			rw::rqw::ImagePainter::drawHorizontalLine(images[i], itemValue.cutLocate, config);

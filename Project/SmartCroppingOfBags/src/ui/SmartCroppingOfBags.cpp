@@ -1,4 +1,4 @@
-﻿#include "SmartCroppingOfBags.h"
+#include "SmartCroppingOfBags.h"
 
 #include "oso_StorageContext.hpp"
 #include "ui_SmartCroppingOfBags.h"
@@ -208,7 +208,7 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	_clickableVersionLabel = new rw::rqw::ClickableLabel(this);
 
 	this->_dlgVersion = new DlgVersion(this);
-	this->_dlgVersion->loadVersionPath(R"(D:\zfkjData\SmartCroppingOfBags\Version\Version.txt)");
+	this->_dlgVersion->loadVersionPath(R"(.\Version.txt)");
 	this->_dlgVersion->hide();
 	auto layoutVersion = ui->gBox_version->layout();
 	layoutVersion->replaceWidget(ui->lb_version, _clickableVersionLabel);
