@@ -113,6 +113,10 @@ public:
 
 struct HistoryDetectInfo
 {
+public:
+	bool hasCut{false};
+	size_t cutLocate{0};
+public:
 	std::vector<rw::DetectionRectangleInfo> processResult;
 public:
 	HistoryDetectInfo() = default;

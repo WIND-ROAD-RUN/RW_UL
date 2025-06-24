@@ -9,6 +9,7 @@
 #include "Utilty.hpp"
 #include"DetachDefectThread.h"
 #include "DetachUtiltyThread.h"
+#include "imeo_ModelEngineFactory_OnnxRuntime.hpp"
 #include"MonitorIO.h"
 
 std::optional<std::chrono::system_clock::time_point> findTimeInterval(
@@ -333,9 +334,19 @@ void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time
 	{
 		if (frame.time > _qieDaoTime)
 		{
+			auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 			auto currentLocation = _imageCollage->getImage(frame.time).value().attribute["location"];
 			auto cutLocation = GlobalStructThreadSmartCroppingOfBags::getInstance().currentQieDaoLocation.load();
-			std::cout << "currentLocation: " << currentLocation << " cutLocation: " << cutLocation << std::endl;
+			auto locationDifference = std::abs(currentLocation - cutLocation);
+			auto cutLineLocate = locationDifference * setConfig.maichongxishu1/setConfig.daichangxishu1;
+			std::cout <<"cutLineLocate"<< static_cast<int>(cutLineLocate) << std::endl;
+			cutLineLocate = frame.image.element.cols - cutLineLocate;
+			if (cutLineLocate<0)
+			{
+				return;
+			}
+
+			
 		}
 	}
 }

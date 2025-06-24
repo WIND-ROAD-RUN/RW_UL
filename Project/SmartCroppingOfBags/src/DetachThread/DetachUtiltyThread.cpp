@@ -134,25 +134,24 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
+	static std::deque<double> pulseHistory; // 用于存储最近五次脉冲值
 
-	if (runningStatePulseParaChange )
+	pulse = std::abs(pulse - lastPulse); // 计算当前脉冲与上次脉冲的绝对差值
+	lastPulse = pulse; // 更新上次脉冲值
+
+	// 将当前脉冲值加入历史记录
+	pulseHistory.push_back(pulse);
+
+	// 如果历史记录超过五次，移除最早的一次
+	if (pulseHistory.size() > 5)
 	{
-		lastPulse = pulse;
-		pulseSum = pulse;
-		pulseCount = 0;
-		runningStatePulseParaChange = false;
+		pulseHistory.pop_front();
 	}
-	else
-	{
-		pulse = pulse - lastPulse; // 计算当前脉冲与上次脉冲的差值
-		lastPulse = pulse; // 更新上次脉冲值
 
-		// 累加所有历史脉冲差值
-		pulseSum += pulse;
-		++pulseCount;
+	// 计算最近五次脉冲的平均值
+	double sum = std::accumulate(pulseHistory.begin(), pulseHistory.end(), 0.0);
+	pulseAverage = (pulseHistory.empty()) ? 0.0 : (sum / pulseHistory.size());
 
-		pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
-	}
 
 }
 
