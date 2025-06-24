@@ -197,6 +197,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
 
+	getCutLine(times,frame);
+
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
@@ -323,6 +325,19 @@ int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_debug(const std::vect
 	auto previousMatHeight = previousMat.rows;
 
 	return previousMatHeight;
+}
+
+void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time, const MatInfo& frame)
+{
+	if (_isQieDao)
+	{
+		if (frame.time > _qieDaoTime)
+		{
+			auto currentLocation = _imageCollage->getImage(frame.time).value().attribute["location"];
+			auto cutLocation = GlobalStructThreadSmartCroppingOfBags::getInstance().currentQieDaoLocation.load();
+			std::cout << "currentLocation: " << currentLocation << " cutLocation: " << cutLocation << std::endl;
+		}
+	}
 }
 
 void ImageProcessorSmartCroppingOfBags::regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec)

@@ -78,6 +78,7 @@ private:
 public:
 	std::atomic_bool isQieDao{false};
 	std::atomic<Time> currentQieDaoTime;
+	std::atomic<double> currentQieDaoLocation{};
 };
 
 class GlobalStructDataSmartCroppingOfBags
@@ -100,7 +101,7 @@ public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
 	std::atomic<RemoveState> removeState{ RemoveState::SmartCrop };
 public:
-	// 统计信息
+	// 缁熻淇℃伅
 	struct StatisticalInfo
 	{
 		std::atomic_uint64_t produceCount{ 0 };
@@ -147,14 +148,14 @@ public:
 	void saveDlgProductScoreConfig();
 
 public:
-	// UI界面参数
+	// UI鐣岄潰鍙傛暟
 	cdm::GeneralConfigSmartCroppingOfBags generalConfig;
 	cdm::ScoreConfigSmartCroppingOfBags scoreConfig;
 	cdm::SetConfigSmartCroppingOfBags setConfig;
 
 public:
 	void buildCamera();
-	// 相机
+	// 鐩告満
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 

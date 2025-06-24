@@ -217,6 +217,8 @@ private:
 	std::vector<rw::DetectionRectangleInfo> processCollageImage_debug(const cv::Mat& mat);
 	// 获取上个时间戳的图像的高度
 	int splitRecognitionBox_debug(const std::vector<Time>& time);
+	//获取切刀线
+	void getCutLine(const std::vector<Time>& time,const MatInfo& frame);
 	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
 	void regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
 	// 将属于上一张图像的识别框合并到上一次的图像识别框中

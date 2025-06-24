@@ -109,6 +109,7 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 			double pulse{ 0 };
 			if (GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(pulse))
 			{
+				currentQieDaoLocation = pulse;
 				emit appendPulse(pulse);
 			}
 		}
