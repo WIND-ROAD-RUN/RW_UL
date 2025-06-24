@@ -29,7 +29,7 @@ private:
 	void setDIErrorInfo(int index);
 
 private:
-	// IO¼à¿ØÒ³ÃæµÄµ÷ÊÔÄ£Ê½
+	// IOç›‘æ§é¡µé¢çš„è°ƒè¯•æ¨¡å¼
 	bool isDebugIO{ false };
 
 private slots:
@@ -65,7 +65,7 @@ private slots:
 	void cbox_qiyongyundongkongzhiqi_checked();
 	void cbox_yundongkongzhiqichonglian_checked();
 
-	// »ù±¾²ÎÊı
+	// åŸºæœ¬å‚æ•°
 	void btn_shedingladaichangdu_clicked();
 	void btn_xiangjichufachangdu_clicked();
 	void btn_jishuqingling_clicked();
@@ -83,7 +83,7 @@ private slots:
 	void btn_yanshiziqi_clicked();
 	void btn_jiajiansushijian_clicked();
 
-	// ¼à¿ØIO
+	// ç›‘æ§IO
 	void cbox_DIqidonganniu_clicked();
 	void cbox_DIjiting_clicked();
 	void cbox_DIlalianlawan_clicked();
@@ -93,7 +93,7 @@ private slots:
 	void cbox_debugMode_checked(bool ischecked);
 
 
-	// ÉèÖÃIO
+	// è®¾ç½®IO
 	void btn_setqidonganniu_clicked();
 	void btn_setlalianlawan_clicked();
 	void btn_setjiting_clicked();
@@ -102,6 +102,11 @@ private slots:
 	void btn_settuoji_clicked();
 
 	void tabWidget_indexChanged(int index);
+
+
+	// ç›‘æ§IOå‡½æ•°
+	void monitorInPutSignal(size_t index, bool state);
+	void monitorOutPutSignal(size_t index, bool state);
 
 private:
 	Ui::DlgProductSetClass *ui;

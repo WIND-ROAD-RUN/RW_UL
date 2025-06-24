@@ -31,12 +31,34 @@ void GlobalStructDataZipper::destory_motion()
 
 void GlobalStructDataZipper::build_MonitorZMotionIOStateThread()
 {
-
+	monitorZMotionMonitorThread.setMonitorObject(zmotion);
+	QVector<size_t> monitorIList = {ControlLines::qidonganniuIn,ControlLines::lalianlawanIn,ControlLines::jitingIn};
+	QVector<size_t> monitorOList = {ControlLines::bujindianjimaichongOut,ControlLines::chongkongOUT,ControlLines::tuojiOut};
+	monitorZMotionMonitorThread.setMonitorIList(monitorIList);
+	monitorZMotionMonitorThread.setMonitorOList(monitorOList);
+	monitorZMotionMonitorThread.setMonitorFrequency(20);
+	monitorZMotionMonitorThread.setRunning(false);
+	monitorZMotionMonitorThread.start();
+	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, &GlobalStructDataZipper::getInPutSignal);
+	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DOState,
+		this, &GlobalStructDataZipper::getOutPutSignal);
 }
 
 void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
 {
+	monitorZMotionMonitorThread.setRunning(false);
+	monitorZMotionMonitorThread.destroyThread();
+}
 
+void GlobalStructDataZipper::getInPutSignal(size_t index, bool state)
+{
+	emit emit_InPutSignal(index, state);
+}
+
+void GlobalStructDataZipper::getOutPutSignal(size_t index, bool state)
+{
+	emit emit_OutPutSignal(index, state);
 }
 
 void GlobalStructDataZipper::build_PriorityQueue()

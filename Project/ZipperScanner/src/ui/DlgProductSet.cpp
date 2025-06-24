@@ -108,6 +108,8 @@ void DlgProductSet::read_config()
 
 void DlgProductSet::build_connect()
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
 	QObject::connect(ui->pbtn_tifeichixushijian1, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_tifeichixushijian1_clicked);
 	QObject::connect(ui->pbtn_tifeijuli1, &QPushButton::clicked,
@@ -230,6 +232,13 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::btn_setchongkong_clicked);
 	QObject::connect(ui->btn_settuoji, &QPushButton::clicked,
 		this, &DlgProductSet::btn_settuoji_clicked);
+
+
+	// 连接监控IO信号
+	QObject::connect(&globalStruct, &GlobalStructDataZipper::emit_InPutSignal,
+		this, &DlgProductSet::monitorInPutSignal);
+	QObject::connect(&globalStruct, &GlobalStructDataZipper::emit_OutPutSignal,
+		this, &DlgProductSet::monitorOutPutSignal);
 }
 
 std::vector<std::vector<int>> DlgProductSet::DOFindAllDuplicateIndices()
@@ -1150,7 +1159,7 @@ void DlgProductSet::cbox_DIqidonganniu_clicked()
 	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
 	if (globalStructSetConfig.debugMode)
 	{
-		
+
 	}
 }
 
@@ -1356,6 +1365,88 @@ void DlgProductSet::tabWidget_indexChanged(int index)
 	default:
 		_isUpdateMonitorInfo = false;
 		break;
+	}
+}
+
+void DlgProductSet::monitorInPutSignal(size_t index, bool state)
+{
+	if (isDebugIO == false)
+	{
+		switch (index)
+		{
+		case 0: // 启动按钮
+			if (state)
+			{
+				ui->cbox_DIqidonganniu->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DIqidonganniu->setChecked(false);
+			}
+			break;
+		case 1: // 急停按钮
+			if (state)
+			{
+				ui->cbox_DIjiting->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DIjiting->setChecked(false);
+			}
+			break;
+		case 2: // 拉链拉完按钮
+			if (state)
+			{
+				ui->cbox_DIlalianlawan->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DIlalianlawan->setChecked(false);
+			}
+			break;
+		}
+
+	}
+
+}
+
+void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
+{
+	if (isDebugIO == false)
+	{
+		switch (index)
+		{
+		case 0: // 步进电机脉冲按钮
+			if (state)
+			{
+				ui->cbox_DObujindianjimaichong->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DObujindianjimaichong->setChecked(false);
+			}
+			break;
+		case 1: // 冲孔按钮
+			if (state)
+			{
+				ui->cbox_DOchongkong->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DOchongkong->setChecked(false);
+			}
+			break;
+		case 2: // 脱机按钮
+			if (state)
+			{
+				ui->cbox_DOtuoji->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DOtuoji->setChecked(false);
+			}
+			break;
+		}
 	}
 }
 

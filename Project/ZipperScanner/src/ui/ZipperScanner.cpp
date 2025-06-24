@@ -26,11 +26,14 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
+	// 构建运动控制器
 	globalStruct.build_motion();
+
+	// 构建运动控制器IO状态监控线程
+	globalStruct.build_MonitorZMotionIOStateThread();
+
 	// 构建优先队列
 	globalStruct.build_PriorityQueue();
-
-
 
 	// 构建异步剔废线程
 	globalStruct.build_DetachDefectThreadZipper();
@@ -128,7 +131,7 @@ void ZipperScanner::build_connect()
 
 	// 连接UI更新
 	QObject::connect(&GlobalStructDataZipper.getInstance(), &GlobalStructDataZipper::emit_updateUiLabels,
-		this,&ZipperScanner::updateUiLabels);
+		this, &ZipperScanner::updateUiLabels);
 
 }
 
@@ -264,7 +267,10 @@ void ZipperScanner::destroyComponents()
 {
 
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
+	// 销毁运动控制器
 	globalStructData.destory_motion();
+	// 销毁运动控制器IO状态监控线程
+	globalStructData.destroy_MonitorZMotionIOStateThread();
 	// 销毁相机
 	globalStructData.destroyCamera();
 	// 销毁图像处理模块
@@ -420,7 +426,7 @@ void ZipperScanner::pbtn_set_clicked()
 		}
 		else if (numKeyBord.getValue() == "6666")
 		{
-			_dlgExposureTimeSet->setFixedSize(500,300);
+			_dlgExposureTimeSet->setFixedSize(500, 300);
 			_dlgExposureTimeSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 			_dlgExposureTimeSet->exec();
 		}

@@ -34,4 +34,6 @@ protected:
 	void run() override;
 private:
 	std::atomic<bool> running; // 使用原子变量保证线程安全
+
+	float preLocation{ 0.0f };
 };

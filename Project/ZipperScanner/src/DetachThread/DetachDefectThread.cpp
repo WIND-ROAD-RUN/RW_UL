@@ -26,12 +26,20 @@ void DetachDefectThreadZipper::stopThread()
 
 void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
 {
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 
-	DefectValueInfo preTime;
 	try
 	{
-		//emit findIsBad(1);
+		bool isGetLocation = false;
+		float nowLocation = globalStruct.zmotion.getAxisLocation(0, isGetLocation);
+		auto tifeijuli1 = setConfig.tifeijuli1;
+		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli1))
+		{
+			//冲孔
+			bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT,true);
+			//emit findIsBad(1);
+		}
 	}
 	catch (const std::runtime_error&)
 	{
@@ -41,13 +49,20 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 
 void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
 {
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 
-	DefectValueInfo preTime;
 	try
 	{
-
-		//emit findIsBad(2);
+		bool isGetLocation = false;
+		float nowLocation = globalStruct.zmotion.getAxisLocation(0, isGetLocation);
+		auto tifeijuli2 = setConfig.tifeijuli2;
+		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli2))
+		{
+			//冲孔
+			bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, true);
+			//emit findIsBad(2);
+		}
 	}
 	catch (const std::runtime_error&)
 	{

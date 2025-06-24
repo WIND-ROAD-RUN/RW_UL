@@ -31,8 +31,8 @@ enum class RunningState
 };
 
 enum class LightLevel {
-	StrongLight, 
-	MediumLight, 
+	StrongLight,
+	MediumLight,
 	WeakLight
 };
 
@@ -49,6 +49,12 @@ public:
 public:
 	void build_MonitorZMotionIOStateThread();
 	void destroy_MonitorZMotionIOStateThread();
+
+	void getInPutSignal(size_t index, bool state);
+	void getOutPutSignal(size_t index, bool state);
+signals:
+	void emit_InPutSignal(size_t index, bool state);
+	void emit_OutPutSignal(size_t index, bool state);
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> > priorityQueue2;
@@ -56,7 +62,7 @@ public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
 public:
-	DetachDefectThreadZipper *detachDefectThreadZipper;
+	DetachDefectThreadZipper* detachDefectThreadZipper;
 public:
 	void build_DetachDefectThreadZipper();
 	void destroy_DetachDefectThreadZipper();
@@ -112,7 +118,7 @@ private:
 	GlobalStructDataZipper();
 	~GlobalStructDataZipper() = default;
 public:
-	void setLightLevel(const LightLevel & level);
+	void setLightLevel(const LightLevel& level);
 public:
 	void buildConfigManager(rw::oso::StorageType type);
 
@@ -123,7 +129,7 @@ public:
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
-	
+
 public:
 	// 保存参数
 	void buildImageSaveEngine();
