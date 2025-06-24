@@ -9,12 +9,21 @@ namespace rw
 		ZMotion::ZMotion(const QString& ip)
 			:_ip(ip)
 		{
-			_zMotion = std::make_unique<zwy::scc::Motion>();
+			_zMotion = new zwy::scc::Motion;
 			_zMotion->OpenBoard(ip.toStdString());
 		}
 
 		ZMotion::ZMotion()
 		{
+		}
+
+		ZMotion::~ZMotion()
+		{
+			if (_zMotion)
+			{
+				_zMotion->CloseBoared();
+				delete _zMotion;
+			}
 		}
 
 		void ZMotion::setIp(const QString& ip)
@@ -29,7 +38,7 @@ namespace rw
 
 		bool ZMotion::connect()
 		{
-			_zMotion = std::make_unique<zwy::scc::Motion>();
+			_zMotion = new zwy::scc::Motion;
 			return _zMotion->OpenBoard(_ip.toStdString());
 		}
 
@@ -59,7 +68,7 @@ namespace rw
 			}
 			isGet = true;
 			auto result= _zMotion->CloseBoared();
-			_zMotion.reset();
+			delete _zMotion;
 			return result;
 		}
 
