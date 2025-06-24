@@ -239,6 +239,8 @@ private:
 		bool isBefore = true, bool ascending = true);
 	// 对五张图像进行绘画检测框操作
 	QVector<QImage> drawUnprocessedMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects);
+	void drawCutLine(const std::vector<Time> & times, QVector<QImage>& images);
+
 	// 拼接绘画好的五张图像
 	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
 	// 随机添加五个检测框

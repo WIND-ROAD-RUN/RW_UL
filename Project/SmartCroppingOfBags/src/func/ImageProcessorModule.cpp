@@ -250,6 +250,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			// 处理图片及其识别框
 			QVector<QImage> fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages, unprocessedImageDetects);
+			drawCutLine(duringTimes,fiveQImages);
 
 			auto collageImage = _imageCollage->verticalConcat(fiveQImages);
 
@@ -340,13 +341,16 @@ void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time
 			auto locationDifference = std::abs(currentLocation - cutLocation);
 			auto cutLineLocate = locationDifference * setConfig.maichongxishu1/setConfig.daichangxishu1;
 			std::cout <<"cutLineLocate"<< static_cast<int>(cutLineLocate) << std::endl;
-			cutLineLocate = frame.image.element.cols - cutLineLocate;
+			cutLineLocate = frame.image.element.rows - cutLineLocate;
 			if (cutLineLocate<0)
 			{
 				return;
 			}
 
-			
+			auto info = _historyResult->get(frame.time);
+			info.value().hasCut = true;
+			info.value().cutLocate = cutLineLocate;
+			_historyResult->set(frame.time, info.value());
 		}
 	}
 }
@@ -471,6 +475,26 @@ QVector<QImage> ImageProcessorSmartCroppingOfBags::drawUnprocessedMatMaskInfo_de
 	}
 	return fiveQImages;
 }
+
+void ImageProcessorSmartCroppingOfBags::drawCutLine(const std::vector<Time>& times, QVector<QImage>& images)
+{
+	for (int i = 0;i<times.size();i++)
+	{
+		auto item=_historyResult->get(times[i]);
+		if (!item.has_value())
+		{
+			return;
+		}
+		auto itemValue = item.value();
+		rw::rqw::ImagePainter::PainterConfig config;
+		config.color = ImagePainter::Color::Red;
+		if (itemValue.hasCut)
+		{
+			rw::rqw::ImagePainter::drawHorizontalLine(images[i], itemValue.cutLocate, config);
+		}
+	}
+}
+
 
 QPixmap ImageProcessorSmartCroppingOfBags::collageMaskImage_debug(const QVector<QImage>& fiveQImages)
 {

@@ -696,12 +696,6 @@ void DlgProductSetSmartCroppingOfBags::btn_maichongxishu1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_maichongxishu1->setText(value);
 		globalStructSetConfig.maichongxishu1 = value.toDouble();
-
-		if (GlobalStructDataSmartCroppingOfBags::getInstance().removeState==RemoveState::SmartCrop)
-		{
-			auto lineHeight = globalStructSetConfig.daichang1 / globalStructSetConfig.maichongxishu1;
-			GlobalStructDataSmartCroppingOfBags::getInstance().camera1->setLineHeight(lineHeight);
-		}
 		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags->runningStatePulseParaChange = true;
 	}
 }
@@ -867,7 +861,7 @@ void DlgProductSetSmartCroppingOfBags::btn_daichang1_clicked()
 
 		if (GlobalStructDataSmartCroppingOfBags::getInstance().removeState == RemoveState::SmartCrop)
 		{
-			auto lineHeight = globalStructSetConfig.daichang1 / globalStructSetConfig.maichongxishu1;
+			auto lineHeight = globalStructSetConfig.daichang1 / globalStructSetConfig.daichangxishu1;
 			GlobalStructDataSmartCroppingOfBags::getInstance().camera1->setLineHeight(lineHeight);
 		}
 	}

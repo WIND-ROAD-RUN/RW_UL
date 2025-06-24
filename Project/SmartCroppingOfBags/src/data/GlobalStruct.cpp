@@ -200,7 +200,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 	// 剔废持续时间
 	long DurationTime = setConfig.tifeishijian1 * 1000;
 
-	auto lineHeight = setConfig.daichang1/setConfig.maichongxishu1;
+	auto lineHeight = setConfig.daichang1/setConfig.daichangxishu1;
 
 	if (cameraMetaData1.ip != "0")
 	{
