@@ -837,9 +837,6 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 
 			switch (item.classId)
 			{
-			case ClassId::baibian:
-				config.text = "白边 " + QString::number(qRound(item.score * 100));
-				break;
 			case ClassId::duyan:
 				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 				break;
@@ -866,15 +863,6 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				break;
 			case ClassId::poyan:
 				config.text = "破眼 " + QString::number(qRound(item.score * 100));
-				break;
-			case ClassId::xiaoqikong:
-				config.text = "小气孔 " + QString::number(qRound(item.score * 100));
-				break;
-			case ClassId::mofa:
-				config.text = "毛发 " + QString::number(qRound(item.score * 100));
-				break;
-			case ClassId::xiaopobian:
-				config.text = "小破边 " + QString::number(qRound(item.score * 100));
 				break;
 			default:
 				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
@@ -1003,9 +991,6 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 	auto setConfigText = [](rw::rqw::ImagePainter::PainterConfig& config, const rw::DetectionRectangleInfo& item) {
 		switch (item.classId)
 		{
-		case ClassId::baibian:
-			config.text = "白边 " + QString::number(qRound(item.score * 100));
-			break;
 		case ClassId::duyan:
 			config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 			break;
@@ -1032,15 +1017,6 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 			break;
 		case ClassId::poyan:
 			config.text = "破眼 " + QString::number(qRound(item.score * 100));
-			break;
-		case ClassId::xiaoqikong:
-			config.text = "小气孔 " + QString::number(qRound(item.score * 100));
-			break;
-		case ClassId::mofa:
-			config.text = "毛发 " + QString::number(qRound(item.score * 100));
-			break;
-		case ClassId::xiaopobian:
-			config.text = "小破边 " + QString::number(qRound(item.score * 100));
 			break;
 		default:
 			config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
@@ -2284,7 +2260,6 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2304,7 +2279,6 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	//getPaintInfo(info, processResult, index[ClassId::mofa]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
