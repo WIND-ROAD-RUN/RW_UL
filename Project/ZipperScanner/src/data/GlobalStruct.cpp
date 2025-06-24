@@ -63,15 +63,15 @@ void GlobalStructDataZipper::getOutPutSignal(size_t index, bool state)
 
 void GlobalStructDataZipper::build_PriorityQueue()
 {
-	auto compareNodeEqual = [](const DefectValueInfo& a, const DefectValueInfo& b) {
+	auto compareNodeEqual = [](const float& a, const float& b) {
 		return a == b;
 		};
-	auto compareNodePriority = [](const DefectValueInfo& a, const DefectValueInfo& b) {
+	auto compareNodePriority = [](const float& a, const float& b) {
 		return a < b;
 		};
 
-	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> >(compareNodeEqual, compareNodePriority);
-	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo> >(compareNodeEqual, compareNodePriority);
+	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<float, float> >(compareNodeEqual, compareNodePriority);
+	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<float, float> >(compareNodeEqual, compareNodePriority);
 }
 
 void GlobalStructDataZipper::destroy_PriorityQueue()

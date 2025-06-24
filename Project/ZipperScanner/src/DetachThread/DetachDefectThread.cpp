@@ -24,7 +24,7 @@ void DetachDefectThreadZipper::stopThread()
 	running = false; // 停止线程
 }
 
-void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
+void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>>& queue)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& setConfig = globalStruct.setConfig;
@@ -47,7 +47,7 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 	}
 }
 
-void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<DefectValueInfo, DefectValueInfo>>& queue)
+void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>>& queue)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& setConfig = globalStruct.setConfig;

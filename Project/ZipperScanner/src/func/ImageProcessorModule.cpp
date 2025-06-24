@@ -1,4 +1,4 @@
-﻿#include "ImageProcessorModule.h"
+#include "ImageProcessorModule.h"
 
 #include <qcolor.h>
 #include <QPainter>
@@ -317,10 +317,10 @@ void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame
 		switch (imageProcessingModuleIndex)
 		{
 		case 1:
-			globalStruct.priorityQueue1->insert(frame.time, frame.time);
+			globalStruct.priorityQueue1->insert(frame.location, frame.location);
 			break;
 		case 2:
-			globalStruct.priorityQueue2->insert(frame.time, frame.time);
+			globalStruct.priorityQueue2->insert(frame.location, frame.location);
 			break;
 		default:
 			break;
@@ -871,11 +871,13 @@ void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 		return; // 跳过空帧
 	}
 
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
 	QMutexLocker locker(&_mutex);
 	MatInfo mat;
 	mat.image = frame;
 	mat.index = index;
-	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
+	mat.location = globalStruct.zmotion.getAxisLocation(0);	// 获取拍照的时间点
 	_queue.enqueue(mat);
 	_condition.wakeOne();
 }

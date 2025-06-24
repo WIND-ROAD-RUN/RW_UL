@@ -13,31 +13,31 @@
 #include <rqw_ImageSaveEngine.h>
 
 
-// À­Á´¼ì²âĞÅÏ¢
+// æ‹‰é“¾æ£€æµ‹ä¿¡æ¯
 struct ZipperDefectInfo
 {
 public:
-	// AIÔËĞĞ¼ÆÊ±
+	// AIè¿è¡Œè®¡æ—¶
 	QString time;
 
 public:
-	// È±Ïİ
+	// ç¼ºé™·
 	struct DetectItem
 	{
 	public:
-		double score = 0;	// ·ÖÊı
-		double area = 0;	// Ãæ»ı
-		int index = -1;		// ÔÚprocessResultÖĞµÄË÷ÒıÎ»ÖÃ
-		bool isDraw = false;	// ÊÇ·ñÂú×ãÌŞ·ÏÌõ¼ş»æ»­ºì¿ò
+		double score = 0;	// åˆ†æ•°
+		double area = 0;	// é¢ç§¯
+		int index = -1;		// åœ¨processResultä¸­çš„ç´¢å¼•ä½ç½®
+		bool isDraw = false;	// æ˜¯å¦æ»¡è¶³å‰”åºŸæ¡ä»¶ç»˜ç”»çº¢æ¡†
 	};
 
-	std::vector<DetectItem> queYaList;		// È±ÑÀ
-	std::vector<DetectItem> tangShangList;	// ÌÌÉË
-	std::vector<DetectItem> zangWuList;		// ÔàÎÛ
+	std::vector<DetectItem> queYaList;		// ç¼ºç‰™
+	std::vector<DetectItem> tangShangList;	// çƒ«ä¼¤
+	std::vector<DetectItem> zangWuList;		// è„æ±¡
 
 };
 
-// Í¼Æ¬»­Í¼Ä£¿é
+// å›¾ç‰‡ç”»å›¾æ¨¡å—
 struct ImagePainter
 {
 	enum Color {
@@ -53,15 +53,15 @@ struct ImagePainter
 
 	static QColor ColorToQColor(Color c);
 
-	// Ã¿Ò»ĞĞµÄ×ÖÓëÉÏÃæµÄÃ¶¾ÙColor¶ÔÓ¦
+	// æ¯ä¸€è¡Œçš„å­—ä¸ä¸Šé¢çš„æšä¸¾Colorå¯¹åº”
 	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
 };
 
-// Í¼Æ¬ĞÅÏ¢
+// å›¾ç‰‡ä¿¡æ¯
 struct MatInfo {
-	cv::Mat image;	// Í¼Æ¬ÄÚÈİ
-	std::chrono::system_clock::time_point time;	// ¼ÇÂ¼ÅÄÕÕË²¼äµÄÊ±¼äµã
-	size_t index;	// ÅÄÕÕµÄÏà»úµÄÏÂ±ê
+	cv::Mat image;	// å›¾ç‰‡å†…å®¹
+	float location;	// è®°å½•æ‹ç…§ç¬é—´çš„æ—¶é—´ç‚¹
+	size_t index;	// æ‹ç…§çš„ç›¸æœºçš„ä¸‹æ ‡
 };
 
 
@@ -80,23 +80,23 @@ protected:
 	void run() override;
 
 private:
-	void run_debug(MatInfo& frame);				// ²»¿ªÌŞ·ÏÊ±ºòµÄµ÷ÊÔÄ£Ê½
-	void run_monitor(MatInfo& frame);			// µ¥´¿µÄÏÔÊ¾Ä£Ê½
+	void run_debug(MatInfo& frame);				// ä¸å¼€å‰”åºŸæ—¶å€™çš„è°ƒè¯•æ¨¡å¼
+	void run_monitor(MatInfo& frame);			// å•çº¯çš„æ˜¾ç¤ºæ¨¡å¼
 
 private:
-	void run_OpenRemoveFunc(MatInfo& frame);	// ¿ªÆôÌŞ·Ï¹¦ÄÜÊ±µÄ´¦ÀíÄ£Ê½
-	// ´¦ÀíÀ­Á´È±ÏİĞÅÏ¢
+	void run_OpenRemoveFunc(MatInfo& frame);	// å¼€å¯å‰”åºŸåŠŸèƒ½æ—¶çš„å¤„ç†æ¨¡å¼
+	// å¤„ç†æ‹‰é“¾ç¼ºé™·ä¿¡æ¯
 	void run_OpenRemoveFunc_process_defect_info(ZipperDefectInfo& info);
-	// ´¦ÀíÈ±ÑÀ
+	// å¤„ç†ç¼ºç‰™
 	void run_OpenRemoveFunc_process_defect_info_QueYa(ZipperDefectInfo& info);
-	// ´¦ÀíÌÌÉË
+	// å¤„ç†çƒ«ä¼¤
 	void run_OpenRemoveFunc_process_defect_info_TangShang(ZipperDefectInfo& info);
-	// ´¦ÀíÔàÎÛ
+	// å¤„ç†è„æ±¡
 	void run_OpenRemoveFunc_process_defect_info_ZangWu(ZipperDefectInfo& info);
-	// ¼ì²âµ½È±Ïİºó·¢³ö´íÎóĞÅÏ¢
+	// æ£€æµ‹åˆ°ç¼ºé™·åå‘å‡ºé”™è¯¯ä¿¡æ¯
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 
-	// ´æÍ¼
+	// å­˜å›¾
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 
@@ -105,62 +105,62 @@ signals:
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
 
 private:
-	// µ÷ÊÔÄ£Ê½ÏÂ½«¶ÔÓ¦µÄÈ±ÏİĞÅÏ¢Ìí¼Óµ½ZipperDefectInfoÖĞ
+	// è°ƒè¯•æ¨¡å¼ä¸‹å°†å¯¹åº”çš„ç¼ºé™·ä¿¡æ¯æ·»åŠ åˆ°ZipperDefectInfoä¸­
 	void getEliminationInfo_debug(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
-	// ÌŞ·ÏÄ£Ê½ÏÂ½«¶ÔÓ¦µÄÈ±ÏİĞÅÏ¢Ìí¼Óµ½ZipperDefectInfoÖĞ
+	// å‰”åºŸæ¨¡å¼ä¸‹å°†å¯¹åº”çš„ç¼ºé™·ä¿¡æ¯æ·»åŠ åˆ°ZipperDefectInfoä¸­
 	void getEliminationInfo_defect(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
-	// ×¥È¡È±ÑÀĞÅÏ¢
+	// æŠ“å–ç¼ºç‰™ä¿¡æ¯
 	void getQueyaInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÌÌÉËĞÅÏ¢
+	// æŠ“å–çƒ«ä¼¤ä¿¡æ¯
 	void getTangshangInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// ×¥È¡ÔàÎÛĞÅÏ¢
+	// æŠ“å–è„æ±¡ä¿¡æ¯
 	void getZangwuInfo(ZipperDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 
 	static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
 
 private:
-	// AIÄ£ĞÍ²ÎÊı
+	// AIæ¨¡å‹å‚æ•°
 	std::unique_ptr<rw::ModelEngine> _modelEngine;
 public:
-	// ¹¹½¨Ä£ĞÍÒıÇæ
-	void buildSegModelEngine(const QString& enginePath);		// Segmentation Ä£ĞÍ
+	// æ„å»ºæ¨¡å‹å¼•æ“
+	void buildSegModelEngine(const QString& enginePath);		// Segmentation æ¨¡å‹
 
 private:
-	// ²»¿ªÆôÌŞ·ÏÊ±, ¹ıÂË³öÓĞĞ§Ë÷Òı
+	// ä¸å¼€å¯å‰”åºŸæ—¶, è¿‡æ»¤å‡ºæœ‰æ•ˆç´¢å¼•
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
-	// ¿ªÆôÌŞ·ÏÊ±, ¹ıÂË³öÓĞĞ§Ë÷Òı
+	// å¼€å¯å‰”åºŸæ—¶, è¿‡æ»¤å‡ºæœ‰æ•ˆç´¢å¼•
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
 
-	// É¸Ñ¡³öÔÚÉÏÏÂ×óÓÒÏŞÎ»ÄÚµÄÈ±ÏİµÄÏÂ±ê
+	// ç­›é€‰å‡ºåœ¨ä¸Šä¸‹å·¦å³é™ä½å†…çš„ç¼ºé™·çš„ä¸‹æ ‡
 	std::vector<std::vector<size_t>> getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
-	// ÅĞ¶ÏÊÇ·ñÔÚÉÏÏÂ×óÓÒÏŞÎ»ÄÚ
+	// åˆ¤æ–­æ˜¯å¦åœ¨ä¸Šä¸‹å·¦å³é™ä½å†…
 	bool isInBoundary(const rw::DetectionRectangleInfo& info);
 
 
 public:
-	// ¿ªÆôÌŞ·ÏÇé¿öÏÂ»æÖÆÈ±ÏİÏà¹ØµÄĞÅÏ¢(·ûºÏÌõ¼şµÄÈ±Ïİ»áÓÃºìÉ«ÏÔÊ¾)
+	// å¼€å¯å‰”åºŸæƒ…å†µä¸‹ç»˜åˆ¶ç¼ºé™·ç›¸å…³çš„ä¿¡æ¯(ç¬¦åˆæ¡ä»¶çš„ç¼ºé™·ä¼šç”¨çº¢è‰²æ˜¾ç¤º)
 	void drawZipperDefectInfoText_defect(QImage& image, const ZipperDefectInfo& info);
-	// Ìí¼Ó¸÷¸öÈ±ÏİĞÅÏ¢µ½ÎÄ±¾ÁĞ±íÖĞ
+	// æ·»åŠ å„ä¸ªç¼ºé™·ä¿¡æ¯åˆ°æ–‡æœ¬åˆ—è¡¨ä¸­
 	void appendQueyaDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info);
 	void appendTangshangDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info);
 	void appendZangwuDectInfo(QVector<QString>& textList, const ZipperDefectInfo& info);
 
 
 public:
-	// ÔÚÖ¸¶¨Î»ÖÃ»­ÊúÏß
+	// åœ¨æŒ‡å®šä½ç½®ç”»ç«–çº¿
 	void drawVerticalLine_locate(QImage& image, size_t locate);
-	// ÔÚÖ¸¶¨Î»ÖÃ»­ºáÏß
+	// åœ¨æŒ‡å®šä½ç½®ç”»æ¨ªçº¿
 	void drawBoundariesLines(QImage& image);
-	// ¿ªÆôµ÷ÊÔÇé¿öÏÂ»æÖÆÈ±ÏİÏà¹ØµÄĞÅÏ¢
+	// å¼€å¯è°ƒè¯•æƒ…å†µä¸‹ç»˜åˆ¶ç¼ºé™·ç›¸å…³çš„ä¿¡æ¯
 	void drawZipperDefectInfoText_Debug(QImage& image, const ZipperDefectInfo& info);
-	// »æ»­ÂÌÉ«µÄ¼ì²â¿ò
+	// ç»˜ç”»ç»¿è‰²çš„æ£€æµ‹æ¡†
 	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
-	// »æ»­ºìÉ«µÄ¼ì²â¿ò
+	// ç»˜ç”»çº¢è‰²çš„æ£€æµ‹æ¡†
 	void drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const ZipperDefectInfo& info);
 
 private:
-	// ÅĞ¶ÏÊÇ·ñÓĞÈ±Ïİ
+	// åˆ¤æ–­æ˜¯å¦æœ‰ç¼ºé™·
 	bool _isbad{ false };	
 
 private:
@@ -180,7 +180,7 @@ class ImageProcessingModuleZipper : public QObject {
 public:
 	QString modelEnginePath;
 public:
-	// ³õÊ¼»¯Í¼Ïñ´¦ÀíÄ£¿é
+	// åˆå§‹åŒ–å›¾åƒå¤„ç†æ¨¡å—
 	void BuildModule();
 public:
 	ImageProcessingModuleZipper(int numConsumers, QObject* parent = nullptr);
@@ -188,7 +188,7 @@ public:
 	~ImageProcessingModuleZipper();
 
 public slots:
-	// Ïà»ú»Øµ÷º¯Êı
+	// ç›¸æœºå›è°ƒå‡½æ•°
 	void onFrameCaptured(cv::Mat frame, size_t index);
 
 signals:
