@@ -150,6 +150,11 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// 获得当前图像的时间戳与上一张图像的时间戳的集合
 	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
+	if (times.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
+
 	// 获得当前图像与上一张图像拼接而成的图像
 	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
 
@@ -160,18 +165,11 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
 	auto processResult = processCollageImage_debug(resultImage.mat);
 
-	// 随机添加检测框用于测试
-	//getRandomDetecionRec_debug(resultImage, processResult);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
-
-	if (times.empty())
-	{
-		return; // 如果没有时间戳，直接返回
-	}
 
 	// 获取上一张图像的行高
 	auto previousMatHeight = splitRecognitionBox_debug(times);
@@ -191,10 +189,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
 
-			std::cout <<"1 "<< duringTimes.size()<<std::endl;
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
-			std::cout << "2 "<< duringTimes.size() << std::endl;
 
 			// 获取有多少张图片没有拼过
 			size_t count = duringTimes.size();
