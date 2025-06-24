@@ -25,6 +25,9 @@ protected:
 private:
 	void getRunningState(size_t s);
 	void getMainWindowRunningState(size_t s);
+public:
+	std::atomic_bool runningStatePixelParaChange =true;
+	std::atomic_bool runningStatePulseParaChange= true;
 private:
 	double getPulse(bool & isGet);
 	double getAveragePulse(bool& isGet);
@@ -40,20 +43,20 @@ public slots:
 	
 private:
 	std::atomic<bool> running;
-	double lastPulse = 0.0;			// ÉÏ´ÎÂö³åÖµ
-	double pulseSum = 0.0;			// ÀÛ¼ÆºÍ
-	size_t pulseCount = 0;			// ÀÛ¼Æ¼ÆÊı
-	double pulseAverage = 0.0;		// Âö³åÆ½¾ùÖµ
+	double lastPulse = 0.0;			// ä¸Šæ¬¡è„‰å†²å€¼
+	double pulseSum = 0.0;			// ç´¯è®¡å’Œ
+	size_t pulseCount = 0;			// ç´¯è®¡è®¡æ•°
+	double pulseAverage = 0.0;		// è„‰å†²å¹³å‡å€¼
 
-	double lastPixel = 0.0;			// ÉÏ´ÎÏñËØÖµ
-	double pixelSum = 0.0;			// ÀÛ¼ÆºÍ
-	double pixelCount = 0;			// ÀÛ¼Æ¼ÆÊı
-	double pixelAverage = 0.0;		// ÏñËØÆ½¾ùÖµ
+	double lastPixel = 0.0;			// ä¸Šæ¬¡åƒç´ å€¼
+	double pixelSum = 0.0;			// ç´¯è®¡å’Œ
+	double pixelCount = 0;			// ç´¯è®¡è®¡æ•°
+	double pixelAverage = 0.0;		// åƒç´ å¹³å‡å€¼
 
-	double daichangAverageFromPulse = 0.0;	// ¸ù¾İÆ½¾ùÂö³åÇóÆ½¾ù´ü³¤
-	double daichangAverageFromPixel = 0.0;	// ¸ù¾İÆ½¾ùÏñËØÇóÆ½¾ù´ü³¤
+	double daichangAverageFromPulse = 0.0;	// æ ¹æ®å¹³å‡è„‰å†²æ±‚å¹³å‡è¢‹é•¿
+	double daichangAverageFromPixel = 0.0;	// æ ¹æ®å¹³å‡åƒç´ æ±‚å¹³å‡è¢‹é•¿
 
-	int lastDefectCount = 0;			// ÉÏ´ÎÌŞ·Ï¼ÆÊı
+	int lastDefectCount = 0;			// ä¸Šæ¬¡å‰”åºŸè®¡æ•°
 };
 
 

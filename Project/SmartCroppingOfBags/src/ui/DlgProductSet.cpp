@@ -1,4 +1,4 @@
-﻿#include "DlgProductSet.h"
+#include "DlgProductSet.h"
 
 #include "GlobalStruct.hpp"
 #include <NumberKeyboard.h>
@@ -388,6 +388,8 @@ void DlgProductSetSmartCroppingOfBags::btn_daichangxishu1_clicked()
 		auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 		ui->btn_daichangxishu1->setText(value);
 		globalStructSetConfig.daichangxishu1 = value.toDouble();
+
+		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags->runningStatePixelParaChange = true;
 	}
 }
 
@@ -700,6 +702,7 @@ void DlgProductSetSmartCroppingOfBags::btn_maichongxishu1_clicked()
 			auto lineHeight = globalStructSetConfig.daichang1 / globalStructSetConfig.maichongxishu1;
 			GlobalStructDataSmartCroppingOfBags::getInstance().camera1->setLineHeight(lineHeight);
 		}
+		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags->runningStatePulseParaChange = true;
 	}
 }
 

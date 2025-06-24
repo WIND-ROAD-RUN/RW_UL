@@ -13,20 +13,20 @@ DetachUtiltyThreadSmartCroppingOfBags::DetachUtiltyThreadSmartCroppingOfBags(QOb
 DetachUtiltyThreadSmartCroppingOfBags::~DetachUtiltyThreadSmartCroppingOfBags()
 {
 	stopThread();
-	wait(); // µÈ´ıÏß³Ì°²È«ÍË³ö
+	wait(); // ç­‰å¾…çº¿ç¨‹å®‰å…¨é€€å‡º
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::startThread()
 {
 	running = true;
 	if (!isRunning()) {
-		start(); // Æô¶¯Ïß³Ì
+		start(); // å¯åŠ¨çº¿ç¨‹
 	}
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::stopThread()
 {
-	running = false; // Í£Ö¹Ïß³Ì
+	running = false; // åœæ­¢çº¿ç¨‹
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::run()
@@ -134,22 +134,45 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	pulse = pulse - lastPulse; // ¼ÆËãµ±Ç°Âö³åÓëÉÏ´ÎÂö³åµÄ²îÖµ
-	lastPulse = pulse; // ¸üĞÂÉÏ´ÎÂö³åÖµ
 
-	// ÀÛ¼ÓËùÓĞÀúÊ·Âö³å²îÖµ
-	pulseSum += pulse;
-	++pulseCount;
+	if (runningStatePulseParaChange )
+	{
+		lastPulse = pulse;
+		pulseSum = pulse;
+		pulseCount = 0;
+		runningStatePulseParaChange = false;
+	}
+	else
+	{
+		pulse = pulse - lastPulse; // è®¡ç®—å½“å‰è„‰å†²ä¸ä¸Šæ¬¡è„‰å†²çš„å·®å€¼
+		lastPulse = pulse; // æ›´æ–°ä¸Šæ¬¡è„‰å†²å€¼
 
-	pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
+		// ç´¯åŠ æ‰€æœ‰å†å²è„‰å†²å·®å€¼
+		pulseSum += pulse;
+		++pulseCount;
+
+		pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
+	}
+
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
 {
-	pixelSum += pixel; // ÀÛ¼ÓËùÓĞÀúÊ·ÏñËØ²îÖµ
-	++pixelCount;
+	if (runningStatePixelParaChange)
+	{
+		pixelSum = pixel;
+		pixelCount = 0;
+		runningStatePixelParaChange = false;
+	}
+	else
+	{
+		pixelSum += pixel; 
+		++pixelCount;
 
-	pixelAverage = (pixelCount == 0) ? 0.0 : (pixelSum / pixelCount);
+		pixelAverage = (pixelCount == 0) ? 0.0 : (pixelSum / pixelCount);
+	}
+
+
 }
 
 
