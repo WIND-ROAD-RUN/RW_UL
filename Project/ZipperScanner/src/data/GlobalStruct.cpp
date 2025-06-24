@@ -11,13 +11,12 @@
 
 void GlobalStructDataZipper::build_motion()
 {
-	zmotion.setIp("192.168.0.11");
-	auto connectResult=zmotion.connect();
+
 }
 
 void GlobalStructDataZipper::destory_motion()
 {
-	auto disconnectResult=zmotion.disConnect();
+
 }
 
 void GlobalStructDataZipper::build_PriorityQueue()
