@@ -17,7 +17,7 @@ namespace rw
 		class ZMotion
 		{
 		private:
-			std::unique_ptr<zwy::scc::Motion> _zMotion{nullptr};
+			zwy::scc::Motion * _zMotion{nullptr};
 		public:
 			explicit ZMotion(const QString &ip);
 			ZMotion();

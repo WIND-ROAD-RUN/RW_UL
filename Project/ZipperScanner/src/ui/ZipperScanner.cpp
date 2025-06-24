@@ -23,9 +23,14 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	// 构建UI
 	build_ui();
 
-	// 构建优先队列
+
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
+	globalStruct.build_motion();
+	// 构建优先队列
 	globalStruct.build_PriorityQueue();
+
+
 
 	// 构建异步剔废线程
 	globalStruct.build_DetachDefectThreadZipper();
@@ -257,8 +262,10 @@ void ZipperScanner::build_threads()
 
 void ZipperScanner::destroyComponents()
 {
-	// 销毁相机
+
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
+	globalStructData.destory_motion();
+	// 销毁相机
 	globalStructData.destroyCamera();
 	// 销毁图像处理模块
 	globalStructData.destroyImageProcessingModule();

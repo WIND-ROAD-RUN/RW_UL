@@ -1,8 +1,7 @@
 #pragma once
 
 #include<memory>
-#include<QString>
-#include<QObject>
+
 
 #include "GeneralConfig.hpp"
 #include "ScoreConfig.hpp"
@@ -16,11 +15,13 @@
 #include "Utilty.hpp"
 #include "CameraAndCardStateThread.h"
 #include <chrono>
+#include"rqw_ZMotion.hpp"
+#include"rqw_MonitorMotionIO.hpp"
 
 
 class DetachDefectThreadZipper;
 
-// 状态机
+// 鐘舵�佹満
 enum class RunningState
 {
 	Debug,
@@ -40,6 +41,10 @@ class GlobalStructDataZipper
 {
 	Q_OBJECT
 public:
+	rw::rqw::ZMotion  zmotion;
+	void build_motion();
+	void destory_motion();
+public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
 public:
@@ -57,10 +62,10 @@ public:
 public:
 	void build_CameraAndCardStateThreadZipper();
 signals:
-	// 更新UI
+	// 鏇存柊UI
 	void emit_updateUiLabels(int index, bool isConnected);
 public slots:
-	// 相机重连
+	// 鐩告満閲嶈繛
 	void rebuild_Camera1();
 	void rebuild_Camera2();
 	void destroy_Camera1();
@@ -75,7 +80,7 @@ public:
 	std::atomic_bool _isUpdateMonitorInfo{ false };
 
 public:
-	// 统计信息
+	// 缁熻淇℃伅
 	struct StatisticalInfo
 	{
 		std::atomic_uint64_t produceCount{ 0 };
@@ -109,13 +114,13 @@ public:
 	void buildImageProcessorModules(const QString& path);
 	void destroyImageProcessingModule();
 
-	// 图像处理模块
+	// 鍥惧儚澶勭悊妯″潡
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
 	
 public:
-	// 保存参数
+	// 淇濆瓨鍙傛暟
 	void buildImageSaveEngine();
 	void destroyImageSaveEngine();
 	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
@@ -126,14 +131,14 @@ public:
 	void saveDlgExposureTimeSetConfig();
 
 public:
-	// UI界面参数
+	// UI鐣岄潰鍙傛暟
 	cdm::GeneralConfig generalConfig;
 	cdm::ScoreConfig scoreConfig;
 	cdm::SetConfig setConfig;
 
 public:
 	void buildCamera();
-	// 相机
+	// 鐩告満
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
