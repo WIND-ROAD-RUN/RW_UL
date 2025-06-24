@@ -21,6 +21,7 @@ namespace rw
 		public:
 			explicit ZMotion(const QString &ip);
 			ZMotion();
+			~ZMotion();
 		private:
 			QString _ip{};
 		public:

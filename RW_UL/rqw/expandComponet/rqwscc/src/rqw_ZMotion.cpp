@@ -17,6 +17,15 @@ namespace rw
 		{
 		}
 
+		ZMotion::~ZMotion()
+		{
+			if (_zMotion)
+			{
+				_zMotion->CloseBoared();
+				delete _zMotion;
+			}
+		}
+
 		void ZMotion::setIp(const QString& ip)
 		{
 			_ip = ip;
