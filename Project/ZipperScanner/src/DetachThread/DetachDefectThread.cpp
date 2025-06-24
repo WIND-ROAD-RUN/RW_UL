@@ -2,26 +2,26 @@
 
 DetachDefectThreadZipper::DetachDefectThreadZipper(QObject* parent)
 {
-	
+
 }
 
 DetachDefectThreadZipper::~DetachDefectThreadZipper()
 {
 	stopThread();
-	wait(); // µÈ´ıÏß³Ì°²È«ÍË³ö
+	wait(); // ç­‰å¾…çº¿ç¨‹å®‰å…¨é€€å‡º
 }
 
 void DetachDefectThreadZipper::startThread()
 {
 	running = true;
 	if (!isRunning()) {
-		start(); // Æô¶¯Ïß³Ì
+		start(); // å¯åŠ¨çº¿ç¨‹
 	}
 }
 
 void DetachDefectThreadZipper::stopThread()
 {
-	running = false; // Í£Ö¹Ïß³Ì
+	running = false; // åœæ­¢çº¿ç¨‹
 }
 
 void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
@@ -31,18 +31,7 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 	Time preTime;
 	try
 	{
-		preTime = queue->peek();
-		auto now = std::chrono::system_clock::now();
-
-		// ¼ÆËãÊ±¼ä²î
-		auto duration = now - preTime;
-		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-
-		if (milliseconds >= setConfig.yanChiTiFeiShiJian1)
-		{
-			queue->top(); // È¡³ö¶ÓÊ×ÔªËØ
-			emit findIsBad(1);
-		}
+		//emit findIsBad(1);
 	}
 	catch (const std::runtime_error&)
 	{
@@ -57,18 +46,8 @@ void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafe
 	Time preTime;
 	try
 	{
-		preTime = queue->peek();
-		auto now = std::chrono::system_clock::now();
 
-		// ¼ÆËãÊ±¼ä²î
-		auto duration = now - preTime;
-		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-
-		if (milliseconds >= setConfig.yanChiTiFeiShiJian2)
-		{
-			queue->top(); // È¡³ö¶ÓÊ×ÔªËØ
-			emit findIsBad(2);
-		}
+		//emit findIsBad(2);
 	}
 	catch (const std::runtime_error&)
 	{

@@ -11,10 +11,30 @@
 
 void GlobalStructDataZipper::build_motion()
 {
-
+	zmotion.setIp("192.168.0.11");
+	bool isConnected = zmotion.connect();
+	if (isConnected)
+	{
+		bool isLocationZero = zmotion.setLocationZero(0);
+		emit emit_updateUiLabels(0, true);
+	}
+	else
+	{
+		emit emit_updateUiLabels(0, false);
+	}
 }
 
 void GlobalStructDataZipper::destory_motion()
+{
+	bool isDisconnect = zmotion.disConnect();
+}
+
+void GlobalStructDataZipper::build_MonitorZMotionIOStateThread()
+{
+
+}
+
+void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
 {
 
 }

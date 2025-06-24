@@ -38,9 +38,9 @@ void DlgProductSet::read_config()
 
 	// 剔废时间
 	ui->pbtn_tifeichixushijian1->setText(QString::number(globalConfig.tiFeiChiXuShiJian1));
-	ui->pbtn_tifeijuli1->setText(QString::number(globalConfig.yanChiTiFeiShiJian1));
+	ui->pbtn_tifeijuli1->setText(QString::number(globalConfig.tifeijuli1));
 	ui->pbtn_tifeichixushijian2->setText(QString::number(globalConfig.tiFeiChiXuShiJian2));
-	ui->pbtn_tifeijuli2->setText(QString::number(globalConfig.yanChiTiFeiShiJian2));
+	ui->pbtn_tifeijuli2->setText(QString::number(globalConfig.tifeijuli2));
 
 	// 采图
 	ui->cBox_takeCamera1Pictures->setChecked(globalConfig.takeWork1Pictures);
@@ -408,7 +408,7 @@ void DlgProductSet::pbtn_yanchitifeishijian1_clicked()
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
 		ui->pbtn_tifeijuli1->setText(value);
-		globalStructSetConfig.yanChiTiFeiShiJian1 = value.toDouble();
+		globalStructSetConfig.tifeijuli1 = value.toDouble();
 	}
 }
 
@@ -446,7 +446,7 @@ void DlgProductSet::pbtn_yanchitifeishijian2_clicked()
 		}
 		auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
 		ui->pbtn_tifeijuli2->setText(value);
-		globalStructSetConfig.yanChiTiFeiShiJian2 = value.toDouble();
+		globalStructSetConfig.tifeijuli2 = value.toDouble();
 	}
 }
 

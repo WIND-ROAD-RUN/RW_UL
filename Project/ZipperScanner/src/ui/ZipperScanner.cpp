@@ -631,6 +631,18 @@ void ZipperScanner::updateUiLabels(int index, bool isConnected)
 {
 	switch (index)
 	{
+	case 0:
+		if (isConnected)
+		{
+			ui->label_cardState->setText("连接成功");
+			ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else
+		{
+			ui->label_cardState->setText("连接失败");
+			ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+		}
+		break;
 	case 1:
 		if (isConnected) {
 			ui->label_camera1State->setText("连接成功");
