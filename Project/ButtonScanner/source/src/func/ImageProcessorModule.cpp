@@ -1776,7 +1776,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(ButtonD
 		auto isInR = ((special_R_standard - specialColorDeviation) <= special_R) && (special_R <= (special_R_standard + specialColorDeviation));
 		auto isInG = ((special_G_standard - specialColorDeviation) <= special_G) && (special_G <= (special_G_standard + specialColorDeviation));
 		auto isInB = ((special_B_standard - specialColorDeviation) <= special_B) && (special_B <= (special_B_standard + specialColorDeviation));
-		if ((!isInR) || (!isInG) || (!isInB))
+		if ((isInR) || (isInG) || (isInB))
 		{
 			_isbad = true;
 			info.isDrawSpecialColor = true;
