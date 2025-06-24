@@ -212,5 +212,35 @@ namespace rw
 
 			return _zMotion->Single_Stop(axis);
 		}
+
+		bool ZMotion::singleMove(int axis, int dir, float speed, float acc, float dec, float units)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->Single_Move(axis,dir,speed,acc,dec,units);
+		}
+
+		bool ZMotion::SingleMove(int axis, double dir)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->Single_Move(axis, dir);
+		}
+
+		bool ZMotion::setLocationZero(int axis)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetLocationZero(axis);
+		}
 	}
 }
