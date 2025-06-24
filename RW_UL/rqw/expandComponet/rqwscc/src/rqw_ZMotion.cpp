@@ -111,8 +111,7 @@ namespace rw
 				return false;
 			}
 
-			_zMotion->SetIOOut(portNum, state);
-			return true;
+			return _zMotion->SetIOOut(portNum, state);
 		}
 
 		bool ZMotion::SetIOOut(int axis, int ioNUm, bool state, int iotime)
@@ -122,8 +121,8 @@ namespace rw
 				return false;
 			}
 
-			_zMotion->SetIOOut(axis, ioNUm, state, iotime);
-			return true;
+			
+			return _zMotion->SetIOOut(axis, ioNUm, state, iotime);
 		}
 
 		bool ZMotion::setAxisPulse(int axis, float value)
@@ -133,8 +132,7 @@ namespace rw
 				return false;
 			}
 
-			_zMotion->SetAxisPulse(axis, value);
-			return true;
+			return _zMotion->SetAxisPulse(axis, value);
 		}
 
 		bool ZMotion::setAxisRunSpeed(int axis, float value)
@@ -144,8 +142,75 @@ namespace rw
 				return false;
 			}
 
-			_zMotion->SetAxisRunSpeed(axis, value);
-			return true;
+			return _zMotion->SetAxisRunSpeed(axis, value);
+		}
+
+		bool ZMotion::setAxisAcc(int axis, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetAxisAcc(axis, value);
+		}
+
+		bool ZMotion::setAxisDec(int axis, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetAxisDec(axis, value);
+		}
+
+		bool ZMotion::setAxisRun(int axis, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetAxisRun(axis, value);
+		}
+
+		bool ZMotion::stopAllAxis()
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->StopAllAxis();
+		}
+
+		float ZMotion::getAxisLocation(int axis, bool& isGet)
+		{
+			float result{0};
+			if (!_zMotion)
+			{
+				isGet = false;
+				return result;
+			}
+			isGet = _zMotion->GetAxisLocation(axis, result);
+			return result;
+		}
+
+		float ZMotion::getAxisLocation(int axis)
+		{
+			bool isGet{false};
+			return getAxisLocation(axis,isGet);
+		}
+
+		bool ZMotion::singleStop(int axis)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->Single_Stop(axis);
 		}
 	}
 }
