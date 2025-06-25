@@ -21,13 +21,15 @@ private:
 	rw::rqw::ClickableLabel* _clickedLabel;
 private:
 	void build_ui();
-public:
-	void readConfig();
-private:
+	void build_connect();
 	float get_blowTime();
 	void read_image();
 	void build_radioButton();
-	void build_connect();
+public:
+	void readConfig();
+private:
+
+
 private:
 	Ui::DlgProductSetClass* ui;
 private slots:
@@ -85,6 +87,7 @@ private slots:
 	//破边
 	void rbtn_edgeDamageEnable_checked(bool checked);
 	void pbtn_edgeDamageSimilarity_clicked();
+	void pbtn_edgeDamageArea_clicked();
 
 	//气孔
 	void rbtn_poreEnable_checked(bool checked);

@@ -236,6 +236,8 @@ void DlgProductSet::build_connect()
 	//破边
 	QObject::connect(ui->pbtn_edgeDamageSimilarity, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_edgeDamageSimilarity_clicked);
+	QObject::connect(ui->pbtn_edgeDamageArea, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_edgeDamageArea_clicked);
 	QObject::connect(ui->rbtn_edgeDamageEnable, &QRadioButton::clicked,
 		this, &DlgProductSet::rbtn_edgeDamageEnable_checked);
 
@@ -651,6 +653,25 @@ void DlgProductSet::pbtn_edgeDamageSimilarity_clicked()
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_edgeDamageSimilarity->setText(value);
 		GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity = value.toDouble();
+	}
+}
+
+void DlgProductSet::pbtn_edgeDamageArea_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 )
+		{
+			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			return;
+		}
+		auto& GlobalStructData = GlobalStructData::getInstance();
+		ui->pbtn_edgeDamageArea->setText(value);
+		GlobalStructData.dlgProductSetConfig.edgeDamageArea = value.toDouble();
 	}
 }
 
