@@ -56,7 +56,7 @@ void DlgProductSet::readConfig()
 	//破边
 	ui->rbtn_edgeDamageEnable->setChecked(GlobalStructData.dlgProductSetConfig.edgeDamageEnable);
 	ui->pbtn_edgeDamageSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity));
-
+	ui->pbtn_edgeDamageArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.edgeDamageArea));
 	//屏蔽范围
 	ui->rbtn_shieldingRangeEnable->setChecked(GlobalStructData.dlgProductSetConfig.shieldingRangeEnable);
 	ui->pbtn_outerRadius->setText(QString::number(GlobalStructData.dlgProductSetConfig.outerRadius));
