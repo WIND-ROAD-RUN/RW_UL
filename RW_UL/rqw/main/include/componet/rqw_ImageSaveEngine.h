@@ -8,9 +8,16 @@
 #include <QDateTime>
 #include <atomic>
 #include <vector>
+#include <map>
 
 namespace rw {
 	namespace rqw {
+		enum class ImageSaveEnginePolicy
+		{
+			Normal,
+			MaxSaveImageNum
+		};
+
 		struct ImageInfo
 		{
 		public:
@@ -49,6 +56,12 @@ namespace rw {
 			// 启动线程池
 			void startEngine();
 
+			// 设置存图策略
+			void setSavePolicy(ImageSaveEnginePolicy policy);
+
+			// 设置最大图片数量
+			void setMaxSaveImageNum(int maxNum);
+
 		protected:
 			void processImages();
 
@@ -65,6 +78,11 @@ namespace rw {
 			const int batchSize = 20;     // 每次批量保存的图片数量
 			int threadCount;              // 消费者线程数量
 			std::vector<QThread*> workerThreads;
+
+			// 新增成员变量
+			ImageSaveEnginePolicy savePolicy = ImageSaveEnginePolicy::Normal; // 默认策略
+			int maxSaveImageNum = 50; // 默认最大图片数量
+			std::map<QString, std::vector<QString>> savedImages; // 存储已保存图片的路径
 		};
 	}
 }
