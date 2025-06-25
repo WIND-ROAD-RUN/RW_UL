@@ -279,7 +279,7 @@ namespace rw
 		float ZMotion::getModbus(int adress, int num)
 		{
 			bool isGet{ false };
-			return getModbus(adress,num);
+			return getModbus(adress,num, isGet);
 		}
 	}
 }
