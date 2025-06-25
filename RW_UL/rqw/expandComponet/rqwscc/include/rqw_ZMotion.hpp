@@ -72,6 +72,7 @@ namespace rw
 			[[nodiscard]] float getModbus(int adress, int num, bool& isGet);
 			[[nodiscard]] float getModbus(int adress, int num);
 
+			[[nodiscard]] bool setAxisType(int axis, int value);
 		};
 
 	}	

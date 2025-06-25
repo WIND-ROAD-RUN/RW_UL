@@ -281,5 +281,15 @@ namespace rw
 			bool isGet{ false };
 			return getModbus(adress,num, isGet);
 		}
+
+		bool ZMotion::setAxisType(int axis, int value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetAxisType(axis,value);
+		}
 	}
 }
