@@ -8,9 +8,8 @@ DlgVersion::DlgVersion(QWidget *parent)
 	, ui(new Ui::DlgVersionClass())
 {
 	ui->setupUi(this);
-    ui->textEdit_VersionShow->setReadOnly(true); // ����Ϊֻ��
+    ui->textEdit_VersionShow->setReadOnly(true); // 设置为只读
     build_connect();
-    this->setWindowFlags(Qt::FramelessWindowHint);
 }
 
 DlgVersion::~DlgVersion()
@@ -37,7 +36,7 @@ void DlgVersion::showEvent(QShowEvent* event)
 {
     QFile file(versionPath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        ui->textEdit_VersionShow->setPlainText("�޷��򿪰汾�ļ�: " + versionPath);
+        ui->textEdit_VersionShow->setPlainText("无法打开版本文件: " + versionPath);
         return;
     }
 
@@ -56,11 +55,11 @@ void DlgVersion::pbtn_exit_clicked()
 
 void DlgVersion::pbtn_bigger_clicked()
 {
-	ui->textEdit_VersionShow->zoomIn(1); // �Ŵ��ı�
+	ui->textEdit_VersionShow->zoomIn(1); // 放大文本
 }
 
 void DlgVersion::pbtn_smaller_clicked()
 {
-	ui->textEdit_VersionShow->zoomOut(1); // ��С�ı�
+	ui->textEdit_VersionShow->zoomOut(1); // 缩小文本
 }
 

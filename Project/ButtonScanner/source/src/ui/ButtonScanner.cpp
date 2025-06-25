@@ -337,6 +337,10 @@ void ButtonScanner::build_ui()
 	delete ui->label_VersionInfo;
 	labelVersionInfo->setText(VersionInfo::Version);
 
+	_dlgVersion = new DlgVersion(this);
+	QString versionFilePath = QCoreApplication::applicationDirPath() + QDir::separator() + "Version.txt";
+	_dlgVersion->loadVersionPath(versionFilePath);
+
 	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime
 		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
@@ -503,6 +507,9 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(ui->cBox_isDisplayText, &QCheckBox::clicked,
 		this, &ButtonScanner::cBox_isDisplayText_checked);
+
+	QObject::connect(labelVersionInfo, &rw::rqw::ClickableLabel::clicked,
+		this, &ButtonScanner::labelVersion_clicked);
 }
 
 void ButtonScanner::read_config()
@@ -1592,6 +1599,12 @@ void ButtonScanner::labelClickable_title_clicked()
 	}
 	_dlgModelManager->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	_dlgModelManager->show();
+}
+
+void ButtonScanner::labelVersion_clicked()
+{
+	_dlgVersion->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	_dlgVersion->show();
 }
 
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)

@@ -18,6 +18,8 @@
 #include<QImage>
 #include<memory>
 
+#include"rqw_DlgVersion.h"
+
 namespace rw
 {
 	namespace rqw
@@ -51,6 +53,8 @@ public:
 	rw::rqw::ClickableLabel* labelClickable_title;
 	rw::rqw::LabelWarning* labelWarning;
 	rw::rqw::ClickableLabel* labelVersionInfo;
+private:
+	DlgVersion* _dlgVersion;
 private:
 	//变量监控线程关机的时候停止
 	bool _mark_thread = false;
@@ -170,6 +174,7 @@ private slots:
 	void cBox_isDisplayText_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
+	void labelVersion_clicked();
 public slots:
 	void onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
 public slots:
