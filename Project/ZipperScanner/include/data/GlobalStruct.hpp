@@ -42,7 +42,6 @@ class GlobalStructDataZipper
 	Q_OBJECT
 public:
 	rw::rqw::ZMotion  zmotion;
-	void build_motion();
 	void destory_motion();
 public:
 	rw::rqw::MonitorZMotionIOStateThread monitorZMotionMonitorThread;

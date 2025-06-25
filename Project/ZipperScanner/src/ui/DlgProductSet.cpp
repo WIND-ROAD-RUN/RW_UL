@@ -954,7 +954,8 @@ void DlgProductSet::btn_shedingladaichangdu_clicked()
 
 void DlgProductSet::btn_xiangjichufachangdu_clicked()
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
 	NumberKeyboard numKeyBord;
 	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	auto isAccept = numKeyBord.exec();
@@ -968,6 +969,7 @@ void DlgProductSet::btn_xiangjichufachangdu_clicked()
 		}
 		ui->btn_xiangjichufachangdu->setText(value);
 		globalStructSetConfig.xiangjichufachangdu = value.toDouble();
+		globalStruct.zmotion.
 	}
 }
 

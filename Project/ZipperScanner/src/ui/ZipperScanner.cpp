@@ -26,9 +26,6 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
-	// 构建运动控制器
-	globalStruct.build_motion();
-
 	// 构建运动控制器IO状态监控线程
 	globalStruct.build_MonitorZMotionIOStateThread();
 
@@ -46,6 +43,9 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 
 	// 构建图像处理模块
 	build_imageProcessorModule();
+
+	// 构建运动控制器
+	build_motion();
 
 	// 连接相机
 	build_camera();
@@ -168,6 +168,24 @@ void ZipperScanner::build_camera()
 	}
 }
 
+void ZipperScanner::build_motion()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	globalStruct.zmotion.setIp("192.168.0.11");
+	bool isConnected = globalStruct.zmotion.connect();
+	if (isConnected)
+	{
+		bool isLocationZero = globalStruct.zmotion.setLocationZero(0);
+		ui->label_cardState->setText("连接成功");
+		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+	}
+	else
+	{
+		ui->label_cardState->setText("连接失败");
+		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+	}
+}
+
 // 加载ZipperScanner窗体数据
 void ZipperScanner::build_ZipperScannerData()
 {
@@ -267,12 +285,12 @@ void ZipperScanner::destroyComponents()
 {
 
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
-	// 销毁运动控制器
-	globalStructData.destory_motion();
 	// 销毁运动控制器IO状态监控线程
 	globalStructData.destroy_MonitorZMotionIOStateThread();
 	// 销毁相机
 	globalStructData.destroyCamera();
+	// 销毁运动控制器
+	globalStructData.destory_motion();
 	// 销毁图像处理模块
 	globalStructData.destroyImageProcessingModule();
 	// 销毁图像保存模块
@@ -688,6 +706,18 @@ void ZipperScanner::updateCameraLabelState(int cameraIndex, bool state)
 {
 	switch (cameraIndex)
 	{
+	case 0:
+		if (state)
+		{
+			ui->label_cardState->setText("连接成功");
+			ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
+		}
+		else
+		{
+			ui->label_cardState->setText("连接失败");
+			ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(230, 0, 0);} "));
+		}
+		break;
 	case 1:
 		if (state) {
 			ui->label_camera1State->setText("连接成功");

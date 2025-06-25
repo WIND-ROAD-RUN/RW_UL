@@ -34,6 +34,7 @@ public :
 	void build_ui();
 	void build_connect();
 	void build_camera();
+	void build_motion();
     
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();
@@ -79,7 +80,7 @@ private slots:
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 
-	// ¸üÐÂUI
+	// æ›´æ–°UI
 	void updateUiLabels(int index, bool isConnected);
 private:
 	Ui::ZipperScannerClass *ui;
