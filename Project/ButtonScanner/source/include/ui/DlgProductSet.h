@@ -117,4 +117,3 @@ private slots:
 	void rbtn_materialHeadEnable_checked(bool checked);
 	void pbtn_materialHeadScore_clicked();
 };
-

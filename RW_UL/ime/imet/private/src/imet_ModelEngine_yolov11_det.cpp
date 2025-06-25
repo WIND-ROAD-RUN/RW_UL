@@ -52,7 +52,7 @@ namespace rw
 
 			(cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float)));
 
-			for (int i = 0;i < 10;i++) {
+			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
 			cudaDeviceSynchronize();

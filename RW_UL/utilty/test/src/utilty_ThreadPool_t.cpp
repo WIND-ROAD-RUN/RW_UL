@@ -75,7 +75,7 @@ namespace utilty_TreadPool {
 
 		std::vector<std::future<bool>> results;
 
-		for (int i = 0;i < 10000;++i) {
+		for (int i = 0; i < 10000; ++i) {
 			results.emplace_back(pool.enqueue([this] { return this->cheapOperate(std::chrono::microseconds(200)); }));
 		}
 

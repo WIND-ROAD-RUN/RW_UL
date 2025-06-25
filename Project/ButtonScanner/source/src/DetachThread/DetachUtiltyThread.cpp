@@ -31,10 +31,10 @@ void DetachUtiltyThread::run()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;
-	 lastWork1Count = statisticalInfo.produceCount1.load();
-	 lastWork2Count = statisticalInfo.produceCount2.load();
-	 lastWork3Count = statisticalInfo.produceCount3.load();
-	 lastWork4Count = statisticalInfo.produceCount4.load();
+	lastWork1Count = statisticalInfo.produceCount1.load();
+	lastWork2Count = statisticalInfo.produceCount2.load();
+	lastWork3Count = statisticalInfo.produceCount3.load();
+	lastWork4Count = statisticalInfo.produceCount4.load();
 	olderWasteCount = statisticalInfo.produceCount.load();
 	static size_t s = 0;
 	while (running) {
@@ -45,7 +45,7 @@ void DetachUtiltyThread::run()
 		processTakePictures(s);
 		processShutdownIO(s);
 		++s;
-		if (s==300)
+		if (s == 300)
 		{
 			s = 0;
 		}
@@ -56,7 +56,7 @@ void DetachUtiltyThread::CalculateRealtimeInformation(size_t s)
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& statisticalInfo = globalStruct.statisticalInfo;
-	if (s % 30==0)
+	if (s % 30 == 0)
 	{
 		auto newWasteCount = statisticalInfo.produceCount.load();
 		long long rate = newWasteCount - olderWasteCount;
@@ -147,12 +147,11 @@ void DetachUtiltyThread::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 		isProcessing = false;
 		warningLabel->popWarningListThreadSafe();
 	}
-
 }
 
 void DetachUtiltyThread::openWarnAlarm(const rw::rqw::WarningInfo& info)
 {
-	auto &motion=zwy::scc::GlobalMotion::getInstance().motionPtr;
+	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
 	motion->SetIOOut(ControlLines::warnRedOut, true);
 	motion->SetIOOut(ControlLines::warnGreenOut, false);
 }
@@ -166,7 +165,7 @@ void DetachUtiltyThread::closeWarnAlarm(const rw::rqw::WarningInfo& info)
 
 void DetachUtiltyThread::processTrigger(size_t s)
 {
-	if (s%180==0)
+	if (s % 180 == 0)
 	{
 		auto& globalStruct = GlobalStructData::getInstance();
 		auto& statisticalInfo = globalStruct.statisticalInfo;
@@ -185,7 +184,7 @@ void DetachUtiltyThread::processTrigger(size_t s)
 			auto newWork3Count = statisticalInfo.produceCount3.load();
 			auto newWork4Count = statisticalInfo.produceCount4.load();
 
-			if (newWork1Count== lastWork1Count)
+			if (newWork1Count == lastWork1Count)
 			{
 				emit workTriggerError(1);
 			}
@@ -201,7 +200,6 @@ void DetachUtiltyThread::processTrigger(size_t s)
 			{
 				emit workTriggerError(4);
 			}
-
 
 			lastWork1Count = newWork1Count;
 			lastWork2Count = newWork2Count;
@@ -220,9 +218,9 @@ void DetachUtiltyThread::processTakePictures(size_t s)
 	auto& globalStruct = GlobalStructData::getInstance();
 	auto& isTakePictures = globalStruct.mainWindowConfig.isTakePictures;
 	auto& isSavePicturesLong = globalStruct.dlgProduceLineSetConfig.takePicturesLong;
-	if (s%60==0)
+	if (s % 60 == 0)
 	{
-		if (lastIsTakePictures==true&& isTakePictures==true&& isSavePicturesLong==false)
+		if (lastIsTakePictures == true && isTakePictures == true && isSavePicturesLong == false)
 		{
 			emit closeTakePictures();
 		}
@@ -232,7 +230,7 @@ void DetachUtiltyThread::processTakePictures(size_t s)
 
 void DetachUtiltyThread::processShutdownIO(size_t s)
 {
-	if (s%1==0)
+	if (s % 1 == 0)
 	{
 		auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
 		auto isShutdown = motion->GetIOIn(ControlLines::shutdownComputerIn);

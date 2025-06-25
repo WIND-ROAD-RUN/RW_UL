@@ -11,7 +11,7 @@ class DlgShutdownWarn : public QDialog
 	Q_OBJECT
 
 public:
-	DlgShutdownWarn(QWidget *parent = nullptr);
+	DlgShutdownWarn(QWidget* parent = nullptr);
 	~DlgShutdownWarn();
 
 private:
@@ -21,5 +21,5 @@ public:
 	void setTimeValue(size_t s);
 
 private:
-	Ui::DlgShutdownWarnClass *ui;
+	Ui::DlgShutdownWarnClass* ui;
 };

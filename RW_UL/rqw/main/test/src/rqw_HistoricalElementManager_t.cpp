@@ -5,97 +5,96 @@ using namespace rw::rqw;
 
 namespace rqw_HistoricalElementManager
 {
-    TEST(HistoricalElementManagerTest, InsertAndRetrieveElement) {
-        using KeyType = int;
-        using ImageType = QImage;
-        HistoricalElementManager<KeyType, ImageType> manager(10);
+	TEST(HistoricalElementManagerTest, InsertAndRetrieveElement) {
+		using KeyType = int;
+		using ImageType = QImage;
+		HistoricalElementManager<KeyType, ImageType> manager(10);
 
-        KeyType key = 1;
-        QImage image(100, 100, QImage::Format_RGB32);
-        ElementInfo<ImageType> elementInfo(image);
-        elementInfo.attribute["Author"] = 1;
+		KeyType key = 1;
+		QImage image(100, 100, QImage::Format_RGB32);
+		ElementInfo<ImageType> elementInfo(image);
+		elementInfo.attribute["Author"] = 1;
 
-        manager.insertElement(key, elementInfo);
+		manager.insertElement(key, elementInfo);
 
-        auto retrievedElement = manager.getElement(key);
-        ASSERT_TRUE(retrievedElement.has_value());
-        EXPECT_EQ(retrievedElement->element.size(), image.size());
-        EXPECT_EQ(retrievedElement->attribute["Author"], 1);
-    }
+		auto retrievedElement = manager.getElement(key);
+		ASSERT_TRUE(retrievedElement.has_value());
+		EXPECT_EQ(retrievedElement->element.size(), image.size());
+		EXPECT_EQ(retrievedElement->attribute["Author"], 1);
+	}
 
-    TEST(HistoricalElementManagerTest, OverwriteElement) {
-        using KeyType = int;
-        using ImageType = QImage;
-        HistoricalElementManager<KeyType, ImageType> manager(10);
+	TEST(HistoricalElementManagerTest, OverwriteElement) {
+		using KeyType = int;
+		using ImageType = QImage;
+		HistoricalElementManager<KeyType, ImageType> manager(10);
 
-        KeyType key = 2;
-        QImage image1(100, 100, QImage::Format_RGB32);
-        QImage image2(200, 200, QImage::Format_RGB32);
+		KeyType key = 2;
+		QImage image1(100, 100, QImage::Format_RGB32);
+		QImage image2(200, 200, QImage::Format_RGB32);
 
-        ElementInfo<ImageType> elementInfo1(image1);
-        ElementInfo<ImageType> elementInfo2(image2);
+		ElementInfo<ImageType> elementInfo1(image1);
+		ElementInfo<ImageType> elementInfo2(image2);
 
-        manager.insertElement(key, elementInfo1);
+		manager.insertElement(key, elementInfo1);
 
-        manager.setElement(key, elementInfo2);
+		manager.setElement(key, elementInfo2);
 
-        auto retrievedElement = manager.getElement(key);
-        ASSERT_TRUE(retrievedElement.has_value());
-        EXPECT_EQ(retrievedElement->element.size(), image2.size());
-    }
+		auto retrievedElement = manager.getElement(key);
+		ASSERT_TRUE(retrievedElement.has_value());
+		EXPECT_EQ(retrievedElement->element.size(), image2.size());
+	}
 
-    TEST(HistoricalElementManagerTest, RetrieveNonExistentElement) {
-        using KeyType = int;
-        using ImageType = QImage;
-        HistoricalElementManager<KeyType, ImageType> manager(10);
+	TEST(HistoricalElementManagerTest, RetrieveNonExistentElement) {
+		using KeyType = int;
+		using ImageType = QImage;
+		HistoricalElementManager<KeyType, ImageType> manager(10);
 
-        KeyType key = 999;
+		KeyType key = 999;
 
-        // ºÏÀ˜≤ª¥Ê‘⁄µƒ‘™Àÿ
-        auto retrievedElement = manager.getElement(key);
-        EXPECT_FALSE(retrievedElement.has_value());
-    }
+		// Ê£ÄÁ¥¢‰∏çÂ≠òÂú®ÁöÑÂÖÉÁ¥†
+		auto retrievedElement = manager.getElement(key);
+		EXPECT_FALSE(retrievedElement.has_value());
+	}
 
-    TEST(HistoricalElementManagerTest, insert) {
-        using KeyType = int;
-        using value = int;
-        HistoricalElementManager<KeyType, value> manager(50);
-        ElementInfo<value> elementInfo(1);
-        for (int i = 0;i<30;i++)
-        {
-            manager.insertElement(i, elementInfo);
-        }
+	TEST(HistoricalElementManagerTest, insert) {
+		using KeyType = int;
+		using value = int;
+		HistoricalElementManager<KeyType, value> manager(50);
+		ElementInfo<value> elementInfo(1);
+		for (int i = 0; i < 30; i++)
+		{
+			manager.insertElement(i, elementInfo);
+		}
 
-        ASSERT_EQ(manager.size(), 30);
+		ASSERT_EQ(manager.size(), 30);
 
-        for (int i = 30; i < 60; i++)
-        {
-            manager.insertElement(i, elementInfo);
-        }
+		for (int i = 30; i < 60; i++)
+		{
+			manager.insertElement(i, elementInfo);
+		}
 
-        ASSERT_EQ(manager.size(), 50);
-    }
+		ASSERT_EQ(manager.size(), 50);
+	}
 
-    TEST(HistoricalElementManagerTest, insertTime) {
-        using KeyType = std::chrono::system_clock::time_point; //  π”√±Í◊ºø‚ ±º‰¿‡–Õ
-        using value = QImage;
-        HistoricalElementManager<KeyType, value> manager(50);
-        QImage image(100, 100, QImage::Format_RGB32);
-        ElementInfo<value> elementInfo(image);
+	TEST(HistoricalElementManagerTest, insertTime) {
+		using KeyType = std::chrono::system_clock::time_point; // ‰ΩøÁî®Ê†áÂáÜÂ∫ìÊó∂Èó¥Á±ªÂûã
+		using value = QImage;
+		HistoricalElementManager<KeyType, value> manager(50);
+		QImage image(100, 100, QImage::Format_RGB32);
+		ElementInfo<value> elementInfo(image);
 
-        for (int i = 0; i < 30; i++) {
-            KeyType key = std::chrono::system_clock::now(); // ƒ£ƒ‚≤ªÕ¨ ±º‰µ„
-            manager.insertElement(key, elementInfo);
-        }
+		for (int i = 0; i < 30; i++) {
+			KeyType key = std::chrono::system_clock::now(); // Ê®°Êãü‰∏çÂêåÊó∂Èó¥ÁÇπ
+			manager.insertElement(key, elementInfo);
+		}
 
-        ASSERT_EQ(manager.size(), 30);
+		ASSERT_EQ(manager.size(), 30);
 
-        for (int i = 30; i < 60; i++) {
-            KeyType key = std::chrono::system_clock::now(); // ƒ£ƒ‚≤ªÕ¨ ±º‰µ„
-            manager.insertElement(key, elementInfo);
-        }
+		for (int i = 30; i < 60; i++) {
+			KeyType key = std::chrono::system_clock::now(); // Ê®°Êãü‰∏çÂêåÊó∂Èó¥ÁÇπ
+			manager.insertElement(key, elementInfo);
+		}
 
-        ASSERT_EQ(manager.size(), 50);
-    }
+		ASSERT_EQ(manager.size(), 50);
+	}
 }
-

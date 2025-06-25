@@ -370,7 +370,7 @@ namespace rw {
 
 		void Camera_MVS::outTrigger(bool isOpen)
 		{
-			MV_CC_SetBoolValue(m_cameraHandle, "LineInverter", isOpen); 
+			MV_CC_SetBoolValue(m_cameraHandle, "LineInverter", isOpen);
 		}
 
 		Camera_MVS_Active::Camera_MVS_Active()

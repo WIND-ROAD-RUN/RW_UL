@@ -1,8 +1,8 @@
-﻿#include "DlgShutdownWarn.h"
+#include "DlgShutdownWarn.h"
 
 #include "ui_DlgShutdownWarn.h"
 
-DlgShutdownWarn::DlgShutdownWarn(QWidget *parent)
+DlgShutdownWarn::DlgShutdownWarn(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DlgShutdownWarnClass())
 {
@@ -20,7 +20,6 @@ DlgShutdownWarn::~DlgShutdownWarn()
 void DlgShutdownWarn::build_ui()
 {
 	this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-
 }
 
 void DlgShutdownWarn::build_connect()

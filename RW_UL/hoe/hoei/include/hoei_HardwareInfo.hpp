@@ -32,6 +32,5 @@ namespace rw {
 		public:
 			static HardwareInfo createHardwareInfo();
 		};
-
 	}
 }

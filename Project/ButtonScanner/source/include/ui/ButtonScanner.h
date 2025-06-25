@@ -189,9 +189,8 @@ public slots:
 public slots:
 	void closeTakePictures();
 private:
-	bool isShutdownByIO{false};
-	bool isConnnectCard{false};
+	bool isShutdownByIO{ false };
+	bool isConnnectCard{ false };
 public slots:
 	void shutdownComputerTrigger(int time);
 };
-

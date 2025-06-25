@@ -35,7 +35,5 @@ namespace rw {
 			std::vector<Topology> topology;
 			static std::vector<Topology> GeyTopology();
 		};
-
 	}
-
 }

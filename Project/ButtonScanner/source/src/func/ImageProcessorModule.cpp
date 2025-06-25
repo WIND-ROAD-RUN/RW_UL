@@ -380,7 +380,7 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 
 	auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
 	QString edgeDamageText("破边:");
-	for (const auto & item:info.edgeDamage1)
+	for (const auto& item : info.edgeDamage1)
 	{
 		if (item.isDraw)
 		{
@@ -430,7 +430,6 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 	}
 	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
 	textList.push_back(edgeDamageText);
-
 
 	auto targetAreaScore = static_cast<int>(productSet.poreEnableArea);
 	QString areaText("气孔面积:");
@@ -484,7 +483,6 @@ void ImageProcessor::appendSmallPoreDectInfo(QVector<QString>& textList, const B
 	}
 	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
 	textList.push_back(edgeDamageText);
-
 
 	auto targetAreaScore = static_cast<int>(productSet.smallPoreEnableArea);
 	QString areaText("气孔面积:");
@@ -568,7 +566,7 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 	{
 		return;
 	}
-	
+
 	auto targetScore = static_cast<int>(productSet.brokenEyeSimilarity);
 	QString edgeDamageText("破眼:");
 	for (const auto& item : info.brokenEye1)
@@ -1053,7 +1051,6 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 			}
 		}
 	}
-	
 
 	if (productSet.poreEnable)
 	{
@@ -1519,7 +1516,6 @@ void ImageProcessor::run_debug(MatInfo& frame)
 		drawButtonDefectInfoText(image, defectInfo);
 	}
 
-
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }
@@ -1728,7 +1724,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(ButtonDefectInf
 		auto outsideDiameterStandard2 = outsideDiameterDeviation - productSet.outsideDiameterValue;
 		auto outsideDiameter = info.outsideDiameter;
 
-		if ((outsideDiameter > outsideDiameterStandard1)|| (outsideDiameter < outsideDiameterStandard2))
+		if ((outsideDiameter > outsideDiameterStandard1) || (outsideDiameter < outsideDiameterStandard2))
 		{
 			_isbad = true;
 			info.isoutsideDiameter = true;
@@ -1825,7 +1821,6 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	{
 		++globalStruct.statisticalInfo.produceCount4;
 	}
-
 
 	if (_isbad) {
 		float absLocation = frame.location;
@@ -2216,7 +2211,6 @@ void ImageProcessor::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& ima
 			save_image_work(imageInfo, image);
 		}
 	}
-
 }
 
 void ImageProcessor::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -2243,7 +2237,6 @@ void ImageProcessor::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage
 			globalData.imageSaveEngine->pushImage(imageInfo);
 		}
 	}
-
 }
 
 void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const

@@ -171,7 +171,7 @@ namespace rw
 			strobeLightItem->setName("$variable$strobeLight$");
 			strobeLightItem->setValueFromBool(strobeLight);
 			assembly.addItem(strobeLightItem);
-	
+
 			auto exposureTimeItem = std::make_shared<oso::ObjectStoreItem>();
 			exposureTimeItem->setName("$variable$exposureTime$");
 			exposureTimeItem->setValueFromInt(static_cast<int>(exposureTime));
@@ -211,8 +211,8 @@ namespace rw
 				gain == account.gain &&
 				rootPath == account.rootPath &&
 				name == account.name &&
-				id == account.id&&
-				strobeLight==account.strobeLight;
+				id == account.id &&
+				strobeLight == account.strobeLight;
 		}
 
 		bool AiModelConfig::operator!=(const AiModelConfig& account) const

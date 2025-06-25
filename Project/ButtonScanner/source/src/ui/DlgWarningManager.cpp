@@ -3,7 +3,7 @@
 #include"GlobalStruct.h"
 #include "ui_DlgWarningManager.h"
 
-DlgWarningManager::DlgWarningManager(QWidget *parent)
+DlgWarningManager::DlgWarningManager(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DlgWarningManagerClass())
 {
@@ -30,7 +30,6 @@ void DlgWarningManager::build_connect()
 	connect(ui->cbox_workTrigger3, &QCheckBox::clicked, this, &DlgWarningManager::cbox_workTrigger3_clicked);
 	connect(ui->cbox_workTrigger4, &QCheckBox::clicked, this, &DlgWarningManager::cbox_workTrigger4_clicked);
 	connect(ui->cbox_airPressure, &QCheckBox::clicked, this, &DlgWarningManager::cbox_airPressure_clicked);
-
 }
 
 void DlgWarningManager::build_ui()
@@ -105,4 +104,3 @@ void DlgWarningManager::cbox_airPressure_clicked(bool checked)
 	auto& config = GlobalStructData::getInstance().dlgWarningManagerConfig;
 	config.airPressure = checked;
 }
-

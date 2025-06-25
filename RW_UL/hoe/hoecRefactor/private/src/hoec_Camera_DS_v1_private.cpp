@@ -64,7 +64,7 @@ namespace rw
 					if (dvpEnum(i, &info) == DVP_STATUS_OK)
 					{
 						CameraInfo cameraInfo;
-						// Ö»ÌáÈ¡IP²¿·Ö
+						// åªæå–IPéƒ¨åˆ†
 						std::string linkName = info.LinkName;
 						auto pos = linkName.find('-');
 						if (pos != std::string::npos && pos + 1 < linkName.size()) {
@@ -73,8 +73,8 @@ namespace rw
 						else {
 							cameraInfo.ip = linkName;
 						}
-						cameraInfo.name = "DS"; // Éè±¸ÓÑºÃÃû
-						cameraInfo.mac = info.PortInfo;      // ¶Ë¿ÚĞÅÏ¢£¬²¿·ÖĞÍºÅÎªMAC
+						cameraInfo.name = "DS"; // è®¾å¤‡å‹å¥½å
+						cameraInfo.mac = info.PortInfo;      // ç«¯å£ä¿¡æ¯ï¼Œéƒ¨åˆ†å‹å·ä¸ºMAC
 						cameraInfoList.emplace_back(std::move(cameraInfo));
 					}
 				}
@@ -95,7 +95,7 @@ namespace rw
 			{
 				if (dvpEnum(i, &info) == DVP_STATUS_OK)
 				{
-					// ÌáÈ¡info.LinkNameÖĞµÄIP²¿·Ö
+					// æå–info.LinkNameä¸­çš„IPéƒ¨åˆ†
 					std::string linkName = info.LinkName;
 					std::string ip;
 					auto pos = linkName.find('-');
@@ -105,7 +105,7 @@ namespace rw
 					else {
 						ip = linkName;
 					}
-					// ±È½ÏIP²¿·Ö
+					// æ¯”è¾ƒIPéƒ¨åˆ†
 					if (_ip == ip)
 					{
 						foundIndex = static_cast<int>(i);
@@ -122,7 +122,7 @@ namespace rw
 				return false;
 
 			m_cameraHandle = handle;
-			_cameraInfo.ip = foundIp; 
+			_cameraInfo.ip = foundIp;
 			_cameraInfo.name = info.FriendlyName;
 			_cameraInfo.mac = info.PortInfo;
 
@@ -175,14 +175,14 @@ namespace rw
 				return false;
 			}
 
-			// ÍÆ¼öÓÅÏÈÊ¹ÓÃ dvpSetFrameRate£¬Èç¹ûÃ»ÓĞÔòÓÃ dvpSetConfigString
+			// æ¨èä¼˜å…ˆä½¿ç”¨ dvpSetFrameRateï¼Œå¦‚æœæ²¡æœ‰åˆ™ç”¨ dvpSetConfigString
 #ifdef dvpSetFrameRate
 			dvpStatus status = dvpSetFrameRate(m_cameraHandle, cameraFrameRate);
 			if (status == DVP_STATUS_OK) {
 				return true;
 			}
 #else
-	// Í¨¹ıÊôĞÔÃûÉèÖÃÖ¡ÂÊ
+	// é€šè¿‡å±æ€§åè®¾ç½®å¸§ç‡
 			dvpStatus status = dvpSetConfigString(m_cameraHandle, "AcquisitionFrameRate", std::to_string(cameraFrameRate).c_str());
 			if (status == DVP_STATUS_OK) {
 				return true;
@@ -199,7 +199,7 @@ namespace rw
 				return 0.0f;
 			}
 
-			// ÍÆ¼öÓÅÏÈÊ¹ÓÃ dvpGetFrameRate£¬Èç¹ûÃ»ÓĞÔòÓÃ dvpGetConfigString
+			// æ¨èä¼˜å…ˆä½¿ç”¨ dvpGetFrameRateï¼Œå¦‚æœæ²¡æœ‰åˆ™ç”¨ dvpGetConfigString
 #ifdef dvpGetFrameRate
 			float frameRate = 0.0f;
 			dvpStatus status = dvpGetFrameRate(m_cameraHandle, &frameRate);
@@ -208,7 +208,7 @@ namespace rw
 				return frameRate;
 			}
 #else
-	// Í¨¹ıÊôĞÔÃû»ñÈ¡Ö¡ÂÊ
+	// é€šè¿‡å±æ€§åè·å–å¸§ç‡
 			const char* szValue = nullptr;
 			dvpStatus status = dvpGetConfigString(m_cameraHandle, "AcquisitionFrameRate", &szValue);
 			if (status == DVP_STATUS_OK && szValue) {
@@ -258,12 +258,11 @@ namespace rw
 			/*if (!m_cameraHandle) {
 				return false;
 			}
-		
+
 			dvpStatus status = dvpSetConfigString(m_cameraHandle, "HeartbeatTimeout", std::to_string(heartBeatTime).c_str());
 			return status == DVP_STATUS_OK;*/
-			//¸ÃÏà»ú²»Ö§³Ö
+			//è¯¥ç›¸æœºä¸æ”¯æŒ
 			return false;
-
 		}
 
 		size_t Camera_DS::getHeartbeatTime(bool& isGet)
@@ -284,7 +283,7 @@ namespace rw
 				return 0;
 			}*/
 			return false;
-			//¸ÃÏà»ú²»Ö§³Ö
+			//è¯¥ç›¸æœºä¸æ”¯æŒ
 		}
 
 		bool Camera_DS::setExposureTime(size_t value)
@@ -317,7 +316,7 @@ namespace rw
 
 		bool Camera_DS::setTriggerMode(CameraTriggerMode mode)
 		{
-			//¶ÔÓÚÏßÉ¨Ïà»úÆúÓÃ
+			//å¯¹äºçº¿æ‰«ç›¸æœºå¼ƒç”¨
 			return false;
 		}
 
@@ -379,7 +378,6 @@ namespace rw
 			if (!m_cameraHandle)
 			{
 				return false;
-
 			}
 
 			auto status = dvpSetTriggerState(m_cameraHandle, state);
@@ -414,7 +412,6 @@ namespace rw
 			if (!m_cameraHandle)
 			{
 				return false;
-
 			}
 
 			std::string s = state ? "true" : "false";
@@ -461,13 +458,11 @@ namespace rw
 		bool Camera_DS::outTrigger()
 		{
 			return false;
-
 		}
 
 		bool Camera_DS::outTrigger(bool isOpen)
 		{
 			return false;
-
 		}
 
 		bool Camera_DS::setPreDivider(size_t number)
@@ -477,21 +472,16 @@ namespace rw
 			if (!m_cameraHandle)
 			{
 				return false;
-
 			}
 			status = dvpSetConfigString(m_cameraHandle, "cLineTrigFreqPreDiv", std::to_string(number).c_str());
 			if (status != DVP_STATUS_OK)
 			{
-
 				return false;
 			}
 			else
 			{
 				return true;
-
-
 			}
-
 		}
 
 		bool Camera_DS::setMultiplier(size_t number)
@@ -501,19 +491,15 @@ namespace rw
 			if (!m_cameraHandle)
 			{
 				return false;
-
 			}
 			status = dvpSetConfigString(m_cameraHandle, "LineTrigFreqMult", std::to_string(number).c_str());
 			if (status != DVP_STATUS_OK)
 			{
-
 				return false;
 			}
 			else
 			{
 				return true;
-
-
 			}
 		}
 
@@ -524,19 +510,15 @@ namespace rw
 			if (!m_cameraHandle)
 			{
 				return false;
-
 			}
 			status = dvpSetConfigString(m_cameraHandle, "LineTrigFreqDiv", std::to_string(number).c_str());
 			if (status != DVP_STATUS_OK)
 			{
-
 				return false;
 			}
 			else
 			{
 				return true;
-
-
 			}
 		}
 
@@ -546,21 +528,19 @@ namespace rw
 			char const* szValue1;
 			dvpStatus status;
 			status = dvpGetConfigString(m_cameraHandle, "EncoderForwardCounter", &szValue);
-			
+
 			if (status != DVP_STATUS_OK)
 			{
 				return false;
-
 			}
-		
+
 			status = dvpGetConfigString(m_cameraHandle, "EncoderBackwardCounter", &szValue1);
 
 			if (status != DVP_STATUS_OK)
 			{
 				return false;
-
 			}
-			
+
 			number = static_cast<size_t>(std::strtod(szValue, nullptr) - std::strtod(szValue1, nullptr));
 			return true;
 		}
@@ -569,28 +549,28 @@ namespace rw
 		{
 			dvpRegion temp;
 			if (!m_cameraHandle) {
-				return false; 
+				return false;
 			}
-			auto getStates=dvpGetRoi(m_cameraHandle, &temp);
+			auto getStates = dvpGetRoi(m_cameraHandle, &temp);
 
 			if (getStates == DVP_STATUS_OK) {
 				temp.H = number;
 				auto setLineHeightState = dvpSetRoi(m_cameraHandle, temp);
-				if (setLineHeightState== DVP_STATUS_OK)
+				if (setLineHeightState == DVP_STATUS_OK)
 				{
 					return true;
 				}
 				return false;
 			}
 			else {
-				return false; 
+				return false;
 			}
 		}
 
 		size_t Camera_DS::getLineHeight(bool& isGet)
 		{
 			if (!m_cameraHandle) {
-				isGet = false; 
+				isGet = false;
 				return 0;
 			}
 
@@ -601,14 +581,13 @@ namespace rw
 				return static_cast<size_t>(std::strtoull(szValue, nullptr, 10));
 			}
 			else {
-				isGet = false; 
+				isGet = false;
 				return 0;
 			}
 		}
 
 		Camera_DS_Active::Camera_DS_Active()
 		{
-
 		}
 
 		Camera_DS_Active::~Camera_DS_Active()
@@ -617,13 +596,11 @@ namespace rw
 
 		cv::Mat Camera_DS_Active::getImage(bool& isGet)
 		{
-
 			return cv::Mat();
 		}
 
 		cv::Mat Camera_DS_Active::getImage()
 		{
-
 			return cv::Mat();
 		}
 
@@ -653,7 +630,6 @@ namespace rw
 				this
 			);
 			return status == DVP_STATUS_OK;
-
 		}
 
 		dvpInt32 Camera_DS_Passive::ImageCallBackFunc(dvpHandle handle, dvpStreamEvent event, void* pContext,
@@ -672,6 +648,5 @@ namespace rw
 
 			return 0;
 		}
-
 	}
 }

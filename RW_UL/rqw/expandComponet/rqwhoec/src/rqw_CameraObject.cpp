@@ -133,7 +133,6 @@ namespace rw
 			return _cameraPassive->getGain(isGet);
 		}
 
-
 		CameraObjectTrigger CameraPassiveObject::getMonitorMode(bool& isGet) const
 		{
 			hoec_v1::CameraTriggerMode hoecTrigger = _cameraPassive->getMonitorMode(isGet);
@@ -154,7 +153,7 @@ namespace rw
 
 		size_t CameraPassiveObject::getHeartbeatTime() const
 		{
-			bool isGet=false;
+			bool isGet = false;
 			return _cameraPassive->getHeartbeatTime(isGet);
 		}
 
@@ -203,7 +202,7 @@ namespace rw
 			hoecCameraIp.ip = cameraMetaData.ip.toStdString();
 			hoecCameraIp.provider = hoec_v1::from_string(cameraMetaData.provider.toStdString());
 
-			if (hoecCameraIp.provider==hoec_v1::CameraProvider::MVS)
+			if (hoecCameraIp.provider == hoec_v1::CameraProvider::MVS)
 			{
 				hoec_v1::CameraTriggerMode hoecTrigger;
 				if (triggerMode == CameraObjectTrigger::Hardware)

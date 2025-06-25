@@ -22,7 +22,6 @@ public:
 	PicturesViewer(QWidget* parent = nullptr);
 	~PicturesViewer();
 
-
 private:
 	void build_ui();
 	void build_connect();

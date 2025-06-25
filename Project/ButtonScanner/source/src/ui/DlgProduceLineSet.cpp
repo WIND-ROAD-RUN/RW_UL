@@ -75,7 +75,7 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_maxBrightness->setText(QString::number(globalStruct.dlgProduceLineSetConfig.maxBrightness));
 	ui->pbtn_codeWheel->setText(QString::number(globalStruct.dlgProduceLineSetConfig.codeWheel));
 	ui->pbtn_pulseFactor->setText(QString::number(globalStruct.dlgProduceLineSetConfig.pulseFactor));
-	
+
 	//Deprecated widget
 	ui->pbtn_maxBrightness->setVisible(false);
 	ui->pbtn_minBrightness->setVisible(false);
@@ -168,7 +168,6 @@ void DlgProduceLineSet::build_connect()
 	QObject::connect(ui->cBox_takePicturesWork4, &QCheckBox::checkStateChanged,
 		this, &DlgProduceLineSet::cBox_takeWork4Pictures);
 
-
 	QObject::connect(ui->rbtn_drawCircle, &QRadioButton::clicked,
 		this, &DlgProduceLineSet::rbtn_drawCircle_clicked);
 	QObject::connect(ui->rbtn_drawRec, &QRadioButton::clicked,
@@ -220,8 +219,6 @@ void DlgProduceLineSet::build_connect()
 		, this, &DlgProduceLineSet::pbtn_warningManager_clicked);
 	QObject::connect(ui->pbtn_DIOValueSet, &QPushButton::clicked
 		, this, &DlgProduceLineSet::pbtn_DIOValueSet_clicked);
-
-
 }
 
 float DlgProduceLineSet::get_blowTime()
@@ -703,7 +700,7 @@ void DlgProduceLineSet::cbox_blow1_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine1.ioNum, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine1.ioNum, ischeck);
 }
 
 void DlgProduceLineSet::cbox_blow2_checked(bool ischeck)
@@ -712,7 +709,7 @@ void DlgProduceLineSet::cbox_blow2_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine2.ioNum, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine2.ioNum, ischeck);
 }
 
 void DlgProduceLineSet::cbox_blow3_checked(bool ischeck)
@@ -721,7 +718,7 @@ void DlgProduceLineSet::cbox_blow3_checked(bool ischeck)
 	{
 		return;
 	}
-	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut( ControlLines::blowLine3.ioNum, ischeck);
+	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::blowLine3.ioNum, ischeck);
 }
 
 void DlgProduceLineSet::cbox_blow4_checked(bool ischeck)
@@ -776,7 +773,6 @@ void DlgProduceLineSet::cbox_storeLight_checked(bool ischeck)
 		return;
 	}
 	zwy::scc::GlobalMotion::getInstance().motionPtr.get()->SetIOOut(ControlLines::strobeLightOut, ischeck);
-
 }
 
 void DlgProduceLineSet::cbox_beltControl(bool ischeck)
@@ -792,10 +788,8 @@ void DlgProduceLineSet::cbox_beltControl(bool ischeck)
 	else
 	{
 		zwy::scc::GlobalMotion::getInstance().motionPtr.get()->StopAllAxis();
-
 	}
 }
-
 
 void DlgProduceLineSet::cbox_DIStart_checked(bool ischeck)
 {
@@ -836,7 +830,6 @@ void DlgProduceLineSet::cbox_DICameraTrigger4_checked(bool ischeck)
 {
 	ui->cbox_DICameraTrigger4->setChecked(false);
 }
-
 
 void DlgProduceLineSet::onDIState(int index, bool state)
 {

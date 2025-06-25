@@ -127,8 +127,5 @@ namespace rw {
 			std::unordered_map<Key, Value> _cache;
 			std::queue<Key> _fifo;
 		};
-
-
-
 	} // namespace dsl
 } // namespace rw

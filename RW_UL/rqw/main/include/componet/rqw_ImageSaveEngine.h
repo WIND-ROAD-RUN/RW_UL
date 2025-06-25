@@ -19,14 +19,13 @@ namespace rw {
 		public:
 			QString time;
 		public:
-			ImageInfo(const QImage & image)
+			ImageInfo(const QImage& image)
 			{
 				this->image = image;
 				QDateTime currentTime = QDateTime::currentDateTime();
 				this->time = currentTime.toString("yyyyMMddhhmmsszzz"); // 年月日时分秒毫秒
 			}
 		};
-
 
 		class ImageSaveEngine : public QThread {
 			Q_OBJECT

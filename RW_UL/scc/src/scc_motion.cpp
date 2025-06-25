@@ -37,9 +37,9 @@ namespace zwy {
 		{
 			if (g_handle != nullptr)
 			{
-				auto reuslt=ZAux_Close(g_handle);
+				auto reuslt = ZAux_Close(g_handle);
 				//关闭连接
-				if (reuslt==ERROR_OK)
+				if (reuslt == ERROR_OK)
 				{
 					g_handle = nullptr;
 					return true;
@@ -48,7 +48,6 @@ namespace zwy {
 				{
 					return false;
 				}
-
 			}
 		}
 		//bool Motion::GetBoardStatue()
@@ -145,7 +144,6 @@ namespace zwy {
 				{
 					s = 1;
 					ZAux_Direct_MoveOp2(g_handle, axis, ioNUm, s, iotime);
-
 				}
 				else
 				{

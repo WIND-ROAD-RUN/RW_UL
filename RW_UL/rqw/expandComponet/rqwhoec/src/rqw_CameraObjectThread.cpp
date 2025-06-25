@@ -176,7 +176,6 @@ namespace rw
 			return false;
 		}
 
-
 		bool CameraPassiveThread::setTriggerMode(CameraObjectTrigger mode) const
 		{
 			if (_cameraObject)
@@ -335,7 +334,7 @@ namespace rw
 		{
 			if (_cameraObject)
 			{
-				 _cameraObject->setOutTriggerConfig(config);
+				_cameraObject->setOutTriggerConfig(config);
 			}
 			return false;
 		}

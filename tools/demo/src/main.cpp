@@ -1,7 +1,5 @@
-
 #include <QtWidgets/QApplication>
 #include"rqw_DlgVersion.h"
-
 
 int main(int argc, char* argv[])
 {

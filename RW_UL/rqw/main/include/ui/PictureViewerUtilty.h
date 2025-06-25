@@ -11,7 +11,7 @@ class PictureViewerUtilty : public QMainWindow
 	Q_OBJECT
 
 public:
-	PictureViewerUtilty(QWidget *parent = nullptr);
+	PictureViewerUtilty(QWidget* parent = nullptr);
 	~PictureViewerUtilty();
 private:
 	void build_ui();
@@ -19,8 +19,8 @@ private:
 protected:
 	void showEvent(QShowEvent* event) override;
 public:
-	void setImgPath(const QString & imgPath);
-	void setAllImgPath(const QString& imgPath,bool isPositive);
+	void setImgPath(const QString& imgPath);
+	void setAllImgPath(const QString& imgPath, bool isPositive);
 	void setPositive(bool ispositive);
 	int getCurrentImageIndex();
 private:
@@ -30,7 +30,7 @@ private:
 	bool isPositive = true;
 	int currentImageIndex = 0;
 private:
-	Ui::PictureViewerUtiltyClass *ui;
+	Ui::PictureViewerUtiltyClass* ui;
 
 signals:
 	void imagesDeleted(QVector<QString> ImagePaths);

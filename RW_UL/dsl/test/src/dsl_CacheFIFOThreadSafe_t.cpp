@@ -4,7 +4,6 @@
 #include <thread>
 
 namespace dsl_cache {
-
 	TEST(CacheFIFOThreadSafe, BasicFunctionality) {
 		using Key = int;
 		using Value = std::string;
@@ -79,5 +78,4 @@ namespace dsl_cache {
 		EXPECT_EQ(cache.get(now), std::nullopt); // Oldest entry evicted
 		EXPECT_EQ(cache.get(now + std::chrono::seconds(3)).value_or(-1), 40);
 	}
-
 } // namespace dsl_cache

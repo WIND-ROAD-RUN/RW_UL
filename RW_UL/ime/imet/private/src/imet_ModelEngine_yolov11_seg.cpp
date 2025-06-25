@@ -95,7 +95,7 @@ namespace rw {
 			return result;
 		}
 
-		void ModelEngine_Yolov11_seg::init(const std::string & enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_seg::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
@@ -128,7 +128,7 @@ namespace rw {
 			cpu_output_buffer2 = new float[thirdOutputSize * thirdOutputSize2 * thirdOutputSize3];
 			(cudaMalloc((void**)&gpu_buffers[2], thirdOutputSize * thirdOutputSize2 * thirdOutputSize3 * sizeof(float)));
 
-			for (int i = 0;i < 10;i++) {
+			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
 			cudaDeviceSynchronize();
@@ -244,7 +244,7 @@ namespace rw {
 			std::vector<DetectionRectangleInfo> result;
 			result.reserve(detections.size());
 
-			// letterBoxScale: Ëõ·ÅÏµÊı£¬letterBoxdw/letterBoxdh: padding
+			// letterBoxScale: ç¼©æ”¾ç³»æ•°ï¼ŒletterBoxdw/letterBoxdh: padding
 			float scale = _letterBoxScale;
 			int dw = _letterBoxdw;
 			int dh = _letterBoxdh;
@@ -253,7 +253,7 @@ namespace rw {
 			{
 				DetectionRectangleInfo resultItem;
 
-				// ·´Ëãµ½Ô­Í¼×ø±ê
+				// åç®—åˆ°åŸå›¾åæ ‡
 				float x1 = (item.bbox.x - dw) / scale;
 				float y1 = (item.bbox.y - dh) / scale;
 				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;

@@ -56,7 +56,6 @@ void PicturesViewer::build_connect()
 
 	QObject::connect(ui->pbtn_nextCategory, &QPushButton::clicked,
 		this, &PicturesViewer::pbtn_nextCategory_clicked);
-
 }
 
 void PicturesViewer::setRootPath(const QString& path)

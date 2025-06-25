@@ -85,9 +85,7 @@ namespace rw {
 					cv::exp(-mask, mask_sigmoid);
 					mask_sigmoid = 1.0 / (1.0 + mask_sigmoid);
 					mask_sigmoids.push_back(mask_sigmoid);
-
 				}
-
 			}
 
 			std::vector<int> nms_result = nmsWithKeepClass(
@@ -144,7 +142,7 @@ namespace rw {
 			cpu_output_buffer2 = new float[thirdOutputSize * thirdOutputSize2 * thirdOutputSize3];
 			(cudaMalloc((void**)&gpu_buffers[2], thirdOutputSize * thirdOutputSize2 * thirdOutputSize3 * sizeof(float)));
 
-			for (int i = 0;i < 10;i++) {
+			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
 			cudaDeviceSynchronize();
@@ -268,7 +266,7 @@ namespace rw {
 			{
 				DetectionRectangleInfo resultItem;
 
-				// ·´Ëãµ½Ô­Í¼×ø±ê
+				// åç®—åˆ°åŸå›¾åæ ‡
 				float x1 = (item.bbox.x - dw) / scale;
 				float y1 = (item.bbox.y - dh) / scale;
 				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;
@@ -305,29 +303,29 @@ namespace rw {
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
 			}
-			for (int i = 0;i<masks.size();i++)
+			for (int i = 0; i < masks.size(); i++)
 			{
 				cv::Mat mask_resized;
 				cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(masks[i].bbox.width, masks[i].bbox.height), 0, 0, cv::INTER_LINEAR);
 				cv::Mat mask_bin;
 				cv::threshold(mask_resized, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
 
-				// È¡³öbboxÇøÓò
+				// å–å‡ºbboxåŒºåŸŸ
 				cv::Rect bbox = masks[i].bbox;
-				// ¼ì²ébboxÊÇ·ñÔÚÍ¼Ïñ·¶Î§ÄÚ
+				// æ£€æŸ¥bboxæ˜¯å¦åœ¨å›¾åƒèŒƒå›´å†…
 				cv::Rect img_rect(0, 0, result.cols, result.rows);
 				cv::Rect roi = bbox & img_rect;
 				if (roi.width <= 0 || roi.height <= 0) continue;
 
-				// Ö»È¡ÓĞĞ§ÇøÓò
+				// åªå–æœ‰æ•ˆåŒºåŸŸ
 				cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
 				cv::Mat img_roi = result(roi);
 
-				// ×ÅÉ«£¨ÒÔºìÉ«ÎªÀı£©
+				// ç€è‰²ï¼ˆä»¥çº¢è‰²ä¸ºä¾‹ï¼‰
 				std::vector<cv::Mat> channels;
 				cv::split(img_roi, channels);
-				// ºìÉ«Í¨µÀ¼Ó¸ßÁÁ
-				channels[2].setTo(255, mask_roi > 0); // BGR: 2ÎªRÍ¨µÀ
+				// çº¢è‰²é€šé“åŠ é«˜äº®
+				channels[2].setTo(255, mask_roi > 0); // BGR: 2ä¸ºRé€šé“
 				cv::merge(channels, img_roi);
 			}
 			return result;

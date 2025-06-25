@@ -26,7 +26,7 @@ namespace rw {
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
 		private:
-			void init(const std::string & enginePath, nvinfer1::ILogger& logger);
+			void init(const std::string& enginePath, nvinfer1::ILogger& logger);
 		public:
 			ModelEngine_Yolov11_seg(const std::string& modelPath, nvinfer1::ILogger& logger);
 			~ModelEngine_Yolov11_seg() override;

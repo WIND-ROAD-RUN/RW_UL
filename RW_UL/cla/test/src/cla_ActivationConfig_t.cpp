@@ -14,7 +14,7 @@ namespace cla_ActivationCodeModule
 		config.insert("name7", "value7");
 		config.insert("name7", "value7");
 
-		auto str=ActivationConfig::serialize(config);
+		auto str = ActivationConfig::serialize(config);
 		ASSERT_EQ(str.empty(), false);
 	}
 
@@ -53,7 +53,6 @@ namespace cla_ActivationCodeModule
 		ActivationConfig deserializeConfig(config);
 		ASSERT_EQ(ActivationConfig::serialize(deserializeConfig), str);
 
-
 		ActivationConfig config1;
 		config1.insert("name1", "value1");
 		config1.insert("name2", "value2");
@@ -70,8 +69,4 @@ namespace cla_ActivationCodeModule
 
 		ASSERT_EQ(config1 == config, true);
 	}
-
-
-
-
 }

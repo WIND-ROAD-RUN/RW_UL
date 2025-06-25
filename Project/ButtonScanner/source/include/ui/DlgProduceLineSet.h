@@ -14,11 +14,11 @@ class DlgProduceLineSet : public QDialog
 {
 	Q_OBJECT
 private:
-	MonitorIOStateThread* monitorIoStateThread{nullptr};
+	MonitorIOStateThread* monitorIoStateThread{ nullptr };
 	DlgWarningManager* dlgWarningManager{ nullptr };
-	DlgWarningIOSetConfig* dlgWarningIOSetConfig{nullptr};
+	DlgWarningIOSetConfig* dlgWarningIOSetConfig{ nullptr };
 public:
-	bool isDebug{false};
+	bool isDebug{ false };
 public:
 	DlgProduceLineSet(QWidget* parent = nullptr);
 	~DlgProduceLineSet();

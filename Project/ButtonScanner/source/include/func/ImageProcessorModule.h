@@ -19,11 +19,11 @@ struct ButtonDefectInfo
 public:
 	struct ButtonDefectInfoItem
 	{
-		size_t index{0};
-		double score{0};
-		bool isDraw{false};
-		double area{0};
-	}; 
+		size_t index{ 0 };
+		double score{ 0 };
+		bool isDraw{ false };
+		double area{ 0 };
+	};
 public:
 	QString time{};
 	double outsideDiameter{};
@@ -48,7 +48,7 @@ public:
 	float large_B{};
 	bool isDrawlargeColor{ false };
 public:
-	//std::vector<double> edgeDamage; 
+	//std::vector<double> edgeDamage;
 	std::vector<ButtonDefectInfoItem>edgeDamage1;
 	//bool isDrawedgeDamage{ false };
 
@@ -178,7 +178,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
 
-	void save_image( rw::rqw::ImageInfo & imageInfo,const QImage & image);
+	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 signals:
 	void imageReady(QPixmap image);
@@ -251,7 +251,7 @@ public:
 	void drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
-	                        ButtonDefectInfo& info);
+		ButtonDefectInfo& info);
 	void drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
 		ButtonDefectInfo& info);
 

@@ -6,8 +6,6 @@ namespace rw
 {
 	namespace hoei
 	{
-		
-
 		CPUInfo::CPUInfo(const CPUInfo& other)
 			: cpuModel(other.cpuModel), coreCount(other.coreCount), logicCoreCount(other.logicCoreCount),
 			threadCount(other.threadCount), baseClockSpeed(other.baseClockSpeed), topology(other.topology) {
@@ -143,9 +141,7 @@ namespace rw
 				RegCloseKey(hKey);
 			}
 			return 0.0; // 如果无法获取，返回 0.0
-
 		}
-
 
 		std::vector<CPUInfo::Topology> CPUInfoFactory::GeyTopology()
 		{

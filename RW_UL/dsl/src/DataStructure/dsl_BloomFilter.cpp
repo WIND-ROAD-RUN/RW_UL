@@ -24,7 +24,7 @@ namespace rw
 		{
 			//Initialize the hash function set using the formula
 			// hi (key)=murmurmHash (key)+i * fnv1Hash (key)+i ^ 2% numBits
-			for (size_t i = 0; i < numHashFunctions;++i) {
+			for (size_t i = 0; i < numHashFunctions; ++i) {
 				_hashFunctions.push_back([numBits, i, this](const std::string& str) {
 					const uint32_t hash1 = _murmurHash(str.c_str());
 					const uint32_t hash2 = _fnv1Hash(str);

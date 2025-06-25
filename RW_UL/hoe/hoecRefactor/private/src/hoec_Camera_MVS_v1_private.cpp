@@ -9,8 +9,8 @@ namespace rw
 {
 	namespace hoec_v1
 	{
-		std::atomic<size_t> Camera_MVS::_cameraNum=0;
-		bool Camera_MVS::_isIniSDK=false;
+		std::atomic<size_t> Camera_MVS::_cameraNum = 0;
+		bool Camera_MVS::_isIniSDK = false;
 
 		Camera_MVS::Camera_MVS()
 			:triggerMode(CameraTriggerMode::SoftwareTriggered)
@@ -44,7 +44,7 @@ namespace rw
 			MV_CC_DEVICE_INFO_LIST deviceList;
 			memset(&deviceList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
 
-			// √∂æŸ…Ë±∏
+			// Êûö‰∏æËÆæÂ§á
 			if (MV_CC_EnumDevices(MV_GIGE_DEVICE, &deviceList) != MV_OK) {
 				return std::vector<std::string>();
 			}
@@ -53,7 +53,7 @@ namespace rw
 			for (unsigned int i = 0; i < deviceList.nDeviceNum; ++i) {
 				MV_CC_DEVICE_INFO* pDeviceInfo = deviceList.pDeviceInfo[i];
 				if (pDeviceInfo->nTLayerType == MV_GIGE_DEVICE) {
-					// ªÒ»°…Ë±∏µƒ IP µÿ÷∑
+					// Ëé∑ÂèñËÆæÂ§áÁöÑ IP Âú∞ÂùÄ
 					unsigned int ip = pDeviceInfo->SpecialInfo.stGigEInfo.nCurrentIp;
 					std::string ipStr = std::to_string((ip >> 24) & 0xFF) + "." +
 						std::to_string((ip >> 16) & 0xFF) + "." +
@@ -70,7 +70,7 @@ namespace rw
 		{
 			MV_CC_DEVICE_INFO_LIST deviceList;
 			memset(&deviceList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
-			// √∂æŸ…Ë±∏
+			// Êûö‰∏æËÆæÂ§á
 			if (MV_CC_EnumDevices(MV_GIGE_DEVICE, &deviceList) != MV_OK) {
 				return std::vector<CameraInfo>();
 			}
@@ -79,7 +79,7 @@ namespace rw
 				MV_CC_DEVICE_INFO* pDeviceInfo = deviceList.pDeviceInfo[i];
 				if (pDeviceInfo->nTLayerType == MV_GIGE_DEVICE) {
 					CameraInfo cameraInfo;
-					// ªÒ»°…Ë±∏µƒ IP µÿ÷∑
+					// Ëé∑ÂèñËÆæÂ§áÁöÑ IP Âú∞ÂùÄ
 					unsigned int ip = pDeviceInfo->SpecialInfo.stGigEInfo.nCurrentIp;
 					cameraInfo.ip = std::to_string((ip >> 24) & 0xFF) + "." +
 						std::to_string((ip >> 16) & 0xFF) + "." +
@@ -127,7 +127,7 @@ namespace rw
 			for (unsigned int i = 0; i < deviceList.nDeviceNum; ++i) {
 				auto pDeviceInfo = deviceList.pDeviceInfo[i];
 				if (pDeviceInfo->nTLayerType == MV_GIGE_DEVICE) {
-					// ªÒ»°…Ë±∏µƒ IP µÿ÷∑
+					// Ëé∑ÂèñËÆæÂ§áÁöÑ IP Âú∞ÂùÄ
 					unsigned int ip = pDeviceInfo->SpecialInfo.stGigEInfo.nCurrentIp;
 					std::string ipStr = std::to_string((ip >> 24) & 0xFF) + "." +
 						std::to_string((ip >> 16) & 0xFF) + "." +
@@ -144,21 +144,21 @@ namespace rw
 				return false;
 			}
 
-			// «∑Òø…“‘∂¿’º∑√Œ 
+			//ÊòØÂê¶ÂèØ‰ª•Áã¨Âç†ËÆøÈóÆ
 			auto canAccessible = MV_CC_IsDeviceAccessible(targetDevice, MV_ACCESS_Exclusive);
 			if (canAccessible != true) {
 				std::cerr << "Failed to access device" << std::endl;
 				return false;
 			}
 
-			//¥¥Ω®æ‰±˙
+			//ÂàõÂª∫Âè•ÊüÑ
 			auto creatHandleResult = MV_CC_CreateHandle(&m_cameraHandle, targetDevice);
 			if (creatHandleResult != MV_OK) {
 				std::cerr << "Failed to create handle" << std::endl;
 				return false;
 			}
 
-			//∂¿’º¥Úø™…Ë±∏
+			//Áã¨Âç†ÊâìÂºÄËÆæÂ§á
 			auto openDeviceResult = MV_CC_OpenDevice(m_cameraHandle, MV_ACCESS_Exclusive);
 			if (openDeviceResult != MV_OK) {
 				std::cerr << "Failed to open device" << std::endl;
@@ -192,7 +192,6 @@ namespace rw
 				isGet = false;
 				return false;
 			}
-
 		}
 
 		bool Camera_MVS::setFrameRate(float cameraFrameRate)
@@ -207,7 +206,6 @@ namespace rw
 				return true;
 			}
 			return false;
-
 		}
 
 		float Camera_MVS::getFrameRate(bool& isGet)

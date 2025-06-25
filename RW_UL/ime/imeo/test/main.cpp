@@ -1,5 +1,4 @@
-﻿#include"opencv2/opencv.hpp"
-
+#include"opencv2/opencv.hpp"
 
 #include"imeo_ModelEngine_yolov11_seg.hpp"
 #include<string>

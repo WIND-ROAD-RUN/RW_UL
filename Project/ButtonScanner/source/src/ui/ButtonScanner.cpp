@@ -43,12 +43,11 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
-
 		//ui->rbtn_debug->setChecked(false);
 		auto& runningState = globalStructData.runningState;
 
 		bool beforeSetExposureTimeIsDebug = false;
-		if (runningState==RunningState::Debug)
+		if (runningState == RunningState::Debug)
 		{
 			beforeSetExposureTimeIsDebug = true;
 		}
@@ -230,7 +229,7 @@ void ButtonScanner::initializeComponents()
 	QObject::connect(dlgNewProduction, &DlgNewProduction::cancelTrain,
 		GlobalStructThread::getInstance().aiTrainModule.get(), &AiTrainModule::cancelTrain);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::showDlgWarn,
-		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
+		this, &ButtonScanner::showDlgWarn, Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::closeTakePictures,
@@ -271,7 +270,6 @@ void ButtonScanner::destroyComponents()
 	loadingDialog.updateMessage("正在停止所有轴...");
 	QCoreApplication::processEvents();
 	stop_all_axis();
-
 
 	// 销毁相机
 	loadingDialog.updateMessage("正在销毁相机...");
@@ -333,7 +331,7 @@ void ButtonScanner::build_ui()
 	delete ui->label_title;
 
 	labelVersionInfo = new rw::rqw::ClickableLabel(this);
-	ui->gBox_VersionInfo->layout()->replaceWidget(ui->label_VersionInfo,labelVersionInfo);
+	ui->gBox_VersionInfo->layout()->replaceWidget(ui->label_VersionInfo, labelVersionInfo);
 	delete ui->label_VersionInfo;
 	labelVersionInfo->setText(VersionInfo::Version);
 
@@ -1073,11 +1071,11 @@ void ButtonScanner::build_ioThread()
 						rbtn_debug_checked(false);
 						label_lightBulb->setVisible(true);
 					});
-					// pidaimove->stop();
-					motionPtr->StopAllAxis();
-					motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+				// pidaimove->stop();
+				motionPtr->StopAllAxis();
+				motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
 
-					motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
+				motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 			}
 			else
 			{
@@ -1134,9 +1132,9 @@ void ButtonScanner::build_ioThread()
 							rbtn_debug_checked(false);
 							label_lightBulb->setVisible(false);
 						});
-						motionPtr->StopAllAxis();
-						motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
-						motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
+					motionPtr->StopAllAxis();
+					motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+					motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 				}
 
 				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIn);
@@ -1503,7 +1501,7 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 void ButtonScanner::rbtn_takePicture_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
-	if (GlobalStructData.runningState==RunningState::Debug)
+	if (GlobalStructData.runningState == RunningState::Debug)
 	{
 		ui->rbtn_takePicture->setChecked(false);
 		return;
@@ -1665,45 +1663,36 @@ void ButtonScanner::workTriggerError(int index)
 {
 	if (index == 1)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "一工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger1;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 2)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "二工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger2;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 3)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "三工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger3;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 4)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "四工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger4;
 		labelWarning->addWarning(info);
-
 	}
-
 }
 
 void ButtonScanner::closeTakePictures()
@@ -1725,16 +1714,16 @@ void ButtonScanner::shutdownComputerTrigger(int time)
 		_dlgShutdownWarn->close();
 		return;
 	}
-	if (time==0)
+	if (time == 0)
 	{
 		_dlgShutdownWarn->show();
 		_dlgShutdownWarn->setTimeValue(shutDownBoundary - time);
 		return;
 	}
 
-	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time)% shutDownBoundary);
+	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time) % shutDownBoundary);
 
-	if ((shutDownBoundary - time)==0)
+	if ((shutDownBoundary - time) == 0)
 	{
 		isShutdownByIO = true;
 		this->close();

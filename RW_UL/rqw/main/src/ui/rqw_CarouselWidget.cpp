@@ -1,4 +1,4 @@
-﻿#include "rqw_CarouselWidget.h"
+#include "rqw_CarouselWidget.h"
 
 #include "ui_CarouselWidget.h"
 
@@ -66,9 +66,7 @@ void CarouselWidget::appendItem(int state)
 		if (firstWidget) {
 			QPushButton* firstButton = qobject_cast<QPushButton*>(firstWidget);
 			if (firstButton) {
-
 				setStandardItemStyle(firstButton, state);
-
 			}
 		}
 	}
@@ -232,5 +230,3 @@ void CarouselWidget::setStandardItemStyle012(QPushButton* pbtn, int i)
 		break;
 	}
 }
-
-

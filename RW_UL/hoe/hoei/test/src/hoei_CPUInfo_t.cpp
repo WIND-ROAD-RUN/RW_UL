@@ -23,5 +23,4 @@ namespace hoei_HardwareInfo
 			std::cout << item.type << std::endl;
 		}
 	}
-
 }

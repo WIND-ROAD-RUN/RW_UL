@@ -19,7 +19,7 @@ private:
 	void setDOErrorInfo(const std::vector<std::vector<int>>& index);
 	void setDOErrorInfo(int index);
 public:
-	DlgWarningIOSetConfig(QWidget *parent = nullptr);
+	DlgWarningIOSetConfig(QWidget* parent = nullptr);
 	~DlgWarningIOSetConfig();
 private:
 	void build_ui();
@@ -27,7 +27,7 @@ private:
 	void read_config();
 
 private:
-	Ui::DlgWarningIOSetConfigClass *ui;
+	Ui::DlgWarningIOSetConfigClass* ui;
 public slots:
 	void pbtn_exit_clicked();
 public slots:

@@ -35,13 +35,12 @@ int main(int argc, char** argv)
 		-1,                          // COM authentication
 		NULL,                        // Authentication services
 		NULL,                        // Reserved
-		RPC_C_AUTHN_LEVEL_DEFAULT,   // Default authentication 
-		RPC_C_IMP_LEVEL_IMPERSONATE, // Default Impersonation  
+		RPC_C_AUTHN_LEVEL_DEFAULT,   // Default authentication
+		RPC_C_IMP_LEVEL_IMPERSONATE, // Default Impersonation
 		NULL,                        // Authentication info
-		EOAC_NONE,                   // Additional capabilities 
+		EOAC_NONE,                   // Additional capabilities
 		NULL                         // Reserved
 	);
-
 
 	if (FAILED(hres))
 	{
@@ -86,7 +85,7 @@ int main(int argc, char** argv)
 		0,                       // Locale. NULL indicates current
 		NULL,                    // Security flags.
 		0,                       // Authority (for example, Kerberos)
-		0,                       // Context object 
+		0,                       // Context object
 		&pSvc                    // pointer to IWbemServices proxy
 	);
 
@@ -101,7 +100,6 @@ int main(int argc, char** argv)
 
 	cout << "Connected to ROOT\\CIMV2 WMI namespace" << endl;
 
-
 	// Step 5: --------------------------------------------------
 	// Set security levels on the proxy -------------------------
 
@@ -109,11 +107,11 @@ int main(int argc, char** argv)
 		pSvc,                        // Indicates the proxy to set
 		RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
 		RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
-		NULL,                        // Server principal name 
-		RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx 
+		NULL,                        // Server principal name
+		RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx
 		RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
 		NULL,                        // client identity
-		EOAC_NONE                    // proxy capabilities 
+		EOAC_NONE                    // proxy capabilities
 	);
 
 	if (FAILED(hres))
@@ -185,5 +183,4 @@ int main(int argc, char** argv)
 	CoUninitialize();
 
 	return 0;   // Program successfully completed.
-
 }

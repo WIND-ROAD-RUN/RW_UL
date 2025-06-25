@@ -7,13 +7,13 @@ QImage cvMatToQImage(const cv::Mat& mat)
 	return rw::rqw::cvMatToQImage(mat);
 }
 
-demo::demo(QWidget *parent)
+demo::demo(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::demoClass())
 {
 	ui->setupUi(this);
 
-	auto camerList=rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
+	auto camerList = rw::rqw::CheckCameraList(rw::rqw::CameraProvider::DS);
 	if (camerList.empty())
 	{
 		qDebug() << "No camera found!";
@@ -29,7 +29,6 @@ demo::demo(QWidget *parent)
 	config.nms_threshold = 0.1;
 	config.conf_threshold = 0.1;
 	//engine=rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
-
 }
 
 demo::~demo()

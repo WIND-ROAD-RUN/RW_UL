@@ -33,7 +33,7 @@ struct ControlLine
 {
 	int axis;
 	int ioNum;
-	ControlLine(int a,int i)
+	ControlLine(int a, int i)
 	{
 		axis = a;
 		ioNum = i;

@@ -1,4 +1,4 @@
-﻿#include "PictureViewerThumbnails.h"
+#include "PictureViewerThumbnails.h"
 
 #include "ui_PictureViewerThumbnails.h"
 #include <QVBoxLayout>
@@ -21,7 +21,6 @@ ThumbnailLoaderThread::ThumbnailLoaderThread(QQueue<QListWidgetItem*>* queue, QM
 	, m_thumbSize(thumbSize)
 	, m_uiReceiver(uiReceiver)
 {
-
 }
 
 ThumbnailLoaderThread::~ThumbnailLoaderThread()
@@ -176,7 +175,6 @@ void PictureViewerThumbnails::showEvent(QShowEvent* event)
 			}, Qt::QueuedConnection);
 		});
 
-
 	QMainWindow::showEvent(event);
 }
 
@@ -201,7 +199,6 @@ void PictureViewerThumbnails::build_ui()
 	ui->treeView_categoryTree->setModel(_categoryModel);
 
 	_thumbnailCache = std::make_unique<rw::dsl::CacheFIFO<QString, QPixmap>>(_thumbnailCacheCapacity);
-
 }
 
 void PictureViewerThumbnails::build_connect()
@@ -236,8 +233,6 @@ void PictureViewerThumbnails::build_connect()
 
 void PictureViewerThumbnails::loadImageList()
 {
-
-
 	stopAsyncLoadQueue();
 	{
 		QMutexLocker locker(&disCacheImageItemMutex);
@@ -557,7 +552,6 @@ void PictureViewerThumbnails::pbtn_delete_clicked()
 	delete _listWidget->takeItem(_listWidget->row(item));
 
 	startAsyncLoadQueue();
-
 }
 
 void PictureViewerThumbnails::pbtn_prePicture_clicked()
