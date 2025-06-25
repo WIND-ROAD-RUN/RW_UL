@@ -76,6 +76,20 @@ void DlgProduceLineSet::read_config()
 	ui->pbtn_codeWheel->setText(QString::number(globalStruct.dlgProduceLineSetConfig.codeWheel));
 	ui->pbtn_pulseFactor->setText(QString::number(globalStruct.dlgProduceLineSetConfig.pulseFactor));
 
+	//默认值
+
+	globalStruct.dlgProduceLineSetConfig.takeWork2Pictures = false;
+	globalStruct.dlgProduceLineSetConfig.takeWork3Pictures = false;
+	globalStruct.dlgProduceLineSetConfig.takeWork4Pictures = false;
+	globalStruct.dlgProduceLineSetConfig.takeNgPictures = false;
+	globalStruct.dlgProduceLineSetConfig.takeOkPictures = false;
+
+	ui->cBox_takePicturesWork2->setChecked(false);
+	ui->cBox_takePicturesWork3->setChecked(false);
+	ui->cBox_takePicturesWork4->setChecked(false);
+	ui->cBox_takeNgPictures->setChecked(false);
+	ui->cBox_takeOkPictures->setChecked(false);
+
 	//Deprecated widget
 	ui->pbtn_maxBrightness->setVisible(false);
 	ui->pbtn_minBrightness->setVisible(false);
@@ -84,6 +98,8 @@ void DlgProduceLineSet::read_config()
 	ui->cbox_workstationProtection12->setVisible(false);
 	ui->cbox_workstationProtection34->setVisible(false);
 	//Deprecated widget
+
+
 }
 
 void DlgProduceLineSet::build_connect()
