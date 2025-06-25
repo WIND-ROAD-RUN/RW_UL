@@ -27,8 +27,6 @@ private:
 	void build_radioButton();
 public:
 	void readConfig();
-private:
-
 
 private:
 	Ui::DlgProductSetClass* ui;
