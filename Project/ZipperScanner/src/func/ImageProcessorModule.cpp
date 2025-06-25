@@ -877,7 +877,7 @@ void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 	MatInfo mat;
 	mat.image = frame;
 	mat.index = index;
-	mat.location = globalStruct.zmotion.getAxisLocation(0);	// 获取拍照的时间点
+	mat.location = globalStruct.zmotion.getModbus(0,1);	// 获取拍照的位置
 	_queue.enqueue(mat);
 	_condition.wakeOne();
 }

@@ -220,7 +220,9 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->cbox_DOchongkong, &QPushButton::clicked,
 		this, &DlgProductSet::cbox_DOchongkong_clicked);
 	QObject::connect(ui->cbox_DOtuoji, &QPushButton::clicked,
-		this, &DlgProductSet::cbox_DOtuoji_clicked);
+		this, &DlgProductSet::btn_tuoji_clicked);
+	QObject::connect(ui->tabWidget, &QTabWidget::currentChanged,
+		this, &DlgProductSet::tabWidget_indexChanged);
 
 	// 设置IO
 	QObject::connect(ui->btn_setqidonganniu, &QPushButton::clicked,
@@ -382,6 +384,11 @@ void DlgProductSet::pbtn_close_clicked()
 {
 	auto& GlobalStructData = GlobalStructDataZipper::getInstance();
 	GlobalStructData.saveDlgProductSetConfig();
+
+	// 关闭监控IO线程
+	GlobalStructDataZipper::getInstance()._isUpdateMonitorInfo = false;
+	GlobalStructDataZipper::getInstance().monitorZMotionMonitorThread.setRunning(false);
+	
 	this->close();
 }
 
@@ -877,6 +884,7 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DObujindianjimaichong->setChecked(false);
 		ui->cbox_DOchongkong->setChecked(false);
 		ui->cbox_DOtuoji->setChecked(false);
+		ui->cbox_DOchufapaizhao->setChecked(false);
 
 		ui->cbox_DIqidonganniu->setEnabled(true);
 		ui->cbox_DIjiting->setEnabled(true);
@@ -884,6 +892,7 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DObujindianjimaichong->setEnabled(true);
 		ui->cbox_DOchongkong->setEnabled(true);
 		ui->cbox_DOtuoji->setEnabled(true);
+		ui->cbox_DOchufapaizhao->setEnabled(true);
 	}
 	else
 	{
@@ -893,6 +902,7 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DObujindianjimaichong->setChecked(false);
 		ui->cbox_DOchongkong->setChecked(false);
 		ui->cbox_DOtuoji->setChecked(false);
+		ui->cbox_DOchufapaizhao->setChecked(false);
 
 		ui->cbox_DIqidonganniu->setEnabled(false);
 		ui->cbox_DIjiting->setEnabled(false);
@@ -900,6 +910,7 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DObujindianjimaichong->setEnabled(false);
 		ui->cbox_DOchongkong->setEnabled(false);
 		ui->cbox_DOtuoji->setEnabled(false);
+		ui->cbox_DOchufapaizhao->setEnabled(false);
 	}
 }
 
@@ -969,7 +980,7 @@ void DlgProductSet::btn_xiangjichufachangdu_clicked()
 		}
 		ui->btn_xiangjichufachangdu->setText(value);
 		globalStructSetConfig.xiangjichufachangdu = value.toDouble();
-		globalStruct.zmotion.
+		bool isSet = globalStruct.zmotion.setModbus(0, 2, value.toDouble());
 	}
 }
 
@@ -1353,22 +1364,28 @@ void DlgProductSet::btn_settuoji_clicked()
 
 void DlgProductSet::tabWidget_indexChanged(int index)
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	auto& _isUpdateMonitorInfo = GlobalStructDataZipper::getInstance()._isUpdateMonitorInfo;
 	switch (index) {
 	case 0:
 		_isUpdateMonitorInfo = false;
+		globalStruct.monitorZMotionMonitorThread.setRunning(false);
 		break;
 	case 1:
 		_isUpdateMonitorInfo = false;
+		globalStruct.monitorZMotionMonitorThread.setRunning(false);
 		break;
 	case 2:
 		_isUpdateMonitorInfo = true;
+		globalStruct.monitorZMotionMonitorThread.setRunning(true);
 		break;
 	case 3:
 		_isUpdateMonitorInfo = false;
+		globalStruct.monitorZMotionMonitorThread.setRunning(false);
 		break;
 	default:
 		_isUpdateMonitorInfo = false;
+		globalStruct.monitorZMotionMonitorThread.setRunning(false);
 		break;
 	}
 }
@@ -1449,6 +1466,16 @@ void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
 			else
 			{
 				ui->cbox_DOtuoji->setChecked(false);
+			}
+			break;
+		case 3: // 触发拍照按钮
+			if (state)
+			{
+				ui->cbox_DOchufapaizhao->setChecked(true);
+			}
+			else
+			{
+				ui->cbox_DOchufapaizhao->setChecked(false);
 			}
 			break;
 		}

@@ -4191,7 +4191,7 @@ QTabBar::tab:hover {
 }</string>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tab_0">
         <attribute name="title">
@@ -7101,7 +7101,10 @@ QCheckBox::indicator:checked:hover {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QCheckBox" name="cbox_DOBlow2_2">
+                    <widget class="QCheckBox" name="cbox_DOchufapaizhao">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -7138,7 +7141,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                      </property>
                      <property name="text">
-                      <string>DO4</string>
+                      <string>触发拍照</string>
                      </property>
                     </widget>
                    </item>

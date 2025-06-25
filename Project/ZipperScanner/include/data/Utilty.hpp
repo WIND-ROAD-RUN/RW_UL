@@ -26,13 +26,14 @@ struct WarningId
 struct ControlLines
 {
 public:
-	static constexpr size_t qidonganniuIn = 0;
-	static constexpr size_t lalianlawanIn = 1;
+	static constexpr size_t qidonganniuIn = 1;
 	static constexpr size_t jitingIn = 2;
+	static constexpr size_t lalianlawanIn = 3;
 public:
 	static constexpr size_t bujindianjimaichongOut = 0;
-	static constexpr size_t chongkongOUT = 1;
-	static constexpr size_t tuojiOut = 2;
+	static constexpr size_t chongkongOUT = 9;
+	static constexpr size_t tuojiOut = 8;
+	static constexpr size_t chufapaizhaoOUT = 10;
 };
 
 struct ClassId
