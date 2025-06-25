@@ -43,51 +43,82 @@ void DlgProductSet::build_ui()
 void DlgProductSet::readConfig()
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
+	//外径
 	ui->rbtn_outsideDiameterEnable->setChecked(GlobalStructData.dlgProductSetConfig.outsideDiameterEnable);
 	ui->pbtn_outsideDiameterValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.outsideDiameterValue));
 	ui->pbtn_outsideDiameterDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.outsideDiameterDeviation));
+	//图片
 	ui->pbtn_photography->setText(QString::number(GlobalStructData.dlgProductSetConfig.photography));
+
+	//吹气
 	ui->pbtn_blowTime->setText(QString::number(GlobalStructData.dlgProductSetConfig.blowTime));
+
+	//破边
 	ui->rbtn_edgeDamageEnable->setChecked(GlobalStructData.dlgProductSetConfig.edgeDamageEnable);
+	ui->pbtn_edgeDamageSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity));
+
+	//屏蔽范围
 	ui->rbtn_shieldingRangeEnable->setChecked(GlobalStructData.dlgProductSetConfig.shieldingRangeEnable);
 	ui->pbtn_outerRadius->setText(QString::number(GlobalStructData.dlgProductSetConfig.outerRadius));
 	ui->pbtn_innerRadius->setText(QString::number(GlobalStructData.dlgProductSetConfig.innerRadius));
-	ui->pbtn_edgeDamageSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.edgeDamageSimilarity));
+
+	//气孔
 	ui->rbtn_poreEnable->setChecked(GlobalStructData.dlgProductSetConfig.poreEnable);
+	ui->pbtn_poreEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableScore));
+	ui->pbtn_poreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableArea));
+
+	//油漆
 	ui->rbtn_paintEnable->setChecked(GlobalStructData.dlgProductSetConfig.paintEnable);
+	ui->pbtn_paintEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.paintEnableScore));
+
+	//孔数
 	ui->rbtn_holesCountEnable->setChecked(GlobalStructData.dlgProductSetConfig.holesCountEnable);
 	ui->ptn_holesCountValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.holesCountValue));
+
+	//孔心距
+	ui->pbtn_holeCenterDistanceSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceSimilarity));
+	ui->pbtn_holeCenterDistanceValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceValue));
+
+	//破眼
 	ui->rbtn_brokenEyeEnable->setChecked(GlobalStructData.dlgProductSetConfig.brokenEyeEnable);
 	ui->pbtn_brokenEyeSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.brokenEyeSimilarity));
+
+	//裂痕
 	ui->rbtn_crackEnable->setChecked(GlobalStructData.dlgProductSetConfig.crackEnable);
 	ui->pbtn_crackSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.crackSimilarity));
+
+	//孔径
 	ui->rbtn_apertureEnable->setChecked(GlobalStructData.dlgProductSetConfig.apertureEnable);
 	ui->pbtn_apertureValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.apertureValue));
 	ui->pbtn_apertureSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.apertureSimilarity));
+
+	//指定色差
 	ui->rbtn_specifyColorDifferenceEnable->setChecked(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceEnable);
 	ui->pbtn_specifyColorDifferenceR->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceR));
 	ui->pbtn_specifyColorDifferenceG->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceG));
 	ui->pbtn_specifyColorDifferenceB->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceB));
+	ui->pbtn_specifyColorDifferenceDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceDeviation));
+
+	//大色差
 	ui->rbtn_largeColorDifferenceEnable->setChecked(GlobalStructData.dlgProductSetConfig.largeColorDifferenceEnable);
 	ui->pbtn_largeColorDifferenceDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.largeColorDifferenceDeviation));
+
+	//磨石
 	ui->rbtn_grindStoneEnable->setChecked(GlobalStructData.dlgProductSetConfig.grindStoneEnable);
-	ui->rbtn_blockEyeEnable->setChecked(GlobalStructData.dlgProductSetConfig.blockEyeEnable);
-	ui->pbtn_holeCenterDistanceValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceValue));
-	ui->rbtn_materialHeadEnable->setChecked(GlobalStructData.dlgProductSetConfig.materialHeadEnable);
-
-	ui->pbtn_blowTime->setText(QString::number(get_blowTime()));
-
-	ui->pbtn_poreEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableScore));
-	ui->pbtn_paintEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.paintEnableScore));
 	ui->pbtn_grindStoneScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.grindStoneEnableScore));
+
+	//破眼
+	ui->rbtn_blockEyeEnable->setChecked(GlobalStructData.dlgProductSetConfig.blockEyeEnable);
 	ui->pbtn_blockEyeScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.blockEyeEnableScore));
+
+	//料头
+	ui->rbtn_materialHeadEnable->setChecked(GlobalStructData.dlgProductSetConfig.materialHeadEnable);
 	ui->pbtn_materialHeadScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.materialHeadEnableScore));
 
-	ui->pbtn_holeCenterDistanceSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceSimilarity));
+	//吹气
+	ui->pbtn_blowTime->setText(QString::number(get_blowTime()));
 
-	ui->pbtn_specifyColorDifferenceDeviation->setText(QString::number(GlobalStructData.dlgProductSetConfig.specifyColorDifferenceDeviation));
-	ui->pbtn_poreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.poreEnableArea));
-
+	//小气孔
 	ui->pbtn_smallPoreEnableArea->setText(QString::number(GlobalStructData.dlgProductSetConfig.smallPoreEnableArea));
 	ui->pbtn_smallPoreEnableScore->setText(QString::number(GlobalStructData.dlgProductSetConfig.smallPoreEnableScore));
 	ui->rbtn_smallPoreEnable->setChecked(GlobalStructData.dlgProductSetConfig.smallPoreEnable);

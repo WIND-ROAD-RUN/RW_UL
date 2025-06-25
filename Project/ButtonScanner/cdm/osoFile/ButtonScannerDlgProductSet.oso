@@ -13,6 +13,10 @@ namespace cdm{
 
         edgeDamageEnable : bool : default = false;
         edgeDamageSimilarity : double : default = 0;
+        dgeDamageScore : double : default = 0;
+
+        bengKouEnabel : bool : default = false;
+        bengKouScore : double : default = 0;
 
         shieldingRangeEnable : bool : default = false;
         outerRadius : double : default = 0;
