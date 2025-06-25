@@ -54,6 +54,7 @@ public:
 
 	//std::vector<double> pore;
 	std::vector<ButtonDefectInfoItem>pore1;
+
 	std::vector<ButtonDefectInfoItem> smallPore1;
 	//bool isDrawpore{ false };
 
@@ -74,13 +75,13 @@ public:
 	//bool isDrawgrindStone{ false };
 
 	//std::vector<double> blockEye;
-	std::vector<ButtonDefectInfoItem>blockEye1;
+	std::vector<ButtonDefectInfoItem> blockEye1;
 	//bool isDrawblockEye{ false };
 
 	//std::vector<double> materialHead;
-	std::vector<ButtonDefectInfoItem>materialHead1;
+	std::vector<ButtonDefectInfoItem> materialHead1;
 	//bool isDrawmaterialHead{ false };
-
+	std::vector<ButtonDefectInfoItem> bengkou;
 public:
 
 	std::vector<double> positive;
