@@ -381,6 +381,9 @@ void ButtonScanner::build_ui()
 		, this, &ButtonScanner::imgDis3_clicked);
 	QObject::connect(imgDis4, &rw::rqw::ClickableLabel::clicked
 		, this, &ButtonScanner::imgDis4_clicked);
+
+	_dlgRealTimeImgDis = new DlgRealTimeImgDis(this);
+	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);;
 }
 
 void ButtonScanner::read_image()
@@ -1267,45 +1270,74 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 
 void ButtonScanner::imgDis1_clicked()
 {
-	QMessageBox::information(this, "", "");
+	_dlgRealTimeImgDis->setGboxTitle("1号工位");
+	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis2_clicked()
 {
-	QMessageBox::information(this, "", "");
-
+	_dlgRealTimeImgDis->setGboxTitle("2号工位");
+	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis3_clicked()
 {
-	QMessageBox::information(this, "", "");
-
+	_dlgRealTimeImgDis->setGboxTitle("3号工位");
+	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis4_clicked()
 {
-	QMessageBox::information(this, "", "");
-
+	_dlgRealTimeImgDis->setGboxTitle("4号工位");
+	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::onCamera1Display(QPixmap image)
 {
-	imgDis1->setPixmap(image.scaled(imgDis1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis1->setPixmap(image.scaled(imgDis1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+		
+	}
 }
 
 void ButtonScanner::onCamera2Display(QPixmap image)
 {
-	imgDis2->setPixmap(image.scaled(imgDis2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis2->setPixmap(image.scaled(imgDis2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+		
+	}
 }
 
 void ButtonScanner::onCamera3Display(QPixmap image)
 {
-	imgDis3->setPixmap(image.scaled(imgDis3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis3->setPixmap(image.scaled(imgDis3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+
+	}
 }
 
 void ButtonScanner::onCamera4Display(QPixmap image)
 {
-	imgDis4->setPixmap(image.scaled(imgDis4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis4->setPixmap(image.scaled(imgDis4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+
+	}
 }
 
 void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)

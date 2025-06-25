@@ -13,6 +13,7 @@
 #include"PictureViewerThumbnails.h"
 #include"DlgShutdownWarn.h"
 #include"DlgWarn.h"
+#include"DlgRealTimeImgDis.h"
 
 #include"opencv2/opencv.hpp"
 #include<QImage>
@@ -44,6 +45,7 @@ private:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 	DlgModelManager* _dlgModelManager = nullptr;
+	DlgRealTimeImgDis* _dlgRealTimeImgDis = nullptr;
 public:
 	DlgNewProduction* dlgNewProduction = nullptr;
 private:
@@ -140,7 +142,8 @@ private:
 	QImage cvMatToQImage(const cv::Mat& mat);
 private:
 	void onUpdateLightStateUi(size_t index, bool state);
-
+private:
+	bool _isRealTimeDis{false};
 private slots:
 	void imgDis1_clicked();
 
