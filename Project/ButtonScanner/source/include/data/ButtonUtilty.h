@@ -7,6 +7,11 @@ QImage cvMatToQImage(const cv::Mat& mat);
 
 QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
+struct VersionInfo
+{
+	static QString Version;
+};
+
 struct WarningId
 {
 	static constexpr int cairPressureAlarm = 0;
@@ -74,10 +79,7 @@ struct ClassId
 	static constexpr int zangwu = 7;
 	static constexpr int liehen = 8;
 	static constexpr int poyan = 9;
-	static constexpr int xiaoqikong = 10;
-	static constexpr int mofa = 11;
-	static constexpr int xiaopobian = 12;
-	static constexpr int baibian = 13;
+	static constexpr int smallPore = 11;
 };
 
 struct ClassIdPositive

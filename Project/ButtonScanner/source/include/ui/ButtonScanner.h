@@ -50,6 +50,7 @@ private:
 public:
 	rw::rqw::ClickableLabel* labelClickable_title;
 	rw::rqw::LabelWarning* labelWarning;
+	rw::rqw::ClickableLabel* labelVersionInfo;
 private:
 	//变量监控线程关机的时候停止
 	bool _mark_thread = false;

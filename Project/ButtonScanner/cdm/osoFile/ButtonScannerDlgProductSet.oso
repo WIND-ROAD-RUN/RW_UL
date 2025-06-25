@@ -22,6 +22,10 @@ namespace cdm{
         poreEnableScore : double : default = 0;
         poreEnableArea : double : default = 0;
 
+        smallPoreEnable : bool : default = false;
+        smallPoreEnableScore : double : default = 0;
+        smallPoreEnableArea : double : default = 0;
+
         paintEnable : bool : default = false;
         paintEnableScore : double : default = 0;
 

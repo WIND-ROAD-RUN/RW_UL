@@ -1,4 +1,6 @@
-#include"ButtonUtilty.h"
+﻿#include"ButtonUtilty.h"
+
+QString VersionInfo::Version = QStringLiteral("内部测试版：0.0.0.1.20250625");
 
 ControlLine ControlLines::blowLine1{ 5,5 };
 ControlLine ControlLines::blowLine2{ 1,4 };

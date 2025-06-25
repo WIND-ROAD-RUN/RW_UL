@@ -54,18 +54,24 @@ private slots:
 	void pbtn_edgeDamageSimilarity_clicked();
 private slots:
 	void pbtn_poreEnableScore_clicked();
+	void pbtn_poreEnableArea_clicked();
+
+	void pbtn_smallPoreEnableScore_clicked();
+	void pbtn_smallPoreEnableArea_clicked();
+
 	void pbtn_paintEnableScore_clicked();
 	void pbtn_grindStoneScore_clicked();
 	void pbtn_blockEyeScore_clicked();
 	void pbtn_materialHeadScore_clicked();
 
-	void pbtn_poreEnableArea_clicked();
+	
 
 private slots:
 	void rbtn_outsideDiameterEnable_checked(bool checked);
 	void rbtn_edgeDamageEnable_checked(bool checked);
 	void rbtn_shieldingRangeEnable_checked(bool checked);
 	void rbtn_poreEnable_checked(bool checked);
+	void rbtn_smallPoreEnable_checked(bool checked);
 	void rbtn_paintEnable_checked(bool checked);
 	void rbtn_holesCountEnable_checked(bool checked);
 	void rbtn_brokenEyeEnable_checked(bool checked);
@@ -80,3 +86,4 @@ private slots:
 private slots:
 	void clickedLabel_clicked();
 };
+
