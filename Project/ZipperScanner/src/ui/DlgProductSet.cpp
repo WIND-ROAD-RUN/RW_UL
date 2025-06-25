@@ -220,7 +220,7 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->cbox_DOchongkong, &QPushButton::clicked,
 		this, &DlgProductSet::cbox_DOchongkong_clicked);
 	QObject::connect(ui->cbox_DOtuoji, &QPushButton::clicked,
-		this, &DlgProductSet::btn_tuoji_clicked);
+		this, &DlgProductSet::cbox_DOtuoji_clicked);
 	QObject::connect(ui->cbox_DOchufapaizhao, &QPushButton::clicked,
 		this, &DlgProductSet::cbox_DOchufapaizhao_clicked);
 	QObject::connect(ui->tabWidget, &QTabWidget::currentChanged,

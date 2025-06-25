@@ -176,6 +176,7 @@ void ZipperScanner::build_motion()
 	if (isConnected)
 	{
 		bool isLocationZero = globalStruct.zmotion.setLocationZero(0);
+		bool isLocationZero = globalStruct.zmotion.
 		ui->label_cardState->setText("连接成功");
 		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
 	}
