@@ -156,32 +156,66 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->pbtn_close, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_close_clicked);
 
+	QObject::connect(ui->pbtn_photography, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_photography_clicked);
+
+	QObject::connect(ui->pbtn_blowTime, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_blowTime_clicked);
+
+	QObject::connect(_clickedLabel, &rw::rqw::ClickableLabel::clicked,
+		this, &DlgProductSet::clickedLabel_clicked);
+
+	//外径
 	QObject::connect(ui->pbtn_outsideDiameterValue, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_outsideDiameterValue_clicked);
 	QObject::connect(ui->pbtn_outsideDiameterDeviation, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_outsideDiameterDeviation_clicked);
-	QObject::connect(ui->pbtn_photography, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_photography_clicked);
-	QObject::connect(ui->pbtn_blowTime, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_blowTime_clicked);
+	QObject::connect(ui->rbtn_outsideDiameterEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_outsideDiameterEnable_checked);
+
+	//屏蔽范围
+	QObject::connect(ui->rbtn_shieldingRangeEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_shieldingRangeEnable_checked);
 	QObject::connect(ui->pbtn_outerRadius, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_outerRadius_clicked);
 	QObject::connect(ui->pbtn_innerRadius, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_innerRadius_clicked);
+
+	//孔数
 	QObject::connect(ui->ptn_holesCountValue, &QPushButton::clicked,
 		this, &DlgProductSet::ptn_holesCountValue_clicked);
-	QObject::connect(ui->pbtn_brokenEyeSimilarity, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_brokenEyeSimilarity_clicked);
-	QObject::connect(ui->pbtn_crackSimilarity, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_crackSimilarity_clicked);
-	QObject::connect(ui->pbtn_apertureValue, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_apertureValue_clicked);
-	QObject::connect(ui->pbtn_apertureSimilarity, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_apertureSimilarity_clicked);
+	QObject::connect(ui->rbtn_holesCountEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_holesCountEnable_checked);
+
+	//孔心距
 	QObject::connect(ui->pbtn_holeCenterDistanceValue, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_holeCenterDistanceValue_clicked);
 	QObject::connect(ui->pbtn_holeCenterDistanceSimilarity, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_holeCenterDistanceSimilarity_clicked);
+	QObject::connect(ui->rbtn_holeCenterDistanceEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_holeCenterDistanceEnable_checked);
+
+	//破眼
+	QObject::connect(ui->pbtn_brokenEyeSimilarity, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_brokenEyeSimilarity_clicked);
+	QObject::connect(ui->rbtn_brokenEyeEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_brokenEyeEnable_checked);
+
+	//裂痕
+	QObject::connect(ui->pbtn_crackSimilarity, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_crackSimilarity_clicked);
+	QObject::connect(ui->rbtn_crackEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_crackEnable_checked);
+
+	//孔径
+	QObject::connect(ui->pbtn_apertureValue, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_apertureValue_clicked);
+	QObject::connect(ui->pbtn_apertureSimilarity, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_apertureSimilarity_clicked);
+	QObject::connect(ui->rbtn_apertureEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_apertureEnable_checked);
+
+	//指定色差
 	QObject::connect(ui->pbtn_specifyColorDifferenceR, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_specifyColorDifferenceR_clicked);
 	QObject::connect(ui->pbtn_specifyColorDifferenceG, &QPushButton::clicked,
@@ -190,64 +224,62 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::pbtn_specifyColorDifferenceB_clicked);
 	QObject::connect(ui->pbtn_specifyColorDifferenceDeviation, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_specifyColorDifferenceDeviation_clicked);
-	QObject::connect(ui->pbtn_largeColorDifferenceDeviation, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_largeColorDifferenceDeviation_clicked);
-	QObject::connect(ui->pbtn_edgeDamageSimilarity, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_edgeDamageSimilarity_clicked);
-	QObject::connect(ui->pbtn_poreEnableScore, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_poreEnableScore_clicked);
-	QObject::connect(ui->pbtn_paintEnableScore, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_paintEnableScore_clicked);
-	QObject::connect(ui->pbtn_grindStoneScore, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_grindStoneScore_clicked);
-	QObject::connect(ui->pbtn_blockEyeScore, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_blockEyeScore_clicked);
-	QObject::connect(ui->pbtn_materialHeadScore, &QPushButton::clicked,
-		this, &DlgProductSet::pbtn_materialHeadScore_clicked);
-
-	QObject::connect(ui->rbtn_outsideDiameterEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_outsideDiameterEnable_checked);
-	QObject::connect(ui->rbtn_edgeDamageEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_edgeDamageEnable_checked);
-	QObject::connect(ui->rbtn_shieldingRangeEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_shieldingRangeEnable_checked);
-	QObject::connect(ui->rbtn_poreEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_poreEnable_checked);
-	QObject::connect(ui->rbtn_paintEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_paintEnable_checked);
-	QObject::connect(ui->rbtn_holesCountEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_holesCountEnable_checked);
-	QObject::connect(ui->rbtn_brokenEyeEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_brokenEyeEnable_checked);
-	QObject::connect(ui->rbtn_crackEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_crackEnable_checked);
-	QObject::connect(ui->rbtn_apertureEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_apertureEnable_checked);
-	QObject::connect(ui->rbtn_holeCenterDistanceEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_holeCenterDistanceEnable_checked);
 	QObject::connect(ui->rbtn_specifyColorDifferenceEnable, &QRadioButton::clicked,
 		this, &DlgProductSet::rbtn_specifyColorDifferenceEnable_checked);
+
+	//大色差
+	QObject::connect(ui->pbtn_largeColorDifferenceDeviation, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_largeColorDifferenceDeviation_clicked);
 	QObject::connect(ui->rbtn_largeColorDifferenceEnable, &QRadioButton::clicked,
 		this, &DlgProductSet::rbtn_largeColorDifferenceEnable_checked);
-	QObject::connect(ui->rbtn_grindStoneEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_grindStoneEnable_checked);
-	QObject::connect(ui->rbtn_blockEyeEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_blockEyeEnable_checked);
-	QObject::connect(ui->rbtn_materialHeadEnable, &QRadioButton::clicked,
-		this, &DlgProductSet::rbtn_materialHeadEnable_checked);
 
-	QObject::connect(_clickedLabel, &rw::rqw::ClickableLabel::clicked,
-		this, &DlgProductSet::clickedLabel_clicked);
+	//破边
+	QObject::connect(ui->pbtn_edgeDamageSimilarity, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_edgeDamageSimilarity_clicked);
+	QObject::connect(ui->rbtn_edgeDamageEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_edgeDamageEnable_checked);
 
+	//气孔
+	QObject::connect(ui->pbtn_poreEnableScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_poreEnableScore_clicked);
+	QObject::connect(ui->rbtn_poreEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_poreEnable_checked);
 	QObject::connect(ui->pbtn_poreEnableArea, &QRadioButton::clicked,
 		this, &DlgProductSet::pbtn_poreEnableArea_clicked);
 
+	//小气孔
 	QObject::connect(ui->pbtn_smallPoreEnableArea, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_smallPoreEnableArea_clicked);
 	QObject::connect(ui->pbtn_smallPoreEnableScore, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_smallPoreEnableScore_clicked);
 	QObject::connect(ui->rbtn_smallPoreEnable, &QRadioButton::clicked,
 		this, &DlgProductSet::rbtn_smallPoreEnable_checked);
+
+	//油漆
+	QObject::connect(ui->pbtn_paintEnableScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_paintEnableScore_clicked);
+	QObject::connect(ui->rbtn_paintEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_paintEnable_checked);
+
+	//磨石
+	QObject::connect(ui->pbtn_grindStoneScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_grindStoneScore_clicked);
+	QObject::connect(ui->rbtn_grindStoneEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_grindStoneEnable_checked);
+
+	//堵眼
+	QObject::connect(ui->pbtn_blockEyeScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_blockEyeScore_clicked);
+	QObject::connect(ui->rbtn_blockEyeEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_blockEyeEnable_checked);
+
+	//料头
+	QObject::connect(ui->pbtn_materialHeadScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_materialHeadScore_clicked);
+	QObject::connect(ui->rbtn_materialHeadEnable, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_materialHeadEnable_checked);
+
+
 }
 
 void DlgProductSet::build_radioButton()
