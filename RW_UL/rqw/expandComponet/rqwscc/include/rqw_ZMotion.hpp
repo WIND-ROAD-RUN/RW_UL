@@ -66,6 +66,12 @@ namespace rw
 			[[nodiscard]] bool SingleMove(int axis, double dir);
 
 			[[nodiscard]] bool setLocationZero(int axis);
+
+			[[nodiscard]] bool setModbus(int adress, int num, float value);
+
+			[[nodiscard]] float getModbus(int adress, int num, bool& isGet);
+			[[nodiscard]] float getModbus(int adress, int num);
+
 		};
 
 	}	
