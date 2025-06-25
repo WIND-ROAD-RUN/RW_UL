@@ -1672,10 +1672,11 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(ButtonDefectInf
 	if (productSet.outsideDiameterEnable)
 	{
 		auto& outsideDiameterDeviation = productSet.outsideDiameterDeviation;
-		auto outsideDiameterStandard = outsideDiameterDeviation + productSet.outsideDiameterValue;
+		auto outsideDiameterStandard1 = outsideDiameterDeviation + productSet.outsideDiameterValue;
+		auto outsideDiameterStandard2 = outsideDiameterDeviation - productSet.outsideDiameterValue;
 		auto outsideDiameter = info.outsideDiameter;
 
-		if (outsideDiameter > outsideDiameterStandard)
+		if ((outsideDiameter > outsideDiameterStandard1)|| (outsideDiameter < outsideDiameterStandard2))
 		{
 			_isbad = true;
 			info.isoutsideDiameter = true;
