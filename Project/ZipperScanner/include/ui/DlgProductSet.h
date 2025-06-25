@@ -84,12 +84,15 @@ private slots:
 	void btn_jiajiansushijian_clicked();
 
 	// 监控IO
-	void cbox_DIqidonganniu_clicked();
-	void cbox_DIjiting_clicked();
-	void cbox_DIlalianlawan_clicked();
-	void cbox_DObujindianjimaichong_clicked();
-	void cbox_DOchongkong_clicked();
-	void cbox_DOtuoji_clicked();
+	void cbox_DIqidonganniu_clicked(bool isChecked);
+	void cbox_DIjiting_clicked(bool isChecked);
+	void cbox_DIlalianlawan_clicked(bool isChecked);
+
+	void cbox_DObujindianjimaichong_clicked(bool isChecked);
+	void cbox_DOchongkong_clicked(bool isChecked);
+	void cbox_DOtuoji_clicked(bool isChecked);
+	void cbox_DOchufapaizhao_clicked(bool isChecked);
+
 	void cbox_debugMode_checked(bool ischecked);
 
 

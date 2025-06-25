@@ -221,6 +221,8 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::cbox_DOchongkong_clicked);
 	QObject::connect(ui->cbox_DOtuoji, &QPushButton::clicked,
 		this, &DlgProductSet::btn_tuoji_clicked);
+	QObject::connect(ui->cbox_DOchufapaizhao, &QPushButton::clicked,
+		this, &DlgProductSet::cbox_DOchufapaizhao_clicked);
 	QObject::connect(ui->tabWidget, &QTabWidget::currentChanged,
 		this, &DlgProductSet::tabWidget_indexChanged);
 
@@ -875,6 +877,9 @@ void DlgProductSet::cBox_takeOkPictures_checked()
 
 void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 {
+	auto& isDebug = GlobalStructDataZipper::getInstance().setConfig.debugMode;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	isDebug = ischecked;
 	isDebugIO = ischecked;
 	if (isDebugIO)
 	{
@@ -893,6 +898,8 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DOchongkong->setEnabled(true);
 		ui->cbox_DOtuoji->setEnabled(true);
 		ui->cbox_DOchufapaizhao->setEnabled(true);
+
+		globalStruct.monitorZMotionMonitorThread.setRunning(false);
 	}
 	else
 	{
@@ -911,6 +918,8 @@ void DlgProductSet::cbox_debugMode_checked(bool ischecked)
 		ui->cbox_DOchongkong->setEnabled(false);
 		ui->cbox_DOtuoji->setEnabled(false);
 		ui->cbox_DOchufapaizhao->setEnabled(false);
+
+		globalStruct.monitorZMotionMonitorThread.setRunning(true);
 	}
 }
 
@@ -1170,57 +1179,73 @@ void DlgProductSet::btn_jiajiansushijian_clicked()
 	}
 }
 
-void DlgProductSet::cbox_DIqidonganniu_clicked()
+void DlgProductSet::cbox_DIqidonganniu_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
-
+		 auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::qidonganniuIn, isChecked);
 	}
 }
 
-void DlgProductSet::cbox_DIjiting_clicked()
+void DlgProductSet::cbox_DIjiting_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
-
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::jitingIn, isChecked);
 	}
 }
 
-void DlgProductSet::cbox_DIlalianlawan_clicked()
+void DlgProductSet::cbox_DIlalianlawan_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
-
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::lalianlawanIn, isChecked);
 	}
 }
 
-void DlgProductSet::cbox_DObujindianjimaichong_clicked()
+void DlgProductSet::cbox_DObujindianjimaichong_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
-
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::bujindianjimaichongOut, isChecked);
 	}
 }
 
-void DlgProductSet::cbox_DOchongkong_clicked()
+void DlgProductSet::cbox_DOchongkong_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
-
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, isChecked);
 	}
 }
 
-void DlgProductSet::cbox_DOtuoji_clicked()
+void DlgProductSet::cbox_DOtuoji_clicked(bool isChecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
-	if (globalStructSetConfig.debugMode)
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
 	{
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::tuojiOut, isChecked);
+	}
+}
 
+void DlgProductSet::cbox_DOchufapaizhao_clicked(bool isChecked)
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	if (isDebugIO)
+	{
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chufapaizhaoOUT, isChecked);
 	}
 }
 
@@ -1396,7 +1421,7 @@ void DlgProductSet::monitorInPutSignal(size_t index, bool state)
 	{
 		switch (index)
 		{
-		case 0: // 启动按钮
+		case ControlLines::qidonganniuIn: // 启动按钮
 			if (state)
 			{
 				ui->cbox_DIqidonganniu->setChecked(true);
@@ -1406,7 +1431,7 @@ void DlgProductSet::monitorInPutSignal(size_t index, bool state)
 				ui->cbox_DIqidonganniu->setChecked(false);
 			}
 			break;
-		case 1: // 急停按钮
+		case ControlLines::jitingIn: // 急停按钮
 			if (state)
 			{
 				ui->cbox_DIjiting->setChecked(true);
@@ -1416,7 +1441,7 @@ void DlgProductSet::monitorInPutSignal(size_t index, bool state)
 				ui->cbox_DIjiting->setChecked(false);
 			}
 			break;
-		case 2: // 拉链拉完按钮
+		case ControlLines::lalianlawanIn: // 拉链拉完按钮
 			if (state)
 			{
 				ui->cbox_DIlalianlawan->setChecked(true);
@@ -1438,7 +1463,7 @@ void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
 	{
 		switch (index)
 		{
-		case 0: // 步进电机脉冲按钮
+		case ControlLines::bujindianjimaichongOut: // 步进电机脉冲按钮
 			if (state)
 			{
 				ui->cbox_DObujindianjimaichong->setChecked(true);
@@ -1448,7 +1473,7 @@ void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
 				ui->cbox_DObujindianjimaichong->setChecked(false);
 			}
 			break;
-		case 1: // 冲孔按钮
+		case ControlLines::chongkongOUT: // 冲孔按钮
 			if (state)
 			{
 				ui->cbox_DOchongkong->setChecked(true);
@@ -1458,7 +1483,7 @@ void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
 				ui->cbox_DOchongkong->setChecked(false);
 			}
 			break;
-		case 2: // 脱机按钮
+		case ControlLines::tuojiOut: // 脱机按钮
 			if (state)
 			{
 				ui->cbox_DOtuoji->setChecked(true);
@@ -1468,7 +1493,7 @@ void DlgProductSet::monitorOutPutSignal(size_t index, bool state)
 				ui->cbox_DOtuoji->setChecked(false);
 			}
 			break;
-		case 3: // 触发拍照按钮
+		case ControlLines::chufapaizhaoOUT: // 触发拍照按钮
 			if (state)
 			{
 				ui->cbox_DOchufapaizhao->setChecked(true);

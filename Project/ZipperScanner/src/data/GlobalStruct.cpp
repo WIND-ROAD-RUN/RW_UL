@@ -26,9 +26,9 @@ void GlobalStructDataZipper::build_MonitorZMotionIOStateThread()
 	monitorZMotionMonitorThread.setRunning(false);
 	monitorZMotionMonitorThread.start();
 	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DIState,
-		this, &GlobalStructDataZipper::getInPutSignal);
+		this, &GlobalStructDataZipper::getInPutSignal,Qt::QueuedConnection);
 	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DOState,
-		this, &GlobalStructDataZipper::getOutPutSignal);
+		this, &GlobalStructDataZipper::getOutPutSignal, Qt::QueuedConnection);
 }
 
 void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
