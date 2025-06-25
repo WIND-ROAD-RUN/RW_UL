@@ -83,7 +83,7 @@ void DlgProductSet::readConfig()
 	//孔心距
 	ui->pbtn_holeCenterDistanceSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceSimilarity));
 	ui->pbtn_holeCenterDistanceValue->setText(QString::number(GlobalStructData.dlgProductSetConfig.holeCenterDistanceValue));
-
+	ui->rbtn_holeCenterDistanceEnable->setChecked(GlobalStructData.dlgProductSetConfig.holesCountEnable);
 	//破眼
 	ui->rbtn_brokenEyeEnable->setChecked(GlobalStructData.dlgProductSetConfig.brokenEyeEnable);
 	ui->pbtn_brokenEyeSimilarity->setText(QString::number(GlobalStructData.dlgProductSetConfig.brokenEyeSimilarity));
