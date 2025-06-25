@@ -881,13 +881,13 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::pobian:
-				config.text = "破边 " + QString::number(qRound(item.score * 100));
+				config.text = "破边 " + QString::number(qRound(item.score * 100)) + "面积 " + QString::number(item.area, 'f', 1);
 				break;
 			case ClassId::qikong:
-				config.text = "气孔 " + QString::number(qRound(item.score * 100));
+				config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 				break;
 			case ClassId::smallPore:
-				config.text = "小气孔 " + QString::number(qRound(item.score * 100));
+				config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 				break;
 			case ClassId::moshi:
 				config.text = "磨石 " + QString::number(qRound(item.score * 100));
@@ -1038,13 +1038,13 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 			config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 			break;
 		case ClassId::pobian:
-			config.text = "破边 " + QString::number(qRound(item.score * 100));
+			config.text = "破边 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 			break;
 		case ClassId::qikong:
-			config.text = "气孔 " + QString::number(qRound(item.score * 100));
+			config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 			break;
 		case ClassId::smallPore:
-			config.text = "小气孔 " + QString::number(qRound(item.score * 100));
+			config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 			break;
 		case ClassId::moshi:
 			config.text = "磨石 " + QString::number(qRound(item.score * 100));
