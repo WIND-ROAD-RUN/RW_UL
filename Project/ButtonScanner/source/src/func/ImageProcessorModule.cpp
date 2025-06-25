@@ -380,16 +380,28 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 	}
 
 	auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
-	QString edgeDamageText("破边:");
+	QString text("破边:");
 	for (const auto& item : info.edgeDamage1)
 	{
 		if (item.isDraw)
 		{
-			edgeDamageText.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+			text.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
 		}
 	}
-	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
-	textList.push_back(edgeDamageText);
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
+
+	auto targetAreaScore = static_cast<int>(productSet.edgeDamageArea);
+	QString areaText("破边面积:");
+	for (const auto& item : info.edgeDamage1)
+	{
+		if (item.isDraw)
+		{
+			text.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+		}
+	}
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
 }
 
 void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -1839,9 +1851,13 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDef
 		{
 			if (item.score > productSet.edgeDamageSimilarity)
 			{
-				_isbad = true;
-				item.isDraw = true;
+				if (item.area > productSet.edgeDamageArea)
+				{
+					_isbad = true;
+					item.isDraw = true;
+				}
 			}
+			
 		}
 	}
 }
