@@ -349,6 +349,38 @@ void ButtonScanner::build_ui()
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
 	ui->rbtn_strobe->setVisible(false);
+
+	imgDis1 = new rw::rqw::ClickableLabel(this);
+	imgDis1->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis2 = new rw::rqw::ClickableLabel(this);
+	imgDis2->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis3 = new rw::rqw::ClickableLabel(this);
+	imgDis3->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis4 = new rw::rqw::ClickableLabel(this);
+	imgDis4->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay, imgDis1);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_2, imgDis2);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_3, imgDis3);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_4, imgDis4);
+
+	delete ui->label_imgDisplay;
+	delete ui->label_imgDisplay_2;
+	delete ui->label_imgDisplay_3;
+	delete ui->label_imgDisplay_4;
+
+	QObject::connect(imgDis1, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis1_clicked);
+	QObject::connect(imgDis2, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis2_clicked);
+	QObject::connect(imgDis3, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis3_clicked);
+	QObject::connect(imgDis4, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis4_clicked);
 }
 
 void ButtonScanner::read_image()
@@ -1233,24 +1265,47 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 	}
 }
 
+void ButtonScanner::imgDis1_clicked()
+{
+	QMessageBox::information(this, "", "");
+}
+
+void ButtonScanner::imgDis2_clicked()
+{
+	QMessageBox::information(this, "", "");
+
+}
+
+void ButtonScanner::imgDis3_clicked()
+{
+	QMessageBox::information(this, "", "");
+
+}
+
+void ButtonScanner::imgDis4_clicked()
+{
+	QMessageBox::information(this, "", "");
+
+}
+
 void ButtonScanner::onCamera1Display(QPixmap image)
 {
-	ui->label_imgDisplay->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	imgDis1->setPixmap(image.scaled(imgDis1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ButtonScanner::onCamera2Display(QPixmap image)
 {
-	ui->label_imgDisplay_2->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	imgDis2->setPixmap(image.scaled(imgDis2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ButtonScanner::onCamera3Display(QPixmap image)
 {
-	ui->label_imgDisplay_3->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	imgDis3->setPixmap(image.scaled(imgDis3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ButtonScanner::onCamera4Display(QPixmap image)
 {
-	ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	imgDis4->setPixmap(image.scaled(imgDis4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)

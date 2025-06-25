@@ -50,9 +50,14 @@ private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
 	DlgShutdownWarn* _dlgShutdownWarn = nullptr;
 public:
-	rw::rqw::ClickableLabel* labelClickable_title;
-	rw::rqw::LabelWarning* labelWarning;
-	rw::rqw::ClickableLabel* labelVersionInfo;
+	rw::rqw::ClickableLabel* labelClickable_title = nullptr;
+	rw::rqw::LabelWarning* labelWarning = nullptr;
+	rw::rqw::ClickableLabel* labelVersionInfo = nullptr;
+public:
+	rw::rqw::ClickableLabel* imgDis1 = nullptr;
+	rw::rqw::ClickableLabel* imgDis2 = nullptr;
+	rw::rqw::ClickableLabel* imgDis3 = nullptr;
+	rw::rqw::ClickableLabel* imgDis4 = nullptr;
 private:
 	DlgVersion* _dlgVersion;
 private:
@@ -135,6 +140,15 @@ private:
 	QImage cvMatToQImage(const cv::Mat& mat);
 private:
 	void onUpdateLightStateUi(size_t index, bool state);
+
+private slots:
+	void imgDis1_clicked();
+
+	void imgDis2_clicked();
+
+	void imgDis3_clicked();
+
+	void imgDis4_clicked();
 
 private slots:
 	void onCamera1Display(QPixmap image);
