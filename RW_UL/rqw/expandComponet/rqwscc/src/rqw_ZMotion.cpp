@@ -249,5 +249,35 @@ namespace rw
 
 			return _zMotion->SetLocationZero(axis);
 		}
+
+		bool ZMotion::setModbus(int adress, int num, float value)
+		{
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->SetModbus(adress,num,value);
+		}
+
+		float ZMotion::getModbus(int adress, int num, bool& isGet)
+		{
+			if (!_zMotion)
+			{
+				isGet = false;
+				return false;
+			}
+			isGet = true;
+
+			float result=0;
+			isGet=_zMotion->GetModbus(adress, num, result);
+			return result;
+		}
+
+		float ZMotion::getModbus(int adress, int num)
+		{
+			bool isGet{ false };
+			return getModbus(adress,num);
+		}
 	}
 }
