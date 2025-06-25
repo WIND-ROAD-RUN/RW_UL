@@ -276,6 +276,7 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 		appendMaterialHeadDectInfo(textList, info);
 		appendCrackDectInfo(textList, info);
 		appendBrokenEyeDectInfo(textList, info);
+		appendBengKouDectInfo(textList, info);
 	}
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
@@ -763,6 +764,35 @@ void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, cons
 	textList.push_back(edgeDamageText);
 }
 
+void ImageProcessor::appendBengKouDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (!_isbad)
+	{
+		return;
+	}
+	if (!productSet.bengKouEnabel)
+	{
+		return;
+	}
+	if (info.bengkou.empty())
+	{
+		return;
+	}
+
+	auto targetScore = static_cast<int>(productSet.bengKouScore);
+	QString text("崩口:");
+	for (const auto& item : info.bengkou)
+	{
+		if (item.isDraw)
+		{
+			text.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+		}
+	}
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
+}
+
 void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() != 1)
@@ -861,6 +891,9 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				break;
 			case ClassId::poyan:
 				config.text = "破眼 " + QString::number(qRound(item.score * 100));
+				break;
+			case ClassId::bengkou:
+				config.text = "崩口 " + QString::number(qRound(item.score * 100));
 				break;
 			default:
 				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
@@ -1016,6 +1049,9 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 		case ClassId::poyan:
 			config.text = "破眼 " + QString::number(qRound(item.score * 100));
 			break;
+		case ClassId::bengkou:
+			config.text = "崩口 " + QString::number(qRound(item.score * 100));
+			break;
 		default:
 			config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
 			break;
@@ -1081,6 +1117,19 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 	if (productSet.paintEnable)
 	{
 		for (const auto& item : info.paint1)
+		{
+			auto& resultItem = processResult[item.index];
+			setConfigText(config, resultItem);
+			if (item.isDraw)
+			{
+				rw::rqw::ImagePainter::drawShapesOnSourceImg(image, resultItem, config);
+			}
+		}
+	}
+
+	if (productSet.bengKouEnabel)
+	{
+		for (const auto& item : info.bengkou)
 		{
 			auto& resultItem = processResult[item.index];
 			setConfigText(config, resultItem);
@@ -1536,6 +1585,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& inf
 	run_OpenRemoveFunc_process_defect_info_materialHead(info);
 	run_OpenRemoveFunc_process_defect_info_largeColor(info);
 	run_OpenRemoveFunc_process_defect_info_crack(info);
+	run_OpenRemoveFunc_process_defect_info_bengkou(info);
 }
 
 void ImageProcessor::run_monitor(MatInfo& frame)
@@ -1659,6 +1709,8 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 		run_OpenRemoveFunc_process_defect_info_materialHead(info);
 		run_OpenRemoveFunc_process_defect_info_largeColor(info);
 		run_OpenRemoveFunc_process_defect_info_crack(info);
+		run_OpenRemoveFunc_process_defect_info_bengkou(info);
+
 	}
 
 	if (isOpenPositive)
@@ -2002,6 +2054,28 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefe
 	}
 }
 
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_bengkou(ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.bengKouEnabel)
+	{
+		auto& bengkou = info.bengkou;
+		if (bengkou.empty())
+		{
+			return;
+		}
+		for (auto& item : bengkou)
+		{
+			if (item.score > productSet.bengKouScore)
+			{
+				_isbad = true;
+				item.isDraw = true;
+			}
+		}
+	}
+}
+
 void ImageProcessor::run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectInfo& info)
 {
 	auto& globalData = GlobalStructData::getInstance();
@@ -2253,6 +2327,7 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
+	getBengKouInfo(info, processResult, index[ClassId::bengkou]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2272,6 +2347,7 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
+	getBengKouInfo(info, processResult, index[ClassId::bengkou]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2485,6 +2561,24 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 		itemDet.score = edgeDamage;
 		itemDet.area = processResult[item].area;
 		info.edgeDamage1.emplace_back(itemDet);
+	}
+}
+
+void ImageProcessor::getBengKouInfo(ButtonDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  bengkouScore = processResult[item].score * 100;
+		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
+		itemDet.index = item;
+		itemDet.score = bengkouScore;
+		itemDet.area = processResult[item].area;
+		info.bengkou.emplace_back(itemDet);
 	}
 }
 

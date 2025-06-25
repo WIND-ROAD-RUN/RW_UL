@@ -158,10 +158,10 @@ protected:
 	void run() override;
 private:
 	void run_debug(MatInfo& frame);
-	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc(MatInfo& frame);
 	void run_monitor(MatInfo& frame);
 private:
-	void run_OpenRemoveFunc(MatInfo& frame);
+	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_positive(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_hole(ButtonDefectInfo& info);
@@ -178,6 +178,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_bengkou(ButtonDefectInfo& info);
 
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
@@ -195,6 +196,7 @@ private:
 	void getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 		cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getBengKouInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getSmallPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -244,6 +246,8 @@ public:
 	void appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendMaterialHeadDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendBengKouDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+
 public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
