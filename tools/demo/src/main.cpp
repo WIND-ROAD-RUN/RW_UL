@@ -38,7 +38,8 @@ int main(int argc, char* argv[])
 	imageSaveEngine.startEngine();
     imageSaveEngine.setSavePolicy(rw::rqw::ImageSaveEnginePolicy::MaxSaveImageNum);
     imageSaveEngine.setMaxSaveImageNum(20);
-    for (int i = 0;i<100;i++)
+    imageSaveEngine.setSaveImgQuality(10);
+    for (int i = 0;i<1000;i++)
     {
         imageSaveEngine.pushImage(createChapterImage(i));
     }

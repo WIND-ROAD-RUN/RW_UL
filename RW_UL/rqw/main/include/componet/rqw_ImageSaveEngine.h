@@ -62,6 +62,9 @@ namespace rw {
 			// 设置最大图片数量
 			void setMaxSaveImageNum(int maxNum);
 
+			void setSaveImgQuality(int quality);
+		private:
+			int saveImgQuality = 99;
 		protected:
 			void processImages();
 

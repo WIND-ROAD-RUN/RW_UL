@@ -119,7 +119,7 @@ namespace rw {
 			}
 
 			// 保存图片
-			if (!image.image.save(fileName)) {
+			if (!image.image.save(fileName,"jpg",saveImgQuality)) {
 				std::cerr << "Failed to save image: " << fileName.toStdString() << std::endl;
 			}
 		}
@@ -134,6 +134,12 @@ namespace rw {
 		{
 			QMutexLocker locker(&mutex);
 			maxSaveImageNum = maxNum;
+		}
+
+		void ImageSaveEngine::setSaveImgQuality(int quality)
+		{
+			QMutexLocker locker(&mutex);
+			saveImgQuality = quality;
 		}
 	}
 }
