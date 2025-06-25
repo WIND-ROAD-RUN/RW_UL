@@ -65,6 +65,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE ime
 	PRIVATE utilty
 	PRIVATE cdm
+	PRIVATE rqw
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
