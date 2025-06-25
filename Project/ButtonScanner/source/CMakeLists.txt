@@ -114,6 +114,13 @@ install(CODE "
     message(\"Running windeployqt during install phase\")
 ")
 
+file(GLOB VERSION_TXT "${CMAKE_CURRENT_SOURCE_DIR}/sourceFiles/*.txt")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${VERSION_TXT}
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
 
 
 
