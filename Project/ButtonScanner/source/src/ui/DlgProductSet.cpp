@@ -201,6 +201,12 @@ void DlgProductSet::build_connect()
 	QObject::connect(ui->rbtn_brokenEyeEnable, &QRadioButton::clicked,
 		this, &DlgProductSet::rbtn_brokenEyeEnable_checked);
 
+	//崩口
+	QObject::connect(ui->pbtn_bengKouScore, &QPushButton::clicked,
+		this, &DlgProductSet::pbtn_bengKouScore_clicked);
+	QObject::connect(ui->rbtn_bengKou, &QRadioButton::clicked,
+		this, &DlgProductSet::rbtn_bengKou_checked);
+
 	//裂痕
 	QObject::connect(ui->pbtn_crackSimilarity, &QPushButton::clicked,
 		this, &DlgProductSet::pbtn_crackSimilarity_clicked);
@@ -672,6 +678,31 @@ void DlgProductSet::pbtn_edgeDamageArea_clicked()
 		auto& GlobalStructData = GlobalStructData::getInstance();
 		ui->pbtn_edgeDamageArea->setText(value);
 		GlobalStructData.dlgProductSetConfig.edgeDamageArea = value.toDouble();
+	}
+}
+
+void DlgProductSet::rbtn_bengKou_checked(bool checked)
+{
+	auto& GlobalStructData = GlobalStructData::getInstance();
+	GlobalStructData.dlgProductSetConfig.bengKouEnabel = checked;
+}
+
+void DlgProductSet::pbtn_bengKouScore_clicked()
+{
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 0 || value.toDouble() > 100)
+		{
+			QMessageBox::warning(this, "提示", "请输入0-100之间的值");
+			return;
+		}
+		auto& GlobalStructData = GlobalStructData::getInstance();
+		ui->pbtn_bengKouScore->setText(value);
+		GlobalStructData.dlgProductSetConfig.bengKouScore = value.toDouble();
 	}
 }
 

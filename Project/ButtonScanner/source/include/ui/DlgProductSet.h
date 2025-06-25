@@ -89,6 +89,10 @@ private slots:
 	void pbtn_edgeDamageSimilarity_clicked();
 	void pbtn_edgeDamageArea_clicked();
 
+	//崩口
+	void rbtn_bengKou_checked(bool checked);
+	void pbtn_bengKouScore_clicked();
+
 	//气孔
 	void rbtn_poreEnable_checked(bool checked);
 	void pbtn_poreEnableScore_clicked();
