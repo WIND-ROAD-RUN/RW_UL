@@ -37,6 +37,31 @@ void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
 	monitorZMotionMonitorThread.destroyThread();
 }
 
+void GlobalStructDataZipper::getStartOrStopSignal(size_t index, bool state)
+{
+	emit emit_StartOrStopSignal(index, state);
+}
+
+void GlobalStructDataZipper::build_monitorStartOrStopThread()
+{
+	monitorStartOrStopThread.setMonitorObject(zmotion);
+
+	QVector<size_t> monitorIList = { ControlLines::qidonganniuIn,ControlLines::jitingIn };
+	monitorStartOrStopThread.setMonitorIList(monitorIList);
+	monitorStartOrStopThread.setMonitorFrequency(20);
+	monitorStartOrStopThread.setRunning(true);
+	monitorStartOrStopThread.start();
+
+	QObject::connect(&monitorStartOrStopThread, &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, &GlobalStructDataZipper::getStartOrStopSignal, Qt::QueuedConnection);
+}
+
+void GlobalStructDataZipper::destroy_monitorStartOrStopThread()
+{
+	monitorStartOrStopThread.setRunning(false);
+	monitorStartOrStopThread.destroyThread();
+}
+
 void GlobalStructDataZipper::getInPutSignal(size_t index, bool state)
 {
 	emit emit_InPutSignal(index, state);
@@ -136,8 +161,8 @@ void GlobalStructDataZipper::rebuild_Camera1()
 			}
 			camera1->startMonitor();
 			// 设置剔废IO输出
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera1->setOutTriggerConfig(config);
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera1->setOutTriggerConfig(config);
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
 		}
@@ -182,8 +207,8 @@ void GlobalStructDataZipper::rebuild_Camera2()
 				setLightLevel(LightLevel::WeakLight);
 			}
 			// 设置剔废IO输出
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera2->setOutTriggerConfig(config);
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
@@ -413,10 +438,12 @@ bool GlobalStructDataZipper::buildCamera1()
 			}
 			camera1->startMonitor();
 			// 设置剔废IO输出
-			auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
-			camera1->setOutTriggerConfig(config);
+			//auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
+			//camera1->setOutTriggerConfig(config);
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
+
+
 			return true;
 		}
 		catch (const std::exception&)
@@ -462,8 +489,8 @@ bool GlobalStructDataZipper::buildCamera2()
 				setLightLevel(LightLevel::WeakLight);
 			}
 			// 设置剔废IO输出
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera2->setOutTriggerConfig(config);
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);

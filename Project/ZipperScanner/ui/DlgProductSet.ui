@@ -4191,7 +4191,7 @@ QTabBar::tab:hover {
 }</string>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab_0">
         <attribute name="title">
@@ -6138,7 +6138,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_28">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>mm/s</string>
                         </property>
                        </widget>
                       </item>
@@ -6273,7 +6273,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_40">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>pluse</string>
                         </property>
                        </widget>
                       </item>
@@ -6412,7 +6412,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_30">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>mm/s</string>
                         </property>
                        </widget>
                       </item>

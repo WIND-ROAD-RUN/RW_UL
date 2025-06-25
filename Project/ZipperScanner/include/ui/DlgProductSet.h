@@ -70,7 +70,8 @@ private slots:
 	void btn_xiangjichufachangdu_clicked();
 	void btn_jishuqingling_clicked();
 	void btn_changduqingling_clicked();
-	void btn_shoudongladai_clicked();
+	void btn_shoudongladai_pressed();
+	void btn_shoudongladai_released();
 	void btn_shoudongchongkong_clicked();
 	void btn_tuoji_clicked();
 	void btn_xiangjichufa_clicked();
@@ -105,7 +106,6 @@ private slots:
 	void btn_settuoji_clicked();
 
 	void tabWidget_indexChanged(int index);
-
 
 	// 监控IO函数
 	void monitorInPutSignal(size_t index, bool state);

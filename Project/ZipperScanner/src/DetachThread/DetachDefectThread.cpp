@@ -37,7 +37,7 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli1))
 		{
 			//冲孔
-			bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT,true);
+			//bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT,true);
 			//emit findIsBad(1);
 		}
 	}
@@ -60,7 +60,7 @@ void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafe
 		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli2))
 		{
 			//冲孔
-			bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, true);
+			//bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, true);
 			//emit findIsBad(2);
 		}
 	}

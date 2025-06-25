@@ -23,11 +23,13 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	// 构建UI
 	build_ui();
 
-
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
 	// 构建运动控制器IO状态监控线程
 	globalStruct.build_MonitorZMotionIOStateThread();
+
+	// 构建主窗体启停IO监控线程
+	globalStruct.build_monitorStartOrStopThread();
 
 	// 构建优先队列
 	globalStruct.build_PriorityQueue();
@@ -133,6 +135,16 @@ void ZipperScanner::build_connect()
 	QObject::connect(&GlobalStructDataZipper.getInstance(), &GlobalStructDataZipper::emit_updateUiLabels,
 		this, &ZipperScanner::updateUiLabels);
 
+	// 连接监控启停按钮
+	QObject::connect(&GlobalStructDataZipper.getInstance(), &GlobalStructDataZipper::emit_StartOrStopSignal,
+		this, &ZipperScanner::getStartOrStopSignal);
+
+	// 连接启动按钮
+	QObject::connect(ui->rbtn_start, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_start_clicked);
+	// 连接停止按钮
+	QObject::connect(ui->rbtn_stop, &QRadioButton::clicked,
+		this, &ZipperScanner::rbtn_stop_clicked);
 }
 
 // 构建相机
@@ -175,8 +187,34 @@ void ZipperScanner::build_motion()
 	bool isConnected = globalStruct.zmotion.connect();
 	if (isConnected)
 	{
+		auto& globalStructsetConfig = GlobalStructDataZipper::getInstance().setConfig;
+		auto meizhuanmaichongshu = globalStructsetConfig.meizhuanmaichongshu;
+		auto shedingzhouchang = globalStructsetConfig.shedingzhouchang;
+		auto value = meizhuanmaichongshu / shedingzhouchang;
+
 		bool isLocationZero = globalStruct.zmotion.setLocationZero(0);
-		bool isLocationZero = globalStruct.zmotion.
+		bool isAxisType = globalStruct.zmotion.setAxisType(0, 1);
+		bool isAxisPulse = globalStruct.zmotion.setAxisPulse(0, value);
+
+		bool isSetXiangJiChuFaChangDu = globalStruct.zmotion.setModbus(4, 1, globalStruct.setConfig.xiangjichufachangdu);
+		bool isSetdangqianweizhi = globalStruct.zmotion.setModbus(2, 1, 0);
+
+		bool isOK = true;
+		for (int i = 3; i < 13; i++)
+		{
+			isOK&& globalStruct.zmotion.setIOOut(i, false);
+		}
+
+		if (!isOK)
+		{
+			QMessageBox::warning(this, "警告", "初始化设置所有IO为false失败!");
+		}
+
+		if (!isLocationZero || !isAxisType || !isAxisPulse || !isSetXiangJiChuFaChangDu || !isSetdangqianweizhi)
+		{
+			QMessageBox::warning(this, "警告", "ZMotion参数设置失败!");
+		}
+
 		ui->label_cardState->setText("连接成功");
 		ui->label_cardState->setStyleSheet(QString("QLabel{color:rgb(0, 230, 0);} "));
 	}
@@ -286,6 +324,8 @@ void ZipperScanner::destroyComponents()
 {
 
 	auto& globalStructData = GlobalStructDataZipper::getInstance();
+	// 销毁主窗体启停IO监控线程
+	globalStructData.destroy_monitorStartOrStopThread();
 	// 销毁运动控制器IO状态监控线程
 	globalStructData.destroy_MonitorZMotionIOStateThread();
 	// 销毁相机
@@ -600,25 +640,62 @@ void ZipperScanner::ckb_wenzi_checked(bool checked)
 void ZipperScanner::rbtn_start_clicked(bool checked)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 	if (checked)
 	{
 		globalStruct.generalConfig.isStart = true;
 		globalStruct.generalConfig.isStop = false;
+
+		// 启动电机
+		auto value = setConfig.meizhuanmaichongshu / setConfig.shedingzhouchang;
+
+		auto isAxisType = globalStruct.zmotion.setAxisType(0, 1);
+		double unit = value;
+		auto isAxisPulse = globalStruct.zmotion.setAxisPulse(0, unit);
+		double acc = setConfig.jiajiansushijian;
+		auto isAxisAcc = globalStruct.zmotion.setAxisAcc(0, acc);
+		auto isAxisDec = globalStruct.zmotion.setAxisDec(0, acc);
+		double speed = setConfig.shoudongsudu;
+		auto isAxisRunSpeed = globalStruct.zmotion.setAxisRunSpeed(0, speed);
+		auto isAxisRun = globalStruct.zmotion.setAxisRun(0, -1);
+
+		if (!isAxisType || !isAxisPulse || !isAxisAcc || !isAxisDec || !isAxisRunSpeed || !isAxisRun)
+		{
+			QMessageBox::warning(this, "警告", "电机参数设置失败");
+		}
 	}
 	else
 	{
 		globalStruct.generalConfig.isStart = false;
 		globalStruct.generalConfig.isStop = true;
+
+		// 停止电机
+		bool isStop = globalStruct.zmotion.stopAllAxis();
+
+		if (!isStop)
+		{
+			QMessageBox::warning(this, "警告", "停止电机取消失败!");
+		}
 	}
 }
 
 void ZipperScanner::rbtn_stop_clicked(bool checked)
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 	if (checked)
 	{
+		ui->rbtn_stop->setChecked(checked);
 		globalStruct.generalConfig.isStart = false;
 		globalStruct.generalConfig.isStop = true;
+
+		// 停止电机
+		bool isStop = globalStruct.zmotion.stopAllAxis();
+
+		if (!isStop)
+		{
+			//QMessageBox::warning(this, "警告", "停止电机取消失败!");
+		}
 	}
 	else
 	{
@@ -696,6 +773,37 @@ void ZipperScanner::updateUiLabels(int index, bool isConnected)
 			info.type = rw::rqw::WarningType::Error;
 			info.warningId = WarningId::ccameraDisconnectAlarm2;
 			//labelWarning->addWarning(info);
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void ZipperScanner::getStartOrStopSignal(size_t index, bool state)
+{
+	switch (index)
+	{
+	case ControlLines::qidonganniuIn:
+		if (state)
+		{
+			ui->rbtn_start->setChecked(true);
+			rbtn_start_clicked(state);
+		}
+		else
+		{
+			ui->rbtn_start->setChecked(false);
+		}
+		break;
+	case ControlLines::jitingIn:
+		if (state)
+		{
+			ui->rbtn_stop->setChecked(true);
+			rbtn_stop_clicked(state);
+		}
+		else
+		{
+			ui->rbtn_stop->setChecked(false);
 		}
 		break;
 	default:

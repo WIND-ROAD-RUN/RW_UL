@@ -183,8 +183,10 @@ void DlgProductSet::build_connect()
 		this, &DlgProductSet::btn_jishuqingling_clicked);
 	QObject::connect(ui->btn_changduqingling, &QPushButton::clicked,
 		this, &DlgProductSet::btn_changduqingling_clicked);
-	QObject::connect(ui->btn_shoudongladai, &QPushButton::clicked,
-		this, &DlgProductSet::btn_shoudongladai_clicked);
+	QObject::connect(ui->btn_shoudongladai, &QPushButton::pressed,
+		this, &DlgProductSet::btn_shoudongladai_pressed);
+	QObject::connect(ui->btn_shoudongladai, &QPushButton::released,
+		this, &DlgProductSet::btn_shoudongladai_released);
 	QObject::connect(ui->btn_shoudongchongkong, &QPushButton::clicked,
 		this, &DlgProductSet::btn_shoudongchongkong_clicked);
 	QObject::connect(ui->btn_tuoji, &QPushButton::clicked,
@@ -955,7 +957,8 @@ void DlgProductSet::cbox_yundongkongzhiqichonglian_checked()
 
 void DlgProductSet::btn_shedingladaichangdu_clicked()
 {
-	auto& globalStructSetConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
 	NumberKeyboard numKeyBord;
 	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	auto isAccept = numKeyBord.exec();
@@ -989,7 +992,12 @@ void DlgProductSet::btn_xiangjichufachangdu_clicked()
 		}
 		ui->btn_xiangjichufachangdu->setText(value);
 		globalStructSetConfig.xiangjichufachangdu = value.toDouble();
-		bool isSet = globalStruct.zmotion.setModbus(0, 2, value.toDouble());
+		bool isSet = globalStruct.zmotion.setModbus(0, 4, value.toDouble());
+
+		if (!isSet)
+		{
+			QMessageBox::warning(this, "警告", "设定拉袋长度失败!");
+		}
 	}
 }
 
@@ -1007,19 +1015,74 @@ void DlgProductSet::btn_changduqingling_clicked()
 	ui->btn_dangqianchangdu->setText("0");
 }
 
-void DlgProductSet::btn_shoudongladai_clicked()
+void DlgProductSet::btn_shoudongladai_pressed()
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto setConfig = globalStruct.setConfig;
+	auto value = setConfig.meizhuanmaichongshu / setConfig.shedingzhouchang;
 
+	// 启动电机
+	auto isAxisType = globalStruct.zmotion.setAxisType(0, 1);
+	double unit = value;
+	auto isAxisPulse = globalStruct.zmotion.setAxisPulse(0, unit);
+	double acc = setConfig.jiajiansushijian;
+	auto isAxisAcc = globalStruct.zmotion.setAxisAcc(0, acc);
+	auto isAxisDec = globalStruct.zmotion.setAxisDec(0, acc);
+	double speed = setConfig.shoudongsudu;
+	auto isAxisRunSpeed = globalStruct.zmotion.setAxisRunSpeed(0, speed);
+	auto isAxisRun = globalStruct.zmotion.setAxisRun(0, -1);
+
+	if (!isAxisType || !isAxisPulse || !isAxisAcc || !isAxisDec || !isAxisRunSpeed || !isAxisRun)
+	{
+		QMessageBox::warning(this, "警告", "电机参数设置失败");
+	}
+}
+
+void DlgProductSet::btn_shoudongladai_released()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	// 停止电机
+	bool isStop = globalStruct.zmotion.stopAllAxis();
+
+	if (!isStop)
+	{
+		QMessageBox::warning(this, "警告", "手动拉带取消失败!");
+	}
 }
 
 void DlgProductSet::btn_shoudongchongkong_clicked()
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
+	bool isSet = globalStruct.zmotion.SetIOOut(2, ControlLines::chongkongOUT, true, 1000);
+
+	if (!isSet)
+	{
+		QMessageBox::warning(this, "警告", "手动冲孔失败!");
+	}
 }
 
 void DlgProductSet::btn_tuoji_clicked()
 {
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
 
+	bool isGetTuoJiOut = false;
+	bool tuojiState = globalStruct.zmotion.getIOOut(ControlLines::tuojiOut, isGetTuoJiOut);
+	bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::tuojiOut, !tuojiState);
+	if (!isSuccess)
+	{
+		QMessageBox::warning(this, "警告", "设置脱机失败!");
+	}
+
+	// 追加你想要的颜色
+	if (tuojiState) 
+	{
+		ui->btn_tuoji->setText("脱机");
+	}
+	else
+	{
+		ui->btn_tuoji->setText("已脱机...");
+	}
 }
 
 void DlgProductSet::btn_xiangjichufa_clicked()

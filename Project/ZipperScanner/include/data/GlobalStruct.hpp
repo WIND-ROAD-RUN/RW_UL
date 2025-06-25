@@ -43,7 +43,9 @@ class GlobalStructDataZipper
 public:
 	rw::rqw::ZMotion  zmotion;
 	void destory_motion();
+
 public:
+	// 监控所有IO
 	rw::rqw::MonitorZMotionIOStateThread monitorZMotionMonitorThread;
 public:
 	void build_MonitorZMotionIOStateThread();
@@ -51,7 +53,20 @@ public:
 
 	void getInPutSignal(size_t index, bool state);
 	void getOutPutSignal(size_t index, bool state);
+
+public:
+	// 监控启停按钮
+	rw::rqw::MonitorZMotionIOStateThread monitorStartOrStopThread;
+public:
+	void build_monitorStartOrStopThread();
+	void destroy_monitorStartOrStopThread();
+
+	void getStartOrStopSignal(size_t index, bool state);
+	
 signals:
+	// 监控启停IO
+	void emit_StartOrStopSignal(size_t index, bool state);
+	// 监控所有IO
 	void emit_InPutSignal(size_t index, bool state);
 	void emit_OutPutSignal(size_t index, bool state);
 public:
