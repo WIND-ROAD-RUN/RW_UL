@@ -7,6 +7,11 @@ QImage cvMatToQImage(const cv::Mat& mat);
 
 QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
+struct VersionInfo
+{
+	static QString Version;
+};
+
 struct WarningId
 {
 	static constexpr int cairPressureAlarm = 0;

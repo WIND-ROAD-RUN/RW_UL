@@ -332,6 +332,11 @@ void ButtonScanner::build_ui()
 	ui->hLayout_title->replaceWidget(ui->label_title, labelClickable_title);
 	delete ui->label_title;
 
+	labelVersionInfo = new rw::rqw::ClickableLabel(this);
+	ui->gBox_VersionInfo->layout()->replaceWidget(ui->label_VersionInfo,labelVersionInfo);
+	delete ui->label_VersionInfo;
+	labelVersionInfo->setText(VersionInfo::Version);
+
 	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime
 		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
