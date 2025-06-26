@@ -136,7 +136,9 @@ public:
 	ImageProcessingModuleSmartCroppingOfBags(int numConsumers, QObject* parent = nullptr);
 
 	~ImageProcessingModuleSmartCroppingOfBags();
-
+public:
+	cv::Mat mat1;
+	cv::Mat mat2;
 public slots:
 	// 相机回调函数
 	void onFrameCaptured(cv::Mat frame, size_t index);

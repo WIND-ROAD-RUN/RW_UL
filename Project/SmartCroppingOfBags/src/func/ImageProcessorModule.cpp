@@ -12,6 +12,7 @@
 #include "imeo_ModelEngineFactory_OnnxRuntime.hpp"
 #include"MonitorIO.h"
 
+
 std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
 	const std::chrono::system_clock::time_point& timePoint)
@@ -132,7 +133,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
 	auto processResult = processCollageImage_debug(resultImage.mat);
-
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
@@ -255,7 +255,8 @@ ImageCollage::CollageImage ImageProcessorSmartCroppingOfBags::getCurrentWithBefo
 
 std::vector<rw::DetectionRectangleInfo> ImageProcessorSmartCroppingOfBags::processCollageImage_debug(const cv::Mat& mat)
 {
-	return _modelEngine->processImg(mat);
+	auto result = _modelEngine->processImg(mat);
+	return result;
 }
 
 int ImageProcessorSmartCroppingOfBags::splitRecognitionBox_debug(const std::vector<Time>& time)
@@ -362,14 +363,14 @@ void ImageProcessorSmartCroppingOfBags::mergeCurrentProcessLastResultWithLastPro
 		});
 	allDetectRec.erase(it, allDetectRec.end());
 
-	// 2. 添加到上一张图片的识别信息
-	if (!previousDetectInfo.empty()) {
-		previousDetectInfo.front().processResult.insert(
-			previousDetectInfo.front().processResult.end(),
-			belongToPrevious.begin(),
-			belongToPrevious.end()
-		);
-	}
+	//// 2. 添加到上一张图片的识别信息
+	//if (!previousDetectInfo.empty()) {
+	//	previousDetectInfo.front().processResult.insert(
+	//		previousDetectInfo.front().processResult.end(),
+	//		belongToPrevious.begin(),
+	//		belongToPrevious.end()
+	//	);
+	//}
 }
 
 void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime, const QString
@@ -2769,7 +2770,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	config.shapeType = rw::rqw::ImagePainter::ShapeType::Rectangle;
 	config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-
+	config.fontSize = 50;
 	// 黑疤
 	for (const auto& item : info.heibaList)
 	{
@@ -2983,6 +2984,9 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		processor->_timeBool = _timeBool;
 		processor->start();
 	}
+
+	mat1= cv::imread(R"(C:\Users\rw\Desktop\temp\1.jpg)");
+	mat2 = cv::imread(R"(C:\Users\rw\Desktop\temp\1.jpg)");
 }
 
 void ImageProcessingModuleSmartCroppingOfBags::setCollageImageNum(size_t num)
@@ -3077,6 +3081,25 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	_historyTimes->insert(currentTime, currentTime);
 	_timeBool->set(currentTime, false);
 
+
+	//
+	static bool temp{ false };
+
+
+	if (temp)
+	{
+		imagePart.element = mat1.clone();
+		temp = false;
+	}
+	else
+	{
+		imagePart.element = mat2.clone();
+		temp = true;
+	}
+
+
+
+	//
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
