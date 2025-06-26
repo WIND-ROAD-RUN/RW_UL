@@ -485,7 +485,7 @@ std::vector<TimeFrameQImageInfo> ImageProcessorSmartCroppingOfBags::drawUnproces
 		auto historyResultItem = _historyResult->get(item.first);
 		if (!historyResultItem.has_value())
 		{
-			continue;;
+			continue;
 		}
 		auto &historyProcessResult = historyResultItem.value().processResult;
 		auto processResultIndex = filterEffectiveIndexes_debug(historyProcessResult);
@@ -719,82 +719,78 @@ collageMaskImage-->emitResultImage
  */
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 {
-	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
-	auto& setConfig = globalStruct.setConfig;
+	// 获得当前图像的时间戳与上一张图像的时间戳的集合
+	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
-	auto times = getTimesWithCurrentTime_Defect(frame.time, 2);
+	if (times.empty())
+	{
+		return; // 如果没有时间戳，直接返回
+	}
 
-	auto collageImage = getCurrentWithBeforeTimeCollageTime_Defect(times);
+	// 获得当前图像与上一张图像拼接而成的图像
+	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
 
-	//AI开始识别
-	SmartCroppingOfBagsDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
-	auto processResult = processCollageImage_Defect(collageImage.mat);
+	auto processResult = processCollageImage_debug(resultImage.mat);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	//defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	auto processTime = QString("%1 ms").arg(duration);
 	//AI识别完成
 
-	auto previousMatHeight = splitRecognitionBox_Defect(times);
+	// 获取上一张图像的行高
+	auto previousMatHeight = splitRecognitionBox_debug(times);
 
-	regularizedTwoRecognitionBox_Defect(previousMatHeight, times[0], frame.time, processResult);
+	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
+	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult, processTime);
+	getErrorLocation(times);
 
-	//过滤出有效索引
-	auto processResultIndex = filterEffectiveIndexes_defect(processResult);
-	//获取到当前图像的缺陷信息
-	getEliminationInfo_defect(defectInfo, processResult, processResultIndex, frame.image.element);
+	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
+	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
+	if (_isQieDao)
+	{
+		if (frame.time > _qieDaoTime)
+		{
+			globalThreadData.isQieDao = false;
 
-	// 遍历所有缺陷类型，找出isDraw为true的最底部识别框（以下两个顶点的y最大值为准）
-	const SmartCroppingOfBagsDefectInfo::DetectItem* bottomItem = nullptr;
-	double maxBottomY = std::numeric_limits<double>::min();
+			//这里第一个时间点可能是上一次的
+			auto duringTimes = _historyTimes->query(_lastQieDaoTime, frame.time);
 
-	// 所有缺陷类型的列表指针
-	std::vector<const std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>*> defectLists = {
-		&defectInfo.heibaList, &defectInfo.shudangList, &defectInfo.huapoList, &defectInfo.jietouList,
-		&defectInfo.guasiList, &defectInfo.podongList, &defectInfo.zangwuList, &defectInfo.noshudangList,
-		&defectInfo.modianList, &defectInfo.loumoList, &defectInfo.xishudangList, &defectInfo.erweimaList,
-		&defectInfo.damodianList, &defectInfo.kongdongList, &defectInfo.sebiaoList, &defectInfo.yinshuaquexianList,
-		&defectInfo.xiaopodongList, &defectInfo.jiaodaiList
-	};
+			duringTimes = getValidTime(duringTimes);
+			getCutLine(duringTimes, frame);
 
-	for (const auto* list : defectLists) {
-		for (const auto& item : *list) {
-			if (item.isDraw && item.index >= 0 && item.index < processResult.size()) {
-				const auto& rect = processResult[item.index];
-				double bottomY1 = rect.leftBottom.second;
-				double bottomY2 = rect.rightBottom.second;
-				double curMaxY = std::max(bottomY1, bottomY2);
-				if (curMaxY > maxBottomY) {
-					maxBottomY = curMaxY;
-					bottomItem = &item;
-				}
+			// 获取有多少张图片没有拼过
+			size_t count = duringTimes.size();
+
+			// 抓取没拼过的图片的时间戳
+			auto unprocessedImageTimes = duringTimes;
+
+			if (unprocessedImageTimes.size() != count)
+			{
+				return; // 如果没有时间戳，直接返回
 			}
+
+			// 获取没拼过的图片的原图像
+			std::vector<TimeFrameMatInfo> unprocessedimages;
+
+			getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
+
+			// 处理图片及其识别框
+			auto fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages);
+
+			auto collageImage = getCollageImage(fiveQImages);
+
+			//std::cout << "imageReady" << collageImage.size().height() << std::endl;
+			emit imageReady(QPixmap::fromImage(collageImage));
+
+			emit appendPixel(collageImage.height());
+			//std::cout << "Image emit" << std::endl;
 		}
 	}
-
-	// bottomItem即为最底部的识别框（如果存在）
-	if (bottomItem) {
-		auto nowImageHeight = frame.image.element.rows;
-
-		auto heightRatio = maxBottomY / nowImageHeight; // 计算高度比例
-
-		auto lastImage = _imageCollage->getImage(times[0]).value();
-
-		auto lastImagePulse = lastImage.attribute["location"];
-
-		auto nowImagePulse = frame.location * heightRatio; // 根据高度比例计算位置
-		
-		auto pulseDifference = nowImagePulse - lastImagePulse;
-	}
-
-	// 剔除逻辑获取_isbad以及绘制defect错误信息
-	run_OpenRemoveFunc_process_defect_info(defectInfo);
-	//如果_isbad为true，将错误信息发送到剔除队列中
-	//run_OpenRemoveFunc_emitErrorInfo(frame);
+	_lastQieDaoTime = _qieDaoTime;
 }
 
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info)
@@ -3150,24 +3146,24 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	_timeBool->set(currentTime, false);
 
 
-	//
-	static bool temp{ false };
+	////
+	//static bool temp{ false };
 
 
-	if (temp)
-	{
-		imagePart.element = mat1.clone();
-		temp = false;
-	}
-	else
-	{
-		imagePart.element = mat2.clone();
-		temp = true;
-	}
+	//if (temp)
+	//{
+	//	imagePart.element = mat1.clone();
+	//	temp = false;
+	//}
+	//else
+	//{
+	//	imagePart.element = mat2.clone();
+	//	temp = true;
+	//}
 
 
 
-	//
+	////
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
