@@ -254,11 +254,11 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			auto collageImage = _imageCollage->verticalConcat(fiveQImages);
 
-			std::cout << "imageReady" << collageImage.size().height() << std::endl;
+			//std::cout << "imageReady" << collageImage.size().height() << std::endl;
 			emit imageReady(QPixmap::fromImage(collageImage));
 
 			emit appendPixel(collageImage.height());
-			std::cout << "Image emit" << std::endl;
+			//std::cout << "Image emit" << std::endl;
 		}
 	}
 	_lastQieDaoTime = _qieDaoTime;
