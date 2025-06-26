@@ -95,6 +95,8 @@ public:
 	bool hasCut{false};
 	size_t cutLocate{0};
 public:
+	double bottomErrorLocation{0};
+public:
 	std::vector<rw::DetectionRectangleInfo> processResult;
 public:
 	QString processTime{};
@@ -103,7 +105,11 @@ public:
 	HistoryDetectInfo(const std::vector<rw::DetectionRectangleInfo>& result) : processResult(result) {}
 	// 拷贝构造函数
 	HistoryDetectInfo(const HistoryDetectInfo& other)
-	: processResult(other.processResult),hasCut(other.hasCut),cutLocate(other.cutLocate),processTime(other.processTime) {}
+	: processResult(other.processResult),
+	hasCut(other.hasCut),
+	cutLocate(other.cutLocate),
+	processTime(other.processTime),
+	bottomErrorLocation(other.bottomErrorLocation){}
 	// 拷贝赋值运算符
 	HistoryDetectInfo& operator=(const HistoryDetectInfo& other) {
 		if (this != &other) {
@@ -111,6 +117,7 @@ public:
 			hasCut = other.hasCut;
 			cutLocate = other.cutLocate;
 			processTime = other.processTime;
+			bottomErrorLocation = other.bottomErrorLocation;
 		}
 		return *this;
 	}
@@ -205,6 +212,7 @@ private:
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
 	std::vector<Time> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true,
 		bool ascending = true);
+	void getErrorLocation(const std::vector<Time>& times);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
 	// AI模型处理拼接图像

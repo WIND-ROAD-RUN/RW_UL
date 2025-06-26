@@ -144,6 +144,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult, processTime);
+	getErrorLocation(times);
 
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -243,6 +244,70 @@ std::vector<Time> ImageProcessorSmartCroppingOfBags::getTimesWithCurrentTime_deb
 	const Time& time, int count, bool isBefore, bool ascending)
 {
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
+}
+
+void ImageProcessorSmartCroppingOfBags::getErrorLocation(const std::vector<Time>& times)
+{
+	auto getBottomMostRectangle = [](const std::vector<rw::DetectionRectangleInfo>& rectangles) -> rw::DetectionRectangleInfo {
+		if (rectangles.empty()) {
+			return rw::DetectionRectangleInfo();
+		}
+
+		// Lambda function to calculate the bottom-most position of a rectangle
+		auto getBottomY = [](const rw::DetectionRectangleInfo& rect) {
+			return std::max({ rect.leftBottom.second, rect.rightBottom.second });
+			};
+
+		// Find the rectangle with the maximum bottom Y coordinate
+		auto bottomMostIt = std::max_element(rectangles.begin(), rectangles.end(),
+			[&getBottomY](const rw::DetectionRectangleInfo& a, const rw::DetectionRectangleInfo& b) {
+				return getBottomY(a) < getBottomY(b);
+			});
+
+		return *bottomMostIt; // Return the bottom-most rectangle
+		};
+
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	auto pixel = setConfig.daichangxishu1;
+	auto pulse = setConfig.maichongxishu1;
+
+	for (const auto & time:times)
+	{
+		auto item = _historyResult->get(time);
+		if (!item.has_value())
+		{
+			continue;
+		}
+		auto currentImg = _imageCollage->getImage(time);
+		if (!currentImg.has_value())
+		{
+			continue;
+		}
+
+		auto frameBottomLocation= currentImg.value().attribute["location"];
+		auto currentLineHeight = currentImg.value().element.rows;
+
+		auto topLocation= frameBottomLocation-currentLineHeight* pixel / pulse;
+
+		auto currentFrameProcessResult = item.value().processResult;
+
+		if (currentFrameProcessResult.empty())
+		{
+			continue;
+		}
+
+		auto bottomRec = getBottomMostRectangle(currentFrameProcessResult);
+
+		auto bottomXiangsu= std::max({ bottomRec.leftBottom.second, bottomRec.rightBottom.second });
+		auto bottomErrorLocation = bottomXiangsu * pixel / pulse+ topLocation;
+
+		auto &info = item.value();
+		info.bottomErrorLocation= bottomErrorLocation;
+
+		_historyResult->set(time, info);
+
+		std::cout << "bottomErrorLocation"<<bottomErrorLocation<<std::endl;
+	}
 }
 
 ImageCollage::CollageImage ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeTimeCollageTime_debug(
