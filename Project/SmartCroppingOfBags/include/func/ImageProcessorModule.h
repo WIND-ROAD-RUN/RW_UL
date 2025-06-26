@@ -62,25 +62,6 @@ public:
 
 };
 
-// 图片画图模块
-struct ImagePainter
-{
-	enum Color {
-		White,
-		Red,
-		Green,
-		Blue,
-		Yellow,
-		Cyan,
-		Magenta,
-		Black
-	};
-
-	static QColor ColorToQColor(Color c);
-
-	static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList = { Color::Red,Color::Green }, double proportion = 0.8);
-};
-
 // 图片信息
 struct MatInfo {
 	rw::rqw::ElementInfo<cv::Mat> image;

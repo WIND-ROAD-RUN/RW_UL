@@ -32,57 +32,6 @@ std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 	return std::nullopt;
 }
 
-QColor ImagePainter::ColorToQColor(Color c)
-{
-	switch (c) {
-	case Color::White:   return QColor(255, 255, 255);
-	case Color::Red:     return QColor(255, 0, 0);
-	case Color::Green:   return QColor(0, 255, 0);
-	case Color::Blue:    return QColor(0, 0, 255);
-	case Color::Yellow:  return QColor(255, 255, 0);
-	case Color::Cyan:    return QColor(0, 255, 255);
-	case Color::Magenta: return QColor(255, 0, 255);
-	case Color::Black:   return QColor(0, 0, 0);
-	default:             return QColor(255, 255, 255);
-	}
-}
-
-void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts, const QVector<Color>& colorList, double proportion)
-{
-	if (texts.isEmpty() || proportion <= 0.0 || proportion > 1.0) {
-		return; // 无效输入直接返回
-	}
-
-	QPainter painter(&image);
-	painter.setRenderHint(QPainter::Antialiasing);
-
-	// 计算字体大小
-	int imageHeight = image.height();
-	int fontSize = static_cast<int>(imageHeight * proportion); // 字号由 proportion 决定
-
-	QFont font = painter.font();
-	font.setPixelSize(fontSize);
-	painter.setFont(font);
-
-	// 起始位置
-	int x = 0;
-	int y = 0;
-
-	// 绘制每一行文字
-	for (int i = 0; i < texts.size(); ++i) {
-		// 获取颜色
-		QColor color = (i < colorList.size()) ? ColorToQColor(colorList[i]) : ColorToQColor(colorList.last());
-		painter.setPen(color);
-
-		// 绘制文字
-		painter.drawText(x, y + fontSize, texts[i]);
-
-		// 更新 y 坐标
-		y += fontSize; // 每行文字的间距等于字体大小
-	}
-
-	painter.end();
-}
 
 ImageProcessorSmartCroppingOfBags::ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue, QMutex& mutex, QWaitCondition& condition, int workIndex, QObject* parent)
 	: QThread(parent), _queue(queue), _mutex(mutex), _condition(condition), _workIndex(workIndex) {
@@ -526,8 +475,8 @@ void ImageProcessorSmartCroppingOfBags::drawCutLine(const std::vector<Time>& tim
 		}
 		auto itemValue = item.value();
 		rw::rqw::ImagePainter::PainterConfig config;
-		config.color = ImagePainter::Color::Red;
-		config.textColor= ImagePainter::Color::Red;
+		config.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+		config.textColor= rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 		config.thickness = 20;
 		if (itemValue.hasCut)
 		{
