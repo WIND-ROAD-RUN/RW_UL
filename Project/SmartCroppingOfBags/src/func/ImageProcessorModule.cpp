@@ -3112,10 +3112,19 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
-
-
 	if (frame.empty()) {
 		return; // 跳过空帧
+	}
+
+	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& setConfig = globalStructData.setConfig;
+	
+	auto minFrameRows= setConfig.zuixiaochutu1* globalStructData.setConfig.daichangxishu1;
+	auto maxFrameRows = setConfig.zuidachutu1 * globalStructData.setConfig.daichangxishu1;
+	auto currentFrameRows = frame.rows;
+	if (currentFrameRows<minFrameRows||currentFrameRows>maxFrameRows)
+	{
+		return;
 	}
 
 	Time currentTime = std::chrono::system_clock::now();
@@ -3123,7 +3132,7 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	frame.copyTo(imagePart.element );
 	
 	double nowLocation=0;
-	GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(nowLocation);
+	globalStructData.camera1->getEncoderNumber(nowLocation);
 	imagePart.attribute.insert("location", nowLocation);
 
 	_historyTimes->insert(currentTime, currentTime);
