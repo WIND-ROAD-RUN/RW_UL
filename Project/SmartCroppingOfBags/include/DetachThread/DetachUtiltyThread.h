@@ -52,7 +52,7 @@ private:
 	double pixelSum = 0.0;			// 累计和
 	double pixelCount = 0;			// 累计计数
 	double pixelAverage = 0.0;		// 像素平均值
-
+public:
 	double daichangAverageFromPulse = 0.0;	// 根据平均脉冲求平均袋长
 	double daichangAverageFromPixel = 0.0;	// 根据平均像素求平均袋长
 

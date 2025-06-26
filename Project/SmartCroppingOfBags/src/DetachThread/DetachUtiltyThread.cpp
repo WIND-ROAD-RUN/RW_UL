@@ -46,7 +46,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 
 void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 {
-	if (s % 1 == 0 &&GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
+	if (s % 1 == 0)
 	{
 		MonitorRunningStateInfo info;
 		info.currentPulse = getPulse(info.isGetCurrentPulse);
@@ -54,7 +54,10 @@ void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 		info.averagePulse = getAveragePulse(info.isGetAveragePulse);
 		info.averagePulseBag = getAveragePulseBag(info.isGetAveragePulseBag);
 		info.lineHeight = getLineHeight(info.isGetLineHeight);
-		emit updateMonitorRunningStateInfo(info);
+		if (GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
+		{
+			emit updateMonitorRunningStateInfo(info);
+		}
 	}
 }
 

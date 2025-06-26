@@ -198,8 +198,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
 
-	getCutLine(times,frame);
-
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 
@@ -225,12 +223,13 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
+			getCutLine(duringTimes, frame);
 
 			// 获取有多少张图片没有拼过
 			size_t count = duringTimes.size();
 
 			// 抓取没拼过的图片的时间戳
-			auto unprocessedImageTimes = getCurrentWithBeforeFourTimes_debug(frame.time, count, true);
+			auto unprocessedImageTimes = duringTimes;
 
 			if (unprocessedImageTimes.size() != count)
 			{
@@ -332,25 +331,63 @@ void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time
 {
 	if (_isQieDao)
 	{
-		if (frame.time > _qieDaoTime)
+		auto xiangjiDaoDaokouJuli = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig.daokoudaoxiangjiluli1;
+		auto daichang= GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags->daichangAverageFromPixel;
+
+		if (daichang<1)
 		{
-			auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-			auto currentLocation = _imageCollage->getImage(frame.time).value().attribute["location"];
-			auto cutLocation = GlobalStructThreadSmartCroppingOfBags::getInstance().currentQieDaoLocation.load();
-			auto locationDifference = std::abs(currentLocation - cutLocation);
-			auto cutLineLocate = locationDifference * setConfig.maichongxishu1/setConfig.daichangxishu1;
-			std::cout <<"cutLineLocate"<< static_cast<int>(cutLineLocate) << std::endl;
-			cutLineLocate = frame.image.element.rows - cutLineLocate;
-			if (cutLineLocate<0)
+			return;
+		}
+
+		auto bagsCount = static_cast<int>(xiangjiDaoDaokouJuli) / static_cast<int>(daichang) < 1 ? 0 : static_cast<int>(xiangjiDaoDaokouJuli) / static_cast<int>(daichang);
+
+		xiangjiDaoDaokouJuli = xiangjiDaoDaokouJuli- daichang*(bagsCount);
+
+		auto cutLocation = xiangjiDaoDaokouJuli/daichang;
+		if (cutLocation >= 1)
+		{
+			return;
+		}
+		cutLocation = 1 - cutLocation;
+
+		size_t totalImgHeight = 0;
+		std::vector<std::pair<Time,size_t>> heights;
+		for (const auto & item: time)
+		{
+			auto img=_imageCollage->getImage(item);
+			if (!img.has_value())
 			{
 				return;
 			}
-
-			auto info = _historyResult->get(frame.time).value();
-			info.hasCut = true;
-			info.cutLocate = cutLineLocate;
-			_historyResult->set(frame.time, info);
+			heights.emplace_back(std::pair<Time,size_t>(item, img.value().element.rows));
+			totalImgHeight += img.value().element.rows;
 		}
+
+		auto cutLocationXiangSuLocation = totalImgHeight * cutLocation;
+
+		for (int i = 0;i<heights.size();i++)
+		{
+			if (cutLocationXiangSuLocation > heights[i].second)
+			{
+				cutLocationXiangSuLocation -= heights[i].second;
+			}
+			else
+			{
+				auto cutTimeFrame = heights[i].first;
+				auto cutFrameDetectResult=_historyResult->get(cutTimeFrame);
+				if (!cutFrameDetectResult.has_value())
+				{
+					return;
+				}
+				auto result = cutFrameDetectResult.value();
+				result.hasCut = true;
+				result.cutLocate = cutLocationXiangSuLocation;
+				_historyResult->set(cutTimeFrame, result);
+				std::cout << "cutLocate" << result.cutLocate << std::endl;
+				return;
+			}
+		}
+
 	}
 }
 
