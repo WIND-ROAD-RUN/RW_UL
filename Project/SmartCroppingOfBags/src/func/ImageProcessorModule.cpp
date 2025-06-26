@@ -168,6 +168,8 @@ drawMaskInfo-->collageMaskImage
 */
 void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 {
+	std::cout << "rows" << frame.image.element.rows << std::endl;
+
 	// 获得当前图像的时间戳与上一张图像的时间戳的集合
 	auto times = getTimesWithCurrentTime_debug(frame.time, 2, true);
 
@@ -252,6 +254,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 			auto collageImage = _imageCollage->verticalConcat(fiveQImages);
 
+			std::cout << "imageReady" << collageImage.size().height() << std::endl;
 			emit imageReady(QPixmap::fromImage(collageImage));
 
 			emit appendPixel(collageImage.height());

@@ -54,7 +54,7 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 
 	monitorZMotionIOStateThread = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
 	monitorZMotionIOStateThread->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
-	monitorZMotionIOStateThread->setMonitorFrequency(20);
+	monitorZMotionIOStateThread->setMonitorFrequency(1);
 	monitorZMotionIOStateThread->setMonitorIList({ ControlLines::qiedaoIn });
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->start();
@@ -141,8 +141,8 @@ void GlobalStructDataSmartCroppingOfBags::buildConfigManager(rw::oso::StorageTyp
 
 void GlobalStructDataSmartCroppingOfBags::buildImageProcessorModules(const QString& path)
 {
-	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
-	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
+	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
+	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
 
 	modelCamera1->modelEnginePath = path;
 	modelCamera2->modelEnginePath = path;
