@@ -36,7 +36,7 @@ public:
 		double score = 0;	// 分数
 		double area = 0;	// 面积
 		int index = -1;		// 在processResult中的索引位置
-		bool isDraw = false;	// 是否满足剔废条件绘画红框
+		bool isBad = false;	// 是否满足剔废条件绘画红框
 	};
 
 	std::vector<DetectItem> heibaList;         // 黑疤

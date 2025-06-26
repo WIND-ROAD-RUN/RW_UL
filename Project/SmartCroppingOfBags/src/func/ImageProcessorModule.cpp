@@ -1456,7 +1456,7 @@ void ImageProcessorSmartCroppingOfBags::getHeibaInfo(SmartCroppingOfBagsDefectIn
 		auto heibaArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.heiba && heibaScore >= scoreConfig.heibascore && heibaArea >= scoreConfig.heibaarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = heibaScore;
 		defectItem.area = heibaArea;
@@ -1490,7 +1490,7 @@ void ImageProcessorSmartCroppingOfBags::getShudangInfo(SmartCroppingOfBagsDefect
 		auto shudangArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.shudang && shudangScore >= scoreConfig.shudangscore && shudangArea >= scoreConfig.shudangarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = shudangScore;
 		defectItem.area = shudangArea;
@@ -1524,7 +1524,7 @@ void ImageProcessorSmartCroppingOfBags::getHuapoInfo(SmartCroppingOfBagsDefectIn
 		auto huapoArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.huapo && huapoScore >= scoreConfig.huaposcore && huapoArea >= scoreConfig.huapoarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = huapoScore;
 		defectItem.area = huapoArea;
@@ -1558,7 +1558,7 @@ void ImageProcessorSmartCroppingOfBags::getJietouInfo(SmartCroppingOfBagsDefectI
 		auto jietouArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.jietou && jietouScore >= scoreConfig.jietouscore && jietouArea >= scoreConfig.jietouarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = jietouScore;
 		defectItem.area = jietouArea;
@@ -1592,7 +1592,7 @@ void ImageProcessorSmartCroppingOfBags::getGuasiInfo(SmartCroppingOfBagsDefectIn
 		auto guasiArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.guasi && guasiScore >= scoreConfig.guasiscore && guasiArea >= scoreConfig.guasiarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = guasiScore;
 		defectItem.area = guasiArea;
@@ -1626,7 +1626,7 @@ void ImageProcessorSmartCroppingOfBags::getPodongInfo(SmartCroppingOfBagsDefectI
 		auto podongArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.podong && podongScore >= scoreConfig.podongscore && podongArea >= scoreConfig.podongarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = podongScore;
 		defectItem.area = podongArea;
@@ -1660,7 +1660,7 @@ void ImageProcessorSmartCroppingOfBags::getZangwuInfo(SmartCroppingOfBagsDefectI
 		auto zangwuArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.zangwu && zangwuScore >= scoreConfig.zangwuscore && zangwuArea >= scoreConfig.zangwuarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = zangwuScore;
 		defectItem.area = zangwuArea;
@@ -1694,7 +1694,7 @@ void ImageProcessorSmartCroppingOfBags::getNoshudangInfo(SmartCroppingOfBagsDefe
 		auto noshudangArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.noshudang && noshudangScore >= scoreConfig.noshudangscore && noshudangArea >= scoreConfig.noshudangarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = noshudangScore;
 		defectItem.area = noshudangArea;
@@ -1728,7 +1728,7 @@ void ImageProcessorSmartCroppingOfBags::getModianInfo(SmartCroppingOfBagsDefectI
 		auto modianArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.modian && modianScore >= scoreConfig.modianscore && modianArea >= scoreConfig.modianarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = modianScore;
 		defectItem.area = modianArea;
@@ -1762,7 +1762,7 @@ void ImageProcessorSmartCroppingOfBags::getLoumoInfo(SmartCroppingOfBagsDefectIn
 		auto loumoArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.loumo && loumoScore >= scoreConfig.loumoscore && loumoArea >= scoreConfig.loumoarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = loumoScore;
 		defectItem.area = loumoArea;
@@ -1796,7 +1796,7 @@ void ImageProcessorSmartCroppingOfBags::getXishudangInfo(SmartCroppingOfBagsDefe
 		auto xishudangArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.xishudang && xishudangScore >= scoreConfig.xishudangscore && xishudangArea >= scoreConfig.xishudangarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = xishudangScore;
 		defectItem.area = xishudangArea;
@@ -1830,7 +1830,7 @@ void ImageProcessorSmartCroppingOfBags::getErweimaInfo(SmartCroppingOfBagsDefect
 		auto erweimaArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.erweima && erweimaScore >= scoreConfig.erweimascore && erweimaArea >= scoreConfig.erweimaarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = erweimaScore;
 		defectItem.area = erweimaArea;
@@ -1864,7 +1864,7 @@ void ImageProcessorSmartCroppingOfBags::getDamodianInfo(SmartCroppingOfBagsDefec
 		auto damodianArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.damodian && damodianScore >= scoreConfig.damodianscore && damodianArea >= scoreConfig.damodianarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = damodianScore;
 		defectItem.area = damodianArea;
@@ -1898,7 +1898,7 @@ void ImageProcessorSmartCroppingOfBags::getKongdongInfo(SmartCroppingOfBagsDefec
 		auto kongdongArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.kongdong && kongdongScore >= scoreConfig.kongdongscore && kongdongArea >= scoreConfig.kongdongarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = kongdongScore;
 		defectItem.area = kongdongArea;
@@ -1932,7 +1932,7 @@ void ImageProcessorSmartCroppingOfBags::getSebiaoInfo(SmartCroppingOfBagsDefectI
 		auto sebiaoArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.sebiao && sebiaoScore >= scoreConfig.sebiaoscore && sebiaoArea >= scoreConfig.sebiaoarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = sebiaoScore;
 		defectItem.area = sebiaoArea;
@@ -1967,7 +1967,7 @@ void ImageProcessorSmartCroppingOfBags::getYinshuaquexianInfo(SmartCroppingOfBag
 		if (scoreConfig.yinshuaquexian && yinshuaquexianScore >= scoreConfig.yinshuaquexianscore &&
 			yinshuaquexianArea >= scoreConfig.yinshuaquexianarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = yinshuaquexianScore;
 		defectItem.area = yinshuaquexianArea;
@@ -2002,7 +2002,7 @@ void ImageProcessorSmartCroppingOfBags::getXiaopodongInfo(SmartCroppingOfBagsDef
 		if (scoreConfig.xiaopodong && xiaopodongScore >= scoreConfig.xiaopodongscore &&
 			xiaopodongArea >= scoreConfig.xiaopodongarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = xiaopodongScore;
 		defectItem.area = xiaopodongArea;
@@ -2036,7 +2036,7 @@ void ImageProcessorSmartCroppingOfBags::getJiaodaiInfo(SmartCroppingOfBagsDefect
 		auto jiaodaiArea = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 获取面积
 		if (scoreConfig.jiaodai && jiaodaiScore >= scoreConfig.jiaodaiscore && jiaodaiArea >= scoreConfig.jiaodaiarea)
 		{
-			defectItem.isDraw = true;
+			defectItem.isBad = true;
 		}
 		defectItem.score = jiaodaiScore;
 		defectItem.area = jiaodaiArea;
@@ -2667,7 +2667,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 黑疤
 	for (const auto& item : info.heibaList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& heibaItem = processResult[item.index];
 			config.text = QString("黑疤 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area* daichangxishuSqrt));
@@ -2677,7 +2677,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 疏档
 	for (const auto& item : info.shudangList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& shudangItem = processResult[item.index];
 			config.text = QString("疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2687,7 +2687,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 划破
 	for (const auto& item : info.huapoList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& huapoItem = processResult[item.index];
 			config.text = QString("划破 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2697,7 +2697,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 接头
 	for (const auto& item : info.jietouList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& jietouItem = processResult[item.index];
 			config.text = QString("接头 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2707,7 +2707,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 挂丝
 	for (const auto& item : info.guasiList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& guasiItem = processResult[item.index];
 			config.text = QString("挂丝 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2717,7 +2717,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 破洞
 	for (const auto& item : info.podongList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& podongItem = processResult[item.index];
 			config.text = QString("破洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2727,7 +2727,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 脏污
 	for (const auto& item : info.zangwuList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& zangwuItem = processResult[item.index];
 			config.text = QString("脏污 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2737,7 +2737,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 无疏档
 	for (const auto& item : info.noshudangList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& noshudangItem = processResult[item.index];
 			config.text = QString("无疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2747,7 +2747,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 墨点
 	for (const auto& item : info.modianList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& modianItem = processResult[item.index];
 			config.text = QString("墨点 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2757,7 +2757,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 漏膜
 	for (const auto& item : info.loumoList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& loumoItem = processResult[item.index];
 			config.text = QString("漏膜 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2767,7 +2767,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 稀疏档
 	for (const auto& item : info.xishudangList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& xishudangItem = processResult[item.index];
 			config.text = QString("稀疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2777,7 +2777,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 二维码
 	for (const auto& item : info.erweimaList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& erweimaItem = processResult[item.index];
 			config.text = QString("二维码 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2787,7 +2787,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 大墨点
 	for (const auto& item : info.damodianList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& damodianItem = processResult[item.index];
 			config.text = QString("大墨点 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2797,7 +2797,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 孔洞
 	for (const auto& item : info.kongdongList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& kongdongItem = processResult[item.index];
 			config.text = QString("孔洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2807,7 +2807,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 色标
 	for (const auto& item : info.sebiaoList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& sebiaoItem = processResult[item.index];
 			config.text = QString("色标 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2817,7 +2817,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 印刷缺陷
 	for (const auto& item : info.yinshuaquexianList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& yinshuaquexianItem = processResult[item.index];
 			config.text = QString("印刷缺陷 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2827,7 +2827,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 小破洞
 	for (const auto& item : info.xiaopodongList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& xiaopodongItem = processResult[item.index];
 			config.text = QString("小破洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2837,7 +2837,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec(QImage& image,
 	// 胶带
 	for (const auto& item : info.jiaodaiList)
 	{
-		if (!item.isDraw)
+		if (!item.isBad)
 		{
 			auto& jiaodaiItem = processResult[item.index];
 			config.text = QString("胶带 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area * daichangxishuSqrt));
@@ -2866,7 +2866,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 黑疤
 	for (const auto& item : info.heibaList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& heibaItem = processResult[item.index];
 			config.text = QString("黑疤 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2876,7 +2876,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 疏档
 	for (const auto& item : info.shudangList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& shudangItem = processResult[item.index];
 			config.text = QString("疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2886,7 +2886,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 划破
 	for (const auto& item : info.huapoList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& huapoItem = processResult[item.index];
 			config.text = QString("划破 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2896,7 +2896,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 接头
 	for (const auto& item : info.jietouList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& jietouItem = processResult[item.index];
 			config.text = QString("接头 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2906,7 +2906,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 挂丝
 	for (const auto& item : info.guasiList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& guasiItem = processResult[item.index];
 			config.text = QString("挂丝 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2916,7 +2916,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 破洞
 	for (const auto& item : info.podongList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& podongItem = processResult[item.index];
 			config.text = QString("破洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2926,7 +2926,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 脏污
 	for (const auto& item : info.zangwuList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& zangwuItem = processResult[item.index];
 			config.text = QString("脏污 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2936,7 +2936,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 无疏档
 	for (const auto& item : info.noshudangList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& noshudangItem = processResult[item.index];
 			config.text = QString("无疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2946,7 +2946,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 墨点
 	for (const auto& item : info.modianList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& modianItem = processResult[item.index];
 			config.text = QString("墨点 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2956,7 +2956,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 漏膜
 	for (const auto& item : info.loumoList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& loumoItem = processResult[item.index];
 			config.text = QString("漏膜 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2966,7 +2966,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 稀疏档
 	for (const auto& item : info.xishudangList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& xishudangItem = processResult[item.index];
 			config.text = QString("稀疏档 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2976,7 +2976,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 二维码
 	for (const auto& item : info.erweimaList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& erweimaItem = processResult[item.index];
 			config.text = QString("二维码 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2986,7 +2986,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 大墨点
 	for (const auto& item : info.damodianList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& damodianItem = processResult[item.index];
 			config.text = QString("大墨点 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -2996,7 +2996,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 孔洞
 	for (const auto& item : info.kongdongList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& kongdongItem = processResult[item.index];
 			config.text = QString("孔洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -3006,7 +3006,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 色标
 	for (const auto& item : info.sebiaoList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& sebiaoItem = processResult[item.index];
 			config.text = QString("色标 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -3016,7 +3016,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 印刷缺陷
 	for (const auto& item : info.yinshuaquexianList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& yinshuaquexianItem = processResult[item.index];
 			config.text = QString("印刷缺陷 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -3026,7 +3026,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 小破洞
 	for (const auto& item : info.xiaopodongList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& xiaopodongItem = processResult[item.index];
 			config.text = QString("小破洞 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
@@ -3036,7 +3036,7 @@ void ImageProcessorSmartCroppingOfBags::drawDefectRec_error(QImage& image,
 	// 胶带
 	for (const auto& item : info.jiaodaiList)
 	{
-		if (item.isDraw)
+		if (item.isBad)
 		{
 			auto& jiaodaiItem = processResult[item.index];
 			config.text = QString("胶带 %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area));
