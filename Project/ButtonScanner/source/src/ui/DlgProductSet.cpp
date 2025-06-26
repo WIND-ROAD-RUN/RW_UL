@@ -303,9 +303,9 @@ void DlgProductSet::pbtn_outsideDiameterValue_clicked() {
 	if (isAccept == QDialog::Accepted)
 	{
 		auto value = numKeyBord.getValue();
-		if (value.toDouble() < 0)
+		if (value.toDouble() < 5)
 		{
-			QMessageBox::warning(this, "提示", "请输入大于0的数值");
+			QMessageBox::warning(this, "提示", "纽扣的外径应大于5mm");
 			return;
 		}
 		auto& GlobalStructData = GlobalStructData::getInstance();
