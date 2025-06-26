@@ -213,6 +213,7 @@ private:
 	std::vector<Time> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true,
 		bool ascending = true);
 	void getErrorLocation(const std::vector<Time>& times);
+	void getErrorLocation(const Time& times, const SmartCroppingOfBagsDefectInfo& info);
 	// 获取一个时间集合拼接而成的图像
 	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
 	// AI模型处理拼接图像
@@ -266,7 +267,9 @@ private:
 
 private:
 	void run_OpenRemoveFunc(MatInfo& frame);	// 开启剔废功能时的处理模式
-	// 处理拉链缺陷信息
+
+	void run_OpenRemoveFunc_process_defect_info(const Time& time);
+
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
 	// 处理黑疤
 	void run_OpenRemoveFunc_process_defect_info_Heiba(SmartCroppingOfBagsDefectInfo& info);
@@ -305,7 +308,7 @@ private:
 	// 处理胶带
 	void run_OpenRemoveFunc_process_defect_info_Jiaodai(SmartCroppingOfBagsDefectInfo& info);
 	// 检测到缺陷后发出错误信息
-	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
+	void run_OpenRemoveFunc_emitErrorInfo(const SmartCroppingOfBagsDefectInfo& info) const;
 
 	// 存图
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
@@ -324,8 +327,7 @@ private:
 	// 调试模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
 	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 	// 剔废模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
-	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
-
+	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 	// 抓取黑疤信息
 	void getHeibaInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	// 抓取疏档信息

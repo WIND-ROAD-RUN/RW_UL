@@ -144,6 +144,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult, processTime);
+	run_OpenRemoveFunc_process_defect_info(frame.time);
 	getErrorLocation(times);
 
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
@@ -308,6 +309,11 @@ void ImageProcessorSmartCroppingOfBags::getErrorLocation(const std::vector<Time>
 
 		std::cout << "bottomErrorLocation"<<bottomErrorLocation<<std::endl;
 	}
+}
+
+void ImageProcessorSmartCroppingOfBags::getErrorLocation(const Time& times, const SmartCroppingOfBagsDefectInfo& info)
+{
+	//TODO:写出算出defect的location的逻辑
 }
 
 ImageCollage::CollageImage ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeTimeCollageTime_debug(
@@ -745,7 +751,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult, processTime);
-	getErrorLocation(times);
+	run_OpenRemoveFunc_process_defect_info(frame.time);
 
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -791,6 +797,29 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 		}
 	}
 	_lastQieDaoTime = _qieDaoTime;
+}
+
+void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(const Time& time)
+{
+	auto currentTimeProcessResult = _historyResult->get(time);
+	if (!currentTimeProcessResult.has_value())
+	{
+		return;
+	}
+	if (currentTimeProcessResult.value().processResult.empty())
+	{
+		return;
+	}
+
+	auto processResult = currentTimeProcessResult.value().processResult;
+	auto processIndex = filterEffectiveIndexes_defect(processResult);
+
+	SmartCroppingOfBagsDefectInfo info;
+
+	getEliminationInfo_defect(info, processResult, processIndex);
+	getErrorLocation(time,info);
+	run_OpenRemoveFunc_process_defect_info(info);
+	run_OpenRemoveFunc_emitErrorInfo(info);
 }
 
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info)
@@ -1219,7 +1248,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info_J
 	}
 }
 
-void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const
+void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const SmartCroppingOfBagsDefectInfo& info) const
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 
@@ -1375,8 +1404,7 @@ void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOf
 }
 
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info,
-	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index,
-	const cv::Mat& mat)
+                                                                  const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index)
 {
 	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
 	getShudangInfo(info, processResult, index[ClassId::Shudang]);
@@ -3146,24 +3174,24 @@ void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, si
 	_timeBool->set(currentTime, false);
 
 
-	////
-	//static bool temp{ false };
+	//
+	/*static bool temp{ false };
 
 
-	//if (temp)
-	//{
-	//	imagePart.element = mat1.clone();
-	//	temp = false;
-	//}
-	//else
-	//{
-	//	imagePart.element = mat2.clone();
-	//	temp = true;
-	//}
+	if (temp)
+	{
+		imagePart.element = mat1.clone();
+		temp = false;
+	}
+	else
+	{
+		imagePart.element = mat2.clone();
+		temp = true;
+	}*/
 
 
 
-	////
+	//
 
 	_imageCollage->pushImage(imagePart, currentTime);
 
