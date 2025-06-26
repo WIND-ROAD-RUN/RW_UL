@@ -84,7 +84,7 @@ void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state)
 {
 	//下降沿
-	/*if (_qiedaoPre)
+	if (_qiedaoPre)
 	{
 		if (state==false)
 		{
@@ -97,10 +97,10 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 			}
 		}
 	}
-	_qiedaoPre = state;*/
+	_qiedaoPre = state;
 
 	//上升沿
-	if (!_qiedaoPre)
+	/*if (!_qiedaoPre)
 	{
 		if (state == true)
 		{
@@ -114,7 +114,7 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 			}
 		}
 	}
-	_qiedaoPre = state;
+	_qiedaoPre = state;*/
 }
 
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()

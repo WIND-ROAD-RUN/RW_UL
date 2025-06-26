@@ -221,7 +221,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 				auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
 				auto daichang = frameLocation * setConfig.maichongxishu1;
 				auto xiangsu = daichang / setConfig.daichangxishu1;
-				std::cout << "像素:" << static_cast<int>(xiangsu) << std::endl;
 			}
 
 			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
@@ -257,7 +256,7 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			emit imageReady(QPixmap::fromImage(collageImage));
 
 			emit appendPixel(collageImage.height());
-
+			std::cout << "Image emit" << std::endl;
 		}
 	}
 	_lastQieDaoTime = _qieDaoTime;
