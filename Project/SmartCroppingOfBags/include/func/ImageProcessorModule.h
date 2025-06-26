@@ -16,6 +16,9 @@
 #include"dsl_TimeBasedCache.hpp"
 #include"dsl_CacheFIFOThreadSafe.hpp"
 
+using TimeFrameMatInfo = std::pair<Time, std::optional<rw::rqw::ElementInfo<cv::Mat>>>;
+using TimeFrameQImageInfo = std::pair<Time, QImage>;
+
 
 inline std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
@@ -217,19 +220,18 @@ private:
 	std::vector<Time> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true,
 		bool ascending = true);
 	// 获得时间集合对应的图像
-	void getUnprocessedSouceImage_debug(std::vector<Time> fiveTimes, std::vector<cv::Mat>& images);
-	// 获得五次时间集合对应的五张图像的检测结果
-	void getUnprocessedHistoyProcessResult_debug(const Time& time, int count, std::vector<std::vector<rw::DetectionRectangleInfo>>& detectRecs,
-		bool isBefore = true, bool ascending = true);
+	void getUnprocessedSouceImage_debug(const std::vector<Time>& fiveTimes, std::vector<TimeFrameMatInfo>& images);
 	// 对五张图像进行绘画检测框操作
-	QVector<QImage> drawUnprocessedMatMaskInfo_debug(const std::vector<cv::Mat>& fiveMats, const std::vector<std::vector<rw::DetectionRectangleInfo>>& fiveMatDetects);
-	void drawCutLine(const std::vector<Time> & times, QVector<QImage>& images);
+	std::vector<TimeFrameQImageInfo> drawUnprocessedMatMaskInfo_debug(const std::vector<TimeFrameMatInfo>& fiveMats);
+	void drawCutLine(TimeFrameQImageInfo& info);
 
 	// 拼接绘画好的五张图像
 	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
 	// 随机添加五个检测框
 	void getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec); // 获取随机的检测框
 
+
+	QImage getCollageImage(const std::vector<TimeFrameQImageInfo>& infos);
 private:
 	// 剔废模式下的处理函数
 	// 获得当前图像的时间戳与前count张图像的时间戳的集合
@@ -307,7 +309,7 @@ signals:
 
 private:
 	// 调试模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
-	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
+	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 	// 剔废模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
 	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const cv::Mat& mat);
 
