@@ -136,8 +136,9 @@ void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
 	static std::deque<double> pulseHistory; // 用于存储最近五次脉冲值
 
+	double pulseTemp=pulse;
 	pulse = std::abs(pulse - lastPulse); // 计算当前脉冲与上次脉冲的绝对差值
-	lastPulse = pulse; // 更新上次脉冲值
+	lastPulse = pulseTemp; // 更新上次脉冲值
 
 	// 将当前脉冲值加入历史记录
 	pulseHistory.push_back(pulse);
@@ -157,21 +158,19 @@ void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
 {
-	if (runningStatePixelParaChange)
-	{
-		pixelSum = pixel;
-		pixelCount = 0;
-		runningStatePixelParaChange = false;
-	}
-	else
-	{
-		pixelSum += pixel; 
-		++pixelCount;
+	static std::deque<double> pixelHistory; // 用于存储最近五次像素值
 
-		pixelAverage = (pixelCount == 0) ? 0.0 : (pixelSum / pixelCount);
+	// 将当前像素值加入历史记录
+	pixelHistory.push_back(pixel);
+
+	// 如果历史记录超过五次，移除最早的一次
+	if (pixelHistory.size() > 5) {
+		pixelHistory.pop_front();
 	}
 
-
+	// 计算最近五次像素的平均值
+	double sum = std::accumulate(pixelHistory.begin(), pixelHistory.end(), 0.0);
+	pixelAverage = (pixelHistory.empty()) ? 0.0 : (sum / pixelHistory.size());
 }
 
 
