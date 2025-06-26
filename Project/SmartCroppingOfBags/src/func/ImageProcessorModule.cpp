@@ -128,8 +128,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	// 获得当前图像与上一张图像拼接而成的图像
 	auto resultImage = getCurrentWithBeforeTimeCollageTime_debug(times);
 
-	//AI开始识别
-	SmartCroppingOfBagsDefectInfo defectInfo;
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	// AI推理获得当前图像与上一张图像拼接而成的图像的检测结果
@@ -138,14 +136,14 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	auto processTime = QString("%1 ms").arg(duration);
 	//AI识别完成
 
 	// 获取上一张图像的行高
 	auto previousMatHeight = splitRecognitionBox_debug(times);
 
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
-	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult);
+	regularizedTwoRecognitionBox_debug(previousMatHeight, times[0], frame.time, processResult, processTime);
 
 	auto& globalThreadData = GlobalStructThreadSmartCroppingOfBags::getInstance();
 	auto& globalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -159,17 +157,6 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			//这里第一个时间点可能是上一次的
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime,frame.time);
 
-			//auto qiedaoTimeFrame = findTimeInterval(duringTimes, _qieDaoTime);
-			//if (qiedaoTimeFrame.has_value())
-			//{
-			//	auto qiedaoFrame = _imageCollage->getImage(qiedaoTimeFrame.value());
-			//	auto frameLocation = qiedaoFrame.value().attribute["location"];
-			//	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-			//	auto daichang = frameLocation * setConfig.maichongxishu1;
-			//	auto xiangsu = daichang / setConfig.daichangxishu1;
-			//}
-
-			// 将duringTimes里面所有出现过的时间戳删除掉，只剩下未出过的图像的时间戳
 			duringTimes = getValidTime(duringTimes);
 			getCutLine(duringTimes, frame);
 
@@ -203,6 +190,18 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 	}
 	_lastQieDaoTime = _qieDaoTime;
 
+}
+
+void ImageProcessorSmartCroppingOfBags::drawDebugTextInfoOnQImage(QImage& image, const HistoryDetectInfo& info)
+{
+	QVector<QString> texts;
+	texts.emplace_back(info.processTime);
+	std::vector<rw::rqw::ImagePainter::PainterConfig> configs;
+	rw::rqw::ImagePainter::PainterConfig config;
+	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+	config.fontSize = 100;
+	configs.emplace_back(config);
+	rw::rqw::ImagePainter::drawTextOnImageWithConfig(image, texts, configs);
 }
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getValidTime(const std::vector<Time>& times)
@@ -334,12 +333,13 @@ void ImageProcessorSmartCroppingOfBags::getCutLine(const std::vector<Time>& time
 	}
 }
 
-void ImageProcessorSmartCroppingOfBags::regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
+void ImageProcessorSmartCroppingOfBags::regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec, const
+                                                                           QString& processTime)
 {
 	// 将识别出来的processResult框的集合分别规整到拆分到的两次行高上,也即重新映射到两张图片上
 	mergeCurrentProcessLastResultWithLastProcessResult_debug(previousMatHeight, previousTime, allDetectRec);
 
-	addCurrentResultToHistoryResult_debug(previousMatHeight, allDetectRec, nowTime);
+	addCurrentResultToHistoryResult_debug(previousMatHeight, allDetectRec, nowTime, processTime);
 }
 
 void ImageProcessorSmartCroppingOfBags::mergeCurrentProcessLastResultWithLastProcessResult_debug(const int& previousMatHeight,const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec)
@@ -372,7 +372,8 @@ void ImageProcessorSmartCroppingOfBags::mergeCurrentProcessLastResultWithLastPro
 	}
 }
 
-void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(const int& previousMatHeight,std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime)
+void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime, const QString
+                                                                              & processTime)
 {
 	// 剩余检测框的四个顶点y坐标减去上一张图片高度
 	for (auto& rect : nowDetectRec) {
@@ -383,8 +384,10 @@ void ImageProcessorSmartCroppingOfBags::addCurrentResultToHistoryResult_debug(co
 		rect.center_y -= previousMatHeight;
 	}
 
+	HistoryDetectInfo info(nowDetectRec);
+	info.processTime = processTime;
 	// 将属于当前图片的检测结果添加到当前图像的识别信息中
-	_historyResult->insert(nowTime, HistoryDetectInfo(nowDetectRec));
+	_historyResult->insert(nowTime, info);
 }
 
 std::vector<Time> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTimes_debug(
@@ -428,8 +431,11 @@ std::vector<TimeFrameQImageInfo> ImageProcessorSmartCroppingOfBags::drawUnproces
 
 		drawDefectRec(qImage, historyProcessResult, processResultIndex, defectInfo);
 		drawDefectRec_error(qImage, historyProcessResult, processResultIndex, defectInfo);
+		drawDebugTextInfoOnQImage(qImage, historyResultItem.value());
+
 		TimeFrameQImageInfo info(item.first,qImage);
 		drawCutLine(info);
+
 
 		fiveQImages.emplace_back(info);
 	}
@@ -663,7 +669,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	defectInfo.time = QString("处理时间: %1 ms").arg(duration);
+	//defectInfo.time = QString("处理时间: %1 ms").arg(duration);
 	//AI识别完成
 
 	auto previousMatHeight = splitRecognitionBox_Defect(times);
@@ -2036,7 +2042,7 @@ void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_de
 	configList.push_back(config);
 
 	//运行时间
-	textList.push_back(info.time);
+	//textList.push_back(info.time);
 
 	auto& generalSet = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	auto& isDefect = generalSet.istifei;
@@ -2400,7 +2406,7 @@ void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_De
 
 	configList.push_back(config);
 	//运行时间
-	textList.push_back(info.time);
+	//textList.push_back(info.time);
 
 	// 黑疤
 	if (!info.heibaList.empty()) {

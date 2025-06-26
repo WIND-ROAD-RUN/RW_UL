@@ -215,6 +215,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 				camera1->setFrameTriggered(false);
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(lineHeight);
+	
 			}
 			else if (mainConfig.isyinshuajiance)
 			{
@@ -222,8 +223,12 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(16000);
 			}
+
+			if (setConfig.isxiangjizengyi1)
+			{
+				camera1->setGain(setConfig.xiangjizengyi1);
+			}
 	
-			setCameraExposureTime(1, setConfig.xiangjibaoguang1);
 			camera1->startMonitor();
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured, Qt::DirectConnection);
@@ -267,7 +272,6 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(16000);
 			}
-			setCameraExposureTime(2, setConfig.xiangjibaoguang1);
 			// 设置剔废IO输出
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			//camera2->setOutTriggerConfig(config);
@@ -326,36 +330,6 @@ rw::rqw::CameraMetaData GlobalStructDataSmartCroppingOfBags::cameraMetaDataCheck
 	rw::rqw::CameraMetaData error;
 	error.ip = "0";
 	return error;
-}
-
-void GlobalStructDataSmartCroppingOfBags::setCameraExposureTime(int cameraIndex, size_t exposureTime)
-{
-	switch (cameraIndex) {
-	case 1:
-		if (camera1) {
-			camera1->setExposureTime(exposureTime);
-			if (exposureTime < 200) {
-				camera1->setGain(0);
-			}
-			else {
-				camera1->setGain(5);
-			}
-		}
-		break;
-	case 2:
-		if (camera2) {
-			camera2->setExposureTime(exposureTime);
-			if (exposureTime < 200) {
-				camera2->setGain(0);
-			}
-			else {
-				camera2->setGain(5);
-			}
-		}
-		break;
-	default:
-		break;
-	}
 }
 
 void GlobalStructDataSmartCroppingOfBags::setCameraDebugMod()

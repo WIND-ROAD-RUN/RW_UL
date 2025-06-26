@@ -174,7 +174,6 @@ public:
 
 	bool isTargetCamera(const QString& cameraIndex, const QString& targetName);
 	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
-	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 
 	void setCameraDebugMod();
 	void setCameraDefectMod();

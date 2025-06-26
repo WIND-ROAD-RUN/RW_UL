@@ -46,6 +46,7 @@ namespace rw {
 			};
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.06);
+			static void drawTextOnImageWithConfig(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList);
 		public:
 			static QImage cvMatToQImage(const cv::Mat& mat);
 

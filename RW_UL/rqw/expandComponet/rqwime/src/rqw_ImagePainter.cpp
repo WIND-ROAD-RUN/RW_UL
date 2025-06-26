@@ -77,6 +77,42 @@ namespace rw
 			painter.end();
 		}
 
+		void ImagePainter::drawTextOnImageWithConfig(QImage& image, const QVector<QString>& texts,
+			const std::vector<PainterConfig>& colorList)
+		{
+			if (texts.empty()) {
+				return;
+			}
+
+			QPainter painter(&image);
+			painter.setRenderHint(QPainter::Antialiasing);
+
+			int x = 0;
+			int y = 0;
+
+			for (size_t i = 0; i < texts.size(); ++i) {
+				// 获取当前文本的颜色和字体大小
+				QColor color = (i < colorList.size()) ? colorList[i].textColor : colorList.back().textColor;
+				int fontSize = (i < colorList.size()) ? colorList[i].fontSize : colorList.back().fontSize;
+
+				// 设置画笔颜色
+				painter.setPen(color);
+
+				// 设置字体大小
+				QFont font = painter.font();
+				font.setPixelSize(fontSize);
+				painter.setFont(font);
+
+				// 绘制文本
+				painter.drawText(x, y + fontSize, texts[i]);
+
+				// 更新 y 坐标，确保下一行文本不会重叠
+				y += fontSize;
+			}
+
+			painter.end();
+		}
+
 		QImage ImagePainter::cvMatToQImage(const cv::Mat& mat)
 		{
 			QImage result;

@@ -29,10 +29,6 @@ inline std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 struct SmartCroppingOfBagsDefectInfo
 {
 public:
-	// AI运行计时
-	QString time;
-
-public:
 	// 缺陷
 	struct DetectItem
 	{
@@ -61,8 +57,6 @@ public:
 	std::vector<DetectItem> yinshuaquexianList;// 印刷缺陷
 	std::vector<DetectItem> xiaopodongList;    // 小破洞
 	std::vector<DetectItem> jiaodaiList;       // 胶带
-
-
 };
 
 // 图片信息
@@ -103,17 +97,20 @@ public:
 public:
 	std::vector<rw::DetectionRectangleInfo> processResult;
 public:
+	QString processTime{};
+public:
 	HistoryDetectInfo() = default;
 	HistoryDetectInfo(const std::vector<rw::DetectionRectangleInfo>& result) : processResult(result) {}
 	// 拷贝构造函数
 	HistoryDetectInfo(const HistoryDetectInfo& other)
-	: processResult(other.processResult),hasCut(other.hasCut),cutLocate(other.cutLocate) {}
+	: processResult(other.processResult),hasCut(other.hasCut),cutLocate(other.cutLocate),processTime(other.processTime) {}
 	// 拷贝赋值运算符
 	HistoryDetectInfo& operator=(const HistoryDetectInfo& other) {
 		if (this != &other) {
 			processResult = other.processResult;
 			hasCut = other.hasCut;
 			cutLocate = other.cutLocate;
+			processTime = other.processTime;
 		}
 		return *this;
 	}
@@ -191,6 +188,10 @@ protected:
 
 private:
 	void run_debug(MatInfo& frame);				// 不开剔废时候的调试模式
+
+	void drawDebugTextInfoOnQImage(QImage & image,const HistoryDetectInfo &info);
+public:
+
 	std::vector<Time> getValidTime(const std::vector<Time>& times);
 
 
@@ -211,11 +212,13 @@ private:
 	//获取切刀线
 	void getCutLine(const std::vector<Time>& time,const MatInfo& frame);
 	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
-	void regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
+	void regularizedTwoRecognitionBox_debug(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec, const
+	                                        QString& processTime);
 	// 将属于上一张图像的识别框合并到上一次的图像识别框中
 	void mergeCurrentProcessLastResultWithLastProcessResult_debug(const int& previousMatHeight, const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
 	// 将属于当前图像的识别框重新计算Y轴并合并到当前图像识别框中
-	void addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
+	void addCurrentResultToHistoryResult_debug(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime, const QString
+	                                           & processTime);
 	// 返回包含当前时间点的count个时间戳集合
 	std::vector<Time> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true,
 		bool ascending = true);
