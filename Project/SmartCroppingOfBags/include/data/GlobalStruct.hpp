@@ -91,8 +91,8 @@ public:
 	bool build_motion();
 	void destroy_motion();
 public:
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue1;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue2;
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();

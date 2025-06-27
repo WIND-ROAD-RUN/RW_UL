@@ -308,7 +308,7 @@ private:
 	// 处理胶带
 	void run_OpenRemoveFunc_process_defect_info_Jiaodai(SmartCroppingOfBagsDefectInfo& info);
 	// 检测到缺陷后发出错误信息
-	void run_OpenRemoveFunc_emitErrorInfo(const SmartCroppingOfBagsDefectInfo& info) const;
+	void run_OpenRemoveFunc_emitErrorInfo(const Time& time) const;
 
 	// 存图
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);

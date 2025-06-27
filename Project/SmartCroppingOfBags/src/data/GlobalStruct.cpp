@@ -27,15 +27,15 @@ void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 
 void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 {
-	auto compareNodeEqual = [](const Time& a, const Time& b) {
+	auto compareNodeEqual = [](const double& a, const double& b) {
 		return a == b;
 		};
-	auto compareNodePriority = [](const Time& a, const Time& b) {
+	auto compareNodePriority = [](const double& a, const double& b) {
 		return a < b;
 		};
 
-	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
-	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
+	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
+	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
 }
 
 void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
