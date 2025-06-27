@@ -271,42 +271,6 @@ private:
 	void run_OpenRemoveFunc_process_defect_info(const Time& time);
 
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
-	// 处理黑疤
-	void run_OpenRemoveFunc_process_defect_info_Heiba(SmartCroppingOfBagsDefectInfo& info);
-	// 处理疏档
-	void run_OpenRemoveFunc_process_defect_info_Shudang(SmartCroppingOfBagsDefectInfo& info);
-	// 处理划破
-	void run_OpenRemoveFunc_process_defect_info_Huapo(SmartCroppingOfBagsDefectInfo& info);
-	// 处理接头
-	void run_OpenRemoveFunc_process_defect_info_Jietou(SmartCroppingOfBagsDefectInfo& info);
-	// 处理挂丝
-	void run_OpenRemoveFunc_process_defect_info_Guasi(SmartCroppingOfBagsDefectInfo& info);
-	// 处理破洞
-	void run_OpenRemoveFunc_process_defect_info_Podong(SmartCroppingOfBagsDefectInfo& info);
-	// 处理脏污
-	void run_OpenRemoveFunc_process_defect_info_Zangwu(SmartCroppingOfBagsDefectInfo& info);
-	// 处理无疏档
-	void run_OpenRemoveFunc_process_defect_info_Noshudang(SmartCroppingOfBagsDefectInfo& info);
-	// 处理墨点
-	void run_OpenRemoveFunc_process_defect_info_Modian(SmartCroppingOfBagsDefectInfo& info);
-	// 处理漏膜
-	void run_OpenRemoveFunc_process_defect_info_Loumo(SmartCroppingOfBagsDefectInfo& info);
-	// 处理稀疏档
-	void run_OpenRemoveFunc_process_defect_info_Xishudang(SmartCroppingOfBagsDefectInfo& info);
-	// 处理二维码
-	void run_OpenRemoveFunc_process_defect_info_Erweima(SmartCroppingOfBagsDefectInfo& info);
-	// 处理大墨点
-	void run_OpenRemoveFunc_process_defect_info_Damodian(SmartCroppingOfBagsDefectInfo& info);
-	// 处理孔洞
-	void run_OpenRemoveFunc_process_defect_info_Kongdong(SmartCroppingOfBagsDefectInfo& info);
-	// 处理色标
-	void run_OpenRemoveFunc_process_defect_info_Sebiao(SmartCroppingOfBagsDefectInfo& info);
-	// 处理印刷缺陷
-	void run_OpenRemoveFunc_process_defect_info_Yinshuaquexian(SmartCroppingOfBagsDefectInfo& info);
-	// 处理小破洞
-	void run_OpenRemoveFunc_process_defect_info_Xiaopodong(SmartCroppingOfBagsDefectInfo& info);
-	// 处理胶带
-	void run_OpenRemoveFunc_process_defect_info_Jiaodai(SmartCroppingOfBagsDefectInfo& info);
 	// 检测到缺陷后发出错误信息
 	void run_OpenRemoveFunc_emitErrorInfo(const Time& time) const;
 
