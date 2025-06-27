@@ -56,7 +56,7 @@ ZipperScanner::ZipperScanner(QWidget* parent)
 	build_connect();
 
 	// 启用所有后台线程
-	build_threads();
+	start_threads();
 }
 
 ZipperScanner::~ZipperScanner()
@@ -72,7 +72,7 @@ void ZipperScanner::build_ui()
 	build_DlgProductSetData();
 	build_DlgProductScore();
 	build_DlgExposureTimeSet();
-
+	build_DlgIOTrigger();
 }
 
 // 连接槽函数
@@ -145,6 +145,10 @@ void ZipperScanner::build_connect()
 	// 连接停止按钮
 	QObject::connect(ui->rbtn_stop, &QRadioButton::clicked,
 		this, &ZipperScanner::rbtn_stop_clicked);
+
+	// 连接IO触发窗体
+	QObject::connect(ui->pbtn_IOTrigger, &QPushButton::clicked,
+		this, &ZipperScanner::pbtn_IOTrigger_clicked);
 }
 
 // 构建相机
@@ -271,6 +275,11 @@ void ZipperScanner::build_DlgExposureTimeSet()
 	_dlgExposureTimeSet = new DlgExposureTimeSet(this);
 }
 
+void ZipperScanner::build_DlgIOTrigger()
+{
+	_dlgIOTrigger = new DlgIOTrigger(this);
+}
+
 void ZipperScanner::build_imageProcessorModule()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
@@ -311,7 +320,7 @@ void ZipperScanner::build_imageSaveEngine()
 	globalStruct.imageSaveEngine->startEngine();
 }
 
-void ZipperScanner::build_threads()
+void ZipperScanner::start_threads()
 {
 	auto& globalStruct = GlobalStructDataZipper::getInstance();
 	// 启动异步剔废线程
@@ -702,6 +711,15 @@ void ZipperScanner::rbtn_stop_clicked(bool checked)
 		globalStruct.generalConfig.isStart = true;
 		globalStruct.generalConfig.isStop = false;
 	}
+}
+
+void ZipperScanner::pbtn_IOTrigger_clicked()
+{
+	_dlgIOTrigger->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	// 计算居中位置
+	QPoint center = this->geometry().center() - QPoint(_dlgIOTrigger->width() / 2, _dlgIOTrigger->height() / 2);
+	_dlgIOTrigger->move(center);
+	_dlgIOTrigger->exec();
 }
 
 void ZipperScanner::onCamera1Display(QPixmap image)

@@ -5,6 +5,7 @@
 #include "DlgProductSet.h"
 #include "DlgProductScore.h"
 #include "DlgExposureTimeSet.h"
+#include "DlgIOTrigger.h"
 #include <rqw_LabelWarning.h>
 #include <opencv2/core/mat.hpp>
 
@@ -26,6 +27,7 @@ public:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgProductScore* _dlgProductScore = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
+	DlgIOTrigger* _dlgIOTrigger = nullptr;
 
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
@@ -40,11 +42,12 @@ public :
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
 	void build_DlgExposureTimeSet();
+	void build_DlgIOTrigger();
 
 	void build_imageProcessorModule();
 	void build_imageSaveEngine();
 
-	void build_threads();
+	void start_threads();
 
 public:
 	void destroyComponents();
@@ -70,6 +73,7 @@ private slots:
 	void ckb_wenzi_checked(bool checked);
 	void rbtn_start_clicked(bool checked);
 	void rbtn_stop_clicked(bool checked);
+	void pbtn_IOTrigger_clicked();
 
 
 private slots:
