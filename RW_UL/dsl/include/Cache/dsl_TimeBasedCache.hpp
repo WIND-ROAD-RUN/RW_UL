@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <deque>
 #include <vector>
@@ -15,17 +15,21 @@ namespace rw {
         public:
             explicit TimeBasedCache(size_t capacity) : _capacity(capacity) {}
 
-            // ��������
             void insert(const Time& time, const T& data) {
-                std::lock_guard<std::mutex> lock(_mutex);
+				std::lock_guard<std::mutex> lock(_mutex);
 
-                // �������������ɾ����ɵ�����
-                if (_cache.size() >= _capacity) {
-                    _cache.pop_front();
-                }
+				// 如果缓存已满，移除最早的元素
+				if (_cache.size() >= _capacity) {
+					_cache.pop_front();
+				}
 
-                // ����������
-                _cache.emplace_back(time, data);
+				// 找到插入位置以保持时间顺序
+				auto it = std::lower_bound(_cache.begin(), _cache.end(), time, [](const auto& entry, const auto& t) {
+					return entry.first < t;
+					});
+
+				// 在正确位置插入新元素
+				_cache.emplace(it, time, data);
             }
 
             std::vector<T> query(const Time& time, int count, bool isBefore = true, bool ascending = true) const {
@@ -246,16 +250,46 @@ namespace rw {
                 return result;
             }
 
-            // ��ȡ�����С
             size_t size() const {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
             }
 
+			// 新增的 set 接口
+			void set(const Time& time, const T& data) {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					it->second = data; // 更新已有的值
+				}
+				else {
+					insert(time, data); // 如果不存在，则插入新值
+				}
+			}
+
+			// 新增的 get 接口
+			std::optional<T> get(const Time& time) const {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					return it->second; // 返回找到的值
+				}
+
+				return std::nullopt; // 如果未找到，返回空值
+			}
+
         private:
-            mutable std::mutex _mutex; // ����������̰߳�ȫ
-            size_t _capacity;          // ��������
-            std::deque<std::pair<Time, T>> _cache; // �������ݣ��洢ʱ�������ݵļ�ֵ��
+            mutable std::mutex _mutex; 
+            size_t _capacity;          
+            std::deque<std::pair<Time, T>> _cache; 
         };
 
         template <typename T>
@@ -264,11 +298,20 @@ namespace rw {
             explicit TimeBasedCache(size_t capacity) : _capacity(capacity) {}
 
             void insert(const std::chrono::system_clock::time_point& time, const T& data) {
-                std::lock_guard<std::mutex> lock(_mutex);
-                if (_cache.size() >= _capacity) {
-                    _cache.pop_front();
-                }
-                _cache.emplace_back(time, data);
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				// 如果缓存已满，移除最早的元素
+				if (_cache.size() >= _capacity) {
+					_cache.pop_front();
+				}
+
+				// 找到插入位置以保持时间顺序
+				auto it = std::lower_bound(_cache.begin(), _cache.end(), time, [](const auto& entry, const auto& t) {
+					return entry.first < t;
+					});
+
+				// 在正确位置插入新元素
+				_cache.emplace(it, time, data);
             }
 
             std::vector<T> queryWithTime(const std::chrono::system_clock::time_point& time, int count, bool isBefore = true, bool ascending = true) const {
@@ -453,7 +496,6 @@ namespace rw {
                     }
                 }
 
-                // ��ʱ������
                 if (ascending) {
                     std::sort(candidates.begin(), candidates.end(), [](const auto& a, const auto& b) {
                         return a.first < b.first;
@@ -465,7 +507,6 @@ namespace rw {
                         });
                 }
 
-                // ���� hasLeft/hasRight
                 if (!candidates.empty() && !hasLeft && candidates.front().first == beginTime) {
                     candidates.erase(candidates.begin());
                 }
@@ -484,6 +525,36 @@ namespace rw {
                 std::lock_guard<std::mutex> lock(_mutex);
                 return _cache.size();
             }
+
+			void set(const std::chrono::system_clock::time_point& time, const T& data) {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					it->second = data; // 更新已有的值
+				}
+				else {
+					insert(time, data); // 如果不存在，则插入新值
+				}
+			}
+
+			// 新增的 get 接口
+			std::optional<T> get(const std::chrono::system_clock::time_point& time) const {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					return it->second; // 返回找到的值
+				}
+
+				return std::nullopt; // 如果未找到，返回空值
+			}
 
         private:
             mutable std::mutex _mutex;

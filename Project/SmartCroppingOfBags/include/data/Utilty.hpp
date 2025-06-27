@@ -49,6 +49,7 @@ public:
 
 struct ClassId
 {
+	static constexpr int MinClassIdNum = 0;
 	static constexpr int Heiba = 0;
 	static constexpr int Shudang = 1;
 	static constexpr int Huapo = 2;
@@ -67,6 +68,7 @@ struct ClassId
 	static constexpr int Damodian = 15;
 	static constexpr int Kongdong = 16;
 	static constexpr int Sebiao = 17;
+	static constexpr int MaxClassIdNum = 17;
 };
 
 struct Version

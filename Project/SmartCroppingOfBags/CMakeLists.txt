@@ -87,3 +87,10 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     ${ZMotionRutime_dlls}
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
+
+file(GLOB TXT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/souceFile/*.txt")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${TXT_FILES}
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)

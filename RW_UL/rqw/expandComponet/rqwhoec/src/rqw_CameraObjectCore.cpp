@@ -1,6 +1,7 @@
 #include"rqw_CameraObjectCore.hpp"
 
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include"hoec_CameraFactory_v1.hpp"
 #include"hoec_Camera_v1.hpp"
@@ -14,7 +15,10 @@ namespace rw
             QImage result;
             auto type = mat.type();
             if (type == CV_8UC1) {
-                result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_Grayscale8);
+				cv::Mat colorMat;
+				cv::cvtColor(mat, colorMat, cv::COLOR_GRAY2BGR); 
+				result = QImage(colorMat.data, colorMat.cols, colorMat.rows, colorMat.step[0], QImage::Format_RGB888).rgbSwapped();
+
             }
             else if (type == CV_8UC3) {
                 result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_RGB888).rgbSwapped();
