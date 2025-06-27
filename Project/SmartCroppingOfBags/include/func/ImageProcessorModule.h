@@ -292,42 +292,6 @@ private:
 	void getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
 	// 剔废模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
 	void getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index);
-	// 抓取黑疤信息
-	void getHeibaInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取疏档信息
-	void getShudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取划破信息
-	void getHuapoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取接头信息
-	void getJietouInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取挂丝信息
-	void getGuasiInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取破洞信息
-	void getPodongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取脏污信息
-	void getZangwuInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取无疏档信息
-	void getNoshudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取墨点信息
-	void getModianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取漏膜信息
-	void getLoumoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取稀疏档信息
-	void getXishudangInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取二维码信息
-	void getErweimaInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取大墨点信息
-	void getDamodianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取孔洞信息
-	void getKongdongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取色标信息
-	void getSebiaoInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取印刷缺陷信息
-	void getYinshuaquexianInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取小破洞信息
-	void getXiaopodongInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
-	// 抓取胶带信息
-	void getJiaodaiInfo(SmartCroppingOfBagsDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 
 	static std::vector<std::vector<size_t>> getClassIndex(const std::vector<rw::DetectionRectangleInfo>& info);
 
@@ -348,7 +312,6 @@ private:
 	std::vector<std::vector<size_t>> getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
 	// 判断是否在上下左右限位内
 	bool isInBoundary(const rw::DetectionRectangleInfo& info);
-
 
 public:
 	// 开启剔废情况下绘制缺陷相关的信息(符合条件的缺陷会用红色显示)
