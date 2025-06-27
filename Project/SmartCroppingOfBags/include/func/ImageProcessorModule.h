@@ -64,13 +64,13 @@ class ImageProcessorSmartCroppingOfBags : public QThread
 {
 	Q_OBJECT
 public:
+	int imageProcessingModuleIndex;
+public:
 	std::shared_ptr<ImageCollage> _imageCollage = nullptr;
 	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, Time>> _historyTimes = nullptr;
-
 	std::shared_ptr<rw::dsl::TimeBasedCache<Time, HistoryDetectInfo>> _historyResult = nullptr;
 	std::shared_ptr<rw::dsl::CacheFIFOThreadSafe<Time, bool>> _timeBool = nullptr;
-	size_t collageImagesNum = 5;
 public:
 	ImageProcessorSmartCroppingOfBags(QQueue<MatInfo>& queue,
 		QMutex& mutex,
@@ -94,14 +94,8 @@ private:
 public:
 	std::vector<Time> getValidTime(const std::vector<Time>& times);
 private:
-	// 调试模式用的封装函数
-	// 获得当前图像的时间戳与前count张图像的时间戳的集合
-	std::vector<Time> getTimesWithCurrentTime_debug(const Time& time, int count, bool isBefore = true,
-		bool ascending = true);
-	void getErrorLocation(const std::vector<Time>& times);
 	void getErrorLocation(const Time& times, const SmartCroppingOfBagsDefectInfo& info);
-	// 获取一个时间集合拼接而成的图像
-	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_debug(const std::vector<Time>& times);
+	void getErrorLocation(const std::vector<Time>& times);
 	// AI模型处理拼接图像
 	std::vector<rw::DetectionRectangleInfo> processCollageImage_debug(const cv::Mat& mat);
 	// 获取上个时间戳的图像的高度
@@ -130,44 +124,13 @@ private:
 	// 随机添加五个检测框
 	void getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec); // 获取随机的检测框
 
-
 	QImage getCollageImage(const std::vector<TimeFrameQImageInfo>& infos);
 private:
-	// 剔废模式下的处理函数
-	// 获得当前图像的时间戳与前count张图像的时间戳的集合
-	std::vector<Time> getTimesWithCurrentTime_Defect(const Time& time, int count, bool isBefore = true,
-		bool ascending = true);
-	// 获取一个时间集合拼接而成的图像
-	ImageCollage::CollageImage getCurrentWithBeforeTimeCollageTime_Defect(const std::vector<Time>& times);
-	// AI模型处理拼接图像
-	std::vector<rw::DetectionRectangleInfo> processCollageImage_Defect(const cv::Mat& mat);
-	// 获取上个时间戳的图像的高度
-	int splitRecognitionBox_Defect(const std::vector<Time>& time);
-	// 将识别框分割成上一次图像的,与这一次图像的识别框,并重新添加到相应的识别框中
-	void regularizedTwoRecognitionBox_Defect(const int& previousMatHeight, const Time& previousTime, const Time& nowTime, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
-	// 将属于上一张图像的识别框合并到上一次的图像识别框中
-	void mergeCurrentProcessLastResultWithLastProcessResult_Defect(const int& previousMatHeight, const Time& time, std::vector<rw::DetectionRectangleInfo>& allDetectRec);
-	// 将属于当前图像的识别框重新计算Y轴并合并到当前图像识别框中
-	void addCurrentResultToHistoryResult_Defect(const int& previousMatHeight, std::vector<rw::DetectionRectangleInfo>& nowDetectRec, const Time& nowTime);
-
-
-private:
-
 	void run_OpenRemoveFunc_process_defect_info(const Time& time);
-
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
-	// 检测到缺陷后发出错误信息
 	void run_OpenRemoveFunc_emitErrorInfo(const Time& time) const;
-
-	// 存图
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
-
-signals:
-	void imageReady(QPixmap image);
-	void imageNGReady(QPixmap image, size_t index, bool isbad);
-signals:
-	void appendPixel(double pixel);
 
 private:
 	// 调试模式下将对应的缺陷信息添加到SmartCroppingOfBagsDefectInfo中
@@ -185,40 +148,23 @@ public:
 	void buildSegModelEngine(const QString& enginePath);		// Segmentation 模型
 
 private:
-	// 不开启剔废时, 过滤出有效索引
-	std::vector<std::vector<size_t>> filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info);
 	// 开启剔废时, 过滤出有效索引
 	std::vector<std::vector<size_t>> filterEffectiveIndexes_defect(std::vector<rw::DetectionRectangleInfo> info);
-
-	// 筛选出在上下左右限位内的缺陷的下标
-	std::vector<std::vector<size_t>> getIndexInBoundary(const std::vector<rw::DetectionRectangleInfo>& info, const std::vector<std::vector<size_t>>& index);
-	// 判断是否在上下左右限位内
-	bool isInBoundary(const rw::DetectionRectangleInfo& info);
 
 public:
 	// 开启剔废情况下绘制缺陷相关的信息(符合条件的缺陷会用红色显示)
 	void drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
 
 public:
-	// 在指定位置画竖线
-	void drawVerticalLine_locate(QImage& image, size_t locate);
-	// 画切刀线与屏蔽线
-	void drawBoundariesLines(QImage& image);
-	// 开启调试情况下绘制缺陷相关的信息
-	void drawSmartCroppingOfBagsDefectInfoText_Debug(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
 	// 绘画绿色的检测框
-	void drawDefectRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
+	void drawDefectRec_green(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
 	// 绘画红色的检测框
-	void drawDefectRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
+	void drawDefectRec_red(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const SmartCroppingOfBagsDefectInfo& info);
 
 private:
 	// 判断是否有缺陷
 	bool _isbad{ false };
-
-public:
-	void setCollageImageNum(size_t num);
 private:
-	size_t _collageNum{ 5 };
 	size_t imagesCount{ 0 };
 private:
 	QQueue<MatInfo>& _queue;
@@ -226,9 +172,11 @@ private:
 	QWaitCondition& _condition;
 	int _workIndex;
 
-public:
-	int imageProcessingModuleIndex;
-
+signals:
+	void imageReady(QPixmap image);
+	void imageNGReady(QPixmap image, size_t index, bool isbad);
+signals:
+	void appendPixel(double pixel);
 };
 
 
