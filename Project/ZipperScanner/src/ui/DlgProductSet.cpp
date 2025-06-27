@@ -1,6 +1,7 @@
 #include "DlgProductSet.h"
 
 #include <QMessageBox>
+#include <QtConcurrent/qtconcurrentrun.h>
 
 #include "GlobalStruct.hpp"
 #include "NumberKeyboard.h"
@@ -1074,14 +1075,19 @@ void DlgProductSet::btn_shoudongladai_released()
 
 void DlgProductSet::btn_shoudongchongkong_clicked()
 {
-	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto future = QtConcurrent::run([this]() {
+		auto& globalStruct = GlobalStructDataZipper::getInstance();
+		auto chongkongshijian = globalStruct.setConfig.chongkongshijian;
+		auto yanchichongkongshijian = globalStruct.setConfig.yanshichongkong;
+		QThread::msleep(yanchichongkongshijian);
+		bool isSet = globalStruct.zmotion.SetIOOut(2, ControlLines::chongkongOUT, true, chongkongshijian);
 
-	bool isSet = globalStruct.zmotion.SetIOOut(2, ControlLines::chongkongOUT, true, 1000);
-
-	if (!isSet)
-	{
-		QMessageBox::warning(this, "警告", "手动冲孔失败!");
-	}
+		if (!isSet) {
+			QMetaObject::invokeMethod(this, [this]() {
+				QMessageBox::warning(this, "警告", "手动冲孔失败!");
+				}, Qt::QueuedConnection);
+		}
+		});
 }
 
 void DlgProductSet::btn_tuoji_clicked()
