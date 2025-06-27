@@ -128,7 +128,7 @@ namespace rw
 			output_name = _session.GetOutputNameAllocated(0, allocator).get();
 			output_name1 = _session.GetOutputNameAllocated(1, allocator).get();
 
-			for (int i = 0;i < _session.GetInputCount();++i)
+			for (int i = 0; i < _session.GetInputCount(); ++i)
 			{
 				_session.GetInputNameAllocated(i, allocator);
 			}
@@ -219,7 +219,7 @@ namespace rw
 			{
 				DetectionRectangleInfo resultItem;
 
-				// ·´Ëãµ½Ô­Í¼×ø±ê
+				// åç®—åˆ°åŽŸå›¾åæ ‡
 				float x1 = (item.bbox.x - dw) / scale;
 				float y1 = (item.bbox.y - dh) / scale;
 				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;

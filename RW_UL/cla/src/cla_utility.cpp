@@ -1,4 +1,4 @@
-﻿#include"cla_utility.hpp"
+#include"cla_utility.hpp"
 
 #include <iomanip>
 #include <sstream>

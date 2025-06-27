@@ -33,7 +33,7 @@ struct ControlLine
 {
 	int axis;
 	int ioNum;
-	ControlLine(int a,int i)
+	ControlLine(int a, int i)
 	{
 		axis = a;
 		ioNum = i;
@@ -79,7 +79,8 @@ struct ClassId
 	static constexpr int zangwu = 7;
 	static constexpr int liehen = 8;
 	static constexpr int poyan = 9;
-	static constexpr int smallPore = 11;
+	static constexpr int smallPore = 10;
+	static constexpr int bengkou = 11;
 };
 
 struct ClassIdPositive

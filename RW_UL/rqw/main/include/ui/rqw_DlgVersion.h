@@ -11,7 +11,7 @@ class DlgVersion : public QMainWindow
 	Q_OBJECT
 
 public:
-	DlgVersion(QWidget *parent = nullptr);
+	DlgVersion(QWidget* parent = nullptr);
 	~DlgVersion();
 
 	void loadVersionPath(QString path);
@@ -29,6 +29,5 @@ private slots:
 	void pbtn_smaller_clicked();
 
 private:
-	Ui::DlgVersionClass *ui;
+	Ui::DlgVersionClass* ui;
 };
-

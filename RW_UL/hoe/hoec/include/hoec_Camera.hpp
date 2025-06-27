@@ -371,9 +371,9 @@ namespace rw
 			 */
 			[[nodiscard]] virtual size_t getTriggerLine() = 0;
 		public:
-			virtual void setOutTriggerConfig(const OutTriggerConfig& config)=0 ;
-			virtual void outTrigger() =0;
-			virtual void outTrigger(bool isOpen) =0;
+			virtual void setOutTriggerConfig(const OutTriggerConfig& config) = 0;
+			virtual void outTrigger() = 0;
+			virtual void outTrigger(bool isOpen) = 0;
 		};
 
 		class ICameraActive
@@ -477,7 +477,7 @@ namespace rw
 		public:
 			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
 			virtual void outTrigger() override;
-			virtual void outTrigger(bool isOpen)override ;
+			virtual void outTrigger(bool isOpen)override;
 		};
 
 		class CameraPassive
@@ -519,10 +519,10 @@ namespace rw
 			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack);
 		public:
 			~CameraPassive() override;
-			public:
+		public:
 			virtual void setOutTriggerConfig(const OutTriggerConfig& config) override;
 			virtual void outTrigger() override;
-			virtual void outTrigger(bool isOpen)override ;
+			virtual void outTrigger(bool isOpen)override;
 		};
 	}
 }

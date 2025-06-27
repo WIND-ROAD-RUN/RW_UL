@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <QPushButton>
 #include <QWidget>
@@ -6,7 +6,6 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class CarouselWidgetClass; };
 QT_END_NAMESPACE
-
 
 class CarouselWidget : public QWidget
 {

@@ -3,5 +3,4 @@
 
 #include"pch.h"
 
-
 #endif // !HOEC_CAMERA_PRIVATE_T_H_

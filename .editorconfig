@@ -4,6 +4,9 @@ root = true
 [*.{c++,cc,cl,cpp,cppm,cu,cuh,cxx,fx,fxh,glsl,h,h++,hh,hlsl,hpp,hxx,inl,ipp,ixx,shdbg,tlh,tli}]
 Charset = utf-8
 
+[*.txt]
+Charset = utf-8
+
 # Visual C++ 代码样式设置
 
 cpp_generate_documentation_comments = xml

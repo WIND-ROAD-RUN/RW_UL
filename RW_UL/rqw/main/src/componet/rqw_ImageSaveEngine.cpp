@@ -1,4 +1,4 @@
-#include"rqw_ImageSaveEngine.h"
+#include "rqw_ImageSaveEngine.h"
 
 #include <iostream>
 #include <QDir>
@@ -106,10 +106,40 @@ namespace rw {
 			// 构造文件名
 			QString fileName = dir.filePath(image.classify + image.time + ".jpg");
 
+			// 检查策略
+			if (savePolicy == ImageSaveEnginePolicy::MaxSaveImageNum) {
+				auto& imageList = savedImages[image.classify];
+				if (imageList.size() >= maxSaveImageNum) {
+					// 删除最旧的图片
+					QString oldestFile = imageList.front();
+					imageList.erase(imageList.begin());
+					QFile::remove(oldestFile);
+				}
+				imageList.push_back(fileName);
+			}
+
 			// 保存图片
-			if (!image.image.save(fileName)) {
+			if (!image.image.save(fileName,"jpg",saveImgQuality)) {
 				std::cerr << "Failed to save image: " << fileName.toStdString() << std::endl;
 			}
+		}
+
+		void ImageSaveEngine::setSavePolicy(ImageSaveEnginePolicy policy)
+		{
+			QMutexLocker locker(&mutex);
+			savePolicy = policy;
+		}
+
+		void ImageSaveEngine::setMaxSaveImageNum(int maxNum)
+		{
+			QMutexLocker locker(&mutex);
+			maxSaveImageNum = maxNum;
+		}
+
+		void ImageSaveEngine::setSaveImgQuality(int quality)
+		{
+			QMutexLocker locker(&mutex);
+			saveImgQuality = quality;
 		}
 	}
 }

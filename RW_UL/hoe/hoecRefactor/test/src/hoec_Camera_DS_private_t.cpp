@@ -20,7 +20,6 @@ namespace  hoec_Camera_DS
 
 	TEST(hoec_Camera_MVS, CameraMVSPassiveMonitor)
 	{
-
 		auto ipList = Camera_DS::getCameraIpList();
 		if (ipList.empty())
 		{
@@ -43,13 +42,11 @@ namespace  hoec_Camera_DS
 			ASSERT_EQ(isStartMonitor, true);
 			auto isStopMonitor = passive.stopMonitor();
 			ASSERT_EQ(isStartMonitor, true);
-
 		}
 	}
 
 	TEST(hoec_Camera_MVS, CameraMVSPassiveSetExposureTime)
 	{
-
 		auto ipList = Camera_DS::getCameraIpList();
 		if (ipList.empty())
 		{
@@ -70,7 +67,7 @@ namespace  hoec_Camera_DS
 
 			auto isSet = passive.setExposureTime(100);
 			ASSERT_EQ(isSet, true);
-			bool isGetExposure{false};
+			bool isGetExposure{ false };
 			auto exposureTime = passive.getExposureTime(isGetExposure);
 			ASSERT_EQ(exposureTime, 100);
 			ASSERT_EQ(isGetExposure, true);
@@ -79,7 +76,6 @@ namespace  hoec_Camera_DS
 
 	TEST(hoec_Camera_MVS, CameraMVSPassiveSetFrameTrigger)
 	{
-
 		auto ipList = Camera_DS::getCameraIpList();
 		if (ipList.empty())
 		{
@@ -107,7 +103,7 @@ namespace  hoec_Camera_DS
 
 			auto state = passive.setFrameTriggered(true);
 
-			bool isGetTrigger1{false};
+			bool isGetTrigger1{ false };
 			auto isGetTrigger = passive.getFrameTriggered(isGetTrigger1);
 			ASSERT_EQ(isGetTrigger, true);
 			ASSERT_EQ(state, true);
@@ -116,7 +112,6 @@ namespace  hoec_Camera_DS
 
 	TEST(hoec_Camera_MVS, CameraMVSPassiveSetLineTrigger)
 	{
-
 		auto ipList = Camera_DS::getCameraIpList();
 		if (ipList.empty())
 		{
@@ -154,17 +149,15 @@ namespace  hoec_Camera_DS
 
 			passive.setLineTriggered(false);
 			passive.setFrameTriggered(false);
-			auto res=passive.RegisterCallBackFunc();
+			auto res = passive.RegisterCallBackFunc();
 			passive.startMonitor();
 
 			std::this_thread::sleep_for(std::chrono::seconds(300));
-
 		}
 	}
 
 	/*TEST(hoec_Camera_MVS, CameraMVSActiveConstruct)
 	{
-
 		auto ipList = Camera_MVS::getCameraIpList();
 		if (ipList.empty())
 		{
@@ -186,10 +179,8 @@ namespace  hoec_Camera_DS
 			bool isget{ false };
 			auto image = active.getImage(isget);
 			ASSERT_EQ(isget, true);
-
 		}
 
 		ASSERT_EQ(Camera_MVS_Passive::_isIniSDK, false);
-
 	}*/
 }

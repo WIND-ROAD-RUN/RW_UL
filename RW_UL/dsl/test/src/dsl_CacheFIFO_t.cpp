@@ -6,7 +6,6 @@
 #include <vector>
 
 namespace dsl_cache {
-
 	TEST(CacheFIFOTimeSpecialization, GetMethod) {
 		using Key = std::chrono::time_point<std::chrono::system_clock>;
 		using Value = int;
@@ -132,7 +131,4 @@ namespace dsl_cache {
 		EXPECT_EQ(cache.get(now), std::nullopt); // Oldest entry evicted
 		EXPECT_EQ(cache.get(now + std::chrono::seconds(3)).value_or(""), "Fourth");
 	}
-
-
-
 } // namespace dsl_cache

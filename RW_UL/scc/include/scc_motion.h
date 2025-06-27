@@ -15,7 +15,7 @@ namespace zwy {
 
 			//打开控制器
 			bool OpenBoard(char* ipAdress);
-			bool OpenBoard(const std::string & ipAdress);
+			bool OpenBoard(const std::string& ipAdress);
 			//关闭板卡
 			bool CloseBoared();
 			//    //获取板卡连接状态

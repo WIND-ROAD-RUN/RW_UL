@@ -35,7 +35,6 @@ namespace rw
 
 		void LabelWarning::addWarning(const WarningInfo& message, int redDuration)
 		{
-
 			// 添加到历史队列
 			pushHistory(message);
 

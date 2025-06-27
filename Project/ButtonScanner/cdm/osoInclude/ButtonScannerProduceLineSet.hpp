@@ -19,14 +19,14 @@ namespace cdm {
         bool operator!=(const ButtonScannerProduceLineSet& obj) const;
 
     public:
-        bool takeNgPictures{ true };
+        bool takeNgPictures{ false };
         bool takeMaskPictures{ true };
-        bool takeOkPictures{ true };
+        bool takeOkPictures{ false };
         bool takePicturesLong{ false };
         bool takeWork1Pictures{ true };
-        bool takeWork2Pictures{ true };
-        bool takeWork3Pictures{ true };
-        bool takeWork4Pictures{ true };
+        bool takeWork2Pictures{ false };
+        bool takeWork3Pictures{ false };
+        bool takeWork4Pictures{ false };
         bool drawRec{ false };
         bool drawCircle{ true };
         bool blowingEnable1{ false };

@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>DlgProductSet</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_14" stretch="3,2,1">
+  <layout class="QVBoxLayout" name="verticalLayout_14" stretch="2,4,1">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_firstRow" stretch="1,1,1">
      <item>
@@ -37,19 +37,39 @@ QGroupBox::title {
        <property name="title">
         <string/>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout_24" stretch="3,2,2,2">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QRadioButton" name="rbtn_outsideDiameterEnable">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QRadioButton {
+         <widget class="QGroupBox" name="groupBox_19">
+          <property name="styleSheet">
+           <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(186, 186, 186);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QRadioButton" name="rbtn_outsideDiameterEnable">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -102,48 +122,18 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-            </property>
-            <property name="text">
-             <string>外径</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_outsideDiameterValue">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+             </property>
+             <property name="text">
+              <string>外径</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label_20">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -226,20 +216,457 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+               </property>
+               <property name="text">
+                <string>外径</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_outsideDiameterValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>偏差值</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_outsideDiameterDeviation">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="styleSheet">
+           <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(186, 186, 186);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QRadioButton" name="rbtn_holesCountEnable">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+             </property>
+             <property name="text">
+              <string>孔数</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_22">
+             <item>
+              <widget class="QLabel" name="label_35">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -322,22 +749,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>偏差值</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_outsideDiameterDeviation">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>数量</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="ptn_holesCountValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -354,112 +781,113 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_5">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-            </property>
-            <property name="text">
-             <string>mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="hLayout_photography">
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="styleSheet">
+           <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(186, 186, 186);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QRadioButton" name="rbtn_apertureEnable">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+             </property>
+             <property name="text">
+              <string>孔径</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_32">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -542,22 +970,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>拍照延时</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_photography">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>孔径</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_apertureValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -574,16 +1002,16 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_21">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -666,20 +1094,333 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>ms</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="QLabel" name="label_28">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>偏差值</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_apertureSimilarity">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_22">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="styleSheet">
+           <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(186, 186, 186);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QRadioButton" name="rbtn_holeCenterDistanceEnable">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+             </property>
+             <property name="text">
+              <string>孔心距</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="QLabel" name="label_33">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -762,22 +1503,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>吹气时间</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_blowTime">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>孔心距</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_holeCenterDistanceValue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -794,16 +1535,16 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="styleSheet">
-             <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_23">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -886,13 +1627,236 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-            </property>
-            <property name="text">
-             <string>ms</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QLabel" name="label_29">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>偏差值</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_holeCenterDistanceSimilarity">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_30">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -931,7 +1895,7 @@ QGroupBox::title {
        <property name="title">
         <string/>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout_23" stretch="1,2,3">
         <item>
          <widget class="QPushButton" name="pbtn_close">
           <property name="sizePolicy">
@@ -963,77 +1927,33 @@ QPushButton:pressed {
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rbtn_edgeDamageEnable">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QGroupBox" name="groupBox_20">
           <property name="styleSheet">
-           <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
+           <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(230, 230, 230);
 }
 
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
 }</string>
           </property>
-          <property name="text">
-           <string>破边</string>
+          <property name="title">
+           <string/>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_8">
-          <property name="styleSheet">
-           <string notr="true">/* 基础标签样式 */
+          <layout class="QVBoxLayout" name="verticalLayout_19">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -1116,22 +2036,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-          </property>
-          <property name="text">
-           <string>相似度</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pbtn_edgeDamageSimilarity">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>吹气时间</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_blowTime">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -1148,41 +2068,329 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-          </property>
-          <property name="text">
-           <string>value</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="2">
-     <item>
-      <widget class="QGroupBox" name="groupBox_5">
-       <property name="styleSheet">
-        <string notr="true">QGroupBox {
-    border: 1px solid #DDD;
-    border-radius: 4px;
-    font: bold 14px;
-    color: #666;
-    background-color: rgb(218, 218, 218);
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
 }
 
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 10px;
-    padding: 0 5px;
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
 }</string>
-       </property>
-       <property name="title">
-        <string/>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
+               </property>
+               <property name="text">
+                <string>ms</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="hLayout_photography">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>拍照延时</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pbtn_photography">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+               </property>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
+               <property name="text">
+                <string>ms</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <widget class="QGroupBox" name="groupBox_3">
           <property name="styleSheet">
@@ -1191,7 +2399,7 @@ QGroupBox::title {
     border-radius: 4px;
     font: bold 14px;
     color: #666;
-    background-color: rgb(124, 124, 124);
+    background-color: rgb(230, 230, 230);
 }
 
 QGroupBox::title {
@@ -1284,9 +2492,11 @@ QRadioButton::indicator:pressed {
             </layout>
            </item>
            <item>
-            <widget class="QLabel" name="label_10">
-             <property name="styleSheet">
-              <string notr="true">/* 基础标签样式 */
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -1369,14 +2579,12 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-             </property>
-             <property name="text">
-              <string>外圆半径</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
+               </property>
+               <property name="text">
+                <string>外圆半径</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QPushButton" name="pbtn_outerRadius">
                <property name="sizePolicy">
@@ -1504,9 +2712,11 @@ QLabel.icon {
             </layout>
            </item>
            <item>
-            <widget class="QLabel" name="label_12">
-             <property name="styleSheet">
-              <string notr="true">/* 基础标签样式 */
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_12">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -1589,14 +2799,12 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-             </property>
-             <property name="text">
-              <string>内圆半径</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
+               </property>
+               <property name="text">
+                <string>内圆半径</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QPushButton" name="pbtn_innerRadius">
                <property name="sizePolicy">
@@ -1631,6 +2839,91 @@ QPushButton:pressed {
              </item>
              <item>
               <widget class="QLabel" name="label_13">
+               <property name="styleSheet">
+                <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+               </property>
                <property name="text">
                 <string>mm</string>
                </property>
@@ -1641,15 +2934,22 @@ QPushButton:pressed {
           </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_14">
-          <property name="styleSheet">
-           <string notr="true">QGroupBox {
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="2">
+     <item>
+      <widget class="QGroupBox" name="groupBox_5">
+       <property name="styleSheet">
+        <string notr="true">QGroupBox {
     border: 1px solid #DDD;
     border-radius: 4px;
     font: bold 14px;
     color: #666;
-    background-color: rgb(124, 124, 124);
+    background-color: rgb(218, 218, 218);
 }
 
 QGroupBox::title {
@@ -1658,27 +2958,45 @@ QGroupBox::title {
     left: 10px;
     padding: 0 5px;
 }</string>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_22">
-           <item>
-            <widget class="QGroupBox" name="groupBox_17">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
-              <item>
-               <widget class="QRadioButton" name="rbtn_poreEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_25">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_30">
+          <item>
+           <widget class="QGroupBox" name="groupBox_17">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QRadioButton" name="rbtn_poreEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -1731,18 +3049,18 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>气孔</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_10">
-                <item>
-                 <widget class="QLabel" name="label_9">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>气孔</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <item>
+                <widget class="QLabel" name="label_9">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -1825,22 +3143,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>分数</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbtn_poreEnableScore">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_poreEnableScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -1857,20 +3175,20 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_11">
-                <item>
-                 <widget class="QLabel" name="label_14">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <item>
+                <widget class="QLabel" name="label_14">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -1953,22 +3271,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>面积</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbtn_poreEnableArea">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>面积</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_poreEnableArea">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -1985,33 +3303,49 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_18">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_21">
-              <item>
-               <widget class="QRadioButton" name="rbtn_smallPoreEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_18">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_21">
+             <item>
+              <widget class="QRadioButton" name="rbtn_smallPoreEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -2064,18 +3398,18 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>小气孔</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_12">
-                <item>
-                 <widget class="QLabel" name="label_15">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>小气孔</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+               <item>
+                <widget class="QLabel" name="label_15">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -2158,22 +3492,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>分数</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbtn_smallPoreEnableScore">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_smallPoreEnableScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2190,20 +3524,20 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_15">
-                <item>
-                 <widget class="QLabel" name="label_16">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item>
+                <widget class="QLabel" name="label_16">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -2286,22 +3620,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>面积</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbtn_smallPoreEnableArea">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>面积</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_smallPoreEnableArea">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2318,29 +3652,833 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_15">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QRadioButton" name="rbtn_edgeDamageEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+               </property>
+               <property name="text">
+                <string>破边</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <item>
+                <widget class="QLabel" name="label_8">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_edgeDamageSimilarity">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_25">
+               <item>
+                <widget class="QLabel" name="label_18">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>面积</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_edgeDamageArea">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_7">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QRadioButton" name="rbtn_crackEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+               </property>
+               <property name="text">
+                <string>裂痕</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_24">
+               <item>
+                <widget class="QLabel" name="label_19">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_crackSimilarity">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_13">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_22">
+             <item>
+              <widget class="QRadioButton" name="rbtn_bengKou">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;  /* 保持原始文字颜色 */
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #FF6B00;  /* 橙色边框 */
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #FF6B00,  /* 主橙色 */
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton:::disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #CC5500;  /* 深橙色边框 */
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #FFD8B3,  /* 浅橙色渐变 */
+        stop:1 transparent
+    );
+}</string>
+               </property>
+               <property name="text">
+                <string>崩口</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_28">
+               <item>
+                <widget class="QLabel" name="label_39">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_bengKouScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    padding: 6px 14px;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    background-color: white;
+    color: #444;
+}
+
+QPushButton:hover {
+    border-color: #999;
+    background-color: #F5F5F5;
+}
+
+QPushButton:pressed {
+    border-color: #777;
+    background-color: #EEE;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_10">
-          <property name="styleSheet">
-           <string notr="true">QGroupBox {
+         <layout class="QHBoxLayout" name="horizontalLayout_29">
+          <item>
+           <widget class="QGroupBox" name="groupBox_10">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
     border: 1px solid #DDD;
     border-radius: 4px;
     font: bold 14px;
     color: #666;
-    background-color: rgb(124, 124, 124);
+    background-color: rgb(157, 157, 157);
 }
 
 QGroupBox::title {
@@ -2349,27 +4487,21 @@ QGroupBox::title {
     left: 10px;
     padding: 0 5px;
 }</string>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QGroupBox" name="groupBox_16">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_20">
-              <item>
-               <widget class="QRadioButton" name="rbtn_paintEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_15">
+             <item>
+              <widget class="QRadioButton" name="rbtn_grindStoneEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -2422,22 +4554,116 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>油漆</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pbtn_paintEnableScore">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>磨石</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QLabel" name="label_36">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_grindStoneScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2454,31 +4680,49 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                </property>
-                <property name="text">
-                 <string>value</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_4">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <widget class="QRadioButton" name="rbtn_holesCountEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_21">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_18">
+             <item>
+              <widget class="QRadioButton" name="rbtn_materialHeadEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -2531,22 +4775,116 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>孔数</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ptn_holesCountValue">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>料头</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_27">
+               <item>
+                <widget class="QLabel" name="label_38">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_materialHeadScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2563,31 +4901,49 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                </property>
-                <property name="text">
-                 <string>value</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_6">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_6">
-              <item>
-               <widget class="QRadioButton" name="rbtn_brokenEyeEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_16">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <widget class="QRadioButton" name="rbtn_paintEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -2640,22 +4996,18 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>破眼</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_17">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>油漆</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_21">
+               <item>
+                <widget class="QLabel" name="label_34">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -2738,22 +5090,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                </property>
-                <property name="text">
-                 <string>相似度</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pbtn_brokenEyeSimilarity">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_paintEnableScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2770,31 +5122,49 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                </property>
-                <property name="text">
-                 <string>value</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_7">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
-              <item>
-               <widget class="QRadioButton" name="rbtn_crackEnable">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QRadioButton {
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_14">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_16">
+             <item>
+              <widget class="QRadioButton" name="rbtn_blockEyeEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -2847,22 +5217,18 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                </property>
-                <property name="text">
-                 <string>裂痕</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_19">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">/* 基础标签样式 */
+               </property>
+               <property name="text">
+                <string>堵眼</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_26">
+               <item>
+                <widget class="QLabel" name="label_37">
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
 QLabel {
     color: #444444;          /* 主文字色 */
     font-size: 14px;         /* 标准字号 */
@@ -2945,22 +5311,22 @@ QLabel.icon {
     background-color: #FFFFFF;
     padding: 12px;
 }</string>
-                </property>
-                <property name="text">
-                 <string>相似度</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pbtn_crackSimilarity">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_blockEyeScore">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -2977,33 +5343,49 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                </property>
-                <property name="text">
-                 <string>value</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_8">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_13">
-                <item>
-                 <widget class="QRadioButton" name="rbtn_apertureEnable">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QRadioButton {
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_6">
+            <property name="styleSheet">
+             <string notr="true">QGroupBox {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font: bold 14px;
+    color: #666;
+    background-color: rgb(157, 157, 157);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+}</string>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QRadioButton" name="rbtn_brokenEyeEnable">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QRadioButton {
     spacing: 8px;
     font-size: 14px;
     color: #333;  /* 保持原始文字颜色 */
@@ -3056,26 +5438,122 @@ QRadioButton::indicator:pressed {
         stop:1 transparent
     );
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>孔径</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_21">
-                <item>
-                 <widget class="QPushButton" name="pbtn_apertureValue">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+               </property>
+               <property name="text">
+                <string>破眼</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_23">
+               <item>
+                <widget class="QLabel" name="label_17">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>分数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pbtn_brokenEyeSimilarity">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
@@ -3092,760 +5570,18 @@ QPushButton:pressed {
     border-color: #777;
     background-color: #EEE;
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_21">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>mm</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_28">
-                <property name="styleSheet">
-                 <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                </property>
-                <property name="text">
-                 <string>偏差值</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_22">
-                <item>
-                 <widget class="QPushButton" name="pbtn_apertureSimilarity">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_22">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>mm</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_9">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_9">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_14">
-                <item>
-                 <widget class="QRadioButton" name="rbtn_holeCenterDistanceEnable">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>孔心距</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_23">
-                <item>
-                 <widget class="QPushButton" name="pbtn_holeCenterDistanceValue">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_23">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>mm</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_29">
-                <property name="styleSheet">
-                 <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                </property>
-                <property name="text">
-                 <string>偏差值</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_24">
-                <item>
-                 <widget class="QPushButton" name="pbtn_holeCenterDistanceSimilarity">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>value</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_30">
-                  <property name="styleSheet">
-                   <string notr="true">/* 基础标签样式 */
-QLabel {
-    color: #444444;          /* 主文字色 */
-    font-size: 14px;         /* 标准字号 */
-    background: transparent; /* 透明背景 */
-    padding: 2px 4px;        /* 基础内边距 */
-}
-
-/* 标题样式 */
-QLabel.title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
-    padding-bottom: 4px;
-}
-
-/* 副标题/次要文本 */
-QLabel.subtitle {
-    color: #666666;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* 强调文本 */
-QLabel.emphasis {
-    color: #333333;
-    font-weight: 500;
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    padding: 4px 8px;
-}
-
-/* 状态标签（成功/警告/错误） */
-QLabel[state=&quot;success&quot;] {
-    color: #228B22;          /* 森林绿 */
-    border-left: 3px solid #228B22;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;warning&quot;] {
-    color: #FF8C00;          /* 暗橙 */
-    border-left: 3px solid #FF8C00;
-    padding-left: 8px;
-}
-
-QLabel[state=&quot;error&quot;] {
-    color: #B22222;          /* 砖红 */
-    border-left: 3px solid #B22222;
-    padding-left: 8px;
-}
-
-/* 数据展示标签 */
-QLabel.data {
-    color: #2F4F4F;          /* 深石板灰 */
-    font-family: monospace;
-    border: 1px solid #E0E0E0;
-    background-color: #FFFFFF;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* 禁用状态 */
-QLabel:disabled {
-    color: #AAAAAA;
-    background-color: transparent;
-}
-
-/* 链接样式（伪链接效果） */
-QLabel.link {
-    color: #4682B4;          /* 钢蓝 */
-    text-decoration: underline;
-    border-bottom: 1px dotted #4682B4;
-}
-
-/* 图标标签 */
-QLabel.icon {
-    qproperty-alignment: AlignCenter;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    background-color: #FFFFFF;
-    padding: 12px;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>mm</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+                 </property>
+                 <property name="text">
+                  <string>value</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -4332,8 +6068,93 @@ QPushButton:pressed {
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
            <widget class="QLabel" name="label_27">
+            <property name="styleSheet">
+             <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+            </property>
             <property name="text">
-             <string>（0~255）</string>
+             <string>偏差值（0~255）</string>
             </property>
            </widget>
           </item>
@@ -4468,350 +6289,98 @@ QRadioButton::indicator:pressed {
          <layout class="QVBoxLayout" name="verticalLayout_17">
           <item>
            <widget class="QLabel" name="label_31">
+            <property name="styleSheet">
+             <string notr="true">/* 基础标签样式 */
+QLabel {
+    color: #444444;          /* 主文字色 */
+    font-size: 14px;         /* 标准字号 */
+    background: transparent; /* 透明背景 */
+    padding: 2px 4px;        /* 基础内边距 */
+}
+
+/* 标题样式 */
+QLabel.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    border-bottom: 1px solid #DDDDDD; /* 下划线装饰 */
+    padding-bottom: 4px;
+}
+
+/* 副标题/次要文本 */
+QLabel.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* 强调文本 */
+QLabel.emphasis {
+    color: #333333;
+    font-weight: 500;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
+/* 状态标签（成功/警告/错误） */
+QLabel[state=&quot;success&quot;] {
+    color: #228B22;          /* 森林绿 */
+    border-left: 3px solid #228B22;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;warning&quot;] {
+    color: #FF8C00;          /* 暗橙 */
+    border-left: 3px solid #FF8C00;
+    padding-left: 8px;
+}
+
+QLabel[state=&quot;error&quot;] {
+    color: #B22222;          /* 砖红 */
+    border-left: 3px solid #B22222;
+    padding-left: 8px;
+}
+
+/* 数据展示标签 */
+QLabel.data {
+    color: #2F4F4F;          /* 深石板灰 */
+    font-family: monospace;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* 禁用状态 */
+QLabel:disabled {
+    color: #AAAAAA;
+    background-color: transparent;
+}
+
+/* 链接样式（伪链接效果） */
+QLabel.link {
+    color: #4682B4;          /* 钢蓝 */
+    text-decoration: underline;
+    border-bottom: 1px dotted #4682B4;
+}
+
+/* 图标标签 */
+QLabel.icon {
+    qproperty-alignment: AlignCenter;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 12px;
+}</string>
+            </property>
             <property name="text">
-             <string>(0~255)</string>
+             <string>偏差值(0~255)</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pbtn_largeColorDifferenceDeviation">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_13">
-       <property name="styleSheet">
-        <string notr="true">QGroupBox {
-    border: 1px solid #DDD;
-    border-radius: 4px;
-    font: bold 14px;
-    color: #666;
-    background-color: rgb(124, 124, 124);
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 10px;
-    padding: 0 5px;
-}</string>
-       </property>
-       <property name="title">
-        <string/>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_15">
-          <item>
-           <widget class="QRadioButton" name="rbtn_grindStoneEnable">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-            </property>
-            <property name="text">
-             <string>磨石</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_grindStoneScore">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_16">
-          <item>
-           <widget class="QRadioButton" name="rbtn_blockEyeEnable">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-            </property>
-            <property name="text">
-             <string>堵眼</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_blockEyeScore">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-    padding: 6px 14px;
-    border: 2px solid #CCC;
-    border-radius: 4px;
-    background-color: white;
-    color: #444;
-}
-
-QPushButton:hover {
-    border-color: #999;
-    background-color: #F5F5F5;
-}
-
-QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
-}</string>
-            </property>
-            <property name="text">
-             <string>value</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_18">
-          <item>
-           <widget class="QRadioButton" name="rbtn_materialHeadEnable">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QRadioButton {
-    spacing: 8px;
-    font-size: 14px;
-    color: #333;  /* 保持原始文字颜色 */
-}
-
-/* 未选中状态 */
-QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 2px solid #999;
-    background: #ffffff;
-}
-
-/* 悬停效果 */
-QRadioButton::indicator:hover {
-    border: 2px solid #666;
-}
-
-/* 选中状态 */
-QRadioButton::indicator:checked {
-    border: 2px solid #FF6B00;  /* 橙色边框 */
-}
-
-/* 选中时的内圆 */
-QRadioButton::indicator:checked {
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.4,
-        fx:0.5, fy:0.5,
-        stop:0 #FF6B00,  /* 主橙色 */
-        stop:1 transparent
-    );
-}
-
-/* 禁用状态 */
-QRadioButton:::disabled {
-    border: 2px solid #ccc;
-    background: #eee;
-}
-
-/* 点击动画效果 */
-QRadioButton::indicator:pressed {
-    border: 2px solid #CC5500;  /* 深橙色边框 */
-    background-color: qradialgradient(
-        cx:0.5, cy:0.5,
-        radius:0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #FFD8B3,  /* 浅橙色渐变 */
-        stop:1 transparent
-    );
-}</string>
-            </property>
-            <property name="text">
-             <string>料头</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pbtn_materialHeadScore">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
               <horstretch>0</horstretch>

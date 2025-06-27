@@ -13,7 +13,6 @@ namespace rw {
 
 	namespace rqw {
 		QImage cvMatToQImage(const cv::Mat& mat);
-        
 
 		struct OutTriggerConfig
 		{
@@ -78,6 +77,6 @@ namespace rw {
 			DS
 		};
 
-		QVector<CameraMetaData> CheckCameraList(CameraProvider provider= CameraProvider::MVS);
+		QVector<CameraMetaData> CheckCameraList(CameraProvider provider = CameraProvider::MVS);
 	} // namespace rqw
 } // namespace rw

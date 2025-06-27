@@ -1,9 +1,8 @@
-﻿#include "DlgWarningIOSetConfig.h"
+#include "DlgWarningIOSetConfig.h"
 
 #include"GlobalStruct.h"
 #include"NumberKeyboard.h"
 #include <QMessageBox>
-
 
 std::vector<std::vector<int>> DlgWarningIOSetConfig::DIFindAllDuplicateIndices()
 {
@@ -55,7 +54,7 @@ void DlgWarningIOSetConfig::setDIErrorInfo(const std::vector<std::vector<int>>& 
 	ui->label_cameraTriggerWarn2->clear();
 	ui->label_cameraTriggerWarn3->clear();
 	ui->label_cameraTriggerWarn4->clear();
-	for (const auto & classic:index)
+	for (const auto& classic : index)
 	{
 		for (const auto& item : classic)
 		{
@@ -202,7 +201,7 @@ void DlgWarningIOSetConfig::setDOErrorInfo(int index)
 	}
 }
 
-DlgWarningIOSetConfig::DlgWarningIOSetConfig(QWidget *parent)
+DlgWarningIOSetConfig::DlgWarningIOSetConfig(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DlgWarningIOSetConfigClass())
 {
@@ -221,7 +220,7 @@ DlgWarningIOSetConfig::~DlgWarningIOSetConfig()
 
 void DlgWarningIOSetConfig::build_ui()
 {
-	auto DIIndices=DIFindAllDuplicateIndices();
+	auto DIIndices = DIFindAllDuplicateIndices();
 	setDIErrorInfo(DIIndices);
 	auto indicesDO = DOFindAllDuplicateIndices();
 	setDOErrorInfo(indicesDO);
@@ -339,7 +338,6 @@ void DlgWarningIOSetConfig::read_config()
 
 	ui->pbtn_AxisStartBelt->setText(QString::number(config.axisStartBelt));
 	ControlLines::beltAsis = config.axisStartBelt;
-
 }
 
 void DlgWarningIOSetConfig::pbtn_exit_clicked()
@@ -356,7 +354,7 @@ void DlgWarningIOSetConfig::pbtn_DIStartValue_clicked()
 	{
 		auto value = numKeyBord.getValue();
 		auto numValue = value.toInt();
-		if (numValue<0)
+		if (numValue < 0)
 		{
 			QMessageBox::warning(this, QString("提示"), QString("请输入大于0的数值"));
 			return;
@@ -365,7 +363,7 @@ void DlgWarningIOSetConfig::pbtn_DIStartValue_clicked()
 		ui->pbtn_DIStartValue->setText(value);
 		GlobalStructData::getInstance().warningIOSetConfig.DIStart = numValue;
 		ControlLines::startIn = numValue;
-		auto index=DIFindAllDuplicateIndices();
+		auto index = DIFindAllDuplicateIndices();
 		setDIErrorInfo(index);
 	}
 }

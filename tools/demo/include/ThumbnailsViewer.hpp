@@ -9,34 +9,34 @@
 
 class ThumbnailsViewer : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit ThumbnailsViewer(QWidget* parent = nullptr);
+	explicit ThumbnailsViewer(QWidget* parent = nullptr);
 
-    // ÉèÖÃÍ¼Æ¬¸ùÂ·¾¶
-    void setRootPath(const QString& rootPath);
+	// è®¾ç½®å›¾ç‰‡æ ¹è·¯å¾„
+	void setRootPath(const QString& rootPath);
 
-    // ÉèÖÃËõÂÔÍ¼´óĞ¡
-    void setSize(const QSize& size);
+	// è®¾ç½®ç¼©ç•¥å›¾å¤§å°
+	void setSize(const QSize& size);
 
-    // ÉèÖÃ×´Ì¬À¸
-    void setStatusBar(QStatusBar* statusBar);
+	// è®¾ç½®çŠ¶æ€æ 
+	void setStatusBar(QStatusBar* statusBar);
 
 protected:
-    void wheelEvent(QWheelEvent* event) override;
+	void wheelEvent(QWheelEvent* event) override;
 
 private slots:
-    // Ñ¡ÖĞËõÂÔÍ¼Ê±ÏÔÊ¾Â·¾¶
-    void onThumbnailSelected();
+	// é€‰ä¸­ç¼©ç•¥å›¾æ—¶æ˜¾ç¤ºè·¯å¾„
+	void onThumbnailSelected();
 
 private:
-    void loadImageList();
-    void loadThumbnail(const QString& imagePath, QListWidgetItem* item);
+	void loadImageList();
+	void loadThumbnail(const QString& imagePath, QListWidgetItem* item);
 
-    QString m_rootPath;
-    QSize m_thumbnailSize{ 128, 128 };
-    DraggableListWidget1* m_listWidget;
-    QStatusBar* m_statusBar{ nullptr };
-    QStringList m_imageFiles;
+	QString m_rootPath;
+	QSize m_thumbnailSize{ 128, 128 };
+	DraggableListWidget1* m_listWidget;
+	QStatusBar* m_statusBar{ nullptr };
+	QStringList m_imageFiles;
 };

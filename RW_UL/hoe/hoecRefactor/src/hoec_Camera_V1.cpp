@@ -223,7 +223,6 @@ namespace rw
 		bool CameraPassive::getConnectState(bool& isGet)
 		{
 			return _camera->getConnectState(isGet);
-
 		}
 
 		bool CameraPassive::setFrameRate(float cameraFrameRate)
@@ -259,7 +258,6 @@ namespace rw
 		bool CameraPassive::setExposureTime(size_t value)
 		{
 			return _camera->setExposureTime(value);
-
 		}
 
 		bool CameraPassive::setGain(size_t value)

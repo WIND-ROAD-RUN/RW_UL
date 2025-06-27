@@ -11,8 +11,7 @@ namespace rw
 		{
 			std::vector<CameraIP> cameraIPs;
 
-
-			if (provider==CameraProvider::MVS)
+			if (provider == CameraProvider::MVS)
 			{
 				auto cameraList = Camera_MVS::getCameraIpList();
 				for (auto& ip : cameraList)

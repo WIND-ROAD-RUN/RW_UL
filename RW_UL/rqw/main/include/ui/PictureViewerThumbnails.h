@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <QDir>
 #include <QMainWindow>
@@ -54,12 +54,11 @@ private:
 	std::atomic<bool> m_running{ true };
 };
 
-
 class PictureViewerThumbnails : public QMainWindow
-{ 
+{
 	Q_OBJECT
 private:
-	bool isFirstLoad{false};
+	bool isFirstLoad{ false };
 public:
 	void startAsyncLoadQueue();
 	void stopAsyncLoadQueue();
@@ -76,25 +75,25 @@ private:
 private:
 	std::unique_ptr<rw::dsl::CacheFIFO<QString, QPixmap>> _thumbnailCache;
 private:
-	QHash<QString, QStringList> m_categoryImageCache; 
+	QHash<QString, QStringList> m_categoryImageCache;
 private:
 	LoadingDialog* _loadingDialog = nullptr;
-	PictureViewerUtilty* pictureViewerUtilty=nullptr;
+	PictureViewerUtilty* pictureViewerUtilty = nullptr;
 public:
-	PictureViewerThumbnails(QWidget *parent = nullptr);
+	PictureViewerThumbnails(QWidget* parent = nullptr);
 	~PictureViewerThumbnails() override;
 public:
 	void setThumbnailCacheCapacity(size_t capacity);
 private:
-	size_t _thumbnailCacheCapacity{1000};
+	size_t _thumbnailCacheCapacity{ 1000 };
 public:
 	void setRootPath(const QString& rootPath);
 
 	void setSize(const QSize& size);
-	void setSizeRange(const QSize & sizeSmall, const QSize& sizeBig);
+	void setSizeRange(const QSize& sizeSmall, const QSize& sizeBig);
 	void setViewerNum(size_t num = 0);
 private:
-	QSize small{100,100};
+	QSize small{ 100,100 };
 	QSize big{ 500,500 };
 signals:
 	void viewerClosed();
@@ -114,7 +113,7 @@ private:
 	void preloadAllCategoryImages(const QDir& dir);
 
 private:
-	Ui::PictureViewerThumbnailsClass *ui;
+	Ui::PictureViewerThumbnailsClass* ui;
 private:
 
 	QString m_rootPath;

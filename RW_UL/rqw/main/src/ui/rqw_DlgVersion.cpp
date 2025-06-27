@@ -3,14 +3,13 @@
 #include "rqw_DlgVersion.h"
 #include <QDir>
 
-DlgVersion::DlgVersion(QWidget *parent)
+DlgVersion::DlgVersion(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::DlgVersionClass())
 {
 	ui->setupUi(this);
-    ui->textEdit_VersionShow->setReadOnly(true); // ÉèÖÃÎªÖ»¶Á
-    build_connect();
-    this->setWindowFlags(Qt::FramelessWindowHint);
+	ui->textEdit_VersionShow->setReadOnly(true); // è®¾ç½®ä¸ºåªè¯»
+	build_connect();
 }
 
 DlgVersion::~DlgVersion()
@@ -25,9 +24,9 @@ void DlgVersion::loadVersionPath(QString path)
 
 void DlgVersion::build_connect()
 {
-    QObject::connect(ui->pbtn_exit, &QPushButton::clicked,
-        this, &DlgVersion::pbtn_exit_clicked);
-    QObject::connect(ui->pbtn_bigger, &QPushButton::clicked,
+	QObject::connect(ui->pbtn_exit, &QPushButton::clicked,
+		this, &DlgVersion::pbtn_exit_clicked);
+	QObject::connect(ui->pbtn_bigger, &QPushButton::clicked,
 		this, &DlgVersion::pbtn_bigger_clicked);
 	QObject::connect(ui->pbtn_smaller, &QPushButton::clicked,
 		this, &DlgVersion::pbtn_smaller_clicked);
@@ -35,18 +34,17 @@ void DlgVersion::build_connect()
 
 void DlgVersion::showEvent(QShowEvent* event)
 {
-    QFile file(versionPath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        ui->textEdit_VersionShow->setPlainText("ÎŞ·¨´ò¿ª°æ±¾ÎÄ¼ş: " + versionPath);
-        return;
-    }
+	QFile file(versionPath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		ui->textEdit_VersionShow->setPlainText("æ— æ³•æ‰“å¼€ç‰ˆæœ¬æ–‡ä»¶: " + versionPath);
+		return;
+	}
 
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
+	QTextStream in(&file);
+	QString content = in.readAll();
+	file.close();
 
-    ui->textEdit_VersionShow->setPlainText(content);
-
+	ui->textEdit_VersionShow->setPlainText(content);
 }
 
 void DlgVersion::pbtn_exit_clicked()
@@ -56,11 +54,10 @@ void DlgVersion::pbtn_exit_clicked()
 
 void DlgVersion::pbtn_bigger_clicked()
 {
-	ui->textEdit_VersionShow->zoomIn(1); // ·Å´óÎÄ±¾
+	ui->textEdit_VersionShow->zoomIn(1); // æ”¾å¤§æ–‡æœ¬
 }
 
 void DlgVersion::pbtn_smaller_clicked()
 {
-	ui->textEdit_VersionShow->zoomOut(1); // ËõĞ¡ÎÄ±¾
+	ui->textEdit_VersionShow->zoomOut(1); // ç¼©å°æ–‡æœ¬
 }
-

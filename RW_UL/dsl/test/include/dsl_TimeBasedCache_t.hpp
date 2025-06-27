@@ -5,7 +5,6 @@
 #include"gtest/gtest.h"
 #include"dsl_TimeBasedCache.hpp"
 
-
 class TimeBasedCache_T
 	: public ::testing::Test {
 protected:
@@ -31,11 +30,11 @@ protected:
 	}
 public:
 	int generateRandomNumber(int min, int max) {
-		std::random_device rd; // ÓÃÓÚÉú³ÉÖÖ×Ó
-		std::mt19937 gen(rd()); // Mersenne Twister 19937 Éú³ÉÆ÷
-		std::uniform_int_distribution<> dis(min, max); // ¾ùÔÈ·Ö²¼
+		std::random_device rd; // ç”¨äºç”Ÿæˆç§å­
+		std::mt19937 gen(rd()); // Mersenne Twister 19937 ç”Ÿæˆå™¨
+		std::uniform_int_distribution<> dis(min, max); // å‡åŒ€åˆ†å¸ƒ
 		return dis(gen);
 	}
 public:
-	std::unique_ptr<rw::dsl::TimeBasedCache<double, double>> testObj=nullptr;
+	std::unique_ptr<rw::dsl::TimeBasedCache<double, double>> testObj = nullptr;
 };

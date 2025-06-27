@@ -88,21 +88,20 @@ namespace rw
                 result = QImage();
             }
 
-            return result;
-        }
-
+			return result;
+		}
 
 		QVector<CameraMetaData> CheckCameraList(CameraProvider provider)
 		{
-            std::vector<hoec_v1::CameraIP> stdCameraIpList;
-            if (provider==CameraProvider::MVS)
-            {
-                 stdCameraIpList = hoec_v1::CameraFactory::checkAllCamera(hoec_v1::CameraProvider::MVS);
-            }
-            else if (provider == CameraProvider::DS)
-            {
-                stdCameraIpList = hoec_v1::CameraFactory::checkAllCamera(hoec_v1::CameraProvider::DS);
-            }
+			std::vector<hoec_v1::CameraIP> stdCameraIpList;
+			if (provider == CameraProvider::MVS)
+			{
+				stdCameraIpList = hoec_v1::CameraFactory::checkAllCamera(hoec_v1::CameraProvider::MVS);
+			}
+			else if (provider == CameraProvider::DS)
+			{
+				stdCameraIpList = hoec_v1::CameraFactory::checkAllCamera(hoec_v1::CameraProvider::DS);
+			}
 
 			QVector<CameraMetaData> cameraIpList;
 			for (auto& cameraIp : stdCameraIpList)

@@ -2348,7 +2348,7 @@ QCheckBox::indicator:checked:hover {
                 <string>采Ng图</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2438,7 +2438,7 @@ QCheckBox::indicator:checked:hover {
                 <string>采Ok图</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2574,7 +2574,7 @@ QCheckBox::indicator:checked:hover {
                 <string>2工位采图</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2619,7 +2619,7 @@ QCheckBox::indicator:checked:hover {
                 <string>3工位采图</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2664,7 +2664,7 @@ QCheckBox::indicator:checked:hover {
                 <string>4工位采图</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>

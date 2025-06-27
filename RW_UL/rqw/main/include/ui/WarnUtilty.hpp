@@ -18,11 +18,10 @@ namespace rw
 		{
 		public:
 			WarningType type{ WarningType::Info };
-			QString message{""};
+			QString message{ "" };
 			QDateTime timestamp{ QDateTime::currentDateTime() };
 		public:
-			int warningId{-1};
+			int warningId{ -1 };
 		};
-
 	}
 }

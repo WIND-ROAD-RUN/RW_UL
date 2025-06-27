@@ -22,7 +22,7 @@ namespace rw
 		}
 
 		bool ActivationCodeValidator::validateActivationCode(const ActivationCodeStruct& code,
-		                                                     const UniqueIdentifier& indetifier)
+			const UniqueIdentifier& indetifier)
 		{
 			ActivationCodeGenerator generator(_config);
 			auto validationCode = generator.generateActivationBinaryCode(indetifier);
@@ -31,7 +31,7 @@ namespace rw
 			case ActivationBits::Hexadecimal:
 				return ActivationBitsConvert::switchHexTOBinary(code.str) == validationCode;
 			case ActivationBits::Octal:
-				return ActivationBitsConvert::switchOctTOBinary(code.str,code.str.size()) == validationCode;
+				return ActivationBitsConvert::switchOctTOBinary(code.str, code.str.size()) == validationCode;
 			case ActivationBits::Binary:
 				return code.str == validationCode;
 			}

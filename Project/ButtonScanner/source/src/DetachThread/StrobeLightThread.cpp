@@ -22,7 +22,7 @@ void StrobeLightThread::startThread()
 
 void StrobeLightThread::stopThread()
 {
-	running = false; 
+	running = false;
 }
 
 void StrobeLightThread::run()

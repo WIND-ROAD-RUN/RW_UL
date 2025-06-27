@@ -1,4 +1,4 @@
-﻿#include"hoec_Camera_core_v1_private.hpp"
+#include"hoec_Camera_core_v1_private.hpp"
 
 #include "MvCameraControl.h"
 #include"opencv2/opencv.hpp"
@@ -98,7 +98,7 @@ namespace rw
 
 				return rgbImage;
 			}
-			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG8) 
+			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG8)
 			{
 				cv::Mat bayerImage(height, width, CV_8UC1, pData);
 				cv::Mat rgbImage;
