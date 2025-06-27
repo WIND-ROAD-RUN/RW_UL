@@ -13,12 +13,6 @@
 #include"MonitorIO.h"
 #include<unordered_map>
 
-class ImageProcessorAssist
-{
-
-
-};
-
 std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
 	const std::chrono::system_clock::time_point& timePoint)
