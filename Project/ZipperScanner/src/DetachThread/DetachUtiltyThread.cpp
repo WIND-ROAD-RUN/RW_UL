@@ -146,19 +146,19 @@ void DetachUtiltyThreadZipper::processOneWarnFinsh(rw::rqw::WarningInfo& info)
 	}*/
 }
 
-void DetachUtiltyThreadZipper::openWarnAlarm(const rw::rqw::WarningInfo& info)
-{
-	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
-	motion->SetIOOut(ControlLines::warnRedOut, true);
-	motion->SetIOOut(ControlLines::warnGreenOut, false);
-}
-
-void DetachUtiltyThreadZipper::closeWarnAlarm(const rw::rqw::WarningInfo& info)
-{
-	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
-	motion->SetIOOut(ControlLines::warnRedOut, false);
-	motion->SetIOOut(ControlLines::warnGreenOut, true);
-}
+//void DetachUtiltyThreadZipper::openWarnAlarm(const rw::rqw::WarningInfo& info)
+//{
+//	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
+//	motion->SetIOOut(ControlLines::warnRedOut, true);
+//	motion->SetIOOut(ControlLines::warnGreenOut, false);
+//}
+//
+//void DetachUtiltyThreadZipper::closeWarnAlarm(const rw::rqw::WarningInfo& info)
+//{
+//	auto& motion = zwy::scc::GlobalMotion::getInstance().motionPtr;
+//	motion->SetIOOut(ControlLines::warnRedOut, false);
+//	motion->SetIOOut(ControlLines::warnGreenOut, true);
+//}
 
 void DetachUtiltyThreadZipper::processTrigger(size_t s)
 {

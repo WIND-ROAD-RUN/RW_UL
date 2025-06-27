@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1278</width>
-    <height>919</height>
+    <width>940</width>
+    <height>823</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>ZipperScanner</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="7,2">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_3" columnstretch="3,1" columnminimumwidth="0,0">
+    <item row="0" column="0">
      <widget class="QGroupBox" name="gBoix_ImageDisplay">
       <property name="title">
        <string/>
@@ -128,7 +128,7 @@
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="0" column="1">
      <layout class="QVBoxLayout" name="vLayout_SideBar" stretch="8,16,6,4,2">
       <item>
        <widget class="QGroupBox" name="groupBox_head">
@@ -320,7 +320,7 @@ QGroupBox::title {
         <property name="title">
          <string/>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,2,2,2,2,2,2,2">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,2,2,2,2,2,2,0,2">
          <item>
           <layout class="QHBoxLayout" name="hLayout_info" stretch="1,1">
            <item>
@@ -378,7 +378,7 @@ QPushButton:pressed {
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="hLayout_produceTotal">
+          <layout class="QHBoxLayout" name="hLayout_produceTotal" stretch="1,2">
            <item>
             <widget class="QLabel" name="label_produceTotal">
              <property name="font">
@@ -423,7 +423,7 @@ QPushButton:pressed {
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="hLayout_wasteProducts">
+          <layout class="QHBoxLayout" name="hLayout_wasteProducts" stretch="1,2">
            <item>
             <widget class="QLabel" name="label_wasteProducts">
              <property name="styleSheet">
@@ -462,7 +462,7 @@ QPushButton:pressed {
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="hLayout_productionYield">
+          <layout class="QHBoxLayout" name="hLayout_productionYield" stretch="1,2">
            <item>
             <widget class="QLabel" name="label_productionYield">
              <property name="styleSheet">
@@ -759,6 +759,174 @@ QPushButton:pressed {
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gBox_set_2">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+	border-radius: 15px
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #2c3e50;
+}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QRadioButton" name="rbtn_start">
+              <property name="styleSheet">
+               <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;        
+    color:  rgb(0, 0, 0);       
+
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #2196F3;
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #2196F3,
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton::indicator:disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 选中时的文字颜色 */
+QRadioButton:checked {
+    color: #2196F3;
+    font-weight: 500;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #1565C0;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #BBDEFB,
+        stop:1 transparent
+    );
+}</string>
+              </property>
+              <property name="text">
+               <string>启动</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rbtn_stop">
+              <property name="styleSheet">
+               <string notr="true">QRadioButton {
+    spacing: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;        
+    color:  rgb(0, 0, 0);       
+
+}
+
+/* 未选中状态 */
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 2px solid #999;
+    background: #ffffff;
+}
+
+/* 悬停效果 */
+QRadioButton::indicator:hover {
+    border: 2px solid #666;
+}
+
+/* 选中状态 */
+QRadioButton::indicator:checked {
+    border: 2px solid #2196F3;
+}
+
+/* 选中时的内圆 */
+QRadioButton::indicator:checked {
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.4,
+        fx:0.5, fy:0.5,
+        stop:0 #2196F3,
+        stop:1 transparent
+    );
+}
+
+/* 禁用状态 */
+QRadioButton::indicator:disabled {
+    border: 2px solid #ccc;
+    background: #eee;
+}
+
+/* 选中时的文字颜色 */
+QRadioButton:checked {
+    color: #2196F3;
+    font-weight: 500;
+}
+
+/* 点击动画效果 */
+QRadioButton::indicator:pressed {
+    border: 2px solid #1565C0;
+    background-color: qradialgradient(
+        cx:0.5, cy:0.5,
+        radius:0.5,
+        fx:0.5, fy:0.5,
+        stop:0 #BBDEFB,
+        stop:1 transparent
+    );
+}</string>
+              </property>
+              <property name="text">
+               <string>停止</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>

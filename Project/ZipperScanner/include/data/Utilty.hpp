@@ -21,38 +21,16 @@ struct WarningId
 	static constexpr int cwork1AndWork2EmptyAlarm = 7;
 };
 
-struct ControlLine
-{
-	int axis;
-	int ioNum;
-	ControlLine(int a, int i)
-	{
-		axis = a;
-		ioNum = i;
-	}
-};
-
 struct ControlLines
 {
 public:
-	const static ControlLine blowLine1;
-	const static ControlLine blowLine2;
+	static size_t qidonganniuIn;
+	static size_t lalianlawanIn;
+	static size_t jitingIn;
 public:
-	static constexpr int stopIn = 2;
-	static constexpr int startIn = 1;
-	static constexpr int airWarnIn = 7;
-	static constexpr int shutdownComputerIn = 8;
-	static constexpr int camer1In = 6;
-	static constexpr int camer2In = 5;
-public:
-	static constexpr int motoPowerOut = 1;
-	static constexpr int beltAsis = 0;
-	static constexpr int warnGreenOut = 7;
-	static constexpr int warnRedOut = 8;
-	static constexpr int upLightOut = 9;
-	static constexpr int sideLightOut = 0;
-	static constexpr int downLightOut = 10;
-	static constexpr int strobeLightOut = 11;
+	static size_t bujindianjimaichongOut;
+	static size_t chongkongOUT;
+	static size_t tuojiOut;
 };
 
 struct ClassId

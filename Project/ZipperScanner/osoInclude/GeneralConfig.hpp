@@ -30,6 +30,8 @@ namespace cdm {
         bool isSaveImg{ false };
         bool isshibiekuang{ true };
         bool iswenzi{ true };
+        bool isStart{ false };
+        bool isStop{ false };
     };
 
     inline GeneralConfig::GeneralConfig(const rw::oso::ObjectStoreAssembly& assembly)
@@ -94,6 +96,16 @@ namespace cdm {
             throw std::runtime_error("$variable$iswenzi is not found");
         }
         iswenzi = iswenziItem->getValueAsBool();
+        auto isStartItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isStart$"));
+        if (!isStartItem) {
+            throw std::runtime_error("$variable$isStart is not found");
+        }
+        isStart = isStartItem->getValueAsBool();
+        auto isStopItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$isStop$"));
+        if (!isStopItem) {
+            throw std::runtime_error("$variable$isStop is not found");
+        }
+        isStop = isStopItem->getValueAsBool();
     }
 
     inline GeneralConfig::GeneralConfig(const GeneralConfig& obj)
@@ -109,6 +121,8 @@ namespace cdm {
         isSaveImg = obj.isSaveImg;
         isshibiekuang = obj.isshibiekuang;
         iswenzi = obj.iswenzi;
+        isStart = obj.isStart;
+        isStop = obj.isStop;
     }
 
     inline GeneralConfig& GeneralConfig::operator=(const GeneralConfig& obj)
@@ -125,6 +139,8 @@ namespace cdm {
             isSaveImg = obj.isSaveImg;
             isshibiekuang = obj.isshibiekuang;
             iswenzi = obj.iswenzi;
+            isStart = obj.isStart;
+            isStop = obj.isStop;
         }
         return *this;
     }
@@ -177,12 +193,20 @@ namespace cdm {
         iswenziItem->setName("$variable$iswenzi$");
         iswenziItem->setValueFromBool(iswenzi);
         assembly.addItem(iswenziItem);
+        auto isStartItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isStartItem->setName("$variable$isStart$");
+        isStartItem->setValueFromBool(isStart);
+        assembly.addItem(isStartItem);
+        auto isStopItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        isStopItem->setName("$variable$isStop$");
+        isStopItem->setValueFromBool(isStop);
+        assembly.addItem(isStopItem);
         return assembly;
     }
 
     inline bool GeneralConfig::operator==(const GeneralConfig& obj) const
     {
-        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang && isDebug == obj.isDebug && isDefect == obj.isDefect && isSaveImg == obj.isSaveImg && isshibiekuang == obj.isshibiekuang && iswenzi == obj.iswenzi;
+        return totalProductionVolume == obj.totalProductionVolume && totalDefectiveVolume == obj.totalDefectiveVolume && productionYield == obj.productionYield && qiangGuang == obj.qiangGuang && zhongGuang == obj.zhongGuang && ruoGuang == obj.ruoGuang && isDebug == obj.isDebug && isDefect == obj.isDefect && isSaveImg == obj.isSaveImg && isshibiekuang == obj.isshibiekuang && iswenzi == obj.iswenzi && isStart == obj.isStart && isStop == obj.isStop;
     }
 
     inline bool GeneralConfig::operator!=(const GeneralConfig& obj) const

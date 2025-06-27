@@ -43,5 +43,25 @@ namespace cdm {
 		qiyongerxiangji : bool :default = false;
 		qiyongyundongkongzhiqi : bool :default = false;
 		yundongkongzhiqichonglian : bool :default = false;
+
+		shedingladaichangdu : double :default = 0;
+		chongkongjishu : double :default = 0;
+		dangqianchangdu : double :default = 0;
+		xiangjichufachangdu : double :default = 0;
+		shoudongsudu : double :default = 0;
+		meizhuanmaichongshu : double :default = 0;
+		zidongladaisudu : double :default = 0;
+		shedingzhouchang : double :default = 0;
+		yanshichongkong : double :default = 0;
+		chongkongshijian : double :default = 0;
+		yanshiziqi : double :default = 0;
+		jiajiansushijian : double :default = 0;
+
+		qidonganniuIN : int :default = 0;
+		lalianlawanIN : int :default = 0;
+		jitingIN : int :default = 0;
+		bujindianjimaichongOUT : int :default = 0;
+		chongkongOUT : int :default = 0;
+		tuojiOUT : int :default = 0;
 	};
 }
