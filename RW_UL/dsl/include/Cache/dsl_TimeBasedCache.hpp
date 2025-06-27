@@ -258,7 +258,13 @@ namespace rw {
 					it->second = data; // 更新已有数据
 				}
 				else {
-					insert(time, data); // 插入新数据
+					// �������������ɾ����ɵ�����
+					if (_cache.size() >= _capacity) {
+						_cache.pop_front();
+					}
+
+					// ����������
+					_cache.emplace_back(time, data);
 				}
 			}
 
@@ -281,6 +287,11 @@ namespace rw {
 			size_t size() const {
 				std::lock_guard<std::mutex> lock(_mutex);
 				return _cache.size();
+			}
+
+			void clear() {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_cache = std::deque<std::pair<Time, T>>();
 			}
 
 		private:
@@ -527,7 +538,10 @@ namespace rw {
 					it->second = data; // 更新已有数据
 				}
 				else {
-					insert(time, data); // 插入新数据
+					if (_cache.size() >= _capacity) {
+						_cache.pop_front();
+					}
+					_cache.emplace_back(time, data);
 				}
 			}
 
@@ -544,6 +558,11 @@ namespace rw {
 				}
 
 				return std::nullopt; // 未找到返回空值
+			}
+
+			void clear()  {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_cache = std::deque<std::pair<Time, T>>();
 			}
 		private:
 			mutable std::mutex _mutex;

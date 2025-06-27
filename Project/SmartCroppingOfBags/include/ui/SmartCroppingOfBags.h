@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <QMainWindow>
 
@@ -87,6 +87,8 @@ private slots:
 	void updateCardLabelState(bool state);
 private slots:
 	void onUpdateMainWindowInfo(int i);
+private slots:
+	void onAppendCarousel(int i);
 private:
 	Ui::SmartCroppingOfBagsClass *ui;
 };

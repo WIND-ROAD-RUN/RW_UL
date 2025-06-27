@@ -28,7 +28,7 @@ SmartCroppingOfBags::SmartCroppingOfBags(QWidget *parent)
 
 	// 构建优先队列
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
-	globalStruct.build_PriorityQueue();
+	globalStruct.build_defectQueue();
 
 	// 构建异步线程
 	GlobalStructThreadSmartCroppingOfBags::getInstance().build_detachThread();
@@ -251,6 +251,11 @@ void SmartCroppingOfBags::build_imageProcessorModule()
 		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel);
 	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::appendPixel,
 		GlobalStructThreadSmartCroppingOfBags::getInstance()._detachUtiltyThreadSmartCroppingOfBags.get(), &DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel);
+
+	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::appendCarousel, this, &SmartCroppingOfBags::onAppendCarousel);
+	QObject::connect(globalStruct.modelCamera2.get(), &ImageProcessingModuleSmartCroppingOfBags::appendCarousel, this, &SmartCroppingOfBags::onAppendCarousel);
+
+
 }
 
 void SmartCroppingOfBags::build_imageSaveEngine()
@@ -287,7 +292,7 @@ void SmartCroppingOfBags::destroyComponents()
 	//销毁板卡
 	destroy_motion();
 	// 销毁剔废优先队列
-	globalStruct.destroy_PriorityQueue();
+	globalStruct.destroy_defectQueue();
 	// 保存参数
 	globalStruct.saveGeneralConfig();
 }
@@ -653,4 +658,9 @@ void SmartCroppingOfBags::onUpdateMainWindowInfo(int i)
 	}
 	
 	
+}
+
+void SmartCroppingOfBags::onAppendCarousel(int i)
+{
+	_carouselWidget->appendItem(i);
 }

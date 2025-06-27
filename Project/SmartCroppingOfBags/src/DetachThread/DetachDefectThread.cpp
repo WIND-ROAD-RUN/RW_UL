@@ -30,60 +30,41 @@ void DetachDefectThreadSmartCroppingOfBags::stopThread()
 
 void DetachDefectThreadSmartCroppingOfBags::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue, double nowLocation)
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+
+	double bottomLocation{0};
 	try
 	{
-		auto & globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
-		auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-		auto prePulse = queue->peek();
-		double tempPulse = 0;
-
-		auto duration =std::abs(nowLocation-prePulse);
+		bottomLocation = queue->peek();
+		auto duration =std::abs(nowLocation-bottomLocation);
 		auto standard = setConfig.daokoudaoxiangjiluli1 / setConfig.maichongxishu1;
 		if (duration> standard)
 		{
-			auto& motion = globalStruct.zMotion;
 			queue->top();
-			motion.setIOOut(ControlLines::yadaiOut, true);
-
-			while (true)
+			emitErrorToZMotion();
+			globalStruct.locations->clear();
+			std::cout << "************************" << std::endl;
+		}
+		else
+		{
+			auto& globalThread = GlobalStructThreadSmartCroppingOfBags::getInstance();
+			if (globalThread.isQieDao)
 			{
-				QThread::msleep(1);
-				if (motion.getIOOut(ControlLines::qiedaoIn) == false)
+				auto topLocationOption=globalStruct.locations->get(bottomLocation);
+				if (!topLocationOption.has_value())
 				{
-					motion.setIOOut(ControlLines::yadaiOut, false);
-					break;
+					return;
 				}
+
+				if (topLocationOption> globalThread.currentQieDaoLocation)
+				{
+					std::cout << "----------------------" << std::endl;
+					queue->top();
+					emitErrorToZMotion();
+				}
+
 			}
-
-			QThread* threaBaojin = QThread::create([&setConfig, &motion]() {
-				QThread::msleep(setConfig.baojingyanshi1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::baojinghongdengOUT, true);
-				QThread::msleep(setConfig.baojingshijian1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::baojinghongdengOUT, false);
-				});
-			QObject::connect(threaBaojin, &QThread::finished, threaBaojin, &QThread::deleteLater);
-
-
-			QThread* threadChuiqi = QThread::create([&setConfig, &motion]() {
-				QThread::msleep(setConfig.chuiqiyanshi1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::chuiqiOut, true);
-				QThread::msleep(setConfig.chuiqishijian1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::chuiqiOut, false);
-				});
-			QObject::connect(threadChuiqi, &QThread::finished, threadChuiqi, &QThread::deleteLater);
-
-
-			QThread* threadTifei = QThread::create([&setConfig,&motion]() {
-				QThread::msleep(setConfig.tifeiyanshi1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::tifeiOut, true);
-				QThread::msleep(setConfig.tifeishijian1); // 设置适当的延迟时间
-				motion.setIOOut(ControlLines::tifeiOut, false);
-				});
-			QObject::connect(threadTifei, &QThread::finished, threadTifei, &QThread::deleteLater);
-
-			threadTifei->start();
-			threadChuiqi->start();
-			threaBaojin->start();
 		}
 
 	}
@@ -91,6 +72,71 @@ void DetachDefectThreadSmartCroppingOfBags::processQueue1(std::unique_ptr<rw::ds
 	{
 		return;
 	}
+}
+
+void DetachDefectThreadSmartCroppingOfBags::emitErrorToZMotion()
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+
+	auto& motion = globalStruct.zMotion;
+	auto setResult=motion.setIOOut(ControlLines::yadaiOut, true);
+
+	while (true)
+	{
+		QThread::msleep(1);
+		if (motion.getIOOut(ControlLines::qiedaoIn) == false)
+		{
+			auto setResult = motion.setIOOut(ControlLines::yadaiOut, false);
+			break;
+		}
+	}
+
+	static std::atomic_bool isFinshBaojing;
+	QThread* threaBaojin = QThread::create([&setConfig, &motion]() {
+		if (isFinshBaojing)
+		{
+			QThread::msleep(setConfig.baojingyanshi1); // 设置适当的延迟时间
+			auto setResult = motion.setIOOut(ControlLines::baojinghongdengOUT, true);
+			QThread::msleep(setConfig.baojingshijian1); // 设置适当的延迟时间
+			setResult=motion.setIOOut(ControlLines::baojinghongdengOUT, false);
+			isFinshBaojing = true;
+		}
+		isFinshBaojing = false;
+		});
+	QObject::connect(threaBaojin, &QThread::finished, threaBaojin, &QThread::deleteLater);
+
+	static std::atomic_bool isFinshChuiqi{ true };
+	QThread* threadChuiqi = QThread::create([&setConfig, &motion]() {
+		if (isFinshChuiqi)
+		{
+			QThread::msleep(setConfig.chuiqiyanshi1); // 设置适当的延迟时间
+			auto setResult = motion.setIOOut(ControlLines::chuiqiOut, true);
+			QThread::msleep(setConfig.chuiqishijian1); // 设置适当的延迟时间
+			setResult=motion.setIOOut(ControlLines::chuiqiOut, false);
+			isFinshChuiqi = true;
+		}
+		isFinshChuiqi = false;
+		});
+	QObject::connect(threadChuiqi, &QThread::finished, threadChuiqi, &QThread::deleteLater);
+
+	static std::atomic_bool isFinshTifei{ true };
+	QThread* threadTifei = QThread::create([&setConfig, &motion]() {
+		if (isFinshTifei)
+		{
+			QThread::msleep(setConfig.tifeiyanshi1); // 设置适当的延迟时间
+			auto setResult = motion.setIOOut(ControlLines::tifeiOut, true);
+			QThread::msleep(setConfig.tifeishijian1); // 设置适当的延迟时间
+			setResult=motion.setIOOut(ControlLines::tifeiOut, false);
+			isFinshTifei = true;
+		}
+		isFinshTifei = false;
+		});
+	QObject::connect(threadTifei, &QThread::finished, threadTifei, &QThread::deleteLater);
+
+	threadTifei->start();
+	threadChuiqi->start();
+	threaBaojin->start();
 }
 
 void DetachDefectThreadSmartCroppingOfBags::run()

@@ -25,7 +25,7 @@ void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 }
 
 
-void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
+void GlobalStructDataSmartCroppingOfBags::build_defectQueue()
 {
 	auto compareNodeEqual = [](const double& a, const double& b) {
 		return a == b;
@@ -36,6 +36,8 @@ void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 
 	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
 	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
+	locations = std::make_unique<rw::dsl::TimeBasedCache<BottomLocation, TopLocation> > (50);
+
 }
 
 void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
@@ -115,10 +117,11 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 	_qiedaoPre = state;*/
 }
 
-void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()
+void GlobalStructDataSmartCroppingOfBags::destroy_defectQueue()
 {
 	priorityQueue1.reset();
 	priorityQueue2.reset();
+	locations.reset();
 }
 
 

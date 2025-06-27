@@ -1583,7 +1583,6 @@ void ImageProcessor::run_debug(MatInfo& frame)
 
 void ImageProcessor::run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info)
 {
-	_isbad = false;
 	run_OpenRemoveFunc_process_defect_info_hole(info);
 	run_OpenRemoveFunc_process_defect_info_body(info);
 	run_OpenRemoveFunc_process_defect_info_specialColor(info);

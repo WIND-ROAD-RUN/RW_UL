@@ -5,12 +5,17 @@
 
 #include<Utilty.hpp>
 
+#include "ime_ModelEngine.h"
+
 class DetachUtiltyThreadSmartCroppingOfBags : public QThread
 {
 	Q_OBJECT
 public:
 	std::atomic_bool isProcessing{ false };
 	std::atomic_bool isProcessFinish{ false };
+
+	/*std::unique_ptr<rw::ModelEngine> engine = nullptr;*/
+
 public:
 	explicit DetachUtiltyThreadSmartCroppingOfBags(QObject* parent = nullptr);
 

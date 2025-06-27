@@ -38,7 +38,8 @@ public:
 public slots:
 	// 相机回调函数
 	void onFrameCaptured(cv::Mat frame, size_t index);
-
+signals:
+	void appendCarousel(int i);
 signals:
 	void imageReady(QPixmap image);
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
@@ -128,7 +129,7 @@ private:
 private:
 	void run_OpenRemoveFunc_process_defect_info(const Time& time);
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
-	void run_OpenRemoveFunc_emitErrorInfo(const Time& time) const;
+	void run_OpenRemoveFunc_emitErrorInfo(const Time& time) ;
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 
@@ -177,6 +178,8 @@ signals:
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
 signals:
 	void appendPixel(double pixel);
+signals:
+	void appendCarousel(int i);
 };
 
 

@@ -85,6 +85,7 @@ public:
 	size_t cutLocate{ 0 };
 public:
 	double bottomErrorLocation{ 0 };
+	double topErrorLocation{0};
 public:
 	std::vector<rw::DetectionRectangleInfo> processResult;
 public:
@@ -98,7 +99,8 @@ public:
 		hasCut(other.hasCut),
 		cutLocate(other.cutLocate),
 		processTime(other.processTime),
-		bottomErrorLocation(other.bottomErrorLocation) {
+		bottomErrorLocation(other.bottomErrorLocation),
+		topErrorLocation(other.topErrorLocation){
 	}
 	// 拷贝赋值运算符
 	HistoryDetectInfo& operator=(const HistoryDetectInfo& other) {
@@ -108,6 +110,7 @@ public:
 			cutLocate = other.cutLocate;
 			processTime = other.processTime;
 			bottomErrorLocation = other.bottomErrorLocation;
+			topErrorLocation = other.topErrorLocation;
 		}
 		return *this;
 	}

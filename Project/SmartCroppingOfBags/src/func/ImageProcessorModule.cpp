@@ -396,8 +396,12 @@ void ImageProcessorSmartCroppingOfBags::getErrorLocation(const Time& times, cons
 	auto bottomXiangsu = std::max({ targetDetectInfo.leftBottom.second, targetDetectInfo.rightBottom.second });
 	auto bottomErrorLocation = bottomXiangsu * pixel / pulse + topLocation;
 
+	auto topXiangsu = std::max({ targetDetectInfo.rightTop.second, targetDetectInfo.leftTop.second });
+	auto topErrorLocation = bottomXiangsu * pixel / pulse + topLocation;
+
 	auto& historyInfo = currentProcessRusult.value();
 	historyInfo.bottomErrorLocation = bottomErrorLocation;
+	historyInfo.topErrorLocation = topErrorLocation;
 
 	_historyResult->set(times, historyInfo);
 }
@@ -670,6 +674,7 @@ QImage ImageProcessorSmartCroppingOfBags::getCollageImage(const std::vector<Time
 
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 {
+	_isbad = false;
 	// 获得当前图像的时间戳与上一张图像的时间戳的集合
 	auto times= _historyTimes->queryWithTime(frame.time, 2);
 	if (times.empty())
@@ -738,6 +743,15 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 
 			emit appendPixel(collageImage.height());
 			//std::cout << "Image emit" << std::endl;
+
+			if (_isbad)
+			{
+				emit appendCarousel(2);
+			}
+			else
+			{
+				emit appendCarousel(1);
+			}
 		}
 	}
 	_lastQieDaoTime = _qieDaoTime;
@@ -931,7 +945,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(S
 	}
 }
 
-void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const Time& time) const
+void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const Time& time) 
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 
@@ -959,6 +973,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const T
 		{
 		case 1:
 			globalStruct.priorityQueue1->insert(bottomLocation, bottomLocation);
+			globalStruct.locations->set(bottomLocation, currentHistoryInfo.value().topErrorLocation);
 			break;
 		case 2:
 			globalStruct.priorityQueue2->insert(bottomLocation, bottomLocation);
@@ -967,7 +982,6 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_emitErrorInfo(const T
 			break;
 		}
 	}
-
 }
 
 void ImageProcessorSmartCroppingOfBags::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -1760,6 +1774,7 @@ void ImageProcessingModuleSmartCroppingOfBags::BuildModule()
 		connect(processor, &ImageProcessorSmartCroppingOfBags::imageNGReady, this, &ImageProcessingModuleSmartCroppingOfBags::imageNGReady, Qt::QueuedConnection);
 		_processors.push_back(processor);
 		connect(processor, &ImageProcessorSmartCroppingOfBags::appendPixel, this, &ImageProcessingModuleSmartCroppingOfBags::appendPixel, Qt::QueuedConnection);
+		connect(processor, &ImageProcessorSmartCroppingOfBags::appendCarousel, this, &ImageProcessingModuleSmartCroppingOfBags::appendCarousel, Qt::QueuedConnection);
 
 		processor->_historyResult = _historyResult;
 		processor->_imageCollage = _imageCollage;

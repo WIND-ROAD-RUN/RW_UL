@@ -93,9 +93,13 @@ public:
 public:
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue1;
 	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue2;
+
+	using BottomLocation = double;
+	using TopLocation = double;
+	std::unique_ptr<rw::dsl::TimeBasedCache<BottomLocation, TopLocation>> locations;
 public:
-	void build_PriorityQueue();
-	void destroy_PriorityQueue();
+	void build_defectQueue();
+	void destroy_defectQueue();
 
 public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };

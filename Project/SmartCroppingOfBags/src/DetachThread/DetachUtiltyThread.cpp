@@ -7,7 +7,13 @@
 
 DetachUtiltyThreadSmartCroppingOfBags::DetachUtiltyThreadSmartCroppingOfBags(QObject* parent)
 	: QThread(parent), running(false) {
-
+	/*rw::ModelEngineConfig config;
+	config.conf_threshold = 0.1f;
+	config.nms_threshold = 0.1f;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
+	config.letterBoxColor = cv::Scalar(114, 114, 114);
+	config.modelPath = globalPath.modelPath.toStdString();
+	engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);*/
 }
 
 DetachUtiltyThreadSmartCroppingOfBags::~DetachUtiltyThreadSmartCroppingOfBags()
@@ -36,6 +42,8 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 		QThread::sleep(1);
 		getRunningState(s);
 		++s;
+		cv::Mat mat = cv::Mat::zeros(1024, 1024, CV_8UC3);
+		//engine->processImg(mat);
 		if (s == 300)
 		{
 			s = 0;

@@ -22,7 +22,8 @@ public:
 	void stopThread();
 
 	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double>>& queue, double nowLocation);
-
+public:
+	void emitErrorToZMotion();
 signals:
 	void findIsBad(size_t index);
 protected:
