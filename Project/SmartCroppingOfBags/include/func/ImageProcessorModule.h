@@ -316,26 +316,6 @@ private:
 public:
 	// 开启剔废情况下绘制缺陷相关的信息(符合条件的缺陷会用红色显示)
 	void drawSmartCroppingOfBagsDefectInfoText_defect(QImage& image, const SmartCroppingOfBagsDefectInfo& info);
-	// 添加各个缺陷信息到文本列表中
-	void appendHeibaDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendShudangDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendHuapoDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendJietouDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendGuasiDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendPodongDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendZangwuDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendNoshudangDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendModianDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendLoumoDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendXishudangDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendErweimaDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendDamodianDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendKongdongDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendSebiaoDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendYinshuaquexianDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendXiaopodongDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-	void appendJiaodaiDectInfo(QVector<QString>& textList, const SmartCroppingOfBagsDefectInfo& info);
-
 
 public:
 	// 在指定位置画竖线

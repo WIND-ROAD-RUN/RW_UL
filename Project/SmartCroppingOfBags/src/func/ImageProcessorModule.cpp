@@ -1508,326 +1508,134 @@ void ImageProcessorSmartCroppingOfBags::drawSmartCroppingOfBagsDefectInfoText_de
 	config.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 	configList.push_back(config);
 
-	//运行时间
-	//textList.push_back(info.time);
-
 	auto& generalSet = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
 	auto& isDefect = generalSet.istifei;
 
 	// 如果开启了剔废功能
 	if (isDefect)
 	{
-		// 添加剔废信息(如果信息内容太多记得修改)
-		appendHeibaDectInfo(textList, info);
-		appendShudangDectInfo(textList, info);
-		appendHuapoDectInfo(textList, info);
-		appendJietouDectInfo(textList, info);
-		appendGuasiDectInfo(textList, info);
-		appendPodongDectInfo(textList, info);
-		appendZangwuDectInfo(textList, info);
-		appendNoshudangDectInfo(textList, info);
-		appendModianDectInfo(textList, info);
-		appendLoumoDectInfo(textList, info);
-		appendXishudangDectInfo(textList, info);
-		appendErweimaDectInfo(textList, info);
-		appendDamodianDectInfo(textList, info);
-		appendKongdongDectInfo(textList, info);
-		appendSebiaoDectInfo(textList, info);
-		appendYinshuaquexianDectInfo(textList, info);
-		appendXiaopodongDectInfo(textList, info);
-		appendJiaodaiDectInfo(textList, info);
+		// Lambda 表达式封装逻辑
+		auto appendDefectInfo = [&](int classId, const QString& defectName, const std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>& defectList) {
+			auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
+
+			if (_isbad && !defectList.empty())
+			{
+				QString defectText = defectName + ":";
+				for (const auto& item : defectList)
+				{
+					defectText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
+				}
+
+				// 根据 classId 获取目标分数和面积
+				double targetScore = 0.0;
+				double targetArea = 0.0;
+				switch (classId)
+				{
+				case ClassId::Heiba:
+					targetScore = productScore.heibascore;
+					targetArea = productScore.heibaarea;
+					break;
+				case ClassId::Shudang:
+					targetScore = productScore.shudangscore;
+					targetArea = productScore.shudangarea;
+					break;
+				case ClassId::Huapo:
+					targetScore = productScore.huaposcore;
+					targetArea = productScore.huapoarea;
+					break;
+				case ClassId::Jietou:
+					targetScore = productScore.jietouscore;
+					targetArea = productScore.jietouarea;
+					break;
+				case ClassId::Guasi:
+					targetScore = productScore.guasiscore;
+					targetArea = productScore.guasiarea;
+					break;
+				case ClassId::Podong:
+					targetScore = productScore.podongscore;
+					targetArea = productScore.podongarea;
+					break;
+				case ClassId::Zangwu:
+					targetScore = productScore.zangwuscore;
+					targetArea = productScore.zangwuarea;
+					break;
+				case ClassId::Noshudang:
+					targetScore = productScore.noshudangscore;
+					targetArea = productScore.noshudangarea;
+					break;
+				case ClassId::Modian:
+					targetScore = productScore.modianscore;
+					targetArea = productScore.modianarea;
+					break;
+				case ClassId::Loumo:
+					targetScore = productScore.loumoscore;
+					targetArea = productScore.loumoarea;
+					break;
+				case ClassId::Xishudang:
+					targetScore = productScore.xishudangscore;
+					targetArea = productScore.xishudangarea;
+					break;
+				case ClassId::Erweima:
+					targetScore = productScore.erweimascore;
+					targetArea = productScore.erweimaarea;
+					break;
+				case ClassId::Damodian:
+					targetScore = productScore.damodianscore;
+					targetArea = productScore.damodianarea;
+					break;
+				case ClassId::Kongdong:
+					targetScore = productScore.kongdongscore;
+					targetArea = productScore.kongdongarea;
+					break;
+				case ClassId::Sebiao:
+					targetScore = productScore.sebiaoscore;
+					targetArea = productScore.sebiaoarea;
+					break;
+				case ClassId::Yinshuaquexian:
+					targetScore = productScore.yinshuaquexianscore;
+					targetArea = productScore.yinshuaquexianarea;
+					break;
+				case ClassId::Xiaopodong:
+					targetScore = productScore.xiaopodongscore;
+					targetArea = productScore.xiaopodongarea;
+					break;
+				case ClassId::Jiaodai:
+					targetScore = productScore.jiaodaiscore;
+					targetArea = productScore.jiaodaiarea;
+					break;
+				default:
+					return;
+				}
+
+				defectText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(targetScore)).arg(static_cast<int>(targetArea)));
+				textList.push_back(defectText);
+			}
+			};
+
+		// 使用 Lambda 表达式处理所有缺陷类型
+		appendDefectInfo(ClassId::Heiba, "黑疤", info.heibaList);
+		appendDefectInfo(ClassId::Shudang, "疏档", info.shudangList);
+		appendDefectInfo(ClassId::Huapo, "划破", info.huapoList);
+		appendDefectInfo(ClassId::Jietou, "接头", info.jietouList);
+		appendDefectInfo(ClassId::Guasi, "挂丝", info.guasiList);
+		appendDefectInfo(ClassId::Podong, "破洞", info.podongList);
+		appendDefectInfo(ClassId::Zangwu, "脏污", info.zangwuList);
+		appendDefectInfo(ClassId::Noshudang, "无疏档", info.noshudangList);
+		appendDefectInfo(ClassId::Modian, "墨点", info.modianList);
+		appendDefectInfo(ClassId::Loumo, "漏膜", info.loumoList);
+		appendDefectInfo(ClassId::Xishudang, "稀疏档", info.xishudangList);
+		appendDefectInfo(ClassId::Erweima, "二维码", info.erweimaList);
+		appendDefectInfo(ClassId::Damodian, "大墨点", info.damodianList);
+		appendDefectInfo(ClassId::Kongdong, "孔洞", info.kongdongList);
+		appendDefectInfo(ClassId::Sebiao, "色标", info.sebiaoList);
+		appendDefectInfo(ClassId::Yinshuaquexian, "印刷缺陷", info.yinshuaquexianList);
+		appendDefectInfo(ClassId::Xiaopodong, "小破洞", info.xiaopodongList);
+		appendDefectInfo(ClassId::Jiaodai, "胶带", info.jiaodaiList);
 	}
 
 	// 将信息显示到左上角
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
-}
 
-void ImageProcessorSmartCroppingOfBags::appendHeibaDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.heiba && !info.heibaList.empty())
-	{
-		QString queyaText("黑疤:");
-		for (const auto& item : info.heibaList)
-		{
-			queyaText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		queyaText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.heibascore)).arg(static_cast<int>(productScore.heibaarea)));
-		textList.push_back(queyaText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendShudangDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.shudang && !info.shudangList.empty())
-	{
-		QString shudangText("疏档:");
-		for (const auto& item : info.shudangList)
-		{
-			shudangText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		shudangText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.shudangscore)).arg(static_cast<int>(productScore.shudangarea)));
-		textList.push_back(shudangText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendHuapoDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.huapo && !info.huapoList.empty())
-	{
-		QString huapoText("划破:");
-		for (const auto& item : info.huapoList)
-		{
-			huapoText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		huapoText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.huaposcore)).arg(static_cast<int>(productScore.huapoarea)));
-		textList.push_back(huapoText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendJietouDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.jietou && !info.jietouList.empty())
-	{
-		QString jietouText("接头:");
-		for (const auto& item : info.jietouList)
-		{
-			jietouText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		jietouText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.jietouscore)).arg(static_cast<int>(productScore.jietouarea)));
-		textList.push_back(jietouText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendGuasiDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.guasi && !info.guasiList.empty())
-	{
-		QString guasiText("挂丝:");
-		for (const auto& item : info.guasiList)
-		{
-			guasiText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		guasiText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.guasiscore)).arg(static_cast<int>(productScore.guasiarea)));
-		textList.push_back(guasiText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendPodongDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.podong && !info.podongList.empty())
-	{
-		QString podongText("破洞:");
-		for (const auto& item : info.podongList)
-		{
-			podongText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		podongText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.podongscore)).arg(static_cast<int>(productScore.podongarea)));
-		textList.push_back(podongText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendZangwuDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.zangwu && !info.zangwuList.empty())
-	{
-		QString zangwuText("脏污:");
-		for (const auto& item : info.zangwuList)
-		{
-			zangwuText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		zangwuText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.zangwuscore)).arg(static_cast<int>(productScore.zangwuarea)));
-		textList.push_back(zangwuText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendNoshudangDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.noshudang && !info.noshudangList.empty())
-	{
-		QString noshudangText("无疏档:");
-		for (const auto& item : info.noshudangList)
-		{
-			noshudangText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		noshudangText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.noshudangscore)).arg(static_cast<int>(productScore.noshudangarea)));
-		textList.push_back(noshudangText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendModianDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.modian && !info.modianList.empty())
-	{
-		QString modianText("墨点:");
-		for (const auto& item : info.modianList)
-		{
-			modianText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		modianText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.modianscore)).arg(static_cast<int>(productScore.modianarea)));
-		textList.push_back(modianText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendLoumoDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.loumo && !info.loumoList.empty())
-	{
-		QString loumoText("漏膜:");
-		for (const auto& item : info.loumoList)
-		{
-			loumoText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		loumoText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.loumoscore)).arg(static_cast<int>(productScore.loumoarea)));
-		textList.push_back(loumoText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendXishudangDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.xishudang && !info.xishudangList.empty())
-	{
-		QString xishudangText("稀疏档:");
-		for (const auto& item : info.xishudangList)
-		{
-			xishudangText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		xishudangText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.xishudangscore)).arg(static_cast<int>(productScore.xishudangarea)));
-		textList.push_back(xishudangText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendErweimaDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.erweima && !info.erweimaList.empty())
-	{
-		QString erweimaText("二维码:");
-		for (const auto& item : info.erweimaList)
-		{
-			erweimaText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		erweimaText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.erweimascore)).arg(static_cast<int>(productScore.erweimaarea)));
-		textList.push_back(erweimaText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendDamodianDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.damodian && !info.damodianList.empty())
-	{
-		QString damodianText("大墨点:");
-		for (const auto& item : info.damodianList)
-		{
-			damodianText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		damodianText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.damodianscore)).arg(static_cast<int>(productScore.damodianarea)));
-		textList.push_back(damodianText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendKongdongDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.kongdong && !info.kongdongList.empty())
-	{
-		QString kongdongText("孔洞:");
-		for (const auto& item : info.kongdongList)
-		{
-			kongdongText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		kongdongText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.kongdongscore)).arg(static_cast<int>(productScore.kongdongarea)));
-		textList.push_back(kongdongText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendSebiaoDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.sebiao && !info.sebiaoList.empty())
-	{
-		QString sebiaoText("色标:");
-		for (const auto& item : info.sebiaoList)
-		{
-			sebiaoText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		sebiaoText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.sebiaoscore)).arg(static_cast<int>(productScore.sebiaoarea)));
-		textList.push_back(sebiaoText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendYinshuaquexianDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.yinshuaquexian && !info.yinshuaquexianList.empty())
-	{
-		QString yinshuaquexianText("印刷缺陷:");
-		for (const auto& item : info.yinshuaquexianList)
-		{
-			yinshuaquexianText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		yinshuaquexianText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.yinshuaquexianscore)).arg(static_cast<int>(productScore.yinshuaquexianarea)));
-		textList.push_back(yinshuaquexianText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendXiaopodongDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.xiaopodong && !info.xiaopodongList.empty())
-	{
-		QString xiaopodongText("小破洞:");
-		for (const auto& item : info.xiaopodongList)
-		{
-			xiaopodongText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		xiaopodongText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.xiaopodongscore)).arg(static_cast<int>(productScore.xiaopodongarea)));
-		textList.push_back(xiaopodongText);
-	}
-}
-
-void ImageProcessorSmartCroppingOfBags::appendJiaodaiDectInfo(QVector<QString>& textList,
-	const SmartCroppingOfBagsDefectInfo& info)
-{
-	auto& productScore = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
-	if (_isbad && productScore.jiaodai && !info.jiaodaiList.empty())
-	{
-		QString jiaodaiText("胶带:");
-		for (const auto& item : info.jiaodaiList)
-		{
-			jiaodaiText.append(QString(" %1 %2").arg(static_cast<int>(item.score)).arg(static_cast<int>(item.area)));
-		}
-		jiaodaiText.append(QString(" 目标分数: %1,目标面积: %2").arg(static_cast<int>(productScore.jiaodaiscore)).arg(static_cast<int>(productScore.jiaodaiarea)));
-		textList.push_back(jiaodaiText);
-	}
 }
 
 void ImageProcessorSmartCroppingOfBags::drawVerticalLine_locate(QImage& image, size_t locate)
@@ -2492,35 +2300,6 @@ ImageProcessingModuleSmartCroppingOfBags::~ImageProcessingModuleSmartCroppingOfB
 		delete processor;
 	}
 }
-
-////监控io线程
-//
-//bool state = false;
-//double lastlocation = 0;
-//
-////全局变量location
-//double location = 0;
-//void getlocation()
-//{
-//
-//	auto& camera1 = GlobalStructDataSmartCroppingOfBags::getInstance().camera1;
-//	//获得编码器的位置
-//	while (true)
-//	{
-//		//location = camera1->getEncoderNumber();
-//
-//	}
-//
-//
-//
-//}
-
-
-
-
-
-
-
 
 void ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured(cv::Mat frame, size_t index)
 {
