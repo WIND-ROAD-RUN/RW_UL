@@ -49,9 +49,6 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
 	detachDefectThreadSmartCroppingOfBags = std::make_unique<DetachDefectThreadSmartCroppingOfBags>();
 
-
-
-
 	monitorZMotionIOStateThread = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
 	monitorZMotionIOStateThread->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
 	monitorZMotionIOStateThread->setMonitorFrequency(1);
@@ -67,6 +64,7 @@ void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags.reset();
 	monitorIOSmartCroppingOfBags.reset();
+	detachDefectThreadSmartCroppingOfBags->stopThread();
 	detachDefectThreadSmartCroppingOfBags.reset();
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->destroyThread();
