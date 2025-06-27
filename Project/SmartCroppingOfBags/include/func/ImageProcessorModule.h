@@ -124,6 +124,7 @@ public:
 };
 
 class ImageProcessorSmartCroppingOfBags;
+class ImageProcessorAssist;
 
 class ImageProcessingModuleSmartCroppingOfBags : public QObject {
 	Q_OBJECT
@@ -174,6 +175,8 @@ public:
 class ImageProcessorSmartCroppingOfBags : public QThread
 {
 	Q_OBJECT
+public:
+	friend ImageProcessorAssist;
 public:
 	std::shared_ptr<ImageCollage> _imageCollage = nullptr;
 	//这个时间的长度，要向外提供接口，设置times数组的长度，从而决定了拼成的张数
