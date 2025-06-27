@@ -274,15 +274,16 @@ void SmartCroppingOfBags::destroyComponents()
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	//销毁相机
-	globalStruct.destroyCamera();
 	// 销毁图像处理模块
 	//globalStruct.destroyImageProcessingModule();
 	// 销毁图像保存模块
-	globalStruct.destroyImageSaveEngine();
+
 
 	// 销毁异步线程
 	GlobalStructThreadSmartCroppingOfBags::getInstance().destroy_detachThread();
 
+	globalStruct.destroyImageSaveEngine();
+	globalStruct.destroyCamera();
 	//销毁板卡
 	destroy_motion();
 	// 销毁剔废优先队列
