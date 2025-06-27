@@ -198,14 +198,12 @@ protected:
 private:
 	void run_debug(MatInfo& frame);				// 不开剔废时候的调试模式
 
+	void run_OpenRemoveFunc(MatInfo& frame);	// 开启剔废功能时的处理模式
+
 	void drawDebugTextInfoOnQImage(QImage & image,const HistoryDetectInfo &info);
 public:
 
 	std::vector<Time> getValidTime(const std::vector<Time>& times);
-
-
-	void run_monitor(MatInfo& frame);			// 单纯的显示模式
-
 
 private:
 	// 调试模式用的封装函数
@@ -266,7 +264,6 @@ private:
 
 
 private:
-	void run_OpenRemoveFunc(MatInfo& frame);	// 开启剔废功能时的处理模式
 
 	void run_OpenRemoveFunc_process_defect_info(const Time& time);
 
@@ -277,9 +274,6 @@ private:
 	// 存图
 	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
-
-	//监控IO
-	void monitorIO();
 
 signals:
 	void imageReady(QPixmap image);
