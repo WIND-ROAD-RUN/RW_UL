@@ -246,6 +246,37 @@ namespace rw {
 				return result;
 			}
 
+			// 设置数据（更新或插入）
+			void set(const Time& time, const T& data) {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					it->second = data; // 更新已有数据
+				}
+				else {
+					insert(time, data); // 插入新数据
+				}
+			}
+
+			// 获取数据
+			std::optional<T> get(const Time& time) const {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					return it->second; // 返回找到的数据
+				}
+
+				return std::nullopt; // 未找到返回空值
+			}
+
 			// ��ȡ�����С
 			size_t size() const {
 				std::lock_guard<std::mutex> lock(_mutex);
@@ -484,7 +515,36 @@ namespace rw {
 				std::lock_guard<std::mutex> lock(_mutex);
 				return _cache.size();
 			}
+			// 设置数据（更新或插入）
+			void set(const std::chrono::system_clock::time_point& time, const T& data) {
+				std::lock_guard<std::mutex> lock(_mutex);
 
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					it->second = data; // 更新已有数据
+				}
+				else {
+					insert(time, data); // 插入新数据
+				}
+			}
+
+			// 获取数据
+			std::optional<T> get(const std::chrono::system_clock::time_point& time) const {
+				std::lock_guard<std::mutex> lock(_mutex);
+
+				auto it = std::find_if(_cache.begin(), _cache.end(), [&time](const auto& entry) {
+					return entry.first == time;
+					});
+
+				if (it != _cache.end()) {
+					return it->second; // 返回找到的数据
+				}
+
+				return std::nullopt; // 未找到返回空值
+			}
 		private:
 			mutable std::mutex _mutex;
 			size_t _capacity;
