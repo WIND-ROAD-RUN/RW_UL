@@ -11,7 +11,13 @@
 #include "DetachUtiltyThread.h"
 #include "imeo_ModelEngineFactory_OnnxRuntime.hpp"
 #include"MonitorIO.h"
+#include<unordered_map>
 
+
+namespace cdm
+{
+	class ScoreConfig;
+}
 
 std::optional<std::chrono::system_clock::time_point> findTimeInterval(
 	const std::vector<std::chrono::system_clock::time_point>& timeCollection,
@@ -934,30 +940,184 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(c
 
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info)
 {
+	//_isbad = false; // 重置坏品标志
+	//auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	//auto& isOpenDefect = globalStruct.generalConfig.istifei;
+
+	//if (isOpenDefect)
+	//{
+	//	run_OpenRemoveFunc_process_defect_info_Heiba(info);
+	//	run_OpenRemoveFunc_process_defect_info_Shudang(info);
+	//	run_OpenRemoveFunc_process_defect_info_Huapo(info);
+	//	run_OpenRemoveFunc_process_defect_info_Jietou(info);
+	//	run_OpenRemoveFunc_process_defect_info_Guasi(info);
+	//	run_OpenRemoveFunc_process_defect_info_Podong(info);
+	//	run_OpenRemoveFunc_process_defect_info_Zangwu(info);
+	//	run_OpenRemoveFunc_process_defect_info_Noshudang(info);
+	//	run_OpenRemoveFunc_process_defect_info_Modian(info);
+	//	run_OpenRemoveFunc_process_defect_info_Loumo(info);
+	//	run_OpenRemoveFunc_process_defect_info_Xishudang(info);
+	//	run_OpenRemoveFunc_process_defect_info_Erweima(info);
+	//	run_OpenRemoveFunc_process_defect_info_Damodian(info);
+	//	run_OpenRemoveFunc_process_defect_info_Kongdong(info);
+	//	run_OpenRemoveFunc_process_defect_info_Sebiao(info);
+	//	run_OpenRemoveFunc_process_defect_info_Yinshuaquexian(info);
+	//	run_OpenRemoveFunc_process_defect_info_Xiaopodong(info);
+	//	run_OpenRemoveFunc_process_defect_info_Jiaodai(info);
+	//}
+
 	_isbad = false; // 重置坏品标志
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& isOpenDefect = globalStruct.generalConfig.istifei;
 
 	if (isOpenDefect)
 	{
-		run_OpenRemoveFunc_process_defect_info_Heiba(info);
-		run_OpenRemoveFunc_process_defect_info_Shudang(info);
-		run_OpenRemoveFunc_process_defect_info_Huapo(info);
-		run_OpenRemoveFunc_process_defect_info_Jietou(info);
-		run_OpenRemoveFunc_process_defect_info_Guasi(info);
-		run_OpenRemoveFunc_process_defect_info_Podong(info);
-		run_OpenRemoveFunc_process_defect_info_Zangwu(info);
-		run_OpenRemoveFunc_process_defect_info_Noshudang(info);
-		run_OpenRemoveFunc_process_defect_info_Modian(info);
-		run_OpenRemoveFunc_process_defect_info_Loumo(info);
-		run_OpenRemoveFunc_process_defect_info_Xishudang(info);
-		run_OpenRemoveFunc_process_defect_info_Erweima(info);
-		run_OpenRemoveFunc_process_defect_info_Damodian(info);
-		run_OpenRemoveFunc_process_defect_info_Kongdong(info);
-		run_OpenRemoveFunc_process_defect_info_Sebiao(info);
-		run_OpenRemoveFunc_process_defect_info_Yinshuaquexian(info);
-		run_OpenRemoveFunc_process_defect_info_Xiaopodong(info);
-		run_OpenRemoveFunc_process_defect_info_Jiaodai(info);
+		// Lambda 表达式封装逻辑
+		auto processDefectInfo = [&](SmartCroppingOfBagsDefectInfo& info, int classId) {
+			auto& productScore = globalStruct.scoreConfig;
+
+			// 根据 classId 获取对应的缺陷列表和评分配置
+			std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>* defectList = nullptr;
+			bool isEnabled = false;
+			double minScore = 0.0;
+			double minArea = 0.0;
+
+			switch (classId)
+			{
+			case ClassId::Heiba:
+				defectList = &info.heibaList;
+				isEnabled = productScore.heiba;
+				minScore = productScore.heibascore;
+				minArea = productScore.heibaarea;
+				break;
+			case ClassId::Shudang:
+				defectList = &info.shudangList;
+				isEnabled = productScore.shudang;
+				minScore = productScore.shudangscore;
+				minArea = productScore.shudangarea;
+				break;
+			case ClassId::Huapo:
+				defectList = &info.huapoList;
+				isEnabled = productScore.huapo;
+				minScore = productScore.huaposcore;
+				minArea = productScore.huapoarea;
+				break;
+			case ClassId::Jietou:
+				defectList = &info.jietouList;
+				isEnabled = productScore.jietou;
+				minScore = productScore.jietouscore;
+				minArea = productScore.jietouarea;
+				break;
+			case ClassId::Guasi:
+				defectList = &info.guasiList;
+				isEnabled = productScore.guasi;
+				minScore = productScore.guasiscore;
+				minArea = productScore.guasiarea;
+				break;
+			case ClassId::Podong:
+				defectList = &info.podongList;
+				isEnabled = productScore.podong;
+				minScore = productScore.podongscore;
+				minArea = productScore.podongarea;
+				break;
+			case ClassId::Zangwu:
+				defectList = &info.zangwuList;
+				isEnabled = productScore.zangwu;
+				minScore = productScore.zangwuscore;
+				minArea = productScore.zangwuarea;
+				break;
+			case ClassId::Noshudang:
+				defectList = &info.noshudangList;
+				isEnabled = productScore.noshudang;
+				minScore = productScore.noshudangscore;
+				minArea = productScore.noshudangarea;
+				break;
+			case ClassId::Modian:
+				defectList = &info.modianList;
+				isEnabled = productScore.modian;
+				minScore = productScore.modianscore;
+				minArea = productScore.modianarea;
+				break;
+			case ClassId::Loumo:
+				defectList = &info.loumoList;
+				isEnabled = productScore.loumo;
+				minScore = productScore.loumoscore;
+				minArea = productScore.loumoarea;
+				break;
+			case ClassId::Xishudang:
+				defectList = &info.xishudangList;
+				isEnabled = productScore.xishudang;
+				minScore = productScore.xishudangscore;
+				minArea = productScore.xishudangarea;
+				break;
+			case ClassId::Erweima:
+				defectList = &info.erweimaList;
+				isEnabled = productScore.erweima;
+				minScore = productScore.erweimascore;
+				minArea = productScore.erweimaarea;
+				break;
+			case ClassId::Damodian:
+				defectList = &info.damodianList;
+				isEnabled = productScore.damodian;
+				minScore = productScore.damodianscore;
+				minArea = productScore.damodianarea;
+				break;
+			case ClassId::Kongdong:
+				defectList = &info.kongdongList;
+				isEnabled = productScore.kongdong;
+				minScore = productScore.kongdongscore;
+				minArea = productScore.kongdongarea;
+				break;
+			case ClassId::Sebiao:
+				defectList = &info.sebiaoList;
+				isEnabled = productScore.sebiao;
+				minScore = productScore.sebiaoscore;
+				minArea = productScore.sebiaoarea;
+				break;
+			case ClassId::Yinshuaquexian:
+				defectList = &info.yinshuaquexianList;
+				isEnabled = productScore.yinshuaquexian;
+				minScore = productScore.yinshuaquexianscore;
+				minArea = productScore.yinshuaquexianarea;
+				break;
+			case ClassId::Xiaopodong:
+				defectList = &info.xiaopodongList;
+				isEnabled = productScore.xiaopodong;
+				minScore = productScore.xiaopodongscore;
+				minArea = productScore.xiaopodongarea;
+				break;
+			case ClassId::Jiaodai:
+				defectList = &info.jiaodaiList;
+				isEnabled = productScore.jiaodai;
+				minScore = productScore.jiaodaiscore;
+				minArea = productScore.jiaodaiarea;
+				break;
+			default:
+				return; // 未知的 classId，直接返回
+			}
+
+			// 如果未启用或缺陷列表为空，直接返回
+			if (!isEnabled || defectList == nullptr || defectList->empty())
+			{
+				return;
+			}
+
+			// 遍历缺陷列表，判断是否为坏品
+			for (const auto& item : *defectList)
+			{
+				if (item.score >= minScore && item.area >= minArea)
+				{
+					_isbad = true; // 如果满足条件，标记为坏品
+					break; // 找到一个符合条件的缺陷即可
+				}
+			}
+			};
+
+		// 使用循环调用 Lambda 表达式处理所有缺陷类型
+		for (int classId = ClassId::MinClassIdNum; classId <= ClassId::MaxClassIdNum; ++classId)
+		{
+			processDefectInfo(info, classId);
+		}
 	}
 }
 
@@ -1501,6 +1661,72 @@ void ImageProcessorSmartCroppingOfBags::save_image_work(rw::rqw::ImageInfo& imag
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOfBagsDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index)
 {
+	auto& scoreConfig = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double pixToWorld = (imageProcessingModuleIndex == 1) ? setConfig.daichangxishu1 : setConfig.daichangxishu1;
+
+	// 初始化 classIdConfig
+	std::unordered_map<int, std::tuple<std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>&, bool, double, double, double>> classIdConfig = {
+		{ClassId::Heiba, {info.heibaList, scoreConfig.heiba, pixToWorld, scoreConfig.heibascore, scoreConfig.heibaarea}},
+		{ClassId::Shudang, {info.shudangList, scoreConfig.shudang, pixToWorld, scoreConfig.shudangscore, scoreConfig.shudangarea}},
+		{ClassId::Huapo, {info.huapoList, scoreConfig.huapo, pixToWorld, scoreConfig.huaposcore, scoreConfig.huapoarea}},
+		{ClassId::Jietou, {info.jietouList, scoreConfig.jietou, pixToWorld, scoreConfig.jietouscore, scoreConfig.jietouarea}},
+		{ClassId::Guasi, {info.guasiList, scoreConfig.guasi, pixToWorld, scoreConfig.guasiscore, scoreConfig.guasiarea}},
+		{ClassId::Podong, {info.podongList, scoreConfig.podong, pixToWorld, scoreConfig.podongscore, scoreConfig.podongarea}},
+		{ClassId::Zangwu, {info.zangwuList, scoreConfig.zangwu, pixToWorld, scoreConfig.zangwuscore, scoreConfig.zangwuarea}},
+		{ClassId::Noshudang, {info.noshudangList, scoreConfig.noshudang, pixToWorld, scoreConfig.noshudangscore, scoreConfig.noshudangarea}},
+		{ClassId::Modian, {info.modianList, scoreConfig.modian, pixToWorld, scoreConfig.modianscore, scoreConfig.modianarea}},
+		{ClassId::Loumo, {info.loumoList, scoreConfig.loumo, pixToWorld, scoreConfig.loumoscore, scoreConfig.loumoarea}},
+		{ClassId::Xishudang, {info.xishudangList, scoreConfig.xishudang, pixToWorld, scoreConfig.xishudangscore, scoreConfig.xishudangarea}},
+		{ClassId::Erweima, {info.erweimaList, scoreConfig.erweima, pixToWorld, scoreConfig.erweimascore, scoreConfig.erweimaarea}},
+		{ClassId::Damodian, {info.damodianList, scoreConfig.damodian, pixToWorld, scoreConfig.damodianscore, scoreConfig.damodianarea}},
+		{ClassId::Kongdong, {info.kongdongList, scoreConfig.kongdong, pixToWorld, scoreConfig.kongdongscore, scoreConfig.kongdongarea}},
+		{ClassId::Sebiao, {info.sebiaoList, scoreConfig.sebiao, pixToWorld, scoreConfig.sebiaoscore, scoreConfig.sebiaoarea}},
+		{ClassId::Yinshuaquexian, {info.yinshuaquexianList, scoreConfig.yinshuaquexian, pixToWorld, scoreConfig.yinshuaquexianscore, scoreConfig.yinshuaquexianarea}},
+		{ClassId::Xiaopodong, {info.xiaopodongList, scoreConfig.xiaopodong, pixToWorld, scoreConfig.xiaopodongscore, scoreConfig.xiaopodongarea}},
+		{ClassId::Jiaodai, {info.jiaodaiList, scoreConfig.jiaodai, pixToWorld, scoreConfig.jiaodaiscore, scoreConfig.jiaodaiarea}}
+	};
+
+	// Lambda 表达式
+	auto processDefectInfo = [](SmartCroppingOfBagsDefectInfo& info,
+		const std::vector<rw::DetectionRectangleInfo>& processResult,
+		const std::vector<std::vector<size_t>>& index,
+		int classId,
+		const std::unordered_map<int, std::tuple<std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>&, bool, double, double, double>>& classIdConfig) {
+			// 查询 ClassId 对应的配置信息
+			auto it = classIdConfig.find(classId);
+			if (it == classIdConfig.end()) {
+				return; // 如果未找到对应的 ClassId，直接返回
+			}
+
+			auto& [defectList, isEnabled, pixToWorld, minScore, minArea] = it->second;
+
+			if (index[classId].empty() || !isEnabled) {
+				return; // 如果索引为空或未启用，直接返回
+			}
+
+			for (const auto& item : index[classId]) {
+				SmartCroppingOfBagsDefectInfo::DetectItem defectItem;
+
+				auto score = processResult[item].score * 100; // 转换为百分比
+				auto area = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 计算面积
+
+				if (score >= minScore && area >= minArea) {
+					defectItem.isBad = true;
+				}
+
+				defectItem.score = score;
+				defectItem.area = area;
+				defectItem.index = static_cast<int>(item);
+				defectList.emplace_back(defectItem);
+			}
+		};
+
+	// 调用 Lambda 表达式处理每个 ClassId
+	for (int classId = ClassId::MinClassIdNum; classId <= ClassId::MaxClassIdNum; ++classId) {
+		processDefectInfo(info, processResult, index, classId, classIdConfig);
+	}
+
 	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
 	getShudangInfo(info, processResult, index[ClassId::Shudang]);
 	getHuapoInfo(info, processResult, index[ClassId::Huapo]);
@@ -1524,7 +1750,75 @@ void ImageProcessorSmartCroppingOfBags::getEliminationInfo_debug(SmartCroppingOf
 void ImageProcessorSmartCroppingOfBags::getEliminationInfo_defect(SmartCroppingOfBagsDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index)
 {
-	getHeibaInfo(info, processResult, index[ClassId::Heiba]);
+	auto& scoreConfig = GlobalStructDataSmartCroppingOfBags::getInstance().scoreConfig;
+	auto& setConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
+	double pixToWorld = (imageProcessingModuleIndex == 1) ? setConfig.daichangxishu1 : setConfig.daichangxishu1;
+
+	// 初始化 classIdConfig
+	std::unordered_map<int, std::tuple<std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>&, bool, double, double, double>> classIdConfig = {
+		{ClassId::Heiba, {info.heibaList, scoreConfig.heiba, pixToWorld, scoreConfig.heibascore, scoreConfig.heibaarea}},
+		{ClassId::Shudang, {info.shudangList, scoreConfig.shudang, pixToWorld, scoreConfig.shudangscore, scoreConfig.shudangarea}},
+		{ClassId::Huapo, {info.huapoList, scoreConfig.huapo, pixToWorld, scoreConfig.huaposcore, scoreConfig.huapoarea}},
+		{ClassId::Jietou, {info.jietouList, scoreConfig.jietou, pixToWorld, scoreConfig.jietouscore, scoreConfig.jietouarea}},
+		{ClassId::Guasi, {info.guasiList, scoreConfig.guasi, pixToWorld, scoreConfig.guasiscore, scoreConfig.guasiarea}},
+		{ClassId::Podong, {info.podongList, scoreConfig.podong, pixToWorld, scoreConfig.podongscore, scoreConfig.podongarea}},
+		{ClassId::Zangwu, {info.zangwuList, scoreConfig.zangwu, pixToWorld, scoreConfig.zangwuscore, scoreConfig.zangwuarea}},
+		{ClassId::Noshudang, {info.noshudangList, scoreConfig.noshudang, pixToWorld, scoreConfig.noshudangscore, scoreConfig.noshudangarea}},
+		{ClassId::Modian, {info.modianList, scoreConfig.modian, pixToWorld, scoreConfig.modianscore, scoreConfig.modianarea}},
+		{ClassId::Loumo, {info.loumoList, scoreConfig.loumo, pixToWorld, scoreConfig.loumoscore, scoreConfig.loumoarea}},
+		{ClassId::Xishudang, {info.xishudangList, scoreConfig.xishudang, pixToWorld, scoreConfig.xishudangscore, scoreConfig.xishudangarea}},
+		{ClassId::Erweima, {info.erweimaList, scoreConfig.erweima, pixToWorld, scoreConfig.erweimascore, scoreConfig.erweimaarea}},
+		{ClassId::Damodian, {info.damodianList, scoreConfig.damodian, pixToWorld, scoreConfig.damodianscore, scoreConfig.damodianarea}},
+		{ClassId::Kongdong, {info.kongdongList, scoreConfig.kongdong, pixToWorld, scoreConfig.kongdongscore, scoreConfig.kongdongarea}},
+		{ClassId::Sebiao, {info.sebiaoList, scoreConfig.sebiao, pixToWorld, scoreConfig.sebiaoscore, scoreConfig.sebiaoarea}},
+		{ClassId::Yinshuaquexian, {info.yinshuaquexianList, scoreConfig.yinshuaquexian, pixToWorld, scoreConfig.yinshuaquexianscore, scoreConfig.yinshuaquexianarea}},
+		{ClassId::Xiaopodong, {info.xiaopodongList, scoreConfig.xiaopodong, pixToWorld, scoreConfig.xiaopodongscore, scoreConfig.xiaopodongarea}},
+		{ClassId::Jiaodai, {info.jiaodaiList, scoreConfig.jiaodai, pixToWorld, scoreConfig.jiaodaiscore, scoreConfig.jiaodaiarea}}
+	};
+
+	// Lambda 表达式
+	auto processDefectInfo = [](SmartCroppingOfBagsDefectInfo& info,
+		const std::vector<rw::DetectionRectangleInfo>& processResult,
+		const std::vector<std::vector<size_t>>& index,
+		int classId,
+		const std::unordered_map<int, std::tuple<std::vector<SmartCroppingOfBagsDefectInfo::DetectItem>&, bool, double, double, double>>& classIdConfig) {
+			// 查询 ClassId 对应的配置信息
+			auto it = classIdConfig.find(classId);
+			if (it == classIdConfig.end()) {
+				return; // 如果未找到对应的 ClassId，直接返回
+			}
+
+			auto& [defectList, isEnabled, pixToWorld, minScore, minArea] = it->second;
+
+			if (index[classId].empty() || !isEnabled) {
+				return; // 如果索引为空或未启用，直接返回
+			}
+
+			for (const auto& item : index[classId]) {
+				SmartCroppingOfBagsDefectInfo::DetectItem defectItem;
+
+				auto score = processResult[item].score * 100; // 转换为百分比
+				auto area = static_cast<double>(processResult[item].area * pixToWorld * pixToWorld); // 计算面积
+
+				if (score >= minScore && area >= minArea) {
+					defectItem.isBad = true;
+				}
+
+				defectItem.score = score;
+				defectItem.area = area;
+				defectItem.index = static_cast<int>(item);
+				defectList.emplace_back(defectItem);
+			}
+		};
+
+	// 调用 Lambda 表达式处理每个 ClassId
+	for (int classId = ClassId::MinClassIdNum; classId <= ClassId::MaxClassIdNum; ++classId) {
+		processDefectInfo(info, processResult, index, classId, classIdConfig);
+	}
+
+	/*processDefectInfo(info, processResult, index, ClassId::Heiba, classIdConfig);*/
+
+	/*getHeibaInfo(info, processResult, index[ClassId::Heiba]);
 	getShudangInfo(info, processResult, index[ClassId::Shudang]);
 	getHuapoInfo(info, processResult, index[ClassId::Huapo]);
 	getJietouInfo(info, processResult, index[ClassId::Jietou]);
@@ -1541,7 +1835,7 @@ void ImageProcessorSmartCroppingOfBags::getEliminationInfo_defect(SmartCroppingO
 	getSebiaoInfo(info, processResult, index[ClassId::Sebiao]);
 	getYinshuaquexianInfo(info, processResult, index[ClassId::Yinshuaquexian]);
 	getXiaopodongInfo(info, processResult, index[ClassId::Xiaopodong]);
-	getJiaodaiInfo(info, processResult, index[ClassId::Jiaodai]);
+	getJiaodaiInfo(info, processResult, index[ClassId::Jiaodai]);*/
 }
 
 void ImageProcessorSmartCroppingOfBags::getHeibaInfo(SmartCroppingOfBagsDefectInfo& info,
