@@ -317,6 +317,25 @@ void DlgProductSet::setDIErrorInfo(int index)
 	}
 }
 
+void DlgProductSet::closeAllIOBtn()
+{
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	bool isChongKongSet = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, false);
+
+	// 冲孔
+	if (!isChongKongSet)
+	{
+		QMessageBox::warning(this, "警告", "手动冲孔失败!");
+	}
+
+	// 脱机
+	bool isTuoJiSet = globalStruct.zmotion.setIOOut(ControlLines::tuojiOut, false);
+	if (!isTuoJiSet)
+	{
+		QMessageBox::warning(this, "警告", "设置脱机失败!");
+	}
+}
+
 void DlgProductSet::setDOErrorInfo(const std::vector<std::vector<int>>& index)
 {
 	ui->lb_bujindianjimaichong->clear();
@@ -387,12 +406,15 @@ std::vector<std::vector<int>> DlgProductSet::DIFindAllDuplicateIndices()
 void DlgProductSet::pbtn_close_clicked()
 {
 	auto& GlobalStructData = GlobalStructDataZipper::getInstance();
-	GlobalStructData.saveDlgProductSetConfig();
+
+	// 关闭所有可以点动的IO按钮
+	closeAllIOBtn();
 
 	// 关闭监控IO线程
 	GlobalStructDataZipper::getInstance()._isUpdateMonitorInfo = false;
 	GlobalStructDataZipper::getInstance().monitorZMotionMonitorThread.setRunning(false);
-	
+
+	GlobalStructData.saveDlgProductSetConfig();
 	this->close();
 }
 
@@ -1074,16 +1096,34 @@ void DlgProductSet::btn_tuoji_clicked()
 		QMessageBox::warning(this, "警告", "设置脱机失败!");
 	}
 
-	// 追加你想要的颜色
-	if (tuojiState) 
+	if (!tuojiState)
 	{
-		ui->btn_tuoji->setText("脱机");
+		ui->btn_tuoji->setText("已脱机...");
+		ui->btn_tuoji->setStyleSheet(
+			"QPushButton {"
+			"border-color: #388E3C;"
+			"background-color: #4CAF50;"
+			"color: #fff;"
+			"font-weight: bold;"
+			"}"
+		);
 	}
 	else
 	{
-		ui->btn_tuoji->setText("已脱机...");
+		ui->btn_tuoji->setText("脱机");
+		ui->btn_tuoji->setStyleSheet(
+			"QPushButton {"
+			"padding: 6px 14px;"
+			"border: 2px solid #CCC;"
+			"border-radius: 4px;"
+			"background-color: red;"
+			"color: #444;"
+			"}"
+		);
 	}
 }
+
+
 
 void DlgProductSet::btn_xiangjichufa_clicked()
 {
@@ -1248,7 +1288,7 @@ void DlgProductSet::cbox_DIqidonganniu_clicked(bool isChecked)
 	auto& globalStructSetConfig = globalStruct.setConfig;
 	if (isDebugIO)
 	{
-		 auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::qidonganniuIn, isChecked);
+		auto isSuccess = globalStruct.zmotion.setIOOut(ControlLines::qidonganniuIn, isChecked);
 	}
 }
 

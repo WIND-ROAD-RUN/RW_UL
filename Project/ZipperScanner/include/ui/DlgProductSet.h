@@ -28,6 +28,9 @@ private:
 	void setDIErrorInfo(const std::vector<std::vector<int>>& index);
 	void setDIErrorInfo(int index);
 
+	// 关闭所有可以点动的IO按钮
+	void closeAllIOBtn();
+
 private:
 	// IO监控页面的调试模式
 	bool isDebugIO{ false };
