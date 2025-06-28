@@ -1275,28 +1275,28 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 void ButtonScanner::imgDis1_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("1号工位");
-	_currentRealTimeDisIndex = 1;
+	_currentRealTimeDisIndex = 0;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis2_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("2号工位");
-	_currentRealTimeDisIndex = 2;
+	_currentRealTimeDisIndex = 1;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis3_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("3号工位");
-	_currentRealTimeDisIndex = 3;
+	_currentRealTimeDisIndex = 2;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis4_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("4号工位");
-	_currentRealTimeDisIndex = 4;
+	_currentRealTimeDisIndex = 3;
 	_dlgRealTimeImgDis->show();
 }
 
@@ -1308,7 +1308,7 @@ void ButtonScanner::onCamera1Display(QPixmap image)
 	}
 	else
 	{
-		if (_currentRealTimeDisIndex==1) {
+		if (_currentRealTimeDisIndex==0) {
 			_dlgRealTimeImgDis->setShowImg(image);
 		}
 	}
@@ -1322,7 +1322,7 @@ void ButtonScanner::onCamera2Display(QPixmap image)
 	}
 	else
 	{
-		if (_currentRealTimeDisIndex == 2) {
+		if (_currentRealTimeDisIndex == 1) {
 			_dlgRealTimeImgDis->setShowImg(image);
 		}
 	}
@@ -1336,7 +1336,7 @@ void ButtonScanner::onCamera3Display(QPixmap image)
 	}
 	else
 	{
-		if (_currentRealTimeDisIndex == 3) {
+		if (_currentRealTimeDisIndex == 2) {
 			_dlgRealTimeImgDis->setShowImg(image);
 		}
 	}
@@ -1350,7 +1350,7 @@ void ButtonScanner::onCamera4Display(QPixmap image)
 	}
 	else
 	{
-		if (_currentRealTimeDisIndex == 4) {
+		if (_currentRealTimeDisIndex == 3) {
 			_dlgRealTimeImgDis->setShowImg(image);
 		}
 	}

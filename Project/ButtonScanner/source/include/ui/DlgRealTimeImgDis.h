@@ -30,6 +30,10 @@ public:
 	void setShowImg(const QPixmap &image);
 private:
 	Ui::DlgRealTimeImgDisClass *ui;
+public:
+	void updateTitle(int index);
 public slots:
 	void pbtn_exit_clicked();
+	void pbtn_nextWork_clicked();
+	void pbtn_preWork_clicked();
 };
