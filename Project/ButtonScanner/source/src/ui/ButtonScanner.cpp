@@ -1578,16 +1578,44 @@ void ButtonScanner::pbtn_resetProduct_clicked()
 
 void ButtonScanner::pbtn_openSaveLocation_clicked()
 {
+//	auto& globalStruct = GlobalStructData::getInstance();
+//	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
+//
+//
+//	globalStruct.imageSaveEngine->isAllImageSaved();
+//
+//	_picturesViewer->setRootPath(imageSavePath);
+//	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+//#ifdef NDEBUG
+//	_picturesViewer->showFullScreen();
+//#else
+//	_picturesViewer->show();
+//#endif
+
+	//打开存储图片位置的时候，自动关闭采图
+	ui->rbtn_takePicture->setChecked(false);
+	rbtn_takePicture_checked(false);
+
 	auto& globalStruct = GlobalStructData::getInstance();
 	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
-	_picturesViewer->setRootPath(imageSavePath);
-	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+
+	// 异步轮询检查图片是否全部保存完毕
+	QTimer* timer = new QTimer(this);
+	timer->setInterval(100); // 100ms轮询一次
+	connect(timer, &QTimer::timeout, this, [this, &globalStruct, imageSavePath, timer]() {
+		if (globalStruct.imageSaveEngine->isAllImageSaved()) {
+			timer->stop();
+			timer->deleteLater();
+			_picturesViewer->setRootPath(imageSavePath);
+			_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 #ifdef NDEBUG
-	_picturesViewer->showFullScreen();
+			_picturesViewer->showFullScreen();
 #else
-	_picturesViewer->show();
+			_picturesViewer->show();
 #endif
-	
+		}
+		});
+	timer->start();
 }
 
 void ButtonScanner::rbtn_debug_checked(bool checked)
