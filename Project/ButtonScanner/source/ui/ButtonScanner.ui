@@ -199,7 +199,7 @@ QPushButton:pressed {
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,0">
            <item>
             <layout class="QVBoxLayout" name="vLayout_cameraStates" stretch="3,2">
              <item>
