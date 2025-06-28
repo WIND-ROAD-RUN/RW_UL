@@ -102,7 +102,7 @@ void DlgProductSetSmartCroppingOfBags::showEvent(QShowEvent* showEvent)
 	_monitorZmotion->setRunning(true);
 	if (ui->tabWidget->currentIndex()==2)
 	{
-		auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
+		auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitorInfo;
 		_isUpdateMonitorInfo = true;
 	}
 }
@@ -326,7 +326,7 @@ void DlgProductSetSmartCroppingOfBags::onUpdateMonitorRunningStateInfo(MonitorRu
 
 void DlgProductSetSmartCroppingOfBags::pbtn_close_clicked()
 {
-	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
+	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitorInfo;
 	_isUpdateMonitorInfo = false;
 	_monitorZmotion->setRunning(false);
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
@@ -1093,7 +1093,7 @@ void DlgProductSetSmartCroppingOfBags::ckb_tifei_checked(bool ischecked)
 
 void DlgProductSetSmartCroppingOfBags::tabWidget_indexChanged(int index)
 {
-	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo;
+	auto& _isUpdateMonitorInfo = GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitorInfo;
 	switch (index) {
 	case 0:
 		_isUpdateMonitorInfo = false;

@@ -41,6 +41,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 	while (running) {
 		QThread::sleep(1);
 		getRunningState(s);
+		getMainWindowRunningState(s);
 		++s;
 		cv::Mat mat = cv::Mat::zeros(1024, 1024, CV_8UC3);
 		//engine->processImg(mat);
@@ -62,7 +63,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 		info.averagePulse = getAveragePulse(info.isGetAveragePulse);
 		info.averagePulseBag = getAveragePulseBag(info.isGetAveragePulseBag);
 		info.lineHeight = getLineHeight(info.isGetLineHeight);
-		if (GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
+		if (GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitorInfo)
 		{
 			emit updateMonitorRunningStateInfo(info);
 		}
@@ -74,7 +75,10 @@ void DetachUtiltyThreadSmartCroppingOfBags::getMainWindowRunningState(size_t s)
 	auto& info = GlobalStructDataSmartCroppingOfBags::getInstance().statisticalInfo;
 	if (s%1==0)
 	{
-		info.productionYield = info.goodCount / info.produceCount;
+		if (info.produceCount != 0)
+		{
+			info.productionYield = info.goodCount / info.produceCount;
+		}
 		info.averageBagLength = daichangAverageFromPulse;
 		updateMainWindowInfo(1);
 	}

@@ -659,8 +659,8 @@ void SmartCroppingOfBags::onUpdateMainWindowInfo(int i)
 	auto& info = GlobalStructDataSmartCroppingOfBags::getInstance().statisticalInfo;
 	if (i==1)
 	{
-		ui->label_produceTotal->setText(QString::number(info.produceCount));
-		ui->label_wasteProducts->setText(QString::number(info.wasteCount));
+		ui->lb_shengchanzongliang->setText(QString::number(info.produceCount));
+		ui->lb_feipinshuliang->setText(QString::number(info.wasteCount));
 		ui->lb_lianglv->setText(QString::number(info.productionYield));
 		ui->lb_pingjundaichang->setText(QString::number(info.averageBagLength));
 	}

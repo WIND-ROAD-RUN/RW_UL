@@ -59,7 +59,7 @@ private:
 	~GlobalStructThreadSmartCroppingOfBags() = default;
 public:
 	std::unique_ptr<DetachUtiltyThreadSmartCroppingOfBags> _detachUtiltyThreadSmartCroppingOfBags{ nullptr };
-	std::atomic_bool _isUpdateMonitoyInfo{false};
+	std::atomic_bool _isUpdateMonitorInfo{false};
 public:
 	std::unique_ptr<MonitorIOSmartCroppingOfBags> monitorIOSmartCroppingOfBags{ nullptr };
 	std::unique_ptr<DetachDefectThreadSmartCroppingOfBags> detachDefectThreadSmartCroppingOfBags{ nullptr };
