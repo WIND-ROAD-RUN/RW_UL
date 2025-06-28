@@ -914,18 +914,22 @@ void DlgProduceLineSet::onDOState(int index, bool state)
 
 void DlgProduceLineSet::pbtn_warningManager_clicked()
 {
+
 #ifdef NDEBUG
 	dlgWarningManager->showFullScreen();
-#endif
+#else
 	dlgWarningManager->show();
+#endif
+	
 }
 
 void DlgProduceLineSet::pbtn_DIOValueSet_clicked()
 {
 #ifdef NDEBUG
 	dlgWarningIOSetConfig->showFullScreen();
-#endif
+#else
 	dlgWarningIOSetConfig->show();
+#endif
 }
 
 void DlgProduceLineSet::cbox_workstationProtection12_checked(bool ischeck)

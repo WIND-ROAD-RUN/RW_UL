@@ -110,6 +110,12 @@ QLabel.icon {
      </item>
      <item>
       <widget class="QPushButton" name="pbtn_outsideDiameterScore">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
     padding: 6px 14px;
@@ -232,6 +238,12 @@ QLabel.icon {
      </item>
      <item>
       <widget class="QPushButton" name="pbtn_forAndAgainstScore">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
     padding: 6px 14px;

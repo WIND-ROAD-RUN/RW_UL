@@ -1276,28 +1276,45 @@ void ButtonScanner::imgDis1_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("1号工位");
 	_currentRealTimeDisIndex = 0;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::imgDis2_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("2号工位");
 	_currentRealTimeDisIndex = 1;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::imgDis3_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("3号工位");
 	_currentRealTimeDisIndex = 2;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
+
 }
 
 void ButtonScanner::imgDis4_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("4号工位");
 	_currentRealTimeDisIndex = 3;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::onCamera1Display(QPixmap image)
@@ -1468,8 +1485,9 @@ void ButtonScanner::pbtn_set_clicked()
 			_dlgProduceLineSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 #ifdef NDEBUG
 			_dlgProduceLineSet->showFullScreen();
-#endif
+#else
 			_dlgProduceLineSet->show();
+#endif
 			ui->pbtn_beltSpeed->setText(QString::number(GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed));
 		}
 		else {
@@ -1494,8 +1512,9 @@ void ButtonScanner::pbtn_newProduction_clicked()
 		dlgNewProduction->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 #ifdef NDEBUG
 		dlgNewProduction->showFullScreen();
-#endif
+#else
 		dlgNewProduction->show();
+#endif
 	}
 }
 
@@ -1534,8 +1553,9 @@ void ButtonScanner::pbtn_score_clicked()
 	_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 #ifdef NDEBUG
 	_dlgProductSet->showFullScreen();
-#endif
+#else
 	_dlgProductSet->show();
+#endif
 }
 
 void ButtonScanner::pbtn_resetProduct_clicked()
@@ -1564,8 +1584,10 @@ void ButtonScanner::pbtn_openSaveLocation_clicked()
 	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 #ifdef NDEBUG
 	_picturesViewer->showFullScreen();
-#endif
+#else
 	_picturesViewer->show();
+#endif
+	
 }
 
 void ButtonScanner::rbtn_debug_checked(bool checked)
@@ -1711,13 +1733,23 @@ void ButtonScanner::labelClickable_title_clicked()
 		return;
 	}
 	_dlgModelManager->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	_dlgModelManager->showFullScreen();
+#else
 	_dlgModelManager->show();
+#endif
+
 }
 
 void ButtonScanner::labelVersion_clicked()
 {
 	_dlgVersion->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	_dlgVersion->showFullScreen();
+#else
 	_dlgVersion->show();
+#endif
+	
 }
 
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)
