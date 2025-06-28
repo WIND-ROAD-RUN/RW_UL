@@ -358,12 +358,12 @@ QLabel.icon {
 }</string>
                       </property>
                       <property name="text">
-                       <string>延迟剔废时间</string>
+                       <string>剔废距离</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pbtn_yanchitifeishijian1">
+                     <widget class="QPushButton" name="pbtn_tifeijuli1">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                         <horstretch>0</horstretch>
@@ -653,12 +653,12 @@ QLabel.icon {
 }</string>
                       </property>
                       <property name="text">
-                       <string>延迟剔废时间</string>
+                       <string>剔废距离</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pbtn_yanchitifeishijian2">
+                     <widget class="QPushButton" name="pbtn_tifeijuli2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                         <horstretch>0</horstretch>
@@ -4191,7 +4191,7 @@ QTabBar::tab:hover {
 }</string>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab_0">
         <attribute name="title">
@@ -4742,7 +4742,7 @@ QPushButton:pressed {
                   <item>
                    <widget class="QLabel" name="label_52">
                     <property name="text">
-                     <string>CM</string>
+                     <string>MM</string>
                     </property>
                    </widget>
                   </item>
@@ -4877,7 +4877,7 @@ QPushButton:pressed {
                   <item>
                    <widget class="QLabel" name="label_64">
                     <property name="text">
-                     <string>CM</string>
+                     <string>MM</string>
                     </property>
                    </widget>
                   </item>
@@ -5147,7 +5147,7 @@ QPushButton:pressed {
                   <item>
                    <widget class="QLabel" name="label_70">
                     <property name="text">
-                     <string/>
+                     <string>MM</string>
                     </property>
                    </widget>
                   </item>
@@ -5284,18 +5284,19 @@ QGroupBox::title {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: white;
+    background-color: red;
     color: #444;
 }
 
 QPushButton:hover {
     border-color: #999;
-    background-color: #F5F5F5;
 }
 
 QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
+    border-color: #388E3C;
+background-color: #4CAF50; /* 明显的绿色 */
+color: #fff;
+font-weight: bold;
 }</string>
                   </property>
                   <property name="text">
@@ -5316,18 +5317,19 @@ QPushButton:pressed {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: white;
+    background-color: red;
     color: #444;
 }
 
 QPushButton:hover {
     border-color: #999;
-    background-color: #F5F5F5;
 }
 
 QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
+    border-color: #388E3C;
+background-color: #4CAF50; /* 明显的绿色 */
+color: #fff;
+font-weight: bold;
 }</string>
                   </property>
                   <property name="text">
@@ -5348,18 +5350,19 @@ QPushButton:pressed {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: white;
+    background-color: red;
     color: #444;
 }
 
 QPushButton:hover {
     border-color: #999;
-    background-color: #F5F5F5;
 }
 
 QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
+    border-color: #388E3C;
+background-color: #4CAF50; /* 明显的绿色 */
+color: #fff;
+font-weight: bold;
 }</string>
                   </property>
                   <property name="text">
@@ -5380,18 +5383,19 @@ QPushButton:pressed {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: white;
+    background-color: red;
     color: #444;
 }
 
 QPushButton:hover {
     border-color: #999;
-    background-color: #F5F5F5;
 }
 
 QPushButton:pressed {
-    border-color: #777;
-    background-color: #EEE;
+    border-color: #388E3C;
+background-color: #4CAF50; /* 明显的绿色 */
+color: #fff;
+font-weight: bold;
 }</string>
                   </property>
                   <property name="text">
@@ -6138,7 +6142,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_28">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>mm/s</string>
                         </property>
                        </widget>
                       </item>
@@ -6273,7 +6277,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_40">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>pluse</string>
                         </property>
                        </widget>
                       </item>
@@ -6412,7 +6416,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_30">
                         <property name="text">
-                         <string>R/Min</string>
+                         <string>mm/s</string>
                         </property>
                        </widget>
                       </item>
@@ -6547,7 +6551,7 @@ QPushButton:pressed {
                       <item>
                        <widget class="QLabel" name="label_42">
                         <property name="text">
-                         <string>CM</string>
+                         <string>MM</string>
                         </property>
                        </widget>
                       </item>
@@ -7101,7 +7105,10 @@ QCheckBox::indicator:checked:hover {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QCheckBox" name="cbox_DOBlow2_2">
+                    <widget class="QCheckBox" name="cbox_DOchufapaizhao">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">QCheckBox {
     /* 默认样式 */
@@ -7138,7 +7145,7 @@ QCheckBox::indicator:checked:hover {
 }</string>
                      </property>
                      <property name="text">
-                      <string>DO4</string>
+                      <string>触发拍照</string>
                      </property>
                     </widget>
                    </item>

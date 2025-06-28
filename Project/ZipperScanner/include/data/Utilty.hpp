@@ -9,6 +9,8 @@ QPixmap cvMatToQPixmap(const cv::Mat& mat);
 
 using Time = std::chrono::system_clock::time_point;
 
+using DefectValueInfo = Time;
+
 struct WarningId
 {
 	static constexpr int cairPressureAlarm = 0;
@@ -24,13 +26,14 @@ struct WarningId
 struct ControlLines
 {
 public:
-	static size_t qidonganniuIn;
-	static size_t lalianlawanIn;
-	static size_t jitingIn;
+	static constexpr size_t qidonganniuIn = 1;
+	static constexpr size_t jitingIn = 2;
+	static constexpr size_t lalianlawanIn = 3;
 public:
-	static size_t bujindianjimaichongOut;
-	static size_t chongkongOUT;
-	static size_t tuojiOut;
+	static constexpr size_t bujindianjimaichongOut = 0;
+	static constexpr size_t chongkongOUT = 9;
+	static constexpr size_t tuojiOut = 8;
+	static constexpr size_t chufapaizhaoOUT = 10;
 };
 
 struct ClassId

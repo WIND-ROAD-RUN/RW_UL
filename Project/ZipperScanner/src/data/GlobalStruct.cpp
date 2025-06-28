@@ -9,17 +9,80 @@
 #include "rqw_CameraObjectThreadZMotion.hpp"
 
 
+
+void GlobalStructDataZipper::destory_motion()
+{
+	bool isDisconnect = zmotion.disConnect();
+}
+
+void GlobalStructDataZipper::build_MonitorZMotionIOStateThread()
+{
+	monitorZMotionMonitorThread.setMonitorObject(zmotion);
+	QVector<size_t> monitorIList = {ControlLines::qidonganniuIn,ControlLines::lalianlawanIn,ControlLines::jitingIn};
+	QVector<size_t> monitorOList = {ControlLines::bujindianjimaichongOut,ControlLines::chongkongOUT,ControlLines::tuojiOut,ControlLines::chufapaizhaoOUT};
+	monitorZMotionMonitorThread.setMonitorIList(monitorIList);
+	monitorZMotionMonitorThread.setMonitorOList(monitorOList);
+	monitorZMotionMonitorThread.setMonitorFrequency(20);
+	monitorZMotionMonitorThread.setRunning(false);
+	monitorZMotionMonitorThread.start();
+	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, &GlobalStructDataZipper::getInPutSignal,Qt::QueuedConnection);
+	QObject::connect(&monitorZMotionMonitorThread, &rw::rqw::MonitorZMotionIOStateThread::DOState,
+		this, &GlobalStructDataZipper::getOutPutSignal, Qt::QueuedConnection);
+}
+
+void GlobalStructDataZipper::destroy_MonitorZMotionIOStateThread()
+{
+	monitorZMotionMonitorThread.setRunning(false);
+	monitorZMotionMonitorThread.destroyThread();
+}
+
+void GlobalStructDataZipper::getStartOrStopSignal(size_t index, bool state)
+{
+	emit emit_StartOrStopSignal(index, state);
+}
+
+void GlobalStructDataZipper::build_monitorStartOrStopThread()
+{
+	monitorStartOrStopThread.setMonitorObject(zmotion);
+
+	QVector<size_t> monitorIList = { ControlLines::qidonganniuIn,ControlLines::jitingIn };
+	monitorStartOrStopThread.setMonitorIList(monitorIList);
+	monitorStartOrStopThread.setMonitorFrequency(20);
+	monitorStartOrStopThread.setRunning(true);
+	monitorStartOrStopThread.start();
+
+	QObject::connect(&monitorStartOrStopThread, &rw::rqw::MonitorZMotionIOStateThread::DIState,
+		this, &GlobalStructDataZipper::getStartOrStopSignal, Qt::QueuedConnection);
+}
+
+void GlobalStructDataZipper::destroy_monitorStartOrStopThread()
+{
+	monitorStartOrStopThread.setRunning(false);
+	monitorStartOrStopThread.destroyThread();
+}
+
+void GlobalStructDataZipper::getInPutSignal(size_t index, bool state)
+{
+	emit emit_InPutSignal(index, state);
+}
+
+void GlobalStructDataZipper::getOutPutSignal(size_t index, bool state)
+{
+	emit emit_OutPutSignal(index, state);
+}
+
 void GlobalStructDataZipper::build_PriorityQueue()
 {
-	auto compareNodeEqual = [](const Time& a, const Time& b) {
+	auto compareNodeEqual = [](const float& a, const float& b) {
 		return a == b;
 		};
-	auto compareNodePriority = [](const Time& a, const Time& b) {
+	auto compareNodePriority = [](const float& a, const float& b) {
 		return a < b;
 		};
 
-	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
-	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
+	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<float, float> >(compareNodeEqual, compareNodePriority);
+	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<float, float> >(compareNodeEqual, compareNodePriority);
 }
 
 void GlobalStructDataZipper::destroy_PriorityQueue()
@@ -32,7 +95,7 @@ void GlobalStructDataZipper::build_DetachDefectThreadZipper()
 {
 	detachDefectThreadZipper = new DetachDefectThreadZipper(this);
 
-	// Á¬½ÓÌÞ·Ï¹¦ÄÜ
+	// è¿žæŽ¥å‰”åºŸåŠŸèƒ½
 	QObject::connect(detachDefectThreadZipper, &DetachDefectThreadZipper::findIsBad
 		,this, &GlobalStructDataZipper::onCameraReject);
 }
@@ -48,15 +111,15 @@ void GlobalStructDataZipper::destroy_DetachDefectThreadZipper()
 void GlobalStructDataZipper::build_CameraAndCardStateThreadZipper()
 {
 	cameraAndCardStateThreadZipper = new CameraAndCardStateThreadZipper(this);
-	// ¸üÐÂUI½çÃæ
+	// æ›´æ–°UIç•Œé¢
 	QObject::connect(cameraAndCardStateThreadZipper, &CameraAndCardStateThreadZipper::updateCameraLabelState,
 		this, &GlobalStructDataZipper::emit_updateUiLabels, Qt::QueuedConnection);
-	// Ïà»úÖØÁ¬
+	// ç›¸æœºé‡è¿ž
 	QObject::connect(cameraAndCardStateThreadZipper, &CameraAndCardStateThreadZipper::buildCamera1,
 		this, &GlobalStructDataZipper::rebuild_Camera1, Qt::QueuedConnection);
 	QObject::connect(cameraAndCardStateThreadZipper, &CameraAndCardStateThreadZipper::buildCamera2,
 		this, &GlobalStructDataZipper::rebuild_Camera2, Qt::QueuedConnection);
-	// Ïà»úÏú»Ù
+	// ç›¸æœºé”€æ¯
 	QObject::connect(cameraAndCardStateThreadZipper, &CameraAndCardStateThreadZipper::destroyCamera1,
 		this, &GlobalStructDataZipper::destroy_Camera1, Qt::QueuedConnection);
 	QObject::connect(cameraAndCardStateThreadZipper, &CameraAndCardStateThreadZipper::destroyCamera2,
@@ -69,7 +132,7 @@ void GlobalStructDataZipper::rebuild_Camera1()
 
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
-	// ÌÞ·Ï³ÖÐøÊ±¼ä
+	// å‰”åºŸæŒç»­æ—¶é—´
 	long DurationTime = setConfig.tiFeiChiXuShiJian1 * 1000;
 
 	if (cameraMetaData1.ip != "0")
@@ -83,23 +146,23 @@ void GlobalStructDataZipper::rebuild_Camera1()
 			camera1->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
-				// Ç¿¹âÕÕÃ÷
+				// å¼ºå…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::StrongLight);
 			}
 			else if (generalConfig.zhongGuang == true)
 			{
-				// ÖÐ¹âÕÕÃ÷
+				// ä¸­å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::MediumLight);
 			}
 			else if (generalConfig.ruoGuang == true)
 			{
-				// Èõ¹âÕÕÃ÷
+				// å¼±å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::WeakLight);
 			}
 			camera1->startMonitor();
-			// ÉèÖÃÌÞ·ÏIOÊä³ö
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera1->setOutTriggerConfig(config);
+			// è®¾ç½®å‰”åºŸIOè¾“å‡º
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera1->setOutTriggerConfig(config);
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
 		}
@@ -116,7 +179,7 @@ void GlobalStructDataZipper::rebuild_Camera2()
 
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
-	// ÌÞ·Ï³ÖÐøÊ±¼ä
+	// å‰”åºŸæŒç»­æ—¶é—´
 	long DurationTime = setConfig.tiFeiChiXuShiJian2 * 1000;
 
 	if (cameraMetaData2.ip != "0")
@@ -130,22 +193,22 @@ void GlobalStructDataZipper::rebuild_Camera2()
 			camera2->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
-				// Ç¿¹âÕÕÃ÷
+				// å¼ºå…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::StrongLight);
 			}
 			else if (generalConfig.zhongGuang == true)
 			{
-				// ÖÐ¹âÕÕÃ÷
+				// ä¸­å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::MediumLight);
 			}
 			else if (generalConfig.ruoGuang == true)
 			{
-				// Èõ¹âÕÕÃ÷
+				// å¼±å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::WeakLight);
 			}
-			// ÉèÖÃÌÞ·ÏIOÊä³ö
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera2->setOutTriggerConfig(config);
+			// è®¾ç½®å‰”åºŸIOè¾“å‡º
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
@@ -317,7 +380,7 @@ void GlobalStructDataZipper::saveGeneralConfig()
 
 void GlobalStructDataZipper::saveDlgProductSetConfig()
 {
-	// µ÷ÊÔÄ£Ê½Ä¬ÈÏÎª²»¿ªÆô
+	// è°ƒè¯•æ¨¡å¼é»˜è®¤ä¸ºä¸å¼€å¯
 	setConfig.debugMode = false;
 	std::string setConfigPath = globalPath.setConfigPath.toStdString();
 	storeContext->save(setConfig, setConfigPath);
@@ -346,7 +409,7 @@ bool GlobalStructDataZipper::buildCamera1()
 
 	auto cameraMetaData1 = cameraMetaDataCheck(cameraIp1, cameraList);
 
-	// ÌÞ·Ï³ÖÐøÊ±¼ä
+	// å‰”åºŸæŒç»­æ—¶é—´
 	long DurationTime = setConfig.tiFeiChiXuShiJian1 * 1000;
 
 	if (cameraMetaData1.ip != "0")
@@ -360,25 +423,27 @@ bool GlobalStructDataZipper::buildCamera1()
 			camera1->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
-				// Ç¿¹âÕÕÃ÷
+				// å¼ºå…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::StrongLight);
 			}
 			else if (generalConfig.zhongGuang == true)
 			{
-				// ÖÐ¹âÕÕÃ÷
+				// ä¸­å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::MediumLight);
 			}
 			else if (generalConfig.ruoGuang == true)
 			{
-				// Èõ¹âÕÕÃ÷
+				// å¼±å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::WeakLight);
 			}
 			camera1->startMonitor();
-			// ÉèÖÃÌÞ·ÏIOÊä³ö
-			auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
-			camera1->setOutTriggerConfig(config);
+			// è®¾ç½®å‰”åºŸIOè¾“å‡º
+			//auto config = rw::rqw::OutTriggerConfig({2,8,5,DurationTime,0,0,true});
+			//camera1->setOutTriggerConfig(config);
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);
+
+
 			return true;
 		}
 		catch (const std::exception&)
@@ -396,7 +461,7 @@ bool GlobalStructDataZipper::buildCamera2()
 
 	auto cameraMetaData2 = cameraMetaDataCheck(cameraIp2, cameraList);
 
-	// ÌÞ·Ï³ÖÐøÊ±¼ä
+	// å‰”åºŸæŒç»­æ—¶é—´
 	long DurationTime = setConfig.tiFeiChiXuShiJian2 * 1000;
 
 	if (cameraMetaData2.ip != "0")
@@ -410,22 +475,22 @@ bool GlobalStructDataZipper::buildCamera2()
 			camera2->setHeartbeatTime(5000);
 			if (generalConfig.qiangGuang == true)
 			{
-				// Ç¿¹âÕÕÃ÷
+				// å¼ºå…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::StrongLight);
 			}
 			else if (generalConfig.zhongGuang == true)
 			{
-				// ÖÐ¹âÕÕÃ÷
+				// ä¸­å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::MediumLight);
 			}
 			else if (generalConfig.ruoGuang == true)
 			{
-				// Èõ¹âÕÕÃ÷
+				// å¼±å…‰ç…§æ˜Ž
 				setLightLevel(LightLevel::WeakLight);
 			}
-			// ÉèÖÃÌÞ·ÏIOÊä³ö
-			auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
-			camera2->setOutTriggerConfig(config);
+			// è®¾ç½®å‰”åºŸIOè¾“å‡º
+			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
+			//camera2->setOutTriggerConfig(config);
 			camera2->startMonitor();
 			QObject::connect(camera2.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera2.get(), &ImageProcessingModuleZipper::onFrameCaptured, Qt::DirectConnection);

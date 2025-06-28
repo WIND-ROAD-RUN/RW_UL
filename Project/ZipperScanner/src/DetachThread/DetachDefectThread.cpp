@@ -2,46 +2,43 @@
 
 DetachDefectThreadZipper::DetachDefectThreadZipper(QObject* parent)
 {
-	
+
 }
 
 DetachDefectThreadZipper::~DetachDefectThreadZipper()
 {
 	stopThread();
-	wait(); // µÈ´ıÏß³Ì°²È«ÍË³ö
+	wait(); // ç­‰å¾…çº¿ç¨‹å®‰å…¨é€€å‡º
 }
 
 void DetachDefectThreadZipper::startThread()
 {
 	running = true;
 	if (!isRunning()) {
-		start(); // Æô¶¯Ïß³Ì
+		start(); // å¯åŠ¨çº¿ç¨‹
 	}
 }
 
 void DetachDefectThreadZipper::stopThread()
 {
-	running = false; // Í£Ö¹Ïß³Ì
+	running = false; // åœæ­¢çº¿ç¨‹
 }
 
-void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>>& queue)
 {
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 
-	Time preTime;
 	try
 	{
-		preTime = queue->peek();
-		auto now = std::chrono::system_clock::now();
-
-		// ¼ÆËãÊ±¼ä²î
-		auto duration = now - preTime;
-		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-
-		if (milliseconds >= setConfig.yanChiTiFeiShiJian1)
+		bool isGetLocation = false;
+		float nowLocation = globalStruct.zmotion.getAxisLocation(0, isGetLocation);
+		auto tifeijuli1 = setConfig.tifeijuli1;
+		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli1))
 		{
-			queue->top(); // È¡³ö¶ÓÊ×ÔªËØ
-			emit findIsBad(1);
+			//å†²å­”
+			//bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT,true);
+			//emit findIsBad(1);
 		}
 	}
 	catch (const std::runtime_error&)
@@ -50,24 +47,21 @@ void DetachDefectThreadZipper::processQueue1(std::unique_ptr<rw::dsl::ThreadSafe
 	}
 }
 
-void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>>& queue)
+void DetachDefectThreadZipper::processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>>& queue)
 {
-	auto& setConfig = GlobalStructDataZipper::getInstance().setConfig;
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+	auto& setConfig = globalStruct.setConfig;
 
-	Time preTime;
 	try
 	{
-		preTime = queue->peek();
-		auto now = std::chrono::system_clock::now();
-
-		// ¼ÆËãÊ±¼ä²î
-		auto duration = now - preTime;
-		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-
-		if (milliseconds >= setConfig.yanChiTiFeiShiJian2)
+		bool isGetLocation = false;
+		float nowLocation = globalStruct.zmotion.getAxisLocation(0, isGetLocation);
+		auto tifeijuli2 = setConfig.tifeijuli2;
+		if (isGetLocation != false && (abs(nowLocation - preLocation) > tifeijuli2))
 		{
-			queue->top(); // È¡³ö¶ÓÊ×ÔªËØ
-			emit findIsBad(2);
+			//å†²å­”
+			//bool isSuccess = globalStruct.zmotion.setIOOut(ControlLines::chongkongOUT, true);
+			//emit findIsBad(2);
 		}
 	}
 	catch (const std::runtime_error&)

@@ -28,8 +28,11 @@ private:
 	void setDIErrorInfo(const std::vector<std::vector<int>>& index);
 	void setDIErrorInfo(int index);
 
+	// å…³é—­æ‰€æœ‰å¯ä»¥ç‚¹åŠ¨çš„IOæŒ‰é’®
+	void closeAllIOBtn();
+
 private:
-	// IO¼à¿ØÒ³ÃæµÄµ÷ÊÔÄ£Ê½
+	// IOç›‘æ§é¡µé¢çš„è°ƒè¯•æ¨¡å¼
 	bool isDebugIO{ false };
 
 private slots:
@@ -65,12 +68,13 @@ private slots:
 	void cbox_qiyongyundongkongzhiqi_checked();
 	void cbox_yundongkongzhiqichonglian_checked();
 
-	// »ù±¾²ÎÊı
+	// åŸºæœ¬å‚æ•°
 	void btn_shedingladaichangdu_clicked();
 	void btn_xiangjichufachangdu_clicked();
 	void btn_jishuqingling_clicked();
 	void btn_changduqingling_clicked();
-	void btn_shoudongladai_clicked();
+	void btn_shoudongladai_pressed();
+	void btn_shoudongladai_released();
 	void btn_shoudongchongkong_clicked();
 	void btn_tuoji_clicked();
 	void btn_xiangjichufa_clicked();
@@ -83,17 +87,20 @@ private slots:
 	void btn_yanshiziqi_clicked();
 	void btn_jiajiansushijian_clicked();
 
-	// ¼à¿ØIO
-	void cbox_DIqidonganniu_clicked();
-	void cbox_DIjiting_clicked();
-	void cbox_DIlalianlawan_clicked();
-	void cbox_DObujindianjimaichong_clicked();
-	void cbox_DOchongkong_clicked();
-	void cbox_DOtuoji_clicked();
+	// ç›‘æ§IO
+	void cbox_DIqidonganniu_clicked(bool isChecked);
+	void cbox_DIjiting_clicked(bool isChecked);
+	void cbox_DIlalianlawan_clicked(bool isChecked);
+
+	void cbox_DObujindianjimaichong_clicked(bool isChecked);
+	void cbox_DOchongkong_clicked(bool isChecked);
+	void cbox_DOtuoji_clicked(bool isChecked);
+	void cbox_DOchufapaizhao_clicked(bool isChecked);
+
 	void cbox_debugMode_checked(bool ischecked);
 
 
-	// ÉèÖÃIO
+	// è®¾ç½®IO
 	void btn_setqidonganniu_clicked();
 	void btn_setlalianlawan_clicked();
 	void btn_setjiting_clicked();
@@ -102,6 +109,10 @@ private slots:
 	void btn_settuoji_clicked();
 
 	void tabWidget_indexChanged(int index);
+
+	// ç›‘æ§IOå‡½æ•°
+	void monitorInPutSignal(size_t index, bool state);
+	void monitorOutPutSignal(size_t index, bool state);
 
 private:
 	Ui::DlgProductSetClass *ui;

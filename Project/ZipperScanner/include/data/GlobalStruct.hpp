@@ -1,8 +1,7 @@
 #pragma once
 
 #include<memory>
-#include<QString>
-#include<QObject>
+
 
 #include "GeneralConfig.hpp"
 #include "ScoreConfig.hpp"
@@ -16,11 +15,13 @@
 #include "Utilty.hpp"
 #include "CameraAndCardStateThread.h"
 #include <chrono>
+#include"rqw_ZMotion.hpp"
+#include"rqw_MonitorMotionIO.hpp"
 
 
 class DetachDefectThreadZipper;
 
-// ״̬��
+// 状态机
 enum class RunningState
 {
 	Debug,
@@ -30,8 +31,8 @@ enum class RunningState
 };
 
 enum class LightLevel {
-	StrongLight, 
-	MediumLight, 
+	StrongLight,
+	MediumLight,
 	WeakLight
 };
 
@@ -40,13 +41,42 @@ class GlobalStructDataZipper
 {
 	Q_OBJECT
 public:
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
+	rw::rqw::ZMotion  zmotion;
+	void destory_motion();
+
+public:
+	// 监控所有IO
+	rw::rqw::MonitorZMotionIOStateThread monitorZMotionMonitorThread;
+public:
+	void build_MonitorZMotionIOStateThread();
+	void destroy_MonitorZMotionIOStateThread();
+
+	void getInPutSignal(size_t index, bool state);
+	void getOutPutSignal(size_t index, bool state);
+
+public:
+	// 监控启停按钮
+	rw::rqw::MonitorZMotionIOStateThread monitorStartOrStopThread;
+public:
+	void build_monitorStartOrStopThread();
+	void destroy_monitorStartOrStopThread();
+
+	void getStartOrStopSignal(size_t index, bool state);
+	
+signals:
+	// 监控启停IO
+	void emit_StartOrStopSignal(size_t index, bool state);
+	// 监控所有IO
+	void emit_InPutSignal(size_t index, bool state);
+	void emit_OutPutSignal(size_t index, bool state);
+public:
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float> > priorityQueue1;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float> > priorityQueue2;
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
 public:
-	DetachDefectThreadZipper *detachDefectThreadZipper;
+	DetachDefectThreadZipper* detachDefectThreadZipper;
 public:
 	void build_DetachDefectThreadZipper();
 	void destroy_DetachDefectThreadZipper();
@@ -57,10 +87,10 @@ public:
 public:
 	void build_CameraAndCardStateThreadZipper();
 signals:
-	// ����UI
+	// 更新UI
 	void emit_updateUiLabels(int index, bool isConnected);
 public slots:
-	// �������
+	// 相机重连
 	void rebuild_Camera1();
 	void rebuild_Camera2();
 	void destroy_Camera1();
@@ -75,7 +105,7 @@ public:
 	std::atomic_bool _isUpdateMonitorInfo{ false };
 
 public:
-	// ͳ����Ϣ
+	// 统计信息
 	struct StatisticalInfo
 	{
 		std::atomic_uint64_t produceCount{ 0 };
@@ -102,20 +132,20 @@ private:
 	GlobalStructDataZipper();
 	~GlobalStructDataZipper() = default;
 public:
-	void setLightLevel(const LightLevel & level);
+	void setLightLevel(const LightLevel& level);
 public:
 	void buildConfigManager(rw::oso::StorageType type);
 
 	void buildImageProcessorModules(const QString& path);
 	void destroyImageProcessingModule();
 
-	// ͼ����ģ��
+	// 图像处理模块
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera1 = nullptr;
 	std::unique_ptr<ImageProcessingModuleZipper> modelCamera2 = nullptr;
 
-	
+
 public:
-	// �������
+	// 保存参数
 	void buildImageSaveEngine();
 	void destroyImageSaveEngine();
 	std::unique_ptr<rw::rqw::ImageSaveEngine> imageSaveEngine{ nullptr };
@@ -126,14 +156,14 @@ public:
 	void saveDlgExposureTimeSetConfig();
 
 public:
-	// UI�������
+	// UI界面参数
 	cdm::GeneralConfig generalConfig;
 	cdm::ScoreConfig scoreConfig;
 	cdm::SetConfig setConfig;
 
 public:
 	void buildCamera();
-	// ���
+	// 相机
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 

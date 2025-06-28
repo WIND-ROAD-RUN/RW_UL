@@ -64,7 +64,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE hoec
 	PRIVATE rqwhoec
 	PRIVATE rqwime
-	PRIVATE scc
+	PRIVATE rqwscc
 	PRIVATE rqwm
 	PRIVATE dsl
 )

@@ -1,4 +1,4 @@
-﻿#include "ImageProcessorModule.h"
+#include "ImageProcessorModule.h"
 
 #include <qcolor.h>
 #include <QPainter>
@@ -317,10 +317,10 @@ void ImageProcessorZipper::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame
 		switch (imageProcessingModuleIndex)
 		{
 		case 1:
-			globalStruct.priorityQueue1->insert(frame.time, frame.time);
+			globalStruct.priorityQueue1->insert(frame.location, frame.location);
 			break;
 		case 2:
-			globalStruct.priorityQueue2->insert(frame.time, frame.time);
+			globalStruct.priorityQueue2->insert(frame.location, frame.location);
 			break;
 		default:
 			break;
@@ -535,7 +535,7 @@ void ImageProcessorZipper::buildSegModelEngine(const QString& enginePath)
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
 	config.letterBoxColor = cv::Scalar(114, 114, 114);
 	config.modelPath = enginePath.toStdString();
-	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
+	_modelEngine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
 }
 
 std::vector<std::vector<size_t>> ImageProcessorZipper::filterEffectiveIndexes_debug(std::vector<rw::DetectionRectangleInfo> info)
@@ -871,11 +871,13 @@ void ImageProcessingModuleZipper::onFrameCaptured(cv::Mat frame, size_t index)
 		return; // 跳过空帧
 	}
 
+	auto& globalStruct = GlobalStructDataZipper::getInstance();
+
 	QMutexLocker locker(&_mutex);
 	MatInfo mat;
 	mat.image = frame;
 	mat.index = index;
-	mat.time = std::chrono::system_clock::now();	// 获取拍照的时间点
+	mat.location = globalStruct.zmotion.getModbus(0,1);	// 获取拍照的位置
 	_queue.enqueue(mat);
 	_condition.wakeOne();
 }

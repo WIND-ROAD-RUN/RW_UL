@@ -25,13 +25,15 @@ public:
 
 	void stopThread();
 
-	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>> &queue);
-	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time>> &queue);
+	void processQueue1(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>> &queue);
+	void processQueue2(std::unique_ptr<rw::dsl::ThreadSafeDHeap<float, float>> &queue);
 
 signals:
 	void findIsBad(size_t index);
 protected:
 	void run() override;
 private:
-	std::atomic<bool> running; // 使用原子变量保证线程安全
+	std::atomic<bool> running; // 浣跨敤鍘熷瓙鍙橀噺淇濊瘉绾跨▼瀹夊叏
+
+	float preLocation{ 0.0f };
 };

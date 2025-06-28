@@ -5,6 +5,7 @@
 #include "DlgProductSet.h"
 #include "DlgProductScore.h"
 #include "DlgExposureTimeSet.h"
+#include "DlgIOTrigger.h"
 #include <rqw_LabelWarning.h>
 #include <opencv2/core/mat.hpp>
 
@@ -26,6 +27,7 @@ public:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgProductScore* _dlgProductScore = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
+	DlgIOTrigger* _dlgIOTrigger = nullptr;
 
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
@@ -34,16 +36,18 @@ public :
 	void build_ui();
 	void build_connect();
 	void build_camera();
+	void build_motion();
     
 	void build_ZipperScannerData();
 	void build_DlgProductSetData();
 	void build_DlgProductScore();
 	void build_DlgExposureTimeSet();
+	void build_DlgIOTrigger();
 
 	void build_imageProcessorModule();
 	void build_imageSaveEngine();
 
-	void build_threads();
+	void start_threads();
 
 public:
 	void destroyComponents();
@@ -69,6 +73,7 @@ private slots:
 	void ckb_wenzi_checked(bool checked);
 	void rbtn_start_clicked(bool checked);
 	void rbtn_stop_clicked(bool checked);
+	void pbtn_IOTrigger_clicked();
 
 
 private slots:
@@ -79,8 +84,11 @@ private slots:
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 
-	// ∏¸–¬UI
+	// Êõ¥Êñ∞UI
 	void updateUiLabels(int index, bool isConnected);
+
+	// ÁõëÊéßÂêØÂÅúIO
+	void getStartOrStopSignal(size_t index, bool state);
 private:
 	Ui::ZipperScannerClass *ui;
 };
