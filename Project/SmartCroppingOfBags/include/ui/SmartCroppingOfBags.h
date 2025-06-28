@@ -21,11 +21,11 @@ private:
 	CarouselWidget* _carouselWidget = nullptr;
 	DlgVersion* _dlgVersion = nullptr;
 public:
-	SmartCroppingOfBags(QWidget *parent = nullptr);
+	SmartCroppingOfBags(QWidget* parent = nullptr);
 	~SmartCroppingOfBags();
 
 public:
-	DlgProductSetSmartCroppingOfBags * _dlgProductSet = nullptr;
+	DlgProductSetSmartCroppingOfBags* _dlgProductSet = nullptr;
 	DlgProductScoreSmartCroppingOfBags* _dlgProductScore = nullptr;
 	//DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 
@@ -89,8 +89,11 @@ private slots:
 	void onUpdateMainWindowInfo(int i);
 private slots:
 	void onAppendCarousel(int i);
+
+signals:
+	void emit_BagTypeChanged(int index);
 private:
-	Ui::SmartCroppingOfBagsClass *ui;
+	Ui::SmartCroppingOfBagsClass* ui;
 };
 
 

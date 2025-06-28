@@ -95,6 +95,43 @@ void DlgProductSetSmartCroppingOfBags::setDOErrorInfo(int index)
 	}
 }
 
+void DlgProductSetSmartCroppingOfBags::changeBagType(int index)
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	bool isSet = false;
+	// 颜色袋
+	if (index)
+	{
+		if (globalStruct.camera1)
+		{
+			isSet = globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.xiangjizengyi1));
+		}
+	}
+	// 白色袋
+	else if (index == 0)
+	{
+		if (globalStructSetConfig.isxiangjizengyi1)
+		{
+			if (globalStruct.camera1)
+			{
+				isSet = globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.xiangjizengyi1));
+			}
+		}
+		else
+		{
+			if (globalStruct.camera1)
+			{
+				isSet = globalStruct.camera1->setGain(0);
+			}
+		}
+	}
+	if (!isSet)
+	{
+		QMessageBox::warning(this, "警告", "设置相机增益失败!");
+	}
+}
+
 void DlgProductSetSmartCroppingOfBags::showEvent(QShowEvent* showEvent)
 {
 	QDialog::showEvent(showEvent);
@@ -715,12 +752,42 @@ void DlgProductSetSmartCroppingOfBags::btn_xiangjizengyi1_clicked()
 		}
 		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 		auto& globalStructSetConfig = globalStruct.setConfig;
-		if (globalStructSetConfig.isxiangjizengyi1)
+		auto& generalConfig = globalStruct.generalConfig;
+
+		bool isSet = false;
+		// 颜色袋
+		if (generalConfig.daizizhonglei == 1)
 		{
-			globalStruct.camera1->setGain(value.toDouble());
+			if (globalStruct.camera1)
+			{
+				isSet = globalStruct.camera1->setGain(value.toDouble());
+			}
+		}
+		// 白色袋
+		else if (generalConfig.daizizhonglei == 0)
+		{
+			if (globalStructSetConfig.isxiangjizengyi1)
+			{
+				if (globalStruct.camera1)
+				{
+					isSet = globalStruct.camera1->setGain(value.toDouble());
+				}
+			}
+			else
+			{
+				if (globalStruct.camera1)
+				{
+					isSet = globalStruct.camera1->setGain(0);
+				}
+			}
 		}
 		ui->btn_xiangjizengyi1->setText(value);
 		globalStructSetConfig.xiangjizengyi1 = value.toDouble();
+
+		if (!isSet)
+		{
+			QMessageBox::warning(this, "警告", "设置相机增益失败!");
+		}
 	}
 }
 
@@ -897,10 +964,32 @@ void DlgProductSetSmartCroppingOfBags::ckb_yundongkongzhiqichonglian_checked()
 	globalStructSetConfig.yundongkongzhiqichonglian = ui->ckb_yundongkongzhiqichonglian->isChecked();
 }
 
-void DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked()
+void DlgProductSetSmartCroppingOfBags::ckb_xiangjizengyi_checked(bool ischecked)
 {
-	auto& globalStructSetConfig = GlobalStructDataSmartCroppingOfBags::getInstance().setConfig;
-	globalStructSetConfig.isxiangjizengyi1 = ui->ckb_xiangjizengyi->isChecked();
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& generalConfig = globalStruct.generalConfig;
+	auto& globalStructSetConfig = globalStruct.setConfig;
+	globalStructSetConfig.isxiangjizengyi1 = ischecked;
+
+	bool isSet = false;
+	if (ischecked)
+	{
+		if (globalStruct.camera1)
+		{
+			isSet = globalStruct.camera1->setGain(static_cast<size_t>(globalStructSetConfig.xiangjizengyi1));
+		}
+	}
+	else
+	{
+		if (globalStruct.camera1)
+		{
+			isSet = globalStruct.camera1->setGain(0);
+		}
+	}
+	if (!isSet)
+	{
+		QMessageBox::warning(this, "警告", "设置增益失败!");
+	}
 }
 
 void DlgProductSetSmartCroppingOfBags::btn_qiedao_clicked()

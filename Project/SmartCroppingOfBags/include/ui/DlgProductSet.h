@@ -42,6 +42,9 @@ public:
 	void build_connect();
 public slots:
 	void onUpdateMonitorRunningStateInfo(MonitorRunningStateInfo info);
+
+	// 切换袋子种类
+	void changeBagType(int index);
 private slots:
 	void pbtn_close_clicked();
 
@@ -78,7 +81,7 @@ private slots:
 	void ckb_xiangjitiaoshi_checked();
 	void ckb_qiyonger_checked();
 	void ckb_yundongkongzhiqichonglian_checked();
-	void ckb_xiangjizengyi_checked();
+	void ckb_xiangjizengyi_checked(bool ischecked);
 
 	void btn_qiedao_clicked();
 	void btn_chuiqi_clicked();

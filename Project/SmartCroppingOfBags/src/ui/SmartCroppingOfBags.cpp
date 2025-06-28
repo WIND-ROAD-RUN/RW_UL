@@ -110,6 +110,10 @@ void SmartCroppingOfBags::build_connect()
 	QObject::connect(_clickableVersionLabel ,&rw::rqw::ClickableLabel::clicked,
 		this, &SmartCroppingOfBags::lb_version_clicked);
 
+	// 连接袋子种类切换
+	QObject::connect(this, &SmartCroppingOfBags::emit_BagTypeChanged,
+		this->_dlgProductSet, &DlgProductSetSmartCroppingOfBags::changeBagType);
+
 }
 
 void SmartCroppingOfBags::build_motion()
@@ -443,6 +447,8 @@ void SmartCroppingOfBags::btn_daizizhonglei_clicked()
 		generalConfig.daizizhonglei = 0;
 		ui->btn_daizizhonglei->setText("白色袋");
 	}
+
+	emit emit_BagTypeChanged(generalConfig.daizizhonglei);
 }
 
 void SmartCroppingOfBags::btn_down_clicked()
