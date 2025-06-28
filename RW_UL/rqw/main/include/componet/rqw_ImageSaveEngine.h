@@ -67,7 +67,8 @@ namespace rw {
 			int saveImgQuality = 99;
 		protected:
 			void processImages();
-
+		public:
+			bool isAllImageSaved();
 		private:
 			void saveImage(const ImageInfo& image);
 
