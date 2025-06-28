@@ -23,7 +23,9 @@ int main(int argc, char* argv[])
 	}
 
 	ButtonScanner w;
-	//w.showFullScreen();
+#ifdef NDEBUG
+	w.showFullScreen();
+#endif
 	w.setFixedSize(w.size());
 	w.show();
 

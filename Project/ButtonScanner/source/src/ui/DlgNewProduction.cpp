@@ -335,8 +335,9 @@ void DlgNewProduction::pbtn_tab3_open_img_locate_clicked()
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\bad)";
 		picturesViewer->setRootPath(tempImagePath);
 	}
-	/*picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
-	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);*/
+#ifdef NDEBUG
+	picturesViewer->showFullScreen();
+#endif
 	picturesViewer->show();
 }
 
@@ -394,10 +395,10 @@ void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
 		auto tempImagePath = globalPath.modelStorageManagerTempPath + R"(Image\work4\good)";
 		picturesViewer->setRootPath(tempImagePath);
 	}
+#ifdef NDEBUG
+	picturesViewer->showFullScreen();
+#endif
 	picturesViewer->show();
-
-	//picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
-	//picturesViewer->show();
 }
 
 void DlgNewProduction::pbtn_tab4_exit_clicked()
@@ -440,6 +441,9 @@ void DlgNewProduction::pbtn_tab5_open_img_locate_clicked()
 {
 	picturesViewer->setRootPath(globalPath.modelStorageManagerTempPath + R"(Image)");
 	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	picturesViewer->showFullScreen();
+#endif
 	picturesViewer->show();
 }
 

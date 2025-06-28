@@ -1466,7 +1466,10 @@ void ButtonScanner::pbtn_set_clicked()
 		if (numKeyBord.getValue() == "1234") {
 			_dlgProduceLineSet->setFixedSize(this->width(), this->height());
 			_dlgProduceLineSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-			_dlgProduceLineSet->exec();
+#ifdef NDEBUG
+			_dlgProduceLineSet->showFullScreen();
+#endif
+			_dlgProduceLineSet->show();
 			ui->pbtn_beltSpeed->setText(QString::number(GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed));
 		}
 		else {
@@ -1489,6 +1492,9 @@ void ButtonScanner::pbtn_newProduction_clicked()
 		ui->rbtn_debug->setChecked(false);
 		rbtn_debug_checked(false);
 		dlgNewProduction->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+		dlgNewProduction->showFullScreen();
+#endif
 		dlgNewProduction->show();
 	}
 }
@@ -1526,7 +1532,10 @@ void ButtonScanner::pbtn_score_clicked()
 	_dlgProductSet->readConfig();
 	_dlgProductSet->setFixedSize(this->width(), this->height());
 	_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	_dlgProductSet->exec();
+#ifdef NDEBUG
+	_dlgProductSet->showFullScreen();
+#endif
+	_dlgProductSet->show();
 }
 
 void ButtonScanner::pbtn_resetProduct_clicked()
@@ -1553,6 +1562,9 @@ void ButtonScanner::pbtn_openSaveLocation_clicked()
 	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
 	_picturesViewer->setRootPath(imageSavePath);
 	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	_picturesViewer->showFullScreen();
+#endif
 	_picturesViewer->show();
 }
 

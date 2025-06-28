@@ -914,11 +914,17 @@ void DlgProduceLineSet::onDOState(int index, bool state)
 
 void DlgProduceLineSet::pbtn_warningManager_clicked()
 {
+#ifdef NDEBUG
+	dlgWarningManager->showFullScreen();
+#endif
 	dlgWarningManager->show();
 }
 
 void DlgProduceLineSet::pbtn_DIOValueSet_clicked()
 {
+#ifdef NDEBUG
+	dlgWarningIOSetConfig->showFullScreen();
+#endif
 	dlgWarningIOSetConfig->show();
 }
 
