@@ -418,6 +418,14 @@ void SmartCroppingOfBags::btn_pingbiquyu_clicked()
 
 void SmartCroppingOfBags::btn_chanliangqingling_clicked()
 {
+	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
+	generalConfig.shengchanzongliang = 0;
+	generalConfig.feipinshuliang = 0;
+	generalConfig.shengchanlianglv = 0;
+
+	ui->lb_shengchanzongliang->setText(QString::number(generalConfig.shengchanzongliang));
+	ui->lb_feipinshuliang->setText(QString::number(generalConfig.feipinshuliang));
+	ui->lb_lianglv->setText(QString::number(generalConfig.shengchanlianglv));
 }
 
 void SmartCroppingOfBags::btn_daizizhonglei_clicked()
