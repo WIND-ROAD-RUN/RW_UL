@@ -787,6 +787,8 @@ void ButtonScanner::build_imageSaveEngine()
 
 	QString imagesFilePathFilePathFull = dir.absoluteFilePath(imageSaveEnginePath);
 	globalStruct.imageSaveEngine->setRootPath(imagesFilePathFilePathFull);
+	globalStruct.imageSaveEngine->setMaxSaveImageNum(50);
+	globalStruct.imageSaveEngine->setSavePolicy(rw::rqw::ImageSaveEnginePolicy::MaxSaveImageNum);
 	globalStruct.imageSaveEngine->startEngine();
 }
 
