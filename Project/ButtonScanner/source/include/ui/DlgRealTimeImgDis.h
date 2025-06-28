@@ -18,12 +18,16 @@ private:
 	void build_connect();
 private:
 	bool* _isShow;
+	int* _currentDisImgIndex;
 public:
 	void setMonitorValue(bool * isShow);
+	void setMonitorDisImgIndex(int * index);
 public:
 	void setGboxTitle(const QString & title);
 protected:
 	void showEvent(QShowEvent* event) override;
+public:
+	void setShowImg(const QPixmap &image);
 private:
 	Ui::DlgRealTimeImgDisClass *ui;
 public slots:

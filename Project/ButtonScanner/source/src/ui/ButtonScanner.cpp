@@ -40,6 +40,9 @@ void ButtonScanner::updateExposureTimeTrigger()
 
 void ButtonScanner::onExposureTimeTriggerAreaClicked()
 {
+	if (_dlgRealTimeImgDis) {
+		_dlgRealTimeImgDis->hide();
+	}
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
@@ -383,7 +386,8 @@ void ButtonScanner::build_ui()
 		, this, &ButtonScanner::imgDis4_clicked);
 
 	_dlgRealTimeImgDis = new DlgRealTimeImgDis(this);
-	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);;
+	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);
+	_dlgRealTimeImgDis->setMonitorDisImgIndex(&_currentRealTimeDisIndex);
 }
 
 void ButtonScanner::read_image()
@@ -1271,24 +1275,28 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 void ButtonScanner::imgDis1_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("1号工位");
+	_currentRealTimeDisIndex = 1;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis2_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("2号工位");
+	_currentRealTimeDisIndex = 2;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis3_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("3号工位");
+	_currentRealTimeDisIndex = 3;
 	_dlgRealTimeImgDis->show();
 }
 
 void ButtonScanner::imgDis4_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("4号工位");
+	_currentRealTimeDisIndex = 4;
 	_dlgRealTimeImgDis->show();
 }
 
@@ -1300,7 +1308,9 @@ void ButtonScanner::onCamera1Display(QPixmap image)
 	}
 	else
 	{
-		
+		if (_currentRealTimeDisIndex==1) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1312,7 +1322,9 @@ void ButtonScanner::onCamera2Display(QPixmap image)
 	}
 	else
 	{
-		
+		if (_currentRealTimeDisIndex == 2) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1324,7 +1336,9 @@ void ButtonScanner::onCamera3Display(QPixmap image)
 	}
 	else
 	{
-
+		if (_currentRealTimeDisIndex == 3) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1336,7 +1350,9 @@ void ButtonScanner::onCamera4Display(QPixmap image)
 	}
 	else
 	{
-
+		if (_currentRealTimeDisIndex == 4) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 

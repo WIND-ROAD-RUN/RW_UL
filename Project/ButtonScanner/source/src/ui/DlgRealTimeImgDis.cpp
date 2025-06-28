@@ -37,6 +37,15 @@ void DlgRealTimeImgDis::setMonitorValue(bool* isShow)
 	_isShow = isShow;
 }
 
+void DlgRealTimeImgDis::setMonitorDisImgIndex(int* index)
+{
+	if (!index)
+	{
+		return;
+	}
+	_currentDisImgIndex = index;
+}
+
 void DlgRealTimeImgDis::setGboxTitle(const QString& title)
 {
 	ui->gBox_imgDis->setTitle(title);
@@ -48,6 +57,11 @@ void DlgRealTimeImgDis::showEvent(QShowEvent* event)
 	{
 		*_isShow = true;
 	}
+}
+
+void DlgRealTimeImgDis::setShowImg(const QPixmap& image)
+{
+	ui->label_imgDis->setPixmap(image.scaled(ui->label_imgDis->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void DlgRealTimeImgDis::pbtn_exit_clicked()

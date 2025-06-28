@@ -144,6 +144,7 @@ private:
 	void onUpdateLightStateUi(size_t index, bool state);
 private:
 	bool _isRealTimeDis{false};
+	int _currentRealTimeDisIndex{1};
 private slots:
 	void imgDis1_clicked();
 
