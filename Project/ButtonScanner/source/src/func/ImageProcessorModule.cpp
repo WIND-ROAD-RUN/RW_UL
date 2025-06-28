@@ -397,11 +397,11 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 	{
 		if (item.isDraw)
 		{
-			text.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+			areaText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
 		}
 	}
-	text.append(QString(" 目标: %1").arg(targetScore));
-	textList.push_back(text);
+	areaText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(areaText);
 }
 
 void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -450,11 +450,11 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 	{
 		if (item.isDraw)
 		{
-			edgeDamageText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+			areaText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
 		}
 	}
-	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
-	textList.push_back(edgeDamageText);
+	areaText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(areaText);
 }
 
 void ImageProcessor::appendSmallPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -503,11 +503,11 @@ void ImageProcessor::appendSmallPoreDectInfo(QVector<QString>& textList, const B
 	{
 		if (item.isDraw)
 		{
-			edgeDamageText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+			areaText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
 		}
 	}
-	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
-	textList.push_back(edgeDamageText);
+	areaText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(areaText);
 }
 
 void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -852,6 +852,25 @@ void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::Det
 
 void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex)
 {
+	auto setConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	double pixel{ 0 };
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixel = setConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixel = setConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		pixel = setConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		pixel = setConfig.pixelEquivalent4;
+	}
+
 	if (processResult.size() == 0)
 	{
 		return;
@@ -881,13 +900,13 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::pobian:
-				config.text = "破边 " + QString::number(qRound(item.score * 100)) + "面积 " + QString::number(item.area, 'f', 1);
+				config.text = "破边 " + QString::number(qRound(item.score * 100)) + "面积 " + QString::number(item.area* pixel* pixel, 'f', 1);
 				break;
 			case ClassId::qikong:
-				config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+				config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area* pixel* pixel, 'f', 1);;
 				break;
 			case ClassId::smallPore:
-				config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+				config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area* pixel* pixel, 'f', 1);;
 				break;
 			case ClassId::moshi:
 				config.text = "磨石 " + QString::number(qRound(item.score * 100));
@@ -1031,20 +1050,39 @@ void ImageProcessor::drawErrorRec_error(QImage& image, const std::vector<rw::Det
 void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult,
 	const std::vector<std::vector<size_t>>& processIndex, const ButtonDefectInfo& info)
 {
-	auto setConfigText = [](rw::rqw::ImagePainter::PainterConfig& config, const rw::DetectionRectangleInfo& item) {
+	auto setConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	double pixel{ 0 };
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixel = setConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixel = setConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		pixel = setConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		pixel = setConfig.pixelEquivalent4;
+	}
+
+	auto setConfigText = [&pixel](rw::rqw::ImagePainter::PainterConfig& config, const rw::DetectionRectangleInfo& item) {
 		switch (item.classId)
 		{
 		case ClassId::duyan:
 			config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 			break;
 		case ClassId::pobian:
-			config.text = "破边 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+			config.text = "破边 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area* pixel* pixel, 'f', 1);;
 			break;
 		case ClassId::qikong:
-			config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+			config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area * pixel * pixel, 'f', 1);;
 			break;
 		case ClassId::smallPore:
-			config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+			config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area * pixel * pixel, 'f', 1);;
 			break;
 		case ClassId::moshi:
 			config.text = "磨石 " + QString::number(qRound(item.score * 100));
