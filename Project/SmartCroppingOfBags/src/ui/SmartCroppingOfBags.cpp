@@ -3,6 +3,7 @@
 #include "oso_StorageContext.hpp"
 #include "ui_SmartCroppingOfBags.h"
 #include <GlobalStruct.hpp>
+#include <QFileDialog>
 #include <QMessageBox>
 
 #include "DetachUtiltyThread.h"
@@ -100,6 +101,8 @@ void SmartCroppingOfBags::build_connect()
 		this, &SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked);
 	QObject::connect(ui->rbtn_zhinengcaiqie, &QPushButton::clicked,
 		this, &SmartCroppingOfBags::rbtn_zhinengcaiqie_clicked);
+	QObject::connect(ui->pbtn_openSaveLocation, &QPushButton::clicked,
+		this, &SmartCroppingOfBags::pbtn_openSaveLocation_clicked);
 
 	// 连接显示NG图像
 	QObject::connect(globalStruct.modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::imageNGReady,
@@ -643,6 +646,34 @@ void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
 	}
 }
 
+void SmartCroppingOfBags::pbtn_openSaveLocation_clicked()
+{
+	// 弹出文件选择对话框，选择图片文件
+	QString fileName = QFileDialog::getOpenFileName(
+		this,
+		tr("选择图片"),
+		"",
+		tr("Images (*.png *.jpg *.jpeg *.bmp *.tif *.tiff)")
+	);
+
+	if (fileName.isEmpty())
+		return;
+
+	// 加载图片
+	QPixmap pixmap;
+	if (!pixmap.load(fileName)) {
+		QMessageBox::warning(this, tr("错误"), tr("图片加载失败！"));
+		return;
+	}
+
+	// 计算平均灰度值
+	double avgGray = calculateAvgGray(pixmap);
+
+	// 调用显示/判断函数
+	judgeAveGray(avgGray);
+	ui->lb_liangdu->setText(QString::number(avgGray));
+}
+
 void SmartCroppingOfBags::lb_version_clicked()
 {
 	if (_dlgVersion)
@@ -703,6 +734,18 @@ void SmartCroppingOfBags::onCamera1Display(QPixmap image, bool isbad)
 	{
 		ui->lb_Ngshow->setPixmap(image.scaled(ui->lb_Ngshow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
+	// 计算灰度值
+	auto avgGray = calculateAvgGray(image);
+	if (0.0 < avgGray && avgGray < 255)
+	{
+		// 判断灰度值是否在设定范围内
+		judgeAveGray(avgGray);
+		ui->lb_liangdu->setText(QString::number(avgGray));
+	}
+	else
+	{
+		QMessageBox::warning(this, "警告", "图像亮度异常!");
+	}
 }
 
 void SmartCroppingOfBags::onCamera2Display(QPixmap image, bool isbad)
@@ -758,4 +801,62 @@ void SmartCroppingOfBags::onUpdateMainWindowInfo(int i)
 void SmartCroppingOfBags::onAppendCarousel(int i)
 {
 	_carouselWidget->appendItem(i);
+}
+
+double SmartCroppingOfBags::calculateAvgGray(const QPixmap& pixmap)
+{
+	QImage img = pixmap.toImage().convertToFormat(QImage::Format_RGB32);
+	if (img.isNull() || img.width() == 0 || img.height() == 0)
+		return 0.0;
+
+	qint64 sum = 0;
+	int w = img.width();
+	int h = img.height();
+
+	for (int y = 0; y < h; ++y) {
+		const QRgb* line = reinterpret_cast<const QRgb*>(img.scanLine(y));
+		for (int x = 0; x < w; ++x) {
+			int r = qRed(line[x]);
+			int g = qGreen(line[x]);
+			int b = qBlue(line[x]);
+			int gray = static_cast<int>(0.299 * r + 0.587 * g + 0.114 * b);
+			sum += gray;
+		}
+	}
+	return static_cast<double>(sum) / (w * h);
+}
+
+void SmartCroppingOfBags::judgeAveGray(double avgGray)
+{
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& setConfig = globalStruct.setConfig;
+	auto& generalConfig = globalStruct.generalConfig;
+
+	double minRange = 0.0, maxRange = 0.0;
+
+	// 白色袋
+	if (generalConfig.daizizhonglei == 0)
+	{
+		minRange = setConfig.baisedailiangdufanweimin1;
+		maxRange = setConfig.baisedailiangdufanweimax1;
+	}
+	// 颜色袋
+	else if (generalConfig.daizizhonglei == 1)
+	{
+		minRange = setConfig.yansedailiangdufanweimin1;
+		maxRange = setConfig.yansedailiangdufanweimax1;
+	}
+
+	if (avgGray < minRange)
+	{
+		ui->lb_liangduzhuangtai->setText("亮度偏暗");
+	}
+	else if (minRange <= avgGray && avgGray <= maxRange)
+	{
+		ui->lb_liangduzhuangtai->setText("亮度正常");
+	}
+	else if (avgGray > maxRange)
+	{
+		ui->lb_liangduzhuangtai->setText("亮度偏亮");
+	}
 }

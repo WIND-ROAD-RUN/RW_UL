@@ -74,6 +74,8 @@ private slots:
 	void rbtn_zhinengcaiqie_clicked(bool checked);
 	void rbtn_yinshuazhiliangjiance_clicked(bool checked);
 
+	void pbtn_openSaveLocation_clicked();
+
 	void lb_version_clicked();
 
 private slots:
@@ -89,6 +91,9 @@ private slots:
 	void onUpdateMainWindowInfo(int i);
 private slots:
 	void onAppendCarousel(int i);
+private:
+	double calculateAvgGray(const QPixmap& pixmap);
+	void judgeAveGray(double avgGray);
 
 signals:
 	void emit_BagTypeChanged(int index);
