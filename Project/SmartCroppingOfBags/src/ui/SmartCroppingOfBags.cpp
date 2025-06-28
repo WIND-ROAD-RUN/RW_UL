@@ -453,14 +453,85 @@ void SmartCroppingOfBags::btn_daizizhonglei_clicked()
 
 void SmartCroppingOfBags::btn_down_clicked()
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& generalConfig = globalStruct.generalConfig;
+
+	auto& baoGuang = generalConfig.baoguang;
+	baoGuang -= 10;
+	if (baoGuang < 10)
+	{
+		baoGuang = 10;
+	}
+
+	ui->btn_baoguang->setText(QString::number(baoGuang));
+
+	bool isSet = false;
+	if (globalStruct.camera1)
+	{
+		isSet = globalStruct.camera1->setExposureTime(static_cast<size_t>(baoGuang));
+	}
+
+	if (!isSet)
+	{
+		QMessageBox::warning(this, "警告", "调小曝光失败!");
+	}
 }
 
 void SmartCroppingOfBags::btn_up_clicked()
 {
+	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+	auto& generalConfig = globalStruct.generalConfig;
+
+	auto& baoGuang = generalConfig.baoguang;
+	baoGuang += 10;
+	if (baoGuang > 200)
+	{
+		baoGuang = 200;
+	}
+
+	ui->btn_baoguang->setText(QString::number(baoGuang));
+
+	bool isSet = false;
+	if (globalStruct.camera1)
+	{
+		isSet = globalStruct.camera1->setExposureTime(static_cast<size_t>(baoGuang));
+	}
+
+	if (!isSet)
+	{
+		QMessageBox::warning(this, "警告", "调大曝光失败!");
+	}
 }
 
 void SmartCroppingOfBags::btn_baoguang_clicked()
 {
+	NumberKeyboard numKeyBord;
+	numKeyBord.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyBord.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		auto value = numKeyBord.getValue();
+		if (value.toDouble() < 10 || value.toDouble() > 200)
+		{
+			QMessageBox::warning(this, "提示", "请输入大于等于10,小于等于200的数值");
+			return;
+		}
+		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
+		auto& globalStructGeneralConfig = globalStruct.generalConfig;
+		ui->btn_baoguang->setText(value);
+		globalStructGeneralConfig.baoguang = value.toDouble();
+
+		bool isSet = false;
+		if (globalStruct.camera1)
+		{
+			isSet = globalStruct.camera1->setExposureTime(value.toInt());
+		}
+
+		if (!isSet)
+		{
+			QMessageBox::warning(this, "警告", "设置相机曝光失败!");
+		}
+	}
 }
 
 void SmartCroppingOfBags::btn_normalParam_clicked()
