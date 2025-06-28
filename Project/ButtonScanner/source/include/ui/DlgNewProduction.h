@@ -1,10 +1,15 @@
 #pragma once
 
-#include <QDialog>
+
 #include "ui_DlgNewProduction.h"
 #include"PictureViewerThumbnails.h"
+#include"LoadingDialog.h"
 
 #include"opencv2/opencv.hpp"
+
+#include <QtConcurrent> 
+#include <QDialog>
+#include <QFuture>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DlgNewProductionClass; };
@@ -26,6 +31,8 @@ struct DlgNewProductionInfo
 class DlgNewProduction : public QDialog
 {
 	Q_OBJECT
+private:
+	LoadingDialog* loadingDialog{ nullptr };
 public:
 	DlgNewProduction(QWidget* parent = nullptr);
 
@@ -59,10 +66,12 @@ public slots:
 public slots:
 	void img_display_work(cv::Mat frame, size_t index);
 private:
+	QVector<QFuture<void>> futures;
 	void img_display_work1(const QPixmap& pixmap);
 	void img_display_work2(const QPixmap& pixmap);
 	void img_display_work3(const QPixmap& pixmap);
 	void img_display_work4(const QPixmap& pixmap);
+	void waitPicturesSave();
 private slots:
 	void pbtn_tab1_ok_clicked();
 	void pbtn_tab1_no_clicked();

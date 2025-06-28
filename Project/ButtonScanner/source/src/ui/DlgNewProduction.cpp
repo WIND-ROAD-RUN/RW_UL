@@ -39,6 +39,7 @@ void DlgNewProduction::build_ui()
 	ui->rbtn_tab4_filterColor->setEnabled(false);
 	ui->rbtn_tab5_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab5_filterColor->setEnabled(false);
+	loadingDialog = new LoadingDialog(this);
 }
 
 void DlgNewProduction::build_connect()
@@ -169,14 +170,18 @@ void DlgNewProduction::img_display_work1(const QPixmap& pixmap)
 	if (this->_info.currentTabIndex == 2 && ui->rbtn_tab3_firstWork1->isChecked())
 	{
 		modelStorageManager->work1_bad_count_ += 1;
-		modelStorageManager->save_work1_image(pixmap.toImage(), false);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work1_image(image, false);
+			}));
 		ui->label_tab3_tabImgCount1->setText(QString::number(modelStorageManager->work1_bad_count_));
 		ui->label_tab3_imgDisplay1->setPixmap(pixmap.scaled(ui->label_tab3_imgDisplay1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
 		modelStorageManager->work1_good_count_ += 1;
-		modelStorageManager->save_work1_image(pixmap.toImage(), true);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work1_image(image, true);
+			}));
 		ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
 		ui->label_tab4_imgDisplay1->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
@@ -193,14 +198,20 @@ void DlgNewProduction::img_display_work2(const QPixmap& pixmap)
 	if (this->_info.currentTabIndex == 2 && ui->rbtn_tab3_firstWork2->isChecked())
 	{
 		modelStorageManager->work2_bad_count_ += 1;
-		modelStorageManager->save_work2_image(pixmap.toImage(), false);
+		//modelStorageManager->save_work2_image(pixmap.toImage(), false);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work2_image(image, false);
+			}));
 		ui->label_tab3_tabImgCount2->setText(QString::number(modelStorageManager->work2_bad_count_));
 		ui->label_tab3_imgDisplay2->setPixmap(pixmap.scaled(ui->label_tab3_imgDisplay2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
 		modelStorageManager->work2_good_count_ += 1;
-		modelStorageManager->save_work2_image(pixmap.toImage(), true);
+		//modelStorageManager->save_work2_image(pixmap.toImage(), true);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work2_image(image, true);
+			}));
 		ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
 		ui->label_tab4_imgDisplay2->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
@@ -217,14 +228,20 @@ void DlgNewProduction::img_display_work3(const QPixmap& pixmap)
 	if (this->_info.currentTabIndex == 2 && ui->rbtn_tab3_firstWork3->isChecked())
 	{
 		modelStorageManager->work3_bad_count_ += 1;
-		modelStorageManager->save_work3_image(pixmap.toImage(), false);
+		//modelStorageManager->save_work3_image(pixmap.toImage(), false);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work3_image(image, false);
+			}));
 		ui->label_tab3_tabImgCount3->setText(QString::number(modelStorageManager->work3_bad_count_));
 		ui->label_tab3_imgDisplay3->setPixmap(pixmap.scaled(ui->label_tab3_imgDisplay3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
 		modelStorageManager->work3_good_count_ += 1;
-		modelStorageManager->save_work3_image(pixmap.toImage(), true);
+		//modelStorageManager->save_work3_image(pixmap.toImage(), true);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work3_image(image, true);
+			}));
 		ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
 		ui->label_tab4_imgDisplay3->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
@@ -241,17 +258,33 @@ void DlgNewProduction::img_display_work4(const QPixmap& pixmap)
 	if (this->_info.currentTabIndex == 2 && ui->rbtn_tab3_firstWork4->isChecked())
 	{
 		modelStorageManager->work4_bad_count_ += 1;
-		modelStorageManager->save_work4_image(pixmap.toImage(), false);
+		//modelStorageManager->save_work4_image(pixmap.toImage(), false);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work4_image(image, false);
+			}));
 		ui->label_tab3_tabImgCount4->setText(QString::number(modelStorageManager->work4_bad_count_));
 		ui->label_tab3_imgDisplay4->setPixmap(pixmap.scaled(ui->label_tab3_imgDisplay4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 	else if (this->_info.currentTabIndex == 3)
 	{
 		modelStorageManager->work4_good_count_ += 1;
-		modelStorageManager->save_work4_image(pixmap.toImage(), true);
+		//modelStorageManager->save_work4_image(pixmap.toImage(), true);
+		futures.append(QtConcurrent::run([&modelStorageManager, image = pixmap.toImage()]() {
+			modelStorageManager->save_work4_image(image, true);
+			}));
 		ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
 		ui->label_tab4_imgDisplay4->setPixmap(pixmap.scaled(ui->label_tab4_imgDisplay4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
+}
+
+void DlgNewProduction::waitPicturesSave()
+{
+	loadingDialog->show();
+	for (auto& future : futures) {
+		future.waitForFinished();
+	}
+	futures.clear();
+	loadingDialog->hide();
 }
 
 void DlgNewProduction::pbtn_tab1_no_clicked()
@@ -351,6 +384,8 @@ void DlgNewProduction::pbtn_tab3_exit_clicked()
 
 void DlgNewProduction::pbtn_tab3_pre_step_clicked()
 {
+	waitPicturesSave();
+	
 	ui->tabWidget->setCurrentIndex(1);
 	this->_info.currentTabIndex = 1;
 
@@ -366,6 +401,8 @@ void DlgNewProduction::pbtn_tab3_pre_step_clicked()
 
 void DlgNewProduction::pbtn_tab3_nex_step_clicked()
 {
+	waitPicturesSave();
+
 	ui->tabWidget->setCurrentIndex(3);
 	this->_info.currentTabIndex = 3;
 
@@ -412,12 +449,14 @@ void DlgNewProduction::pbtn_tab4_exit_clicked()
 
 void DlgNewProduction::pbtn_tab4_pre_step_clicked()
 {
+	waitPicturesSave();
 	ui->tabWidget->setCurrentIndex(2);
 	this->_info.currentTabIndex = 2;
 }
 
 void DlgNewProduction::pbtn_tab4_nex_step_clicked()
 {
+	waitPicturesSave();
 	ui->tabWidget->setCurrentIndex(4);
 	this->_info.currentTabIndex = 4;
 	set_motionRun(false);
