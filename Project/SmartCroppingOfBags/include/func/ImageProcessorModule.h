@@ -41,7 +41,7 @@ public slots:
 signals:
 	void appendCarousel(int i);
 signals:
-	void imageReady(QPixmap image);
+	void imageReady(QPixmap image,bool isbad);
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
 signals:
 	void appendPixel(double pixel);
@@ -115,17 +115,18 @@ private:
 	std::vector<Time> getCurrentWithBeforeFourTimes_debug(const Time& time, int count, bool isBefore = true,
 		bool ascending = true);
 	// 获得时间集合对应的图像
-	void getUnprocessedSouceImage_debug(const std::vector<Time>& fiveTimes, std::vector<TimeFrameMatInfo>& images);
-	// 对五张图像进行绘画检测框操作
-	std::vector<TimeFrameQImageInfo> drawUnprocessedMatMaskInfo_debug(const std::vector<TimeFrameMatInfo>& fiveMats);
+	void getUnprocessedSourceImage_debug(const std::vector<Time>& unprocessedTimes, std::vector<TimeFrameMatInfo>& images);
+	// 对未处理图像进行绘画检测框操作
+	std::vector<TimeFrameQImageInfo> drawUnprocessedMatMaskInfo_debug(const std::vector<TimeFrameMatInfo>& unprocessedMats);
 	void drawCutLine(TimeFrameQImageInfo& info);
 
-	// 拼接绘画好的五张图像
+	// 拼接绘画好的未处理图像
 	QPixmap collageMaskImage_debug(const QVector<QImage>& fiveQImages);
 	// 随机添加五个检测框
 	void getRandomDetecionRec_debug(const ImageCollage::CollageImage& collageImage, std::vector<rw::DetectionRectangleInfo>& detectionRec); // 获取随机的检测框
 
 	QImage getCollageImage(const std::vector<TimeFrameQImageInfo>& infos);
+	QImage getCollageImage(const std::vector<TimeFrameMatInfo>& infos);
 private:
 	void run_OpenRemoveFunc_process_defect_info(const Time& time);
 	void run_OpenRemoveFunc_process_defect_info(SmartCroppingOfBagsDefectInfo& info);
@@ -174,7 +175,7 @@ private:
 	int _workIndex;
 
 signals:
-	void imageReady(QPixmap image);
+	void imageReady(QPixmap image,bool isbad);
 	void imageNGReady(QPixmap image, size_t index, bool isbad);
 signals:
 	void appendPixel(double pixel);

@@ -146,11 +146,15 @@ void DetachDefectThreadSmartCroppingOfBags::run()
 		auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 		auto& deque1 = globalStruct.priorityQueue1;
 		double location{0};
-		auto isGet=globalStruct.camera1->getEncoderNumber(location);
-		if (!isGet)
+		if (globalStruct.camera1)
 		{
-			continue;
+			auto isGet = globalStruct.camera1->getEncoderNumber(location);
+			if (!isGet)
+			{
+				continue;
+			}
 		}
+		
 		processQueue1(deque1, location);
 	}
 }

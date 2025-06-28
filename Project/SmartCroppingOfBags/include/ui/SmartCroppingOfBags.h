@@ -79,8 +79,8 @@ private slots:
 private slots:
 	void updateCameraLabelState(int cameraIndex, bool state);
 
-	void onCamera1Display(QPixmap image);
-	void onCamera2Display(QPixmap image);
+	void onCamera1Display(QPixmap image, bool isbad);
+	void onCamera2Display(QPixmap image, bool isbad);
 
 	void onCameraNGDisplay(QPixmap image, size_t index, bool isbad);
 

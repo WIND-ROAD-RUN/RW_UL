@@ -159,6 +159,8 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			auto duringTimes = _historyTimes->query(_lastQieDaoTime, frame.time);
 
 			duringTimes = getValidTime(duringTimes);
+
+			// 获得切刀线在哪一张图片上的哪个位置
 			getCutLine(duringTimes, frame);
 
 			// 获取有多少张图片没有拼过
@@ -167,20 +169,34 @@ void ImageProcessorSmartCroppingOfBags::run_debug(MatInfo& frame)
 			// 抓取没拼过的图片的时间戳
 			auto unprocessedImageTimes = duringTimes;
 
-			if (unprocessedImageTimes.size() != count)
+			if (unprocessedImageTimes.empty())
 			{
 				return; // 如果没有时间戳，直接返回
 			}
 
 			std::vector<TimeFrameMatInfo> unprocessedimages;
 
-			getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
+			getUnprocessedSourceImage_debug(unprocessedImageTimes, unprocessedimages);
 
-			auto fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages);
+			// 用于保存的原图
+			auto saveQimage = getCollageImage(unprocessedimages);
 
-			auto collageImage = getCollageImage(fiveQImages);
+			auto unprocessedQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages);
 
-			emit imageReady(QPixmap::fromImage(collageImage));
+			auto collageImage = getCollageImage(unprocessedQImages);
+
+			emit imageReady(QPixmap::fromImage(collageImage), _isbad);
+
+			if (_isbad == false)
+			{
+				// 保存好的图片
+
+			}
+			else if (_isbad == true)
+			{
+				// 保存坏的图片
+
+			}
 
 			emit appendPixel(collageImage.height());
 		}
@@ -550,21 +566,20 @@ std::vector<Time> ImageProcessorSmartCroppingOfBags::getCurrentWithBeforeFourTim
 	return _historyTimes->queryWithTime(time, count, isBefore, ascending);
 }
 
-void ImageProcessorSmartCroppingOfBags::getUnprocessedSouceImage_debug(const std::vector<Time>& fiveTimes, std::vector<TimeFrameMatInfo>& images)
+void ImageProcessorSmartCroppingOfBags::getUnprocessedSourceImage_debug(const std::vector<Time>& unprocessedTimes, std::vector<TimeFrameMatInfo>& images)
 {
-	for (const auto& item : fiveTimes)
+	for (const auto& item : unprocessedTimes)
 	{
 		auto image = _imageCollage->getImage(item);
 		images.emplace_back(TimeFrameMatInfo(item, image));
 	}
-
 }
 
 std::vector<TimeFrameQImageInfo> ImageProcessorSmartCroppingOfBags::drawUnprocessedMatMaskInfo_debug(
-	const std::vector<TimeFrameMatInfo>& fiveMats)
+	const std::vector<TimeFrameMatInfo>& unprocessedMats)
 {
-	std::vector<TimeFrameQImageInfo> fiveQImages;
-	for (const auto& item : fiveMats)
+	std::vector<TimeFrameQImageInfo> unprocessedQImages;
+	for (const auto& item : unprocessedMats)
 	{
 		if (!item.second.has_value())
 		{
@@ -591,10 +606,10 @@ std::vector<TimeFrameQImageInfo> ImageProcessorSmartCroppingOfBags::drawUnproces
 		drawCutLine(info);
 
 
-		fiveQImages.emplace_back(info);
+		unprocessedQImages.emplace_back(info);
 	}
 
-	return fiveQImages;
+	return unprocessedQImages;
 }
 
 void ImageProcessorSmartCroppingOfBags::drawCutLine(TimeFrameQImageInfo& info)
@@ -672,6 +687,20 @@ QImage ImageProcessorSmartCroppingOfBags::getCollageImage(const std::vector<Time
 	return ImageCollage::verticalConcat(imgs);
 }
 
+QImage ImageProcessorSmartCroppingOfBags::getCollageImage(const std::vector<TimeFrameMatInfo>& infos)
+{
+	std::vector<TimeFrameQImageInfo> qImages;
+	for (const auto& item : infos)
+	{
+		if (item.second.has_value())
+		{
+			QImage qImage = rw::rqw::cvMatToQImage(item.second.value().element);
+			qImages.emplace_back(item.first, qImage);
+		}
+	}
+	return getCollageImage(qImages);
+}
+
 void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 {
 	_isbad = false;
@@ -731,7 +760,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 			// 获取没拼过的图片的原图像
 			std::vector<TimeFrameMatInfo> unprocessedimages;
 
-			getUnprocessedSouceImage_debug(unprocessedImageTimes, unprocessedimages);
+			getUnprocessedSourceImage_debug(unprocessedImageTimes, unprocessedimages);
 
 			// 处理图片及其识别框
 			auto fiveQImages = drawUnprocessedMatMaskInfo_debug(unprocessedimages);
@@ -739,7 +768,7 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 			auto collageImage = getCollageImage(fiveQImages);
 
 			//std::cout << "imageReady" << collageImage.size().height() << std::endl;
-			emit imageReady(QPixmap::fromImage(collageImage));
+			emit imageReady(QPixmap::fromImage(collageImage),_isbad);
 
 			emit appendPixel(collageImage.height());
 			//std::cout << "Image emit" << std::endl;
@@ -747,10 +776,12 @@ void ImageProcessorSmartCroppingOfBags::run_OpenRemoveFunc(MatInfo& frame)
 			if (_isbad)
 			{
 				emit appendCarousel(2);
+				// 保存坏的图片
 			}
 			else
 			{
 				emit appendCarousel(1);
+				// 保存好的图片
 			}
 		}
 	}

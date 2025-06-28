@@ -605,12 +605,16 @@ void SmartCroppingOfBags::updateCameraLabelState(int cameraIndex, bool state)
 	}
 }
 
-void SmartCroppingOfBags::onCamera1Display(QPixmap image)
+void SmartCroppingOfBags::onCamera1Display(QPixmap image, bool isbad)
 {
 	ui->lb_show->setPixmap(image.scaled(ui->lb_show->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (isbad)
+	{
+		ui->lb_Ngshow->setPixmap(image.scaled(ui->lb_Ngshow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
 }
 
-void SmartCroppingOfBags::onCamera2Display(QPixmap image)
+void SmartCroppingOfBags::onCamera2Display(QPixmap image, bool isbad)
 {
 
 }
