@@ -2,6 +2,10 @@
 
 #include <QMessageBox>
 
+#include "ButtonScannerDlgExposureTimeSet.hpp"
+#include"oso_StorageContext.hpp"
+#include"ButtonUtilty.h"
+
 bool RunEnvCheck::isSingleInstance(const QString& instanceName)
 {
 	static QSharedMemory sharedMemory(instanceName);
@@ -18,6 +22,14 @@ bool RunEnvCheck::isProcessRunning(const QString& processName)
 	process.waitForFinished();
 	QString output = process.readAllStandardOutput();
 	return output.contains(processName, Qt::CaseInsensitive);
+}
+
+bool RunEnvCheck::checkConfigIsOk()
+{
+	rw::oso::StorageContext storageContext(rw::oso::StorageType::Xml);
+	cdm::ButtonScannerDlgExposureTimeSet config = *storageContext.load(globalPath.configRootPath.toStdString());
+
+	return true;
 }
 
 EnvCheckResult RunEnvCheck::envCheck()

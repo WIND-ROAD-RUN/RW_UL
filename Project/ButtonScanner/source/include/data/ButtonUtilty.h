@@ -101,6 +101,13 @@ public:
 	QString trainAISegRootPath = projectHome + R"(Train\Seg\)";
 public:
 	QString configRootPath = projectHome + R"(config\)";
+	QString dlgHideScoreSetPath = configRootPath + R"(dlgHideScoreSet.xml)";
+	QString dlgProduceLineSetConfigPath = configRootPath + R"(dlgProduceLineSetConfig.xml)";
+	QString dlgProdutSetConfigPath = configRootPath + R"(dlgProdutSetConfig.xml)";
+	QString exposureTimeSetConfigPath = configRootPath + R"(exposureTimeSetConfig.xml)";
+	QString mainWindowConfigPath = configRootPath + R"(mainWindowConfig.xml)";
+	QString warningIOSetConfigPath = configRootPath + R"(warningIOSetConfig.xml)";
+	QString warningManagerConfigPath = configRootPath + R"(warningManagerConfig.xml)";
 public:
 	QString modelRootPath = projectHome + R"(model\)";
 	QString engineObb = R"(ObbModel.engine)";

@@ -15,6 +15,8 @@ private:
 	static bool isSingleInstance(const QString& instanceName);
 
 	static bool isProcessRunning(const QString& processName);
+
+	static bool checkConfigIsOk();
 	
 public:
 	static EnvCheckResult envCheck();

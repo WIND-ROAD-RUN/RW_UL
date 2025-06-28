@@ -567,7 +567,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString mainWindowFilePathFull = globalPath.configRootPath + "mainWindowConfig.xml";
+	QString mainWindowFilePathFull = globalPath.mainWindowConfigPath;
 	QFileInfo mainWindowFile(mainWindowFilePathFull);
 
 	globalStruct.mainWindowFilePath = mainWindowFilePathFull;
@@ -596,7 +596,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 void ButtonScanner::read_config_warningManagerConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
-	QString warningManagerFilePathFull = globalPath.configRootPath + "warningManagerConfig.xml";
+	QString warningManagerFilePathFull = globalPath.warningManagerConfigPath;
 	QFileInfo warningManagerFile(warningManagerFilePathFull);
 	globalStruct.warningManagerFilePath = warningManagerFilePathFull;
 	if (!warningManagerFile.exists()) {
@@ -624,7 +624,7 @@ void ButtonScanner::read_config_produceLineConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgProduceLineSetFilePathFull = globalPath.configRootPath + "dlgProduceLineSetConfig.xml";
+	QString dlgProduceLineSetFilePathFull = globalPath.dlgProduceLineSetConfigPath;
 	QFileInfo dlgProduceLineSetFile(dlgProduceLineSetFilePathFull);
 
 	globalStruct.dlgProduceLineSetFilePath = dlgProduceLineSetFilePathFull;
@@ -657,7 +657,7 @@ void ButtonScanner::read_config_productSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgProductSetFilePathFull = globalPath.configRootPath + "dlgProdutSetConfig.xml";
+	QString dlgProductSetFilePathFull = globalPath.dlgProdutSetConfigPath;
 	QFileInfo dlgProductSetFile(dlgProductSetFilePathFull);
 
 	globalStruct.dlgProductSetFilePath = dlgProductSetFilePathFull;
@@ -687,7 +687,7 @@ void ButtonScanner::read_config_exposureTimeSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString exposureTimeSetConfigFilePathFull = globalPath.configRootPath + "exposureTimeSetConfig.xml";
+	QString exposureTimeSetConfigFilePathFull = globalPath.exposureTimeSetConfigPath;
 	QFileInfo dlgProductSetFile(exposureTimeSetConfigFilePathFull);
 
 	globalStruct.dlgExposureTimeSetFilePath = exposureTimeSetConfigFilePathFull;
@@ -717,7 +717,7 @@ void ButtonScanner::read_config_hideScoreSet()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgHideScoreSetFilePathFull = globalPath.configRootPath + "dlgHideScoreSet.xml";
+	QString dlgHideScoreSetFilePathFull = globalPath.dlgHideScoreSetPath;
 	QFileInfo dlgHideScoreSetFile(dlgHideScoreSetFilePathFull);
 
 	globalStruct.dlgHideScoreSetPath = dlgHideScoreSetFilePathFull;
@@ -747,7 +747,7 @@ void ButtonScanner::read_config_warningIOSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgWarningIOSetConfigFull = globalPath.configRootPath + "warningIOSetConfig.xml";
+	QString dlgWarningIOSetConfigFull = globalPath.warningIOSetConfigPath;
 	QFileInfo dlgWarningIOSetConfigFile(dlgWarningIOSetConfigFull);
 
 	globalStruct.warningIOSetConfigPath = dlgWarningIOSetConfigFull;
