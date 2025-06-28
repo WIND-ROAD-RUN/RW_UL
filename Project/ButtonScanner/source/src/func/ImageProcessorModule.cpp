@@ -512,18 +512,6 @@ void ImageProcessor::appendSmallPoreDectInfo(QVector<QString>& textList, const B
 
 void ImageProcessor::appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
 {
-	/*auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
-	if (_isbad && productSet.paintEnable && info.isDrawpaint)
-	{
-		QString paintText("油漆:");
-		for (const auto& item : info.paint)
-		{
-			paintText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
-		}
-		paintText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.paintEnableScore)));
-		textList.push_back(paintText);
-	}*/
-
 	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
 	if (!_isbad)
 	{
