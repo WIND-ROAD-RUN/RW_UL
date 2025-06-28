@@ -279,12 +279,11 @@ void DlgNewProduction::img_display_work4(const QPixmap& pixmap)
 
 void DlgNewProduction::waitPicturesSave()
 {
-	loadingDialog->show();
+
 	for (auto& future : futures) {
 		future.waitForFinished();
 	}
 	futures.clear();
-	loadingDialog->hide();
 }
 
 void DlgNewProduction::pbtn_tab1_no_clicked()
@@ -384,6 +383,8 @@ void DlgNewProduction::pbtn_tab3_exit_clicked()
 
 void DlgNewProduction::pbtn_tab3_pre_step_clicked()
 {
+	/*loadingDialog->exec();
+	set_motionRun(false);
 	waitPicturesSave();
 	
 	ui->tabWidget->setCurrentIndex(1);
@@ -395,12 +396,39 @@ void DlgNewProduction::pbtn_tab3_pre_step_clicked()
 	ui->rbtn_tab5_filterColor->setChecked(false);
 	ui->rbtn_tab3_checkBladeShape->setChecked(true);
 	ui->rbtn_tab4_checkBladeShape->setChecked(true);
-	ui->rbtn_tab5_checkBladeShape->setChecked(true);
+	ui->rbtn_tab5_checkBladeShape->setChecked(true);*/
+	loadingDialog->updateMessage("保存图片中...");
+	loadingDialog->show();
 	set_motionRun(false);
+
+	auto watcher = new QFutureWatcher<void>(this);
+	QFuture<void> all = QtConcurrent::run([this] {
+		for (auto& f : futures) f.waitForFinished();
+		futures.clear();
+		});
+	watcher->setFuture(all);
+
+	connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
+		watcher->deleteLater();
+		loadingDialog->close();
+
+		ui->tabWidget->setCurrentIndex(1);
+		this->_info.currentTabIndex = 1;
+
+		this->_info.state = DlgNewProductionInfo::None;
+		ui->rbtn_tab3_filterColor->setChecked(false);
+		ui->rbtn_tab4_filterColor->setChecked(false);
+		ui->rbtn_tab5_filterColor->setChecked(false);
+		ui->rbtn_tab3_checkBladeShape->setChecked(true);
+		ui->rbtn_tab4_checkBladeShape->setChecked(true);
+		ui->rbtn_tab5_checkBladeShape->setChecked(true);
+		});
+
 }
 
 void DlgNewProduction::pbtn_tab3_nex_step_clicked()
 {
+	/*loadingDialog->show();
 	waitPicturesSave();
 
 	ui->tabWidget->setCurrentIndex(3);
@@ -411,6 +439,30 @@ void DlgNewProduction::pbtn_tab3_nex_step_clicked()
 	ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
 	ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
 	ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
+	loadingDialog->close();*/
+	loadingDialog->updateMessage("保存图片中...");
+	loadingDialog->show();
+	// 创建QFutureWatcher
+	auto watcher = new QFutureWatcher<void>(this);
+	// 合并所有future等待
+	QFuture<void> all = QtConcurrent::run([this] {
+		for (auto& f : futures) f.waitForFinished();
+		futures.clear();
+		});
+	watcher->setFuture(all);
+
+	connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
+		watcher->deleteLater();
+		ui->tabWidget->setCurrentIndex(3);
+		this->_info.currentTabIndex = 3;
+
+		auto& modelStorageManager = GlobalStructData::getInstance().modelStorageManager;
+		ui->label_tab4_tabImgCount1->setText(QString::number(modelStorageManager->work1_good_count_));
+		ui->label_tab4_tabImgCount2->setText(QString::number(modelStorageManager->work2_good_count_));
+		ui->label_tab4_tabImgCount3->setText(QString::number(modelStorageManager->work3_good_count_));
+		ui->label_tab4_tabImgCount4->setText(QString::number(modelStorageManager->work4_good_count_));
+		loadingDialog->close();
+		});
 }
 
 void DlgNewProduction::pbtn_tab4_open_img_locate_clicked()
@@ -449,17 +501,53 @@ void DlgNewProduction::pbtn_tab4_exit_clicked()
 
 void DlgNewProduction::pbtn_tab4_pre_step_clicked()
 {
-	waitPicturesSave();
+	/*waitPicturesSave();
 	ui->tabWidget->setCurrentIndex(2);
-	this->_info.currentTabIndex = 2;
+	this->_info.currentTabIndex = 2;*/
+
+	loadingDialog->updateMessage("保存图片中...");
+	loadingDialog->show();
+	auto watcher = new QFutureWatcher<void>(this);
+	QFuture<void> all = QtConcurrent::run([this] {
+		for (auto& f : futures) f.waitForFinished();
+		futures.clear();
+		});
+	watcher->setFuture(all);
+
+	connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
+		watcher->deleteLater();
+		loadingDialog->close();
+
+		ui->tabWidget->setCurrentIndex(2);
+		this->_info.currentTabIndex = 2;
+		});
 }
 
 void DlgNewProduction::pbtn_tab4_nex_step_clicked()
 {
-	waitPicturesSave();
+	/*waitPicturesSave();
 	ui->tabWidget->setCurrentIndex(4);
 	this->_info.currentTabIndex = 4;
+	set_motionRun(false);*/
+
+	loadingDialog->updateMessage("保存图片中...");
+	loadingDialog->show();
 	set_motionRun(false);
+
+	auto watcher = new QFutureWatcher<void>(this);
+	QFuture<void> all = QtConcurrent::run([this] {
+		for (auto& f : futures) f.waitForFinished();
+		futures.clear();
+		});
+	watcher->setFuture(all);
+
+	connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
+		watcher->deleteLater();
+		loadingDialog->close();
+
+		ui->tabWidget->setCurrentIndex(4);
+		this->_info.currentTabIndex = 4;
+		});
 }
 
 void DlgNewProduction::pbtn_tab5_start_train_clicked()
