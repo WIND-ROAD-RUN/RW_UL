@@ -17,20 +17,20 @@ namespace rw
 		class ZMotion
 		{
 		private:
-			zwy::scc::Motion * _zMotion{nullptr};
+			zwy::scc::Motion* _zMotion{ nullptr };
 		public:
-			explicit ZMotion(const QString &ip);
+			explicit ZMotion(const QString& ip);
 			ZMotion();
 			~ZMotion();
 		private:
 			QString _ip{};
 		public:
-			void setIp(const QString & ip);
+			void setIp(const QString& ip);
 			QString getIp(const QString& ip);
 		public:
 			[[nodiscard]] bool connect();
 
-			[[nodiscard]] bool getConnectState(bool &isGet);
+			[[nodiscard]] bool getConnectState(bool& isGet);
 			[[nodiscard]] bool getConnectState();
 
 			[[nodiscard]] bool disConnect(bool& isGet);
@@ -56,7 +56,7 @@ namespace rw
 
 			[[nodiscard]] bool stopAllAxis();
 
-			[[nodiscard]] float getAxisLocation(int axis, bool & isGet);
+			[[nodiscard]] float getAxisLocation(int axis, bool& isGet);
 			[[nodiscard]] float getAxisLocation(int axis);
 
 			[[nodiscard]] bool singleStop(int axis);
@@ -74,6 +74,5 @@ namespace rw
 
 			[[nodiscard]] bool setAxisType(int axis, int value);
 		};
-
-	}	
+	}
 }

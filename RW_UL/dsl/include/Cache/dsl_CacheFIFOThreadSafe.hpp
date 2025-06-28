@@ -140,6 +140,5 @@ namespace rw {
 			std::queue<Key> _fifo;
 			mutable std::mutex _mutex;
 		};
-
 	} // namespace dsl
 } // namespace rw

@@ -15,24 +15,23 @@ protected:
 		generate();
 	}
 	void TearDown() override {
-
 	}
 
 private:
 	std::string getRandom()
 	{
-		// ¶¨ÒåËæ»ú×Ö·û´®µÄ³¤¶È
+		// å®šä¹‰éšæœºå­—ç¬¦ä¸²çš„é•¿åº¦
 		const size_t length = 16;
 
-		// ¶¨Òå×Ö·û¼¯
+		// å®šä¹‰å­—ç¬¦é›†
 		const std::string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		// Ëæ»úÊıÉú³ÉÆ÷
+		// éšæœºæ•°ç”Ÿæˆå™¨
 		std::random_device rd;
 		std::mt19937 generator(rd());
 		std::uniform_int_distribution<size_t> distribution(0, charset.size() - 1);
 
-		// Éú³ÉËæ»ú×Ö·û´®
+		// ç”Ÿæˆéšæœºå­—ç¬¦ä¸²
 		std::string randomString;
 		for (size_t i = 0; i < length; ++i)
 		{

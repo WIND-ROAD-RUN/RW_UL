@@ -2,7 +2,7 @@
 
 #include "ui_DlgWarn.h"
 
-DlgWarn::DlgWarn(QWidget *parent)
+DlgWarn::DlgWarn(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DlgWarnClass())
 {
@@ -23,8 +23,8 @@ void DlgWarn::build_ui()
 
 void DlgWarn::build_connect()
 {
-	connect(ui->pbtn_accept,&QPushButton::clicked,
-		this,&DlgWarn::pbtn_accept_clicked);
+	connect(ui->pbtn_accept, &QPushButton::clicked,
+		this, &DlgWarn::pbtn_accept_clicked);
 	connect(ui->pbtn_ignore, &QPushButton::clicked,
 		this, &DlgWarn::pbtn_ignore_clicked);
 }

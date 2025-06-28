@@ -34,7 +34,7 @@ void DlgNewProduction::build_ui()
 	picturesViewer->setThumbnailCacheCapacity(300);
 	picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 	ui->rbtn_tab3_checkBladeShape->setEnabled(false);
-	ui->rbtn_tab3_filterColor-> setEnabled(false);
+	ui->rbtn_tab3_filterColor->setEnabled(false);
 	ui->rbtn_tab4_checkBladeShape->setEnabled(false);
 	ui->rbtn_tab4_filterColor->setEnabled(false);
 	ui->rbtn_tab5_checkBladeShape->setEnabled(false);
@@ -93,7 +93,6 @@ void DlgNewProduction::build_connect()
 
 	QObject::connect(picturesViewer, &PictureViewerThumbnails::viewerClosed,
 		this, &DlgNewProduction::flashImgCount);
-
 }
 
 void DlgNewProduction::set_motionRun(bool isRun)

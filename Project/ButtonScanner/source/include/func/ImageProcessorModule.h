@@ -19,11 +19,11 @@ struct ButtonDefectInfo
 public:
 	struct ButtonDefectInfoItem
 	{
-		size_t index{0};
-		double score{0};
-		bool isDraw{false};
-		double area{0};
-	}; 
+		size_t index{ 0 };
+		double score{ 0 };
+		bool isDraw{ false };
+		double area{ 0 };
+	};
 public:
 	QString time{};
 	double outsideDiameter{};
@@ -48,12 +48,14 @@ public:
 	float large_B{};
 	bool isDrawlargeColor{ false };
 public:
-	//std::vector<double> edgeDamage; 
+	//std::vector<double> edgeDamage;
 	std::vector<ButtonDefectInfoItem>edgeDamage1;
 	//bool isDrawedgeDamage{ false };
 
 	//std::vector<double> pore;
 	std::vector<ButtonDefectInfoItem>pore1;
+
+	std::vector<ButtonDefectInfoItem> smallPore1;
 	//bool isDrawpore{ false };
 
 	//std::vector<double> paint;
@@ -73,13 +75,13 @@ public:
 	//bool isDrawgrindStone{ false };
 
 	//std::vector<double> blockEye;
-	std::vector<ButtonDefectInfoItem>blockEye1;
+	std::vector<ButtonDefectInfoItem> blockEye1;
 	//bool isDrawblockEye{ false };
 
 	//std::vector<double> materialHead;
-	std::vector<ButtonDefectInfoItem>materialHead1;
+	std::vector<ButtonDefectInfoItem> materialHead1;
 	//bool isDrawmaterialHead{ false };
-
+	std::vector<ButtonDefectInfoItem> bengkou;
 public:
 
 	std::vector<double> positive;
@@ -156,10 +158,10 @@ protected:
 	void run() override;
 private:
 	void run_debug(MatInfo& frame);
-	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc(MatInfo& frame);
 	void run_monitor(MatInfo& frame);
 private:
-	void run_OpenRemoveFunc(MatInfo& frame);
+	void run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_positive(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_hole(ButtonDefectInfo& info);
@@ -168,6 +170,7 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) const;
 	void run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_smallPore(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_paint(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_crack(ButtonDefectInfo& info);
@@ -175,8 +178,9 @@ private:
 	void run_OpenRemoveFunc_process_defect_info_blockEye(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_materialHead(ButtonDefectInfo& info);
 	void run_OpenRemoveFunc_process_defect_info_largeColor(ButtonDefectInfo& info);
+	void run_OpenRemoveFunc_process_defect_info_bengkou(ButtonDefectInfo& info);
 
-	void save_image( rw::rqw::ImageInfo & imageInfo,const QImage & image);
+	void save_image(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 	void save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image);
 signals:
 	void imageReady(QPixmap image);
@@ -192,7 +196,9 @@ private:
 	void getLargeColorDifference(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
 		cv::Mat& mat);
 	void getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getBengKouInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
+	void getSmallPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getPaintInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getBrokenEyeInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void getCrackInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
@@ -232,6 +238,7 @@ public:
 	void appendLargeColorDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendEdgeDamageDefectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendSmallPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPaintDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBrokenEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendPositiveDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
@@ -239,6 +246,8 @@ public:
 	void appendGrindStoneDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendBlockEyeDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
 	void appendMaterialHeadDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+	void appendBengKouDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info);
+
 public:
 	void drawLine(QImage& image);
 	void drawLine_locate(QImage& image, size_t locate);
@@ -247,7 +256,7 @@ public:
 	void drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex);
 	void drawErrorRec(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex);
 	void drawErrorRec_error(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
-	                        ButtonDefectInfo& info);
+		ButtonDefectInfo& info);
 	void drawErrorRec_error1(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& processIndex, const
 		ButtonDefectInfo& info);
 

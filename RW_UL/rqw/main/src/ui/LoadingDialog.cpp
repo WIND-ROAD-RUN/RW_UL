@@ -1,4 +1,4 @@
-﻿#include "LoadingDialog.h"
+#include "LoadingDialog.h"
 
 #include <QVBoxLayout>
 

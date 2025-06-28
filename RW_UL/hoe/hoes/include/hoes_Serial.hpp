@@ -5,9 +5,6 @@
 namespace rw {
 	namespace hoes {
 		class Serial {
-
-
-
 		};
 	}
 }

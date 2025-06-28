@@ -54,7 +54,7 @@ namespace rw
 
 			(cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float)));
 
-			for (int i = 0;i < 10;i++) {
+			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
 			cudaDeviceSynchronize();
@@ -295,7 +295,7 @@ namespace rw
 
 			if (dets.empty()) return {};
 
-			// 1. 按需分组
+			// 1. 鎸夐渶鍒嗙粍
 			std::vector<int> keep_indices;
 			std::map<int, std::vector<int>> class_to_indices;
 			for (int i = 0; i < dets.size(); ++i) {
@@ -308,7 +308,7 @@ namespace rw
 				}
 			}
 
-			// 2. 对需要一起NMS的类别做NMS
+			// 2. 瀵归渶瑕佷竴璧種MS鐨勭被鍒仛NMS
 			if (!keep_indices.empty()) {
 				std::vector<int> sorted_indices = keep_indices;
 				std::sort(sorted_indices.begin(), sorted_indices.end(), [&](int a, int b) {
@@ -329,7 +329,7 @@ namespace rw
 				}
 			}
 
-			// 3. 其余类别各自做NMS
+			// 3. 鍏朵綑绫诲埆鍚勮嚜鍋歂MS
 			for (const auto& kv : class_to_indices) {
 				const auto& indices = kv.second;
 				if (indices.empty()) continue;
@@ -352,7 +352,7 @@ namespace rw
 				}
 			}
 
-			// 根据索引返回Detection对象
+			// 鏍规嵁绱㈠紩杩斿洖Detection瀵硅薄
 			std::vector<Detection> nms_result;
 			nms_result.reserve(nms_indices.size());
 			for (int idx : nms_indices) {
@@ -367,7 +367,7 @@ namespace rw
 			std::vector<ModelEngine_Yolov11_obb::Detection> result;
 			if (dets.empty()) return result;
 
-			// 按置信度降序排序
+			// 鎸夌疆淇″害闄嶅簭鎺掑簭
 			std::vector<size_t> idxs(dets.size());
 			std::iota(idxs.begin(), idxs.end(), 0);
 			std::sort(idxs.begin(), idxs.end(), [&](size_t i, size_t j) {

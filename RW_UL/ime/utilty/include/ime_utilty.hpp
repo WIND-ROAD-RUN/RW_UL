@@ -7,7 +7,7 @@
 namespace rw {
 	/**
 	 * @brief Object detection rectangle information
-	 * 
+	 *
 	 * For most of the object detection models, the detection result is a rectangle.
 	 * This class is used to store the information of the rectangle.
 	 * For ime package, the detection result us DetectionRectangleInfo.
@@ -41,10 +41,10 @@ namespace rw {
 		/**
 		 *@Parameters:
 		 *  bodyIndexVector: a vector of DetectionRectangleInfo
-		 *  
+		 *
 		 *@Methods:
 		 *  Get the maximum area rectangle iterator from the vector
-		 *@Returns: 
+		 *@Returns:
 		 *	The maximum area rectangle iterator from the vector
 		 */
 		static std::vector<rw::DetectionRectangleInfo>::const_iterator getMaxAreaRectangleIterator(

@@ -26,12 +26,18 @@ namespace cdm {
         double blowTime{ 0 };
         bool edgeDamageEnable{ false };
         double edgeDamageSimilarity{ 0 };
+        double edgeDamageArea{ 0 };
+        bool bengKouEnabel{ false };
+        double bengKouScore{ 0 };
         bool shieldingRangeEnable{ false };
         double outerRadius{ 0 };
         double innerRadius{ 0 };
         bool poreEnable{ false };
         double poreEnableScore{ 0 };
         double poreEnableArea{ 0 };
+        bool smallPoreEnable{ false };
+        double smallPoreEnableScore{ 0 };
+        double smallPoreEnableArea{ 0 };
         bool paintEnable{ false };
         double paintEnableScore{ 0 };
         bool holesCountEnable{ false };
@@ -103,6 +109,21 @@ namespace cdm {
             throw std::runtime_error("$variable$edgeDamageSimilarity is not found");
         }
         edgeDamageSimilarity = edgeDamageSimilarityItem->getValueAsDouble();
+        auto edgeDamageAreaItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$edgeDamageArea$"));
+        if (!edgeDamageAreaItem) {
+            throw std::runtime_error("$variable$edgeDamageArea is not found");
+        }
+        edgeDamageArea = edgeDamageAreaItem->getValueAsDouble();
+        auto bengKouEnabelItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$bengKouEnabel$"));
+        if (!bengKouEnabelItem) {
+            throw std::runtime_error("$variable$bengKouEnabel is not found");
+        }
+        bengKouEnabel = bengKouEnabelItem->getValueAsBool();
+        auto bengKouScoreItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$bengKouScore$"));
+        if (!bengKouScoreItem) {
+            throw std::runtime_error("$variable$bengKouScore is not found");
+        }
+        bengKouScore = bengKouScoreItem->getValueAsDouble();
         auto shieldingRangeEnableItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$shieldingRangeEnable$"));
         if (!shieldingRangeEnableItem) {
             throw std::runtime_error("$variable$shieldingRangeEnable is not found");
@@ -133,6 +154,21 @@ namespace cdm {
             throw std::runtime_error("$variable$poreEnableArea is not found");
         }
         poreEnableArea = poreEnableAreaItem->getValueAsDouble();
+        auto smallPoreEnableItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$smallPoreEnable$"));
+        if (!smallPoreEnableItem) {
+            throw std::runtime_error("$variable$smallPoreEnable is not found");
+        }
+        smallPoreEnable = smallPoreEnableItem->getValueAsBool();
+        auto smallPoreEnableScoreItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$smallPoreEnableScore$"));
+        if (!smallPoreEnableScoreItem) {
+            throw std::runtime_error("$variable$smallPoreEnableScore is not found");
+        }
+        smallPoreEnableScore = smallPoreEnableScoreItem->getValueAsDouble();
+        auto smallPoreEnableAreaItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$smallPoreEnableArea$"));
+        if (!smallPoreEnableAreaItem) {
+            throw std::runtime_error("$variable$smallPoreEnableArea is not found");
+        }
+        smallPoreEnableArea = smallPoreEnableAreaItem->getValueAsDouble();
         auto paintEnableItem = rw::oso::ObjectStoreCoreToItem(assembly.getItem("$variable$paintEnable$"));
         if (!paintEnableItem) {
             throw std::runtime_error("$variable$paintEnable is not found");
@@ -279,12 +315,18 @@ namespace cdm {
         blowTime = obj.blowTime;
         edgeDamageEnable = obj.edgeDamageEnable;
         edgeDamageSimilarity = obj.edgeDamageSimilarity;
+        edgeDamageArea = obj.edgeDamageArea;
+        bengKouEnabel = obj.bengKouEnabel;
+        bengKouScore = obj.bengKouScore;
         shieldingRangeEnable = obj.shieldingRangeEnable;
         outerRadius = obj.outerRadius;
         innerRadius = obj.innerRadius;
         poreEnable = obj.poreEnable;
         poreEnableScore = obj.poreEnableScore;
         poreEnableArea = obj.poreEnableArea;
+        smallPoreEnable = obj.smallPoreEnable;
+        smallPoreEnableScore = obj.smallPoreEnableScore;
+        smallPoreEnableArea = obj.smallPoreEnableArea;
         paintEnable = obj.paintEnable;
         paintEnableScore = obj.paintEnableScore;
         holesCountEnable = obj.holesCountEnable;
@@ -324,12 +366,18 @@ namespace cdm {
             blowTime = obj.blowTime;
             edgeDamageEnable = obj.edgeDamageEnable;
             edgeDamageSimilarity = obj.edgeDamageSimilarity;
+            edgeDamageArea = obj.edgeDamageArea;
+            bengKouEnabel = obj.bengKouEnabel;
+            bengKouScore = obj.bengKouScore;
             shieldingRangeEnable = obj.shieldingRangeEnable;
             outerRadius = obj.outerRadius;
             innerRadius = obj.innerRadius;
             poreEnable = obj.poreEnable;
             poreEnableScore = obj.poreEnableScore;
             poreEnableArea = obj.poreEnableArea;
+            smallPoreEnable = obj.smallPoreEnable;
+            smallPoreEnableScore = obj.smallPoreEnableScore;
+            smallPoreEnableArea = obj.smallPoreEnableArea;
             paintEnable = obj.paintEnable;
             paintEnableScore = obj.paintEnableScore;
             holesCountEnable = obj.holesCountEnable;
@@ -393,6 +441,18 @@ namespace cdm {
         edgeDamageSimilarityItem->setName("$variable$edgeDamageSimilarity$");
         edgeDamageSimilarityItem->setValueFromDouble(edgeDamageSimilarity);
         assembly.addItem(edgeDamageSimilarityItem);
+        auto edgeDamageAreaItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        edgeDamageAreaItem->setName("$variable$edgeDamageArea$");
+        edgeDamageAreaItem->setValueFromDouble(edgeDamageArea);
+        assembly.addItem(edgeDamageAreaItem);
+        auto bengKouEnabelItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        bengKouEnabelItem->setName("$variable$bengKouEnabel$");
+        bengKouEnabelItem->setValueFromBool(bengKouEnabel);
+        assembly.addItem(bengKouEnabelItem);
+        auto bengKouScoreItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        bengKouScoreItem->setName("$variable$bengKouScore$");
+        bengKouScoreItem->setValueFromDouble(bengKouScore);
+        assembly.addItem(bengKouScoreItem);
         auto shieldingRangeEnableItem = std::make_shared<rw::oso::ObjectStoreItem>();
         shieldingRangeEnableItem->setName("$variable$shieldingRangeEnable$");
         shieldingRangeEnableItem->setValueFromBool(shieldingRangeEnable);
@@ -417,6 +477,18 @@ namespace cdm {
         poreEnableAreaItem->setName("$variable$poreEnableArea$");
         poreEnableAreaItem->setValueFromDouble(poreEnableArea);
         assembly.addItem(poreEnableAreaItem);
+        auto smallPoreEnableItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        smallPoreEnableItem->setName("$variable$smallPoreEnable$");
+        smallPoreEnableItem->setValueFromBool(smallPoreEnable);
+        assembly.addItem(smallPoreEnableItem);
+        auto smallPoreEnableScoreItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        smallPoreEnableScoreItem->setName("$variable$smallPoreEnableScore$");
+        smallPoreEnableScoreItem->setValueFromDouble(smallPoreEnableScore);
+        assembly.addItem(smallPoreEnableScoreItem);
+        auto smallPoreEnableAreaItem = std::make_shared<rw::oso::ObjectStoreItem>();
+        smallPoreEnableAreaItem->setName("$variable$smallPoreEnableArea$");
+        smallPoreEnableAreaItem->setValueFromDouble(smallPoreEnableArea);
+        assembly.addItem(smallPoreEnableAreaItem);
         auto paintEnableItem = std::make_shared<rw::oso::ObjectStoreItem>();
         paintEnableItem->setName("$variable$paintEnable$");
         paintEnableItem->setValueFromBool(paintEnable);
@@ -530,7 +602,7 @@ namespace cdm {
 
     inline bool ButtonScannerDlgProductSet::operator==(const ButtonScannerDlgProductSet& obj) const
     {
-        return outsideDiameterEnable == obj.outsideDiameterEnable && outsideDiameterValue == obj.outsideDiameterValue && outsideDiameterDeviation == obj.outsideDiameterDeviation && photography == obj.photography && blowTime == obj.blowTime && edgeDamageEnable == obj.edgeDamageEnable && edgeDamageSimilarity == obj.edgeDamageSimilarity && shieldingRangeEnable == obj.shieldingRangeEnable && outerRadius == obj.outerRadius && innerRadius == obj.innerRadius && poreEnable == obj.poreEnable && poreEnableScore == obj.poreEnableScore && poreEnableArea == obj.poreEnableArea && paintEnable == obj.paintEnable && paintEnableScore == obj.paintEnableScore && holesCountEnable == obj.holesCountEnable && holesCountValue == obj.holesCountValue && brokenEyeEnable == obj.brokenEyeEnable && brokenEyeSimilarity == obj.brokenEyeSimilarity && crackEnable == obj.crackEnable && crackSimilarity == obj.crackSimilarity && apertureEnable == obj.apertureEnable && apertureValue == obj.apertureValue && apertureSimilarity == obj.apertureSimilarity && holeCenterDistanceEnable == obj.holeCenterDistanceEnable && holeCenterDistanceValue == obj.holeCenterDistanceValue && holeCenterDistanceSimilarity == obj.holeCenterDistanceSimilarity && specifyColorDifferenceEnable == obj.specifyColorDifferenceEnable && specifyColorDifferenceR == obj.specifyColorDifferenceR && specifyColorDifferenceG == obj.specifyColorDifferenceG && specifyColorDifferenceB == obj.specifyColorDifferenceB && specifyColorDifferenceDeviation == obj.specifyColorDifferenceDeviation && largeColorDifferenceEnable == obj.largeColorDifferenceEnable && largeColorDifferenceDeviation == obj.largeColorDifferenceDeviation && grindStoneEnable == obj.grindStoneEnable && grindStoneEnableScore == obj.grindStoneEnableScore && blockEyeEnable == obj.blockEyeEnable && blockEyeEnableScore == obj.blockEyeEnableScore && materialHeadEnable == obj.materialHeadEnable && materialHeadEnableScore == obj.materialHeadEnableScore;
+        return outsideDiameterEnable == obj.outsideDiameterEnable && outsideDiameterValue == obj.outsideDiameterValue && outsideDiameterDeviation == obj.outsideDiameterDeviation && photography == obj.photography && blowTime == obj.blowTime && edgeDamageEnable == obj.edgeDamageEnable && edgeDamageSimilarity == obj.edgeDamageSimilarity && edgeDamageArea == obj.edgeDamageArea && bengKouEnabel == obj.bengKouEnabel && bengKouScore == obj.bengKouScore && shieldingRangeEnable == obj.shieldingRangeEnable && outerRadius == obj.outerRadius && innerRadius == obj.innerRadius && poreEnable == obj.poreEnable && poreEnableScore == obj.poreEnableScore && poreEnableArea == obj.poreEnableArea && smallPoreEnable == obj.smallPoreEnable && smallPoreEnableScore == obj.smallPoreEnableScore && smallPoreEnableArea == obj.smallPoreEnableArea && paintEnable == obj.paintEnable && paintEnableScore == obj.paintEnableScore && holesCountEnable == obj.holesCountEnable && holesCountValue == obj.holesCountValue && brokenEyeEnable == obj.brokenEyeEnable && brokenEyeSimilarity == obj.brokenEyeSimilarity && crackEnable == obj.crackEnable && crackSimilarity == obj.crackSimilarity && apertureEnable == obj.apertureEnable && apertureValue == obj.apertureValue && apertureSimilarity == obj.apertureSimilarity && holeCenterDistanceEnable == obj.holeCenterDistanceEnable && holeCenterDistanceValue == obj.holeCenterDistanceValue && holeCenterDistanceSimilarity == obj.holeCenterDistanceSimilarity && specifyColorDifferenceEnable == obj.specifyColorDifferenceEnable && specifyColorDifferenceR == obj.specifyColorDifferenceR && specifyColorDifferenceG == obj.specifyColorDifferenceG && specifyColorDifferenceB == obj.specifyColorDifferenceB && specifyColorDifferenceDeviation == obj.specifyColorDifferenceDeviation && largeColorDifferenceEnable == obj.largeColorDifferenceEnable && largeColorDifferenceDeviation == obj.largeColorDifferenceDeviation && grindStoneEnable == obj.grindStoneEnable && grindStoneEnableScore == obj.grindStoneEnableScore && blockEyeEnable == obj.blockEyeEnable && blockEyeEnableScore == obj.blockEyeEnableScore && materialHeadEnable == obj.materialHeadEnable && materialHeadEnableScore == obj.materialHeadEnableScore;
     }
 
     inline bool ButtonScannerDlgProductSet::operator!=(const ButtonScannerDlgProductSet& obj) const

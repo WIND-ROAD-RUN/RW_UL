@@ -4,11 +4,10 @@
 
 namespace rw {
 	namespace hoei {
-
 		struct CPUInfo
 		{
 		public:
-			CPUInfo()=default;
+			CPUInfo() = default;
 
 			CPUInfo(const CPUInfo& other);
 
@@ -53,7 +52,5 @@ namespace rw {
 			static double GetBaseClockSpeed();
 			static std::vector<CPUInfo::Topology> GeyTopology();
 		};
-	
 	}
-
 }

@@ -11,19 +11,16 @@ namespace rw {
 			MotherBoardInfo() = default;
 
 			MotherBoardInfo(const MotherBoardInfo& other);
-				
 
 			MotherBoardInfo(MotherBoardInfo&& other) noexcept;
 
 			MotherBoardInfo& operator=(const MotherBoardInfo& other);
-			
 
 			MotherBoardInfo& operator=(MotherBoardInfo&& other) noexcept;
 		public:
 			void getCurrentContextInfo();
 		public:
 			std::string UUID{};
-
 		};
 
 		class MotherBoardInfoFactory

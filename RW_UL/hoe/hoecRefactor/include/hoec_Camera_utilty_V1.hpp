@@ -68,9 +68,9 @@ namespace rw
 			DS
 		};
 
-		inline CameraProvider from_string(const std::string &s)
+		inline CameraProvider from_string(const std::string& s)
 		{
-			if (s=="MVS")
+			if (s == "MVS")
 			{
 				return CameraProvider::MVS;
 			}

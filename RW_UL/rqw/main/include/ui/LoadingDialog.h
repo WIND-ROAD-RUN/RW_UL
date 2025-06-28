@@ -14,7 +14,6 @@ class LoadingDialog : public QDialog
 
 public:
 	explicit LoadingDialog(QWidget* parent = nullptr);
-		
 
 	void updateMessage(const QString& message);
 

@@ -16,13 +16,13 @@ class demo : public QMainWindow
 	Q_OBJECT
 
 public:
-	demo(QWidget *parent = nullptr);
+	demo(QWidget* parent = nullptr);
 	~demo();
 private:
 	rw::rqw::CameraPassiveThread m_cameraThread;
 	std::unique_ptr<rw::ModelEngine> engine;
 private:
-	Ui::demoClass *ui;
+	Ui::demoClass* ui;
 private slots:
 	void displayImg(cv::Mat frame);
 };

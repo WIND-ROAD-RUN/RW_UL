@@ -25,7 +25,7 @@ namespace rw
 		struct ElementInfo<cv::Mat, Name, Value>
 		{
 		public:
-			cv::Mat element; 
+			cv::Mat element;
 			QMap<Name, Value> attribute;
 
 		public:
@@ -34,7 +34,7 @@ namespace rw
 
 			ElementInfo& operator=(const ElementInfo& other) {
 				if (this != &other) {
-					element = other.element.clone(); 
+					element = other.element.clone();
 					attribute = other.attribute;
 				}
 				return *this;
@@ -76,6 +76,5 @@ namespace rw
 				return elementCache.size();
 			}
 		};
-
 	}
 }

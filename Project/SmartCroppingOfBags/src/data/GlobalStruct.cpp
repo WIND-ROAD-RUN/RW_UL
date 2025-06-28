@@ -27,15 +27,15 @@ void GlobalStructDataSmartCroppingOfBags::destroy_motion()
 
 void GlobalStructDataSmartCroppingOfBags::build_PriorityQueue()
 {
-	auto compareNodeEqual = [](const Time& a, const Time& b) {
+	auto compareNodeEqual = [](const double& a, const double& b) {
 		return a == b;
 		};
-	auto compareNodePriority = [](const Time& a, const Time& b) {
+	auto compareNodePriority = [](const double& a, const double& b) {
 		return a < b;
 		};
 
-	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
-	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<Time, Time> >(compareNodeEqual, compareNodePriority);
+	priorityQueue1 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
+	priorityQueue2 = std::make_unique<rw::dsl::ThreadSafeDHeap<double, double> >(compareNodeEqual, compareNodePriority);
 }
 
 void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
@@ -49,12 +49,9 @@ void GlobalStructThreadSmartCroppingOfBags::build_detachThread()
 	monitorIOSmartCroppingOfBags = std::make_unique<MonitorIOSmartCroppingOfBags>();
 	detachDefectThreadSmartCroppingOfBags = std::make_unique<DetachDefectThreadSmartCroppingOfBags>();
 
-
-
-
 	monitorZMotionIOStateThread = std::make_unique<rw::rqw::MonitorZMotionIOStateThread>();
 	monitorZMotionIOStateThread->setMonitorObject(GlobalStructDataSmartCroppingOfBags::getInstance().zMotion);
-	monitorZMotionIOStateThread->setMonitorFrequency(20);
+	monitorZMotionIOStateThread->setMonitorFrequency(1);
 	monitorZMotionIOStateThread->setMonitorIList({ ControlLines::qiedaoIn });
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->start();
@@ -67,6 +64,7 @@ void GlobalStructThreadSmartCroppingOfBags::destroy_detachThread()
 {
 	_detachUtiltyThreadSmartCroppingOfBags.reset();
 	monitorIOSmartCroppingOfBags.reset();
+	detachDefectThreadSmartCroppingOfBags->stopThread();
 	detachDefectThreadSmartCroppingOfBags.reset();
 	monitorZMotionIOStateThread->setRunning(false);
 	monitorZMotionIOStateThread->destroyThread();
@@ -84,7 +82,7 @@ void GlobalStructThreadSmartCroppingOfBags::start_detachThread()
 void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state)
 {
 	//下降沿
-	/*if (_qiedaoPre)
+	if (_qiedaoPre)
 	{
 		if (state==false)
 		{
@@ -97,10 +95,10 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 			}
 		}
 	}
-	_qiedaoPre = state;*/
+	_qiedaoPre = state;
 
 	//上升沿
-	if (!_qiedaoPre)
+	/*if (!_qiedaoPre)
 	{
 		if (state == true)
 		{
@@ -109,11 +107,12 @@ void GlobalStructThreadSmartCroppingOfBags::getQieDaoDI(size_t index, bool state
 			double pulse{ 0 };
 			if (GlobalStructDataSmartCroppingOfBags::getInstance().camera1->getEncoderNumber(pulse))
 			{
+				currentQieDaoLocation = pulse;
 				emit appendPulse(pulse);
 			}
 		}
 	}
-	_qiedaoPre = state;
+	_qiedaoPre = state;*/
 }
 
 void GlobalStructDataSmartCroppingOfBags::destroy_PriorityQueue()
@@ -140,8 +139,8 @@ void GlobalStructDataSmartCroppingOfBags::buildConfigManager(rw::oso::StorageTyp
 
 void GlobalStructDataSmartCroppingOfBags::buildImageProcessorModules(const QString& path)
 {
-	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
-	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(1);
+	modelCamera1 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
+	modelCamera2 = std::make_unique<ImageProcessingModuleSmartCroppingOfBags>(2);
 
 	modelCamera1->modelEnginePath = path;
 	modelCamera2->modelEnginePath = path;
@@ -199,7 +198,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 	// 剔废持续时间
 	long DurationTime = setConfig.tifeishijian1 * 1000;
 
-	auto lineHeight = setConfig.daichang1/setConfig.maichongxishu1;
+	auto lineHeight = setConfig.daichang1/setConfig.daichangxishu1;
 
 	if (cameraMetaData1.ip != "0")
 	{
@@ -214,6 +213,7 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 				camera1->setFrameTriggered(false);
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(lineHeight);
+	
 			}
 			else if (mainConfig.isyinshuajiance)
 			{
@@ -221,8 +221,12 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera1()
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(16000);
 			}
+
+			if (setConfig.isxiangjizengyi1)
+			{
+				camera1->setGain(setConfig.xiangjizengyi1);
+			}
 	
-			setCameraExposureTime(1, setConfig.xiangjibaoguang1);
 			camera1->startMonitor();
 			QObject::connect(camera1.get(), &rw::rqw::CameraPassiveThread::frameCaptured,
 				modelCamera1.get(), &ImageProcessingModuleSmartCroppingOfBags::onFrameCaptured, Qt::DirectConnection);
@@ -266,7 +270,6 @@ bool GlobalStructDataSmartCroppingOfBags::buildCamera2()
 				camera1->setLineTriggered(true);
 				camera1->setLineHeight(16000);
 			}
-			setCameraExposureTime(2, setConfig.xiangjibaoguang1);
 			// 设置剔废IO输出
 			//auto config = rw::rqw::OutTriggerConfig({ 2,8,5,DurationTime,0,0,true });
 			//camera2->setOutTriggerConfig(config);
@@ -325,36 +328,6 @@ rw::rqw::CameraMetaData GlobalStructDataSmartCroppingOfBags::cameraMetaDataCheck
 	rw::rqw::CameraMetaData error;
 	error.ip = "0";
 	return error;
-}
-
-void GlobalStructDataSmartCroppingOfBags::setCameraExposureTime(int cameraIndex, size_t exposureTime)
-{
-	switch (cameraIndex) {
-	case 1:
-		if (camera1) {
-			camera1->setExposureTime(exposureTime);
-			if (exposureTime < 200) {
-				camera1->setGain(0);
-			}
-			else {
-				camera1->setGain(5);
-			}
-		}
-		break;
-	case 2:
-		if (camera2) {
-			camera2->setExposureTime(exposureTime);
-			if (exposureTime < 200) {
-				camera2->setGain(0);
-			}
-			else {
-				camera2->setGain(5);
-			}
-		}
-		break;
-	default:
-		break;
-	}
 }
 
 void GlobalStructDataSmartCroppingOfBags::setCameraDebugMod()

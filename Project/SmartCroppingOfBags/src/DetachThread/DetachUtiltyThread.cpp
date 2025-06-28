@@ -13,20 +13,20 @@ DetachUtiltyThreadSmartCroppingOfBags::DetachUtiltyThreadSmartCroppingOfBags(QOb
 DetachUtiltyThreadSmartCroppingOfBags::~DetachUtiltyThreadSmartCroppingOfBags()
 {
 	stopThread();
-	wait(); // �ȴ��̰߳�ȫ�˳�
+	wait(); // 等待线程安全退出
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::startThread()
 {
 	running = true;
 	if (!isRunning()) {
-		start(); // �����߳�
+		start(); // 启动线程
 	}
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::stopThread()
 {
-	running = false; // ֹͣ�߳�
+	running = false; // 停止线程
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::run()
@@ -46,7 +46,7 @@ void DetachUtiltyThreadSmartCroppingOfBags::run()
 
 void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 {
-	if (s % 1 == 0 &&GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
+	if (s % 1 == 0)
 	{
 		MonitorRunningStateInfo info;
 		info.currentPulse = getPulse(info.isGetCurrentPulse);
@@ -54,7 +54,10 @@ void DetachUtiltyThreadSmartCroppingOfBags::getRunningState(size_t s)
 		info.averagePulse = getAveragePulse(info.isGetAveragePulse);
 		info.averagePulseBag = getAveragePulseBag(info.isGetAveragePulseBag);
 		info.lineHeight = getLineHeight(info.isGetLineHeight);
-		emit updateMonitorRunningStateInfo(info);
+		if (GlobalStructThreadSmartCroppingOfBags::getInstance()._isUpdateMonitoyInfo)
+		{
+			emit updateMonitorRunningStateInfo(info);
+		}
 	}
 }
 
@@ -134,22 +137,43 @@ double DetachUtiltyThreadSmartCroppingOfBags::getLineHeight(bool& isGet)
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPulse(double pulse)
 {
-	pulse = pulse - lastPulse; // ���㵱ǰ�������ϴ�����Ĳ�ֵ
-	lastPulse = pulse; // �����ϴ�����ֵ
+	static std::deque<double> pulseHistory; // 用于存储最近五次脉冲值
 
-	// �ۼ�������ʷ�����ֵ
-	pulseSum += pulse;
-	++pulseCount;
+	double pulseTemp=pulse;
+	pulse = std::abs(pulse - lastPulse); // 计算当前脉冲与上次脉冲的绝对差值
+	lastPulse = pulseTemp; // 更新上次脉冲值
 
-	pulseAverage = (pulseCount == 0) ? 0.0 : (pulseSum / pulseCount);
+	// 将当前脉冲值加入历史记录
+	pulseHistory.push_back(pulse);
+
+	// 如果历史记录超过五次，移除最早的一次
+	if (pulseHistory.size() > 5)
+	{
+		pulseHistory.pop_front();
+	}
+
+	// 计算最近五次脉冲的平均值
+	double sum = std::accumulate(pulseHistory.begin(), pulseHistory.end(), 0.0);
+	pulseAverage = (pulseHistory.empty()) ? 0.0 : (sum / pulseHistory.size());
+
+
 }
 
 void DetachUtiltyThreadSmartCroppingOfBags::onAppendPixel(double pixel)
 {
-	pixelSum += pixel; // �ۼ�������ʷ���ز�ֵ
-	++pixelCount;
+	static std::deque<double> pixelHistory; // 用于存储最近五次像素值
 
-	pixelAverage = (pixelCount == 0) ? 0.0 : (pixelSum / pixelCount);
+	// 将当前像素值加入历史记录
+	pixelHistory.push_back(pixel);
+
+	// 如果历史记录超过五次，移除最早的一次
+	if (pixelHistory.size() > 5) {
+		pixelHistory.pop_front();
+	}
+
+	// 计算最近五次像素的平均值
+	double sum = std::accumulate(pixelHistory.begin(), pixelHistory.end(), 0.0);
+	pixelAverage = (pixelHistory.empty()) ? 0.0 : (sum / pixelHistory.size());
 }
 
 

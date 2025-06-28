@@ -7,8 +7,7 @@ using Time = std::chrono::system_clock::time_point;
 
 namespace dsl_TimeBasedCache
 {
-
-	TEST_F(TimeBasedCache_T,demo)
+	TEST_F(TimeBasedCache_T, demo)
 	{
 		ASSERT_EQ(testObj->size(), 9);
 	}
@@ -76,7 +75,6 @@ namespace dsl_TimeBasedCache
 		std::vector<double> standard{ 123,124 };
 		ASSERT_EQ(result, standard);
 
-
 		auto result1 = cache.query(125, 2, false, true);
 		standard = { 126,127 };
 		ASSERT_EQ(result1, standard);
@@ -95,7 +93,7 @@ namespace dsl_TimeBasedCache
 		using Time = std::chrono::system_clock::time_point;
 		rw::dsl::TimeBasedCache<Time, double> cache(50);
 
-		// ¹¹ÔìÒ»×éµÝÔöµÄÊ±¼äµã
+		// æž„é€ ä¸€ç»„é€’å¢žçš„æ—¶é—´ç‚¹
 		Time base = std::chrono::system_clock::now();
 		std::vector<Time> times;
 		for (int i = 0; i < 9; ++i) {
@@ -112,7 +110,7 @@ namespace dsl_TimeBasedCache
 		cache.insert(times[7], 127);
 		cache.insert(times[8], 128);
 
-		// ²éÑ¯Ê±ÓÃ times[5] ´ú±í¡°125¡±
+		// æŸ¥è¯¢æ—¶ç”¨ times[5] ä»£è¡¨â€œ125â€
 		auto result = cache.query(times[5], times[7], true, true, true);
 		std::vector<double> standard{ 125, 126,127 };
 		ASSERT_EQ(result, standard);
@@ -122,7 +120,7 @@ namespace dsl_TimeBasedCache
 		ASSERT_EQ(result, standard);
 
 		result = cache.query(times[5], times[7], false, false, true);
-		standard = { 126};
+		standard = { 126 };
 		ASSERT_EQ(result, standard);
 
 		result = cache.query(times[5], times[7], true, false, true);

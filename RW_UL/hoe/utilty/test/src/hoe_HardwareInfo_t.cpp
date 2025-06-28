@@ -4,46 +4,45 @@
 
 namespace hoe_hardwareInfo
 {
-    TEST(HwlocTest, GetTopology) {
-        hwloc_topology_t topology;
-        hwloc_topology_init(&topology);
-        hwloc_topology_load(topology);
+	TEST(HwlocTest, GetTopology) {
+		hwloc_topology_t topology;
+		hwloc_topology_init(&topology);
+		hwloc_topology_load(topology);
 
-        // ªÒ»° CPU –Õ∫≈–≈œ¢
-        hwloc_obj_t cpu_obj = hwloc_get_root_obj(topology);
-        if (cpu_obj) {
-            const char* model_name = hwloc_obj_get_info_by_name(cpu_obj, "ProcessorName");
-            if (model_name) {
-                std::cout << "CPU Model: " << model_name << std::endl;
-            }
-            else {
-                model_name = hwloc_obj_get_info_by_name(cpu_obj, "ModelName");
-                if (model_name) {
-                    std::cout << "CPU Model: " << model_name << std::endl;
-                }
-                else {
-                    // ≥¢ ‘¥”µ⁄“ª∏ˆ PU ∂‘œÛªÒ»°–≈œ¢
-                    hwloc_obj_t pu_obj = hwloc_get_obj_by_type(topology, HWLOC_OBJ_PU, 0);
-                    if (pu_obj) {
-                        model_name = hwloc_obj_get_info_by_name(pu_obj, "ModelName");
-                        if (model_name) {
-                            std::cout << "CPU Model (from PU): " << model_name << std::endl;
-                        }
-                        else {
-                            std::cout << "CPU Model information not found." << std::endl;
-                        }
-                    }
-                    else {
-                        std::cout << "CPU Model information not found." << std::endl;
-                    }
-                }
-            }
-        }
-        else {
-            std::cout << "Could not retrieve CPU object." << std::endl;
-        }
+		// Ëé∑Âèñ CPU ÂûãÂè∑‰ø°ÊÅØ
+		hwloc_obj_t cpu_obj = hwloc_get_root_obj(topology);
+		if (cpu_obj) {
+			const char* model_name = hwloc_obj_get_info_by_name(cpu_obj, "ProcessorName");
+			if (model_name) {
+				std::cout << "CPU Model: " << model_name << std::endl;
+			}
+			else {
+				model_name = hwloc_obj_get_info_by_name(cpu_obj, "ModelName");
+				if (model_name) {
+					std::cout << "CPU Model: " << model_name << std::endl;
+				}
+				else {
+					// Â∞ùËØï‰ªéÁ¨¨‰∏Ä‰∏™ PU ÂØπË±°Ëé∑Âèñ‰ø°ÊÅØ
+					hwloc_obj_t pu_obj = hwloc_get_obj_by_type(topology, HWLOC_OBJ_PU, 0);
+					if (pu_obj) {
+						model_name = hwloc_obj_get_info_by_name(pu_obj, "ModelName");
+						if (model_name) {
+							std::cout << "CPU Model (from PU): " << model_name << std::endl;
+						}
+						else {
+							std::cout << "CPU Model information not found." << std::endl;
+						}
+					}
+					else {
+						std::cout << "CPU Model information not found." << std::endl;
+					}
+				}
+			}
+		}
+		else {
+			std::cout << "Could not retrieve CPU object." << std::endl;
+		}
 
-        hwloc_topology_destroy(topology);
-    }
-
+		hwloc_topology_destroy(topology);
+	}
 }

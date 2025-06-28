@@ -78,6 +78,7 @@ private:
 public:
 	std::atomic_bool isQieDao{false};
 	std::atomic<Time> currentQieDaoTime;
+	std::atomic<double> currentQieDaoLocation{};
 };
 
 class GlobalStructDataSmartCroppingOfBags
@@ -90,8 +91,8 @@ public:
 	bool build_motion();
 	void destroy_motion();
 public:
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue1;
-	std::unique_ptr<rw::dsl::ThreadSafeDHeap<Time, Time> > priorityQueue2;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue1;
+	std::unique_ptr<rw::dsl::ThreadSafeDHeap<double, double> > priorityQueue2;
 public:
 	void build_PriorityQueue();
 	void destroy_PriorityQueue();
@@ -100,7 +101,7 @@ public:
 	std::atomic<RunningState> runningState{ RunningState::Stop };
 	std::atomic<RemoveState> removeState{ RemoveState::SmartCrop };
 public:
-	// 统计信息
+	// 缁熻淇℃伅
 	struct StatisticalInfo
 	{
 		std::atomic_uint64_t produceCount{ 0 };
@@ -147,14 +148,14 @@ public:
 	void saveDlgProductScoreConfig();
 
 public:
-	// UI界面参数
+	// UI鐣岄潰鍙傛暟
 	cdm::GeneralConfigSmartCroppingOfBags generalConfig;
 	cdm::ScoreConfigSmartCroppingOfBags scoreConfig;
 	cdm::SetConfigSmartCroppingOfBags setConfig;
 
 public:
 	void buildCamera();
-	// 相机
+	// 鐩告満
 	QString cameraIp1{ "11" };
 	QString cameraIp2{ "12" };
 
@@ -173,7 +174,6 @@ public:
 
 	bool isTargetCamera(const QString& cameraIndex, const QString& targetName);
 	rw::rqw::CameraMetaData cameraMetaDataCheck(const QString& cameraIndex, const QVector<rw::rqw::CameraMetaData>& cameraInfo);
-	void setCameraExposureTime(int cameraIndex, size_t exposureTime);
 
 	void setCameraDebugMod();
 	void setCameraDefectMod();

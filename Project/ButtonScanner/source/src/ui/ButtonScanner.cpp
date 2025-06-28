@@ -43,12 +43,11 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
-
 		//ui->rbtn_debug->setChecked(false);
 		auto& runningState = globalStructData.runningState;
 
 		bool beforeSetExposureTimeIsDebug = false;
-		if (runningState==RunningState::Debug)
+		if (runningState == RunningState::Debug)
 		{
 			beforeSetExposureTimeIsDebug = true;
 		}
@@ -230,7 +229,7 @@ void ButtonScanner::initializeComponents()
 	QObject::connect(dlgNewProduction, &DlgNewProduction::cancelTrain,
 		GlobalStructThread::getInstance().aiTrainModule.get(), &AiTrainModule::cancelTrain);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::showDlgWarn,
-		this, &ButtonScanner::showDlgWarn,Qt::QueuedConnection);
+		this, &ButtonScanner::showDlgWarn, Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::workTriggerError,
 		this, &ButtonScanner::workTriggerError, Qt::QueuedConnection);
 	QObject::connect(GlobalStructThread::getInstance().detachUtiltyThread.get(), &DetachUtiltyThread::closeTakePictures,
@@ -271,7 +270,6 @@ void ButtonScanner::destroyComponents()
 	loadingDialog.updateMessage("正在停止所有轴...");
 	QCoreApplication::processEvents();
 	stop_all_axis();
-
 
 	// 销毁相机
 	loadingDialog.updateMessage("正在销毁相机...");
@@ -332,6 +330,15 @@ void ButtonScanner::build_ui()
 	ui->hLayout_title->replaceWidget(ui->label_title, labelClickable_title);
 	delete ui->label_title;
 
+	labelVersionInfo = new rw::rqw::ClickableLabel(this);
+	ui->gBox_VersionInfo->layout()->replaceWidget(ui->label_VersionInfo, labelVersionInfo);
+	delete ui->label_VersionInfo;
+	labelVersionInfo->setText(VersionInfo::Version);
+
+	_dlgVersion = new DlgVersion(this);
+	QString versionFilePath = QCoreApplication::applicationDirPath() + QDir::separator() + "Version.txt";
+	_dlgVersion->loadVersionPath(versionFilePath);
+
 	QObject::connect(_dlgModelManager, &DlgModelManager::updateExposureTime
 		, this, &ButtonScanner::updateExposureTimeValueOnDlg);
 	QObject::connect(_dlgModelManager, &DlgModelManager::checkPosiviveRadioButtonCheck
@@ -342,6 +349,41 @@ void ButtonScanner::build_ui()
 	//Deprecated
 	ui->pbtn_beltSpeed->setVisible(false);
 	ui->rbtn_strobe->setVisible(false);
+
+	imgDis1 = new rw::rqw::ClickableLabel(this);
+	imgDis1->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis2 = new rw::rqw::ClickableLabel(this);
+	imgDis2->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis3 = new rw::rqw::ClickableLabel(this);
+	imgDis3->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+	imgDis4 = new rw::rqw::ClickableLabel(this);
+	imgDis4->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+
+
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay, imgDis1);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_2, imgDis2);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_3, imgDis3);
+	ui->gBoix_ImageDisplay->layout()->replaceWidget(ui->label_imgDisplay_4, imgDis4);
+
+	delete ui->label_imgDisplay;
+	delete ui->label_imgDisplay_2;
+	delete ui->label_imgDisplay_3;
+	delete ui->label_imgDisplay_4;
+
+	QObject::connect(imgDis1, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis1_clicked);
+	QObject::connect(imgDis2, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis2_clicked);
+	QObject::connect(imgDis3, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis3_clicked);
+	QObject::connect(imgDis4, &rw::rqw::ClickableLabel::clicked
+		, this, &ButtonScanner::imgDis4_clicked);
+
+	_dlgRealTimeImgDis = new DlgRealTimeImgDis(this);
+	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);;
 }
 
 void ButtonScanner::read_image()
@@ -498,6 +540,9 @@ void ButtonScanner::build_connect()
 
 	QObject::connect(ui->cBox_isDisplayText, &QCheckBox::clicked,
 		this, &ButtonScanner::cBox_isDisplayText_checked);
+
+	QObject::connect(labelVersionInfo, &rw::rqw::ClickableLabel::clicked,
+		this, &ButtonScanner::labelVersion_clicked);
 }
 
 void ButtonScanner::read_config()
@@ -599,6 +644,9 @@ void ButtonScanner::read_config_produceLineConfig()
 	else {
 		globalStruct.ReadDlgProduceLineSetConfig();
 	}
+	globalStruct.dlgProduceLineSetConfig.takeNgPictures = true;
+	globalStruct.dlgProduceLineSetConfig.takeMaskPictures = true;
+	globalStruct.dlgProduceLineSetConfig.takeOkPictures = true;
 }
 
 void ButtonScanner::read_config_productSetConfig()
@@ -1058,11 +1106,11 @@ void ButtonScanner::build_ioThread()
 						rbtn_debug_checked(false);
 						label_lightBulb->setVisible(true);
 					});
-					// pidaimove->stop();
-					motionPtr->StopAllAxis();
-					motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+				// pidaimove->stop();
+				motionPtr->StopAllAxis();
+				motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
 
-					motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
+				motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 			}
 			else
 			{
@@ -1119,9 +1167,9 @@ void ButtonScanner::build_ioThread()
 							rbtn_debug_checked(false);
 							label_lightBulb->setVisible(false);
 						});
-						motionPtr->StopAllAxis();
-						motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
-						motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
+					motionPtr->StopAllAxis();
+					motionPtr->SetIOOut(ControlLines::motoPowerOut, false);
+					motionPtr->SetIOOut(ControlLines::warnGreenOut, false);
 				}
 
 				auto qiya = motionPtr->GetIOIn(ControlLines::airWarnIn);
@@ -1220,24 +1268,76 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 	}
 }
 
+void ButtonScanner::imgDis1_clicked()
+{
+	_dlgRealTimeImgDis->setGboxTitle("1号工位");
+	_dlgRealTimeImgDis->show();
+}
+
+void ButtonScanner::imgDis2_clicked()
+{
+	_dlgRealTimeImgDis->setGboxTitle("2号工位");
+	_dlgRealTimeImgDis->show();
+}
+
+void ButtonScanner::imgDis3_clicked()
+{
+	_dlgRealTimeImgDis->setGboxTitle("3号工位");
+	_dlgRealTimeImgDis->show();
+}
+
+void ButtonScanner::imgDis4_clicked()
+{
+	_dlgRealTimeImgDis->setGboxTitle("4号工位");
+	_dlgRealTimeImgDis->show();
+}
+
 void ButtonScanner::onCamera1Display(QPixmap image)
 {
-	ui->label_imgDisplay->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis1->setPixmap(image.scaled(imgDis1->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+		
+	}
 }
 
 void ButtonScanner::onCamera2Display(QPixmap image)
 {
-	ui->label_imgDisplay_2->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis2->setPixmap(image.scaled(imgDis2->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+		
+	}
 }
 
 void ButtonScanner::onCamera3Display(QPixmap image)
 {
-	ui->label_imgDisplay_3->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis3->setPixmap(image.scaled(imgDis3->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+
+	}
 }
 
 void ButtonScanner::onCamera4Display(QPixmap image)
 {
-	ui->label_imgDisplay_4->setPixmap(image.scaled(ui->label_imgDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if (!_isRealTimeDis)
+	{
+		imgDis4->setPixmap(image.scaled(imgDis4->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
+	else
+	{
+
+	}
 }
 
 void ButtonScanner::updateCameraLabelState(int cameraIndex, bool state)
@@ -1488,7 +1588,7 @@ void ButtonScanner::rbtn_debug_checked(bool checked)
 void ButtonScanner::rbtn_takePicture_checked(bool checked)
 {
 	auto& GlobalStructData = GlobalStructData::getInstance();
-	if (GlobalStructData.runningState==RunningState::Debug)
+	if (GlobalStructData.runningState == RunningState::Debug)
 	{
 		ui->rbtn_takePicture->setChecked(false);
 		return;
@@ -1586,6 +1686,12 @@ void ButtonScanner::labelClickable_title_clicked()
 	_dlgModelManager->show();
 }
 
+void ButtonScanner::labelVersion_clicked()
+{
+	_dlgVersion->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	_dlgVersion->show();
+}
+
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)
 {
 	rw::rqw::WarningInfo info;
@@ -1644,45 +1750,36 @@ void ButtonScanner::workTriggerError(int index)
 {
 	if (index == 1)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "一工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger1;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 2)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "二工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger2;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 3)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "三工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger3;
 		labelWarning->addWarning(info);
-
 	}
 	if (index == 4)
 	{
-
 		rw::rqw::WarningInfo info;
 		info.message = "四工位运行中长时间无触发";
 		info.type = rw::rqw::WarningType::Warning;
 		info.warningId = WarningId::cworkTrigger4;
 		labelWarning->addWarning(info);
-
 	}
-
 }
 
 void ButtonScanner::closeTakePictures()
@@ -1704,16 +1801,16 @@ void ButtonScanner::shutdownComputerTrigger(int time)
 		_dlgShutdownWarn->close();
 		return;
 	}
-	if (time==0)
+	if (time == 0)
 	{
 		_dlgShutdownWarn->show();
 		_dlgShutdownWarn->setTimeValue(shutDownBoundary - time);
 		return;
 	}
 
-	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time)% shutDownBoundary);
+	_dlgShutdownWarn->setTimeValue((shutDownBoundary - time) % shutDownBoundary);
 
-	if ((shutDownBoundary - time)==0)
+	if ((shutDownBoundary - time) == 0)
 	{
 		isShutdownByIO = true;
 		this->close();

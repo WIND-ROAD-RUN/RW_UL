@@ -269,12 +269,14 @@ void ImageProcessor::drawButtonDefectInfoText_defect(QImage& image, const Button
 		appendEdgeDamageDefectInfo(textList, info);
 		appendLargeColorDefectInfo(textList, info);
 		appendPoreDectInfo(textList, info);
+		appendSmallPoreDectInfo(textList, info);
 		appendPaintDectInfo(textList, info);
 		appendBlockEyeDectInfo(textList, info);
 		appendGrindStoneDectInfo(textList, info);
 		appendMaterialHeadDectInfo(textList, info);
 		appendCrackDectInfo(textList, info);
 		appendBrokenEyeDectInfo(textList, info);
+		appendBengKouDectInfo(textList, info);
 	}
 
 	rw::rqw::ImagePainter::drawTextOnImage(image, textList, configList);
@@ -378,16 +380,28 @@ void ImageProcessor::appendEdgeDamageDefectInfo(QVector<QString>& textList, cons
 	}
 
 	auto targetScore = static_cast<int>(productSet.edgeDamageSimilarity);
-	QString edgeDamageText("破边:");
-	for (const auto & item:info.edgeDamage1)
+	QString text("破边:");
+	for (const auto& item : info.edgeDamage1)
 	{
 		if (item.isDraw)
 		{
-			edgeDamageText.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+			text.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
 		}
 	}
-	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
-	textList.push_back(edgeDamageText);
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
+
+	auto targetAreaScore = static_cast<int>(productSet.edgeDamageArea);
+	QString areaText("破边面积:");
+	for (const auto& item : info.edgeDamage1)
+	{
+		if (item.isDraw)
+		{
+			text.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+		}
+	}
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
 }
 
 void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
@@ -430,10 +444,62 @@ void ImageProcessor::appendPoreDectInfo(QVector<QString>& textList, const Button
 	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
 	textList.push_back(edgeDamageText);
 
-
 	auto targetAreaScore = static_cast<int>(productSet.poreEnableArea);
 	QString areaText("气孔面积:");
 	for (const auto& item : info.pore1)
+	{
+		if (item.isDraw)
+		{
+			edgeDamageText.push_back(QString(" %1 ").arg(item.area, 0, 'f', 2));
+		}
+	}
+	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(edgeDamageText);
+}
+
+void ImageProcessor::appendSmallPoreDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	/*auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (_isbad && productSet.poreEnable && info.isDrawpore)
+	{
+		QString poreText("气孔:");
+		for (const auto& item : info.pore)
+		{
+			poreText.push_back(QString(" %1 ").arg(item, 0, 'f', 2));
+		}
+		poreText.append(QString(" 目标: %1").arg(static_cast<int>(productSet.poreEnableScore)));
+		textList.push_back(poreText);
+	}*/
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (!_isbad)
+	{
+		return;
+	}
+	if (!productSet.smallPoreEnable)
+	{
+		return;
+	}
+
+	if (info.smallPore1.empty())
+	{
+		return;
+	}
+
+	auto targetScore = static_cast<int>(productSet.smallPoreEnableScore);
+	QString edgeDamageText("小气孔:");
+	for (const auto& item : info.smallPore1)
+	{
+		if (item.isDraw)
+		{
+			edgeDamageText.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+		}
+	}
+	edgeDamageText.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(edgeDamageText);
+
+	auto targetAreaScore = static_cast<int>(productSet.smallPoreEnableArea);
+	QString areaText("气孔面积:");
+	for (const auto& item : info.smallPore1)
 	{
 		if (item.isDraw)
 		{
@@ -513,7 +579,7 @@ void ImageProcessor::appendBrokenEyeDectInfo(QVector<QString>& textList, const B
 	{
 		return;
 	}
-	
+
 	auto targetScore = static_cast<int>(productSet.brokenEyeSimilarity);
 	QString edgeDamageText("破眼:");
 	for (const auto& item : info.brokenEye1)
@@ -710,6 +776,35 @@ void ImageProcessor::appendMaterialHeadDectInfo(QVector<QString>& textList, cons
 	textList.push_back(edgeDamageText);
 }
 
+void ImageProcessor::appendBengKouDectInfo(QVector<QString>& textList, const ButtonDefectInfo& info)
+{
+	auto& productSet = GlobalStructData::getInstance().dlgProductSetConfig;
+	if (!_isbad)
+	{
+		return;
+	}
+	if (!productSet.bengKouEnabel)
+	{
+		return;
+	}
+	if (info.bengkou.empty())
+	{
+		return;
+	}
+
+	auto targetScore = static_cast<int>(productSet.bengKouScore);
+	QString text("崩口:");
+	for (const auto& item : info.bengkou)
+	{
+		if (item.isDraw)
+		{
+			text.push_back(QString(" %1 ").arg(item.score, 0, 'f', 2));
+		}
+	}
+	text.append(QString(" 目标: %1").arg(targetScore));
+	textList.push_back(text);
+}
+
 void ImageProcessor::drawShieldingRange(QImage& image, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() != 1)
@@ -782,17 +877,17 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 
 			switch (item.classId)
 			{
-			case ClassId::baibian:
-				config.text = "白边 " + QString::number(qRound(item.score * 100));
-				break;
 			case ClassId::duyan:
 				config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 				break;
 			case ClassId::pobian:
-				config.text = "破边 " + QString::number(qRound(item.score * 100));
+				config.text = "破边 " + QString::number(qRound(item.score * 100)) + "面积 " + QString::number(item.area, 'f', 1);
 				break;
 			case ClassId::qikong:
-				config.text = "气孔 " + QString::number(qRound(item.score * 100));
+				config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+				break;
+			case ClassId::smallPore:
+				config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 				break;
 			case ClassId::moshi:
 				config.text = "磨石 " + QString::number(qRound(item.score * 100));
@@ -809,14 +904,8 @@ void ImageProcessor::drawErrorRec(QImage& image, const std::vector<rw::Detection
 			case ClassId::poyan:
 				config.text = "破眼 " + QString::number(qRound(item.score * 100));
 				break;
-			case ClassId::xiaoqikong:
-				config.text = "小气孔 " + QString::number(qRound(item.score * 100));
-				break;
-			case ClassId::mofa:
-				config.text = "毛发 " + QString::number(qRound(item.score * 100));
-				break;
-			case ClassId::xiaopobian:
-				config.text = "小破边 " + QString::number(qRound(item.score * 100));
+			case ClassId::bengkou:
+				config.text = "崩口 " + QString::number(qRound(item.score * 100));
 				break;
 			default:
 				config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
@@ -945,17 +1034,17 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 	auto setConfigText = [](rw::rqw::ImagePainter::PainterConfig& config, const rw::DetectionRectangleInfo& item) {
 		switch (item.classId)
 		{
-		case ClassId::baibian:
-			config.text = "白边 " + QString::number(qRound(item.score * 100));
-			break;
 		case ClassId::duyan:
 			config.text = "堵眼 " + QString::number(qRound(item.score * 100));
 			break;
 		case ClassId::pobian:
-			config.text = "破边 " + QString::number(qRound(item.score * 100));
+			config.text = "破边 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 			break;
 		case ClassId::qikong:
-			config.text = "气孔 " + QString::number(qRound(item.score * 100));
+			config.text = "气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
+			break;
+		case ClassId::smallPore:
+			config.text = "小气孔 " + QString::number(qRound(item.score * 100))+ "面积 " + QString::number(item.area, 'f', 1);;
 			break;
 		case ClassId::moshi:
 			config.text = "磨石 " + QString::number(qRound(item.score * 100));
@@ -972,14 +1061,8 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 		case ClassId::poyan:
 			config.text = "破眼 " + QString::number(qRound(item.score * 100));
 			break;
-		case ClassId::xiaoqikong:
-			config.text = "小气孔 " + QString::number(qRound(item.score * 100));
-			break;
-		case ClassId::mofa:
-			config.text = "毛发 " + QString::number(qRound(item.score * 100));
-			break;
-		case ClassId::xiaopobian:
-			config.text = "小破边 " + QString::number(qRound(item.score * 100));
+		case ClassId::bengkou:
+			config.text = "崩口 " + QString::number(qRound(item.score * 100));
 			break;
 		default:
 			config.text = QString::number(item.classId) + QString::number(qRound(item.score * 100));
@@ -1016,7 +1099,6 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 			}
 		}
 	}
-	
 
 	if (productSet.poreEnable)
 	{
@@ -1031,9 +1113,35 @@ void ImageProcessor::drawErrorRec_error1(QImage& image, const std::vector<rw::De
 		}
 	}
 
+	if (productSet.smallPoreEnable)
+	{
+		for (const auto& item : info.smallPore1)
+		{
+			auto& resultItem = processResult[item.index];
+			setConfigText(config, resultItem);
+			if (item.isDraw)
+			{
+				rw::rqw::ImagePainter::drawShapesOnSourceImg(image, resultItem, config);
+			}
+		}
+	}
+
 	if (productSet.paintEnable)
 	{
 		for (const auto& item : info.paint1)
+		{
+			auto& resultItem = processResult[item.index];
+			setConfigText(config, resultItem);
+			if (item.isDraw)
+			{
+				rw::rqw::ImagePainter::drawShapesOnSourceImg(image, resultItem, config);
+			}
+		}
+	}
+
+	if (productSet.bengKouEnabel)
+	{
+		for (const auto& item : info.bengkou)
 		{
 			auto& resultItem = processResult[item.index];
 			setConfigText(config, resultItem);
@@ -1469,7 +1577,6 @@ void ImageProcessor::run_debug(MatInfo& frame)
 		drawButtonDefectInfoText(image, defectInfo);
 	}
 
-
 	QPixmap pixmap = QPixmap::fromImage(image);
 	emit imageReady(pixmap);
 }
@@ -1482,6 +1589,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& inf
 	run_OpenRemoveFunc_process_defect_info_specialColor(info);
 	run_OpenRemoveFunc_process_defect_info_edgeDamage(info);
 	run_OpenRemoveFunc_process_defect_info_pore(info);
+	run_OpenRemoveFunc_process_defect_info_smallPore(info);
 	run_OpenRemoveFunc_process_defect_info_paint(info);
 	run_OpenRemoveFunc_process_defect_info_brokenEye(info);
 	run_OpenRemoveFunc_process_defect_info_blockEye(info);
@@ -1489,6 +1597,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_debug_info(ButtonDefectInfo& inf
 	run_OpenRemoveFunc_process_defect_info_materialHead(info);
 	run_OpenRemoveFunc_process_defect_info_largeColor(info);
 	run_OpenRemoveFunc_process_defect_info_crack(info);
+	run_OpenRemoveFunc_process_defect_info_bengkou(info);
 }
 
 void ImageProcessor::run_monitor(MatInfo& frame)
@@ -1604,6 +1713,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 		run_OpenRemoveFunc_process_defect_info_specialColor(info);
 		run_OpenRemoveFunc_process_defect_info_edgeDamage(info);
 		run_OpenRemoveFunc_process_defect_info_pore(info);
+		run_OpenRemoveFunc_process_defect_info_smallPore(info);
 		run_OpenRemoveFunc_process_defect_info_paint(info);
 		run_OpenRemoveFunc_process_defect_info_brokenEye(info);
 		run_OpenRemoveFunc_process_defect_info_blockEye(info);
@@ -1611,6 +1721,8 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info(ButtonDefectInfo& in
 		run_OpenRemoveFunc_process_defect_info_materialHead(info);
 		run_OpenRemoveFunc_process_defect_info_largeColor(info);
 		run_OpenRemoveFunc_process_defect_info_crack(info);
+		run_OpenRemoveFunc_process_defect_info_bengkou(info);
+
 	}
 
 	if (isOpenPositive)
@@ -1676,7 +1788,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_body(ButtonDefectInf
 		auto outsideDiameterStandard2 = outsideDiameterDeviation - productSet.outsideDiameterValue;
 		auto outsideDiameter = info.outsideDiameter;
 
-		if ((outsideDiameter > outsideDiameterStandard1)|| (outsideDiameter < outsideDiameterStandard2))
+		if ((outsideDiameter > outsideDiameterStandard1) || (outsideDiameter < outsideDiameterStandard2))
 		{
 			_isbad = true;
 			info.isoutsideDiameter = true;
@@ -1700,7 +1812,7 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_specialColor(ButtonD
 		auto isInR = ((special_R_standard - specialColorDeviation) <= special_R) && (special_R <= (special_R_standard + specialColorDeviation));
 		auto isInG = ((special_G_standard - specialColorDeviation) <= special_G) && (special_G <= (special_G_standard + specialColorDeviation));
 		auto isInB = ((special_B_standard - specialColorDeviation) <= special_B) && (special_B <= (special_B_standard + specialColorDeviation));
-		if ((!isInR) || (!isInG) || (!isInB))
+		if ((isInR) || (isInG) || (isInB))
 		{
 			_isbad = true;
 			info.isDrawSpecialColor = true;
@@ -1739,9 +1851,13 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_edgeDamage(ButtonDef
 		{
 			if (item.score > productSet.edgeDamageSimilarity)
 			{
-				_isbad = true;
-				item.isDraw = true;
+				if (item.area > productSet.edgeDamageArea)
+				{
+					_isbad = true;
+					item.isDraw = true;
+				}
 			}
+			
 		}
 	}
 }
@@ -1773,7 +1889,6 @@ void ImageProcessor::run_OpenRemoveFunc_emitErrorInfo(const MatInfo& frame) cons
 	{
 		++globalStruct.statisticalInfo.produceCount4;
 	}
-
 
 	if (_isbad) {
 		float absLocation = frame.location;
@@ -1832,6 +1947,46 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_pore(ButtonDefectInf
 			if (item.score > productSet.poreEnableScore)
 			{
 				if (item.area > productSet.poreEnableArea)
+				{
+					_isbad = true;
+					item.isDraw = true;
+				}
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_smallPore(ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.smallPoreEnable)
+	{
+		/*auto& pore = info.pore;
+		if (pore.empty())
+		{
+			return;
+		}
+		for (const auto& item : pore)
+		{
+			if (item > productSet.poreEnableScore)
+			{
+				_isbad = true;
+				info.isDrawpore = true;
+				break;
+			}
+		}*/
+
+		auto& smallPore1 = info.smallPore1;
+		if (smallPore1.empty())
+		{
+			return;
+		}
+		for (auto& item : smallPore1)
+		{
+			if (item.score > productSet.smallPoreEnableScore)
+			{
+				if (item.area > productSet.smallPoreEnableArea)
 				{
 					_isbad = true;
 					item.isDraw = true;
@@ -1907,6 +2062,28 @@ void ImageProcessor::run_OpenRemoveFunc_process_defect_info_brokenEye(ButtonDefe
 		for (auto& item : brokenEye1)
 		{
 			if (item.score > productSet.brokenEyeSimilarity)
+			{
+				_isbad = true;
+				item.isDraw = true;
+			}
+		}
+	}
+}
+
+void ImageProcessor::run_OpenRemoveFunc_process_defect_info_bengkou(ButtonDefectInfo& info)
+{
+	auto& globalData = GlobalStructData::getInstance();
+	auto& productSet = globalData.dlgProductSetConfig;
+	if (productSet.bengKouEnabel)
+	{
+		auto& bengkou = info.bengkou;
+		if (bengkou.empty())
+		{
+			return;
+		}
+		for (auto& item : bengkou)
+		{
+			if (item.score > productSet.bengKouScore)
 			{
 				_isbad = true;
 				item.isDraw = true;
@@ -2124,7 +2301,6 @@ void ImageProcessor::save_image(rw::rqw::ImageInfo& imageInfo, const QImage& ima
 			save_image_work(imageInfo, image);
 		}
 	}
-
 }
 
 void ImageProcessor::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage& image)
@@ -2151,7 +2327,6 @@ void ImageProcessor::save_image_work(rw::rqw::ImageInfo& imageInfo, const QImage
 			globalData.imageSaveEngine->pushImage(imageInfo);
 		}
 	}
-
 }
 
 void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<std::vector<size_t>>& index, const
@@ -2161,13 +2336,14 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
 	getPoreInfo(info, processResult, index[ClassId::qikong]);
+	getSmallPoreInfo(info, processResult, index[ClassId::smallPore]);
 	getBlockEyeInfo(info, processResult, index[ClassId::duyan]);
 	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
 	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	getPaintInfo(info, processResult, index[ClassId::mofa]);
+	getBengKouInfo(info, processResult, index[ClassId::bengkou]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2180,13 +2356,14 @@ void ImageProcessor::getEliminationInfo_defect(ButtonDefectInfo& info,
 	getBodyInfo(info, processResult, index[ClassId::Body]);
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
 	getPoreInfo(info, processResult, index[ClassId::qikong]);
+	getSmallPoreInfo(info, processResult, index[ClassId::smallPore]);
 	getBlockEyeInfo(info, processResult, index[ClassId::duyan]);
 	getGrindStoneInfo(info, processResult, index[ClassId::moshi]);
 	getMaterialHeadInfo(info, processResult, index[ClassId::liaotou]);
 	getPaintInfo(info, processResult, index[ClassId::zangwu]);
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
-	//getPaintInfo(info, processResult, index[ClassId::mofa]);
+	getBengKouInfo(info, processResult, index[ClassId::bengkou]);
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2403,6 +2580,24 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 	}
 }
 
+void ImageProcessor::getBengKouInfo(ButtonDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  bengkouScore = processResult[item].score * 100;
+		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
+		itemDet.index = item;
+		itemDet.score = bengkouScore;
+		itemDet.area = processResult[item].area;
+		info.bengkou.emplace_back(itemDet);
+	}
+}
+
 void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
 	if (processIndex.size() == 0)
@@ -2418,6 +2613,25 @@ void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		itemDet.score = pore;
 		itemDet.area = processResult[item].area;
 		info.pore1.emplace_back(itemDet);
+	}
+}
+
+void ImageProcessor::getSmallPoreInfo(ButtonDefectInfo& info,
+	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
+{
+	if (processIndex.size() == 0)
+	{
+		return;
+	}
+	for (const auto& item : processIndex)
+	{
+		auto  pore = processResult[item].score * 100;
+		/*info.pore.emplace_back(pore);*/
+		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
+		itemDet.index = item;
+		itemDet.score = pore;
+		itemDet.area = processResult[item].area;
+		info.smallPore1.emplace_back(itemDet);
 	}
 }
 

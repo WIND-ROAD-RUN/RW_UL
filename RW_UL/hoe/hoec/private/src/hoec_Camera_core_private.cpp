@@ -132,7 +132,7 @@ namespace rw {
 			case PixelType_Gvsp_BayerGR12_Packed:
 				channels = 1;
 				break;
-			
+
 			default:
 				std::cerr << "Unsupported pixel format which is " << frameInfo.enPixelType << std::endl;
 				return cv::Mat();

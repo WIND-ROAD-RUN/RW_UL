@@ -8,7 +8,7 @@
 namespace rw {
 	/**
 	* @brief Image pretreatment policy for the model engine.
-	* 
+	*
 	* For example, if the model engine requires a specific input size,
 	* you can choose to resize the image to that size, maintain the aspect ratio
 	*
@@ -28,7 +28,7 @@ namespace rw {
 
 	/**
 	* @brief Model engine configuration.
-	* 
+	*
 	* Some config only works for specific model engine or runtime.
 	*/
 	struct ModelEngineConfig {

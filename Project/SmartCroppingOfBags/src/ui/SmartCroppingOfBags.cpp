@@ -1,4 +1,4 @@
-﻿#include "SmartCroppingOfBags.h"
+#include "SmartCroppingOfBags.h"
 
 #include "oso_StorageContext.hpp"
 #include "ui_SmartCroppingOfBags.h"
@@ -208,7 +208,7 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	_clickableVersionLabel = new rw::rqw::ClickableLabel(this);
 
 	this->_dlgVersion = new DlgVersion(this);
-	this->_dlgVersion->loadVersionPath(R"(D:\zfkjData\SmartCroppingOfBags\Version\Version.txt)");
+	this->_dlgVersion->loadVersionPath(R"(.\Version.txt)");
 	this->_dlgVersion->hide();
 	auto layoutVersion = ui->gBox_version->layout();
 	layoutVersion->replaceWidget(ui->lb_version, _clickableVersionLabel);
@@ -274,15 +274,16 @@ void SmartCroppingOfBags::destroyComponents()
 {
 	auto& globalStruct = GlobalStructDataSmartCroppingOfBags::getInstance();
 	//销毁相机
-	globalStruct.destroyCamera();
 	// 销毁图像处理模块
 	//globalStruct.destroyImageProcessingModule();
 	// 销毁图像保存模块
-	globalStruct.destroyImageSaveEngine();
+
 
 	// 销毁异步线程
 	GlobalStructThreadSmartCroppingOfBags::getInstance().destroy_detachThread();
 
+	globalStruct.destroyImageSaveEngine();
+	globalStruct.destroyCamera();
 	//销毁板卡
 	destroy_motion();
 	// 销毁剔废优先队列

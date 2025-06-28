@@ -4,15 +4,15 @@ namespace cdm{
     class ButtonScannerProduceLineSet
     {
     public:
-        takeNgPictures : bool : default = true;
+        takeNgPictures : bool : default = false;
         takeMaskPictures : bool : default = true;
-        takeOkPictures : bool : default = true;
+        takeOkPictures : bool : default = false;
         takePicturesLong : bool : default = false;
 
         takeWork1Pictures : bool : default = true;
-        takeWork2Pictures : bool : default = true;
-        takeWork3Pictures : bool : default = true;
-        takeWork4Pictures : bool : default = true;
+        takeWork2Pictures : bool : default = false;
+        takeWork3Pictures : bool : default = false;
+        takeWork4Pictures : bool : default = false;
 
         drawRec : bool : default = false;
         drawCircle : bool : default = true;

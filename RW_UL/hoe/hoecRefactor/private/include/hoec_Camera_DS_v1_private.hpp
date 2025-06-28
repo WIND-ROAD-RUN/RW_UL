@@ -13,7 +13,6 @@
 #include"dvpir.h"
 #include"dvpParam.h"
 
-
 namespace rw
 {
 	namespace hoec_v1
@@ -61,7 +60,7 @@ namespace rw
 			bool setPostDivider(size_t number) override;
 			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
-			size_t getLineHeight(bool & isGet) override;
+			size_t getLineHeight(bool& isGet) override;
 
 		protected:
 			dvpHandle m_cameraHandle{};
@@ -69,7 +68,6 @@ namespace rw
 			bool _isMonitor{ false };
 			CameraTriggerMode triggerMode;
 		};
-
 
 		class Camera_DS_Active
 			:public Camera_DS, public ICameraActive {
@@ -101,7 +99,6 @@ namespace rw
 				void* pContext,
 				dvpFrame* pFrame,
 				void* pBuffer);
-	
 		};
 	}
 }

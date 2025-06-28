@@ -25,17 +25,17 @@ namespace rw
 		public:
 			bool findIsOpen(int id);
 		public:
-			bool cameraDisconnect1{true};
+			bool cameraDisconnect1{ true };
 			bool cameraDisconnect2{ true };
 			bool cameraDisconnect3{ true };
 			bool cameraDisconnect4{ true };
 		public:
-			bool workTrigger1{true};
+			bool workTrigger1{ true };
 			bool workTrigger2{ true };
 			bool workTrigger3{ true };
 			bool workTrigger4{ true };
 		public:
-			bool airPressure{true};
+			bool airPressure{ true };
 		};
 	}
 }

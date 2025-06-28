@@ -1,4 +1,4 @@
-﻿#include "AutomaticAnnotation.h"
+#include "AutomaticAnnotation.h"
 
 #include"NumberKeyboard.h"
 
@@ -47,7 +47,7 @@ AutomaticAnnotation::AutomaticAnnotation(QWidget* parent)
 
 AutomaticAnnotation::~AutomaticAnnotation()
 {
-	for (int i = 0;i < threads.size();i++)
+	for (int i = 0; i < threads.size(); i++)
 	{
 		disconnect(threads[i], &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage);
 	}
@@ -303,7 +303,7 @@ void AutomaticAnnotation::pbtn_next_clicked()
 
 void AutomaticAnnotation::on_pbtn_preStep_clicked()
 {
-	for (int i = 0;i < threads.size();i++)
+	for (int i = 0; i < threads.size(); i++)
 	{
 		disconnect(threads[i], &AutomaticAnnotationThread::imageProcessed, this, &AutomaticAnnotation::displayImage);
 	}

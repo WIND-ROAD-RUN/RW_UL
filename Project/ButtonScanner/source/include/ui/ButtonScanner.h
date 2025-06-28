@@ -13,10 +13,13 @@
 #include"PictureViewerThumbnails.h"
 #include"DlgShutdownWarn.h"
 #include"DlgWarn.h"
+#include"DlgRealTimeImgDis.h"
 
 #include"opencv2/opencv.hpp"
 #include<QImage>
 #include<memory>
+
+#include"rqw_DlgVersion.h"
 
 namespace rw
 {
@@ -42,14 +45,23 @@ private:
 	DlgProductSet* _dlgProductSet = nullptr;
 	DlgExposureTimeSet* _dlgExposureTimeSet = nullptr;
 	DlgModelManager* _dlgModelManager = nullptr;
+	DlgRealTimeImgDis* _dlgRealTimeImgDis = nullptr;
 public:
 	DlgNewProduction* dlgNewProduction = nullptr;
 private:
 	PictureViewerThumbnails* _picturesViewer = nullptr;
 	DlgShutdownWarn* _dlgShutdownWarn = nullptr;
 public:
-	rw::rqw::ClickableLabel* labelClickable_title;
-	rw::rqw::LabelWarning* labelWarning;
+	rw::rqw::ClickableLabel* labelClickable_title = nullptr;
+	rw::rqw::LabelWarning* labelWarning = nullptr;
+	rw::rqw::ClickableLabel* labelVersionInfo = nullptr;
+public:
+	rw::rqw::ClickableLabel* imgDis1 = nullptr;
+	rw::rqw::ClickableLabel* imgDis2 = nullptr;
+	rw::rqw::ClickableLabel* imgDis3 = nullptr;
+	rw::rqw::ClickableLabel* imgDis4 = nullptr;
+private:
+	DlgVersion* _dlgVersion;
 private:
 	//变量监控线程关机的时候停止
 	bool _mark_thread = false;
@@ -130,6 +142,16 @@ private:
 	QImage cvMatToQImage(const cv::Mat& mat);
 private:
 	void onUpdateLightStateUi(size_t index, bool state);
+private:
+	bool _isRealTimeDis{false};
+private slots:
+	void imgDis1_clicked();
+
+	void imgDis2_clicked();
+
+	void imgDis3_clicked();
+
+	void imgDis4_clicked();
 
 private slots:
 	void onCamera1Display(QPixmap image);
@@ -169,6 +191,7 @@ private slots:
 	void cBox_isDisplayText_checked(bool checked);
 private:
 	void labelClickable_title_clicked();
+	void labelVersion_clicked();
 public slots:
 	void onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration);
 public slots:
@@ -183,9 +206,8 @@ public slots:
 public slots:
 	void closeTakePictures();
 private:
-	bool isShutdownByIO{false};
-	bool isConnnectCard{false};
+	bool isShutdownByIO{ false };
+	bool isConnnectCard{ false };
 public slots:
 	void shutdownComputerTrigger(int time);
 };
-

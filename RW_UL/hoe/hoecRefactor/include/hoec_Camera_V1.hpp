@@ -21,7 +21,7 @@ namespace rw
 
 		public:
 			void setIP(const std::string& ip);
-			[[nodiscard]] std::string getIP(bool & isGet) const;
+			[[nodiscard]] std::string getIP(bool& isGet) const;
 
 		public:
 			virtual bool connectCamera() = 0;
@@ -46,17 +46,17 @@ namespace rw
 			virtual bool setGain(size_t value) = 0;
 			virtual bool setInTriggerLine(size_t lineIndex) = 0;
 		public:
-			//ÃæÕóÏà»úÓÃ
+			//é¢é˜µç›¸æœºç”¨
 			virtual bool setTriggerMode(CameraTriggerMode mode) = 0;
-			//ÏßÕóÏà»úÓÃ
+			//çº¿é˜µç›¸æœºç”¨
 			virtual bool setFrameTriggered(bool state) = 0;
 			virtual bool getFrameTriggered(bool& isGet) = 0;
 			virtual bool setLineTriggered(bool state) = 0;
 			virtual bool getLineTriggered(bool& isGet) = 0;
 		public:
-			//ÏßÕóÏà»ú¶îÍâÅäÖÃ
-			virtual bool setPreDivider(size_t number) = 0 ;
-			virtual bool setMultiplier(size_t number) = 0 ;
+			//çº¿é˜µç›¸æœºé¢å¤–é…ç½®
+			virtual bool setPreDivider(size_t number) = 0;
+			virtual bool setMultiplier(size_t number) = 0;
 			virtual bool setPostDivider(size_t number) = 0;
 			virtual bool getEncoderNumber(double& number) = 0;
 			virtual bool setLineHeight(size_t number) = 0;
@@ -207,6 +207,5 @@ namespace rw
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 		};
-
 	}
 }

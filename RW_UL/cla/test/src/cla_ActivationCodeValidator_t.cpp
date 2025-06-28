@@ -7,9 +7,9 @@ namespace cla_ActivationCodeModule
 	TEST(ActivationCodeValidator, validateActivationCode)
 	{
 		rw::cla::ActivationCodeGenerator generator;
-		auto code=generator.generateActivationCode("temp");
+		auto code = generator.generateActivationCode("temp");
 		rw::cla::ActivationCodeValidator validator;
-		auto result=validator.validateActivationCode(code, "temp");
+		auto result = validator.validateActivationCode(code, "temp");
 		ASSERT_EQ(result, true);
 	}
 
@@ -30,8 +30,5 @@ namespace cla_ActivationCodeModule
 		rw::cla::ActivationCodeValidator validatorError;
 		auto resultError = validatorError.validateActivationCode(code, "temp");
 		ASSERT_EQ(resultError, false);
-
-
 	}
 }
-

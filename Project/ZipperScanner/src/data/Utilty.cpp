@@ -1,6 +1,5 @@
 #include"Utilty.hpp"
 
-
 QImage cvMatToQImage(const cv::Mat& mat)
 {
 	QImage result;

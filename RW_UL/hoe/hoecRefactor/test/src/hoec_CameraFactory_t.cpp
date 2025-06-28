@@ -8,6 +8,5 @@ namespace  hoecRefactor_CameraFactory
 {
 	TEST(hoec_CameraFactoryClass, CheckIplist)
 	{
-
 	}
 }

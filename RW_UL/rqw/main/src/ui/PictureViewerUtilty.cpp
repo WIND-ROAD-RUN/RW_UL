@@ -6,7 +6,7 @@
 
 #include "ui_PictureViewerUtilty.h"
 
-PictureViewerUtilty::PictureViewerUtilty(QWidget *parent)
+PictureViewerUtilty::PictureViewerUtilty(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::PictureViewerUtiltyClass())
 {
@@ -42,10 +42,10 @@ void PictureViewerUtilty::showEvent(QShowEvent* event)
 	QFileInfo fileInfo(path);
 	QString parentDir = fileInfo.dir().absolutePath();
 
-	// »ñÈ¡Í¼Æ¬ÎÄ¼ş¼ĞËùÓĞµÄÍ¼Æ¬Â·¾¶
+	// è·å–å›¾ç‰‡æ–‡ä»¶å¤¹æ‰€æœ‰çš„å›¾ç‰‡è·¯å¾„
 	setAllImgPath(parentDir, isPositive);
 
-	// »ñµÃµ±Ç°Í¼Æ¬µÄË÷Òı
+	// è·å¾—å½“å‰å›¾ç‰‡çš„ç´¢å¼•
 	getCurrentImageIndex();
 
 	QMainWindow::showEvent(event);
@@ -56,7 +56,7 @@ void PictureViewerUtilty::showEvent(QShowEvent* event)
 		}
 		else {
 			ui->label_imgDisplay->clear();
-			ui->label_imgDisplay->setText("ÎŞ·¨¼ÓÔØÍ¼Æ¬");
+			ui->label_imgDisplay->setText("æ— æ³•åŠ è½½å›¾ç‰‡");
 		}
 	}
 }
@@ -68,7 +68,7 @@ void PictureViewerUtilty::setImgPath(const QString& imgPath)
 
 void PictureViewerUtilty::setAllImgPath(const QString& imgParentPath, bool isPositive)
 {
-	// ¶¨ÒåÍ¼Æ¬À©Õ¹Ãû¹ıÂËÆ÷
+	// å®šä¹‰å›¾ç‰‡æ‰©å±•åè¿‡æ»¤å™¨
 	QStringList filters;
 	filters << "*.jpg" << "*.jpeg" << "*.png" << "*.bmp" << "*.gif";
 
@@ -76,16 +76,16 @@ void PictureViewerUtilty::setAllImgPath(const QString& imgParentPath, bool isPos
 	QStringList fileList;
 	if (isPositive == true)
 	{
-		// »ñÈ¡ËùÓĞÍ¼Æ¬ÎÄ¼şÃû£¬ÕıĞòÅÅÁĞ
+		// è·å–æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶åï¼Œæ­£åºæ’åˆ—
 		fileList = dir.entryList(filters, QDir::Files, QDir::Name);
 	}
 	else
 	{
-		// »ñÈ¡ËùÓĞÍ¼Æ¬ÎÄ¼şÃû£¬µ¹ĞòÅÅÁĞ
+		// è·å–æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶åï¼Œå€’åºæ’åˆ—
 		fileList = dir.entryList(filters, QDir::Files, QDir::Name);
 		std::reverse(fileList.begin(), fileList.end());
 	}
-	
+
 	for (const QString& fileName : fileList) {
 		imagePaths.append(dir.absoluteFilePath(fileName));
 	}
@@ -123,7 +123,7 @@ void PictureViewerUtilty::pbtn_previousimage_clicked()
 		}
 		else {
 			ui->label_imgDisplay->clear();
-			ui->label_imgDisplay->setText("ÎŞ·¨¼ÓÔØÍ¼Æ¬");
+			ui->label_imgDisplay->setText("æ— æ³•åŠ è½½å›¾ç‰‡");
 		}
 	}
 }
@@ -146,7 +146,7 @@ void PictureViewerUtilty::pbtn_nextimage_clicked()
 		}
 		else {
 			ui->label_imgDisplay->clear();
-			ui->label_imgDisplay->setText("ÎŞ·¨¼ÓÔØÍ¼Æ¬");
+			ui->label_imgDisplay->setText("æ— æ³•åŠ è½½å›¾ç‰‡");
 		}
 	}
 }
@@ -158,9 +158,9 @@ void PictureViewerUtilty::pbtn_delete_clicked()
 
 	QString fileToDelete = imagePaths[currentImageIndex];
 
-	// É¾³ıÎÄ¼ş
+	// åˆ é™¤æ–‡ä»¶
 	if (QFile::remove(fileToDelete)) {
-		// ¼ÇÂ¼É¾³ıµÄÍ¼Æ¬Â·¾¶
+		// è®°å½•åˆ é™¤çš„å›¾ç‰‡è·¯å¾„
 		deletedImagePaths.append(fileToDelete);
 
 		imagePaths.removeAt(currentImageIndex);
@@ -169,7 +169,7 @@ void PictureViewerUtilty::pbtn_delete_clicked()
 			path.clear();
 			if (ui->label_imgDisplay) {
 				ui->label_imgDisplay->clear();
-				ui->label_imgDisplay->setText("Ã»ÓĞÍ¼Æ¬");
+				ui->label_imgDisplay->setText("æ²¡æœ‰å›¾ç‰‡");
 			}
 			currentImageIndex = -1;
 			return;
@@ -187,7 +187,7 @@ void PictureViewerUtilty::pbtn_delete_clicked()
 			}
 			else {
 				ui->label_imgDisplay->clear();
-				ui->label_imgDisplay->setText("ÎŞ·¨¼ÓÔØÍ¼Æ¬");
+				ui->label_imgDisplay->setText("æ— æ³•åŠ è½½å›¾ç‰‡");
 			}
 		}
 	}

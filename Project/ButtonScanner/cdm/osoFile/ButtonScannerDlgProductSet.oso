@@ -13,6 +13,10 @@ namespace cdm{
 
         edgeDamageEnable : bool : default = false;
         edgeDamageSimilarity : double : default = 0;
+        edgeDamageArea : double : default = 0;
+
+        bengKouEnabel : bool : default = false;
+        bengKouScore : double : default = 0;
 
         shieldingRangeEnable : bool : default = false;
         outerRadius : double : default = 0;
@@ -21,6 +25,10 @@ namespace cdm{
         poreEnable : bool : default = false;
         poreEnableScore : double : default = 0;
         poreEnableArea : double : default = 0;
+
+        smallPoreEnable : bool : default = false;
+        smallPoreEnableScore : double : default = 0;
+        smallPoreEnableArea : double : default = 0;
 
         paintEnable : bool : default = false;
         paintEnableScore : double : default = 0;
