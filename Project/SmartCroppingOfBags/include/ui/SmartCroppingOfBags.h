@@ -68,7 +68,7 @@ private slots:
 	void btn_normalParam_clicked();
 	void btn_setParam_clicked();
 
-	void ckb_tifei_checked();
+	void ckb_tifei_checked(bool ischecked);
 	void ckb_Debug_checked(bool checked);
 	void ckb_cuntu_checked();
 	void rbtn_zhinengcaiqie_clicked(bool checked);

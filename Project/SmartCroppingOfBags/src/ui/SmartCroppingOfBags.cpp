@@ -197,6 +197,9 @@ void SmartCroppingOfBags::build_SmartCroppingOfBagsData()
 	ui->ckb_debug->setChecked(false);
 	globalStruct.generalConfig.isDebug = false;
 
+	// 开机根据断电记忆的剔废模式选择是否启用剔废
+	ckb_tifei_checked(globalStruct.generalConfig.istifei);
+
 	globalStruct.buildImageSaveEngine();
 
 	// 初始化图像查看器
@@ -559,14 +562,13 @@ void SmartCroppingOfBags::btn_setParam_clicked()
 	}
 }
 
-
-void SmartCroppingOfBags::ckb_tifei_checked()
+void SmartCroppingOfBags::ckb_tifei_checked(bool ischecked)
 {
 	auto& GlobalStructData = GlobalStructDataSmartCroppingOfBags::getInstance();
 	auto& generalConfig = GlobalStructDataSmartCroppingOfBags::getInstance().generalConfig;
-	generalConfig.istifei = ui->rbtn_removeFunc->isChecked();
+	generalConfig.istifei = ischecked;
 
-	if (generalConfig.istifei)
+	if (ischecked)
 	{
 		ui->ckb_debug->setChecked(false);
 		generalConfig.isDebug = false;
@@ -617,11 +619,12 @@ void SmartCroppingOfBags::rbtn_zhinengcaiqie_clicked(bool checked)
 	generalConfig.iszhinengcaiqie = checked;
 	auto lineHeight = setConfig.daichang1 / setConfig.maichongxishu1;
 
-
-	global.camera1->setFrameTriggered(false);
-	global.camera1->setLineTriggered(true);
-	global.camera1->setLineHeight(lineHeight);
-
+	if (global.camera1)
+	{
+		global.camera1->setFrameTriggered(false);
+		global.camera1->setLineTriggered(true);
+		global.camera1->setLineHeight(lineHeight);
+	}
 }
 
 void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
@@ -632,9 +635,12 @@ void SmartCroppingOfBags::rbtn_yinshuazhiliangjiance_clicked(bool checked)
 	generalConfig.isyinshuajiance = checked;
 	generalConfig.iszhinengcaiqie = false;
 
-	global.camera1->setFrameTriggered(true);
-	global.camera1->setLineTriggered(true);
-	global.camera1->setLineHeight(16000);
+	if (global.camera1)
+	{
+		global.camera1->setFrameTriggered(true);
+		global.camera1->setLineTriggered(true);
+		global.camera1->setLineHeight(16000);
+	}
 }
 
 void SmartCroppingOfBags::lb_version_clicked()

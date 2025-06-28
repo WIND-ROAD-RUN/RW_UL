@@ -24,6 +24,7 @@ namespace cdm {
 		baisedailiangdufanweimax1 : double :default = 0;
 
 		daokoudaoxiangjiluli1 : double :default = 0;
+		tifeiyanju : double :default = 0;
 		xiangjibaoguang1 : double :default = 0;
 		tifeiyanshi1 : double :default = 0;
 		baojingyanshi1 : double :default = 0;
