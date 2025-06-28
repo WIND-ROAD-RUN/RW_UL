@@ -121,3 +121,12 @@ void DlgRealTimeImgDis::pbtn_preWork_clicked()
 	updateTitle(index);
 	*_currentDisImgIndex = index;
 }
+
+void DlgRealTimeImgDis::closeEvent(QCloseEvent* close_event)
+{
+	if (_isShow)
+	{
+		*_isShow = false;
+	}
+	QDialog::closeEvent(close_event);
+}

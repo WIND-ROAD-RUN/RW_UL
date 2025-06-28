@@ -36,4 +36,7 @@ public slots:
 	void pbtn_exit_clicked();
 	void pbtn_nextWork_clicked();
 	void pbtn_preWork_clicked();
+
+protected:
+	void closeEvent(QCloseEvent*) override;
 };

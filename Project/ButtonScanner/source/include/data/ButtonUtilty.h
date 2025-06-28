@@ -71,6 +71,9 @@ struct ClassId
 {
 	static constexpr int Body = 0;
 	static constexpr int Hole = 1;
+
+	static constexpr int MinNum = 1;
+
 	static constexpr int pobian = 2;
 	static constexpr int qikong = 3;
 	static constexpr int duyan = 4;
@@ -81,6 +84,8 @@ struct ClassId
 	static constexpr int poyan = 9;
 	static constexpr int smallPore = 10;
 	static constexpr int bengkou = 11;
+
+	static constexpr int MaxNum = 11;
 };
 
 struct ClassIdPositive

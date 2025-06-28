@@ -41,7 +41,7 @@ void ButtonScanner::updateExposureTimeTrigger()
 void ButtonScanner::onExposureTimeTriggerAreaClicked()
 {
 	if (_dlgRealTimeImgDis) {
-		_dlgRealTimeImgDis->hide();
+		_dlgRealTimeImgDis->close();
 	}
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
@@ -66,6 +66,8 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 			rbtn_debug_checked(true); // 如果之前是调试模式，重新设置为调试模式
 		}
 	}
+
+	_isRealTimeDis = false;
 }
 
 void ButtonScanner::mousePressEvent(QMouseEvent* event)

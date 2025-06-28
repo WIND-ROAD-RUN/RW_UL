@@ -2333,6 +2333,7 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 {
 	getHoleInfo(info, processResult, index[ClassId::Hole]);
 	getBodyInfo(info, processResult, index[ClassId::Body]);
+
 	getEdgeDamageInfo(info, processResult, index[ClassId::pobian]);
 	getPoreInfo(info, processResult, index[ClassId::qikong]);
 	getSmallPoreInfo(info, processResult, index[ClassId::smallPore]);
@@ -2343,6 +2344,8 @@ void ImageProcessor::getEliminationInfo_debug(ButtonDefectInfo& info, const std:
 	getCrackInfo(info, processResult, index[ClassId::liehen]);
 	getBrokenEyeInfo(info, processResult, index[ClassId::poyan]);
 	getBengKouInfo(info, processResult, index[ClassId::bengkou]);
+
+
 	getLargeColorDifference(info, processResult, index, mat);
 	getSpecialColorDifference(info, processResult, index, mat);
 }
@@ -2563,6 +2566,25 @@ void ImageProcessor::getLargeColorDifference(ButtonDefectInfo& info, const std::
 
 void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
+	auto setConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	double pixel{ 0 };
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixel = setConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixel = setConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		pixel = setConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		pixel = setConfig.pixelEquivalent4;
+	}
+
 	if (processIndex.size() == 0)
 	{
 		return;
@@ -2574,7 +2596,7 @@ void ImageProcessor::getEdgeDamageInfo(ButtonDefectInfo& info, const std::vector
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = edgeDamage;
-		itemDet.area = processResult[item].area;
+		itemDet.area = processResult[item].area* pixel* pixel;
 		info.edgeDamage1.emplace_back(itemDet);
 	}
 }
@@ -2599,6 +2621,24 @@ void ImageProcessor::getBengKouInfo(ButtonDefectInfo& info,
 
 void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
+	auto setConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	double pixel{ 0 };
+	if (imageProcessingModuleIndex == 1)
+	{
+		pixel = setConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixel = setConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		pixel = setConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		pixel = setConfig.pixelEquivalent4;
+	}
 	if (processIndex.size() == 0)
 	{
 		return;
@@ -2610,7 +2650,7 @@ void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::D
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = pore;
-		itemDet.area = processResult[item].area;
+		itemDet.area = processResult[item].area* pixel* pixel;
 		info.pore1.emplace_back(itemDet);
 	}
 }
@@ -2618,6 +2658,24 @@ void ImageProcessor::getPoreInfo(ButtonDefectInfo& info, const std::vector<rw::D
 void ImageProcessor::getSmallPoreInfo(ButtonDefectInfo& info,
 	const std::vector<rw::DetectionRectangleInfo>& processResult, const std::vector<size_t>& processIndex)
 {
+	auto setConfig = GlobalStructData::getInstance().dlgProduceLineSetConfig;
+	double pixel{0};
+	if (imageProcessingModuleIndex==1)
+	{
+		pixel = setConfig.pixelEquivalent1;
+	}
+	else if (imageProcessingModuleIndex == 2)
+	{
+		pixel = setConfig.pixelEquivalent2;
+	}
+	else if (imageProcessingModuleIndex == 3)
+	{
+		pixel = setConfig.pixelEquivalent3;
+	}
+	else if (imageProcessingModuleIndex == 4)
+	{
+		pixel = setConfig.pixelEquivalent4;
+	}
 	if (processIndex.size() == 0)
 	{
 		return;
@@ -2629,7 +2687,7 @@ void ImageProcessor::getSmallPoreInfo(ButtonDefectInfo& info,
 		ButtonDefectInfo::ButtonDefectInfoItem itemDet;
 		itemDet.index = item;
 		itemDet.score = pore;
-		itemDet.area = processResult[item].area;
+		itemDet.area = processResult[item].area * pixel * pixel;
 		info.smallPore1.emplace_back(itemDet);
 	}
 }
