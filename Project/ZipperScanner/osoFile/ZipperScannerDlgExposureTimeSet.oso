@@ -1,9 +1,0 @@
-#include <string>
-
-namespace cdm {
-	class ZipperScannerDlgExposureTimeSet
-	{
-	public:
-		exposureTime : size_t :default = 1000;
-	};
-}
