@@ -1,7 +1,0 @@
-train: D:/zfkjData/ButtonScanner/Train/Seg
-val: D:/zfkjData/ButtonScanner/Train/Seg 
-
-nc: 2  
-names: 
-  0: good
-  1: bad

@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/ButtonScanner">
-        <file>image/close.png</file>
-        <file>image/exit.png</file>
-        <file>image/icon.png</file>
-        <file>image/lightBulb.png</file>
-        <file>image/product.png</file>
-    </qresource>
-</RCC>
