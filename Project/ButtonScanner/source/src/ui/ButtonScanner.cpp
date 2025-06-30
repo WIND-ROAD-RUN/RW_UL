@@ -40,6 +40,9 @@ void ButtonScanner::updateExposureTimeTrigger()
 
 void ButtonScanner::onExposureTimeTriggerAreaClicked()
 {
+	if (_dlgRealTimeImgDis) {
+		_dlgRealTimeImgDis->close();
+	}
 	auto& globalStructData = GlobalStructData::getInstance();
 	auto isRuning = ui->rbtn_removeFunc->isChecked();
 	if (!isRuning) {
@@ -63,6 +66,8 @@ void ButtonScanner::onExposureTimeTriggerAreaClicked()
 			rbtn_debug_checked(true); // 如果之前是调试模式，重新设置为调试模式
 		}
 	}
+
+	_isRealTimeDis = false;
 }
 
 void ButtonScanner::mousePressEvent(QMouseEvent* event)
@@ -383,7 +388,8 @@ void ButtonScanner::build_ui()
 		, this, &ButtonScanner::imgDis4_clicked);
 
 	_dlgRealTimeImgDis = new DlgRealTimeImgDis(this);
-	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);;
+	_dlgRealTimeImgDis->setMonitorValue(&_isRealTimeDis);
+	_dlgRealTimeImgDis->setMonitorDisImgIndex(&_currentRealTimeDisIndex);
 }
 
 void ButtonScanner::read_image()
@@ -563,7 +569,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString mainWindowFilePathFull = globalPath.configRootPath + "mainWindowConfig.xml";
+	QString mainWindowFilePathFull = globalPath.mainWindowConfigPath;
 	QFileInfo mainWindowFile(mainWindowFilePathFull);
 
 	globalStruct.mainWindowFilePath = mainWindowFilePathFull;
@@ -592,7 +598,7 @@ void ButtonScanner::read_config_mainWindowConfig()
 void ButtonScanner::read_config_warningManagerConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
-	QString warningManagerFilePathFull = globalPath.configRootPath + "warningManagerConfig.xml";
+	QString warningManagerFilePathFull = globalPath.warningManagerConfigPath;
 	QFileInfo warningManagerFile(warningManagerFilePathFull);
 	globalStruct.warningManagerFilePath = warningManagerFilePathFull;
 	if (!warningManagerFile.exists()) {
@@ -620,7 +626,7 @@ void ButtonScanner::read_config_produceLineConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgProduceLineSetFilePathFull = globalPath.configRootPath + "dlgProduceLineSetConfig.xml";
+	QString dlgProduceLineSetFilePathFull = globalPath.dlgProduceLineSetConfigPath;
 	QFileInfo dlgProduceLineSetFile(dlgProduceLineSetFilePathFull);
 
 	globalStruct.dlgProduceLineSetFilePath = dlgProduceLineSetFilePathFull;
@@ -653,7 +659,7 @@ void ButtonScanner::read_config_productSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgProductSetFilePathFull = globalPath.configRootPath + "dlgProdutSetConfig.xml";
+	QString dlgProductSetFilePathFull = globalPath.dlgProdutSetConfigPath;
 	QFileInfo dlgProductSetFile(dlgProductSetFilePathFull);
 
 	globalStruct.dlgProductSetFilePath = dlgProductSetFilePathFull;
@@ -683,7 +689,7 @@ void ButtonScanner::read_config_exposureTimeSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString exposureTimeSetConfigFilePathFull = globalPath.configRootPath + "exposureTimeSetConfig.xml";
+	QString exposureTimeSetConfigFilePathFull = globalPath.exposureTimeSetConfigPath;
 	QFileInfo dlgProductSetFile(exposureTimeSetConfigFilePathFull);
 
 	globalStruct.dlgExposureTimeSetFilePath = exposureTimeSetConfigFilePathFull;
@@ -713,7 +719,7 @@ void ButtonScanner::read_config_hideScoreSet()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgHideScoreSetFilePathFull = globalPath.configRootPath + "dlgHideScoreSet.xml";
+	QString dlgHideScoreSetFilePathFull = globalPath.dlgHideScoreSetPath;
 	QFileInfo dlgHideScoreSetFile(dlgHideScoreSetFilePathFull);
 
 	globalStruct.dlgHideScoreSetPath = dlgHideScoreSetFilePathFull;
@@ -743,7 +749,7 @@ void ButtonScanner::read_config_warningIOSetConfig()
 {
 	auto& globalStruct = GlobalStructData::getInstance();
 
-	QString dlgWarningIOSetConfigFull = globalPath.configRootPath + "warningIOSetConfig.xml";
+	QString dlgWarningIOSetConfigFull = globalPath.warningIOSetConfigPath;
 	QFileInfo dlgWarningIOSetConfigFile(dlgWarningIOSetConfigFull);
 
 	globalStruct.warningIOSetConfigPath = dlgWarningIOSetConfigFull;
@@ -783,6 +789,8 @@ void ButtonScanner::build_imageSaveEngine()
 
 	QString imagesFilePathFilePathFull = dir.absoluteFilePath(imageSaveEnginePath);
 	globalStruct.imageSaveEngine->setRootPath(imagesFilePathFilePathFull);
+	globalStruct.imageSaveEngine->setMaxSaveImageNum(50);
+	globalStruct.imageSaveEngine->setSavePolicy(rw::rqw::ImageSaveEnginePolicy::MaxSaveImageNum);
 	globalStruct.imageSaveEngine->startEngine();
 }
 
@@ -1271,25 +1279,46 @@ void ButtonScanner::onUpdateLightStateUi(size_t index, bool state)
 void ButtonScanner::imgDis1_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("1号工位");
+	_currentRealTimeDisIndex = 0;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::imgDis2_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("2号工位");
+	_currentRealTimeDisIndex = 1;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::imgDis3_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("3号工位");
+	_currentRealTimeDisIndex = 2;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
+
 }
 
 void ButtonScanner::imgDis4_clicked()
 {
 	_dlgRealTimeImgDis->setGboxTitle("4号工位");
+	_currentRealTimeDisIndex = 3;
+#ifdef NDEBUG
+	_dlgRealTimeImgDis->showFullScreen();
+#else
 	_dlgRealTimeImgDis->show();
+#endif
 }
 
 void ButtonScanner::onCamera1Display(QPixmap image)
@@ -1300,7 +1329,9 @@ void ButtonScanner::onCamera1Display(QPixmap image)
 	}
 	else
 	{
-		
+		if (_currentRealTimeDisIndex==0) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1312,7 +1343,9 @@ void ButtonScanner::onCamera2Display(QPixmap image)
 	}
 	else
 	{
-		
+		if (_currentRealTimeDisIndex == 1) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1324,7 +1357,9 @@ void ButtonScanner::onCamera3Display(QPixmap image)
 	}
 	else
 	{
-
+		if (_currentRealTimeDisIndex == 2) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1336,7 +1371,9 @@ void ButtonScanner::onCamera4Display(QPixmap image)
 	}
 	else
 	{
-
+		if (_currentRealTimeDisIndex == 3) {
+			_dlgRealTimeImgDis->setShowImg(image);
+		}
 	}
 }
 
@@ -1450,7 +1487,11 @@ void ButtonScanner::pbtn_set_clicked()
 		if (numKeyBord.getValue() == "1234") {
 			_dlgProduceLineSet->setFixedSize(this->width(), this->height());
 			_dlgProduceLineSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-			_dlgProduceLineSet->exec();
+#ifdef NDEBUG
+			_dlgProduceLineSet->showFullScreen();
+#else
+			_dlgProduceLineSet->show();
+#endif
 			ui->pbtn_beltSpeed->setText(QString::number(GlobalStructData::getInstance().dlgProduceLineSetConfig.motorSpeed));
 		}
 		else {
@@ -1473,7 +1514,11 @@ void ButtonScanner::pbtn_newProduction_clicked()
 		ui->rbtn_debug->setChecked(false);
 		rbtn_debug_checked(false);
 		dlgNewProduction->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+		dlgNewProduction->showFullScreen();
+#else
 		dlgNewProduction->show();
+#endif
 	}
 }
 
@@ -1510,7 +1555,11 @@ void ButtonScanner::pbtn_score_clicked()
 	_dlgProductSet->readConfig();
 	_dlgProductSet->setFixedSize(this->width(), this->height());
 	_dlgProductSet->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	_dlgProductSet->exec();
+#ifdef NDEBUG
+	_dlgProductSet->showFullScreen();
+#else
+	_dlgProductSet->show();
+#endif
 }
 
 void ButtonScanner::pbtn_resetProduct_clicked()
@@ -1533,11 +1582,44 @@ void ButtonScanner::pbtn_resetProduct_clicked()
 
 void ButtonScanner::pbtn_openSaveLocation_clicked()
 {
+//	auto& globalStruct = GlobalStructData::getInstance();
+//	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
+//
+//
+//	globalStruct.imageSaveEngine->isAllImageSaved();
+//
+//	_picturesViewer->setRootPath(imageSavePath);
+//	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+//#ifdef NDEBUG
+//	_picturesViewer->showFullScreen();
+//#else
+//	_picturesViewer->show();
+//#endif
+
+	//打开存储图片位置的时候，自动关闭采图
+	ui->rbtn_takePicture->setChecked(false);
+	rbtn_takePicture_checked(false);
+
 	auto& globalStruct = GlobalStructData::getInstance();
 	QString imageSavePath = globalStruct.imageSaveEngine->getRootPath();
-	_picturesViewer->setRootPath(imageSavePath);
-	_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-	_picturesViewer->show();
+
+	// 异步轮询检查图片是否全部保存完毕
+	QTimer* timer = new QTimer(this);
+	timer->setInterval(100); // 100ms轮询一次
+	connect(timer, &QTimer::timeout, this, [this, &globalStruct, imageSavePath, timer]() {
+		if (globalStruct.imageSaveEngine->isAllImageSaved()) {
+			timer->stop();
+			timer->deleteLater();
+			_picturesViewer->setRootPath(imageSavePath);
+			_picturesViewer->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+			_picturesViewer->showFullScreen();
+#else
+			_picturesViewer->show();
+#endif
+		}
+		});
+	timer->start();
 }
 
 void ButtonScanner::rbtn_debug_checked(bool checked)
@@ -1683,13 +1765,23 @@ void ButtonScanner::labelClickable_title_clicked()
 		return;
 	}
 	_dlgModelManager->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	_dlgModelManager->showFullScreen();
+#else
 	_dlgModelManager->show();
+#endif
+
 }
 
 void ButtonScanner::labelVersion_clicked()
 {
 	_dlgVersion->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+#ifdef NDEBUG
+	_dlgVersion->showFullScreen();
+#else
 	_dlgVersion->show();
+#endif
+	
 }
 
 void ButtonScanner::onAddWarningInfo(QString message, bool updateTimestampIfSame, int redDuration)

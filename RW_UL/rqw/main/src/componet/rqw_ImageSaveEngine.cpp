@@ -96,6 +96,12 @@ namespace rw {
 			}
 		}
 
+		bool ImageSaveEngine::isAllImageSaved()
+		{
+			QMutexLocker locker(&mutex);
+			return saveQueue.isEmpty();
+		}
+
 		void ImageSaveEngine::saveImage(const ImageInfo& image)
 		{
 			QDir dir(rootPath + "/" + image.classify);

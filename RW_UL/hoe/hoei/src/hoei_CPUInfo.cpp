@@ -1,6 +1,7 @@
 #include"hoei_CPUInfo.hpp"
 
 #include <hwloc.h>
+#include <intrin.h>
 
 namespace rw
 {
