@@ -3,6 +3,7 @@
 #include <complex>
 #include <QDir>
 #include <QFileInfo>
+#include <QMessageBox>
 
 #include "ui_PictureViewerUtilty.h"
 
@@ -111,7 +112,10 @@ void PictureViewerUtilty::pbtn_exit_clicked()
 void PictureViewerUtilty::pbtn_previousImage_clicked()
 {
 	if (imagePaths.isEmpty() || currentImageIndex <= 0)
+	{
+		QMessageBox::information(this, "提示", "已经是第一张图片了");
 		return;
+	}
 
 	--currentImageIndex;
 	path = imagePaths[currentImageIndex];
@@ -134,9 +138,14 @@ void PictureViewerUtilty::pbtn_nextImage_clicked()
 		return;
 
 	if (currentImageIndex >= imagePaths.size() - 1)
-		currentImageIndex = 0;
+	{
+		QMessageBox::information(this, "提示", "已经是最后一张图片了");
+		return;
+	}
 	else
+	{
 		++currentImageIndex;
+	}
 	path = imagePaths[currentImageIndex];
 
 	if (ui->label_imgDisplay) {
