@@ -35,4 +35,6 @@ target_link_libraries(${PROJECT_NAME}
 	PUBLIC dsl
 )
 
-add_subdirectory(test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()

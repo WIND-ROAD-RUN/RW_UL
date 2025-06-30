@@ -1,4 +1,7 @@
 add_subdirectory(AutomaticAnnotation)
 add_subdirectory(ModelConverter)
-add_subdirectory(demo)
-add_subdirectory(demoNoQt)
+
+if(CONFIG_TEST)
+    add_subdirectory(demo)
+	add_subdirectory(demoNoQt)
+endif()

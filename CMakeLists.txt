@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 # 检查当前 CMakeLists 是否为根 CMakeLists
+#如果是根 CMakeLists，则设置不构建测试
 set(CONFIG_TEST false)
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-	#如果是根 CMakeLists，则设置不构建测试
 	set(CONFIG_TEST true)
 	
 	set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
