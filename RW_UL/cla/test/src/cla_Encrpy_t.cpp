@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include"EncrpyModule/cla_Encrpt.hpp"
+#include"cla_SymmetricEncryptor.hpp"
 
 namespace cla_Encrpy
 {
