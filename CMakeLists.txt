@@ -41,15 +41,15 @@ enable_testing()
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
 
 if(MSVC)
-    # ¶ÔÓÚ MSVC ±àÒëÆ÷£¬ÆôÓÃ UTF-8 ±àÂë
+    # å¯¹äº MSVC ç¼–è¯‘å™¨ï¼Œå¯ç”¨ UTF-8 ç¼–ç 
     add_compile_options("/utf-8")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    # ¶ÔÓÚ GCC »ò Clang ±àÒëÆ÷£¬ÉèÖÃÔ´ÎÄ¼ş±àÂëÎª UTF-8
+    # å¯¹äº GCC æˆ– Clang ç¼–è¯‘å™¨ï¼Œè®¾ç½®æºæ–‡ä»¶ç¼–ç ä¸º UTF-8
     add_compile_options("-finput-charset=UTF-8")
 endif()
 
 find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(RW_UL)
-add_subdirectory(Project)
+#add_subdirectory(Project)
 add_subdirectory(tools)
