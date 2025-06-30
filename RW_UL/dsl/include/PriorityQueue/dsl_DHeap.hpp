@@ -143,5 +143,60 @@ namespace rw
 			std::vector<std::pair<T, Priority>> _heap_array;
 		};
 
+		template <class T, class Priority = size_t>
+		class DHeapThreadSafe : public IPriorityQueue<T, Priority> {
+		public:
+			DHeapThreadSafe(size_t d = 4)
+				: _heap(d) {
+			}
+
+			DHeapThreadSafe(std::function<bool(const T&, const T&)> compareNodeEqual,
+				std::function<bool(const Priority&, const Priority&)> compareNodePriority,
+				size_t d = 4)
+				: _heap(compareNodeEqual, compareNodePriority, d) {
+			}
+
+			~DHeapThreadSafe() = default;
+
+		public:
+			T top() override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				return _heap.top();
+			}
+
+			T peek() override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				return _heap.peek();
+			}
+
+			void insert(T element, Priority priority) override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_heap.insert(element, priority);
+			}
+
+			void remove(T element) override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_heap.remove(element);
+			}
+
+			void update(T element, Priority priority) override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_heap.update(element, priority);
+			}
+
+			size_t size() override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				return _heap.size();
+			}
+
+			void clear() override {
+				std::lock_guard<std::mutex> lock(_mutex);
+				_heap.clear();
+			}
+
+		private:
+			DHeap<T, Priority> _heap; 
+			std::mutex _mutex;        
+		};
 	}
 }
