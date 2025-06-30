@@ -8,15 +8,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
 	${CMAKE_CURRENT_SOURCE_DIR}/include/Cache
+	${CMAKE_CURRENT_SOURCE_DIR}/include/PriorityQueue
 	${CMAKE_CURRENT_SOURCE_DIR}/include/DataStructure
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Cache
-	${CMAKE_CURRENT_SOURCE_DIR}/include/DataStructure
+	${CMAKE_CURRENT_SOURCE_DIR}/src/PriorityQueue
 )
 
 group_interface_sources_and_headers(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/include/Cache
+	${CMAKE_CURRENT_SOURCE_DIR}/include/PriorityQueue
 	${CMAKE_CURRENT_SOURCE_DIR}/include/DataStructure
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Cache
@@ -24,9 +26,12 @@ group_interface_sources_and_headers(
 )
 
 add_library(${PROJECT_NAME} STATIC ${SRC_LIST} )
-target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_include_directories(${PROJECT_NAME} PUBLIC include/Cache)
-target_include_directories(${PROJECT_NAME} PUBLIC include/DataStructure)
+target_include_directories(${PROJECT_NAME} 
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/Cache
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/DataStructure
+	${CMAKE_CURRENT_SOURCE_DIR}/include/PriorityQueue
+)
 
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST_PY_INTERFACE
