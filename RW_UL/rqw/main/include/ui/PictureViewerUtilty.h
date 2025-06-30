@@ -37,7 +37,7 @@ signals:
 
 private slots:
 	void pbtn_exit_clicked();
-	void pbtn_previousimage_clicked();
-	void pbtn_nextimage_clicked();
+	void pbtn_previousImage_clicked();
+	void pbtn_nextImage_clicked();
 	void pbtn_delete_clicked();
 };

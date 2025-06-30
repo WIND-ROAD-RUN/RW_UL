@@ -30,9 +30,9 @@ void PictureViewerUtilty::build_connect()
 	connect(ui->pbtn_exit, &QPushButton::clicked,
 		this, &PictureViewerUtilty::pbtn_exit_clicked);
 	connect(ui->pbtn_previousimage, &QPushButton::clicked,
-		this, &PictureViewerUtilty::pbtn_previousimage_clicked);
+		this, &PictureViewerUtilty::pbtn_previousImage_clicked);
 	connect(ui->pbtn_nextimage, &QPushButton::clicked,
-		this, &PictureViewerUtilty::pbtn_nextimage_clicked);
+		this, &PictureViewerUtilty::pbtn_nextImage_clicked);
 	connect(ui->pbtn_delete, &QPushButton::clicked,
 		this, &PictureViewerUtilty::pbtn_delete_clicked);
 }
@@ -108,7 +108,7 @@ void PictureViewerUtilty::pbtn_exit_clicked()
 	this->close();
 }
 
-void PictureViewerUtilty::pbtn_previousimage_clicked()
+void PictureViewerUtilty::pbtn_previousImage_clicked()
 {
 	if (imagePaths.isEmpty() || currentImageIndex <= 0)
 		return;
@@ -128,7 +128,7 @@ void PictureViewerUtilty::pbtn_previousimage_clicked()
 	}
 }
 
-void PictureViewerUtilty::pbtn_nextimage_clicked()
+void PictureViewerUtilty::pbtn_nextImage_clicked()
 {
 	if (imagePaths.isEmpty())
 		return;
