@@ -39,29 +39,31 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 
-# ¼ì²éÊÇ·ñÎªWindows²Ù×÷ÏµÍ³
+# æ£€æŸ¥æ˜¯å¦ä¸ºWindowsæ“ä½œç³»ç»Ÿ
 if(WIN32)
-    #message(STATUS "µ±Ç°²Ù×÷ÏµÍ³ÎªWindows")
+    #message(STATUS "å½“å‰æ“ä½œç³»ç»Ÿä¸ºWindows")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        #message(STATUS "µ±Ç°Îª64Î»ÏµÍ³")
+        #message(STATUS "å½“å‰ä¸º64ä½ç³»ç»Ÿ")
         target_link_libraries(${PROJECT_NAME} PRIVATE ${MVS_PATH}/Libraries/windows64/MvCameraControl.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x64/DVPCamera64.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x64/dvpir64.lib)
-        # ÔÚÕâÀïÌí¼ÓÌØ¶¨ÓÚWin64µÄÉèÖÃ
+        # åœ¨è¿™é‡Œæ·»åŠ ç‰¹å®šäºWin64çš„è®¾ç½®
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        #message(STATUS "µ±Ç°Îª32Î»ÏµÍ³")
+        #message(STATUS "å½“å‰ä¸º32ä½ç³»ç»Ÿ")
         target_link_libraries(${PROJECT_NAME} PRIVATE ${MVS_PATH}/Libraries/windows32/MvCameraControl.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x86/DVPCamera64.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x86/dvpir64.lib)
-        # ÔÚÕâÀïÌí¼ÓÌØ¶¨ÓÚWin32µÄÉèÖÃ
+        # åœ¨è¿™é‡Œæ·»åŠ ç‰¹å®šäºWin32çš„è®¾ç½®
     endif()
 else()
-    #message(STATUS "µ±Ç°²Ù×÷ÏµÍ³²»ÊÇWindows")
-    # ÔÚÕâÀïÌí¼ÓÌØ¶¨ÓÚ·ÇWindowsµÄÉèÖÃ
+    #message(STATUS "å½“å‰æ“ä½œç³»ç»Ÿä¸æ˜¯Windows")
+    # åœ¨è¿™é‡Œæ·»åŠ ç‰¹å®šäºéWindowsçš„è®¾ç½®
 endif()
 
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/)
 install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/lib/)

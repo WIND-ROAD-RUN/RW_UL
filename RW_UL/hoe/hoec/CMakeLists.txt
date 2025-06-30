@@ -55,7 +55,9 @@ else()
 endif()
 
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/)
 install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/lib/)

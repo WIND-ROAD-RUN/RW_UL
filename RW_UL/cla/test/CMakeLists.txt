@@ -20,7 +20,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE cryptopp::cryptopp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE cla)
 
+
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

@@ -39,4 +39,6 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/include
 )
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()

@@ -42,4 +42,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${TensorRT_libs})
 
-add_subdirectory(test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()

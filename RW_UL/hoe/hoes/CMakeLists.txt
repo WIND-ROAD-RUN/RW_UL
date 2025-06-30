@@ -27,7 +27,9 @@ target_link_libraries(hoes
 )
 
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()
 add_subdirectory(ThirdLibrary)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/)

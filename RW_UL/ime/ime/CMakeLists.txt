@@ -44,4 +44,6 @@ install(FILES ${TensorRT_libs} ${OnnxRuntime_libs}
     DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/libs
 )
 
-add_subdirectory(test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()

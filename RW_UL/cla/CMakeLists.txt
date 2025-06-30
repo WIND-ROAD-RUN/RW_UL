@@ -29,4 +29,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE cryptopp::cryptopp)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::Crypto)
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()

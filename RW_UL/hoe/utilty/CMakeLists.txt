@@ -27,7 +27,9 @@ link_directories(${HWLOC_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${HWLOC_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${HWLOC_INCLUDE_DIRS})
 
-add_subdirectory(./test)
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()
 
 
 
