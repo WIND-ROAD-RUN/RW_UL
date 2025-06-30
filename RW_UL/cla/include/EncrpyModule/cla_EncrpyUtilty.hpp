@@ -1,27 +1,20 @@
 #pragma once
 
+#include"cla_utility.hpp"
 #include <string>
 
 namespace rw {
 	namespace cla {
-		struct EncryptConfig
+		struct SymmetricEncryptorContext
 		{
 		public:
-			std::string encryptString{};
-		public: 
-			std::string key{};
-		};
-
-
-		struct DecryptConfig
-		{
+			ActivationBits bits;
 		public:
 			std::string decryptString{ };
 		public:
+			std::string encryptString{};
+		public:
 			std::string key{};
 		};
-
-
-	
 	}
 }
