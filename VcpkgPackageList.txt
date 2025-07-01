@@ -8,3 +8,4 @@ hwloc
 pkgconf
 cryptopp
 openssl
+libmodbus

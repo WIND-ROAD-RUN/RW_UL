@@ -5,6 +5,8 @@ project(hoes VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(libmodbus CONFIG REQUIRED)
+
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/include 
@@ -24,12 +26,14 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(hoes
     PRIVATE serial
+	PRIVATE libmodbus
 )
 
 
 if(CONFIG_TEST)
     add_subdirectory(./test)
 endif()
+
 add_subdirectory(ThirdLibrary)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_PATH}/${PROJECT_NAME}/include/)
