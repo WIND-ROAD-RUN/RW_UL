@@ -96,6 +96,35 @@ namespace rw
 			Y1F=31
 		};
 
+		inline int32_t swapEndian(int32_t value)
+		{
+			return ((value & 0xFF000000) >> 24) |
+				((value & 0x00FF0000) >> 8) |
+				((value & 0x0000FF00) << 8) |
+				((value & 0x000000FF) << 24);
+		}
+
+		inline int32_t modbusIToInt32(ModbusI modbusI, Endianness endianness)
+		{
+			int32_t value = 1 << static_cast<int32_t>(modbusI);
+			if (endianness == Endianness::BigEndian)
+			{
+				return swapEndian(value); // 转换为大端表示
+			}
+			return value; // 小端表示直接返回
+		}
+
+		inline int32_t modbusOToInt32(ModbusO modbusO, Endianness endianness)
+		{
+			int32_t value = 1 << static_cast<int32_t>(modbusO);
+			if (endianness == Endianness::BigEndian)
+			{
+				return swapEndian(value); // 转换为大端表示
+			}
+			return value; // 小端表示直接返回
+		}
+
+
 		inline std::vector<RegisterValue> toRegisterValues(ModbusI i, Endianness endianness)
 		{
 			int32_t value = static_cast<int32_t>(i);

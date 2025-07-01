@@ -59,14 +59,14 @@ namespace rw {
 
 		bool KeRuiE::getOState(ModbusO locate) const
 		{
-			std::vector<RegisterValue> value;
+			std::vector<RegisterValue> value(2);
 			_modbusDevice->readRegisters(0, 2, value);
 
-			auto int32=fromRegisterValuesToInt32(value,Endianness::LittleEndian);
+			auto int32=fromRegisterValuesToInt32(value,Endianness::BigEndian);
+			auto int32O=modbusOToInt32(locate, Endianness::BigEndian);
+			bool result = (int32 & int32O);
 
-
-
-			return true;
+			return result;
 		}
 
 		bool KeRuiE::reconnect()
