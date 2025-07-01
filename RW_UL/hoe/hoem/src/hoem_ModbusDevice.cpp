@@ -34,13 +34,13 @@ namespace rw
 			return true;
 		}
 
-		void ModbusDevice::disconnect()
+		bool ModbusDevice::disconnect()
 		{
 			if (_modbusContext != nullptr) {
 				modbus_close(_modbusContext);
-				modbus_free(_modbusContext);
-				_modbusContext = nullptr;
+				return true;
 			}
+			return false;
 		}
 
 		bool ModbusDevice::isConnected() const

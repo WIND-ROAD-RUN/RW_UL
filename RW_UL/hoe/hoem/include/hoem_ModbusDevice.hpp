@@ -19,7 +19,7 @@ namespace rw
 			~ModbusDevice();
 		public:
 			bool connect() ;
-			void disconnect() ;
+			bool disconnect() ;
 			bool isConnected() const ;
 			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data) ;
 			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data) ;

@@ -13,27 +13,17 @@ namespace rw {
             virtual bool connect() = 0;
 
             // 断开设备连接
-            virtual void disconnect() = 0;
+            virtual bool disconnect() = 0;
 
             virtual bool isConnected() const = 0;
 
-            virtual bool setBasedAddress(Address basedAddress)=0;
+            virtual bool setIState(ModbusI locate,bool state);
 
-			virtual Address getBasedAddress() const = 0;
+			virtual bool getIState(ModbusI locate) const = 0;
 
-            virtual bool readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data) = 0;
+            virtual bool setOState(ModbusO locate, bool state);
 
-            virtual bool writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data) = 0;
-
-            virtual bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data) = 0;
-
-            virtual bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data) = 0;
-
-            virtual bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data) = 0;
-
-            virtual bool writeCoil(Address address, bool state) = 0;
-
-            virtual bool writeCoils(Address startAddress, const std::vector<bool>& states) = 0;
+            virtual bool getOState(ModbusO locate) const = 0;
         };
 	
 	}
