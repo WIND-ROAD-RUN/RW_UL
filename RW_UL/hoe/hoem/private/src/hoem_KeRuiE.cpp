@@ -59,14 +59,32 @@ namespace rw {
 
 		bool KeRuiE::getOState(ModbusO locate) const
 		{
-			/*if (_modbusDevice) {
-				std::vector<bool> data;
-				if (_modbusDevice->readCoils(locate.address, 1, data)) {
-					return data[0];
-				}
-			}
-			return false;*/
+			std::vector<RegisterValue> value;
+			_modbusDevice->readRegisters(0, 2, value);
+
+			auto int32=fromRegisterValuesToInt32(value,Endianness::LittleEndian);
+
+
+
 			return true;
+		}
+
+		bool KeRuiE::reconnect()
+		{
+			if (_modbusDevice) {
+				return _modbusDevice->reconnect();
+			}
+			return false;
+		}
+
+		bool KeRuiE::setIState(ModbusI locate, bool state)
+		{
+			return 0;
+		}
+
+		bool KeRuiE::setOState(ModbusO locate, bool state)
+		{
+			return 0;
 		}
 	}
 }

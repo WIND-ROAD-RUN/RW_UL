@@ -15,13 +15,15 @@ namespace rw {
             // 断开设备连接
             virtual bool disconnect() = 0;
 
+			virtual bool reconnect() = 0;
+
             virtual bool isConnected() const = 0;
 
-            virtual bool setIState(ModbusI locate,bool state);
+            virtual bool setIState(ModbusI locate,bool state)=0;
 
 			virtual bool getIState(ModbusI locate) const = 0;
 
-            virtual bool setOState(ModbusO locate, bool state);
+            virtual bool setOState(ModbusO locate, bool state)=0;
 
             virtual bool getOState(ModbusO locate) const = 0;
         };

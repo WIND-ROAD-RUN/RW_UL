@@ -21,6 +21,7 @@ namespace rw
 			bool connect() ;
 			bool disconnect() ;
 			bool isConnected() const ;
+			bool reconnect();
 			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data) ;
 			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data) ;
 			bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data) ;

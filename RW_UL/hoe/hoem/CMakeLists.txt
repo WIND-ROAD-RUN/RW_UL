@@ -23,7 +23,7 @@ group_interface_sources_and_headers(
 add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} 
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/include
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/private/include
 )
 
 target_link_libraries(${PROJECT_NAME}

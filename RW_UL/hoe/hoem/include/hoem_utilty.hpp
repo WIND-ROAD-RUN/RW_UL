@@ -18,76 +18,158 @@ namespace rw
 			keRuiE
 		};
 
+		enum class Endianness
+		{
+			BigEndian,    // 大端
+			LittleEndian  // 小端
+		};
+
 		enum class ModbusI
 		{
-			X00,
-			X01,
-			X02,
-			X03,
-			X04,
-			X05,
-			X06,
-			X07,
-			X08,
-			X09,
-			X0A,
-			X0B,
-			X0C,
-			X0D,
-			X0E,
-			X0F,
-			X10,
-			X11,
-			X12,
-			X13,
-			X14,
-			X15,
-			X16,
-			X17,
-			X18,
-			X19,
-			X1A,
-			X1B,
-			X1C,
-			X1D,
-			X1E,
-			X1F
+			X00=0,
+			X01=1,
+			X02=2,
+			X03=3,
+			X04=4,
+			X05=5,
+			X06=6,
+			X07=7,
+			X08=8,
+			X09=9,
+			X0A=10,
+			X0B=11,
+			X0C=12,
+			X0D=13,
+			X0E=14,
+			X0F=15,
+			X10=16,
+			X11=17,
+			X12=18,
+			X13=19,
+			X14=20,
+			X15=21,
+			X16=22,
+			X17=23,
+			X18=24,
+			X19=25,
+			X1A=26,
+			X1B=27,
+			X1C=28,
+			X1D=29,
+			X1E=30,
+			X1F=31
 		};
 
 		enum class ModbusO
 		{
-			Y00,
-			Y01,
-			Y02,
-			Y03,
-			Y04,
-			Y05,
-			Y06,
-			Y07,
-			Y08,
-			Y09,
-			Y0A,
-			Y0B,
-			Y0C,
-			Y0D,
-			Y0E,
-			Y0F,
-			Y10,
-			Y11,
-			Y12,
-			Y13,
-			Y14,
-			Y15,
-			Y16,
-			Y17,
-			Y18,
-			Y19,
-			Y1A,
-			Y1B,
-			Y1C,
-			Y1D,
-			Y1E,
-			Y1F
+			Y00=0,
+			Y01=1,
+			Y02=2,
+			Y03=3,
+			Y04=4,
+			Y05=5,
+			Y06=6,
+			Y07=7,
+			Y08=8,
+			Y09=9,
+			Y0A=10,
+			Y0B=11,
+			Y0C=12,
+			Y0D=13,
+			Y0E=14,
+			Y0F=15,
+			Y10=16,
+			Y11=17,
+			Y12=18,
+			Y13=19,
+			Y14=20,
+			Y15=21,
+			Y16=22,
+			Y17=23,
+			Y18=24,
+			Y19=25,
+			Y1A=26,
+			Y1B=27,
+			Y1C=28,
+			Y1D=29,
+			Y1E=30,
+			Y1F=31
 		};
+
+		inline std::vector<RegisterValue> toRegisterValues(ModbusI i, Endianness endianness)
+		{
+			int32_t value = static_cast<int32_t>(i);
+
+			RegisterValue high = static_cast<RegisterValue>((value >> 16) & 0xFFFF); // 高16位
+			RegisterValue low = static_cast<RegisterValue>(value & 0xFFFF);         // 低16位
+
+			std::vector<RegisterValue> result;
+			if (endianness == Endianness::BigEndian)
+			{
+				result.push_back(high);
+				result.push_back(low); 
+			}
+			else // LittleEndian
+			{
+				result.push_back(low);  
+				result.push_back(high); 
+			}
+
+			return result;
+		}
+
+		inline std::vector<RegisterValue> toRegisterValues(ModbusO i, Endianness endianness)
+		{
+			int32_t value = static_cast<int32_t>(i);
+
+			RegisterValue high = static_cast<RegisterValue>((value >> 16) & 0xFFFF); // 高16位
+			RegisterValue low = static_cast<RegisterValue>(value & 0xFFFF);         // 低16位
+
+			std::vector<RegisterValue> result;
+			if (endianness == Endianness::BigEndian)
+			{
+				result.push_back(high); 
+				result.push_back(low); 
+			}
+			else // LittleEndian
+			{
+				result.push_back(low);
+				result.push_back(high);
+			}
+
+			return result;
+		}
+
+		inline int32_t fromRegisterValuesToInt32(const std::vector<RegisterValue>& values, Endianness endianness)
+		{
+			if (values.size() != 2)
+			{
+				throw std::invalid_argument("Invalid register values size for ModbusI. Expected 2 values.");
+			}
+
+			int32_t value = 0;
+			if (endianness == Endianness::BigEndian)
+			{
+				value = (static_cast<int32_t>(values[0]) << 16) | static_cast<int32_t>(values[1]);
+			}
+			else // LittleEndian
+			{
+				value = (static_cast<int32_t>(values[1]) << 16) | static_cast<int32_t>(values[0]);
+			}
+
+			return value;
+		}
+
+		inline ModbusI fromRegisterValuesToModbusI(const std::vector<RegisterValue>& values, Endianness endianness)
+		{
+
+			return static_cast<ModbusI>(fromRegisterValuesToInt32(values,endianness));
+		}
+
+		inline ModbusO fromRegisterValuesToModbusO(const std::vector<RegisterValue>& values, Endianness endianness)
+		{
+			return static_cast<ModbusO>(fromRegisterValuesToInt32(values, endianness));
+
+		}
 	}
 }

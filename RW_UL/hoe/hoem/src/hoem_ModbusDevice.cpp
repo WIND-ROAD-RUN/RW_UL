@@ -45,7 +45,21 @@ namespace rw
 
 		bool ModbusDevice::isConnected() const
 		{
-			return _modbusContext != nullptr && modbus_get_socket(_modbusContext) >= 0;
+			if (_modbusContext == nullptr) {
+				return false;
+			}
+			// 尝试读取一个寄存器，判断连接是否正常
+			uint16_t temp = 0;
+			int result = modbus_read_registers(_modbusContext, _baseAddress, 1, &temp);
+			return result == 1;
+		}
+
+		bool ModbusDevice::reconnect()
+		{
+			if (disconnect()) {
+				return connect();
+			}
+			return false;
 		}
 
 		bool ModbusDevice::readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data)

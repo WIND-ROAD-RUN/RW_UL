@@ -21,6 +21,9 @@ namespace rw {
 			bool isConnected() const override;
 			bool getIState(ModbusI locate) const override;
 			bool getOState(ModbusO locate) const override;
+			bool reconnect() override;
+			bool setIState(ModbusI locate, bool state) override;
+			bool setOState(ModbusO locate, bool state) override;
 		};
 	}
 }
