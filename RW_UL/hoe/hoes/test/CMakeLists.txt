@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
-find_package(libmodbus CONFIG REQUIRED)
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
@@ -21,7 +20,6 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE GTest::gtest GTest::gtest_main)
 ##test library
 target_link_libraries(${PROJECT_NAME}
     PRIVATE serial
-	PRIVATE libmodbus
 )
 target_include_directories(${PROJECT_NAME} 
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
