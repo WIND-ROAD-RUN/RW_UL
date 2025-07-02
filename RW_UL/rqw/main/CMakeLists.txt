@@ -33,6 +33,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC dsl
+	PRIVATE cla
+	PRIVATE hoei
 )
 
 if(CONFIG_TEST)

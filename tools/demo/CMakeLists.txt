@@ -45,13 +45,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concurrent)
 
 target_link_libraries(${PROJECT_NAME} 
-    PRIVATE hoec
     PRIVATE rqw
-    PRIVATE ime
-    PRIVATE rqwm
-    PRIVATE rqwime
-    PRIVATE oso
-
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -65,9 +59,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
-# ╟╡в╟©иж╢ппнд╪Ч
+# Е╝┴Хё┘Е▐╞Ф┴╖Х║▄Ф√┤Д╩╤
 install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # ©иж╢ппнд╪Ч╟╡в╟╣╫ bin д©б╪
+    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # Е▐╞Ф┴╖Х║▄Ф√┤Д╩╤Е╝┴Хё┘Е┬╟ bin Г⌡╝Е╫∙
 )
 
 string(REPLACE "\\" "/" QT_PATH_FIXED ${QT_PATH})

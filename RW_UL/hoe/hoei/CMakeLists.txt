@@ -8,6 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(HWLOC REQUIRED hwloc)
 
+# Define global variables using CACHE
+set(HWLOC_LIBRARY_DIRS ${HWLOC_LIBRARY_DIRS} CACHE INTERNAL "HWLOC library directories")
+set(HWLOC_LIBRARIES ${HWLOC_LIBRARIES} CACHE INTERNAL "HWLOC libraries")
+set(HWLOC_INCLUDE_DIRS ${HWLOC_INCLUDE_DIRS} CACHE INTERNAL "HWLOC include directories")
 
 FIND_SOURCES_AND_HEADERS(SRC_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/include 
@@ -31,8 +35,8 @@ endif()
 add_library(${PROJECT_NAME} STATIC ${SRC_LIST} ${SRC_LIST_PRIVATE})
 
 target_link_directories(${PROJECT_NAME} PUBLIC ${HWLOC_LIBRARY_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${HWLOC_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${HWLOC_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${HWLOC_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${HWLOC_INCLUDE_DIRS})
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
