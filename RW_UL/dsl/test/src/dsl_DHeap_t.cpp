@@ -10,6 +10,55 @@ namespace dsl_PriorityQueue {
         return a < b; // 优先级较大的元素优先
         };
 
+    TEST(DHeapLockFreeTest, TopWithIsGet) {
+        rw::dsl::DHeapLockFree<int, size_t> heap(compareNodeEqual, compareNodePriority, 4);
+
+        // 插入元素
+        heap.insert(10, 5);
+        heap.insert(20, 3);
+        heap.insert(30, 8);
+
+        bool isGet = false;
+
+        // 获取堆顶元素
+        EXPECT_EQ(heap.top(isGet), 20); // 优先级最低的元素
+        EXPECT_TRUE(isGet); // 验证操作成功
+
+        EXPECT_EQ(heap.top(isGet), 10); // 下一个优先级最低的元素
+        EXPECT_TRUE(isGet);
+
+        EXPECT_EQ(heap.top(isGet), 30); // 最后一个元素
+        EXPECT_TRUE(isGet);
+
+        // 堆为空时
+        EXPECT_EQ(heap.top(isGet), int()); // 返回默认构造的值
+        EXPECT_FALSE(isGet); // 验证操作失败
+    }
+
+    TEST(DHeapLockFreeTest, PeekWithIsGet) {
+        rw::dsl::DHeapLockFree<int, size_t> heap(compareNodeEqual, compareNodePriority, 4);
+
+        // 插入元素
+        heap.insert(10, 5);
+        heap.insert(20, 3);
+
+        bool isGet = false;
+
+        // 验证堆顶元素
+        EXPECT_EQ(heap.peek(isGet), 20); // 优先级最低的元素
+        EXPECT_TRUE(isGet); // 验证操作成功
+
+        EXPECT_EQ(heap.peek(isGet), 20); // peek 不移除元素
+        EXPECT_TRUE(isGet);
+
+        // 清空堆
+        heap.clear();
+
+        // 堆为空时
+        EXPECT_EQ(heap.peek(isGet), int()); // 返回默认构造的值
+        EXPECT_FALSE(isGet); // 验证操作失败
+    }
+
     TEST(DHeapLockFreeTest, InsertAndTop) {
         rw::dsl::DHeapLockFree<int, size_t> heap(compareNodeEqual, compareNodePriority, 4);
 

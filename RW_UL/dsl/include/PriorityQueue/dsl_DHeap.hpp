@@ -65,6 +65,33 @@ namespace rw
 				}
 				return this->_heap_array.front().first;
 			}
+
+			T top(bool& isGet) override
+			{
+				if (this->_heap_array.empty()) {
+					isGet = false; // 堆为空，无法获取元素
+					return T(); // 返回默认构造的 T 对象
+				}
+				isGet = true; // 成功获取元素
+				T top_element = this->_heap_array.front().first;
+				std::swap(this->_heap_array.front(), this->_heap_array.back());
+				this->_heap_array.pop_back();
+				if (!this->_heap_array.empty()) {
+					push_down(0);
+				}
+				return top_element;
+			}
+
+			T peek(bool& isGet) override
+			{
+				if (this->_heap_array.empty()) {
+					isGet = false; // 堆为空，无法查看元素
+					return T(); // 返回默认构造的 T 对象
+				}
+				isGet = true; // 成功查看元素
+				return this->_heap_array.front().first;
+			}
+
 			void insert(T element, Priority priority) override {
 				this->_heap_array.emplace_back(element, priority);
 				bubble_up(this->_heap_array.size() - 1);
@@ -90,7 +117,7 @@ namespace rw
 					push_down(std::distance(this->_heap_array.begin(), it));
 				}
 			}
-			size_t size() override {
+			size_t size() const override {
 				return this->_heap_array.size();
 			}
 
@@ -146,7 +173,7 @@ namespace rw
 		};
 
 		template <class T, class Priority = size_t>
-		class DHeapLockFree {
+		class DHeapLockFree : public IPriorityQueue<T, Priority> {
 		public:
 			explicit DHeapLockFree(size_t d = 4) : _d(d) {}
 
@@ -156,10 +183,11 @@ namespace rw
 				: _d(d), _compareNodeEqual(compareNodeEqual), _compareNodePriority(compareNodePriority) {
 			}
 
-			~DHeapLockFree() = default;
+			~DHeapLockFree() override = default;
 
 		public:
-			T top() {
+			T top() override
+			{
 				std::unique_lock<std::shared_mutex> lock(_mutex); // 使用独占锁以确保线程安全
 				if (_heap_array.empty()) {
 					throw std::runtime_error("Heap is empty");
@@ -174,7 +202,8 @@ namespace rw
 
 			}
 
-			T peek() {
+			T peek() override
+			{
 				std::shared_lock<std::shared_mutex> lock(_mutex);
 				if (_heap_array.empty()) {
 					throw std::runtime_error("Heap is empty");
@@ -182,13 +211,43 @@ namespace rw
 				return _heap_array.front().first;
 			}
 
-			void insert(T element, Priority priority) {
+			T top(bool& isGet) override
+			{
+				std::unique_lock<std::shared_mutex> lock(_mutex); // 使用独占锁以确保线程安全
+				if (_heap_array.empty()) {
+					isGet = false; // 堆为空，无法获取元素
+					return T(); // 返回默认构造的 T 对象
+				}
+				isGet = true; // 成功获取元素
+				T top_element = _heap_array.front().first; // 获取堆顶元素
+				std::swap(_heap_array.front(), _heap_array.back()); // 将堆顶元素与最后一个元素交换
+				_heap_array.pop_back(); // 删除最后一个元素（即原堆顶）
+				if (!_heap_array.empty()) {
+					push_down(0); // 调整堆以保持堆性质
+				}
+				return top_element; // 返回堆顶元素
+			}
+
+			T peek(bool& isGet) override
+			{
+				std::shared_lock<std::shared_mutex> lock(_mutex); // 使用共享锁以确保线程安全
+				if (_heap_array.empty()) {
+					isGet = false; // 堆为空，无法查看元素
+					return T(); // 返回默认构造的 T 对象
+				}
+				isGet = true; // 成功查看元素
+				return _heap_array.front().first; // 返回堆顶元素
+			}
+
+			void insert(T element, Priority priority) override
+			{
 				std::unique_lock<std::shared_mutex> lock(_mutex);
 				_heap_array.emplace_back(element, priority);
 				bubble_up(_heap_array.size() - 1);
 			}
 
-			void remove(T element) {
+			void remove(T element) override
+			{
 				std::unique_lock<std::shared_mutex> lock(_mutex);
 				auto it = std::find_if(_heap_array.begin(), _heap_array.end(),
 					[element, this](const std::pair<T, Priority>& p) {
@@ -204,7 +263,8 @@ namespace rw
 				}
 			}
 
-			void update(T element, Priority priority) {
+			void update(T element, Priority priority) override
+			{
 				std::unique_lock<std::shared_mutex> lock(_mutex);
 				auto it = std::find_if(_heap_array.begin(), _heap_array.end(),
 					[element, this](const std::pair<T, Priority>& p) {
@@ -217,12 +277,13 @@ namespace rw
 				}
 			}
 
-			size_t size() const {
+			size_t size() const override {
 				std::shared_lock<std::shared_mutex> lock(_mutex);
 				return _heap_array.size();
 			}
 
-			void clear() {
+			void clear() override
+			{
 				std::unique_lock<std::shared_mutex> lock(_mutex);
 				_heap_array.clear();
 			}

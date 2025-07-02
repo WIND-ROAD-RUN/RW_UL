@@ -95,6 +95,9 @@ namespace rw
 		   */
 			virtual T top() = 0;
 
+			virtual T top(bool & isGet) = 0;
+
+
 			/**
 			*@Parameters:
 			*  void
@@ -106,6 +109,8 @@ namespace rw
 			*  1. std::runtime_error: If the priority queue is empty
 			*/
 			virtual T peek() = 0;
+
+			virtual T peek(bool& isGet) = 0;
 
 			/**
 			 *@Parameters:
@@ -157,7 +162,7 @@ namespace rw
 			*  The size of the priority queue
 			*@Throws: void
 			*/
-			virtual size_t size() = 0;
+			virtual size_t size() const= 0;
 
 			/**
 			 *@Parameters:
