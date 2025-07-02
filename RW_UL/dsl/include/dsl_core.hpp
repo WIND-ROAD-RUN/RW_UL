@@ -35,6 +35,13 @@ namespace rw {
 		inline Shared_ptr<T> make_shared(Args&&... args) {
 			return std::make_shared<T>(std::forward<Args>(args)...);
 		}
+
+
+		enum class PriorityQueueType
+		{
+			DHeap,
+			DHeapLockFree
+		};
 	}
 }
 
