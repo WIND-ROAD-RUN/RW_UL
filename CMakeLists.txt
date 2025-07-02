@@ -46,6 +46,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(HWLOC REQUIRED hwloc)
+	link_directories( ${HWLOC_LIBRARY_DIRS})
 
 if(MSVC)
     # 对于 MSVC 编译器，启用 UTF-8 编码
