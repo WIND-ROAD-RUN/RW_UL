@@ -20,9 +20,9 @@ namespace rw
                 size_t d = 4) {
                 switch (type) {
                 case PriorityQueueType::DHeap:
-                    return make_shared<DHeap<T, Priority>>(compareNodeEqual, compareNodePriority, d);
+                    return std::make_shared<DHeap<T, Priority>>(compareNodeEqual, compareNodePriority, d);
                 case PriorityQueueType::DHeapLockFree:
-                    return make_shared<DHeapLockFree<T, Priority>>(compareNodeEqual, compareNodePriority, d);
+                    return std::make_shared<DHeapLockFree<T, Priority>>(compareNodeEqual, compareNodePriority, d);
                 default:
                     throw std::invalid_argument("Invalid PriorityQueueType");
                 }
