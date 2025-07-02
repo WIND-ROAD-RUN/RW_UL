@@ -3,11 +3,13 @@
 
 #include"PictureViewerThumbnails.h"
 #include "FullKeyBoard.h"
+
+#include"LicenseValidation.h"
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	FullKeyBoard p;
+	LicenseValidation p;
 	p.show();
 	
 
