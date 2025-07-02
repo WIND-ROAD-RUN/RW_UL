@@ -13,7 +13,7 @@ namespace rw
 		enum class ActivationBits
 		{
 			Hexadecimal=16,
-			Octal=10,
+			Octal=8,
 			Binary=2
 		};
 

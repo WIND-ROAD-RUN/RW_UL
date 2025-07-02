@@ -8,11 +8,9 @@ namespace rw {
 		struct SymmetricEncryptorContext
 		{
 		public:
-			ActivationBits bits;
+			ActivationCodeStruct decryptString{ };
 		public:
-			std::string decryptString{ };
-		public:
-			std::string encryptString{};
+			ActivationCodeStruct encryptString{};
 		public:
 			std::string key{};
 		};

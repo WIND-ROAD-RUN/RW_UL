@@ -23,6 +23,8 @@ namespace rw
 		public:
 			explicit SymmetricEncryptor(SymmetricEncryptorContext context);
 			~SymmetricEncryptor() = default;
+		public:
+
 		};
 	}
 }
