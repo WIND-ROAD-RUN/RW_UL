@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	LicenseValidation p;
+	FullKeyBoard p;
 	p.show();
 	
 

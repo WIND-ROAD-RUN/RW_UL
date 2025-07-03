@@ -387,6 +387,8 @@ void FullKeyBoard::initializeKeyMap()
 	// 特殊字符
 	keyMap[ui->pbtn_numdunhao] = KeyEntry{ "、", "、", "," };
 	keyMap[ui->pbtn_numjuhao] = KeyEntry{ "。", "。", "." };
+	keyMap[ui->pbtn_daxie] = KeyEntry{ "abc", "ABC", " " };
+	keyMap[ui->pbtn_qiehuanfuhao] = KeyEntry{ "?#&&", "?#&&", "abc" };
 }
 
 void FullKeyBoard::handleButtonClicked()
