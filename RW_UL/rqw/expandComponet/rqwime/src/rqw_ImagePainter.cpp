@@ -279,6 +279,7 @@ namespace rw
 			drawShapesOnSourceImg(resultImage, rectInfo, config);
 			return resultImage;
 		}
+
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, PainterConfig config)
 		{
 			if (config.shapeType == ShapeType::Rectangle) {
@@ -310,11 +311,43 @@ namespace rw
 			font.setPixelSize(config.fontSize);
 			textPainter.setFont(font);
 
-			textPainter.drawText(
-				QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10),
-				config.text
-			);
+			QPointF textPosition;
+			int offset = config.fontSize ; // 动态计算偏移量，基于字体大小的一半
+			switch (config.textLocate) {
+			case PainterConfig::TextLocate::LeftTopIn:
+				textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
+				break;
+			case PainterConfig::TextLocate::LeftTopOut:
+				textPosition = QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10);
+				break;
+			case PainterConfig::TextLocate::RightTopIn:
+				textPosition = QPointF(rectInfo.rightTop.first - offset * config.text.size() / 1.5, rectInfo.rightTop.second + offset);
+				break;
+			case PainterConfig::TextLocate::RightTopOut:
+				textPosition = QPointF(rectInfo.rightTop.first- offset*config.text.size()/1.5, rectInfo.rightTop.second - 10);
+				break;
+			case PainterConfig::TextLocate::LeftBottomIn:
+				textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
+				break;
+			case PainterConfig::TextLocate::LeftBottomOut:
+				textPosition = QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second + offset);
+				break;
+			case PainterConfig::TextLocate::RightBottomIn:
+				textPosition = QPointF(rectInfo.rightBottom.first - offset * config.text.size() / 1.5, rectInfo.rightBottom.second - 10);
+				break;
+			case PainterConfig::TextLocate::RightBottomOut:
+				textPosition = QPointF(rectInfo.rightBottom.first- offset * config.text.size() / 1.5, rectInfo.rightBottom.second + offset);
+				break;
+			case PainterConfig::TextLocate::CenterIn:
+				textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);
+				break;
+			default:
+				throw std::invalid_argument("Unsupported TextLocate type.");
+			}
+
+			textPainter.drawText(textPosition, config.text);
 		}
+
 		void ImagePainter::drawVerticalLine(QImage& image, int position, const ImagePainter::PainterConfig& config)
 		{
 			QPainter painter(&image);

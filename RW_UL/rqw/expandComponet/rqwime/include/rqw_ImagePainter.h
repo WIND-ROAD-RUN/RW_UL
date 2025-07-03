@@ -36,13 +36,32 @@ namespace rw {
 
 			struct PainterConfig
 			{
+			public:
+				enum class TextLocate
+				{
+					LeftTopIn,// Text is inside the left top corner of the shape
+					LeftTopOut,
+					RightTopIn,
+					RightTopOut,
+					LeftBottomIn,
+					LeftBottomOut,
+					RightBottomIn,
+					RightBottomOut,
+					CenterIn,
+				};
+			public:
 				ShapeType shapeType{ ShapeType::Rectangle };
+				int thickness = 2;
+				QColor color{ Qt::red };
+			public:
+				QString text;
 				int fontSize = 25;
 				int fontThickness = 1;
-				int thickness = 2;
-				QString text;
-				QColor color{ Qt::red };
 				QColor textColor{ Qt::green };
+			public:
+				//The location of the text relative to the shape
+				TextLocate textLocate{ TextLocate::LeftTopOut };
+	
 			};
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.06);
