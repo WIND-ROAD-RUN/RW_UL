@@ -258,8 +258,6 @@ namespace rw
 		{
 			for (const auto& item : rectInfo)
 			{
-				config.text = QString::number(item.classId);
-				config.fontSize = 25;
 				drawShapesOnSourceImg(image, item, config);
 			}
 		}
@@ -270,8 +268,6 @@ namespace rw
 			for (const auto& classId : index) {
 				for (const auto& item : classId)
 				{
-					config.text = QString::number(rectInfo[item].classId);
-					config.fontSize = 25;
 					drawShapesOnSourceImg(image, rectInfo[item], config);
 				}
 			}
@@ -286,16 +282,6 @@ namespace rw
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, PainterConfig config)
 		{
 			if (config.shapeType == ShapeType::Rectangle) {
-				/*QPainter painter(&image);
-				painter.setPen(QPen(config.color, config.thickness));
-				painter.drawRect(
-					QRectF(
-						rectInfo.leftTop.first,
-						rectInfo.leftTop.second,
-						rectInfo.rightBottom.first - rectInfo.leftTop.first,
-						rectInfo.rightBottom.second - rectInfo.leftTop.second
-					)
-				);*/
 				QPainter painter(&image);
 				painter.setPen(QPen(config.color, config.thickness));
 
