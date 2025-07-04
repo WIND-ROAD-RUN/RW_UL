@@ -15,7 +15,8 @@ namespace rw {
 		enum class ImageSaveEnginePolicy
 		{
 			Normal,
-			MaxSaveImageNum
+			MaxSaveImageNum,
+			SaveAllImg
 		};
 
 		struct ImageInfo

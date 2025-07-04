@@ -37,7 +37,8 @@ namespace rw {
 		void ImageSaveEngine::pushImage(const ImageInfo& image)
 		{
 			QMutexLocker locker(&mutex);
-			if (saveQueue.size() >= maxQueueSize) {
+			// 如果策略为 SaveAllImg，则不限制队列大小
+			if (savePolicy != ImageSaveEnginePolicy::SaveAllImg && saveQueue.size() >= maxQueueSize) {
 				std::cerr << "Queue is full, dropping image." << std::endl;
 				return;
 			}
