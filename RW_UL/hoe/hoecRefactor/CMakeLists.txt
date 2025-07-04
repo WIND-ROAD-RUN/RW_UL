@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(HOEC_REFACTOR_PRIVATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/private)
 set(MVS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/MVS)
 set(DS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/DS)
+set(iRay_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/iRay)
 
 find_package(OpenCV REQUIRED)
 
@@ -33,6 +34,7 @@ add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} 
     PRIVATE ${DS_PATH}/include
     PRIVATE ${MVS_PATH}/Includes
+	PRIVATE ${iRay_PATH}/Include
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/include
 )
@@ -47,12 +49,15 @@ if(WIN32)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${MVS_PATH}/Libraries/windows64/MvCameraControl.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x64/DVPCamera64.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x64/dvpir64.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${iRay_PATH}/lib/x64/MVSDKmd.lib)
+
         # 在这里添加特定于Win64的设置
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
         #message(STATUS "当前为32位系统")
         target_link_libraries(${PROJECT_NAME} PRIVATE ${MVS_PATH}/Libraries/windows32/MvCameraControl.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x86/DVPCamera64.lib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${DS_PATH}/lib/x86/dvpir64.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${iRay_PATH}/lib/win32/MVSDKmd.lib)
         # 在这里添加特定于Win32的设置
     endif()
 else()
