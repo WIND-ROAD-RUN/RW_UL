@@ -100,16 +100,27 @@ void HalconWidget::showEvent(QShowEvent* event)
 
 void HalconWidget::resizeEvent(QResizeEvent* event)
 {
-    // 检查窗口大小是否真的发生变化
-    if (event->size() != event->oldSize())
+    if (!_image)
     {
-        // 仅在窗口大小变化时更新显示
-        displayImg();
+        QWidget::resizeEvent(event);
+        return;
     }
-   
-    /*closeHalconWindow();
-    initializeHalconWindow();*/
-    displayImg();
 
+    HTuple width, height;
+    GetImageSize(*_image, &width, &height);
+
+    double imgAspectRatio = static_cast<double>(width.I()) / height.I();
+
+    const int minHeight = 100; 
+    const int minWidth = static_cast<int>(minHeight * imgAspectRatio);
+
+    this->setMinimumSize(minWidth, minHeight);
+
+    if (event->size().width() < minWidth || event->size().height() < minHeight)
+    {
+        return;
+    }
+
+    displayImg();
     QWidget::resizeEvent(event);
 }
