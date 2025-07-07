@@ -39,6 +39,7 @@ public:
 public:
 	QString inputFile;
 	QString outputFile;
+	QString extraPar;
 	ConvertPolicy _convertPolicy{ ConvertPolicy::defaultPolicy };
 public:
 	explicit Converter(QObject* parent = nullptr);

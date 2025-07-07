@@ -157,6 +157,7 @@ void ModelConverter::pbtn_startConvert_clicked()
 		return;
 	}
 
+	_converter->extraPar = ui->lEdit_extraPar->text();
 	_converter->run();
 }
 

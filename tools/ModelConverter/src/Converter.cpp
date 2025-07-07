@@ -67,7 +67,10 @@ void Converter::run()
 		str += " --defaultPolicy";
 		break;
 	}
-
+	if (!extraPar.isEmpty())
+	{
+		str += " " + extraPar.toStdString();
+	}
 	_processExportToEngine->start("cmd.exe", { "/c",str.c_str() });
 
 	exec();
