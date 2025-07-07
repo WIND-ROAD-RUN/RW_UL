@@ -60,6 +60,12 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
+target_include_directories(${PROJECT_NAME} 
+	PRIVATE ${Halcon_include})
+
+target_link_libraries(${PROJECT_NAME} 
+	PRIVATE ${Halcon_libs})
+
 # 安装可执行文件
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # 可执行文件安装到 bin 目录
