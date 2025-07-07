@@ -10,6 +10,7 @@ Demo::Demo(QWidget *parent)
 	ui->setupUi(this);
 	halconWidget = new HalconWidget(this);
     ui->horizontalLayout->replaceWidget(ui->label, halconWidget);
+	delete ui->label; 
 }
 
 Demo::~Demo()
@@ -22,7 +23,7 @@ void Demo::ini()
     HalconCpp::HObject image;
     ReadImage(&image, "C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
 
-    halconWidget->displayImage(image);
+    halconWidget->setImage(image);
 
 }
 

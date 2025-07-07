@@ -1,8 +1,12 @@
 #pragma once
 
 #include <QWidget>
-#include "halconcpp/HalconCpp.h"
 
+namespace HalconCpp
+{
+    class HTuple;
+	class HObject;
+}
 
 class HalconWidget : public QWidget
 {
@@ -12,13 +16,16 @@ public:
     explicit HalconWidget(QWidget* parent = nullptr);
     ~HalconWidget() override;
 
-    void displayImage(const HalconCpp::HObject& image);
-
-protected:
-    void resizeEvent(QResizeEvent* event) override;
-
+    void setImage(const HalconCpp::HObject& image);
 private:
-    HalconCpp::HTuple  *_halconWindow; 
+    HalconCpp::HTuple  *_halconWindow{ nullptr };
+    HalconCpp::HObject* _image{nullptr};
+private:
     void initializeHalconWindow();
     void closeHalconWindow();
+    void displayImg();
+
+protected:
+    void showEvent(QShowEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 };

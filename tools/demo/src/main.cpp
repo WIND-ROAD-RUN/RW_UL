@@ -10,8 +10,9 @@ int main(int argc, char* argv[])
 
 
 	Demo l;
-	l.show();
 	l.ini();
+	l.show();
+
 
 
 	return a.exec();
