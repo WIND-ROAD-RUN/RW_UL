@@ -39,6 +39,38 @@ void Converter::run()
 	str += inputFile.toStdString();
 	str += R"( --saveEngine=)";
 	str += outputFile.toStdString();
+
+	switch (_convertPolicy)
+	{
+	case ConvertPolicy::defaultPolicy:
+		str += " --defaultPolicy";
+		break;
+	case ConvertPolicy::fp16:
+		str += " --fp16";
+		break;
+	case ConvertPolicy::bf16:
+		str += " --bf16";
+		break;
+	case ConvertPolicy::int8:
+		str += " --int8";
+		break;
+	case ConvertPolicy::fp8:
+		str += " --fp8";
+		break;
+	case ConvertPolicy::int4:
+		str += " --int4";
+		break;
+	case ConvertPolicy::best:
+		str += " --best";
+		break;
+	default:
+		str += " --defaultPolicy";
+		break;
+	}
+	if (!extraPar.isEmpty())
+	{
+		str += " " + extraPar.toStdString();
+	}
 	_processExportToEngine->start("cmd.exe", { "/c",str.c_str() });
 
 	exec();
@@ -48,14 +80,14 @@ void Converter::handleOutput()
 {
 	QByteArray output = _processExportToEngine->readAllStandardOutput();
 	QString outputStr = QString::fromLocal8Bit(output);
-	emit appRunLog(outputStr); // ½«Êä³öÄÚÈİ·¢ËÍµ½ÈÕÖ¾»ò½çÃæ
+	emit appRunLog(outputStr); // å°†è¾“å‡ºå†…å®¹å‘é€åˆ°æ—¥å¿—æˆ–ç•Œé¢
 }
 
 void Converter::handleError()
 {
 	QByteArray output = _processExportToEngine->readAllStandardOutput();
 	QString outputStr = QString::fromLocal8Bit(output);
-	emit appRunLog(outputStr); // ½«Êä³öÄÚÈİ·¢ËÍµ½ÈÕÖ¾»ò½çÃæ
+	emit appRunLog(outputStr); // å°†è¾“å‡ºå†…å®¹å‘é€åˆ°æ—¥å¿—æˆ–ç•Œé¢
 }
 
 void Converter::handleFinished(int exitCode, QProcess::ExitStatus exitStatus)
