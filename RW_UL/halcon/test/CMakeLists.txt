@@ -21,6 +21,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE halcon)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+target_include_directories(${PROJECT_NAME} 
+	PRIVATE ${Halcon_include})
+
+target_link_libraries(${PROJECT_NAME} 
+	PRIVATE ${Halcon_libs})
+
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 include(GoogleTest)
