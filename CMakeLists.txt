@@ -19,15 +19,15 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(SerializedCodeGenerator)
 
     include(./cmake/func.cmake)
-    include(./cmake/iniEnvironmet.cmake)
-	include(./cmake/findPackage.cmake)
+    include(./cmake/EnvironmetIni.cmake)
+	include(./cmake/PackageFind.cmake)
 
     set(INSTALL_PATH ${CMAKE_SOURCE_DIR}/install/${CMAKE_BUILD_TYPE})
 endif()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
-	include(./cmake/iniPackage.cmake)
-	include(./cmake/iniComplier.cmake)
+	include(./cmake/PackageIni.cmake)
+	include(./cmake/ComplierIni.cmake)
 
 find_package(gtest REQUIRED CONFIG)
 
