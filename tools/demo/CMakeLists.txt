@@ -47,6 +47,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concur
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE rqw
 	PRIVATE rqwime
+	PRIVATE rqwhalcon
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -59,6 +60,12 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     ${TensorRT_exes} ${TensorRT_dlls} ${ZMotionRutime_dlls} ${OnnxRuntime_dlls}
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
+
+target_include_directories(${PROJECT_NAME} 
+	PRIVATE ${Halcon_include})
+
+target_link_libraries(${PROJECT_NAME} 
+	PRIVATE ${Halcon_libs})
 
 # 安装可执行文件
 install(TARGETS ${PROJECT_NAME}

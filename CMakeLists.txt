@@ -19,46 +19,19 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(SerializedCodeGenerator)
 
     include(./cmake/func.cmake)
-    include(./cmake/iniEnvironmet.cmake)
-
-    set(TensorRTPath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/TensorRT-10.9.0.34)
-    set(TensorRT_include ${TensorRTPath}/include)
-
-    find_all_libs(${TensorRTPath}/lib TensorRT_libs)
-    find_all_dlls(${TensorRTPath}/lib TensorRT_dlls)
-    find_all_exes(${TensorRTPath}/bin TensorRT_exes)
-
-    set(OnnxRuntimePath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/onnxruntime-win-x64-gpu-1.21.0)
-    set(OnnxRuntime_include ${OnnxRuntimePath}/include)
-
-    find_all_libs(${OnnxRuntimePath}/lib OnnxRuntime_libs)
-    find_all_dlls(${OnnxRuntimePath}/lib OnnxRuntime_dlls)
-
-    set(ZMotionRutimePath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/ZMotion)
-    set(ZMotionRutime_include ${ZMotionRutimePath}/include)
-
-    find_all_libs(${ZMotionRutimePath}/lib ZMotionRutime_libs)
-    find_all_dlls(${ZMotionRutimePath}/dll ZMotionRutime_dlls)
+    include(./cmake/EnvironmetIni.cmake)
+	include(./cmake/PackageFind.cmake)
 
     set(INSTALL_PATH ${CMAKE_SOURCE_DIR}/install/${CMAKE_BUILD_TYPE})
-
-    enable_testing()
 endif()
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
-	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(HWLOC REQUIRED hwloc)
-	link_directories( ${HWLOC_LIBRARY_DIRS})
-
-if(MSVC)
-    # 对于 MSVC 编译器，启用 UTF-8 编码
-    add_compile_options("/utf-8")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    # 对于 GCC 或 Clang 编译器，设置源文件编码为 UTF-8
-    add_compile_options("-finput-charset=UTF-8")
-endif()
+	include(./cmake/PackageIni.cmake)
+	include(./cmake/ComplierIni.cmake)
 
 find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(RW_UL)
 add_subdirectory(tools)
+
+ enable_testing()
