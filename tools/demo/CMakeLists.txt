@@ -47,6 +47,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concur
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE rqw
 	PRIVATE rqwime
+	PRIVATE rqwhalcon
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

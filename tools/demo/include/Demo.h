@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
-#include"halconcpp/HalconCpp.h"
-#include"HalconWidget.hpp"
+#include"rqw_HalconWidget.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DemoClass; };
@@ -12,7 +11,7 @@ class Demo : public QMainWindow
 {
 	Q_OBJECT
 public:
-	HalconWidget *halconWidget;
+	rw::rqw::HalconWidget *halconWidget;
 public:
 	Demo(QWidget *parent = nullptr);
 	~Demo() override;
