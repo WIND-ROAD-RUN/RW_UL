@@ -120,6 +120,43 @@ void ModelConverter::pbtn_startConvert_clicked()
 	ui->pbtn_startConvert->setEnabled(false);
 	ui->pbtn_tab1Exit->setEnabled(false);
 	ui->pbtn_preStep->setEnabled(false);
+
+
+	auto currentText=ui->comboBox->currentText();
+	if (currentText=="default")
+	{
+		_converter->_convertPolicy = ConvertPolicy::defaultPolicy;
+	}
+	else if (currentText == "fp16")
+	{
+		_converter->_convertPolicy = ConvertPolicy::fp16;
+	}
+	else if (currentText == "bf16")
+	{
+		_converter->_convertPolicy = ConvertPolicy::bf16;
+	}
+	else if (currentText == "int8")
+	{
+		_converter->_convertPolicy = ConvertPolicy::int8;
+	}
+	else if (currentText == "fp8")
+	{
+		_converter->_convertPolicy = ConvertPolicy::fp8;
+	}
+	else if (currentText == "int4")
+	{
+		_converter->_convertPolicy = ConvertPolicy::int4;
+	}
+	else if (currentText == "best")
+	{
+		_converter->_convertPolicy = ConvertPolicy::best;
+	}
+	else
+	{
+		QMessageBox::warning(this, tr("Warning"), tr("Please select a valid conversion policy."));
+		return;
+	}
+
 	_converter->run();
 }
 

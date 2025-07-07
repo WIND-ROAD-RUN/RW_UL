@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -50,6 +50,56 @@
           </item>
           <item>
            <widget class="QLineEdit" name="lEdit_outPutPath"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>转换精度：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox">
+            <item>
+             <property name="text">
+              <string>default</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>fp16</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>bf16</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>int8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>fp8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>int4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>best</string>
+             </property>
+            </item>
+           </widget>
           </item>
          </layout>
         </item>
