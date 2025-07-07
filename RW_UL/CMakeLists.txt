@@ -10,7 +10,6 @@ add_subdirectory(cla)
 # 检查是否为Windows操作系统
 if(WIN32)
     if(INSTALL_HALCON)
-		message("-------------${Halcon_libs}")
 		add_subdirectory(halcon)
     endif()
 else()
