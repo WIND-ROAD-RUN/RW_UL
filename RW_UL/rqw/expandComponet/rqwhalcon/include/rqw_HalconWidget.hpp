@@ -25,8 +25,8 @@ namespace rw {
             void setImage(const HalconCpp::HImage& image);
             void setImage(const QImage& image);
             void setImage(const cv::Mat& mat);
-        private:
-            HalconCpp::HTuple* _halconWindow{ nullptr };
+        public:
+            HalconCpp::HTuple* _halconWindowHandle{ nullptr };
             HalconCpp::HImage* _image{ nullptr };
         private:
             void initializeHalconWindow();
@@ -36,6 +36,8 @@ namespace rw {
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
+        public slots:
+            void drawRect();
         };
 
 	}

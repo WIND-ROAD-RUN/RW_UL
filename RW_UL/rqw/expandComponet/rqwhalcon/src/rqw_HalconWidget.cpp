@@ -40,27 +40,31 @@ namespace rw {
 			displayImg();
         }
 
+        void HalconWidget::setImage(const cv::Mat& mat)
+        {
+        }
+
         void HalconWidget::initializeHalconWindow()
         {
-            _halconWindow = new HalconCpp::HTuple();
+            _halconWindowHandle = new HalconCpp::HTuple();
             Hlong winId = this->winId();
             auto size = this->size();
 
-            OpenWindow(0, 0, size.width(), size.height(), winId, "visible", "", _halconWindow);
+            OpenWindow(0, 0, size.width(), size.height(), winId, "visible", "", _halconWindowHandle);
         }
 
         void HalconWidget::closeHalconWindow()
         {
-            if (_halconWindow != nullptr)
+            if (_halconWindowHandle != nullptr)
             {
-                CloseWindow(*_halconWindow);
-                delete _halconWindow;
+                CloseWindow(*_halconWindowHandle);
+                delete _halconWindowHandle;
             }
         }
 
         void HalconWidget::displayImg()
         {
-            if (!_image || !_halconWindow)
+            if (!_image || !_halconWindowHandle)
             {
                 return;
             }
@@ -98,13 +102,13 @@ namespace rw {
             }
 
             // 设置显示区域
-            SetPart(*_halconWindow, 0, 0, height.I() - 1, width.I() - 1);
+            SetPart(*_halconWindowHandle, 0, 0, height.I() - 1, width.I() - 1);
 
             // 调整窗口显示位置
-            HalconCpp::SetWindowExtents(*_halconWindow, offsetX, offsetY, displayWidth, displayHeight);
+            HalconCpp::SetWindowExtents(*_halconWindowHandle, offsetX, offsetY, displayWidth, displayHeight);
 
             // 显示图像
-            DispObj(*_image, *_halconWindow);
+            DispObj(*_image, *_halconWindowHandle);
         }
 
         void HalconWidget::showEvent(QShowEvent* event)
@@ -140,5 +144,20 @@ namespace rw {
             QWidget::resizeEvent(event);
         }
 
+        void HalconWidget::drawRect()
+        {
+            HalconCpp::HTuple  hv_WindowHandle, hv_Row1, hv_Column1;
+            HalconCpp::HTuple  hv_Row2, hv_Column2, hv_ModelID, hv_Row, hv_Column, hv_Angle, hv_Score, hv_HomMat2D;
+            HalconCpp::HObject ho_Rectangle, ho_ImageReduced, ho_ModelContours, ho_ContoursAffineTrans;
+            HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
+          
+            HalconCpp::SetDraw(*_halconWindowHandle, "margin");
+           
+            HalconCpp::SetLineWidth(*_halconWindowHandle, 5);
+
+            HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
+
+            HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
+        }
 	}
 }

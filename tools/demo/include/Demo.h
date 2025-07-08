@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include"rqw_HalconWidget.hpp"
+#include <halconcpp/HalconCpp.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DemoClass; };
@@ -15,14 +16,20 @@ public:
 public:
 	Demo(QWidget *parent = nullptr);
 	~Demo() override;
-
+public:
+	void build_ui();
+	void build_connect();
 public:
 	void ini();
+	HalconCpp::HImage image;
 
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 
 private:
 	Ui::DemoClass *ui;
+public:
+	void pushButton_clicked();
 };
+
 
