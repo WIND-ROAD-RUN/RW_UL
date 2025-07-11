@@ -82,30 +82,30 @@ namespace rw {
             double imgAspectRatio = static_cast<double>(width.I()) / height.I();
             double windowAspectRatio = static_cast<double>(windowWidth) / windowHeight;
 
+            // 设置 Halcon 窗口铺满整个 QWidget
+            SetWindowExtents(*_halconWindowHandle, 0, 0, windowWidth, windowHeight);
+
             // 计算显示区域
-            int displayWidth, displayHeight, offsetX, offsetY;
+            int partWidth, partHeight, offsetX, offsetY;
             if (imgAspectRatio > windowAspectRatio)
             {
                 // 图像更宽，以宽度为基准
-                displayWidth = windowWidth;
-                displayHeight = static_cast<int>(windowWidth / imgAspectRatio);
+                partWidth = width.I();
+                partHeight = static_cast<int>(width.I() / windowAspectRatio);
                 offsetX = 0;
-                offsetY = (windowHeight - displayHeight) / 2;
+                offsetY = (partHeight - height.I()) / 2;
             }
             else
             {
                 // 图像更高，以高度为基准
-                displayHeight = windowHeight;
-                displayWidth = static_cast<int>(windowHeight * imgAspectRatio);
-                offsetX = (windowWidth - displayWidth) / 2;
+                partHeight = height.I();
+                partWidth = static_cast<int>(height.I() * windowAspectRatio);
+                offsetX = (partWidth - width.I()) / 2;
                 offsetY = 0;
             }
 
-            // 设置显示区域
-            SetPart(*_halconWindowHandle, 0, 0, height.I() - 1, width.I() - 1);
-
-            // 调整窗口显示位置
-            HalconCpp::SetWindowExtents(*_halconWindowHandle, offsetX, offsetY, displayWidth, displayHeight);
+            // 设置显示区域，使图像居中等比例显示
+            SetPart(*_halconWindowHandle, -offsetY, -offsetX, height.I() - 1 + offsetY, width.I() - 1 + offsetX);
 
             // 显示图像
             DispObj(*_image, *_halconWindowHandle);
