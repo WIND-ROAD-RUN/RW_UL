@@ -42,6 +42,13 @@ namespace rw {
 
         void HalconWidget::setImage(const cv::Mat& mat)
         {
+            HalconCpp::HImage hImage = HalconImageConverter::CVMatToHImage(mat);
+            if (_image)
+            {
+                delete _image;
+            }
+            _image = new HalconCpp::HImage(hImage);
+            displayImg();
         }
 
         void HalconWidget::initializeHalconWindow()
