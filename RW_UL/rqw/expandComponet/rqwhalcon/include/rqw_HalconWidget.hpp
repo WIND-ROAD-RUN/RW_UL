@@ -32,7 +32,8 @@ namespace rw {
             void initializeHalconWindow();
             void closeHalconWindow();
             void displayImg();
-
+        public:
+            void wheelEvent(QWheelEvent* event) override; 
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;

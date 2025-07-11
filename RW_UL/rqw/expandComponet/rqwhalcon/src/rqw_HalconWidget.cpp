@@ -118,6 +118,23 @@ namespace rw {
             DispObj(*_image, *_halconWindowHandle);
         }
 
+        void HalconWidget::wheelEvent(QWheelEvent* event)
+        {
+            if (rect().contains(event->position().toPoint())) { // 使用 position() 并转换为 QPoint
+                int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
+                if (delta > 0) {
+                    qDebug() << "Mouse wheel scrolled up inside HalconWidget.";
+                }
+                else {
+                    qDebug() << "Mouse wheel scrolled down inside HalconWidget.";
+                }
+                event->accept(); // 事件已处理
+            }
+            else {
+                event->ignore(); // 事件未处理
+            }
+        }
+
         void HalconWidget::showEvent(QShowEvent* event)
         {
             displayImg();
