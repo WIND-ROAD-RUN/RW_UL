@@ -34,12 +34,12 @@ void Demo::build_connect()
 void Demo::ini()
 {
   
-	HalconCpp::ReadImage(&image, "C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
-	Rgb1ToGray(image, &image);
+	/*HalconCpp::ReadImage(&image, "C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
+	Rgb1ToGray(image, &image);*/
 
 	//QImage image("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
 
-	//auto image = cv::imread("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
+	auto image = cv::imread("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
     halconWidget->setImage(image);
 
 

@@ -43,7 +43,6 @@ void Converter::run()
 	switch (_convertPolicy)
 	{
 	case ConvertPolicy::defaultPolicy:
-		str += " --defaultPolicy";
 		break;
 	case ConvertPolicy::fp16:
 		str += " --fp16";
