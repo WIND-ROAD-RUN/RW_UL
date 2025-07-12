@@ -107,6 +107,24 @@ namespace rw {
 			return _object;
 		}
 
+		void HalconWidgetDisObject::release()
+		{
+            if (_object)
+            {
+                delete _object;
+                _object = nullptr;
+			}
+		}
+
+		void HalconWidgetDisObject::updateObject(const HalconCpp::HObject& object)
+		{
+            if (_object)
+            {
+                delete _object; 
+            }
+			_object = new HalconCpp::HObject(object); 
+		}
+
 		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {
@@ -142,6 +160,20 @@ namespace rw {
             HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
             _halconObjects.push_back(newObject);
             refresh_allObject();
+        }
+
+        void HalconWidget::appendHObject(HalconWidgetDisObject object)
+        {
+            for (const auto& existingObject : _halconObjects)
+            {
+                if (existingObject->id == object.id)
+                {
+                    throw std::runtime_error("An object with the same ID already exists.");
+                }
+            }
+            HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
+            _halconObjects.push_back(newObject);
+			refresh_allObject();
         }
 
         void HalconWidget::clearHObject()
@@ -240,6 +272,11 @@ namespace rw {
             }
         }
 
+        void HalconWidget::updateWidget()
+        {
+            refresh_allObject();
+        }
+
         void HalconWidget::initialize_halconWindow()
         {
             _halconWindowHandle = new HalconCpp::HTuple();
@@ -260,6 +297,11 @@ namespace rw {
 
         void HalconWidget::wheelEvent(QWheelEvent* event)
         {
+            if (_isDrawingRect) {
+                event->ignore(); 
+                return;
+            }
+
             if (rect().contains(event->position().toPoint())) { // 检查鼠标是否在 HalconWidget 内
                 int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
                 double scaleFactor = (delta > 0) ? 1.1 : 0.9; // 缩放因子，向上滚动放大，向下滚动缩小
@@ -314,13 +356,11 @@ namespace rw {
         void HalconWidget::showEvent(QShowEvent* event)
         {
             refresh_allObject();
-            QWidget::showEvent(event);
         }
 
         void HalconWidget::resizeEvent(QResizeEvent* event)
         {
             refresh_allObject();
-            QWidget::resizeEvent(event);
         }
 
         void HalconWidget::mousePressEvent(QMouseEvent* event)

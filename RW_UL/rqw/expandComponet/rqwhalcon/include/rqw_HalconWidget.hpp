@@ -39,6 +39,10 @@ namespace rw {
         public:
             bool has_value();
             HalconCpp::HObject* value();
+        public:
+            void release();
+        public:
+            void updateObject(const HalconCpp::HObject & object);
 		};
 
         class HalconWidget : public QWidget
@@ -49,22 +53,16 @@ namespace rw {
             ~HalconWidget() override;
         private:
             HalconCpp::HTuple* _halconWindowHandle{ nullptr };
-        private:
-			std::vector<HalconWidgetDisObject*> _halconObjects;
-        private:
-            void append_HObject(HalconWidgetDisObject* object);
         public:
 			void appendHObject(const HalconWidgetDisObject& object);
+            void appendHObject(HalconWidgetDisObject object);
 			void clearHObject();
         public:
             HalconWidgetDisObject* getObjectPtrById(size_t id);
             HalconWidgetDisObject getObjectById(size_t id);
-        private:
-            void initialize_halconWindow();
-            void close_halconWindow();
-        private:
-            void refresh_allObject();
         public:
+			void updateWidget();
+        protected:
             void wheelEvent(QWheelEvent* event) override; 
         protected:
             void showEvent(QShowEvent* event) override;
@@ -73,6 +71,15 @@ namespace rw {
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
             void mouseReleaseEvent(QMouseEvent* event) override;
+        private:
+            std::vector<HalconWidgetDisObject*> _halconObjects;
+        private:
+            void append_HObject(HalconWidgetDisObject* object);
+        private:
+            void initialize_halconWindow();
+            void close_halconWindow();
+        private:
+            void refresh_allObject();
         private:
             bool _isDragging{ false }; 
             QPoint _lastMousePos;
