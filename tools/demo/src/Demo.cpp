@@ -2,6 +2,8 @@
 
 #include "ui_Demo.h"
 #include<Algorithm>
+#include <qevent.h>
+
 #include"opencv2/opencv.hpp"
 
 Demo::Demo(QWidget *parent)
@@ -45,15 +47,13 @@ void Demo::ini()
 	object.id = 0;
 	auto a=object.has_value();
     halconWidget->appendHObject(object);
-	auto id=halconWidget->getMinValidAppendId();
-	rw::rqw::HalconWidgetDisObjectPainterConfig config;
-	config.color = rw::rqw::RQWColor::Orange;
-	/*auto width = halconWidget->width() / 2;
-	halconWidget->appendVerticalLine(width);*/
-	auto width = halconWidget->height() / 2;
-	halconWidget->appendHorizontalLine(width, config);
-	
-	auto id2 = halconWidget->getMinValidAppendId();
+	auto id=halconWidget->getVailidAppendId();
+	rw::rqw::PainterConfig config;
+	config.color = rw::rqw::RQWColor::Green;
+	halconWidget->appendHorizontalLine(halconWidget->height() / 2, config);
+	halconWidget->appendVerticalLine(halconWidget->width() / 2, config);
+
+	auto id2 = halconWidget->getVailidAppendId();
 }
 
 void Demo::resizeEvent(QResizeEvent* event)
@@ -64,7 +64,8 @@ void Demo::resizeEvent(QResizeEvent* event)
 
 void Demo::pushButton_clicked()
 {
-	halconWidget->drawRect();
+	rw::rqw::PainterConfig config;
+	halconWidget->drawRect(config);
 
 	////画一个矩形
 	//HalconCpp::HTuple  hv_WindowHandle, hv_Row1, hv_Column1;
@@ -113,5 +114,14 @@ void Demo::pushButton_clicked()
 	//DispObj(ho_ContoursAffineTrans, *halconWidget->_halconWindowHandle);
 
 
+}
+
+void Demo::closeEvent(QCloseEvent* event)
+{
+	if (halconWidget->isDrawing())
+	{
+		event->accept();
+		return;
+	}
 }
 
