@@ -46,10 +46,13 @@ void Demo::ini()
 	auto a=object.has_value();
     halconWidget->appendHObject(object);
 	auto id=halconWidget->getMinValidAppendId();
+	rw::rqw::HalconWidgetDisObjectPainterConfig config;
+	config.color = rw::rqw::RQWColor::Orange;
 	/*auto width = halconWidget->width() / 2;
 	halconWidget->appendVerticalLine(width);*/
 	auto width = halconWidget->height() / 2;
-	halconWidget->appendHorizontalLine(width);
+	halconWidget->appendHorizontalLine(width, config);
+	
 	auto id2 = halconWidget->getMinValidAppendId();
 }
 

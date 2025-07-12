@@ -456,7 +456,8 @@ namespace rw {
             HalconCpp::GenRectangle1(verticalLine, row1.D(), calibratedPosition - config.thickness / 2, row2.D(), calibratedPosition + config.thickness / 2);
 
             // 设置颜色
-            SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
+            auto [r, g, b] = RQWColorToRGB(config.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
 
             // 创建并添加对象
             HalconWidgetDisObject object(verticalLine);
@@ -492,7 +493,8 @@ namespace rw {
             HalconCpp::GenRectangle1(horizontalLine, calibratedPosition - config.thickness / 2, col1.D(), calibratedPosition + config.thickness / 2, col2.D());
 
             // 设置颜色
-            SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
+            auto [r,g,b] = RQWColorToRGB(config.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
 
             // 创建并添加对象
             HalconWidgetDisObject object(horizontalLine);

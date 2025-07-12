@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include"opencv2/opencv.hpp"
+#include"rqw_rqwColor.hpp"
 
 namespace HalconCpp
 {
@@ -19,30 +20,14 @@ namespace rw {
 
         struct HalconWidgetDisObjectPainterConfig
         {
+
         public:
-            enum class Color {
-                Red,
-                Green,
-                Blue,
-                Yellow,
-                Cyan,
-                Magenta,
-                White,
-                Black,
-                Orange,
-                LightBlue,
-                Gray,
-                Purple,
-                Brown,
-                LightBrown
-            };
-        public:
-            Color color{ Color::Black };
-			int thickness{ 20 };
+            RQWColor color{ RQWColor::Black };
+			int thickness{ 3 };
             QString text;
-            int fontSize{ 25 };
+            int fontSize{ 3 };
             int fontThickness{ 1 };
-            Color textColor{ Color::Black };
+            RQWColor textColor{ RQWColor::Black };
         };
 
         struct HalconWidgetDisObject
