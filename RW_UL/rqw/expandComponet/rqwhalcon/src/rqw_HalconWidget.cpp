@@ -7,7 +7,93 @@
 namespace rw {
 	namespace rqw
 	{
-        HalconWidget::HalconWidget(QWidget* parent)
+		HalconWidgetDisObject::HalconWidgetDisObject(HalconCpp::HObject* obj)
+			:_object(obj)
+		{
+
+		}
+
+		HalconWidgetDisObject::HalconWidgetDisObject(const HalconCpp::HImage& image)
+		{
+            HalconCpp::HImage* newImage = new HalconCpp::HImage(image);
+            _object = newImage;
+		}
+
+		HalconWidgetDisObject::HalconWidgetDisObject(const cv::Mat& mat)
+		{
+            HalconCpp::HImage hImage = CvMatToHImage(mat);
+            auto newImage = new HalconCpp::HImage(hImage);
+            _object = newImage;
+		}
+
+		HalconWidgetDisObject::HalconWidgetDisObject(const QImage& image)
+		{
+            HalconCpp::HImage hImage = QImageToHImage(image);
+            auto newImage = new HalconCpp::HImage(hImage);
+			_object = newImage;
+		}
+
+		HalconWidgetDisObject::~HalconWidgetDisObject()
+		{
+            if (_object)
+            {
+                delete _object;
+            }
+		}
+
+		HalconWidgetDisObject::HalconWidgetDisObject(const HalconWidgetDisObject& other)
+            : _object(other._object ? new HalconCpp::HObject(*other._object) : nullptr),
+            id(other.id),
+            name(other.name),
+            isShow(other.isShow)
+        {
+        }
+
+		HalconWidgetDisObject::HalconWidgetDisObject(HalconWidgetDisObject&& other) noexcept
+            : _object(other._object),
+            id(other.id),
+            name(std::move(other.name)),
+            isShow(other.isShow)
+        {
+            other._object = nullptr;
+        }
+
+		HalconWidgetDisObject& HalconWidgetDisObject::operator=(const HalconWidgetDisObject& other)
+        {
+            if (this != &other)
+            {
+                // 释放当前对象
+                delete _object;
+
+                // 深拷贝
+                _object = other._object ? new HalconCpp::HObject(*other._object) : nullptr;
+                id = other.id;
+                name = other.name;
+                isShow = other.isShow;
+            }
+            return *this;
+        }
+
+		HalconWidgetDisObject& HalconWidgetDisObject::operator=(HalconWidgetDisObject&& other) noexcept
+        {
+            if (this != &other)
+            {
+                // 释放当前对象
+                delete _object;
+
+                // 移动资源
+                _object = other._object;
+                id = other.id;
+                name = std::move(other.name);
+                isShow = other.isShow;
+
+                // 清空源对象
+                other._object = nullptr;
+            }
+            return *this;
+        }
+
+		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {
             initialize_halconWindow();
@@ -17,26 +103,6 @@ namespace rw {
         {
             clearHObject();
             close_halconWindow();
-        }
-
-        void HalconWidget::appendImage(const HalconCpp::HImage& image)
-        {
-            HalconCpp::HImage* newImage = new HalconCpp::HImage(image);
-            append_HObject(newImage);
-        }
-
-        void HalconWidget::appendImage(const QImage& image)
-        {
-            HalconCpp::HImage hImage = QImageToHImage(image);
-            auto newImage = new HalconCpp::HImage(hImage);
-            append_HObject(newImage);
-        }
-
-        void HalconWidget::appendImage(const cv::Mat& mat)
-        {
-            HalconCpp::HImage hImage = CvMatToHImage(mat);
-            auto newImage = new HalconCpp::HImage(hImage);
-            append_HObject(newImage);
         }
 
         void HalconWidget::append_HObject(HalconCpp::HObject* object)
