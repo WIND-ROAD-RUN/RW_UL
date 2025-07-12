@@ -24,10 +24,6 @@ namespace rw {
         public:
             RQWColor color{ RQWColor::Black };
 			int thickness{ 3 };
-            QString text;
-            int fontSize{ 3 };
-            int fontThickness{ 1 };
-            RQWColor textColor{ RQWColor::Black };
         };
 
         struct HalconWidgetDisObject

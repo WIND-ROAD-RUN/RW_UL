@@ -687,15 +687,44 @@ namespace rw {
         {
             _isDrawingRect = true; // 开始绘制矩形
             HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
-            HalconCpp::HObject ho_Rectangle;
+            HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
 
             // 调用 Halcon 的绘制矩形方法
             HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
 
-            // 生成矩形对象并显示
+            // 生成矩形对象
             HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
-            //appendHObject(ho_Rectangle);
-        	HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
+
+            // 提取矩形区域内的内容作为模板学习区域
+            HalconCpp::ReduceDomain(*_halconObjects.front()->value(), ho_Rectangle, &ho_TemplateRegion);
+
+            // 创建模板
+            HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
+            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity","auto", "auto", &hv_TemplateID);
+
+            HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
+			HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
+            //// 在整个图像中进行模板匹配
+            HalconCpp::HTuple hv_Row, hv_Column, hv_Angle, hv_Score;
+            HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares",0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
+
+            if ((hv_Row.TupleLength()) > 0)
+            {
+
+                VectorAngleToRigid(0, 0, 0, hv_Row, hv_Column, hv_Angle, &hv_HomMat2D);
+                HalconCpp::SetColor(*_halconWindowHandle, "blue");
+     
+                HalconCpp::AffineTransContourXld(ho_ModelContours, &ho_ContoursAffineTrans, hv_HomMat2D);
+                HalconCpp::DispObj(ho_TemplateRegion, *_halconWindowHandle);
+            }
+
+            //// 显示匹配结果
+            //HalconCpp::GenRectangle1(&ho_MatchResult, hv_Row - 10, hv_Column - 10, hv_Row + 10, hv_Column + 10);
+            //HalconCpp::SetColor(*_halconWindowHandle, "green");
+            //HalconCpp::DispObj(ho_MatchResult, *_halconWindowHandle);
+
+            //// 清理模板
+            //HalconCpp::ClearTemplate(hv_TemplateID);
 
             _isDrawingRect = false; // 绘制完成
         }
