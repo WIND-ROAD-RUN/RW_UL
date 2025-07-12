@@ -62,6 +62,7 @@ namespace rw {
         public:
             HalconWidgetDisObject* getObjectPtrById(int id);
             HalconWidgetDisObject getObjectById(int id);
+            bool eraseObjectById(int id);
         public:
 			void updateWidget();
         protected:

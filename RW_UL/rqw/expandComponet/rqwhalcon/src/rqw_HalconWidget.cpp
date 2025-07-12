@@ -231,6 +231,21 @@ namespace rw {
             return HalconWidgetDisObject(nullptr);
         }
 
+        bool HalconWidget::eraseObjectById(int id)
+        {
+            for (auto it = _halconObjects.begin(); it != _halconObjects.end(); ++it)
+            {
+                if ((*it)->id == id)
+                {
+                    delete *it; 
+                    _halconObjects.erase(it); 
+                    refresh_allObject(); 
+                    return true; 
+                }
+            }
+			return false; // 未找到对象
+        }
+
         void HalconWidget::refresh_allObject()
         {
             if (!_halconWindowHandle)
