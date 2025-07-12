@@ -33,6 +33,14 @@ namespace rw {
 			_object = newImage;
 		}
 
+		HalconWidgetDisObject::HalconWidgetDisObject(const QPixmap& pixmap)
+		{
+            QImage image = pixmap.toImage();
+            HalconCpp::HImage hImage = QImageToHImage(image);
+            auto newImage = new HalconCpp::HImage(hImage);
+            _object = newImage;
+		}
+
 		HalconWidgetDisObject::~HalconWidgetDisObject()
 		{
             if (_object)

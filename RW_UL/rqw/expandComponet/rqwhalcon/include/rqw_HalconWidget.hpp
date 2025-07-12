@@ -23,6 +23,7 @@ namespace rw {
             explicit HalconWidgetDisObject(const HalconCpp::HImage& image);
             explicit HalconWidgetDisObject(const cv::Mat& mat);
             explicit HalconWidgetDisObject(const QImage& image);
+            explicit HalconWidgetDisObject(const QPixmap& pixmap);
 
             ~HalconWidgetDisObject();
         public:
