@@ -47,8 +47,7 @@ namespace rw {
         public:
             enum class ObjectType {
                 Image,
-                Line, 
-                Rectangle,
+                Region,
                 Undefined
 			};
         public:
@@ -142,13 +141,18 @@ namespace rw {
             QPoint _lastMousePos;
         private:
             bool _isDrawingRect{ false };
-        public slots:
-            void drawRect();
+        /*public slots:
+            void drawRect();*/
         public:
+            HalconWidgetDisObject drawRect();
             HalconWidgetDisObject drawRect(PainterConfig config);
+            HalconWidgetDisObject drawRect(PainterConfig config, bool isShow);
+            HalconWidgetDisObject drawRect(PainterConfig config, double minHeight, double minWidth);
+            HalconWidgetDisObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth);
+            HalconWidgetDisObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw);
+
         public:
             void shapeModel(HalconWidgetDisObject & rec);
-
             void study();
         };
 

@@ -467,7 +467,7 @@ namespace rw {
             HalconWidgetDisObject object(verticalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
         }
@@ -498,7 +498,7 @@ namespace rw {
             HalconWidgetDisObject object(horizontalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
         }
@@ -714,66 +714,85 @@ namespace rw {
             SetRgb(*_halconWindowHandle, r, g, b);
         }
 
-        void HalconWidget::drawRect()
-        {
-            _isDrawingRect = true; // 开始绘制矩形
-            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
-            HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
+        //void HalconWidget::drawRect()
+        //{
+        //    _isDrawingRect = true; // 开始绘制矩形
+        //    HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
+        //    HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
 
-            // 调用 Halcon 的绘制矩形方法
-            HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
+        //    // 调用 Halcon 的绘制矩形方法
+        //    HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
 
-            // 生成矩形对象
-            HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
+        //    // 生成矩形对象
+        //    HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
 
-            // 提取矩形区域内的内容作为模板学习区域
-            HalconCpp::ReduceDomain(*_halconObjects.front()->value(), ho_Rectangle, &ho_TemplateRegion);
+        //    // 提取矩形区域内的内容作为模板学习区域
+        //    HalconCpp::ReduceDomain(*_halconObjects.front()->value(), ho_Rectangle, &ho_TemplateRegion);
 
-            // 创建模板
-            HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
-            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
+        //    // 创建模板
+        //    HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
+        //    HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
 
-            HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
-            HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
+        //    HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
+        //    HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
 
-            // 在整个图像中进行模板匹配
-            HalconCpp::HTuple hv_Row, hv_Column, hv_Angle, hv_Score;
-            HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
+        //    // 在整个图像中进行模板匹配
+        //    HalconCpp::HTuple hv_Row, hv_Column, hv_Angle, hv_Score;
+        //    HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
 
-            if ((hv_Row.TupleLength()) > 0)
-            {
-                // 计算仿射变换矩阵
-                VectorAngleToRigid(0, 0, 0, hv_Row, hv_Column, hv_Angle, &hv_HomMat2D);
+        //    if ((hv_Row.TupleLength()) > 0)
+        //    {
+        //        // 计算仿射变换矩阵
+        //        VectorAngleToRigid(0, 0, 0, hv_Row, hv_Column, hv_Angle, &hv_HomMat2D);
 
-                // 将模板轮廓进行仿射变换
-                HalconCpp::AffineTransContourXld(ho_ModelContours, &ho_ContoursAffineTrans, hv_HomMat2D);
+        //        // 将模板轮廓进行仿射变换
+        //        HalconCpp::AffineTransContourXld(ho_ModelContours, &ho_ContoursAffineTrans, hv_HomMat2D);
 
-                // 设置显示颜色
-                HalconCpp::SetColor(*_halconWindowHandle, "blue");
+        //        // 设置显示颜色
+        //        HalconCpp::SetColor(*_halconWindowHandle, "blue");
 
-                // 显示匹配到的轮廓
-                HalconCpp::DispObj(ho_ContoursAffineTrans, *_halconWindowHandle);
+        //        // 显示匹配到的轮廓
+        //        HalconCpp::DispObj(ho_ContoursAffineTrans, *_halconWindowHandle);
 
-                // 显示匹配分数
-                for (int i = 0; i < hv_Score.TupleLength(); i++)
-                {
-                    HalconCpp::HTuple hv_ScoreText = std::to_string(hv_Score[i].D()).c_str() ;
-                    HalconCpp::SetTposition(*_halconWindowHandle, hv_Row[i].D(), hv_Column[i].D());
-                    HalconCpp::WriteString(*_halconWindowHandle, hv_ScoreText);
-                }
-            }
-            else
-            {
-                // 如果没有匹配到，显示提示信息
-                HalconCpp::SetColor(*_halconWindowHandle, "red");
-                HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
-                HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
-            }
+        //        // 显示匹配分数
+        //        for (int i = 0; i < hv_Score.TupleLength(); i++)
+        //        {
+        //            HalconCpp::HTuple hv_ScoreText = std::to_string(hv_Score[i].D()).c_str() ;
+        //            HalconCpp::SetTposition(*_halconWindowHandle, hv_Row[i].D(), hv_Column[i].D());
+        //            HalconCpp::WriteString(*_halconWindowHandle, hv_ScoreText);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // 如果没有匹配到，显示提示信息
+        //        HalconCpp::SetColor(*_halconWindowHandle, "red");
+        //        HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
+        //        HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
+        //    }
 
-            _isDrawingRect = false; // 绘制完成
-        }
+        //    _isDrawingRect = false; // 绘制完成
+        //}
 
         HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config)
+        {
+            bool isDraw{false};
+            return drawRect(config,true, 0, 0, isDraw);
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow)
+        {
+            bool isDraw{false};
+			return drawRect(config, isShow, 0, 0, isDraw);
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight,
+	        double minWidth)
+        {
+            bool isDraw{ false };
+            return drawRect(config, isShow, minHeight, minWidth, isDraw);
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw)
         {
             prepare_display(config);
             _isDrawingRect = true;
@@ -791,16 +810,43 @@ namespace rw {
 
             _isDrawingRect = false;
 
+            auto height = hv_Row2.D() - hv_Row1.D();
+			auto width = hv_Column2.D() - hv_Column1.D();
+
+            if (height< minHeight|| width<minWidth)
+            {
+                isDraw = false;
+                return HalconWidgetDisObject(nullptr);
+            }
+
+
             // 创建 HalconWidgetDisObject 对象
             auto object = new HalconWidgetDisObject(ho_Contour); // 使用轮廓对象
             object->id = getVailidAppendId();
             object->painterConfig = config;
-            object->isShow = true;
-            object->type = HalconWidgetDisObject::ObjectType::Rectangle;
+            object->isShow = isShow;
+            object->type = HalconWidgetDisObject::ObjectType::Region;
             object->descrption = "drawRect";
 
+
             appendHObject(object);
+            isDraw = true;
             return *object;
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect()
+        {
+            PainterConfig config;
+            config.color = RQWColor::Red; 
+            config.thickness = 2; 
+            bool isDraw = false;
+			return drawRect(config, true, 0, 0, isDraw);
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, double minHeight, double minWidth)
+        {
+            bool isDraw = false;
+			return drawRect(config, true, minHeight, minWidth, isDraw);
         }
 
         void HalconWidget::shapeModel(HalconWidgetDisObject& rec)
