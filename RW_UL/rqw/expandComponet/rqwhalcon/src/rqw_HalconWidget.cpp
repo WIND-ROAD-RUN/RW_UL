@@ -133,6 +133,15 @@ namespace rw {
 			_object = new HalconCpp::HObject(object); 
 		}
 
+		void HalconWidgetDisObject::updateObject(HalconCpp::HObject* object)
+		{
+            if (_object)
+            {
+                delete _object; 
+            }
+			_object = object; 
+		}
+
 		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {
@@ -170,19 +179,24 @@ namespace rw {
             refresh_allObject();
         }
 
-        void HalconWidget::appendHObject(HalconWidgetDisObject object)
+        void HalconWidget::appendHObject(HalconWidgetDisObject* object)
         {
+            if (object == nullptr)
+            {
+                return;
+            }
+            
             for (const auto& existingObject : _halconObjects)
             {
-                if (existingObject->id == object.id)
+                if (existingObject->id == object->id)
                 {
                     throw std::runtime_error("An object with the same ID already exists.");
                 }
             }
-            HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
-            _halconObjects.push_back(newObject);
+            _halconObjects.push_back(object);
 			refresh_allObject();
         }
+
 
         void HalconWidget::clearHObject()
         {
@@ -193,7 +207,7 @@ namespace rw {
 			}
         }
 
-        HalconWidgetDisObject* HalconWidget::getObjectPtrById(size_t id)
+        HalconWidgetDisObject* HalconWidget::getObjectPtrById(int id)
         {
             for (auto& object : _halconObjects)
             {
@@ -205,7 +219,7 @@ namespace rw {
             return new HalconWidgetDisObject(nullptr);
         }
 
-        HalconWidgetDisObject HalconWidget::getObjectById(size_t id)
+        HalconWidgetDisObject HalconWidget::getObjectById(int id)
         {
             for (auto& object : _halconObjects)
             {
@@ -215,6 +229,21 @@ namespace rw {
                 }
             }
             return HalconWidgetDisObject(nullptr);
+        }
+
+        bool HalconWidget::eraseObjectById(int id)
+        {
+            for (auto it = _halconObjects.begin(); it != _halconObjects.end(); ++it)
+            {
+                if ((*it)->id == id)
+                {
+                    delete *it; 
+                    _halconObjects.erase(it); 
+                    refresh_allObject(); 
+                    return true; 
+                }
+            }
+			return false; // 未找到对象
         }
 
         void HalconWidget::refresh_allObject()
