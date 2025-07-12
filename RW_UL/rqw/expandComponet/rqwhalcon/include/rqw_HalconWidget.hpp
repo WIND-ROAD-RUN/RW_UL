@@ -47,8 +47,7 @@ namespace rw {
         public:
             enum class ObjectType {
                 Image,
-                Line, 
-                Rectangle,
+                Region,
                 Undefined
 			};
         public:
@@ -146,9 +145,9 @@ namespace rw {
             void drawRect();
         public:
             HalconWidgetDisObject drawRect(PainterConfig config);
+            HalconWidgetDisObject drawRect(PainterConfig config,bool isShow);
         public:
             void shapeModel(HalconWidgetDisObject & rec);
-
             void study();
         };
 

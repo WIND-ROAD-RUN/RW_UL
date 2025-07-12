@@ -467,7 +467,7 @@ namespace rw {
             HalconWidgetDisObject object(verticalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
         }
@@ -498,7 +498,7 @@ namespace rw {
             HalconWidgetDisObject object(horizontalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
         }
@@ -775,6 +775,11 @@ namespace rw {
 
         HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config)
         {
+            return drawRect(config,true);
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow)
+        {
             prepare_display(config);
             _isDrawingRect = true;
             HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
@@ -795,8 +800,8 @@ namespace rw {
             auto object = new HalconWidgetDisObject(ho_Contour); // 使用轮廓对象
             object->id = getVailidAppendId();
             object->painterConfig = config;
-            object->isShow = true;
-            object->type = HalconWidgetDisObject::ObjectType::Rectangle;
+            object->isShow = isShow;
+            object->type = HalconWidgetDisObject::ObjectType::Region;
             object->descrption = "drawRect";
 
             appendHObject(object);
