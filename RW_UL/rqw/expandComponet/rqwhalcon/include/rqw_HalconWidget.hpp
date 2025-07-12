@@ -103,9 +103,6 @@ namespace rw {
         public:
 			void updateWidget();
         public:
-            size_t height();
-            size_t width();
-        public:
             void drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
             void drawHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
         protected:

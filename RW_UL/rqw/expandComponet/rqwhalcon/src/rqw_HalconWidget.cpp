@@ -362,15 +362,6 @@ namespace rw {
             refresh_allObject();
         }
 
-        size_t HalconWidget::height()
-        {
-            return this->height();
-        }
-
-        size_t HalconWidget::width()
-        {
-			return this->width();
-        }
 
         void HalconWidget::drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
         {

@@ -46,7 +46,8 @@ void Demo::ini()
 	auto a=object.has_value();
     halconWidget->appendHObject(object);
 	auto id=halconWidget->getMinValidAppendId();
-	halconWidget->drawHorizontalLine(10);
+	auto position = halconWidget->height() / 2;
+	halconWidget->drawHorizontalLine(halconWidget->height()/2);
 }
 
 void Demo::resizeEvent(QResizeEvent* event)
