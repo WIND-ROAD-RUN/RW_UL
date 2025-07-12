@@ -1,5 +1,7 @@
 #include"rqw_HalconWidget.hpp"
 #include <QResizeEvent>
+#include <unordered_set>
+
 #include "halconcpp/HalconCpp.h"
 
 #include"rqw_HalconUtilty.hpp"
@@ -254,6 +256,33 @@ namespace rw {
                 }
             }
 			return false; // 未找到对象
+        }
+
+        std::vector<HalconWidgetDisObjectId> HalconWidget::getAllIds() const
+        {
+            std::vector<HalconWidgetDisObjectId> ids;
+            for (const auto& object : _halconObjects)
+            {
+                ids.push_back(object->id);
+            }
+			return ids;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::getMinValidAppendId()
+        {
+            std::unordered_set<HalconWidgetDisObjectId> existingIds;
+            for (const auto& object : _halconObjects)
+            {
+                existingIds.insert(object->id);
+            }
+
+            HalconWidgetDisObjectId newId = 0;
+            while (existingIds.find(newId) != existingIds.end())
+            {
+                ++newId;
+            }
+
+            return newId;
         }
 
         void HalconWidget::refresh_allObject()

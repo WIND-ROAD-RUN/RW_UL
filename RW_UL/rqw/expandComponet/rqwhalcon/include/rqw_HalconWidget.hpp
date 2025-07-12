@@ -67,6 +67,9 @@ namespace rw {
             HalconWidgetDisObject getObjectById(HalconWidgetDisObjectId id);
             bool eraseObjectById(int id);
         public:
+            std::vector<HalconWidgetDisObjectId> getAllIds() const;
+            HalconWidgetDisObjectId getMinValidAppendId();
+        public:
 			void updateWidget();
         protected:
             void wheelEvent(QWheelEvent* event) override; 
