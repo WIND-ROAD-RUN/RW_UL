@@ -166,6 +166,15 @@ namespace rw {
             refresh_allObject();
         }
 
+        HalconCpp::HTuple* HalconWidget::Handle()
+        {
+            if (_halconWindowHandle == nullptr)
+            {
+                initialize_halconWindow();
+            }
+			return _halconWindowHandle;
+        }
+
         void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
         {
             if (object.id<0)
@@ -351,6 +360,72 @@ namespace rw {
         void HalconWidget::updateWidget()
         {
             refresh_allObject();
+        }
+
+        size_t HalconWidget::height()
+        {
+            return this->height();
+        }
+
+        size_t HalconWidget::width()
+        {
+			return this->width();
+        }
+
+        void HalconWidget::drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        {
+            if (!_halconWindowHandle)
+            {
+                return;
+            }
+
+            // 获取 Halcon 窗口的当前显示区域
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算线条的起点和终点
+            int lineX = col1.I() + position; // 线条的 X 坐标
+            int startY = row1.I();           // 起点 Y 坐标
+            int endY = row2.I();             // 终点 Y 坐标
+
+            // 生成垂直线
+            HalconCpp::HObject verticalLine;
+            HalconCpp::GenRegionLine(&verticalLine, startY, lineX, endY, lineX);
+
+            // 设置线条颜色和粗细
+            SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
+            SetLineWidth(*_halconWindowHandle, config.thickness);
+
+            // 显示线条
+            DispObj(verticalLine, *_halconWindowHandle);
+        }
+
+        void HalconWidget::drawHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        {
+            if (!_halconWindowHandle)
+            {
+                return;
+            }
+
+            // 获取 Halcon 窗口的当前显示区域
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算线条的起点和终点
+            int lineY = row1.I() + position; // 线条的 Y 坐标
+            int startX = col1.I();           // 起点 X 坐标
+            int endX = col2.I();             // 终点 X 坐标
+
+            // 生成水平线
+            HalconCpp::HObject horizontalLine;
+            HalconCpp::GenRegionLine(&horizontalLine, lineY, startX, lineY, endX);
+
+            // 设置线条颜色和粗细
+            SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
+            SetLineWidth(*_halconWindowHandle, config.thickness);
+
+            // 显示线条
+            DispObj(horizontalLine, *_halconWindowHandle);
         }
 
         void HalconWidget::initialize_halconWindow()

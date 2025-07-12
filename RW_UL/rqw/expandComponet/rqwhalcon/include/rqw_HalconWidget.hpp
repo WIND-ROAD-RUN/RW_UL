@@ -88,6 +88,8 @@ namespace rw {
         private:
             HalconCpp::HTuple* _halconWindowHandle{ nullptr };
         public:
+            HalconCpp::HTuple* Handle();
+        public:
 			void appendHObject(const HalconWidgetDisObject& object);
             void appendHObject(HalconWidgetDisObject * object);
 			void clearHObject();
@@ -100,6 +102,12 @@ namespace rw {
             HalconWidgetDisObjectId getMinValidAppendId();
         public:
 			void updateWidget();
+        public:
+            size_t height();
+            size_t width();
+        public:
+            void drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+            void drawHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
