@@ -721,31 +721,44 @@ namespace rw {
 
             // 创建模板
             HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
-            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity","auto", "auto", &hv_TemplateID);
+            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
 
             HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
-			HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
-            //// 在整个图像中进行模板匹配
+            HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
+
+            // 在整个图像中进行模板匹配
             HalconCpp::HTuple hv_Row, hv_Column, hv_Angle, hv_Score;
-            HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares",0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
+            HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
 
             if ((hv_Row.TupleLength()) > 0)
             {
-
+                // 计算仿射变换矩阵
                 VectorAngleToRigid(0, 0, 0, hv_Row, hv_Column, hv_Angle, &hv_HomMat2D);
-                HalconCpp::SetColor(*_halconWindowHandle, "blue");
-     
+
+                // 将模板轮廓进行仿射变换
                 HalconCpp::AffineTransContourXld(ho_ModelContours, &ho_ContoursAffineTrans, hv_HomMat2D);
-                HalconCpp::DispObj(ho_TemplateRegion, *_halconWindowHandle);
+
+                // 设置显示颜色
+                HalconCpp::SetColor(*_halconWindowHandle, "blue");
+
+                // 显示匹配到的轮廓
+                HalconCpp::DispObj(ho_ContoursAffineTrans, *_halconWindowHandle);
+
+                // 显示匹配分数
+                for (int i = 0; i < hv_Score.TupleLength(); i++)
+                {
+                    HalconCpp::HTuple hv_ScoreText = std::to_string(hv_Score[i].D()).c_str() ;
+                    HalconCpp::SetTposition(*_halconWindowHandle, hv_Row[i].D(), hv_Column[i].D());
+                    HalconCpp::WriteString(*_halconWindowHandle, hv_ScoreText);
+                }
             }
-
-            //// 显示匹配结果
-            //HalconCpp::GenRectangle1(&ho_MatchResult, hv_Row - 10, hv_Column - 10, hv_Row + 10, hv_Column + 10);
-            //HalconCpp::SetColor(*_halconWindowHandle, "green");
-            //HalconCpp::DispObj(ho_MatchResult, *_halconWindowHandle);
-
-            //// 清理模板
-            //HalconCpp::ClearTemplate(hv_TemplateID);
+            else
+            {
+                // 如果没有匹配到，显示提示信息
+                HalconCpp::SetColor(*_halconWindowHandle, "red");
+                HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
+                HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
+            }
 
             _isDrawingRect = false; // 绘制完成
         }
