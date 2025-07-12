@@ -17,6 +17,34 @@ namespace rw {
 
         class HalconWidget;
 
+        struct HalconWidgetDisObjectPainterConfig
+        {
+        public:
+            enum class Color {
+                Red,
+                Green,
+                Blue,
+                Yellow,
+                Cyan,
+                Magenta,
+                White,
+                Black,
+                Orange,
+                LightBlue,
+                Gray,
+                Purple,
+                Brown,
+                LightBrown
+            };
+        public:
+            Color color{ Color::Black };
+			int thickness{ 2 };
+            QString text;
+            int fontSize{ 25 };
+            int fontThickness{ 1 };
+            Color textColor{ Color::Black };
+        };
+
         struct HalconWidgetDisObject
         {
             friend HalconWidget;
@@ -40,6 +68,7 @@ namespace rw {
             HalconWidgetDisObjectId id{0};
             std::string name{"Undefined"};
             bool isShow{true};
+			HalconWidgetDisObjectPainterConfig painterConfig;
         public:
             bool has_value();
             HalconCpp::HObject* value();
@@ -72,10 +101,10 @@ namespace rw {
         public:
 			void updateWidget();
         protected:
-            void wheelEvent(QWheelEvent* event) override; 
-        protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
+        protected:
+            void wheelEvent(QWheelEvent* event) override;
         protected:
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
