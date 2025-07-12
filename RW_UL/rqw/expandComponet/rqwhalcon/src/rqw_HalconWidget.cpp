@@ -818,5 +818,9 @@ namespace rw {
             HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
             HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
         }
+
+        void HalconWidget::study()
+        {
+        }
 	}
 }
