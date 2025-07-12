@@ -28,8 +28,11 @@ protected:
 
 private:
 	Ui::DemoClass *ui;
-public:
+public slots:
 	void pushButton_clicked();
+
+protected:
+	void closeEvent(QCloseEvent* event) override;
 };
 
 

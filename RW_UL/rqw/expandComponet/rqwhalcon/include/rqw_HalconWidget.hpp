@@ -18,24 +18,24 @@ namespace rw {
 
         class HalconWidget;
 
-        struct HalconWidgetDisObjectPainterConfig
+        struct PainterConfig
         {
         public:
-            HalconWidgetDisObjectPainterConfig() = default;
+            PainterConfig() = default;
 
-            HalconWidgetDisObjectPainterConfig(const RQWColor& color, int thickness)
+            PainterConfig(const RQWColor& color, int thickness)
                 : color(color), thickness(thickness) {
             }
 
-            HalconWidgetDisObjectPainterConfig(const HalconWidgetDisObjectPainterConfig& other) = default;
+            PainterConfig(const PainterConfig& other) = default;
 
-            HalconWidgetDisObjectPainterConfig(HalconWidgetDisObjectPainterConfig&& other) noexcept = default;
+            PainterConfig(PainterConfig&& other) noexcept = default;
 
-            HalconWidgetDisObjectPainterConfig& operator=(const HalconWidgetDisObjectPainterConfig& other) = default;
+            PainterConfig& operator=(const PainterConfig& other) = default;
 
-            HalconWidgetDisObjectPainterConfig& operator=(HalconWidgetDisObjectPainterConfig&& other) noexcept = default;
+            PainterConfig& operator=(PainterConfig&& other) noexcept = default;
 
-            ~HalconWidgetDisObjectPainterConfig() = default;
+            ~PainterConfig() = default;
         public:
             RQWColor color{ RQWColor::Black };
 			int thickness{ 3 };
@@ -69,9 +69,9 @@ namespace rw {
         public:
 			// Object properties :default id=0 for image, id>0 is other, < 0 is inside
             HalconWidgetDisObjectId id{0};
-            std::string name{"Undefined"};
+            std::string descrption{"Undefined"};
             bool isShow{true};
-			HalconWidgetDisObjectPainterConfig painterConfig;
+			PainterConfig painterConfig;
             ObjectType type;
         public:
             bool has_value();
@@ -108,14 +108,16 @@ namespace rw {
         public:
             [[nodiscard]] std::vector<HalconWidgetDisObjectId> getAllIds() const;
             [[nodiscard]] std::vector<HalconWidgetDisObjectId> getIdsByType(HalconWidgetDisObject::ObjectType objectType) const;
-            HalconWidgetDisObjectId getMinValidAppendId();
+            HalconWidgetDisObjectId getVailidAppendId();
         public:
 			void updateWidget();
         public:
-            void appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
-            void appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+            void appendVerticalLine(int position, const PainterConfig& config={});
+            void appendHorizontalLine(int position, const PainterConfig& config={});
         public:
             bool setObjectVisible(HalconWidgetDisObjectId id,const bool visible);
+        public:
+            bool isDrawing();
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
@@ -127,6 +129,7 @@ namespace rw {
             void mouseReleaseEvent(QMouseEvent* event) override;
         private:
             void display_HalconWidgetDisObject(HalconWidgetDisObject* object);
+            void prepare_display(const PainterConfig & config);
         private:
             std::vector<HalconWidgetDisObject*> _halconObjects;
         private:
@@ -137,9 +140,16 @@ namespace rw {
         private:
             bool _isDragging{ false }; 
             QPoint _lastMousePos;
+        private:
             bool _isDrawingRect{ false };
         public slots:
             void drawRect();
+        public:
+            HalconWidgetDisObject drawRect(PainterConfig config);
+        public:
+            void shapeModel(HalconWidgetDisObject & rec);
+
+            void study();
         };
 
 	}
