@@ -18,22 +18,26 @@ namespace rw {
         {
             Q_OBJECT
         public:
-            //TODO:appendHObject接口
-			//TODO:clearHObject接口
-        public:
             explicit HalconWidget(QWidget* parent = nullptr);
             ~HalconWidget() override;
         public:
-            void setImage(const HalconCpp::HImage& image);
-            void setImage(const QImage& image);
-            void setImage(const cv::Mat& mat);
-        public:
-            HalconCpp::HTuple* _halconWindowHandle{ nullptr };
-            HalconCpp::HImage* _image{ nullptr };
+            void appendImage(const HalconCpp::HImage& image);
+            void appendImage(const QImage& image);
+            void appendImage(const cv::Mat& mat);
         private:
-            void initializeHalconWindow();
-            void closeHalconWindow();
-            void displayImg();
+            HalconCpp::HTuple* _halconWindowHandle{ nullptr };
+        private:
+			std::vector<HalconCpp::HObject *> _halconObjects;
+        private:
+            void append_HObject(HalconCpp::HObject* object);
+        public:
+			void appendHObject(const HalconCpp::HObject& object);
+			void clearHObject();
+        private:
+            void initialize_halconWindow();
+            void close_halconWindow();
+        private:
+            void refresh_allObject();
         public:
             void wheelEvent(QWheelEvent* event) override; 
         protected:
