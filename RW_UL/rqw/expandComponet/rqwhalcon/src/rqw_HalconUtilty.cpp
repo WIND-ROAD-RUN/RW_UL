@@ -1,5 +1,7 @@
 #include "rqw_HalconUtilty.hpp"
 
+#include <QPixmap>
+
 namespace rw
 {
 	namespace rqw
@@ -115,6 +117,12 @@ namespace rw
 			}
 
 			return hImage;
+		}
+
+		HalconCpp::HImage QPixmapToHImage(const QPixmap& pixmap)
+		{
+			QImage image = pixmap.toImage();
+			return QImageToHImage(image);
 		}
 	}
 }

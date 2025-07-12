@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include"opencv2/opencv.hpp"
+#include"rqw_rqwColor.hpp"
 
 namespace HalconCpp
 {
@@ -13,11 +14,32 @@ namespace HalconCpp
 
 namespace rw {
 	namespace rqw {
+        using HalconWidgetDisObjectId = int;
+
         class HalconWidget;
+
+        struct HalconWidgetDisObjectPainterConfig
+        {
+
+        public:
+            RQWColor color{ RQWColor::Black };
+			int thickness{ 3 };
+            QString text;
+            int fontSize{ 3 };
+            int fontThickness{ 1 };
+            RQWColor textColor{ RQWColor::Black };
+        };
 
         struct HalconWidgetDisObject
         {
             friend HalconWidget;
+        public:
+            enum class ObjectType {
+                Image,
+                Line, 
+                Rectangle,
+                Undefined
+			};
         public:
 	        explicit HalconWidgetDisObject(HalconCpp::HObject* obj);
             explicit HalconWidgetDisObject(const HalconCpp::HImage& image);
@@ -34,9 +56,12 @@ namespace rw {
         private:
             HalconCpp::HObject* _object;
         public:
-            int id{0};
+			// Object properties :default id=0 for image, id>0 is other, < 0 is inside
+            HalconWidgetDisObjectId id{0};
             std::string name{"Undefined"};
             bool isShow{true};
+			HalconWidgetDisObjectPainterConfig painterConfig;
+            ObjectType type;
         public:
             bool has_value();
             HalconCpp::HObject* value();
@@ -56,28 +81,39 @@ namespace rw {
         private:
             HalconCpp::HTuple* _halconWindowHandle{ nullptr };
         public:
+            HalconCpp::HTuple* Handle();
+        public:
 			void appendHObject(const HalconWidgetDisObject& object);
             void appendHObject(HalconWidgetDisObject * object);
 			void clearHObject();
         public:
-            HalconWidgetDisObject* getObjectPtrById(int id);
-            HalconWidgetDisObject getObjectById(int id);
+            size_t width();
+            size_t height();
+        public:
+            HalconWidgetDisObject* getObjectPtrById(HalconWidgetDisObjectId id);
+            HalconWidgetDisObject getObjectById(HalconWidgetDisObjectId id);
             bool eraseObjectById(int id);
+            bool eraseObjectsByType(HalconWidgetDisObject::ObjectType objectType);
+        public:
+            [[nodiscard]] std::vector<HalconWidgetDisObjectId> getAllIds() const;
+            [[nodiscard]] std::vector<HalconWidgetDisObjectId> getIdsByType(HalconWidgetDisObject::ObjectType objectType) const;
+            HalconWidgetDisObjectId getMinValidAppendId();
         public:
 			void updateWidget();
-        protected:
-            void wheelEvent(QWheelEvent* event) override; 
+        public:
+            void appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+            void appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
+        protected:
+            void wheelEvent(QWheelEvent* event) override;
         protected:
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
             void mouseReleaseEvent(QMouseEvent* event) override;
         private:
             std::vector<HalconWidgetDisObject*> _halconObjects;
-        private:
-            void append_HObject(HalconWidgetDisObject* object);
         private:
             void initialize_halconWindow();
             void close_halconWindow();

@@ -15,6 +15,8 @@ find_package(OpenCV REQUIRED)
 FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
 	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${RQW_UTILTY_INCLUDE_PATH}
+	${RQW_UTILTY_SRC_PATH}
 )
 file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/ui/*.ui")
 
@@ -24,16 +26,18 @@ add_library(${PROJECT_NAME} STATIC ${SRC_LIST} ${GENERATED_UI_HEADERS})
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-	PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+	PUBLIC ${RQW_UTILTY_INCLUDE_PATH}
+	PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 
 target_include_directories(${PROJECT_NAME} 
-	PRIVATE ${Halcon_include}
+	PUBLIC ${Halcon_include}
 )
 
 target_link_libraries(${PROJECT_NAME} 
-	PRIVATE ${Halcon_libs}
+	PUBLIC ${Halcon_libs}
 	PRIVATE ${OpenCV_LIBS}
 )
 

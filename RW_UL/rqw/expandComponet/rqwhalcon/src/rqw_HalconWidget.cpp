@@ -1,5 +1,7 @@
 #include"rqw_HalconWidget.hpp"
 #include <QResizeEvent>
+#include <unordered_set>
+
 #include "halconcpp/HalconCpp.h"
 
 #include"rqw_HalconUtilty.hpp"
@@ -14,12 +16,14 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const HalconCpp::HImage& image)
+			:type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage* newImage = new HalconCpp::HImage(image);
             _object = newImage;
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const cv::Mat& mat)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage hImage = CvMatToHImage(mat);
             auto newImage = new HalconCpp::HImage(hImage);
@@ -27,6 +31,7 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const QImage& image)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage hImage = QImageToHImage(image);
             auto newImage = new HalconCpp::HImage(hImage);
@@ -34,6 +39,7 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const QPixmap& pixmap)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             QImage image = pixmap.toImage();
             HalconCpp::HImage hImage = QImageToHImage(image);
@@ -53,7 +59,8 @@ namespace rw {
             : _object(other._object ? new HalconCpp::HObject(*other._object) : nullptr),
             id(other.id),
             name(other.name),
-            isShow(other.isShow)
+            isShow(other.isShow),
+			type(other.type)
         {
         }
 
@@ -61,7 +68,8 @@ namespace rw {
             : _object(other._object),
             id(other.id),
             name(std::move(other.name)),
-            isShow(other.isShow)
+            isShow(other.isShow),
+			type(other.type)
         {
             other._object = nullptr;
         }
@@ -78,6 +86,7 @@ namespace rw {
                 id = other.id;
                 name = other.name;
                 isShow = other.isShow;
+				type = other.type;
             }
             return *this;
         }
@@ -94,6 +103,7 @@ namespace rw {
                 id = other.id;
                 name = std::move(other.name);
                 isShow = other.isShow;
+				type = other.type;
 
                 // 清空源对象
                 other._object = nullptr;
@@ -121,6 +131,7 @@ namespace rw {
             {
                 delete _object;
                 _object = nullptr;
+                type = ObjectType::Undefined;
 			}
 		}
 
@@ -154,18 +165,22 @@ namespace rw {
             close_halconWindow();
         }
 
-        void HalconWidget::append_HObject(HalconWidgetDisObject* object)
+        HalconCpp::HTuple* HalconWidget::Handle()
         {
-            if (object == nullptr)
+            if (_halconWindowHandle == nullptr)
             {
-                return;
+                initialize_halconWindow();
             }
-            _halconObjects.push_back(object);
-            refresh_allObject();
+			return _halconWindowHandle;
         }
 
         void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
         {
+            if (object.id<0)
+            {
+				throw std::runtime_error("Object ID must be a non-negative integer.");
+            }
+
             for (const auto& existingObject : _halconObjects)
             {
                 if (existingObject->id == object.id)
@@ -181,6 +196,11 @@ namespace rw {
 
         void HalconWidget::appendHObject(HalconWidgetDisObject* object)
         {
+            if (object->id < 0)
+            {
+                throw std::runtime_error("Object ID must be a non-negative integer.");
+            }
+
             if (object == nullptr)
             {
                 return;
@@ -205,6 +225,34 @@ namespace rw {
             {
                 ClearWindow(*_halconWindowHandle);
 			}
+        }
+
+        size_t HalconWidget::width()
+        {
+            if (!_halconWindowHandle)
+            {
+                return 0; // 如果窗口句柄未初始化，返回 0
+            }
+
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算宽度
+            return static_cast<size_t>(col2.D() - col1.D() + 1);
+        }
+
+        size_t HalconWidget::height()
+        {
+            if (!_halconWindowHandle)
+            {
+                return 0; // 如果窗口句柄未初始化，返回 0
+            }
+
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算高度
+            return static_cast<size_t>(row2.D() - row1.D() + 1);
         }
 
         HalconWidgetDisObject* HalconWidget::getObjectPtrById(int id)
@@ -246,6 +294,69 @@ namespace rw {
 			return false; // 未找到对象
         }
 
+        bool HalconWidget::eraseObjectsByType(HalconWidgetDisObject::ObjectType objectType)
+        {
+            auto ids=getIdsByType(objectType);
+            if (ids.empty())
+            {
+                return false; // 没有找到指定类型的对象
+			}
+            for (auto it = _halconObjects.begin(); it != _halconObjects.end();)
+            {
+                if ((*it)->type == objectType)
+                {
+                    delete *it; // 释放对象内存
+                    it = _halconObjects.erase(it); // 删除对象并更新迭代器
+                }
+                else
+                {
+                    ++it; // 继续迭代
+                }
+            }
+            refresh_allObject(); // 刷新显示
+			return true; // 成功删除指定类型的对象
+        }
+
+        std::vector<HalconWidgetDisObjectId> HalconWidget::getAllIds() const
+        {
+            std::vector<HalconWidgetDisObjectId> ids;
+            for (const auto& object : _halconObjects)
+            {
+                ids.push_back(object->id);
+            }
+			return ids;
+        }
+
+        std::vector<HalconWidgetDisObjectId> HalconWidget::getIdsByType(const HalconWidgetDisObject::ObjectType objectType) const
+        {
+            std::vector<HalconWidgetDisObjectId> ids;
+            for (const auto& object : _halconObjects)
+            {
+                if (object->type==objectType)
+                {
+                    ids.push_back(object->id);
+                }
+            }
+            return ids;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::getMinValidAppendId()
+        {
+            std::unordered_set<HalconWidgetDisObjectId> existingIds;
+            for (const auto& object : _halconObjects)
+            {
+                existingIds.insert(object->id);
+            }
+
+            HalconWidgetDisObjectId newId = 0;
+            while (existingIds.find(newId) != existingIds.end())
+            {
+                ++newId;
+            }
+
+            return newId;
+        }
+
         void HalconWidget::refresh_allObject()
         {
             if (!_halconWindowHandle)
@@ -267,8 +378,13 @@ namespace rw {
             int windowHeight = size.height();
 
             // 获取第一个对象的大小（假设所有对象的大小一致）
+            auto ids=getIdsByType(HalconWidgetDisObject::ObjectType::Image);
+            if (ids.empty())
+            {
+                return;
+            }
             HalconCpp::HTuple width, height;
-            GetImageSize(*_halconObjects.front()->_object, &width, &height);
+            GetImageSize(*getObjectPtrById(ids.front())->value(), &width, &height);
 
             // 计算图像和窗口的宽高比
             double imgAspectRatio = static_cast<double>(width.I()) / height.I();
@@ -312,6 +428,81 @@ namespace rw {
         void HalconWidget::updateWidget()
         {
             refresh_allObject();
+        }
+
+
+        void HalconWidget::appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        {
+            if (!_halconWindowHandle)
+            {
+                return;
+            }
+
+            // 获取窗口的高度和宽度范围
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 校准 position，使其基于窗口的坐标范围
+            int calibratedPosition = static_cast<int>(col1.D() + position);
+
+            // 检查校准后的 position 是否在有效范围内
+            if (calibratedPosition - config.thickness / 2 < col1.D() || calibratedPosition + config.thickness / 2 > col2.D())
+            {
+                throw std::out_of_range("Position is out of the valid range for the vertical line.");
+            }
+
+            // 生成垂直线
+            auto verticalLine = new HalconCpp::HObject;
+            HalconCpp::GenRectangle1(verticalLine, row1.D(), calibratedPosition - config.thickness / 2, row2.D(), calibratedPosition + config.thickness / 2);
+
+            // 设置颜色
+            auto [r, g, b] = RQWColorToRGB(config.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
+
+            // 创建并添加对象
+            HalconWidgetDisObject object(verticalLine);
+            object.isShow = true;
+            object.painterConfig = config;
+            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.id = getMinValidAppendId();
+            appendHObject(object);
+        }
+
+        void HalconWidget::appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        {
+            if (!_halconWindowHandle)
+            {
+                return;
+            }
+
+            // 获取窗口的高度和宽度范围
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 校准 position，使其基于窗口的坐标范围
+            int calibratedPosition = static_cast<int>(row1.D() + position);
+
+            // 检查校准后的 position 是否在有效范围内
+            if (calibratedPosition - config.thickness / 2 < row1.D() || calibratedPosition + config.thickness / 2 > row2.D())
+            {
+                throw std::out_of_range("Position is out of the valid range for the horizontal line.");
+            }
+
+            // 生成水平线
+            auto horizontalLine = new HalconCpp::HObject;
+            HalconCpp::GenRectangle1(horizontalLine, calibratedPosition - config.thickness / 2, col1.D(), calibratedPosition + config.thickness / 2, col2.D());
+
+            // 设置颜色
+            auto [r,g,b] = RQWColorToRGB(config.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
+
+            // 创建并添加对象
+            HalconWidgetDisObject object(horizontalLine);
+            object.isShow = true;
+            object.painterConfig = config;
+            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.id = getMinValidAppendId();
+            appendHObject(object);
         }
 
         void HalconWidget::initialize_halconWindow()
@@ -397,6 +588,22 @@ namespace rw {
 
         void HalconWidget::resizeEvent(QResizeEvent* event)
         {
+            // 定义最小宽度和高度
+            const int minWidth = 100;  // 最小宽度
+            const int minHeight = 100; // 最小高度
+
+            // 获取当前窗口大小
+            QSize newSize = event->size();
+
+            // 检查是否小于最小尺寸
+            if (newSize.width() < minWidth || newSize.height() < minHeight)
+            {
+                // 调整窗口大小到最小值
+                resize((std::max)(newSize.width(), minWidth), (std::max)(newSize.height(), minHeight));
+                return;
+            }
+
+            // 刷新所有对象
             refresh_allObject();
         }
 
