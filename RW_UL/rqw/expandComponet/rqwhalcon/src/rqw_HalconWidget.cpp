@@ -59,7 +59,8 @@ namespace rw {
             : _object(other._object ? new HalconCpp::HObject(*other._object) : nullptr),
             id(other.id),
             name(other.name),
-            isShow(other.isShow)
+            isShow(other.isShow),
+			type(other.type)
         {
         }
 
@@ -67,7 +68,8 @@ namespace rw {
             : _object(other._object),
             id(other.id),
             name(std::move(other.name)),
-            isShow(other.isShow)
+            isShow(other.isShow),
+			type(other.type)
         {
             other._object = nullptr;
         }
@@ -84,6 +86,7 @@ namespace rw {
                 id = other.id;
                 name = other.name;
                 isShow = other.isShow;
+				type = other.type;
             }
             return *this;
         }
@@ -100,6 +103,7 @@ namespace rw {
                 id = other.id;
                 name = std::move(other.name);
                 isShow = other.isShow;
+				type = other.type;
 
                 // 清空源对象
                 other._object = nullptr;
@@ -374,8 +378,13 @@ namespace rw {
             int windowHeight = size.height();
 
             // 获取第一个对象的大小（假设所有对象的大小一致）
+            auto ids=getIdsByType(HalconWidgetDisObject::ObjectType::Image);
+            if (ids.empty())
+            {
+                return;
+            }
             HalconCpp::HTuple width, height;
-            GetImageSize(*_halconObjects.front()->_object, &width, &height);
+            GetImageSize(*getObjectPtrById(ids.front())->value(), &width, &height);
 
             // 计算图像和窗口的宽高比
             double imgAspectRatio = static_cast<double>(width.I()) / height.I();
@@ -436,14 +445,17 @@ namespace rw {
             // 生成垂直线
          
             auto verticalLine = new HalconCpp::HObject;
-            HalconCpp::GenRegionLine(verticalLine, row1, position, row2, position);
+            HalconCpp::GenRectangle1(verticalLine, row1, position - config.thickness / 2, row2, position + config.thickness / 2);
 
             // 设置颜色和线宽
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
-            SetLineWidth(*_halconWindowHandle, config.thickness);
 
-            // 显示垂直线
-            HalconCpp::DispObj(*verticalLine, *_halconWindowHandle);
+			HalconWidgetDisObject object(verticalLine);
+			object.isShow = true;
+			object.painterConfig = config;
+            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.id = getMinValidAppendId();
+			appendHObject(object);
         }
 
         void HalconWidget::appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
@@ -458,15 +470,18 @@ namespace rw {
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
             // 生成水平线
-            HalconCpp::HObject horizontalLine;
-            HalconCpp::GenRegionLine(&horizontalLine, position, col1, position, col2);
+            auto horizontalLine = new HalconCpp::HObject;
 
+            HalconCpp::GenRectangle1(horizontalLine, position - config.thickness / 2, col1, position + config.thickness / 2, col2);
             // 设置颜色和线宽
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
-            SetLineWidth(*_halconWindowHandle, config.thickness);
 
-            // 显示水平线
-            HalconCpp::DispObj(horizontalLine, *_halconWindowHandle);
+            HalconWidgetDisObject object(horizontalLine);
+            object.isShow = true;
+            object.painterConfig = config;
+            object.type = HalconWidgetDisObject::ObjectType::Line;
+            object.id=getMinValidAppendId();
+            appendHObject(object);
         }
 
         void HalconWidget::initialize_halconWindow()

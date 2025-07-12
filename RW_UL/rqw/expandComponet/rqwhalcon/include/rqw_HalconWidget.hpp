@@ -38,7 +38,7 @@ namespace rw {
             };
         public:
             Color color{ Color::Black };
-			int thickness{ 2 };
+			int thickness{ 20 };
             QString text;
             int fontSize{ 25 };
             int fontThickness{ 1 };
