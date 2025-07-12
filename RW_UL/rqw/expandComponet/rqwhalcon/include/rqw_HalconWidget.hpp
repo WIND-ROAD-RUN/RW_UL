@@ -20,7 +20,22 @@ namespace rw {
 
         struct HalconWidgetDisObjectPainterConfig
         {
+        public:
+            HalconWidgetDisObjectPainterConfig() = default;
 
+            HalconWidgetDisObjectPainterConfig(const RQWColor& color, int thickness)
+                : color(color), thickness(thickness) {
+            }
+
+            HalconWidgetDisObjectPainterConfig(const HalconWidgetDisObjectPainterConfig& other) = default;
+
+            HalconWidgetDisObjectPainterConfig(HalconWidgetDisObjectPainterConfig&& other) noexcept = default;
+
+            HalconWidgetDisObjectPainterConfig& operator=(const HalconWidgetDisObjectPainterConfig& other) = default;
+
+            HalconWidgetDisObjectPainterConfig& operator=(HalconWidgetDisObjectPainterConfig&& other) noexcept = default;
+
+            ~HalconWidgetDisObjectPainterConfig() = default;
         public:
             RQWColor color{ RQWColor::Black };
 			int thickness{ 3 };
@@ -110,6 +125,8 @@ namespace rw {
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
             void mouseReleaseEvent(QMouseEvent* event) override;
+        private:
+            void display_HalconWidgetDisObject(HalconWidgetDisObject* object);
         private:
             std::vector<HalconWidgetDisObject*> _halconObjects;
         private:

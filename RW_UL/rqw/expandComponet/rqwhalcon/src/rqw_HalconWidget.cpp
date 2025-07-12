@@ -60,7 +60,8 @@ namespace rw {
             id(other.id),
             name(other.name),
             isShow(other.isShow),
-			type(other.type)
+			type(other.type),
+            painterConfig(other.painterConfig)
         {
         }
 
@@ -69,7 +70,8 @@ namespace rw {
             id(other.id),
             name(std::move(other.name)),
             isShow(other.isShow),
-			type(other.type)
+			type(other.type),
+            painterConfig(other.painterConfig)
         {
             other._object = nullptr;
         }
@@ -87,6 +89,7 @@ namespace rw {
                 name = other.name;
                 isShow = other.isShow;
 				type = other.type;
+				painterConfig = other.painterConfig;
             }
             return *this;
         }
@@ -104,6 +107,7 @@ namespace rw {
                 name = std::move(other.name);
                 isShow = other.isShow;
 				type = other.type;
+				painterConfig = other.painterConfig;
 
                 // 清空源对象
                 other._object = nullptr;
@@ -420,7 +424,7 @@ namespace rw {
             {
                 if (object->isShow)
                 {
-                    DispObj(*object->_object, *_halconWindowHandle);
+                    display_HalconWidgetDisObject(object);
                 }
             }
         }
@@ -655,7 +659,7 @@ namespace rw {
                 for (auto& object : _halconObjects) {
                     if (object->isShow)
                     {
-                        DispObj(*object->_object, *_halconWindowHandle);
+                        display_HalconWidgetDisObject(object);
                     }
                 }
 
@@ -681,6 +685,23 @@ namespace rw {
             else {
                 event->ignore();
             }
+        }
+
+        void HalconWidget::display_HalconWidgetDisObject(HalconWidgetDisObject* object)
+        {
+            if (object == nullptr || !object->has_value())
+            {
+                return; // 如果对象无效，直接返回
+            }
+            HalconCpp::HObject* halconObject = object->value();
+            if (halconObject == nullptr || !halconObject->IsInitialized())
+            {
+                return; 
+            }
+            auto [r, g, b] = RQWColorToRGB(object->painterConfig.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
+            HalconCpp::HTuple hv_WindowHandle = *_halconWindowHandle;
+			HalconCpp::DispObj(*halconObject, hv_WindowHandle);
         }
 
         void HalconWidget::drawRect()
