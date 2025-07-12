@@ -4,7 +4,7 @@ namespace rw
 {
 	namespace rqw
 	{
-		HalconCpp::HImage HalconImageConverter::QImageToHImage(const QImage& qImage)
+		HalconCpp::HImage QImageToHImage(const QImage& qImage)
 		{
 			// 检查输入 QImage 是否为空
 			if (qImage.isNull())
@@ -70,7 +70,7 @@ namespace rw
 			return hImage;
 		}
 
-		HalconCpp::HImage HalconImageConverter::CVMatToHImage(const cv::Mat& mat)
+		HalconCpp::HImage CvMatToHImage(const cv::Mat& mat)
 		{
 			// 检查输入 cv::Mat 是否为空
 			if (mat.empty())

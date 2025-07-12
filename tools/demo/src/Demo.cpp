@@ -40,9 +40,11 @@ void Demo::ini()
 	//QImage image("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
 
 	auto image = cv::imread("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
-    halconWidget->setImage(image);
-
-
+	rw::rqw::HalconWidgetDisObject object(image);
+	object.isShow = true;
+	object.id = 1;
+	auto a=object.has_value();
+    halconWidget->appendHObject(object);
 }
 
 void Demo::resizeEvent(QResizeEvent* event)
