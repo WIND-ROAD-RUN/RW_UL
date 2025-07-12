@@ -103,6 +103,8 @@ namespace rw {
         public:
             void appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
             void appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+        public:
+            bool setObjectVisible(HalconWidgetDisObjectId id,const bool visible);
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;

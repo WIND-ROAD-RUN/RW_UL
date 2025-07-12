@@ -475,28 +475,22 @@ namespace rw {
                 return;
             }
 
-            // 获取窗口的高度和宽度范围
             HalconCpp::HTuple row1, col1, row2, col2;
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-            // 校准 position，使其基于窗口的坐标范围
             int calibratedPosition = static_cast<int>(row1.D() + position);
 
-            // 检查校准后的 position 是否在有效范围内
             if (calibratedPosition - config.thickness / 2 < row1.D() || calibratedPosition + config.thickness / 2 > row2.D())
             {
                 throw std::out_of_range("Position is out of the valid range for the horizontal line.");
             }
 
-            // 生成水平线
             auto horizontalLine = new HalconCpp::HObject;
             HalconCpp::GenRectangle1(horizontalLine, calibratedPosition - config.thickness / 2, col1.D(), calibratedPosition + config.thickness / 2, col2.D());
 
-            // 设置颜色
             auto [r,g,b] = RQWColorToRGB(config.color);
             SetRgb(*_halconWindowHandle, r, g, b);
 
-            // 创建并添加对象
             HalconWidgetDisObject object(horizontalLine);
             object.isShow = true;
             object.painterConfig = config;
@@ -504,6 +498,19 @@ namespace rw {
             object.id = getMinValidAppendId();
             appendHObject(object);
         }
+
+        bool HalconWidget::setObjectVisible(const HalconWidgetDisObjectId id, const bool visible)
+        {
+            auto object=getObjectPtrById(id);
+            if (object == nullptr || !object->has_value())
+            {
+                return false; 
+			}
+            object->isShow = visible; 
+            refresh_allObject(); 
+			return true; 
+        }
+
 
         void HalconWidget::initialize_halconWindow()
         {
@@ -530,28 +537,23 @@ namespace rw {
                 return;
             }
 
-            if (rect().contains(event->position().toPoint())) { // 检查鼠标是否在 HalconWidget 内
-                int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
-                double scaleFactor = (delta > 0) ? 1.1 : 0.9; // 缩放因子，向上滚动放大，向下滚动缩小
+            if (rect().contains(event->position().toPoint())) { 
+                int delta = event->angleDelta().y(); 
+                double scaleFactor = (delta > 0) ? 1.1 : 0.9; 
 
-                // 获取鼠标在 HalconWidget 中的位置
                 QPointF mousePos = event->position();
                 int mouseX = static_cast<int>(mousePos.x());
                 int mouseY = static_cast<int>(mousePos.y());
 
-                // 获取当前显示区域
                 HalconCpp::HTuple row1, col1, row2, col2;
                 GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-                // 计算当前显示区域的宽高
                 double currentWidth = col2.D() - col1.D() + 1;
                 double currentHeight = row2.D() - row1.D() + 1;
 
-                // 计算鼠标位置在图像中的相对位置
                 double relativeX = col1.D() + (mouseX / static_cast<double>(width())) * currentWidth;
                 double relativeY = row1.D() + (mouseY / static_cast<double>(height())) * currentHeight;
 
-                // 计算新的显示区域
                 double newWidth = currentWidth / scaleFactor;
                 double newHeight = currentHeight / scaleFactor;
                 double newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
@@ -559,13 +561,10 @@ namespace rw {
                 double newCol2 = newCol1 + newWidth - 1;
                 double newRow2 = newRow1 + newHeight - 1;
 
-                // 清除窗口内容
                 ClearWindow(*_halconWindowHandle);
 
-                // 设置新的显示区域
                 SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
 
-                // 重新显示所有对象
                 for (auto& object : _halconObjects)
                 {
                     if (object->isShow)
@@ -574,10 +573,10 @@ namespace rw {
                     }
                 }
 
-                event->accept(); // 事件已处理
+                event->accept(); 
             }
             else {
-                event->ignore(); // 事件未处理
+                event->ignore(); 
             }
         }
 
