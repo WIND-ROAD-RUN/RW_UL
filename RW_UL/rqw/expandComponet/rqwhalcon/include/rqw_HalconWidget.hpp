@@ -17,7 +17,11 @@ namespace rw {
         class HalconWidget : public QWidget
         {
             Q_OBJECT
-
+        public:
+            //TODO:鼠标滚轮缩放
+			//TODO:鼠标拖拽
+            //TODO:appendHObject接口
+			//TODO:clearHObject接口
         public:
             explicit HalconWidget(QWidget* parent = nullptr);
             ~HalconWidget() override;

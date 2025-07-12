@@ -31,7 +31,7 @@ namespace rw {
         void HalconWidget::setImage(const QImage& image)
         {
 
-            HalconCpp::HImage hImage = HalconImageConverter::QImageToHImage(image);
+            HalconCpp::HImage hImage = QImageToHImage(image);
             if (_image)
             {
                 delete _image;
@@ -42,7 +42,7 @@ namespace rw {
 
         void HalconWidget::setImage(const cv::Mat& mat)
         {
-            HalconCpp::HImage hImage = HalconImageConverter::CVMatToHImage(mat);
+            HalconCpp::HImage hImage = CvMatToHImage(mat);
             if (_image)
             {
                 delete _image;

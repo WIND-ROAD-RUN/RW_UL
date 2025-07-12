@@ -7,12 +7,10 @@
 
 namespace rw {
 	namespace rqw {
-		class HalconImageConverter
-		{
-		public:
-			static HalconCpp::HImage QImageToHImage(const QImage& qImage);
-			static HalconCpp::HImage CVMatToHImage(const cv::Mat& mat);
 
-		};
+		HalconCpp::HImage QImageToHImage(const QImage& qImage);
+		HalconCpp::HImage CvMatToHImage(const cv::Mat& mat);
+
+		;
 	} // namespace rqw
 } // namespace rw
