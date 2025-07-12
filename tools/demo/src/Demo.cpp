@@ -39,14 +39,13 @@ void Demo::ini()
 
 	//QImage image("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
 
-	auto image = cv::imread("C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
+	auto image = cv::imread(R"(C:\Users\rw\Desktop\temp\f2e008f9-1ccd-42ea-94b0-cb25f39b9a47.png)");
 	rw::rqw::HalconWidgetDisObject object(image);
 	object.isShow = true;
 	object.id = 0;
 	auto a=object.has_value();
     halconWidget->appendHObject(object);
 	auto id=halconWidget->getMinValidAppendId();
-	auto position = halconWidget->height() / 2;
 	/*auto width = halconWidget->width() / 2;
 	halconWidget->appendVerticalLine(width);*/
 	auto width = halconWidget->height() / 2;

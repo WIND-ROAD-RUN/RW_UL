@@ -438,24 +438,33 @@ namespace rw {
                 return;
             }
 
-            // 获取窗口的高度
+            // 获取窗口的高度和宽度范围
             HalconCpp::HTuple row1, col1, row2, col2;
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-            // 生成垂直线
-         
-            auto verticalLine = new HalconCpp::HObject;
-            HalconCpp::GenRectangle1(verticalLine, row1, position - config.thickness / 2, row2, position + config.thickness / 2);
+            // 校准 position，使其基于窗口的坐标范围
+            int calibratedPosition = static_cast<int>(col1.D() + position);
 
-            // 设置颜色和线宽
+            // 检查校准后的 position 是否在有效范围内
+            if (calibratedPosition - config.thickness / 2 < col1.D() || calibratedPosition + config.thickness / 2 > col2.D())
+            {
+                throw std::out_of_range("Position is out of the valid range for the vertical line.");
+            }
+
+            // 生成垂直线
+            auto verticalLine = new HalconCpp::HObject;
+            HalconCpp::GenRectangle1(verticalLine, row1.D(), calibratedPosition - config.thickness / 2, row2.D(), calibratedPosition + config.thickness / 2);
+
+            // 设置颜色
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
 
-			HalconWidgetDisObject object(verticalLine);
-			object.isShow = true;
-			object.painterConfig = config;
+            // 创建并添加对象
+            HalconWidgetDisObject object(verticalLine);
+            object.isShow = true;
+            object.painterConfig = config;
             object.type = HalconWidgetDisObject::ObjectType::Line;
             object.id = getMinValidAppendId();
-			appendHObject(object);
+            appendHObject(object);
         }
 
         void HalconWidget::appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
@@ -465,22 +474,32 @@ namespace rw {
                 return;
             }
 
-            // 获取窗口的宽度
+            // 获取窗口的高度和宽度范围
             HalconCpp::HTuple row1, col1, row2, col2;
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
+            // 校准 position，使其基于窗口的坐标范围
+            int calibratedPosition = static_cast<int>(row1.D() + position);
+
+            // 检查校准后的 position 是否在有效范围内
+            if (calibratedPosition - config.thickness / 2 < row1.D() || calibratedPosition + config.thickness / 2 > row2.D())
+            {
+                throw std::out_of_range("Position is out of the valid range for the horizontal line.");
+            }
+
             // 生成水平线
             auto horizontalLine = new HalconCpp::HObject;
+            HalconCpp::GenRectangle1(horizontalLine, calibratedPosition - config.thickness / 2, col1.D(), calibratedPosition + config.thickness / 2, col2.D());
 
-            HalconCpp::GenRectangle1(horizontalLine, position - config.thickness / 2, col1, position + config.thickness / 2, col2);
-            // 设置颜色和线宽
+            // 设置颜色
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
 
+            // 创建并添加对象
             HalconWidgetDisObject object(horizontalLine);
             object.isShow = true;
             object.painterConfig = config;
             object.type = HalconWidgetDisObject::ObjectType::Line;
-            object.id=getMinValidAppendId();
+            object.id = getMinValidAppendId();
             appendHObject(object);
         }
 
