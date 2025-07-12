@@ -18,7 +18,7 @@ namespace rw {
         {
             Q_OBJECT
         public:
-            //TODO:鼠标滚轮缩放
+            
 			//TODO:鼠标拖拽
             //TODO:appendHObject接口
 			//TODO:clearHObject接口

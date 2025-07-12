@@ -120,14 +120,44 @@ namespace rw {
 
         void HalconWidget::wheelEvent(QWheelEvent* event)
         {
-            if (rect().contains(event->position().toPoint())) { // 使用 position() 并转换为 QPoint
+            if (rect().contains(event->position().toPoint())) { // 检查鼠标是否在 HalconWidget 内
                 int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
-                if (delta > 0) {
-                    qDebug() << "Mouse wheel scrolled up inside HalconWidget.";
-                }
-                else {
-                    qDebug() << "Mouse wheel scrolled down inside HalconWidget.";
-                }
+                double scaleFactor = (delta > 0) ? 1.1 : 0.9; // 缩放因子，向上滚动放大，向下滚动缩小
+
+                // 获取鼠标在 HalconWidget 中的位置
+                QPointF mousePos = event->position();
+                int mouseX = static_cast<int>(mousePos.x());
+                int mouseY = static_cast<int>(mousePos.y());
+
+                // 获取当前显示区域
+                HalconCpp::HTuple row1, col1, row2, col2;
+                GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+                // 计算当前显示区域的宽高
+                double currentWidth = col2.D() - col1.D() + 1;
+                double currentHeight = row2.D() - row1.D() + 1;
+
+                // 计算鼠标位置在图像中的相对位置
+                double relativeX = col1.D() + (mouseX / static_cast<double>(width())) * currentWidth;
+                double relativeY = row1.D() + (mouseY / static_cast<double>(height())) * currentHeight;
+
+                // 计算新的显示区域
+                double newWidth = currentWidth / scaleFactor;
+                double newHeight = currentHeight / scaleFactor;
+                double newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
+                double newRow1 = relativeY - (mouseY / static_cast<double>(height())) * newHeight;
+                double newCol2 = newCol1 + newWidth - 1;
+                double newRow2 = newRow1 + newHeight - 1;
+
+                // 清除窗口内容
+                ClearWindow(*_halconWindowHandle);
+
+                // 设置新的显示区域
+                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
+
+                // 重新显示图像
+                DispObj(*_image, *_halconWindowHandle);
+
                 event->accept(); // 事件已处理
             }
             else {
