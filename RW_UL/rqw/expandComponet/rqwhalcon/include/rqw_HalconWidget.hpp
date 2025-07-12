@@ -34,6 +34,7 @@ namespace rw {
         private:
             HalconCpp::HObject* _object;
         public:
+			// Object properties :default id=0 for image, id>0 is other, < 0 is inside
             int id{0};
             std::string name{"Undefined"};
             bool isShow{true};
