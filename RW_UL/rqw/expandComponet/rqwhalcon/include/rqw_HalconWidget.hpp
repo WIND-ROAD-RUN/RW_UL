@@ -13,9 +13,11 @@ namespace HalconCpp
 
 namespace rw {
 	namespace rqw {
+        class HalconWidget;
 
         struct HalconWidgetDisObject
         {
+            friend HalconWidget;
         public:
 	        explicit HalconWidgetDisObject(HalconCpp::HObject* obj);
             explicit HalconWidgetDisObject(const HalconCpp::HImage& image);
@@ -45,11 +47,11 @@ namespace rw {
         private:
             HalconCpp::HTuple* _halconWindowHandle{ nullptr };
         private:
-			std::vector<HalconCpp::HObject *> _halconObjects;
+			std::vector<HalconWidgetDisObject*> _halconObjects;
         private:
-            void append_HObject(HalconCpp::HObject* object);
+            void append_HObject(HalconWidgetDisObject* object);
         public:
-			void appendHObject(const HalconCpp::HObject& object);
+			void appendHObject(const HalconWidgetDisObject& object);
 			void clearHObject();
         private:
             void initialize_halconWindow();

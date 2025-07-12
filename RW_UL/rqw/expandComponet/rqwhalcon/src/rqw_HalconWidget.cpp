@@ -105,7 +105,7 @@ namespace rw {
             close_halconWindow();
         }
 
-        void HalconWidget::append_HObject(HalconCpp::HObject* object)
+        void HalconWidget::append_HObject(HalconWidgetDisObject* object)
         {
             if (object == nullptr)
             {
@@ -115,9 +115,9 @@ namespace rw {
             refresh_allObject();
         }
 
-        void HalconWidget::appendHObject(const HalconCpp::HObject& object)
+        void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
         {
-			HalconCpp::HObject* newObject = new HalconCpp::HObject(object);
+            HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
             _halconObjects.push_back(newObject);
             refresh_allObject();
         }
@@ -153,7 +153,7 @@ namespace rw {
 
             // 获取第一个对象的大小（假设所有对象的大小一致）
             HalconCpp::HTuple width, height;
-            GetImageSize(*_halconObjects.front(), &width, &height);
+            GetImageSize(*_halconObjects.front()->_object, &width, &height);
 
             // 计算图像和窗口的宽高比
             double imgAspectRatio = static_cast<double>(width.I()) / height.I();
@@ -187,7 +187,10 @@ namespace rw {
             // 显示所有对象
             for (auto& object : _halconObjects)
             {
-                DispObj(*object, *_halconWindowHandle);
+                if (object->isShow)
+                {
+                    DispObj(*object->_object, *_halconWindowHandle);
+                }
             }
         }
 
@@ -249,7 +252,10 @@ namespace rw {
                 // 重新显示所有对象
                 for (auto& object : _halconObjects)
                 {
-                    DispObj(*object, *_halconWindowHandle);
+                    if (object->isShow)
+                    {
+                        DispObj(*object->_object, *_halconWindowHandle);
+                    }
                 }
 
                 event->accept(); // 事件已处理
@@ -318,7 +324,10 @@ namespace rw {
                 // 清除窗口并重新显示所有对象
                 ClearWindow(*_halconWindowHandle);
                 for (auto& object : _halconObjects) {
-                    DispObj(*object, *_halconWindowHandle);
+                    if (object->isShow)
+                    {
+                        DispObj(*object->_object, *_halconWindowHandle);
+                    }
                 }
 
                 _lastMousePos = currentMousePos; // 更新鼠标位置
@@ -356,7 +365,7 @@ namespace rw {
 
             // 生成矩形对象并显示
             HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
-            appendHObject(ho_Rectangle);
+            //appendHObject(ho_Rectangle);
         	HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
 
             _isDrawingRect = false; // 绘制完成
