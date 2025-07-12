@@ -34,7 +34,7 @@ namespace rw {
         private:
             HalconCpp::HObject* _object;
         public:
-            size_t id{0};
+            int id{0};
             std::string name{"Undefined"};
             bool isShow{true};
         public:
@@ -57,11 +57,11 @@ namespace rw {
             HalconCpp::HTuple* _halconWindowHandle{ nullptr };
         public:
 			void appendHObject(const HalconWidgetDisObject& object);
-            void appendHObject(HalconWidgetDisObject object);
+            void appendHObject(HalconWidgetDisObject * object);
 			void clearHObject();
         public:
-            HalconWidgetDisObject* getObjectPtrById(size_t id);
-            HalconWidgetDisObject getObjectById(size_t id);
+            HalconWidgetDisObject* getObjectPtrById(int id);
+            HalconWidgetDisObject getObjectById(int id);
         public:
 			void updateWidget();
         protected:
