@@ -65,7 +65,7 @@ void Demo::resizeEvent(QResizeEvent* event)
 void Demo::pushButton_clicked()
 {
 	rw::rqw::PainterConfig config;
-	halconWidget->drawRect(config,true);
+	halconWidget->drawRect(config);
 
 	////画一个矩形
 	//HalconCpp::HTuple  hv_WindowHandle, hv_Row1, hv_Column1;
