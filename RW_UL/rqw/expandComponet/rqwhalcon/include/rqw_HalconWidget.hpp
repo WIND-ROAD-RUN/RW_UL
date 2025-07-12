@@ -13,6 +13,8 @@ namespace HalconCpp
 
 namespace rw {
 	namespace rqw {
+        using HalconWidgetDisObjectId = int;
+
         class HalconWidget;
 
         struct HalconWidgetDisObject
@@ -35,7 +37,7 @@ namespace rw {
             HalconCpp::HObject* _object;
         public:
 			// Object properties :default id=0 for image, id>0 is other, < 0 is inside
-            int id{0};
+            HalconWidgetDisObjectId id{0};
             std::string name{"Undefined"};
             bool isShow{true};
         public:
@@ -61,8 +63,8 @@ namespace rw {
             void appendHObject(HalconWidgetDisObject * object);
 			void clearHObject();
         public:
-            HalconWidgetDisObject* getObjectPtrById(int id);
-            HalconWidgetDisObject getObjectById(int id);
+            HalconWidgetDisObject* getObjectPtrById(HalconWidgetDisObjectId id);
+            HalconWidgetDisObject getObjectById(HalconWidgetDisObjectId id);
             bool eraseObjectById(int id);
         public:
 			void updateWidget();
