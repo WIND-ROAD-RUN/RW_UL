@@ -58,7 +58,7 @@ namespace rw {
 		HalconWidgetDisObject::HalconWidgetDisObject(const HalconWidgetDisObject& other)
             : _object(other._object ? new HalconCpp::HObject(*other._object) : nullptr),
             id(other.id),
-            name(other.name),
+            descrption(other.descrption),
             isShow(other.isShow),
 			type(other.type),
             painterConfig(other.painterConfig)
@@ -68,7 +68,7 @@ namespace rw {
 		HalconWidgetDisObject::HalconWidgetDisObject(HalconWidgetDisObject&& other) noexcept
             : _object(other._object),
             id(other.id),
-            name(std::move(other.name)),
+            descrption(std::move(other.descrption)),
             isShow(other.isShow),
 			type(other.type),
             painterConfig(other.painterConfig)
@@ -86,7 +86,7 @@ namespace rw {
                 // 深拷贝
                 _object = other._object ? new HalconCpp::HObject(*other._object) : nullptr;
                 id = other.id;
-                name = other.name;
+                descrption = other.descrption;
                 isShow = other.isShow;
 				type = other.type;
 				painterConfig = other.painterConfig;
@@ -104,7 +104,7 @@ namespace rw {
                 // 移动资源
                 _object = other._object;
                 id = other.id;
-                name = std::move(other.name);
+                descrption = std::move(other.descrption);
                 isShow = other.isShow;
 				type = other.type;
 				painterConfig = other.painterConfig;
@@ -344,7 +344,7 @@ namespace rw {
             return ids;
         }
 
-        HalconWidgetDisObjectId HalconWidget::getMinValidAppendId()
+        HalconWidgetDisObjectId HalconWidget::getVailidAppendId()
         {
             std::unordered_set<HalconWidgetDisObjectId> existingIds;
             for (const auto& object : _halconObjects)
@@ -435,7 +435,7 @@ namespace rw {
         }
 
 
-        void HalconWidget::appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        void HalconWidget::appendVerticalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
@@ -468,11 +468,11 @@ namespace rw {
             object.isShow = true;
             object.painterConfig = config;
             object.type = HalconWidgetDisObject::ObjectType::Line;
-            object.id = getMinValidAppendId();
+            object.id = getVailidAppendId();
             appendHObject(object);
         }
 
-        void HalconWidget::appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        void HalconWidget::appendHorizontalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
@@ -499,7 +499,7 @@ namespace rw {
             object.isShow = true;
             object.painterConfig = config;
             object.type = HalconWidgetDisObject::ObjectType::Line;
-            object.id = getMinValidAppendId();
+            object.id = getVailidAppendId();
             appendHObject(object);
         }
 
@@ -513,6 +513,11 @@ namespace rw {
             object->isShow = visible; 
             refresh_allObject(); 
 			return true; 
+        }
+
+        bool HalconWidget::isDrawing()
+        {
+            return _isDrawingRect;
         }
 
 
@@ -573,7 +578,7 @@ namespace rw {
                 {
                     if (object->isShow)
                     {
-                        DispObj(*object->_object, *_halconWindowHandle);
+                        display_HalconWidgetDisObject(object);
                     }
                 }
 
@@ -698,10 +703,15 @@ namespace rw {
             {
                 return; 
             }
-            auto [r, g, b] = RQWColorToRGB(object->painterConfig.color);
-            SetRgb(*_halconWindowHandle, r, g, b);
+            prepare_display(object->painterConfig);
             HalconCpp::HTuple hv_WindowHandle = *_halconWindowHandle;
 			HalconCpp::DispObj(*halconObject, hv_WindowHandle);
+        }
+
+        void HalconWidget::prepare_display(const PainterConfig& config)
+        {
+            auto [r, g, b] = RQWColorToRGB(config.color);
+            SetRgb(*_halconWindowHandle, r, g, b);
         }
 
         void HalconWidget::drawRect()
@@ -761,6 +771,52 @@ namespace rw {
             }
 
             _isDrawingRect = false; // 绘制完成
+        }
+
+        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config)
+        {
+            prepare_display(config);
+            _isDrawingRect = true;
+            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
+
+            auto ho_Rectangle = new HalconCpp::HObject;
+            auto ho_Contour = new HalconCpp::HObject;
+
+            // 绘制矩形
+            HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
+            HalconCpp::GenRectangle1(ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
+
+            // 将矩形转换为轮廓（边框）
+            HalconCpp::GenContourRegionXld(*ho_Rectangle, ho_Contour, "border");
+
+            _isDrawingRect = false;
+
+            // 创建 HalconWidgetDisObject 对象
+            auto object = new HalconWidgetDisObject(ho_Contour); // 使用轮廓对象
+            object->id = getVailidAppendId();
+            object->painterConfig = config;
+            object->isShow = true;
+            object->type = HalconWidgetDisObject::ObjectType::Rectangle;
+            object->descrption = "drawRect";
+
+            appendHObject(object);
+            return *object;
+        }
+
+        void HalconWidget::shapeModel(HalconWidgetDisObject& rec)
+        {
+            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
+            HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
+
+            // 提取矩形区域内的内容作为模板学习区域
+            HalconCpp::ReduceDomain(*_halconObjects.front()->value(), *rec._object, &ho_TemplateRegion);
+
+            // 创建模板
+            HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
+            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
+
+            HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
+            HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
         }
 	}
 }
