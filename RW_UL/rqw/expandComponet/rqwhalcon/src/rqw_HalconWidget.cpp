@@ -16,12 +16,14 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const HalconCpp::HImage& image)
+			:type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage* newImage = new HalconCpp::HImage(image);
             _object = newImage;
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const cv::Mat& mat)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage hImage = CvMatToHImage(mat);
             auto newImage = new HalconCpp::HImage(hImage);
@@ -29,6 +31,7 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const QImage& image)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             HalconCpp::HImage hImage = QImageToHImage(image);
             auto newImage = new HalconCpp::HImage(hImage);
@@ -36,6 +39,7 @@ namespace rw {
 		}
 
 		HalconWidgetDisObject::HalconWidgetDisObject(const QPixmap& pixmap)
+            :type(HalconWidgetDisObject::ObjectType::Image)
 		{
             QImage image = pixmap.toImage();
             HalconCpp::HImage hImage = QImageToHImage(image);
@@ -123,6 +127,7 @@ namespace rw {
             {
                 delete _object;
                 _object = nullptr;
+                type = ObjectType::Undefined;
 			}
 		}
 
@@ -154,16 +159,6 @@ namespace rw {
         {
             clearHObject();
             close_halconWindow();
-        }
-
-        void HalconWidget::append_HObject(HalconWidgetDisObject* object)
-        {
-            if (object == nullptr)
-            {
-                return;
-            }
-            _halconObjects.push_back(object);
-            refresh_allObject();
         }
 
         HalconCpp::HTuple* HalconWidget::Handle()
@@ -228,6 +223,34 @@ namespace rw {
 			}
         }
 
+        size_t HalconWidget::width()
+        {
+            if (!_halconWindowHandle)
+            {
+                return 0; // 如果窗口句柄未初始化，返回 0
+            }
+
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算宽度
+            return static_cast<size_t>(col2.D() - col1.D() + 1);
+        }
+
+        size_t HalconWidget::height()
+        {
+            if (!_halconWindowHandle)
+            {
+                return 0; // 如果窗口句柄未初始化，返回 0
+            }
+
+            HalconCpp::HTuple row1, col1, row2, col2;
+            GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+            // 计算高度
+            return static_cast<size_t>(row2.D() - row1.D() + 1);
+        }
+
         HalconWidgetDisObject* HalconWidget::getObjectPtrById(int id)
         {
             for (auto& object : _halconObjects)
@@ -267,6 +290,29 @@ namespace rw {
 			return false; // 未找到对象
         }
 
+        bool HalconWidget::eraseObjectsByType(HalconWidgetDisObject::ObjectType objectType)
+        {
+            auto ids=getIdsByType(objectType);
+            if (ids.empty())
+            {
+                return false; // 没有找到指定类型的对象
+			}
+            for (auto it = _halconObjects.begin(); it != _halconObjects.end();)
+            {
+                if ((*it)->type == objectType)
+                {
+                    delete *it; // 释放对象内存
+                    it = _halconObjects.erase(it); // 删除对象并更新迭代器
+                }
+                else
+                {
+                    ++it; // 继续迭代
+                }
+            }
+            refresh_allObject(); // 刷新显示
+			return true; // 成功删除指定类型的对象
+        }
+
         std::vector<HalconWidgetDisObjectId> HalconWidget::getAllIds() const
         {
             std::vector<HalconWidgetDisObjectId> ids;
@@ -275,6 +321,19 @@ namespace rw {
                 ids.push_back(object->id);
             }
 			return ids;
+        }
+
+        std::vector<HalconWidgetDisObjectId> HalconWidget::getIdsByType(const HalconWidgetDisObject::ObjectType objectType) const
+        {
+            std::vector<HalconWidgetDisObjectId> ids;
+            for (const auto& object : _halconObjects)
+            {
+                if (object->type==objectType)
+                {
+                    ids.push_back(object->id);
+                }
+            }
+            return ids;
         }
 
         HalconWidgetDisObjectId HalconWidget::getMinValidAppendId()
@@ -363,60 +422,51 @@ namespace rw {
         }
 
 
-        void HalconWidget::drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        void HalconWidget::appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
                 return;
             }
 
-            // 获取 Halcon 窗口的当前显示区域
+            // 获取窗口的高度
             HalconCpp::HTuple row1, col1, row2, col2;
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-            // 计算线条的起点和终点
-            int lineX = col1.I() + position; // 线条的 X 坐标
-            int startY = row1.I();           // 起点 Y 坐标
-            int endY = row2.I();             // 终点 Y 坐标
-
             // 生成垂直线
-            HalconCpp::HObject verticalLine;
-            HalconCpp::GenRegionLine(&verticalLine, startY, lineX, endY, lineX);
+         
+            auto verticalLine = new HalconCpp::HObject;
+            HalconCpp::GenRegionLine(verticalLine, row1, position, row2, position);
 
-            // 设置线条颜色和粗细
+            // 设置颜色和线宽
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
             SetLineWidth(*_halconWindowHandle, config.thickness);
 
-            // 显示线条
-            DispObj(verticalLine, *_halconWindowHandle);
+            // 显示垂直线
+            HalconCpp::DispObj(*verticalLine, *_halconWindowHandle);
         }
 
-        void HalconWidget::drawHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
+        void HalconWidget::appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
                 return;
             }
 
-            // 获取 Halcon 窗口的当前显示区域
+            // 获取窗口的宽度
             HalconCpp::HTuple row1, col1, row2, col2;
             GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
-
-            // 计算线条的起点和终点
-            int lineY = row1.I() + position; // 线条的 Y 坐标
-            int startX = col1.I();           // 起点 X 坐标
-            int endX = col2.I();             // 终点 X 坐标
 
             // 生成水平线
             HalconCpp::HObject horizontalLine;
-            HalconCpp::GenRegionLine(&horizontalLine, lineY, startX, lineY, endX);
+            HalconCpp::GenRegionLine(&horizontalLine, position, col1, position, col2);
 
-            // 设置线条颜色和粗细
+            // 设置颜色和线宽
             SetColor(*_halconWindowHandle, config.color == HalconWidgetDisObjectPainterConfig::Color::Black ? "black" : "white");
             SetLineWidth(*_halconWindowHandle, config.thickness);
 
-            // 显示线条
-            DispObj(horizontalLine, *_halconWindowHandle);
+            // 显示水平线
+            HalconCpp::DispObj(horizontalLine, *_halconWindowHandle);
         }
 
         void HalconWidget::initialize_halconWindow()

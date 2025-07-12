@@ -49,6 +49,13 @@ namespace rw {
         {
             friend HalconWidget;
         public:
+            enum class ObjectType {
+                Image,
+                Line, 
+                Rectangle,
+                Undefined
+			};
+        public:
 	        explicit HalconWidgetDisObject(HalconCpp::HObject* obj);
             explicit HalconWidgetDisObject(const HalconCpp::HImage& image);
             explicit HalconWidgetDisObject(const cv::Mat& mat);
@@ -69,6 +76,7 @@ namespace rw {
             std::string name{"Undefined"};
             bool isShow{true};
 			HalconWidgetDisObjectPainterConfig painterConfig;
+            ObjectType type;
         public:
             bool has_value();
             HalconCpp::HObject* value();
@@ -94,17 +102,22 @@ namespace rw {
             void appendHObject(HalconWidgetDisObject * object);
 			void clearHObject();
         public:
+            size_t width();
+            size_t height();
+        public:
             HalconWidgetDisObject* getObjectPtrById(HalconWidgetDisObjectId id);
             HalconWidgetDisObject getObjectById(HalconWidgetDisObjectId id);
             bool eraseObjectById(int id);
+            bool eraseObjectsByType(HalconWidgetDisObject::ObjectType objectType);
         public:
-            std::vector<HalconWidgetDisObjectId> getAllIds() const;
+            [[nodiscard]] std::vector<HalconWidgetDisObjectId> getAllIds() const;
+            [[nodiscard]] std::vector<HalconWidgetDisObjectId> getIdsByType(HalconWidgetDisObject::ObjectType objectType) const;
             HalconWidgetDisObjectId getMinValidAppendId();
         public:
 			void updateWidget();
         public:
-            void drawVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
-            void drawHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+            void appendVerticalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
+            void appendHorizontalLine(int position, const HalconWidgetDisObjectPainterConfig& config={});
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
@@ -116,8 +129,6 @@ namespace rw {
             void mouseReleaseEvent(QMouseEvent* event) override;
         private:
             std::vector<HalconWidgetDisObject*> _halconObjects;
-        private:
-            void append_HObject(HalconWidgetDisObject* object);
         private:
             void initialize_halconWindow();
             void close_halconWindow();
