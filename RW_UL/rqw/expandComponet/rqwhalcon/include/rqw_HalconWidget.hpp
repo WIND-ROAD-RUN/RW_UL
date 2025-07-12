@@ -36,6 +36,9 @@ namespace rw {
             size_t id{0};
             std::string name{"Undefined"};
             bool isShow{true};
+        public:
+            bool has_value();
+            HalconCpp::HObject* value();
 		};
 
         class HalconWidget : public QWidget
@@ -53,6 +56,9 @@ namespace rw {
         public:
 			void appendHObject(const HalconWidgetDisObject& object);
 			void clearHObject();
+        public:
+            HalconWidgetDisObject* getObjectPtrById(size_t id);
+            HalconWidgetDisObject getObjectById(size_t id);
         private:
             void initialize_halconWindow();
             void close_halconWindow();

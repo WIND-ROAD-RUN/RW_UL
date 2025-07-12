@@ -93,6 +93,20 @@ namespace rw {
             return *this;
         }
 
+		bool HalconWidgetDisObject::has_value()
+		{
+			return _object != nullptr && _object->IsInitialized();
+		}
+
+		HalconCpp::HObject* HalconWidgetDisObject::value()
+		{
+            if (!has_value())
+            {
+                throw std::runtime_error("HalconWidgetDisObject does not contain a valid HObject.");
+            }
+			return _object;
+		}
+
 		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {
@@ -117,6 +131,14 @@ namespace rw {
 
         void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
         {
+            for (const auto& existingObject : _halconObjects)
+            {
+                if (existingObject->id == object.id)
+                {
+                    throw std::runtime_error("An object with the same ID already exists.");
+                }
+            }
+
             HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
             _halconObjects.push_back(newObject);
             refresh_allObject();
@@ -129,6 +151,30 @@ namespace rw {
             {
                 ClearWindow(*_halconWindowHandle);
 			}
+        }
+
+        HalconWidgetDisObject* HalconWidget::getObjectPtrById(size_t id)
+        {
+            for (auto& object : _halconObjects)
+            {
+                if (object->id == id)
+                {
+                    return object;
+                }
+            }
+            return new HalconWidgetDisObject(nullptr);
+        }
+
+        HalconWidgetDisObject HalconWidget::getObjectById(size_t id)
+        {
+            for (auto& object : _halconObjects)
+            {
+                if (object->id == id)
+                {
+                    return HalconWidgetDisObject(*object);
+                }
+            }
+            return HalconWidgetDisObject(nullptr);
         }
 
         void HalconWidget::refresh_allObject()
