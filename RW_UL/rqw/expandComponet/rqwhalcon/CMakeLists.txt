@@ -29,11 +29,11 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
 
 target_include_directories(${PROJECT_NAME} 
-	PRIVATE ${Halcon_include}
+	PUBLIC ${Halcon_include}
 )
 
 target_link_libraries(${PROJECT_NAME} 
-	PRIVATE ${Halcon_libs}
+	PUBLIC ${Halcon_libs}
 	PRIVATE ${OpenCV_LIBS}
 )
 

@@ -166,6 +166,11 @@ namespace rw {
 
         void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
         {
+            if (object.id<0)
+            {
+				throw std::runtime_error("Object ID must be a non-negative integer.");
+            }
+
             for (const auto& existingObject : _halconObjects)
             {
                 if (existingObject->id == object.id)
@@ -181,6 +186,11 @@ namespace rw {
 
         void HalconWidget::appendHObject(HalconWidgetDisObject* object)
         {
+            if (object->id < 0)
+            {
+                throw std::runtime_error("Object ID must be a non-negative integer.");
+            }
+
             if (object == nullptr)
             {
                 return;
