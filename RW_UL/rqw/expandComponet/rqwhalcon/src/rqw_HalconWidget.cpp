@@ -133,6 +133,15 @@ namespace rw {
 			_object = new HalconCpp::HObject(object); 
 		}
 
+		void HalconWidgetDisObject::updateObject(HalconCpp::HObject* object)
+		{
+            if (_object)
+            {
+                delete _object; 
+            }
+			_object = object; 
+		}
+
 		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {

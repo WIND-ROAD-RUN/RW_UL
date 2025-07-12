@@ -44,6 +44,7 @@ namespace rw {
             void release();
         public:
             void updateObject(const HalconCpp::HObject & object);
+            void updateObject(HalconCpp::HObject* object);
 		};
 
         class HalconWidget : public QWidget
