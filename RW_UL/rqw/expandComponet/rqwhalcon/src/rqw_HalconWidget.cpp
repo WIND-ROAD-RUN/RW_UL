@@ -198,20 +198,92 @@ namespace rw {
             QWidget::resizeEvent(event);
         }
 
+        void HalconWidget::mousePressEvent(QMouseEvent* event)
+        {
+            if (_isDrawingRect) {
+                event->ignore(); // 如果正在绘制矩形，忽略鼠标事件
+                return;
+            }
+
+            if (event->button() == Qt::LeftButton && rect().contains(event->pos())) {
+                _isDragging = true;
+                _lastMousePos = event->pos(); // 记录鼠标按下时的位置
+                event->accept();
+            }
+            else {
+                event->ignore();
+            }
+        }
+
+        void HalconWidget::mouseMoveEvent(QMouseEvent* event)
+        {
+            if (_isDrawingRect) {
+                event->ignore(); // 如果正在绘制矩形，忽略鼠标事件
+                return;
+            }
+
+            if (_isDragging && _halconWindowHandle && _image) {
+                QPoint currentMousePos = event->pos();
+                QPoint delta = currentMousePos - _lastMousePos; // 计算鼠标移动的偏移量
+
+                // 获取当前显示区域
+                HalconCpp::HTuple row1, col1, row2, col2;
+                GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+
+                // 根据鼠标移动的偏移量调整显示区域
+                double deltaX = -delta.x() * (col2.D() - col1.D() + 1) / width();
+                double deltaY = -delta.y() * (row2.D() - row1.D() + 1) / height();
+
+                double newCol1 = col1.D() + deltaX;
+                double newCol2 = col2.D() + deltaX;
+                double newRow1 = row1.D() + deltaY;
+                double newRow2 = row2.D() + deltaY;
+
+                // 设置新的显示区域
+                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
+
+                // 清除窗口并重新显示图像
+                ClearWindow(*_halconWindowHandle);
+                DispObj(*_image, *_halconWindowHandle);
+
+                _lastMousePos = currentMousePos; // 更新鼠标位置
+                event->accept();
+            }
+            else {
+                event->ignore();
+            }
+        }
+
+        void HalconWidget::mouseReleaseEvent(QMouseEvent* event)
+        {
+            if (_isDrawingRect) {
+                event->ignore(); // 如果正在绘制矩形，忽略鼠标事件
+                return;
+            }
+
+            if (event->button() == Qt::LeftButton) {
+                _isDragging = false; // 停止拖拽
+                event->accept();
+            }
+            else {
+                event->ignore();
+            }
+        }
+
         void HalconWidget::drawRect()
         {
-            HalconCpp::HTuple  hv_WindowHandle, hv_Row1, hv_Column1;
-            HalconCpp::HTuple  hv_Row2, hv_Column2, hv_ModelID, hv_Row, hv_Column, hv_Angle, hv_Score, hv_HomMat2D;
-            HalconCpp::HObject ho_Rectangle, ho_ImageReduced, ho_ModelContours, ho_ContoursAffineTrans;
+            _isDrawingRect = true; // 开始绘制矩形
+            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
+            HalconCpp::HObject ho_Rectangle;
+
+            // 调用 Halcon 的绘制矩形方法
             HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
-          
-            HalconCpp::SetDraw(*_halconWindowHandle, "margin");
-           
-            HalconCpp::SetLineWidth(*_halconWindowHandle, 5);
 
+            // 生成矩形对象并显示
             HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
-
             HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
+
+            _isDrawingRect = false; // 绘制完成
         }
 	}
 }

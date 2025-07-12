@@ -18,8 +18,6 @@ namespace rw {
         {
             Q_OBJECT
         public:
-            
-			//TODO:鼠标拖拽
             //TODO:appendHObject接口
 			//TODO:clearHObject接口
         public:
@@ -41,6 +39,14 @@ namespace rw {
         protected:
             void showEvent(QShowEvent* event) override;
             void resizeEvent(QResizeEvent* event) override;
+        protected:
+            void mousePressEvent(QMouseEvent* event) override;
+            void mouseMoveEvent(QMouseEvent* event) override;
+            void mouseReleaseEvent(QMouseEvent* event) override;
+        private:
+            bool _isDragging{ false }; 
+            QPoint _lastMousePos;
+            bool _isDrawingRect{ false };
         public slots:
             void drawRect();
         };
