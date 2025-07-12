@@ -588,6 +588,22 @@ namespace rw {
 
         void HalconWidget::resizeEvent(QResizeEvent* event)
         {
+            // 定义最小宽度和高度
+            const int minWidth = 100;  // 最小宽度
+            const int minHeight = 100; // 最小高度
+
+            // 获取当前窗口大小
+            QSize newSize = event->size();
+
+            // 检查是否小于最小尺寸
+            if (newSize.width() < minWidth || newSize.height() < minHeight)
+            {
+                // 调整窗口大小到最小值
+                resize((std::max)(newSize.width(), minWidth), (std::max)(newSize.height(), minHeight));
+                return;
+            }
+
+            // 刷新所有对象
             refresh_allObject();
         }
 
