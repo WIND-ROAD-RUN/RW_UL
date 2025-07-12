@@ -145,49 +145,52 @@ namespace rw {
 
         void HalconWidget::wheelEvent(QWheelEvent* event)
         {
-            //if (rect().contains(event->position().toPoint())) { // 检查鼠标是否在 HalconWidget 内
-            //    int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
-            //    double scaleFactor = (delta > 0) ? 1.1 : 0.9; // 缩放因子，向上滚动放大，向下滚动缩小
+            if (rect().contains(event->position().toPoint())) { // 检查鼠标是否在 HalconWidget 内
+                int delta = event->angleDelta().y(); // 获取滚轮滚动的角度
+                double scaleFactor = (delta > 0) ? 1.1 : 0.9; // 缩放因子，向上滚动放大，向下滚动缩小
 
-            //    // 获取鼠标在 HalconWidget 中的位置
-            //    QPointF mousePos = event->position();
-            //    int mouseX = static_cast<int>(mousePos.x());
-            //    int mouseY = static_cast<int>(mousePos.y());
+                // 获取鼠标在 HalconWidget 中的位置
+                QPointF mousePos = event->position();
+                int mouseX = static_cast<int>(mousePos.x());
+                int mouseY = static_cast<int>(mousePos.y());
 
-            //    // 获取当前显示区域
-            //    HalconCpp::HTuple row1, col1, row2, col2;
-            //    GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+                // 获取当前显示区域
+                HalconCpp::HTuple row1, col1, row2, col2;
+                GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-            //    // 计算当前显示区域的宽高
-            //    double currentWidth = col2.D() - col1.D() + 1;
-            //    double currentHeight = row2.D() - row1.D() + 1;
+                // 计算当前显示区域的宽高
+                double currentWidth = col2.D() - col1.D() + 1;
+                double currentHeight = row2.D() - row1.D() + 1;
 
-            //    // 计算鼠标位置在图像中的相对位置
-            //    double relativeX = col1.D() + (mouseX / static_cast<double>(width())) * currentWidth;
-            //    double relativeY = row1.D() + (mouseY / static_cast<double>(height())) * currentHeight;
+                // 计算鼠标位置在图像中的相对位置
+                double relativeX = col1.D() + (mouseX / static_cast<double>(width())) * currentWidth;
+                double relativeY = row1.D() + (mouseY / static_cast<double>(height())) * currentHeight;
 
-            //    // 计算新的显示区域
-            //    double newWidth = currentWidth / scaleFactor;
-            //    double newHeight = currentHeight / scaleFactor;
-            //    double newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
-            //    double newRow1 = relativeY - (mouseY / static_cast<double>(height())) * newHeight;
-            //    double newCol2 = newCol1 + newWidth - 1;
-            //    double newRow2 = newRow1 + newHeight - 1;
+                // 计算新的显示区域
+                double newWidth = currentWidth / scaleFactor;
+                double newHeight = currentHeight / scaleFactor;
+                double newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
+                double newRow1 = relativeY - (mouseY / static_cast<double>(height())) * newHeight;
+                double newCol2 = newCol1 + newWidth - 1;
+                double newRow2 = newRow1 + newHeight - 1;
 
-            //    // 清除窗口内容
-            //    ClearWindow(*_halconWindowHandle);
+                // 清除窗口内容
+                ClearWindow(*_halconWindowHandle);
 
-            //    // 设置新的显示区域
-            //    SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
+                // 设置新的显示区域
+                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
 
-            //    // 重新显示图像
-            //    DispObj(*_image, *_halconWindowHandle);
+                // 重新显示所有对象
+                for (auto& object : _halconObjects)
+                {
+                    DispObj(*object, *_halconWindowHandle);
+                }
 
-            //    event->accept(); // 事件已处理
-            //}
-            //else {
-            //    event->ignore(); // 事件未处理
-            //}
+                event->accept(); // 事件已处理
+            }
+            else {
+                event->ignore(); // 事件未处理
+            }
         }
 
         void HalconWidget::showEvent(QShowEvent* event)
@@ -198,29 +201,8 @@ namespace rw {
 
         void HalconWidget::resizeEvent(QResizeEvent* event)
         {
-            /*if (!_image)
-            {
-                QWidget::resizeEvent(event);
-                return;
-            }
-
-            HalconCpp::HTuple width, height;
-            GetImageSize(*_image, &width, &height);
-
-            double imgAspectRatio = static_cast<double>(width.I()) / height.I();
-
-            const int minHeight = 100;
-            const int minWidth = static_cast<int>(minHeight * imgAspectRatio);
-
-            this->setMinimumSize(minWidth, minHeight);
-
-            if (event->size().width() < minWidth || event->size().height() < minHeight)
-            {
-                return;
-            }
-
-            refreshHalconWindow();
-            QWidget::resizeEvent(event);*/
+            refresh_allObject();
+            QWidget::resizeEvent(event);
         }
 
         void HalconWidget::mousePressEvent(QMouseEvent* event)
@@ -242,41 +224,43 @@ namespace rw {
 
         void HalconWidget::mouseMoveEvent(QMouseEvent* event)
         {
-            //if (_isDrawingRect) {
-            //    event->ignore(); // 如果正在绘制矩形，忽略鼠标事件
-            //    return;
-            //}
+            if (_isDrawingRect) {
+                event->ignore(); // 如果正在绘制矩形，忽略鼠标事件
+                return;
+            }
 
-            //if (_isDragging && _halconWindowHandle && _image) {
-            //    QPoint currentMousePos = event->pos();
-            //    QPoint delta = currentMousePos - _lastMousePos; // 计算鼠标移动的偏移量
+            if (_isDragging && _halconWindowHandle && !_halconObjects.empty()) {
+                QPoint currentMousePos = event->pos();
+                QPoint delta = currentMousePos - _lastMousePos; // 计算鼠标移动的偏移量
 
-            //    // 获取当前显示区域
-            //    HalconCpp::HTuple row1, col1, row2, col2;
-            //    GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
+                // 获取当前显示区域
+                HalconCpp::HTuple row1, col1, row2, col2;
+                GetPart(*_halconWindowHandle, &row1, &col1, &row2, &col2);
 
-            //    // 根据鼠标移动的偏移量调整显示区域
-            //    double deltaX = -delta.x() * (col2.D() - col1.D() + 1) / width();
-            //    double deltaY = -delta.y() * (row2.D() - row1.D() + 1) / height();
+                // 根据鼠标移动的偏移量调整显示区域
+                double deltaX = -delta.x() * (col2.D() - col1.D() + 1) / width();
+                double deltaY = -delta.y() * (row2.D() - row1.D() + 1) / height();
 
-            //    double newCol1 = col1.D() + deltaX;
-            //    double newCol2 = col2.D() + deltaX;
-            //    double newRow1 = row1.D() + deltaY;
-            //    double newRow2 = row2.D() + deltaY;
+                double newCol1 = col1.D() + deltaX;
+                double newCol2 = col2.D() + deltaX;
+                double newRow1 = row1.D() + deltaY;
+                double newRow2 = row2.D() + deltaY;
 
-            //    // 设置新的显示区域
-            //    SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
+                // 设置新的显示区域
+                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
 
-            //    // 清除窗口并重新显示图像
-            //    ClearWindow(*_halconWindowHandle);
-            //    DispObj(*_image, *_halconWindowHandle);
+                // 清除窗口并重新显示所有对象
+                ClearWindow(*_halconWindowHandle);
+                for (auto& object : _halconObjects) {
+                    DispObj(*object, *_halconWindowHandle);
+                }
 
-            //    _lastMousePos = currentMousePos; // 更新鼠标位置
-            //    event->accept();
-            //}
-            //else {
-            //    event->ignore();
-            //}
+                _lastMousePos = currentMousePos; // 更新鼠标位置
+                event->accept();
+            }
+            else {
+                event->ignore();
+            }
         }
 
         void HalconWidget::mouseReleaseEvent(QMouseEvent* event)
@@ -306,7 +290,8 @@ namespace rw {
 
             // 生成矩形对象并显示
             HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
-            HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
+            appendHObject(ho_Rectangle);
+        	HalconCpp::DispObj(ho_Rectangle, *_halconWindowHandle);
 
             _isDrawingRect = false; // 绘制完成
         }
