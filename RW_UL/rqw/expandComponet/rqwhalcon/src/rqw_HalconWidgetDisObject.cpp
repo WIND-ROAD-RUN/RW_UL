@@ -214,12 +214,12 @@ namespace rw
         }
 
         HalconWidgetTemplateResult::HalconWidgetTemplateResult(const HalconWidgetTemplateResult& other)
-            :HalconWidgetObject(other),score(other.score)
+			:HalconWidgetObject(other), score(other.score), row(other.row), column(other.column), angle(other.angle)
         {
         }
 
         HalconWidgetTemplateResult::HalconWidgetTemplateResult(HalconWidgetTemplateResult&& other) noexcept
-            :score(other.score),HalconWidgetObject(other)
+            :score(other.score), row(other.row), column(other.column), angle(other.angle),HalconWidgetObject(other)
         {
         }
 
@@ -229,6 +229,9 @@ namespace rw
             {
                 HalconWidgetObject::operator=(other);
                 score = other.score;
+				row = other.row;
+				column = other.column;
+				angle = other.angle;
 			}
 			return *this;
         }
@@ -238,6 +241,9 @@ namespace rw
             if (this != &other)
             {
                 score = other.score;
+				row = other.row;
+				column = other.column;
+				angle = other.angle;
                 HalconWidgetObject::operator=(std::move(other));
             }
             return *this;

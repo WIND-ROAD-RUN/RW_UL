@@ -69,6 +69,12 @@ namespace rw
                     HalconWidgetTemplateResult result(new HalconCpp::HObject(transformedContours));
                     result.score = score[i].D(); // 设置匹配分数
                     result.painterConfig = config;
+
+                    // 设置位置信息
+                    result.row = row[i].D();      // 匹配中心的行坐标
+                    result.column = column[i].D(); // 匹配中心的列坐标
+                    result.angle = angle[i].D();   // 匹配的旋转角度
+
                     // 添加到结果列表
                     results.push_back(std::move(result));
                 }

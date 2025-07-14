@@ -82,6 +82,9 @@ namespace rw {
             HalconWidgetTemplateResult& operator=(HalconWidgetTemplateResult&& other) noexcept;
 		public:
 			double score{ 0.0 };
+            double row{ 0.0 };
+            double column{0.0};
+            double angle{ 0.0 };
         };
 	}
 }
