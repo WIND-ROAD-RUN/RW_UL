@@ -204,6 +204,18 @@ namespace rw
 			return findShapeModel(id, img, halconShapeXldFindConfig, PainterConfig());
 		}
 
+		void HalconShapeXLDModel::saveModel(const HalconShapeId& id, const std::string& filePath)
+		{
+			HalconCpp::WriteShapeModel(id, filePath.c_str());
+		}
+
+		HalconShapeId HalconShapeXLDModel::readModel(const std::string& filePath)
+		{
+			HalconShapeId result;
+			HalconCpp::ReadShapeModel(filePath.c_str(), &result);
+			return result;
+		}
+
 		std::vector<HalconWidgetTemplateResult> HalconShapeModel::findShapeModel(
 			const HalconShapeId& modelId, const HalconWidgetObject& img)
 		{
