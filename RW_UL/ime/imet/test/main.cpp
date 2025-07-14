@@ -14,8 +14,8 @@ class Logger : public nvinfer1::ILogger {
 }logger;
 
 int main() {
-	rw::imet::ModelEngine_Yolov11_seg_refactor modelEngine(R"(C:\Users\rw\Desktop\models\SegModel.engine)", logger);
-	auto mat = cv::imread(R"(D:\zfkjData\ButtonScanner\ModelStorage\Temp\Image\work1\bad\NG20250417152301729.png)");
+	rw::imet::ModelEngine_Yolov11_seg_refactor modelEngine(R"(C:\Users\rw\Desktop\models\niukou.engine)", logger);
+	auto mat = cv::imread(R"(C:\Users\rw\Desktop\c3a0dd3937b5a61270469cb21491d6a7.jpg)");
 	auto result = modelEngine.processImg(mat);
 	auto matResult = modelEngine.draw(mat, result);
 	cv::imshow("result", matResult);
