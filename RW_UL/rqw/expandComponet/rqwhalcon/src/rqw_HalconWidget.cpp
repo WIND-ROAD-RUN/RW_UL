@@ -400,6 +400,10 @@ namespace rw {
 
         void HalconWidget::initialize_halconWindow()
         {
+            if (_halconWindowHandle)
+            {
+                delete _halconWindowHandle;
+            }
             _halconWindowHandle = new HalconCpp::HTuple();
             Hlong winId = this->winId();
             auto size = this->size();
@@ -459,6 +463,7 @@ namespace rw {
 
         void HalconWidget::showEvent(QShowEvent* event)
         {
+            initialize_halconWindow();
             refresh_allObject();
         }
 
