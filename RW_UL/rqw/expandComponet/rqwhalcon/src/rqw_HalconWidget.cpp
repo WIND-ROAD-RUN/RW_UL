@@ -2,6 +2,7 @@
 #include <QResizeEvent>
 #include <unordered_set>
 
+#include "rqw_HalconShapeModel.hpp"
 #include "halconcpp/HalconCpp.h"
 
 #include"rqw_HalconUtilty.hpp"
@@ -42,11 +43,6 @@ namespace rw {
 
         HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetObject* object)
         {
-            if (object->id < 0)
-            {
-                throw std::runtime_error("Object ID must be a non-negative integer.");
-            }
-
             if (object == nullptr)
             {
                 return -1;
@@ -58,6 +54,47 @@ namespace rw {
 			refresh_allObject();
 
             return object->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(const HalconWidgetImg& object)
+        {
+            HalconWidgetImg* newObject = new HalconWidgetImg(object);
+            newObject->id = getVailidAppendId();
+            _halconObjects.push_back(newObject);
+			refresh_allObject();
+            return newObject->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetImg* object)
+        {
+            if (object == nullptr)
+            {
+                return -1;
+            }
+            object->id = getVailidAppendId();
+			_halconObjects.push_back(object);
+            return object->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(const HalconWidgetTemplateResult& object)
+        {
+            HalconWidgetTemplateResult* newObject = new HalconWidgetTemplateResult(object);
+            newObject->id = getVailidAppendId();
+            _halconObjects.push_back(newObject);
+            refresh_allObject();
+            return newObject->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetTemplateResult* object)
+        {
+            if (object == nullptr)
+            {
+                return -1;
+            }
+            object->id = getVailidAppendId();
+            _halconObjects.push_back(object);
+            refresh_allObject();
+			return object->id;
         }
 
 
@@ -719,64 +756,35 @@ namespace rw {
             return hv_shapeId;
         }
 
-        void HalconWidget::shapeModel(const HalconCpp::HTuple& id)
+        std::vector<HalconWidgetTemplateResult> HalconWidget::shapeModel(const HalconCpp::HTuple& id)
         {
-            if (!_halconWindowHandle || _halconObjects.empty())
-            {
-                throw std::runtime_error("Halcon window or objects are not initialized.");
-            }
+            return shapeModel(id,PainterConfig());
 
-            // 获取第一个图像对象
-            HalconWidgetObject* imageObject = _halconObjects.front();
-            if (!imageObject || !imageObject->has_value())
-            {
-                throw std::runtime_error("No valid image object available for shape matching.");
-            }
-
-            // 获取图像对象
-            HalconCpp::HObject* image = imageObject->value();
-
-            // 执行模板匹配
-            HalconCpp::HTuple row, column, angle, score;
-            HalconCpp::FindShapeModel(*image, id, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &row, &column, &angle, &score);
-
-            // 检查是否找到匹配
-            if (row.TupleLength() > 0)
-            {
-                // 获取模板轮廓
-                HalconCpp::HObject modelContours, transformedContours;
-                HalconCpp::GetShapeModelContours(&modelContours, id, 1);
-
-                // 显示匹配结果
-                for (int i = 0; i < row.TupleLength(); ++i)
-                {
-                    // 计算仿射变换矩阵
-                    HalconCpp::HTuple homMat2D;
-                    HalconCpp::VectorAngleToRigid(0, 0, 0, row[i], column[i], angle[i], &homMat2D);
-
-                    // 仿射变换模板轮廓
-                    HalconCpp::AffineTransContourXld(modelContours, &transformedContours, homMat2D);
-
-                    // 设置显示颜色
-                    HalconCpp::SetColor(*_halconWindowHandle, "blue");
-
-                    // 显示匹配到的轮廓
-                    HalconCpp::DispObj(transformedContours, *_halconWindowHandle);
-
-                    // 显示匹配分数
-                    HalconCpp::HTuple scoreText = score[i].D();
-                    HalconCpp::SetTposition(*_halconWindowHandle, row[i].D(), column[i].D());
-                    HalconCpp::WriteString(*_halconWindowHandle, scoreText);
-                }
-            }
-            else
-            {
-                // 如果没有找到匹配，显示提示信息
-                HalconCpp::SetColor(*_halconWindowHandle, "red");
-                HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
-                HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
-            }
         }
 
+        std::vector<HalconWidgetTemplateResult> HalconWidget::shapeModel(const HalconShapeId& id,
+	        const PainterConfig& config)
+        {
+            if (_halconObjects.empty())
+            {
+                return  std::vector<HalconWidgetTemplateResult>();
+            }
+
+            auto imgs = getIdsByType(HalconObjectType::Image);
+            if (imgs.empty())
+            {
+                return std::vector<HalconWidgetTemplateResult>();
+            }
+
+
+            auto results = HalconShapeModel::shape(id, getObjectPtrById(imgs.front()),config);
+
+            for (auto& result : results)
+            {
+                appendHObject(result);
+            }
+
+            return results;
+        }
 	}
 }

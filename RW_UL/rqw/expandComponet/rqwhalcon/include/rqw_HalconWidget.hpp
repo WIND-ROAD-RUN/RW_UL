@@ -23,6 +23,10 @@ namespace rw {
         public:
             HalconWidgetDisObjectId appendHObject(const HalconWidgetObject& object);
             HalconWidgetDisObjectId appendHObject(HalconWidgetObject* object);
+            HalconWidgetDisObjectId appendHObject(const HalconWidgetImg& object);
+            HalconWidgetDisObjectId appendHObject(HalconWidgetImg* object);
+            HalconWidgetDisObjectId appendHObject(const HalconWidgetTemplateResult& object);
+            HalconWidgetDisObjectId appendHObject(HalconWidgetTemplateResult* object);
 			void clearHObject();
         public:
             size_t width();
@@ -81,7 +85,8 @@ namespace rw {
             HalconWidgetObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw);
         public:
             HalconShapeId createShapeModel(HalconWidgetObject& rec);
-            void shapeModel(const HalconShapeId& id);
+            std::vector<HalconWidgetTemplateResult> shapeModel(const HalconShapeId& id);
+            std::vector<HalconWidgetTemplateResult> shapeModel(const HalconShapeId& id,const PainterConfig & config);
 
         };
 

@@ -9,19 +9,36 @@ namespace rw
         std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(
             const HalconShapeId& id, const HalconWidgetObject& rec)
         {
-            // 检查输入对象是否有效
-            if (!rec.has_value())
+            return shape(id,&rec);
+        }
+
+        std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(const HalconShapeId& id,
+            const HalconWidgetObject* rec)
+        {
+			return shape(id, rec, PainterConfig());
+        }
+
+        std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(const HalconShapeId& id,
+	        const HalconWidgetObject* rec, const PainterConfig& config)
+        {
+            if (!rec)
             {
-                throw std::runtime_error("The provided HalconWidgetObject does not contain a valid HObject.");
+                return std::vector<HalconWidgetTemplateResult>();
             }
 
-            if (rec.type != HalconObjectType::Image)
+            // 检查输入对象是否有效
+            if (!rec->has_value())
             {
-                throw std::runtime_error("The provided HalconWidgetObject is not of type Image.");
+                return std::vector<HalconWidgetTemplateResult>();
+            }
+
+            if (rec->type != HalconObjectType::Image)
+            {
+                return std::vector<HalconWidgetTemplateResult>();
             }
 
             // 获取图像对象
-            HalconCpp::HObject* image = rec.value();
+            HalconCpp::HObject* image = rec->value();
 
             // 执行模板匹配
             HalconCpp::HTuple row, column, angle, score;
@@ -51,7 +68,7 @@ namespace rw
                     // 创建匹配结果对象
                     HalconWidgetTemplateResult result(new HalconCpp::HObject(transformedContours));
                     result.score = score[i].D(); // 设置匹配分数
-
+                    result.painterConfig = config;
                     // 添加到结果列表
                     results.push_back(std::move(result));
                 }

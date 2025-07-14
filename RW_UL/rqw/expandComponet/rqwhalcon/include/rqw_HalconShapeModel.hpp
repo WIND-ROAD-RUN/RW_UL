@@ -9,7 +9,9 @@ namespace rw {
 		class HalconShapeModel {
 		public:
 			static std::vector<HalconWidgetTemplateResult> shape(const HalconShapeId& id, const HalconWidgetObject& rec);
+			static std::vector<HalconWidgetTemplateResult> shape(const HalconShapeId& id, const HalconWidgetObject * rec);
 
+			static std::vector<HalconWidgetTemplateResult> shape(const HalconShapeId& id, const HalconWidgetObject* rec,const PainterConfig&config);
 		};
 	}
 }
