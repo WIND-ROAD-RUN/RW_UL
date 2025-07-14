@@ -1,4 +1,4 @@
-#include"rqw_HalconShapeModel.hpp"
+#include"rqw_HalconModel.hpp"
 
 #include <halconcpp/HalconCpp.h>
 
@@ -6,7 +6,36 @@ namespace rw
 {
 	namespace rqw
 	{
-        std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(
+		HalconShapeId HalconShapeModel::createShape(const HalconWidgetImg& img, const HalconWidgetObject& rec)
+		{
+            return createShape(&img,&rec);
+		}
+
+		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject* img, const HalconWidgetObject* rec)
+		{
+            HalconCpp::HObject  ho_TemplateRegion;
+
+            // 提取矩形区域内的内容作为模板学习区域
+            HalconCpp::ReduceDomain(*img->value(), *rec->value(), &ho_TemplateRegion);
+
+            // 创建模板
+            HalconCpp::HTuple hv_shapeId;
+            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_shapeId);
+
+            return hv_shapeId;
+		}
+
+		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject& img, const HalconWidgetObject* rec)
+		{
+			return createShape(&img, rec);
+		}
+
+		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject* img, const HalconWidgetObject& rec)
+		{
+            return createShape(img, &rec);
+		}
+
+		std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(
             const HalconShapeId& id, const HalconWidgetObject& rec)
         {
             return shape(id,&rec);
