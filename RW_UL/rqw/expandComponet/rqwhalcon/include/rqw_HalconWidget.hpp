@@ -62,6 +62,15 @@ namespace rw {
             double _newRow1{0} ;
             double _newCol2{0} ;
             double _newRow2{0};
+        private:
+            double _standardCol1{ 0 };
+            double _standardRow1{ 0 };
+            double _standardCol2{ 0 };
+            double _standardRow2{ 0 };
+        private:
+            double _wheelSize{ 1 };
+        private:
+            void reset_display();
         protected:
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
