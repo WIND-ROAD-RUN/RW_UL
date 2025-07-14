@@ -130,23 +130,29 @@ namespace rw {
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::postProcess()
 		{
 			std::vector<DetectionSeg> output;
+
+			// 从 GPU 拷贝检测结果和掩膜原型到 CPU
 			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
-			(cudaMemcpy(cpu_output_buffer2, gpu_buffers[2], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
+			(cudaMemcpy(cpu_output_buffer2, gpu_buffers[2], maskCoefficientNum * mask_h * mask_w * sizeof(float), cudaMemcpyDeviceToHost));
+
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
 			std::vector<cv::Mat> mask_sigmoids;
 
+			// 将检测结果和掩膜原型转换为 OpenCV 矩阵
 			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
 			cv::Mat mask_protos(maskCoefficientNum, mask_h * mask_w, CV_32F, cpu_output_buffer2);
 
 			for (int i = 0; i < det_output.cols; ++i) {
-				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
+				// 提取类别分数
+				const cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
 				cv::Point class_id_point;
 				double score;
 				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
 
 				if (score > config.conf_threshold) {
+					// 提取边界框信息
 					const float cx = det_output.at<float>(0, i);
 					const float cy = det_output.at<float>(1, i);
 					const float ow = det_output.at<float>(2, i);
@@ -161,26 +167,38 @@ namespace rw {
 					class_ids.push_back(class_id_point.y);
 					confidences.push_back(score);
 
-					const  cv::Mat mask_coeffs = det_output.col(i).rowRange(4 + num_classes, detection_attribute_size);
+					// 提取掩膜系数
+					const cv::Mat mask_coeffs = det_output.col(i).rowRange(4 + num_classes, detection_attribute_size);
+					if (mask_coeffs.rows != mask_protos.rows) {
+						throw std::runtime_error("Mismatch between mask_coeffs and mask_protos dimensions.");
+					}
+
+					// 计算掩膜
 					cv::Mat mask_flat = mask_coeffs.t() * mask_protos; // [1, mask_h * mask_w]
+					if (mask_flat.total() != mask_h * mask_w) {
+						throw std::runtime_error("Mismatch between mask_flat size and mask_h * mask_w.");
+					}
+
 					cv::Mat mask = mask_flat.reshape(1, mask_h); // [mask_h, mask_w]
 					cv::Mat mask_sigmoid;
 					cv::exp(-mask, mask_sigmoid);
-					mask_sigmoid = 1.0 / (1.0 + mask_sigmoid);
+					mask_sigmoid = 1.0 / (1.0 + mask_sigmoid); // 应用 sigmoid 激活函数
 					mask_sigmoids.push_back(mask_sigmoid);
 				}
 			}
 
+			// 非极大值抑制 (NMS)
 			std::vector<int> nms_result = nmsWithKeepClass(
 				boxes, class_ids, confidences, config.conf_threshold, config.nms_threshold, config.classids_nms_together);
 
-			for (int i = 0; i < nms_result.size(); i++)
-			{
+			for (int i = 0; i < nms_result.size(); i++) {
 				DetectionSeg result;
 				int idx = nms_result[i];
 				result.class_id = class_ids[idx];
 				result.conf = confidences[idx];
 				result.bbox = boxes[idx];
+
+				// 保存掩膜
 				result.mask_sigmoid = mask_sigmoids[idx];
 				output.push_back(result);
 			}
@@ -190,6 +208,8 @@ namespace rw {
 
 			return result;
 		}
+
+
 
 		void ModelEngine_Yolov11_seg_refactor::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
@@ -407,20 +427,48 @@ namespace rw {
 
 				// 调整 mask 到 bbox 尺寸
 				cv::Mat mask_resized;
-				cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(bbox.width, bbox.height), 0, 0, cv::INTER_LINEAR);
+				cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
 
+				// 创建仿射变换矩阵，将掩膜从 bbox 的左上角平移到 (0, 0)
+				cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, -bbox.x, 0, 1, -bbox.y);
+
+				// 创建与原图大小一致的空白掩膜
+				cv::Mat mask_translated = cv::Mat::zeros(_sourceWidth, _sourceHeight, mask_resized.type());
+
+				// 应用仿射变换，将掩膜平移到 (0, 0)
+				cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
+
+				
 				// 二值化 mask
 				cv::Mat mask_bin;
-				cv::threshold(mask_resized, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+				cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
 
 				// 只取有效区域
 				cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
 				cv::Mat img_roi = result(roi);
 
-				// 着色（以红色为例）
+
+
+				//！！！！！！！！！！！！！！这个mask_roi要返回
+				// 计算掩膜的像素个数
+				int mask_pixel_count = cv::countNonZero(mask_roi);
+
+				// 输出掩膜像素个数
+				//！！！！！！！！！！！！！！这个mask_pixel_count要返回，可以用来计算面积
+				std::cout << "pixSize: " << mask_pixel_count << std::endl;
+
+				// 随机生成 RGB 颜色
+				cv::RNG rng(cv::getTickCount()); // 使用随机数生成器
+				int blue = rng.uniform(0, 256);
+				int green = rng.uniform(0, 256);
+				int red = rng.uniform(0, 256);
+
+				// 着色（随机颜色）
 				std::vector<cv::Mat> channels;
 				cv::split(img_roi, channels);
-				channels[2].setTo(255, mask_roi > 0); // BGR: 2为R通道
+				channels[0].setTo(blue, mask_roi > 0);  // B 通道
+				channels[1].setTo(green, mask_roi > 0); // G 通道
+				channels[2].setTo(red, mask_roi > 0);   // R 通道
 				cv::merge(channels, img_roi);
 			}
 
@@ -428,5 +476,8 @@ namespace rw {
 			//postProcessAndDraw(result);
 			return result;
 		}
+
+
+
 	}
 }
