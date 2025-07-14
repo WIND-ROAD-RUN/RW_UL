@@ -7,7 +7,6 @@
 
 namespace rw {
 	namespace rqw {
-
 		HalconCpp::HImage QImageToHImage(const QImage& qImage);
 		HalconCpp::HImage CvMatToHImage(const cv::Mat& mat);
 		HalconCpp::HImage QPixmapToHImage(const QPixmap& pixmap);

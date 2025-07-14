@@ -165,6 +165,7 @@ namespace rw {
 
         HalconWidget::~HalconWidget()
         {
+            clear_shapeModels();
             clearHObject();
             close_halconWindow();
         }
@@ -801,27 +802,30 @@ namespace rw {
             HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
 
             auto ho_Rectangle = new HalconCpp::HObject;
-            auto ho_Contour = new HalconCpp::HObject;
 
             // 绘制矩形
             HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
             HalconCpp::GenRectangle1(ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
 
-            // 将矩形转换为轮廓（边框）
-            HalconCpp::GenContourRegionXld(*ho_Rectangle, ho_Contour, "border");
-
-            _isDrawingRect = false;
-
             auto height = hv_Row2.D() - hv_Row1.D();
-			auto width = hv_Column2.D() - hv_Column1.D();
+            auto width = hv_Column2.D() - hv_Column1.D();
 
-            if (height< minHeight|| width<minWidth)
+            if (height < minHeight || width < minWidth)
             {
                 isDraw = false;
                 return HalconWidgetDisObject(nullptr);
             }
 
+            auto resultObject = new HalconWidgetDisObject(ho_Rectangle); // 使用边框对象
+            resultObject->id = getVailidAppendId();
+            resultObject->painterConfig = config;
+            resultObject->isShow = isShow;
+            resultObject->type = HalconWidgetDisObject::ObjectType::Region;
+            resultObject->descrption = "drawRect";
 
+            // 将矩形转换为轮廓（边框）
+            auto ho_Contour = new HalconCpp::HObject;
+            HalconCpp::GenContourRegionXld(*ho_Rectangle, ho_Contour, "border");
             // 创建 HalconWidgetDisObject 对象
             auto object = new HalconWidgetDisObject(ho_Contour); // 使用轮廓对象
             object->id = getVailidAppendId();
@@ -829,11 +833,21 @@ namespace rw {
             object->isShow = isShow;
             object->type = HalconWidgetDisObject::ObjectType::Region;
             object->descrption = "drawRect";
-
-
             appendHObject(object);
             isDraw = true;
-            return *object;
+
+            _isDrawingRect = false;
+
+            return *resultObject;
+        }
+
+        void HalconWidget::clear_shapeModels()
+        {
+            for (const auto& id : _shapeModelIds)
+            {
+                HalconCpp::ClearShapeModel(id); 
+            }
+            _shapeModelIds.clear();
         }
 
         HalconWidgetDisObject HalconWidget::drawRect()
@@ -851,24 +865,80 @@ namespace rw {
 			return drawRect(config, true, minHeight, minWidth, isDraw);
         }
 
-        void HalconWidget::shapeModel(HalconWidgetDisObject& rec)
+        HalconShapeId HalconWidget::createShapeModel(HalconWidgetDisObject& rec)
         {
-            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
-            HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
+            HalconCpp::HObject  ho_TemplateRegion;
 
             // 提取矩形区域内的内容作为模板学习区域
             HalconCpp::ReduceDomain(*_halconObjects.front()->value(), *rec._object, &ho_TemplateRegion);
 
             // 创建模板
-            HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
-            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
+            HalconCpp::HTuple hv_shapeId;
+            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_shapeId);
 
-            HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
-            HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
+            _shapeModelIds.push_back(hv_shapeId);
+
+            return hv_shapeId;
         }
 
-        void HalconWidget::study()
+        void HalconWidget::shapeModel(const HalconCpp::HTuple& id)
         {
+            if (!_halconWindowHandle || _halconObjects.empty())
+            {
+                throw std::runtime_error("Halcon window or objects are not initialized.");
+            }
+
+            // 获取第一个图像对象
+            HalconWidgetDisObject* imageObject = _halconObjects.front();
+            if (!imageObject || !imageObject->has_value())
+            {
+                throw std::runtime_error("No valid image object available for shape matching.");
+            }
+
+            // 获取图像对象
+            HalconCpp::HObject* image = imageObject->value();
+
+            // 执行模板匹配
+            HalconCpp::HTuple row, column, angle, score;
+            HalconCpp::FindShapeModel(*image, id, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &row, &column, &angle, &score);
+
+            // 检查是否找到匹配
+            if (row.TupleLength() > 0)
+            {
+                // 获取模板轮廓
+                HalconCpp::HObject modelContours, transformedContours;
+                HalconCpp::GetShapeModelContours(&modelContours, id, 1);
+
+                // 显示匹配结果
+                for (int i = 0; i < row.TupleLength(); ++i)
+                {
+                    // 计算仿射变换矩阵
+                    HalconCpp::HTuple homMat2D;
+                    HalconCpp::VectorAngleToRigid(0, 0, 0, row[i], column[i], angle[i], &homMat2D);
+
+                    // 仿射变换模板轮廓
+                    HalconCpp::AffineTransContourXld(modelContours, &transformedContours, homMat2D);
+
+                    // 设置显示颜色
+                    HalconCpp::SetColor(*_halconWindowHandle, "blue");
+
+                    // 显示匹配到的轮廓
+                    HalconCpp::DispObj(transformedContours, *_halconWindowHandle);
+
+                    // 显示匹配分数
+                    HalconCpp::HTuple scoreText = score[i].D();
+                    HalconCpp::SetTposition(*_halconWindowHandle, row[i].D(), column[i].D());
+                    HalconCpp::WriteString(*_halconWindowHandle, scoreText);
+                }
+            }
+            else
+            {
+                // 如果没有找到匹配，显示提示信息
+                HalconCpp::SetColor(*_halconWindowHandle, "red");
+                HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
+                HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
+            }
         }
+
 	}
 }

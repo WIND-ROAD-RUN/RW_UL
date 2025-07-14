@@ -65,8 +65,9 @@ void Demo::resizeEvent(QResizeEvent* event)
 void Demo::pushButton_clicked()
 {
 	rw::rqw::PainterConfig config;
-	halconWidget->drawRect(config);
-
+	auto rec=halconWidget->drawRect(config);
+	auto id=halconWidget->createShapeModel(rec);
+	halconWidget->shapeModel(id);
 	////画一个矩形
 	//HalconCpp::HTuple  hv_WindowHandle, hv_Row1, hv_Column1;
 	//HalconCpp::HTuple  hv_Row2, hv_Column2, hv_ModelID, hv_Row, hv_Column, hv_Angle, hv_Score, hv_HomMat2D;

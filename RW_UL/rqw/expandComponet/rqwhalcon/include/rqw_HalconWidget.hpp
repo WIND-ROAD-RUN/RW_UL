@@ -15,6 +15,7 @@ namespace HalconCpp
 namespace rw {
 	namespace rqw {
         using HalconWidgetDisObjectId = int;
+        using HalconShapeId = HalconCpp::HTuple;
 
         class HalconWidget;
 
@@ -141,8 +142,9 @@ namespace rw {
             QPoint _lastMousePos;
         private:
             bool _isDrawingRect{ false };
-        /*public slots:
-            void drawRect();*/
+        private:
+            std::vector<HalconCpp::HTuple> _shapeModelIds;
+            void clear_shapeModels();
         public:
             HalconWidgetDisObject drawRect();
             HalconWidgetDisObject drawRect(PainterConfig config);
@@ -150,10 +152,10 @@ namespace rw {
             HalconWidgetDisObject drawRect(PainterConfig config, double minHeight, double minWidth);
             HalconWidgetDisObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth);
             HalconWidgetDisObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw);
-
         public:
-            void shapeModel(HalconWidgetDisObject & rec);
-            void study();
+            HalconShapeId createShapeModel(HalconWidgetDisObject& rec);
+            void shapeModel(const HalconShapeId& id);
+
         };
 
 	}
