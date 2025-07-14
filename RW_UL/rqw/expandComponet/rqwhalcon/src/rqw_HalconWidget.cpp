@@ -290,9 +290,16 @@ namespace rw {
                 offsetX = (partWidth - width.I()) / 2;
                 offsetY = 0;
             }
-
-            // 设置显示区域，使图像居中等比例显示
-            SetPart(*_halconWindowHandle, -offsetY, -offsetX, height.I() - 1 + offsetY, width.I() - 1 + offsetX);
+            if (!_isChange)
+            {
+                // 设置显示区域，使图像居中等比例显示
+                SetPart(*_halconWindowHandle, -offsetY, -offsetX, height.I() - 1 + offsetY, width.I() - 1 + offsetX);
+            }
+            else
+            {
+                SetPart(*_halconWindowHandle, _newRow1, _newCol1, _newRow2, _newCol2);
+            }
+            
 
             // 显示所有对象
             for (auto& object : _halconObjects)
@@ -437,24 +444,12 @@ namespace rw {
 
                 double newWidth = currentWidth / scaleFactor;
                 double newHeight = currentHeight / scaleFactor;
-                double newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
-                double newRow1 = relativeY - (mouseY / static_cast<double>(height())) * newHeight;
-                double newCol2 = newCol1 + newWidth - 1;
-                double newRow2 = newRow1 + newHeight - 1;
-
-                ClearWindow(*_halconWindowHandle);
-
-                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
-
-                for (auto& object : _halconObjects)
-                {
-                    if (object->isShow)
-                    {
-                        display_HalconWidgetDisObject(object);
-                    }
-                }
-
-                event->accept(); 
+                _newCol1 = relativeX - (mouseX / static_cast<double>(width())) * newWidth;
+                _newRow1 = relativeY - (mouseY / static_cast<double>(height())) * newHeight;
+                _newCol2 = _newCol1 + newWidth - 1;
+                _newRow2 = _newRow1 + newHeight - 1;
+                _isChange = true;
+                refresh_allObject();
             }
             else {
                 event->ignore(); 
@@ -524,22 +519,14 @@ namespace rw {
                 double deltaX = -delta.x() * (col2.D() - col1.D() + 1) / width();
                 double deltaY = -delta.y() * (row2.D() - row1.D() + 1) / height();
 
-                double newCol1 = col1.D() + deltaX;
-                double newCol2 = col2.D() + deltaX;
-                double newRow1 = row1.D() + deltaY;
-                double newRow2 = row2.D() + deltaY;
+                _newCol1 = col1.D() + deltaX;
+                _newCol2 = col2.D() + deltaX;
+                _newRow1 = row1.D() + deltaY;
+                _newRow2 = row2.D() + deltaY;
 
-                // 设置新的显示区域
-                SetPart(*_halconWindowHandle, newRow1, newCol1, newRow2, newCol2);
 
-                // 清除窗口并重新显示所有对象
-                ClearWindow(*_halconWindowHandle);
-                for (auto& object : _halconObjects) {
-                    if (object->isShow)
-                    {
-                        display_HalconWidgetDisObject(object);
-                    }
-                }
+                _isChange = true;
+                refresh_allObject();
 
                 _lastMousePos = currentMousePos; // 更新鼠标位置
                 event->accept();

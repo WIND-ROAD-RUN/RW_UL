@@ -56,6 +56,12 @@ namespace rw {
             void resizeEvent(QResizeEvent* event) override;
         protected:
             void wheelEvent(QWheelEvent* event) override;
+        private:
+            bool _isChange{ false };
+            double _newCol1{0} ;
+            double _newRow1{0} ;
+            double _newCol2{0} ;
+            double _newRow2{0};
         protected:
             void mousePressEvent(QMouseEvent* event) override;
             void mouseMoveEvent(QMouseEvent* event) override;
