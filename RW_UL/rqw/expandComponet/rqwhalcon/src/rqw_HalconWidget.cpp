@@ -715,7 +715,7 @@ namespace rw {
             }
 
 
-            auto results = HalconShapeModel::shape(id, getObjectPtrById(imgs.front()),config);
+            auto results = HalconShapeModel::findShapeModel(id, getObjectPtrById(imgs.front()),config);
 
             for (auto& result : results)
             {
