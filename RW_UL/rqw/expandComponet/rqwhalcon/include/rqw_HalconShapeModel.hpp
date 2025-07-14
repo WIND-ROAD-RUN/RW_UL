@@ -8,7 +8,7 @@ namespace rw {
 	{
 		class HalconShapeModel {
 		public:
-			static HalconWidgetObject shape(const HalconShapeId& id,const HalconWidgetObject& rec);
+			static std::vector<HalconWidgetTemplateResult> shape(const HalconShapeId& id, const HalconWidgetObject& rec);
 
 		};
 	}
