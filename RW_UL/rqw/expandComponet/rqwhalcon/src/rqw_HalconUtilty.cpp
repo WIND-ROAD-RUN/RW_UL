@@ -2,6 +2,8 @@
 
 #include <QPixmap>
 
+#include "halconcpp/HalconCpp.h"
+
 namespace rw
 {
 	namespace rqw
