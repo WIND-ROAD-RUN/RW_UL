@@ -435,11 +435,11 @@ namespace rw {
         }
 
 
-        void HalconWidget::appendVerticalLine(int position, const PainterConfig& config)
+        HalconWidgetDisObjectId HalconWidget::appendVerticalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
-                return;
+                return -1;
             }
 
             // 获取窗口的高度和宽度范围
@@ -470,13 +470,14 @@ namespace rw {
             object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
+            return object.id;
         }
 
-        void HalconWidget::appendHorizontalLine(int position, const PainterConfig& config)
+        HalconWidgetDisObjectId HalconWidget::appendHorizontalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
-                return;
+                return -1;
             }
 
             HalconCpp::HTuple row1, col1, row2, col2;
@@ -501,6 +502,7 @@ namespace rw {
             object.type = HalconWidgetDisObject::ObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
+            return object.id;
         }
 
         bool HalconWidget::setObjectVisible(const HalconWidgetDisObjectId id, const bool visible)

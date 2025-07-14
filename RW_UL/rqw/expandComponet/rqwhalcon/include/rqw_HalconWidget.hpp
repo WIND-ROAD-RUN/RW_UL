@@ -111,8 +111,8 @@ namespace rw {
         public:
 			void updateWidget();
         public:
-            void appendVerticalLine(int position, const PainterConfig& config={});
-            void appendHorizontalLine(int position, const PainterConfig& config={});
+            HalconWidgetDisObjectId appendVerticalLine(int position, const PainterConfig& config = {});
+            HalconWidgetDisObjectId appendHorizontalLine(int position, const PainterConfig& config = {});
         public:
             bool setObjectVisible(HalconWidgetDisObjectId id,const bool visible);
         public:
