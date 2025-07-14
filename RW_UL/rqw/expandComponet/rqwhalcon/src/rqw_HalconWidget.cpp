@@ -236,6 +236,16 @@ namespace rw {
             return newId;
         }
 
+        void HalconWidget::reset_display()
+        {
+			_isChange = false;
+            _newCol1 = 0;
+            _newRow1 = 0;
+            _newCol2 = 0;
+			_newRow2 = 0;
+            refresh_allObject();
+        }
+
         void HalconWidget::refresh_allObject()
         {
             if (!_halconWindowHandle)
@@ -292,8 +302,11 @@ namespace rw {
             }
             if (!_isChange)
             {
-                // 设置显示区域，使图像居中等比例显示
-                SetPart(*_halconWindowHandle, -offsetY, -offsetX, height.I() - 1 + offsetY, width.I() - 1 + offsetX);
+                _standardCol1 = -offsetX;
+                _standardCol2 = width.I() - 1 + offsetX;
+                _standardRow1 = -offsetY;
+                _standardRow2 = height.I() - 1 + offsetY;
+                SetPart(*_halconWindowHandle, _standardRow1, _standardCol1, _standardRow2, _standardCol2);
             }
             else
             {
@@ -428,7 +441,13 @@ namespace rw {
             if (rect().contains(event->position().toPoint())) { 
                 int delta = event->angleDelta().y(); 
                 double scaleFactor = (delta > 0) ? 1.1 : 0.9; 
-
+                _wheelSize *= scaleFactor;
+                if (_wheelSize<0.95)
+                {
+                    reset_display();
+                    _wheelSize = 1;
+                    return;
+                }
                 QPointF mousePos = event->position();
                 int mouseX = static_cast<int>(mousePos.x());
                 int mouseY = static_cast<int>(mousePos.y());
