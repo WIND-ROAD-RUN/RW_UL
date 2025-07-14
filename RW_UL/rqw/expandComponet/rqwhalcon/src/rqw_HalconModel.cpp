@@ -6,12 +6,12 @@ namespace rw
 {
 	namespace rqw
 	{
-		HalconShapeId HalconShapeModel::createShape(const HalconWidgetImg& img, const HalconWidgetObject& rec)
+		HalconShapeId HalconShapeModel::create(const HalconWidgetImg& img, const HalconWidgetObject& rec)
 		{
-            return createShape(&img,&rec);
+            return create(&img,&rec);
 		}
 
-		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject* img, const HalconWidgetObject* rec)
+		HalconShapeId HalconShapeModel::create(const HalconWidgetObject* img, const HalconWidgetObject* rec)
 		{
             HalconCpp::HObject  ho_TemplateRegion;
 
@@ -25,14 +25,14 @@ namespace rw
             return hv_shapeId;
 		}
 
-		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject& img, const HalconWidgetObject* rec)
+		HalconShapeId HalconShapeModel::create(const HalconWidgetObject& img, const HalconWidgetObject* rec)
 		{
-			return createShape(&img, rec);
+			return create(&img, rec);
 		}
 
-		HalconShapeId HalconShapeModel::createShape(const HalconWidgetObject* img, const HalconWidgetObject& rec)
+		HalconShapeId HalconShapeModel::create(const HalconWidgetObject* img, const HalconWidgetObject& rec)
 		{
-            return createShape(img, &rec);
+            return create(img, &rec);
 		}
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeModel::shape(
@@ -111,6 +111,18 @@ namespace rw
 
             // 如果没有找到匹配，返回空结果列表
             return results;
+        }
+
+        void HalconShapeModel::saveModel(const HalconShapeId& id, const std::string& filePath)
+        {
+            HalconCpp::WriteShapeModel(id, filePath.c_str());
+        }
+
+        HalconShapeId HalconShapeModel::readModel(const std::string& filePath)
+        {
+            HalconShapeId result;
+			HalconCpp::ReadShapeModel(filePath.c_str(), &result);
+			return result;
         }
 	}
 }

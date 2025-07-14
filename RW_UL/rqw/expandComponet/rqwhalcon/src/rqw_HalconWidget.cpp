@@ -688,7 +688,7 @@ namespace rw {
             {
 				throw std::runtime_error("No image object available for creating shape model.");
             }
-            auto id = HalconShapeModel::createShape(getObjectPtrById(ids.front()), rec);
+            auto id = HalconShapeModel::create(getObjectPtrById(ids.front()), rec);
             _shapeModelIds.push_back(id);
 
             return id;
