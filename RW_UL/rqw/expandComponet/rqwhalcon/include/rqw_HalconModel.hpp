@@ -34,6 +34,9 @@ namespace rw {
 			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& config);
 			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig);
 			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject& img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig);
+		public:
+			static void saveModel(const HalconShapeId& id, const std::string& filePath);
+			static HalconShapeId readModel(const std::string& filePath);
 		};
 
 
