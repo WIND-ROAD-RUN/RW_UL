@@ -4,6 +4,8 @@
 #include"rqw_HalconWidgetDisObject.hpp"
 
 #include <QWidget>
+
+#include "rqw_HalconModelConfig.hpp"
 #include"opencv2/opencv.hpp"
 
 
@@ -65,7 +67,6 @@ namespace rw {
             std::vector<HalconWidgetObject*> _halconObjects;
         private:
             void initialize_halconWindow();
-            void close_halconWindow();
         private:
             void refresh_allObject();
         private:
@@ -84,9 +85,10 @@ namespace rw {
             HalconWidgetObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth);
             HalconWidgetObject drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw);
         public:
-            HalconShapeId createShapeModel(HalconWidgetObject& rec);
-            std::vector<HalconWidgetTemplateResult> shapeModel(const HalconShapeId& id);
-            std::vector<HalconWidgetTemplateResult> shapeModel(const HalconShapeId& id,const PainterConfig & config);
+            HalconShapeId createShapeXLDModel(const std::vector<HalconWidgetObject>& recs);
+            HalconShapeId createShapeXLDModel(const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& halconShapeXLDConfig);
+            HalconShapeId createShapeXLDModel(const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& halconShapeXLDConfig, bool& isCreate);
+            std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig);
 
         };
 

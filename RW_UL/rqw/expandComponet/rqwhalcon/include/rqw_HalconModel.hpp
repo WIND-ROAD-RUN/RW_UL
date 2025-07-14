@@ -30,10 +30,10 @@ namespace rw {
 			static HalconShapeId createXLD(const HalconWidgetObject* img, const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig & config);
 			static HalconShapeId createXLD(const HalconWidgetObject* img, const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config, bool& isCreate);
 		public:
-			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject& img, HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& config);
-			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& config);
-			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, HalconShapeXLDFindConfig& halconShapeXldFindConfig);
-			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject& img, HalconShapeXLDFindConfig& halconShapeXldFindConfig);
+			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject& img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& config);
+			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& config);
+			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig);
+			static std::vector<HalconWidgetTemplateResult> findShapeModel(const HalconShapeId& id, const HalconWidgetObject& img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig);
 		};
 
 

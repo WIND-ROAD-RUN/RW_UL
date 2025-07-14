@@ -66,8 +66,11 @@ void Demo::pushButton_clicked()
 {
 	rw::rqw::PainterConfig config;
 	auto rec=halconWidget->drawRect(config);
-	auto id=halconWidget->createShapeModel(rec);
-	halconWidget->shapeModel(id);
+	auto id = halconWidget->createShapeXLDModel({ rec });
+	rw::rqw::HalconShapeXLDFindConfig config1;
+	rw::rqw::PainterConfig config2;
+	config2.color = rw::rqw::RQWColor::Red;
+	halconWidget->findShapeModel(id, config1, config2);
 
 }
 

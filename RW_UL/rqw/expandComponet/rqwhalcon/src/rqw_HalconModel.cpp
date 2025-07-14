@@ -24,7 +24,7 @@ namespace rw
 			// 创建模板
 			HalconCpp::HTuple hv_shapeId;
 			HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_shapeId);
-
+			GlobalHalconData::getInstance()._shapeModelIds.push_back(hv_shapeId);
 			return hv_shapeId;
 		}
 
@@ -104,6 +104,8 @@ namespace rw
 					5,
 					&hv_ModelID
 				);
+				GlobalHalconData::getInstance()._shapeModelIds.push_back(hv_ModelID);
+				isCreate = true;
 			}
 			else
 			{
@@ -117,13 +119,13 @@ namespace rw
 		}
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id,
-			const HalconWidgetObject& img, HalconShapeXLDFindConfig& halconShapeXldFindConfig,
+			const HalconWidgetObject& img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig,
 			const PainterConfig& config)
 		{
 			return findShapeModel(id, &img, halconShapeXldFindConfig, config);
 		}
 
-		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
+		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
 		{
 
 			if (!img)
@@ -191,13 +193,13 @@ namespace rw
 		}
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id,
-			const HalconWidgetObject* img, HalconShapeXLDFindConfig& halconShapeXldFindConfig)
+			const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig)
 		{
 			return findShapeModel(id, img, halconShapeXldFindConfig, PainterConfig());
 		}
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id,
-			const HalconWidgetObject& img, HalconShapeXLDFindConfig& halconShapeXldFindConfig)
+			const HalconWidgetObject& img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig)
 		{
 			return findShapeModel(id, img, halconShapeXldFindConfig, PainterConfig());
 		}

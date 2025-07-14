@@ -20,7 +20,6 @@ namespace rw {
         {
             clear_shapeModels();
             clearHObject();
-            close_halconWindow();
         }
 
         HalconCpp::HTuple* HalconWidget::Handle()
@@ -408,15 +407,6 @@ namespace rw {
             OpenWindow(0, 0, size.width(), size.height(), winId, "visible", "", _halconWindowHandle);
         }
 
-        void HalconWidget::close_halconWindow()
-        {
-            if (_halconWindowHandle != nullptr)
-            {
-                CloseWindow(*_halconWindowHandle);
-                delete _halconWindowHandle;
-            }
-        }
-
         void HalconWidget::wheelEvent(QWheelEvent* event)
         {
             if (_isDrawingRect) {
@@ -657,6 +647,29 @@ namespace rw {
             return *resultObject;
         }
 
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs)
+        {
+            bool isCreate = false;
+            HalconShapeId id = createShapeXLDModel(recs, HalconShapeXLDConfig(), isCreate);
+            if (!isCreate)
+            {
+                throw std::runtime_error("Failed to create shape XLD model.");
+            }
+			return id;
+        }
+
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs,
+                                                        const HalconShapeXLDConfig& halconShapeXLDConfig)
+        {
+            bool isCreate = false;
+            HalconShapeId id = createShapeXLDModel(recs, halconShapeXLDConfig, isCreate);
+            if (!isCreate)
+            {
+                throw std::runtime_error("Failed to create shape XLD model.");
+            }
+            return id;
+        }
+
         void HalconWidget::clear_shapeModels()
         {
             for (const auto& id : _shapeModelIds)
@@ -681,27 +694,19 @@ namespace rw {
 			return drawRect(config, true, minHeight, minWidth, isDraw);
         }
 
-        HalconShapeId HalconWidget::createShapeModel(HalconWidgetObject& rec)
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& halconShapeXLDConfig, bool& isCreate)
         {
             auto ids=getIdsByType(HalconObjectType::Image);
             if (ids.empty())
             {
 				throw std::runtime_error("No image object available for creating shape model.");
             }
-            auto id = HalconShapeModel::create(getObjectPtrById(ids.front()), rec);
+			auto id = HalconShapeXLDModel::createXLD(getObjectPtrById(ids.front()), recs, halconShapeXLDConfig, isCreate);
             _shapeModelIds.push_back(id);
-
             return id;
         }
 
-        std::vector<HalconWidgetTemplateResult> HalconWidget::shapeModel(const HalconCpp::HTuple& id)
-        {
-            return shapeModel(id,PainterConfig());
-
-        }
-
-        std::vector<HalconWidgetTemplateResult> HalconWidget::shapeModel(const HalconShapeId& id,
-	        const PainterConfig& config)
+        std::vector<HalconWidgetTemplateResult> HalconWidget::findShapeModel(const HalconShapeId& id, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
         {
             if (_halconObjects.empty())
             {
@@ -715,7 +720,7 @@ namespace rw {
             }
 
 
-            auto results = HalconShapeModel::findShapeModel(id, getObjectPtrById(imgs.front()),config);
+            auto results = HalconShapeXLDModel::findShapeModel(id, getObjectPtrById(imgs.front()), halconShapeXldFindConfig,painterConfig);
 
             for (auto& result : results)
             {

@@ -126,5 +126,23 @@ namespace rw
 			QImage image = pixmap.toImage();
 			return QImageToHImage(image);
 		}
+
+		void GlobalHalconData::clear_shapeModels()
+		{
+			for (const auto& id : _shapeModelIds)
+			{
+				HalconCpp::ClearShapeModel(id);
+			}
+			_shapeModelIds.clear();
+		}
+
+		GlobalHalconData::GlobalHalconData()
+		{
+		}
+
+		GlobalHalconData::~GlobalHalconData()
+		{
+			clear_shapeModels();
+		}
 	}
 }

@@ -16,6 +16,9 @@ namespace HalconCpp
 
 namespace rw {
 	namespace rqw {
+		class HalconShapeModel;
+		class HalconShapeXLDModel;
+
 		using HalconWidgetDisObjectId = int;
 		using HalconShapeId = HalconCpp::HTuple;
 
@@ -45,5 +48,28 @@ namespace rw {
             RQWColor color{ RQWColor::Black };
             int thickness{ 3 };
         };
+
+		class GlobalHalconData
+		{
+		public:
+			friend HalconShapeXLDModel;
+			friend HalconShapeModel;
+		public:
+			static GlobalHalconData& getInstance()
+			{
+				static GlobalHalconData instance;
+				return instance;
+			}
+
+			GlobalHalconData(const GlobalHalconData&) = delete;
+			GlobalHalconData& operator=(const GlobalHalconData&) = delete;
+		private:
+			void clear_shapeModels();
+		private:
+			GlobalHalconData();
+			~GlobalHalconData();
+		private:
+			std::vector<HalconCpp::HTuple> _shapeModelIds;
+		};
 	} // namespace rqw
 } // namespace rw
