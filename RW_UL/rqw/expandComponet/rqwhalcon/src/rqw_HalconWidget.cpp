@@ -2,6 +2,7 @@
 #include <QResizeEvent>
 #include <unordered_set>
 
+#include "rqw_HalconModel.hpp"
 #include "halconcpp/HalconCpp.h"
 
 #include"rqw_HalconUtilty.hpp"
@@ -9,154 +10,6 @@
 namespace rw {
 	namespace rqw
 	{
-		HalconWidgetDisObject::HalconWidgetDisObject(HalconCpp::HObject* obj)
-			:_object(obj)
-		{
-
-		}
-
-		HalconWidgetDisObject::HalconWidgetDisObject(const HalconCpp::HImage& image)
-			:type(HalconWidgetDisObject::ObjectType::Image)
-		{
-            HalconCpp::HImage* newImage = new HalconCpp::HImage(image);
-            _object = newImage;
-		}
-
-		HalconWidgetDisObject::HalconWidgetDisObject(const cv::Mat& mat)
-            :type(HalconWidgetDisObject::ObjectType::Image)
-		{
-            HalconCpp::HImage hImage = CvMatToHImage(mat);
-            auto newImage = new HalconCpp::HImage(hImage);
-            _object = newImage;
-		}
-
-		HalconWidgetDisObject::HalconWidgetDisObject(const QImage& image)
-            :type(HalconWidgetDisObject::ObjectType::Image)
-		{
-            HalconCpp::HImage hImage = QImageToHImage(image);
-            auto newImage = new HalconCpp::HImage(hImage);
-			_object = newImage;
-		}
-
-		HalconWidgetDisObject::HalconWidgetDisObject(const QPixmap& pixmap)
-            :type(HalconWidgetDisObject::ObjectType::Image)
-		{
-            QImage image = pixmap.toImage();
-            HalconCpp::HImage hImage = QImageToHImage(image);
-            auto newImage = new HalconCpp::HImage(hImage);
-            _object = newImage;
-		}
-
-		HalconWidgetDisObject::~HalconWidgetDisObject()
-		{
-            if (_object)
-            {
-                delete _object;
-            }
-		}
-
-		HalconWidgetDisObject::HalconWidgetDisObject(const HalconWidgetDisObject& other)
-            : _object(other._object ? new HalconCpp::HObject(*other._object) : nullptr),
-            id(other.id),
-            descrption(other.descrption),
-            isShow(other.isShow),
-			type(other.type),
-            painterConfig(other.painterConfig)
-        {
-        }
-
-		HalconWidgetDisObject::HalconWidgetDisObject(HalconWidgetDisObject&& other) noexcept
-            : _object(other._object),
-            id(other.id),
-            descrption(std::move(other.descrption)),
-            isShow(other.isShow),
-			type(other.type),
-            painterConfig(other.painterConfig)
-        {
-            other._object = nullptr;
-        }
-
-		HalconWidgetDisObject& HalconWidgetDisObject::operator=(const HalconWidgetDisObject& other)
-        {
-            if (this != &other)
-            {
-                // 释放当前对象
-                delete _object;
-
-                // 深拷贝
-                _object = other._object ? new HalconCpp::HObject(*other._object) : nullptr;
-                id = other.id;
-                descrption = other.descrption;
-                isShow = other.isShow;
-				type = other.type;
-				painterConfig = other.painterConfig;
-            }
-            return *this;
-        }
-
-		HalconWidgetDisObject& HalconWidgetDisObject::operator=(HalconWidgetDisObject&& other) noexcept
-        {
-            if (this != &other)
-            {
-                // 释放当前对象
-                delete _object;
-
-                // 移动资源
-                _object = other._object;
-                id = other.id;
-                descrption = std::move(other.descrption);
-                isShow = other.isShow;
-				type = other.type;
-				painterConfig = other.painterConfig;
-
-                // 清空源对象
-                other._object = nullptr;
-            }
-            return *this;
-        }
-
-		bool HalconWidgetDisObject::has_value()
-		{
-			return _object != nullptr && _object->IsInitialized();
-		}
-
-		HalconCpp::HObject* HalconWidgetDisObject::value()
-		{
-            if (!has_value())
-            {
-                throw std::runtime_error("HalconWidgetDisObject does not contain a valid HObject.");
-            }
-			return _object;
-		}
-
-		void HalconWidgetDisObject::release()
-		{
-            if (_object)
-            {
-                delete _object;
-                _object = nullptr;
-                type = ObjectType::Undefined;
-			}
-		}
-
-		void HalconWidgetDisObject::updateObject(const HalconCpp::HObject& object)
-		{
-            if (_object)
-            {
-                delete _object; 
-            }
-			_object = new HalconCpp::HObject(object); 
-		}
-
-		void HalconWidgetDisObject::updateObject(HalconCpp::HObject* object)
-		{
-            if (_object)
-            {
-                delete _object; 
-            }
-			_object = object; 
-		}
-
 		HalconWidget::HalconWidget(QWidget* parent)
             : QWidget(parent)
         {
@@ -165,8 +18,8 @@ namespace rw {
 
         HalconWidget::~HalconWidget()
         {
+            clear_shapeModels();
             clearHObject();
-            close_halconWindow();
         }
 
         HalconCpp::HTuple* HalconWidget::Handle()
@@ -178,47 +31,69 @@ namespace rw {
 			return _halconWindowHandle;
         }
 
-        void HalconWidget::appendHObject(const HalconWidgetDisObject& object)
+        HalconWidgetDisObjectId HalconWidget::appendHObject(const HalconWidgetObject& object)
         {
-            if (object.id<0)
-            {
-				throw std::runtime_error("Object ID must be a non-negative integer.");
-            }
-
-            for (const auto& existingObject : _halconObjects)
-            {
-                if (existingObject->id == object.id)
-                {
-                    throw std::runtime_error("An object with the same ID already exists.");
-                }
-            }
-
-            HalconWidgetDisObject* newObject = new HalconWidgetDisObject(object);
+            HalconWidgetObject* newObject = new HalconWidgetObject(object);
+            newObject->id = getVailidAppendId();
             _halconObjects.push_back(newObject);
             refresh_allObject();
+			return newObject->id;
         }
 
-        void HalconWidget::appendHObject(HalconWidgetDisObject* object)
+        HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetObject* object)
         {
-            if (object->id < 0)
-            {
-                throw std::runtime_error("Object ID must be a non-negative integer.");
-            }
-
             if (object == nullptr)
             {
-                return;
+                return -1;
             }
-            
-            for (const auto& existingObject : _halconObjects)
-            {
-                if (existingObject->id == object->id)
-                {
-                    throw std::runtime_error("An object with the same ID already exists.");
-                }
-            }
+
+            object->id = getVailidAppendId();
+
             _halconObjects.push_back(object);
 			refresh_allObject();
+
+            return object->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(const HalconWidgetImg& object)
+        {
+            HalconWidgetImg* newObject = new HalconWidgetImg(object);
+            newObject->id = getVailidAppendId();
+            _halconObjects.push_back(newObject);
+			refresh_allObject();
+            return newObject->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetImg* object)
+        {
+            if (object == nullptr)
+            {
+                return -1;
+            }
+            object->id = getVailidAppendId();
+			_halconObjects.push_back(object);
+            return object->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(const HalconWidgetTemplateResult& object)
+        {
+            HalconWidgetTemplateResult* newObject = new HalconWidgetTemplateResult(object);
+            newObject->id = getVailidAppendId();
+            _halconObjects.push_back(newObject);
+            refresh_allObject();
+            return newObject->id;
+        }
+
+        HalconWidgetDisObjectId HalconWidget::appendHObject(HalconWidgetTemplateResult* object)
+        {
+            if (object == nullptr)
+            {
+                return -1;
+            }
+            object->id = getVailidAppendId();
+            _halconObjects.push_back(object);
+            refresh_allObject();
+			return object->id;
         }
 
 
@@ -259,7 +134,7 @@ namespace rw {
             return static_cast<size_t>(row2.D() - row1.D() + 1);
         }
 
-        HalconWidgetDisObject* HalconWidget::getObjectPtrById(int id)
+        HalconWidgetObject* HalconWidget::getObjectPtrById(int id)
         {
             for (auto& object : _halconObjects)
             {
@@ -268,19 +143,19 @@ namespace rw {
                     return object;
                 }
             }
-            return new HalconWidgetDisObject(nullptr);
+            return new HalconWidgetObject(nullptr);
         }
 
-        HalconWidgetDisObject HalconWidget::getObjectById(int id)
+        HalconWidgetObject HalconWidget::getObjectById(int id)
         {
             for (auto& object : _halconObjects)
             {
                 if (object->id == id)
                 {
-                    return HalconWidgetDisObject(*object);
+                    return HalconWidgetObject(*object);
                 }
             }
-            return HalconWidgetDisObject(nullptr);
+            return HalconWidgetObject(nullptr);
         }
 
         bool HalconWidget::eraseObjectById(int id)
@@ -298,7 +173,7 @@ namespace rw {
 			return false; // 未找到对象
         }
 
-        bool HalconWidget::eraseObjectsByType(HalconWidgetDisObject::ObjectType objectType)
+        bool HalconWidget::eraseObjectsByType(HalconObjectType objectType)
         {
             auto ids=getIdsByType(objectType);
             if (ids.empty())
@@ -331,7 +206,7 @@ namespace rw {
 			return ids;
         }
 
-        std::vector<HalconWidgetDisObjectId> HalconWidget::getIdsByType(const HalconWidgetDisObject::ObjectType objectType) const
+        std::vector<HalconWidgetDisObjectId> HalconWidget::getIdsByType(const HalconObjectType objectType) const
         {
             std::vector<HalconWidgetDisObjectId> ids;
             for (const auto& object : _halconObjects)
@@ -382,7 +257,7 @@ namespace rw {
             int windowHeight = size.height();
 
             // 获取第一个对象的大小（假设所有对象的大小一致）
-            auto ids=getIdsByType(HalconWidgetDisObject::ObjectType::Image);
+            auto ids=getIdsByType(HalconObjectType::Image);
             if (ids.empty())
             {
                 return;
@@ -435,11 +310,11 @@ namespace rw {
         }
 
 
-        void HalconWidget::appendVerticalLine(int position, const PainterConfig& config)
+        HalconWidgetDisObjectId HalconWidget::appendVerticalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
-                return;
+                return -1;
             }
 
             // 获取窗口的高度和宽度范围
@@ -464,19 +339,20 @@ namespace rw {
             SetRgb(*_halconWindowHandle, r, g, b);
 
             // 创建并添加对象
-            HalconWidgetDisObject object(verticalLine);
+            HalconWidgetObject object(verticalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Region;
+            object.type = HalconObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
+            return object.id;
         }
 
-        void HalconWidget::appendHorizontalLine(int position, const PainterConfig& config)
+        HalconWidgetDisObjectId HalconWidget::appendHorizontalLine(int position, const PainterConfig& config)
         {
             if (!_halconWindowHandle)
             {
-                return;
+                return -1;
             }
 
             HalconCpp::HTuple row1, col1, row2, col2;
@@ -495,12 +371,13 @@ namespace rw {
             auto [r,g,b] = RQWColorToRGB(config.color);
             SetRgb(*_halconWindowHandle, r, g, b);
 
-            HalconWidgetDisObject object(horizontalLine);
+            HalconWidgetObject object(horizontalLine);
             object.isShow = true;
             object.painterConfig = config;
-            object.type = HalconWidgetDisObject::ObjectType::Region;
+            object.type = HalconObjectType::Region;
             object.id = getVailidAppendId();
             appendHObject(object);
+            return object.id;
         }
 
         bool HalconWidget::setObjectVisible(const HalconWidgetDisObjectId id, const bool visible)
@@ -528,15 +405,6 @@ namespace rw {
             auto size = this->size();
 
             OpenWindow(0, 0, size.width(), size.height(), winId, "visible", "", _halconWindowHandle);
-        }
-
-        void HalconWidget::close_halconWindow()
-        {
-            if (_halconWindowHandle != nullptr)
-            {
-                CloseWindow(*_halconWindowHandle);
-                delete _halconWindowHandle;
-            }
         }
 
         void HalconWidget::wheelEvent(QWheelEvent* event)
@@ -692,7 +560,7 @@ namespace rw {
             }
         }
 
-        void HalconWidget::display_HalconWidgetDisObject(HalconWidgetDisObject* object)
+        void HalconWidget::display_HalconWidgetDisObject(HalconWidgetObject* object)
         {
             if (object == nullptr || !object->has_value())
             {
@@ -714,127 +582,104 @@ namespace rw {
             SetRgb(*_halconWindowHandle, r, g, b);
         }
 
-        //void HalconWidget::drawRect()
-        //{
-        //    _isDrawingRect = true; // 开始绘制矩形
-        //    HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
-        //    HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
-
-        //    // 调用 Halcon 的绘制矩形方法
-        //    HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
-
-        //    // 生成矩形对象
-        //    HalconCpp::GenRectangle1(&ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
-
-        //    // 提取矩形区域内的内容作为模板学习区域
-        //    HalconCpp::ReduceDomain(*_halconObjects.front()->value(), ho_Rectangle, &ho_TemplateRegion);
-
-        //    // 创建模板
-        //    HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
-        //    HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
-
-        //    HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
-        //    HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
-
-        //    // 在整个图像中进行模板匹配
-        //    HalconCpp::HTuple hv_Row, hv_Column, hv_Angle, hv_Score;
-        //    HalconCpp::FindShapeModel(ho_TemplateRegion, hv_TemplateID, -0.39, 0.79, 0.5, 1, 0.5, "least_squares", 0, 0.9, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
-
-        //    if ((hv_Row.TupleLength()) > 0)
-        //    {
-        //        // 计算仿射变换矩阵
-        //        VectorAngleToRigid(0, 0, 0, hv_Row, hv_Column, hv_Angle, &hv_HomMat2D);
-
-        //        // 将模板轮廓进行仿射变换
-        //        HalconCpp::AffineTransContourXld(ho_ModelContours, &ho_ContoursAffineTrans, hv_HomMat2D);
-
-        //        // 设置显示颜色
-        //        HalconCpp::SetColor(*_halconWindowHandle, "blue");
-
-        //        // 显示匹配到的轮廓
-        //        HalconCpp::DispObj(ho_ContoursAffineTrans, *_halconWindowHandle);
-
-        //        // 显示匹配分数
-        //        for (int i = 0; i < hv_Score.TupleLength(); i++)
-        //        {
-        //            HalconCpp::HTuple hv_ScoreText = std::to_string(hv_Score[i].D()).c_str() ;
-        //            HalconCpp::SetTposition(*_halconWindowHandle, hv_Row[i].D(), hv_Column[i].D());
-        //            HalconCpp::WriteString(*_halconWindowHandle, hv_ScoreText);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // 如果没有匹配到，显示提示信息
-        //        HalconCpp::SetColor(*_halconWindowHandle, "red");
-        //        HalconCpp::SetTposition(*_halconWindowHandle, 10, 10);
-        //        HalconCpp::WriteString(*_halconWindowHandle, "No match found!");
-        //    }
-
-        //    _isDrawingRect = false; // 绘制完成
-        //}
-
-        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config)
+        HalconWidgetObject HalconWidget::drawRect(PainterConfig config)
         {
             bool isDraw{false};
             return drawRect(config,true, 0, 0, isDraw);
         }
 
-        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow)
+        HalconWidgetObject HalconWidget::drawRect(PainterConfig config, bool isShow)
         {
             bool isDraw{false};
 			return drawRect(config, isShow, 0, 0, isDraw);
         }
 
-        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight,
+        HalconWidgetObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight,
 	        double minWidth)
         {
             bool isDraw{ false };
             return drawRect(config, isShow, minHeight, minWidth, isDraw);
         }
 
-        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw)
+        HalconWidgetObject HalconWidget::drawRect(PainterConfig config, bool isShow, double minHeight, double minWidth, bool& isDraw)
         {
             prepare_display(config);
             _isDrawingRect = true;
             HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
 
             auto ho_Rectangle = new HalconCpp::HObject;
-            auto ho_Contour = new HalconCpp::HObject;
 
             // 绘制矩形
             HalconCpp::DrawRectangle1(*_halconWindowHandle, &hv_Row1, &hv_Column1, &hv_Row2, &hv_Column2);
             HalconCpp::GenRectangle1(ho_Rectangle, hv_Row1, hv_Column1, hv_Row2, hv_Column2);
 
-            // 将矩形转换为轮廓（边框）
-            HalconCpp::GenContourRegionXld(*ho_Rectangle, ho_Contour, "border");
-
-            _isDrawingRect = false;
-
             auto height = hv_Row2.D() - hv_Row1.D();
-			auto width = hv_Column2.D() - hv_Column1.D();
+            auto width = hv_Column2.D() - hv_Column1.D();
 
-            if (height< minHeight|| width<minWidth)
+            if (height < minHeight || width < minWidth)
             {
                 isDraw = false;
-                return HalconWidgetDisObject(nullptr);
+                return HalconWidgetObject(nullptr);
             }
 
+            auto resultObject = new HalconWidgetObject(ho_Rectangle); // 使用边框对象
+            resultObject->id = getVailidAppendId();
+            resultObject->painterConfig = config;
+            resultObject->isShow = isShow;
+            resultObject->type = HalconObjectType::Region;
+            resultObject->descrption = "drawRect";
 
+            // 将矩形转换为轮廓（边框）
+            auto ho_Contour = new HalconCpp::HObject;
+            HalconCpp::GenContourRegionXld(*ho_Rectangle, ho_Contour, "border");
             // 创建 HalconWidgetDisObject 对象
-            auto object = new HalconWidgetDisObject(ho_Contour); // 使用轮廓对象
+            auto object = new HalconWidgetObject(ho_Contour); // 使用轮廓对象
             object->id = getVailidAppendId();
             object->painterConfig = config;
             object->isShow = isShow;
-            object->type = HalconWidgetDisObject::ObjectType::Region;
+            object->type = HalconObjectType::Region;
             object->descrption = "drawRect";
-
-
             appendHObject(object);
             isDraw = true;
-            return *object;
+
+            _isDrawingRect = false;
+
+            return *resultObject;
         }
 
-        HalconWidgetDisObject HalconWidget::drawRect()
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs)
+        {
+            bool isCreate = false;
+            HalconShapeId id = createShapeXLDModel(recs, HalconShapeXLDConfig(), isCreate);
+            if (!isCreate)
+            {
+                throw std::runtime_error("Failed to create shape XLD model.");
+            }
+			return id;
+        }
+
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs,
+                                                        const HalconShapeXLDConfig& halconShapeXLDConfig)
+        {
+            bool isCreate = false;
+            HalconShapeId id = createShapeXLDModel(recs, halconShapeXLDConfig, isCreate);
+            if (!isCreate)
+            {
+                throw std::runtime_error("Failed to create shape XLD model.");
+            }
+            return id;
+        }
+
+        void HalconWidget::clear_shapeModels()
+        {
+            for (const auto& id : _shapeModelIds)
+            {
+                HalconCpp::ClearShapeModel(id); 
+            }
+            _shapeModelIds.clear();
+        }
+
+        HalconWidgetObject HalconWidget::drawRect()
         {
             PainterConfig config;
             config.color = RQWColor::Red; 
@@ -843,30 +688,46 @@ namespace rw {
 			return drawRect(config, true, 0, 0, isDraw);
         }
 
-        HalconWidgetDisObject HalconWidget::drawRect(PainterConfig config, double minHeight, double minWidth)
+        HalconWidgetObject HalconWidget::drawRect(PainterConfig config, double minHeight, double minWidth)
         {
             bool isDraw = false;
 			return drawRect(config, true, minHeight, minWidth, isDraw);
         }
 
-        void HalconWidget::shapeModel(HalconWidgetDisObject& rec)
+        HalconShapeId HalconWidget::createShapeXLDModel(const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& halconShapeXLDConfig, bool& isCreate)
         {
-            HalconCpp::HTuple hv_Row1, hv_Column1, hv_Row2, hv_Column2;
-            HalconCpp::HObject ho_Rectangle, ho_TemplateRegion, ho_MatchResult;
-
-            // 提取矩形区域内的内容作为模板学习区域
-            HalconCpp::ReduceDomain(*_halconObjects.front()->value(), *rec._object, &ho_TemplateRegion);
-
-            // 创建模板
-            HalconCpp::HTuple hv_TemplateID, hv_HomMat2D;
-            HalconCpp::CreateShapeModel(ho_TemplateRegion, "auto", -0.39, 0.79, "auto", "auto", "use_polarity", "auto", "auto", &hv_TemplateID);
-
-            HalconCpp::HObject ho_ModelContours, ho_ContoursAffineTrans;
-            HalconCpp::GetShapeModelContours(&ho_ModelContours, hv_TemplateID, 1);
+            auto ids=getIdsByType(HalconObjectType::Image);
+            if (ids.empty())
+            {
+				throw std::runtime_error("No image object available for creating shape model.");
+            }
+			auto id = HalconShapeXLDModel::createXLD(getObjectPtrById(ids.front()), recs, halconShapeXLDConfig, isCreate);
+            _shapeModelIds.push_back(id);
+            return id;
         }
 
-        void HalconWidget::study()
+        std::vector<HalconWidgetTemplateResult> HalconWidget::findShapeModel(const HalconShapeId& id, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
         {
+            if (_halconObjects.empty())
+            {
+                return  std::vector<HalconWidgetTemplateResult>();
+            }
+
+            auto imgs = getIdsByType(HalconObjectType::Image);
+            if (imgs.empty())
+            {
+                return std::vector<HalconWidgetTemplateResult>();
+            }
+
+
+            auto results = HalconShapeXLDModel::findShapeModel(id, getObjectPtrById(imgs.front()), halconShapeXldFindConfig,painterConfig);
+
+            for (auto& result : results)
+            {
+                appendHObject(result);
+            }
+
+            return results;
         }
 	}
 }
