@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
+
+project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
+
 # 检查当前 CMakeLists 是否为根 CMakeLists
 #如果是根 CMakeLists，则设置不构建测试
 set(CONFIG_TEST false)
@@ -25,11 +28,12 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(INSTALL_PATH ${CMAKE_SOURCE_DIR}/install/${CMAKE_BUILD_TYPE})
 endif()
 
-project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
-	include(./cmake/PackageIni.cmake)
-	include(./cmake/ComplierIni.cmake)
+include(./cmake/PackageIni.cmake)
+include(./cmake/ComplierIni.cmake)
 
 find_package(gtest REQUIRED CONFIG)
+
+
 
 add_subdirectory(RW_UL)
 add_subdirectory(tools)

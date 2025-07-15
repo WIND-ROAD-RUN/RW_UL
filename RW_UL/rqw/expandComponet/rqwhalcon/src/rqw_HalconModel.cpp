@@ -75,7 +75,7 @@ namespace rw
 			}
 
 
-			HalconCpp::ReduceDomain(grayImage, *recs.front().value(), &ho_TemplateRegion);
+			HalconCpp::ReduceDomain(grayImage, mergedRegion, &ho_TemplateRegion);
 
 
 			// 边缘提取
@@ -182,7 +182,8 @@ namespace rw
 					result.row = row[i].D();      // 匹配中心的行坐标
 					result.column = column[i].D(); // 匹配中心的列坐标
 					result.angle = angle[i].D();   // 匹配的旋转角度
-
+					result.descrption = "XLDFindResult";
+					result.type = HalconObjectType::TemplateResult;
 					// 添加到结果列表
 					results.push_back(std::move(result));
 				}
@@ -286,6 +287,7 @@ namespace rw
 					result.row = row[i].D();      // 匹配中心的行坐标
 					result.column = column[i].D(); // 匹配中心的列坐标
 					result.angle = angle[i].D();   // 匹配的旋转角度
+					result.type = HalconObjectType::TemplateResult;
 
 					// 添加到结果列表
 					results.push_back(std::move(result));

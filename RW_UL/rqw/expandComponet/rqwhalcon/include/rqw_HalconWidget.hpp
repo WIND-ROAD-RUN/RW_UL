@@ -90,6 +90,10 @@ namespace rw {
         private:
             bool _isDrawingRect{ false };
         private:
+            bool _isLearning{ false };
+        public:
+            bool isLearning();
+        private:
             std::vector<HalconCpp::HTuple> _shapeModelIds;
             void clear_shapeModels();
         public:
