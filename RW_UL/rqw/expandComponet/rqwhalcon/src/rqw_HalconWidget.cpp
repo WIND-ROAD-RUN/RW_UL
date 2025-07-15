@@ -681,6 +681,11 @@ namespace rw {
             return id;
         }
 
+        bool HalconWidget::isLearning()
+        {
+			return _isLearning;
+        }
+
         void HalconWidget::clear_shapeModels()
         {
             for (const auto& id : _shapeModelIds)
@@ -719,6 +724,7 @@ namespace rw {
 
         std::vector<HalconWidgetTemplateResult> HalconWidget::findShapeModel(const HalconShapeId& id, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
         {
+            _isLearning = true;
             if (_halconObjects.empty())
             {
                 return  std::vector<HalconWidgetTemplateResult>();
@@ -738,7 +744,7 @@ namespace rw {
                 result.id = getVailidAppendId();
                 appendHObject(result);
             }
-
+            _isLearning = false;
             return results;
         }
 	}
