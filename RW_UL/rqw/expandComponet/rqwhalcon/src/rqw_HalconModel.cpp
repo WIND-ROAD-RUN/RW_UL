@@ -182,6 +182,7 @@ namespace rw
 					result.row = row[i].D();      // 匹配中心的行坐标
 					result.column = column[i].D(); // 匹配中心的列坐标
 					result.angle = angle[i].D();   // 匹配的旋转角度
+					result.descrption = "XLDFindResult";
 
 					// 添加到结果列表
 					results.push_back(std::move(result));
