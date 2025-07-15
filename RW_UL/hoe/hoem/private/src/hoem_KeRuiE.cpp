@@ -1,5 +1,7 @@
 #include"hoem_KeRuiE.hpp"
 
+#include<cmath>
+
 namespace rw {
 	namespace hoem {
 		Address KeRuiE::switchAddress(ModbusI locate)
@@ -14,6 +16,12 @@ namespace rw {
 
 		KeRuiE::KeRuiE(ModbusDevice* modbusDevice)
 			: _modbusDevice(modbusDevice) {
+			for (int i=0;i< 16;i++)
+			{
+				_ioOutState.push_back(false);
+				_ioInState.push_back(false);
+			}
+			
 		}
 
 		KeRuiE::~KeRuiE()
@@ -47,25 +55,48 @@ namespace rw {
 
 		bool KeRuiE::getIState(ModbusI locate) const
 		{
-			/*if (_modbusDevice) {
-				std::vector<bool> data;
-				if (_modbusDevice->readCoils(locate.address, 1, data)) {
-					return data[0];
-				}
+			if (!_modbusDevice) {
+				return false;
 			}
-			return false;*/
-			return true;
+
+			int index = static_cast<int>(locate);
+			if (index < 0 || index >= _ioInState.size()) {
+				return false;
+			}
+
+			std::vector<RegisterValue> data(1);
+			if (!_modbusDevice->readRegisters(0x10, 2, data)) {
+				return false;
+			}
+
+			uint16_t number = static_cast<uint16_t>(data[0]);
+
+
+			bool isTriggered = (number & (1 << index)) != 0;
+
+			return isTriggered; 
 		}
 
 		bool KeRuiE::getOState(ModbusO locate) const
 		{
-			std::vector<RegisterValue> value(2);
-			_modbusDevice->readRegisters(0, 2, value);
+			if (!_modbusDevice) {
+				return false;
+			}
 
-			auto int32=fromRegisterValuesToInt32(value,Endianness::BigEndian);
-			auto int32O=modbusOToInt32(locate, Endianness::BigEndian);
-			bool result = (int32 & int32O);
+			int index = static_cast<int>(locate);
+			if (index < 0 || index >= _ioOutState.size()) {
+				return false;
+			}
 
+			uint16_t number = 0;
+			std::vector<RegisterValue> data(1);
+			if (!_modbusDevice->readRegisters(0x20, 1, data)) {
+				return false;
+			}
+
+			number = static_cast<uint16_t>(data[0]);
+
+			bool result = (number & (1 << index)) != 0;
 			return result;
 		}
 
@@ -77,14 +108,27 @@ namespace rw {
 			return false;
 		}
 
-		bool KeRuiE::setIState(ModbusI locate, bool state)
-		{
-			return 0;
-		}
-
 		bool KeRuiE::setOState(ModbusO locate, bool state)
 		{
-			return 0;
+			if (!_modbusDevice) {
+				return false;
+			}
+
+			int index = static_cast<int>(locate);
+			if (index < 0 || index >= _ioInState.size()) {
+				return false;
+			}
+			_ioInState[index] = state;
+
+			uint16_t number = 0;
+			for (int i = 0; i < _ioInState.size(); i++) {
+				if (_ioInState[i]) {
+					number += static_cast<uint16_t>((std::pow)(2, i));
+				}
+			}
+
+			bool result = _modbusDevice->writeRegisters(0x20, { {number, 0x0000} });
+			return result;
 		}
 	}
 }

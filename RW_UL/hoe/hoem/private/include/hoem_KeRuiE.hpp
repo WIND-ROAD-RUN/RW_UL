@@ -15,6 +15,11 @@ namespace rw {
 		public:
 			KeRuiE(ModbusDevice* modbusDevice);
 			~KeRuiE() override;
+
+		private:
+			std::vector<bool>_ioOutState;
+			std::vector<bool>_ioInState;
+
 		public:
 			bool connect() override;
 			bool disconnect() override;
@@ -22,7 +27,6 @@ namespace rw {
 			bool getIState(ModbusI locate) const override;
 			bool getOState(ModbusO locate) const override;
 			bool reconnect() override;
-			bool setIState(ModbusI locate, bool state) override;
 			bool setOState(ModbusO locate, bool state) override;
 		};
 	}
