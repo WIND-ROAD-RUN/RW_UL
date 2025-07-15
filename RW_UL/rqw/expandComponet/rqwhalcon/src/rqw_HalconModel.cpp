@@ -75,7 +75,7 @@ namespace rw
 			}
 
 
-			HalconCpp::ReduceDomain(grayImage, *recs.front().value(), &ho_TemplateRegion);
+			HalconCpp::ReduceDomain(grayImage, mergedRegion, &ho_TemplateRegion);
 
 
 			// 边缘提取
