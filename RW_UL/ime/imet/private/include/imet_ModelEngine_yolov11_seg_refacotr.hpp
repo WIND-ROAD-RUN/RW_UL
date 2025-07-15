@@ -40,7 +40,6 @@ namespace rw {
 			std::vector<DetectionRectangleInfo> convertWhenCentralCrop(const std::vector<DetectionSeg>& detections);
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
-			cv::Mat postProcessAndDraw(cv::Mat& mat);
 
 			float* gpu_buffers[3];               //!< The vector of device buffers needed for engine execution
 			float* cpu_output_buffer;
