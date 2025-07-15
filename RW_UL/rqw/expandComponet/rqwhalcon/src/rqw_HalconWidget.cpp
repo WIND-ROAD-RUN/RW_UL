@@ -735,6 +735,7 @@ namespace rw {
 
             for (auto& result : results)
             {
+                result.id = getVailidAppendId();
                 appendHObject(result);
             }
 
