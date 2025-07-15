@@ -38,6 +38,19 @@ namespace rw {
 		size_t classId{ 0 };
 		double score{ -1 };
 	public:
+		cv::Mat mask_roi;//if it is seg
+		cv::Rect roi;
+	public:
+		bool segMaskValid{false};
+	public:
+		DetectionRectangleInfo() = default;
+
+		DetectionRectangleInfo(const DetectionRectangleInfo& other);
+		DetectionRectangleInfo(DetectionRectangleInfo&& other) noexcept;
+		DetectionRectangleInfo& operator=(const DetectionRectangleInfo& other);
+		DetectionRectangleInfo& operator=(DetectionRectangleInfo&& other) noexcept;
+		~DetectionRectangleInfo() = default;
+	public:
 		/**
 		 *@Parameters:
 		 *  bodyIndexVector: a vector of DetectionRectangleInfo

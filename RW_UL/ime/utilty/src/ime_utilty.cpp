@@ -174,6 +174,60 @@ namespace rw
 		cv::line(image, cv::Point(0, position), cv::Point(image.cols - 1, position), lineColor, thickness);
 	}
 
+	DetectionRectangleInfo::DetectionRectangleInfo(const DetectionRectangleInfo& other)
+		: leftTop(other.leftTop), rightTop(other.rightTop), leftBottom(other.leftBottom), rightBottom(other.rightBottom),
+		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
+		classId(other.classId), score(other.score), mask_roi(other.mask_roi.clone()),roi(other.roi) {
+	}
+
+	DetectionRectangleInfo::DetectionRectangleInfo(DetectionRectangleInfo&& other) noexcept
+		: leftTop(std::move(other.leftTop)), rightTop(std::move(other.rightTop)), leftBottom(std::move(other.leftBottom)), rightBottom(std::move(other.rightBottom)),
+		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
+		classId(other.classId), score(other.score), mask_roi(std::move(other.mask_roi)),roi(std::move(other.roi)) {
+	}
+
+	DetectionRectangleInfo& DetectionRectangleInfo::operator=(const DetectionRectangleInfo& other)
+	{
+		if (this != &other)
+		{
+			leftTop = other.leftTop;
+			rightTop = other.rightTop;
+			leftBottom = other.leftBottom;
+			rightBottom = other.rightBottom;
+			center_x = other.center_x;
+			center_y = other.center_y;
+			width = other.width;
+			height = other.height;
+			area = other.area;
+			classId = other.classId;
+			score = other.score;
+			mask_roi = other.mask_roi.clone();
+			roi = other.roi;
+		}
+		return *this;
+	}
+
+	DetectionRectangleInfo& DetectionRectangleInfo::operator=(DetectionRectangleInfo&& other) noexcept
+	{
+		if (this != &other)
+		{
+			leftTop = std::move(other.leftTop);
+			rightTop = std::move(other.rightTop);
+			leftBottom = std::move(other.leftBottom);
+			rightBottom = std::move(other.rightBottom);
+			center_x = other.center_x;
+			center_y = other.center_y;
+			width = other.width;
+			height = other.height;
+			area = other.area;
+			classId = other.classId;
+			score = other.score;
+			mask_roi = std::move(other.mask_roi);
+			roi = other.roi;
+		}
+		return *this;
+	}
+
 	std::vector<rw::DetectionRectangleInfo>::const_iterator DetectionRectangleInfo::getMaxAreaRectangleIterator(
 		const std::vector<rw::DetectionRectangleInfo>& bodyIndexVector)
 	{

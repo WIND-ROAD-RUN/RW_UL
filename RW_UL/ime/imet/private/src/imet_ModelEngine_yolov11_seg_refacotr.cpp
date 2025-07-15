@@ -7,7 +7,7 @@
 
 namespace rw {
 	namespace imet {
-		void ModelEngine_Yolov11_seg_refactor::preprocess(const cv::Mat& mat)
+		void ModelEngine_Yolov11_seg_with_mask::preprocess(const cv::Mat& mat)
 		{
 			_sourceWidth = mat.cols;
 			_sourceHeight = mat.rows;
@@ -36,7 +36,7 @@ namespace rw {
 			}
 		}
 
-		void ModelEngine_Yolov11_seg_refactor::infer()
+		void ModelEngine_Yolov11_seg_with_mask::infer()
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
@@ -44,7 +44,7 @@ namespace rw {
 			this->context->enqueueV3(NULL);
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::postProcess()
 		{
 			std::vector<DetectionSeg> output;
 
@@ -128,7 +128,7 @@ namespace rw {
 
 
 
-		void ModelEngine_Yolov11_seg_refactor::init(const std::string& enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_seg_with_mask::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
@@ -169,13 +169,13 @@ namespace rw {
 			cudaDeviceSynchronize();
 		}
 
-		ModelEngine_Yolov11_seg_refactor::ModelEngine_Yolov11_seg_refactor(const std::string& modelPath,
+		ModelEngine_Yolov11_seg_with_mask::ModelEngine_Yolov11_seg_with_mask(const std::string& modelPath,
 			nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
 
-		ModelEngine_Yolov11_seg_refactor::~ModelEngine_Yolov11_seg_refactor()
+		ModelEngine_Yolov11_seg_with_mask::~ModelEngine_Yolov11_seg_with_mask()
 		{
 			for (int i = 0; i < 2; i++)
 				(cudaFree(gpu_buffers[i]));
@@ -186,7 +186,7 @@ namespace rw {
 			delete runtime;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
 		{
 			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
@@ -206,7 +206,7 @@ namespace rw {
 			}
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenResize(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenResize(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -215,28 +215,54 @@ namespace rw {
 			auto scaleY = _sourceHeight / static_cast<float>(input_h);
 			for (const auto& item : detections)
 			{
+				// 调整 bbox 到原图比例
+				cv::Rect bbox = item.bbox;
+				bbox.x = static_cast<int>(bbox.x * scaleX);
+				bbox.y = static_cast<int>(bbox.y * scaleY);
+				bbox.width = static_cast<int>(bbox.width * scaleX);
+				bbox.height = static_cast<int>(bbox.height * scaleY);
+
 				DetectionRectangleInfo resultItem;
-				resultItem.width = item.bbox.width * scaleX;
-				resultItem.height = item.bbox.height * scaleY;
-				resultItem.leftTop.first = item.bbox.x * scaleX;
-				resultItem.leftTop.second = item.bbox.y * scaleY;
-				resultItem.rightTop.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
-				resultItem.rightTop.second = item.bbox.y * scaleY;
-				resultItem.leftBottom.first = item.bbox.x * scaleX;
-				resultItem.leftBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
-				resultItem.rightBottom.first = item.bbox.x * scaleX + item.bbox.width * scaleX;
-				resultItem.rightBottom.second = item.bbox.y * scaleY + item.bbox.height * scaleY;
-				resultItem.center_x = item.bbox.x * scaleX + item.bbox.width * scaleX / 2;
-				resultItem.center_y = item.bbox.y * scaleY + item.bbox.height * scaleY / 2;
-				resultItem.area = item.bbox.width * scaleX * item.bbox.height * scaleY;
+				resultItem.width = bbox.width ;
+				resultItem.height = bbox.height;
+				resultItem.leftTop.first = bbox.x;
+				resultItem.leftTop.second = bbox.y;
+				resultItem.rightTop.first = bbox.x  + bbox.width;
+				resultItem.rightTop.second = bbox.y ;
+				resultItem.leftBottom.first = bbox.x ;
+				resultItem.leftBottom.second = bbox.y  + bbox.height ;
+				resultItem.rightBottom.first = bbox.x  + bbox.width ;
+				resultItem.rightBottom.second = bbox.y  + bbox.height ;
+				resultItem.center_x = bbox.x + bbox.width / 2;
+				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
+
+
+				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
+				cv::Rect roi = bbox & img_rect;
+				if (roi.width <= 0 || roi.height <= 0) continue;
+				resultItem.roi = roi;
+				resultItem.segMaskValid = true;
+
+				cv::Mat mask_resized;
+				cv::resize(item.mask_sigmoid, mask_resized, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
+				cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, -bbox.x, 0, 1, -bbox.y);
+				cv::Mat mask_translated = cv::Mat::zeros(_sourceWidth, _sourceHeight, mask_resized.type());
+				cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
+				cv::Mat mask_bin;
+				cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+				cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
+				resultItem.area = cv::countNonZero(mask_roi);
+				resultItem.mask_roi = mask_roi.clone();
+
 				result.push_back(resultItem);
 			}
+
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenCentralCrop(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenCentralCrop(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -252,28 +278,65 @@ namespace rw {
 				float x2 = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left;
 				float y2 = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top;
 
+				cv::Rect bbox = item.bbox;
+				bbox.x = item.bbox.x + params.crop_x - params.pad_left;
+				bbox.y = item.bbox.y + params.crop_y - params.pad_top;
+				bbox.width = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left- bbox.x;
+				bbox.height = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top- bbox.y;
+
 				DetectionRectangleInfo resultItem;
-				resultItem.leftTop.first = x1;
-				resultItem.leftTop.second = y1;
-				resultItem.rightTop.first = x2;
-				resultItem.rightTop.second = y1;
-				resultItem.leftBottom.first = x1;
-				resultItem.leftBottom.second = y2;
-				resultItem.rightBottom.first = x2;
-				resultItem.rightBottom.second = y2;
-				resultItem.width = x2 - x1;
-				resultItem.height = y2 - y1;
-				resultItem.center_x = (x1 + x2) / 2;
-				resultItem.center_y = (y1 + y2) / 2;
-				resultItem.area = resultItem.width * resultItem.height;
+				resultItem.width = bbox.width;
+				resultItem.height = bbox.height;
+				resultItem.leftTop.first = bbox.x;
+				resultItem.leftTop.second = bbox.y;
+				resultItem.rightTop.first = bbox.x + bbox.width;
+				resultItem.rightTop.second = bbox.y;
+				resultItem.leftBottom.first = bbox.x;
+				resultItem.leftBottom.second = bbox.y + bbox.height;
+				resultItem.rightBottom.first = bbox.x + bbox.width;
+				resultItem.rightBottom.second = bbox.y + bbox.height;
+				resultItem.center_x = bbox.x + bbox.width / 2;
+				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
+
+
+				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
+				cv::Rect roi = bbox & img_rect;
+				if (roi.width <= 0 || roi.height <= 0) continue;
+				resultItem.roi = roi;
+				resultItem.segMaskValid = true;
+
+				// 获取中心裁剪的偏移量
+				int pad_left = _centerCropParams.pad_left;
+				int pad_top = _centerCropParams.pad_top;
+				int crop_x = _centerCropParams.crop_x;
+				int crop_y = _centerCropParams.crop_y;
+
+				// 将掩膜调整回裁剪后的尺寸
+				cv::Mat mask_resized;
+				cv::resize(item.mask_sigmoid, mask_resized, cv::Size(input_w, input_h), 0, 0, cv::INTER_LINEAR);
+
+				// 计算平移矩阵，将掩膜从裁剪后的坐标系映射回原始图像
+				cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, crop_x - pad_left - bbox.x, 0, 1, crop_y - pad_top - bbox.y);
+				cv::Mat mask_translated = cv::Mat::zeros(_sourceHeight, _sourceWidth, mask_resized.type());
+				cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
+
+				// 二值化掩膜
+				cv::Mat mask_bin;
+				cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+
+				// 提取ROI区域的掩膜
+				cv::Mat mask_roi = mask_bin(cv::Rect(roi.x, roi.y, roi.width, roi.height));
+				resultItem.area = cv::countNonZero(mask_roi);
+				resultItem.mask_roi = mask_roi.clone();
+
 				result.push_back(resultItem);
 			}
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_refactor::convertWhenLetterBox(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenLetterBox(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -285,35 +348,64 @@ namespace rw {
 
 			for (const auto& item : detections)
 			{
+				cv::Rect bbox = item.bbox;
+				bbox.x = (item.bbox.x - dw) / scale;
+				bbox.y = (item.bbox.y - dh) / scale;
+				bbox.width = (item.bbox.x + item.bbox.width - dw) / scale- bbox.x;
+				bbox.height = (item.bbox.y + item.bbox.height - dh) / scale- bbox.y;
+
+
 				DetectionRectangleInfo resultItem;
-
-				// 反算到原图坐标
-				float x1 = (item.bbox.x - dw) / scale;
-				float y1 = (item.bbox.y - dh) / scale;
-				float x2 = (item.bbox.x + item.bbox.width - dw) / scale;
-				float y2 = (item.bbox.y + item.bbox.height - dh) / scale;
-
-				resultItem.leftTop.first = x1;
-				resultItem.leftTop.second = y1;
-				resultItem.rightTop.first = x2;
-				resultItem.rightTop.second = y1;
-				resultItem.leftBottom.first = x1;
-				resultItem.leftBottom.second = y2;
-				resultItem.rightBottom.first = x2;
-				resultItem.rightBottom.second = y2;
-				resultItem.width = x2 - x1;
-				resultItem.height = y2 - y1;
-				resultItem.center_x = (x1 + x2) / 2;
-				resultItem.center_y = (y1 + y2) / 2;
-				resultItem.area = resultItem.width * resultItem.height;
+				resultItem.width = bbox.width;
+				resultItem.height = bbox.height;
+				resultItem.leftTop.first = bbox.x;
+				resultItem.leftTop.second = bbox.y;
+				resultItem.rightTop.first = bbox.x + bbox.width;
+				resultItem.rightTop.second = bbox.y;
+				resultItem.leftBottom.first = bbox.x;
+				resultItem.leftBottom.second = bbox.y + bbox.height;
+				resultItem.rightBottom.first = bbox.x + bbox.width;
+				resultItem.rightBottom.second = bbox.y + bbox.height;
+				resultItem.center_x = bbox.x + bbox.width / 2;
+				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
+
+
+				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
+				cv::Rect roi = bbox & img_rect;
+				if (roi.width <= 0 || roi.height <= 0) continue;
+				resultItem.roi = roi;
+				resultItem.segMaskValid = true;
+
+				// 计算 LetterBox 的缩放比例和填充偏移
+				float scale = _letterBoxScale;
+				int dw = _letterBoxdw;
+				int dh = _letterBoxdh;
+
+				// 调整掩膜到原图比例
+				cv::Mat mask_resized;
+				cv::resize(item.mask_sigmoid, mask_resized, cv::Size(input_w, input_h), 0, 0, cv::INTER_LINEAR);
+
+				// 去除填充并应用缩放
+				cv::Mat mask_translated = mask_resized(cv::Rect(dw, dh, input_w - 2 * dw, input_h - 2 * dh));
+				cv::resize(mask_translated, mask_translated, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
+
+				// 二值化掩膜
+				cv::Mat mask_bin;
+				cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+
+				// 提取 ROI 区域
+				cv::Mat mask_roi = mask_bin(roi);
+				resultItem.area = cv::countNonZero(mask_roi);
+				resultItem.mask_roi = mask_roi.clone();
+
 				result.push_back(resultItem);
 			}
 			return result;
 		}
 
-		cv::Mat ModelEngine_Yolov11_seg_refactor::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		cv::Mat ModelEngine_Yolov11_seg_with_mask::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
 			ImagePainter::PainterConfig config;
@@ -323,56 +415,14 @@ namespace rw {
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
-			}
-			for (int i = 0; i < masks.size(); i++)
-			{
-				// 计算比例因子
-				float scaleX = _sourceWidth / static_cast<float>(input_w);
-				float scaleY = _sourceHeight / static_cast<float>(input_h);
-
-				// 调整 bbox 到原图比例
-				cv::Rect bbox = masks[i].bbox;
-				bbox.x = static_cast<int>(bbox.x * scaleX);
-				bbox.y = static_cast<int>(bbox.y * scaleY);
-				bbox.width = static_cast<int>(bbox.width * scaleX);
-				bbox.height = static_cast<int>(bbox.height * scaleY);
-
-				// 检查 bbox 是否在图像范围内
-				cv::Rect img_rect(0, 0, result.cols, result.rows);
-				cv::Rect roi = bbox & img_rect;
-				if (roi.width <= 0 || roi.height <= 0) continue;
-
-				// 调整 mask 到 bbox 尺寸
-				cv::Mat mask_resized;
-				cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
-
-				// 创建仿射变换矩阵，将掩膜从 bbox 的左上角平移到 (0, 0)
-				cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, -bbox.x, 0, 1, -bbox.y);
-
-				// 创建与原图大小一致的空白掩膜
-				cv::Mat mask_translated = cv::Mat::zeros(_sourceWidth, _sourceHeight, mask_resized.type());
-
-				// 应用仿射变换，将掩膜平移到 (0, 0)
-				cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
-
-				
-				// 二值化 mask
-				cv::Mat mask_bin;
-				cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
-
-				// 只取有效区域
-				cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
-				cv::Mat img_roi = result(roi);
 
 
+				if (item.mask_roi.empty())
+				{
+					continue;
+				}
 
-				//！！！！！！！！！！！！！！这个mask_roi要返回
-				// 计算掩膜的像素个数
-				int mask_pixel_count = cv::countNonZero(mask_roi);
-
-				// 输出掩膜像素个数
-				//！！！！！！！！！！！！！！这个mask_pixel_count要返回，可以用来计算面积
-				std::cout << "pixSize: " << mask_pixel_count << std::endl;
+				cv::Mat img_roi = result(item.roi);
 
 				// 随机生成 RGB 颜色
 				cv::RNG rng(cv::getTickCount()); // 使用随机数生成器
@@ -383,14 +433,77 @@ namespace rw {
 				// 着色（随机颜色）
 				std::vector<cv::Mat> channels;
 				cv::split(img_roi, channels);
-				channels[0].setTo(blue, mask_roi > 0);  // B 通道
-				channels[1].setTo(green, mask_roi > 0); // G 通道
-				channels[2].setTo(red, mask_roi > 0);   // R 通道
+				channels[0].setTo(blue, item.mask_roi > 0);  // B 通道
+				channels[1].setTo(green, item.mask_roi > 0); // G 通道
+				channels[2].setTo(red, item.mask_roi > 0);   // R 通道
 				cv::merge(channels, img_roi);
 			}
 
+			//for (int i = 0; i < masks.size(); i++)
+			//{
+			//	// 计算比例因子
+			//	float scaleX = _sourceWidth / static_cast<float>(input_w);
+			//	float scaleY = _sourceHeight / static_cast<float>(input_h);
 
-			//postProcessAndDraw(result);
+			//	// 调整 bbox 到原图比例
+			//	cv::Rect bbox = masks[i].bbox;
+			//	bbox.x = static_cast<int>(bbox.x * scaleX);
+			//	bbox.y = static_cast<int>(bbox.y * scaleY);
+			//	bbox.width = static_cast<int>(bbox.width * scaleX);
+			//	bbox.height = static_cast<int>(bbox.height * scaleY);
+
+			//	// 检查 bbox 是否在图像范围内
+			//	cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
+			//	cv::Rect roi = bbox & img_rect;
+			//	if (roi.width <= 0 || roi.height <= 0) continue;
+
+			//	// 调整 mask 到 bbox 尺寸
+			//	cv::Mat mask_resized;
+			//	cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
+
+			//	// 创建仿射变换矩阵，将掩膜从 bbox 的左上角平移到 (0, 0)
+			//	cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, -bbox.x, 0, 1, -bbox.y);
+
+			//	// 创建与原图大小一致的空白掩膜
+			//	cv::Mat mask_translated = cv::Mat::zeros(_sourceWidth, _sourceHeight, mask_resized.type());
+
+			//	// 应用仿射变换，将掩膜平移到 (0, 0)
+			//	cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
+
+			//	
+			//	// 二值化 mask
+			//	cv::Mat mask_bin;
+			//	cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+
+			//	// 只取有效区域
+			//	cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
+			//	cv::Mat img_roi = result(roi);
+
+
+
+			//	//！！！！！！！！！！！！！！这个mask_roi要返回
+			//	// 计算掩膜的像素个数
+			//	int mask_pixel_count = cv::countNonZero(mask_roi);
+
+			//	// 输出掩膜像素个数
+			//	//！！！！！！！！！！！！！！这个mask_pixel_count要返回，可以用来计算面积
+			//	std::cout << "pixSize: " << mask_pixel_count << std::endl;
+
+			//	// 随机生成 RGB 颜色
+			//	cv::RNG rng(cv::getTickCount()); // 使用随机数生成器
+			//	int blue = rng.uniform(0, 256);
+			//	int green = rng.uniform(0, 256);
+			//	int red = rng.uniform(0, 256);
+
+			//	// 着色（随机颜色）
+			//	std::vector<cv::Mat> channels;
+			//	cv::split(img_roi, channels);
+			//	channels[0].setTo(blue, mask_roi > 0);  // B 通道
+			//	channels[1].setTo(green, mask_roi > 0); // G 通道
+			//	channels[2].setTo(red, mask_roi > 0);   // R 通道
+			//	cv::merge(channels, img_roi);
+			//}
+
 			return result;
 		}
 
