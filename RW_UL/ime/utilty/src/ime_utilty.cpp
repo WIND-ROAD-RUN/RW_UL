@@ -142,6 +142,35 @@ namespace rw
 		);
 	}
 
+	void ImagePainter::drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo, PainterConfig config)
+	{
+		if (rectInfo.mask_roi.empty())
+		{
+			return;
+		}
+
+		cv::Mat img_roi = image(rectInfo.roi);
+
+		cv::Mat color_mask(img_roi.size(), img_roi.type(), config.color);
+
+		cv::Mat mask;
+		cv::threshold(rectInfo.mask_roi, mask, config.thresh, config.maxVal, cv::THRESH_BINARY);
+		std::vector<cv::Mat> mask_channels(3, mask);
+		cv::Mat mask_3channel;
+		cv::merge(mask_channels, mask_3channel);
+
+
+		if (color_mask.type() != img_roi.type()) {
+			color_mask.convertTo(color_mask, img_roi.type());
+		}
+		if (mask_3channel.type() != img_roi.type()) {
+			mask_3channel.convertTo(mask_3channel, img_roi.type());
+		}
+
+		cv::addWeighted(img_roi, 1.0, color_mask.mul(mask_3channel), config.alpha, 0, img_roi);
+
+	}
+
 	void ImagePainter::drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config)
 	{
 		if (image.empty()) {

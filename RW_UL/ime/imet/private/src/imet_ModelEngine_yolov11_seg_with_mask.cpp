@@ -415,94 +415,14 @@ namespace rw {
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
+		
+				int blue = (item.classId * 37) % 256;  // 37 是一个随机质数，用于生成分布均匀的值
+				int green = (item.classId * 73) % 256; // 73 是另一个随机质数
+				int red = (item.classId * 109) % 256;  // 109 是另一个随机质数
 
-
-				if (item.mask_roi.empty())
-				{
-					continue;
-				}
-
-				cv::Mat img_roi = result(item.roi);
-
-				// 随机生成 RGB 颜色
-				cv::RNG rng(cv::getTickCount()); // 使用随机数生成器
-				int blue = rng.uniform(0, 256);
-				int green = rng.uniform(0, 256);
-				int red = rng.uniform(0, 256);
-
-				// 着色（随机颜色）
-				std::vector<cv::Mat> channels;
-				cv::split(img_roi, channels);
-				channels[0].setTo(blue, item.mask_roi > 0);  // B 通道
-				channels[1].setTo(green, item.mask_roi > 0); // G 通道
-				channels[2].setTo(red, item.mask_roi > 0);   // R 通道
-				cv::merge(channels, img_roi);
+				config.color = cv::Scalar(blue, green, red); // BGR 格式
+				ImagePainter::drawMaskOnSourceImg(result, item, config);
 			}
-
-			//for (int i = 0; i < masks.size(); i++)
-			//{
-			//	// 计算比例因子
-			//	float scaleX = _sourceWidth / static_cast<float>(input_w);
-			//	float scaleY = _sourceHeight / static_cast<float>(input_h);
-
-			//	// 调整 bbox 到原图比例
-			//	cv::Rect bbox = masks[i].bbox;
-			//	bbox.x = static_cast<int>(bbox.x * scaleX);
-			//	bbox.y = static_cast<int>(bbox.y * scaleY);
-			//	bbox.width = static_cast<int>(bbox.width * scaleX);
-			//	bbox.height = static_cast<int>(bbox.height * scaleY);
-
-			//	// 检查 bbox 是否在图像范围内
-			//	cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
-			//	cv::Rect roi = bbox & img_rect;
-			//	if (roi.width <= 0 || roi.height <= 0) continue;
-
-			//	// 调整 mask 到 bbox 尺寸
-			//	cv::Mat mask_resized;
-			//	cv::resize(masks[i].mask_sigmoid, mask_resized, cv::Size(_sourceWidth, _sourceHeight), 0, 0, cv::INTER_LINEAR);
-
-			//	// 创建仿射变换矩阵，将掩膜从 bbox 的左上角平移到 (0, 0)
-			//	cv::Mat translation_matrix = (cv::Mat_<double>(2, 3) << 1, 0, -bbox.x, 0, 1, -bbox.y);
-
-			//	// 创建与原图大小一致的空白掩膜
-			//	cv::Mat mask_translated = cv::Mat::zeros(_sourceWidth, _sourceHeight, mask_resized.type());
-
-			//	// 应用仿射变换，将掩膜平移到 (0, 0)
-			//	cv::warpAffine(mask_resized, mask_translated, translation_matrix, cv::Size(_sourceWidth, _sourceHeight), cv::INTER_LINEAR, cv::BORDER_CONSTANT, 0);
-
-			//	
-			//	// 二值化 mask
-			//	cv::Mat mask_bin;
-			//	cv::threshold(mask_translated, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
-
-			//	// 只取有效区域
-			//	cv::Mat mask_roi = mask_bin(cv::Rect(0, 0, roi.width, roi.height));
-			//	cv::Mat img_roi = result(roi);
-
-
-
-			//	//！！！！！！！！！！！！！！这个mask_roi要返回
-			//	// 计算掩膜的像素个数
-			//	int mask_pixel_count = cv::countNonZero(mask_roi);
-
-			//	// 输出掩膜像素个数
-			//	//！！！！！！！！！！！！！！这个mask_pixel_count要返回，可以用来计算面积
-			//	std::cout << "pixSize: " << mask_pixel_count << std::endl;
-
-			//	// 随机生成 RGB 颜色
-			//	cv::RNG rng(cv::getTickCount()); // 使用随机数生成器
-			//	int blue = rng.uniform(0, 256);
-			//	int green = rng.uniform(0, 256);
-			//	int red = rng.uniform(0, 256);
-
-			//	// 着色（随机颜色）
-			//	std::vector<cv::Mat> channels;
-			//	cv::split(img_roi, channels);
-			//	channels[0].setTo(blue, mask_roi > 0);  // B 通道
-			//	channels[1].setTo(green, mask_roi > 0); // G 通道
-			//	channels[2].setTo(red, mask_roi > 0);   // R 通道
-			//	cv::merge(channels, img_roi);
-			//}
 
 			return result;
 		}

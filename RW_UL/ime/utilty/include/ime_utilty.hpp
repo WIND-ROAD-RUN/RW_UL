@@ -117,6 +117,11 @@ namespace rw {
 			cv::Scalar color{ 0, 0, 255 };
 			// Color of the word
 			cv::Scalar textColor{ 0, 255, 0 };
+		public:
+			//For mask painter
+			double alpha{ 0.3 };
+			double thresh{0.5};
+			double maxVal{1.0};
 		};
 
 		/**
@@ -197,6 +202,13 @@ namespace rw {
 			const DetectionRectangleInfo& rectInfo,
 			PainterConfig config = {}
 		);
+
+		static void drawMaskOnSourceImg(
+			cv::Mat& image,
+			const DetectionRectangleInfo& rectInfo,
+			PainterConfig config = {}
+		);
+
 		/// Draw a vertical line on the image at the specified position
 		static  void drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config);
 		/// Draw a horizontal line on the image at the specified position
