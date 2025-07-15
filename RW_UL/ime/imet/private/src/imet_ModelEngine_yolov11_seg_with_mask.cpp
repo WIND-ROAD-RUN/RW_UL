@@ -25,10 +25,10 @@ namespace rw {
 			}
 			else if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
 			{
-				cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &_centerCropParams);
+				/*cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &_centerCropParams);
 				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
-			}
+			*/}
 			else
 			{
 				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
@@ -421,7 +421,12 @@ namespace rw {
 				int red = (item.classId * 109) % 256;  // 109 是另一个随机质数
 
 				config.color = cv::Scalar(blue, green, red); // BGR 格式
+				config.alpha = 10;
 				ImagePainter::drawMaskOnSourceImg(result, item, config);
+				
+
+
+
 			}
 
 			return result;
