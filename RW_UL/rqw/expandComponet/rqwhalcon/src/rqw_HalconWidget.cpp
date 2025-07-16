@@ -280,7 +280,15 @@ namespace rw {
             double windowAspectRatio = static_cast<double>(windowWidth) / windowHeight;
 
             // 设置 Halcon 窗口铺满整个 QWidget
-            SetWindowExtents(*_halconWindowHandle, 0, 0, windowWidth, windowHeight);
+            try
+            {
+                SetWindowExtents(*_halconWindowHandle, 0, 0, windowWidth, windowHeight);
+            }
+            catch (HalconCpp::HException & e)
+            {
+                return;
+            }
+            
 
             // 计算显示区域
             int partWidth, partHeight, offsetX, offsetY;
