@@ -67,6 +67,7 @@ namespace rw
 			size_t getLineHeight(bool& isGet) override;
 			bool setIOOut(int line_index, bool state) override;
 			bool getIOIn(int line_index, bool& state) override;
+			bool getIOOut(int line_index, bool& state) override;
 
 		protected:
 			void* m_cameraHandle{ nullptr };

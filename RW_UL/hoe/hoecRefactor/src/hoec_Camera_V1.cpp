@@ -223,6 +223,11 @@ namespace rw
 			return _camera->getIOIn(line_index, state);
 		}
 
+		bool CameraActive::getIOOut(int line_index, bool& state)
+		{
+			return _camera -> getIOOut(line_index, state);
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -415,6 +420,11 @@ namespace rw
 		bool CameraPassive::getIOIn(int line_index, bool& state)
 		{
 			return _camera->getIOIn(line_index, state);
+		}
+
+		bool CameraPassive::getIOOut(int line_index, bool& state)
+		{
+			return _camera->getIOOut(line_index, state);
 		}
 	}
 }

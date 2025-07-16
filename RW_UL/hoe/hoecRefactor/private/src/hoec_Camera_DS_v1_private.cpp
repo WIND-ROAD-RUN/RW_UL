@@ -689,6 +689,12 @@ namespace rw
 			return false;
 		}
 
+		bool Camera_DS::getIOOut(int line_index, bool& state)
+		{
+			state = false;
+			return false;
+		}
+
 
 		Camera_DS_Active::Camera_DS_Active()
 		{

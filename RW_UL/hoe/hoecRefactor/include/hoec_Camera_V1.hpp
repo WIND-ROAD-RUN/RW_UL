@@ -64,6 +64,7 @@ namespace rw
 		public:
 			//DS
 			virtual bool setIOOut(int line_index, bool state) = 0;
+			virtual bool getIOOut(int line_index, bool& state) = 0;
 			virtual bool getIOIn(int line_index, bool& state) = 0;
 
 		public:
@@ -155,6 +156,7 @@ namespace rw
 			size_t getLineHeight(bool& isGet) override;
 			bool setIOOut(int line_index, bool state) override;
 			bool getIOIn(int line_index, bool& state) override;
+			bool getIOOut(int line_index, bool& state) override;
 		};
 
 		class CameraPassive
@@ -214,6 +216,7 @@ namespace rw
 			size_t getLineHeight(bool& isGet) override;
 			bool setIOOut(int line_index, bool state) override;
 			bool getIOIn(int line_index, bool& state) override;
+			bool getIOOut(int line_index, bool& state) override;
 		};
 
 	}
