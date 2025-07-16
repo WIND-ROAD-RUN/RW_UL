@@ -311,6 +311,15 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveThread::softwareTrigger()
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->softwareTrigger();
+			}
+			return false;
+		}
+
 		size_t CameraPassiveThread::getExposureTime() const
 		{
 			if (_cameraObject)

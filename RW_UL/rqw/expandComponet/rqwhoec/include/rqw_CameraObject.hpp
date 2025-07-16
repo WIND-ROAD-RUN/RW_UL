@@ -80,6 +80,8 @@ namespace rw {
 			bool setIOOut(int line_index, bool state);
 			bool getIOIn(int line_index, bool& state);
 			bool getIOOut(int line_index, bool& state);
+			//MVS
+			bool softwareTrigger();
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};

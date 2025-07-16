@@ -228,6 +228,11 @@ namespace rw
 			return _camera -> getIOOut(line_index, state);
 		}
 
+		bool CameraActive::softwareTrigger()
+		{
+			return _camera->softwareTrigger();
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -425,6 +430,11 @@ namespace rw
 		bool CameraPassive::getIOOut(int line_index, bool& state)
 		{
 			return _camera->getIOOut(line_index, state);
+		}
+
+		bool CameraPassive::softwareTrigger()
+		{
+			return _camera->softwareTrigger();
 		}
 	}
 }

@@ -150,6 +150,15 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveObject::softwareTrigger()
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->softwareTrigger();
+			}
+			return false;
+		}
+
 		size_t CameraPassiveObject::getExposureTime(bool& isGet) const
 		{
 			return _cameraPassive->getExposureTime(isGet);

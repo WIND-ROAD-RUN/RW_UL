@@ -578,6 +578,25 @@ namespace rw
 			return false;
 		}
 
+		bool Camera_MVS::softwareTrigger()
+		{
+			int enumValue = MV_CC_SetEnumValue(m_cameraHandle, "TriggerSource", MV_TRIGGER_SOURCE_SOFTWARE);
+			if (enumValue != 0) {
+				return false;
+			}
+			else {
+			}
+			int comdValue = MV_CC_SetCommandValue(m_cameraHandle, "TriggerSoftware");
+			if (comdValue != 0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

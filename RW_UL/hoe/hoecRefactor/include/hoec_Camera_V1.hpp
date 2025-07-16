@@ -66,7 +66,8 @@ namespace rw
 			virtual bool setIOOut(int line_index, bool state) = 0;
 			virtual bool getIOOut(int line_index, bool& state) = 0;
 			virtual bool getIOIn(int line_index, bool& state) = 0;
-
+			//MVS
+			virtual bool softwareTrigger() = 0;
 		public:
 			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
 			[[nodiscard]] virtual size_t getGain(bool& isGet) = 0;
@@ -157,6 +158,7 @@ namespace rw
 			bool setIOOut(int line_index, bool state) override;
 			bool getIOIn(int line_index, bool& state) override;
 			bool getIOOut(int line_index, bool& state) override;
+			bool softwareTrigger() override;
 		};
 
 		class CameraPassive
@@ -217,6 +219,7 @@ namespace rw
 			bool setIOOut(int line_index, bool state) override;
 			bool getIOIn(int line_index, bool& state) override;
 			bool getIOOut(int line_index, bool& state) override;
+			bool softwareTrigger() override;
 		};
 
 	}

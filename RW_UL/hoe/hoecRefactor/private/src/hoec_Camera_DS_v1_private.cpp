@@ -695,6 +695,11 @@ namespace rw
 			return false;
 		}
 
+		bool Camera_DS::softwareTrigger()
+		{
+			return false;
+		}
+
 
 		Camera_DS_Active::Camera_DS_Active()
 		{
