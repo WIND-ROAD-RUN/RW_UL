@@ -586,7 +586,7 @@ namespace rw
 			}
 		}
 
-		bool Camera_DS::setIoOut(int line_index, bool state)
+		bool Camera_DS::setIOOut(int line_index, bool state)
 		{
 
 			if (!m_cameraHandle) {
@@ -640,7 +640,7 @@ namespace rw
 
 		}
 
-		bool Camera_DS::getIoIn(int line_index, bool& state)
+		bool Camera_DS::getIOIn(int line_index, bool& state)
 		{
 			if (!m_cameraHandle) {
 				return false;

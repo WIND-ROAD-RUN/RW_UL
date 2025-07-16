@@ -45,7 +45,7 @@ namespace  hoec_Camera_DS
 
 			 passive.setIoOut(5,true);*/
 			 bool state = false;
-			 passive.getIoIn(6, state);
+			 passive.getIOIn(6, state);
 
 
 			ASSERT_EQ(isStartMonitor, true);

@@ -62,9 +62,9 @@ namespace rw
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 
-			bool setIoOut(int line_index,bool state) ;
+			bool setIOOut(int line_index,bool state) override;
 
-			bool getIoIn(int line_index, bool &state);
+			bool getIOIn(int line_index, bool &state) override;
 
 
 

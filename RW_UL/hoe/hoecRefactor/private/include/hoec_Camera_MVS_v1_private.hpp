@@ -65,6 +65,8 @@ namespace rw
 			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
+			bool setIOOut(int line_index, bool state) override;
+			bool getIOIn(int line_index, bool& state) override;
 
 		protected:
 			void* m_cameraHandle{ nullptr };

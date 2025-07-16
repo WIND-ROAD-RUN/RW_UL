@@ -284,6 +284,24 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveThread::setIOOut(int line_index, bool state)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setIOOut(line_index, state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::getIOIn(int line_index, bool& state)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->getIOIn(line_index, state);
+			}
+			return false;
+		}
+
 		size_t CameraPassiveThread::getExposureTime() const
 		{
 			if (_cameraObject)

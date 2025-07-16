@@ -213,6 +213,16 @@ namespace rw
 			return _camera->getLineHeight(isGet);
 		}
 
+		bool CameraActive::setIOOut(int line_index, bool state)
+		{
+			return _camera->setIOOut(line_index, state);
+		}
+
+		bool CameraActive::getIOIn(int line_index, bool& state)
+		{
+			return _camera->getIOIn(line_index, state);
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -395,6 +405,16 @@ namespace rw
 		size_t CameraPassive::getLineHeight(bool& isGet)
 		{
 			return _camera->getLineHeight(isGet);
+		}
+
+		bool CameraPassive::setIOOut(int line_index, bool state)
+		{
+			return _camera->setIOOut(line_index, state);
+		}
+
+		bool CameraPassive::getIOIn(int line_index, bool& state)
+		{
+			return _camera->getIOIn(line_index, state);
 		}
 	}
 }
