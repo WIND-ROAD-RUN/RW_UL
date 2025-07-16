@@ -8,7 +8,7 @@ namespace rw
 	{
 		static std::unique_ptr<IModbusDevice> createKeRuiE(const ModbusDeviceName& type, const ModbusIConfig& config);
 
-		std::unique_ptr<IModbusDevice> ModbusDeviceFactory::createModelEngine(const ModbusDeviceName& type, const ModbusIConfig& config)
+		std::unique_ptr<IModbusDevice> ModbusDeviceFactory::createDevice(const ModbusDeviceName& type, const ModbusIConfig& config)
 		{
 			switch (type)
 			{

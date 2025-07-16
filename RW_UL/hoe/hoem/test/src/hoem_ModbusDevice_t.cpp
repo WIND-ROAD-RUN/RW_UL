@@ -13,7 +13,7 @@ namespace hoem_ModbusDevice
 		rw::hoem::ModbusIConfig config;
 		config.ip = "192.168.1.199";
 		config.port = 502;
-		auto deviceKeRuiE = rw::hoem::ModbusDeviceFactory::createModelEngine(rw::hoem::ModbusDeviceName::keRuiE, config);
+		auto deviceKeRuiE = rw::hoem::ModbusDeviceFactory::createDevice(rw::hoem::ModbusDeviceName::keRuiE, config);
 
 		auto connectResult = deviceKeRuiE->connect();
 		deviceKeRuiE->setOState(rw::hoem::ModbusO::Y01, true);
