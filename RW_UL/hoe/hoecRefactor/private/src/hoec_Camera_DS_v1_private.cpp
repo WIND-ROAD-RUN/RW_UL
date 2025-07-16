@@ -586,6 +586,110 @@ namespace rw
 			}
 		}
 
+		bool Camera_DS::setIOOut(int line_index, bool state)
+		{
+
+			if (!m_cameraHandle) {
+				return false;
+			}
+
+			// 基地址
+			uint baseAddr = 0x1100000;
+			uint offset = 0x840 << 2;
+
+			if (line_index==1)
+			{
+				offset= (0x840 ) << 2;
+
+			}
+			else if(line_index == 2)
+			{
+				offset = (0x841) << 2;
+			}
+			else if (line_index == 3)
+			{
+				offset = (0x842) << 2;
+			}
+			else if (line_index == 4)
+			{
+				offset = (0x843) << 2;
+			}
+			else if (line_index == 5)
+			{
+				offset = (0x844) << 2;
+			}
+			else if (line_index == 6)
+			{
+				offset = (0x845) << 2;
+			}
+			else if (line_index == 7)
+			{
+				offset = (0x846) << 2;
+			}
+
+			// 偏移量计算
+			uint addr = baseAddr + offset;
+
+			// 根据状态设置寄存器值
+			uint value = state ? 0x00000108 : 0x00000109;
+
+			// 写入寄存器
+			dvpStatus status = dvpWriteGenICamReg(m_cameraHandle, addr, value);
+
+			return status == DVP_STATUS_OK;
+
+		}
+
+		bool Camera_DS::getIOIn(int line_index, bool& state)
+		{
+			if (!m_cameraHandle) {
+				return false;
+			}
+
+			// 基地址
+			uint baseAddr = 0x1100000;
+			uint offset = 0x840 << 2;
+
+			// 根据 line_index 计算偏移量
+			if (line_index == 1) {
+				offset = (0x840) << 2;
+			}
+			else if (line_index == 2) {
+				offset = (0x841) << 2;
+			}
+			else if (line_index == 3) {
+				offset = (0x842) << 2;
+			}
+			else if (line_index == 4) {
+				offset = (0x843) << 2;
+			}
+			else if (line_index == 5) {
+				offset = (0x844) << 2;
+			}
+			else if (line_index == 6) {
+				offset = (0x845) << 2;
+			}
+			else if (line_index == 7) {
+				offset = (0x846) << 2;
+			}
+
+			// 偏移量计算
+			uint addr = baseAddr + offset;
+
+			// 读取寄存器值
+			uint value = 0;
+			dvpStatus status = dvpReadGenICamReg(m_cameraHandle, addr, &value);
+
+			if (status == DVP_STATUS_OK) {
+				// 根据读取的值判断状态
+				state = (value == 13); // 假设 0x00000108 表示状态为 1
+				return true;
+			}
+
+			return false;
+		}
+
+
 		Camera_DS_Active::Camera_DS_Active()
 		{
 		}

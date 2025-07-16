@@ -62,7 +62,7 @@ namespace rw {
 			void outTrigger();
 			void outTrigger(bool isOpen);
 		public:
-			//ÏßÕóÏà»úÓÃ
+			//çº¿é˜µç›¸æœºç”¨
 			bool setLineHeight(size_t number);
 			size_t getLineHeight(bool& isGet);
 			bool setFrameTriggered(bool state);
@@ -70,11 +70,15 @@ namespace rw {
 			bool setLineTriggered(bool state);
 			bool getLineTriggered(bool& isGet);
 		public:
-			//ÏßÕóÏà»ú¶îÍâÅäÖÃ
+			//çº¿é˜µç›¸æœºé¢å¤–é…ç½®
 			bool setPreDivider(size_t number);
 			bool setMultiplier(size_t number);
 			bool setPostDivider(size_t number);
 			bool getEncoderNumber(double& number);
+		public:
+			//DSä¸“ç”¨
+			bool setIOOut(int line_index, bool state);
+			bool getIOIn(int line_index, bool& state);
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};

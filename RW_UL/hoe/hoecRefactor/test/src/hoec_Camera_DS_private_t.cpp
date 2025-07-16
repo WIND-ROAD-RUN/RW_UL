@@ -40,6 +40,16 @@ namespace  hoec_Camera_DS
 
 			auto isStartMonitor = passive.startMonitor();
 			ASSERT_EQ(isStartMonitor, true);
+
+			/*passive.setIoOut(4, true);
+
+			 passive.setIoOut(5,true);*/
+			 bool state = false;
+			 passive.getIOIn(6, state);
+
+
+			ASSERT_EQ(isStartMonitor, true);
+
 			auto isStopMonitor = passive.stopMonitor();
 			ASSERT_EQ(isStartMonitor, true);
 		}
@@ -156,31 +166,4 @@ namespace  hoec_Camera_DS
 		}
 	}
 
-	/*TEST(hoec_Camera_MVS, CameraMVSActiveConstruct)
-	{
-		auto ipList = Camera_MVS::getCameraIpList();
-		if (ipList.empty())
-		{
-			return;
-		}
-
-		{
-			Camera_MVS_Active active;
-
-			ASSERT_EQ(Camera_MVS_Passive::_isIniSDK, true);
-
-			active.setIP(ipList[0]);
-			auto connectResult = active.connectCamera();
-			ASSERT_EQ(connectResult, true);
-
-			auto startMonitorResult = active.startMonitor();
-			ASSERT_EQ(startMonitorResult, true);
-
-			bool isget{ false };
-			auto image = active.getImage(isget);
-			ASSERT_EQ(isget, true);
-		}
-
-		ASSERT_EQ(Camera_MVS_Passive::_isIniSDK, false);
-	}*/
 }

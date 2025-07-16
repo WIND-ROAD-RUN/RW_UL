@@ -562,6 +562,16 @@ namespace rw
 			return 0;
 		}
 
+		bool Camera_MVS::setIOOut(int line_index, bool state)
+		{
+			return false;
+		}
+
+		bool Camera_MVS::getIOIn(int line_index, bool& state)
+		{
+			return false;
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

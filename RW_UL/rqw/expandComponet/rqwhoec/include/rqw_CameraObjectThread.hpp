@@ -17,9 +17,9 @@ namespace rw {
 			size_t cameraIndex{ 0 };
 		public:
 			explicit CameraPassiveThread(QObject* parent = nullptr);
-			CameraPassiveThread(const CameraPassiveThread&) = delete; // ¿½±´¹¹Ôìº¯Êı±»É¾³ı
-			CameraPassiveThread& operator=(const CameraPassiveThread&) = delete; // ¿½±´¸³ÖµÔËËã·û±»É¾³ı
-			// ÆäËû³ÉÔ±º¯ÊıºÍ±äÁ¿
+			CameraPassiveThread(const CameraPassiveThread&) = delete; // æ‹·è´æ„é€ å‡½æ•°è¢«åˆ é™¤
+			CameraPassiveThread& operator=(const CameraPassiveThread&) = delete; // æ‹·è´èµ‹å€¼è¿ç®—ç¬¦è¢«åˆ é™¤
+			// å…¶ä»–æˆå‘˜å‡½æ•°å’Œå˜é‡
 
 			~CameraPassiveThread() override;
 
@@ -52,7 +52,7 @@ namespace rw {
 			size_t getHeartbeatTime(bool& isGet) const;
 			float getFrameRate(bool& isGet) const;
 		public:
-			//ÏßÕóÏà»úÓÃ
+			//çº¿é˜µç›¸æœºç”¨
 			bool setLineHeight(size_t number) const;
 			size_t getLineHeight(bool& isGet) const;
 			bool setFrameTriggered(bool state);
@@ -60,11 +60,15 @@ namespace rw {
 			bool setLineTriggered(bool state);
 			bool getLineTriggered(bool& isGet);
 		public:
-			//ÏßÕóÏà»ú¶îÍâÅäÖÃ
+			//çº¿é˜µç›¸æœºé¢å¤–é…ç½®
 			bool setPreDivider(size_t number);
 			bool setMultiplier(size_t number);
 			bool setPostDivider(size_t number);
 			bool getEncoderNumber(double& number);
+		public:
+			//DSä¸“ç”¨
+			bool setIOOut(int line_index, bool state);
+			bool getIOIn(int line_index, bool& state);
 
 		signals:
 			void frameCaptured(cv::Mat frame, size_t index);

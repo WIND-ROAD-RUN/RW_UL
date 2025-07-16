@@ -61,6 +61,10 @@ namespace rw
 			virtual bool getEncoderNumber(double& number) = 0;
 			virtual bool setLineHeight(size_t number) = 0;
 			virtual size_t getLineHeight(bool& isGet) = 0;
+		public:
+			//DS
+			virtual bool setIOOut(int line_index, bool state) = 0;
+			virtual bool getIOIn(int line_index, bool& state) = 0;
 
 		public:
 			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
@@ -149,6 +153,8 @@ namespace rw
 			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
+			bool setIOOut(int line_index, bool state) override;
+			bool getIOIn(int line_index, bool& state) override;
 		};
 
 		class CameraPassive
@@ -206,6 +212,9 @@ namespace rw
 			bool getEncoderNumber(double& number) override;
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
+			bool setIOOut(int line_index, bool state) override;
+			bool getIOIn(int line_index, bool& state) override;
 		};
+
 	}
 }
