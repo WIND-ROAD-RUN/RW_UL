@@ -142,6 +142,35 @@ namespace rw
 		);
 	}
 
+	void ImagePainter::drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo, PainterConfig config)
+	{
+		if (rectInfo.mask_roi.empty())
+		{
+			return;
+		}
+
+		cv::Mat img_roi = image(rectInfo.roi);
+
+		cv::Mat color_mask(img_roi.size(), img_roi.type(), config.color);
+
+		cv::Mat mask;
+		cv::threshold(rectInfo.mask_roi, mask, config.thresh, config.maxVal, cv::THRESH_BINARY);
+		std::vector<cv::Mat> mask_channels(3, mask);
+		cv::Mat mask_3channel;
+		cv::merge(mask_channels, mask_3channel);
+
+
+		if (color_mask.type() != img_roi.type()) {
+			color_mask.convertTo(color_mask, img_roi.type());
+		}
+		if (mask_3channel.type() != img_roi.type()) {
+			mask_3channel.convertTo(mask_3channel, img_roi.type());
+		}
+
+		cv::addWeighted(img_roi, 1.0, color_mask.mul(mask_3channel), config.alpha, 0, img_roi);
+
+	}
+
 	void ImagePainter::drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config)
 	{
 		if (image.empty()) {
@@ -172,6 +201,60 @@ namespace rw
 		int thickness = config.thickness;
 
 		cv::line(image, cv::Point(0, position), cv::Point(image.cols - 1, position), lineColor, thickness);
+	}
+
+	DetectionRectangleInfo::DetectionRectangleInfo(const DetectionRectangleInfo& other)
+		: leftTop(other.leftTop), rightTop(other.rightTop), leftBottom(other.leftBottom), rightBottom(other.rightBottom),
+		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
+		classId(other.classId), score(other.score), mask_roi(other.mask_roi.clone()),roi(other.roi) {
+	}
+
+	DetectionRectangleInfo::DetectionRectangleInfo(DetectionRectangleInfo&& other) noexcept
+		: leftTop(std::move(other.leftTop)), rightTop(std::move(other.rightTop)), leftBottom(std::move(other.leftBottom)), rightBottom(std::move(other.rightBottom)),
+		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
+		classId(other.classId), score(other.score), mask_roi(std::move(other.mask_roi)),roi(std::move(other.roi)) {
+	}
+
+	DetectionRectangleInfo& DetectionRectangleInfo::operator=(const DetectionRectangleInfo& other)
+	{
+		if (this != &other)
+		{
+			leftTop = other.leftTop;
+			rightTop = other.rightTop;
+			leftBottom = other.leftBottom;
+			rightBottom = other.rightBottom;
+			center_x = other.center_x;
+			center_y = other.center_y;
+			width = other.width;
+			height = other.height;
+			area = other.area;
+			classId = other.classId;
+			score = other.score;
+			mask_roi = other.mask_roi.clone();
+			roi = other.roi;
+		}
+		return *this;
+	}
+
+	DetectionRectangleInfo& DetectionRectangleInfo::operator=(DetectionRectangleInfo&& other) noexcept
+	{
+		if (this != &other)
+		{
+			leftTop = std::move(other.leftTop);
+			rightTop = std::move(other.rightTop);
+			leftBottom = std::move(other.leftBottom);
+			rightBottom = std::move(other.rightBottom);
+			center_x = other.center_x;
+			center_y = other.center_y;
+			width = other.width;
+			height = other.height;
+			area = other.area;
+			classId = other.classId;
+			score = other.score;
+			mask_roi = std::move(other.mask_roi);
+			roi = other.roi;
+		}
+		return *this;
 	}
 
 	std::vector<rw::DetectionRectangleInfo>::const_iterator DetectionRectangleInfo::getMaxAreaRectangleIterator(

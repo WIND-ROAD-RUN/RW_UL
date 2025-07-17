@@ -45,7 +45,7 @@ namespace rw {
 		std::string modelPath;
 	public:
 		//The type of model engine.
-		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::Resize;
+		ImagePretreatmentPolicy imagePretreatmentPolicy = ImagePretreatmentPolicy::LetterBox;
 		//The color of the letterbox padding.
 		cv::Scalar letterBoxColor{ 0, 0, 0 };
 		//The color of the center crop padding.
@@ -59,7 +59,8 @@ namespace rw {
 		//Yolov11 Segmentation model
 		Yolov11_Seg,
 		//Yolov11 Oriented Bounding Box model
-		Yolov11_Obb
+		Yolov11_Obb,
+		Yolov11_Seg_with_mask,
 	};
 
 	inline const char* to_string(ModelType e)

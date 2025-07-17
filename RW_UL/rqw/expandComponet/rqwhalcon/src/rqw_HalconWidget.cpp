@@ -280,7 +280,15 @@ namespace rw {
             double windowAspectRatio = static_cast<double>(windowWidth) / windowHeight;
 
             // 设置 Halcon 窗口铺满整个 QWidget
-            SetWindowExtents(*_halconWindowHandle, 0, 0, windowWidth, windowHeight);
+            try
+            {
+                SetWindowExtents(*_halconWindowHandle, 0, 0, windowWidth, windowHeight);
+            }
+            catch (HalconCpp::HException & e)
+            {
+                return;
+            }
+            
 
             // 计算显示区域
             int partWidth, partHeight, offsetX, offsetY;
@@ -681,6 +689,11 @@ namespace rw {
             return id;
         }
 
+        bool HalconWidget::isLearning()
+        {
+			return _isLearning;
+        }
+
         void HalconWidget::clear_shapeModels()
         {
             for (const auto& id : _shapeModelIds)
@@ -719,6 +732,7 @@ namespace rw {
 
         std::vector<HalconWidgetTemplateResult> HalconWidget::findShapeModel(const HalconShapeId& id, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
         {
+            _isLearning = true;
             if (_halconObjects.empty())
             {
                 return  std::vector<HalconWidgetTemplateResult>();
@@ -735,9 +749,10 @@ namespace rw {
 
             for (auto& result : results)
             {
+                result.id = getVailidAppendId();
                 appendHObject(result);
             }
-
+            _isLearning = false;
             return results;
         }
 	}

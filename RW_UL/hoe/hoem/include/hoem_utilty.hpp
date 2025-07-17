@@ -24,6 +24,13 @@ namespace rw
 			LittleEndian  // 小端
 		};
 
+		struct ModbusIConfig
+		{
+		public:
+			std::string ip{};
+			int port{};
+		};
+
 		enum class ModbusI
 		{
 			X00=0,

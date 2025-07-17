@@ -3,6 +3,7 @@
 #include"imet_ModelEngine_yolov11_det.hpp"
 #include"imet_ModelEngine_yolov11_seg.hpp"
 #include"imet_ModelEngine_yolov11_obb.hpp"
+#include "imet_ModelEngine_yolov11_seg_with_mask.hpp"
 
 class Logger : public nvinfer1::ILogger {
 	void log(Severity severity, const char* msg) noexcept override {
@@ -14,6 +15,7 @@ namespace rw {
 		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg* createModelEngine_Yolov11_seg(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config);
+		static ModelEngine_Yolov11_seg_with_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config);
 
 		std::unique_ptr<ModelEngine>
 			ModelEngineFactory_TensorRT::createModelEngine
@@ -28,6 +30,8 @@ namespace rw {
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg(config));
 			case ModelType::Yolov11_Obb:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_obb(config));
+			case ModelType::Yolov11_Seg_with_mask:
+				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg_with_mask(config));
 			default:
 				return nullptr;
 			}
@@ -57,6 +61,16 @@ namespace rw {
 		ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config)
 		{
 			ModelEngine_Yolov11_obb* modelEngine = new ModelEngine_Yolov11_obb(config.modelPath, logger);
+			if (!modelEngine) {
+				return nullptr;
+			}
+			modelEngine->setConfig(config);
+			return modelEngine;
+		}
+
+		ModelEngine_Yolov11_seg_with_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config)
+		{
+			ModelEngine_Yolov11_seg_with_mask* modelEngine = new ModelEngine_Yolov11_seg_with_mask(config.modelPath, logger);
 			if (!modelEngine) {
 				return nullptr;
 			}

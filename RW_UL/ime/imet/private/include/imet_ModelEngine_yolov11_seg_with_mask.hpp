@@ -11,7 +11,7 @@
 
 namespace rw {
 	namespace imet {
-		class ModelEngine_Yolov11_seg_refactor
+		class ModelEngine_Yolov11_seg_with_mask
 			:public ModelEngine
 		{
 		private:
@@ -31,8 +31,8 @@ namespace rw {
 		private:
 			void init(const std::string& enginePath, nvinfer1::ILogger& logger);
 		public:
-			ModelEngine_Yolov11_seg_refactor(const std::string& modelPath, nvinfer1::ILogger& logger);
-			~ModelEngine_Yolov11_seg_refactor() override;
+			ModelEngine_Yolov11_seg_with_mask(const std::string& modelPath, nvinfer1::ILogger& logger);
+			~ModelEngine_Yolov11_seg_with_mask() override;
 		private:
 			std::vector<DetectionRectangleInfo> convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections);
 			std::vector<DetectionRectangleInfo> convertWhenResize(const std::vector<DetectionSeg>& detections);

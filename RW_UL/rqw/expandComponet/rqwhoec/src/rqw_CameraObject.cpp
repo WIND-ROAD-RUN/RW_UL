@@ -123,6 +123,42 @@ namespace rw
 			return _cameraPassive->getEncoderNumber(number);
 		}
 
+		bool CameraPassiveObject::setIOOut(int line_index, bool state)
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setIOOut(line_index, state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveObject::getIOIn(int line_index, bool& state)
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getIOIn(line_index, state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveObject::getIOOut(int line_index, bool& state)
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getIOOut(line_index, state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveObject::softwareTrigger()
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->softwareTrigger();
+			}
+			return false;
+		}
+
 		size_t CameraPassiveObject::getExposureTime(bool& isGet) const
 		{
 			return _cameraPassive->getExposureTime(isGet);

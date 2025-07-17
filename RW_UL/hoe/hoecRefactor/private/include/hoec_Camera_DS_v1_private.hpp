@@ -62,6 +62,12 @@ namespace rw
 			bool setLineHeight(size_t number) override;
 			size_t getLineHeight(bool& isGet) override;
 
+			bool setIOOut(int line_index,bool state) override;
+
+			bool getIOIn(int line_index, bool &state) override;
+			bool getIOOut(int line_index, bool& state) override;
+			bool softwareTrigger() override;
+
 		protected:
 			dvpHandle m_cameraHandle{};
 		protected:

@@ -8,7 +8,7 @@ else()
 endif()
 
 # TensorRT | Include: TensorRT_include | Lib: TensorRT_libs | Dll: TensorRT_dlls |Exe: TensorRT_exes |
-set(TensorRTPath ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary/TensorRT-10.9.0.34)
+set(TensorRTPath ${TensorFindPath})
 set(TensorRT_include ${TensorRTPath}/include)
 find_all_libs(${TensorRTPath}/lib TensorRT_libs)
 find_all_dlls(${TensorRTPath}/lib TensorRT_dlls)

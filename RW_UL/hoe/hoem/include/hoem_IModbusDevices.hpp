@@ -19,8 +19,6 @@ namespace rw {
 
             virtual bool isConnected() const = 0;
 
-            virtual bool setIState(ModbusI locate,bool state)=0;
-
 			virtual bool getIState(ModbusI locate) const = 0;
 
             virtual bool setOState(ModbusO locate, bool state)=0;
