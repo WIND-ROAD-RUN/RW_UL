@@ -13,36 +13,7 @@ void performRandomIO(rw::rqwm::ModbusDeviceThreadSafe& modbusDeviceThread, int t
 
     for (int i = 0; i < 3000; ++i) { // 每个线程执行 30 次操作
         int operation = dist(gen);
-        switch (operation) {
-        case 0:
-            std::cout << "Thread " << threadId << ": connect() -> "
-                << modbusDeviceThread.connect() << std::endl;
-            break;
-        case 1:
-            std::cout << "Thread " << threadId << ": disconnect() -> "
-                << modbusDeviceThread.disconnect() << std::endl;
-            break;
-        case 2:
-            std::cout << "Thread " << threadId << ": isConnected() -> "
-                << modbusDeviceThread.isConnected() << std::endl;
-            break;
-        case 3:
-            std::cout << "Thread " << threadId << ": setOState(Y03, true) -> "
-                << modbusDeviceThread.setOState(rw::rqwm::ModbusO::Y03, true) << std::endl;
-            break;
-        case 4:
-            std::cout << "Thread " << threadId << ": getOState(Y03) -> "
-                << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y03) << std::endl;
-            break;
-        case 5:
-            std::cout << "Thread " << threadId << ": setOState(Y03, true) -> "
-                << modbusDeviceThread.setOState(rw::rqwm::ModbusO::Y04, true) << std::endl;
-            break;
-        case 6:
-            std::cout << "Thread " << threadId << ": getOState(Y03) -> "
-                << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y04) << std::endl;
-            break;
-        }
+        std::cout << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y03) << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 模拟 I/O 操作的延迟
     }
 }
@@ -57,6 +28,8 @@ int main(int argc, char* argv[])
     config.port = 502;
     rw::rqwm::ModbusDeviceThreadSafe modbusDeviceThread(rw::rqwm::ModbusType::keRuiE, config);
 
+    modbusDeviceThread.connect();
+    modbusDeviceThread.setOState(rw::rqwm::ModbusO::Y03, true);
     // 创建 10 个线程
     std::vector<std::thread> threads;
     for (int i = 0; i < 10; ++i) {

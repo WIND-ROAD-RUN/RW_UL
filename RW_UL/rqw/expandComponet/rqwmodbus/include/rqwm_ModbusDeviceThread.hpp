@@ -24,7 +24,7 @@ namespace rw::rqwm {
 
     private:
         std::unique_ptr<ModbusDevice> _device;
-        mutable std::shared_mutex _mutex; 
+        mutable std::mutex _mutex; 
     };
 
 } // namespace rw::rqwm

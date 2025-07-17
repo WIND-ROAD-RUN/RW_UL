@@ -11,37 +11,37 @@ namespace rw::rqwm {
     }
 
     bool ModbusDeviceThreadSafe::connect() {
-        std::unique_lock lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->connect();
     }
 
     bool ModbusDeviceThreadSafe::disconnect() {
-        std::unique_lock lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->disconnect();
     }
 
     bool ModbusDeviceThreadSafe::reconnect() {
-        std::unique_lock lock(_mutex); 
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->reconnect();
     }
 
     bool ModbusDeviceThreadSafe::isConnected() const {
-        std::shared_lock lock(_mutex); 
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->isConnected();
     }
 
     bool ModbusDeviceThreadSafe::getIState(ModbusI locate) const {
-        std::shared_lock lock(_mutex); 
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->getIState(locate);
     }
 
     bool ModbusDeviceThreadSafe::setOState(ModbusO locate, bool state) {
-        std::unique_lock lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->setOState(locate, state);
     }
 
     bool ModbusDeviceThreadSafe::getOState(ModbusO locate) const {
-        std::shared_lock lock(_mutex); 
+        std::lock_guard<std::mutex> lock(_mutex);
         return _device->getOState(locate);
     }
 
