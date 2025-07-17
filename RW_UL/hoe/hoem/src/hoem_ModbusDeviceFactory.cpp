@@ -6,9 +6,9 @@ namespace rw
 {
 	namespace hoem
 	{
-		static std::unique_ptr<IModbusDevice> createKeRuiE(const ModbusDeviceName& type, const ModbusIConfig& config);
+		static std::unique_ptr<IModbusDevice> createKeRuiE(const ModbusDeviceName& type, const ModbusConfig& config);
 
-		std::unique_ptr<IModbusDevice> ModbusDeviceFactory::createDevice(const ModbusDeviceName& type, const ModbusIConfig& config)
+		std::unique_ptr<IModbusDevice> ModbusDeviceFactory::createDevice(const ModbusDeviceName& type, const ModbusConfig& config)
 		{
 			switch (type)
 			{
@@ -19,7 +19,7 @@ namespace rw
 			}
 		}
 
-		std::unique_ptr<IModbusDevice> createKeRuiE(const ModbusDeviceName& type, const ModbusIConfig& config)
+		std::unique_ptr<IModbusDevice> createKeRuiE(const ModbusDeviceName& type, const ModbusConfig& config)
 		{
 			auto device = new rw::hoem::ModbusDevice(config.ip, config.port, 0);
 			return std::make_unique<KeRuiE>(device);

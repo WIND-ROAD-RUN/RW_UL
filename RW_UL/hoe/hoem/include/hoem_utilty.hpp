@@ -24,7 +24,7 @@ namespace rw
 			LittleEndian  // 小端
 		};
 
-		struct ModbusIConfig
+		struct ModbusConfig
 		{
 		public:
 			std::string ip{};

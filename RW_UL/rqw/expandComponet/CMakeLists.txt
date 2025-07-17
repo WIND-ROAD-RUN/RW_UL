@@ -2,6 +2,7 @@ add_subdirectory(rqwm)
 add_subdirectory(rqwime)
 add_subdirectory(rqwhoec)
 add_subdirectory(rqwscc)
+add_subdirectory(rqwmodbus)
 
 if(WIN32)
     if(INSTALL_HALCON)

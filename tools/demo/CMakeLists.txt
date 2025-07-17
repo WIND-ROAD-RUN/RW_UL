@@ -48,6 +48,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE rqw
 	PRIVATE rqwime
 	PRIVATE rqwhalcon
+	PRIVATE rqwmodbus
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

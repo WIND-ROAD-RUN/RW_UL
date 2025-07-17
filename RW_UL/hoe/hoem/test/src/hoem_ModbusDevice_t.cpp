@@ -10,7 +10,7 @@ namespace hoem_ModbusDevice
 	TEST(ModbusDeviceTest, a)
 	{
 
-		rw::hoem::ModbusIConfig config;
+		rw::hoem::ModbusConfig config;
 		config.ip = "192.168.1.199";
 		config.port = 502;
 		auto deviceKeRuiE = rw::hoem::ModbusDeviceFactory::createDevice(rw::hoem::ModbusDeviceName::keRuiE, config);
