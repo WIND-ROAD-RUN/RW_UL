@@ -73,7 +73,6 @@ namespace rw
 			int result = modbus_read_registers(_modbusContext, startAddress + _baseAddress, quantity, reinterpret_cast<uint16_t*>(data.data()));
 			uint16_t number = static_cast<uint16_t>(data[0]);
 
-			std::cout << "number" << number << std::endl;
 			if (result < 0) {
 				return false;
 			}
