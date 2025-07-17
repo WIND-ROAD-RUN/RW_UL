@@ -542,7 +542,7 @@ QPushButton:pressed {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pbtn_cancel">
+                 <widget class="QPushButton" name="pbtn_shanchu">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                     <horstretch>0</horstretch>
@@ -554,9 +554,9 @@ QPushButton:pressed {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(162, 162, 162);
     color: #444;
-    font-size: 13px; 
+    font-size: 15px; 
 }
 
 QPushButton:hover {
@@ -570,7 +570,7 @@ QPushButton:pressed {
 }</string>
                   </property>
                   <property name="text">
-                   <string>Cancle</string>
+                   <string>←</string>
                   </property>
                  </widget>
                 </item>
@@ -1311,7 +1311,7 @@ QPushButton:pressed {
                </layout>
               </item>
               <item row="3" column="0">
-               <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="7,1,1,1,1">
+               <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="7,1,1,1,0">
                 <item>
                  <widget class="QPushButton" name="pbtn_kongge">
                   <property name="sizePolicy">
@@ -1445,7 +1445,7 @@ QPushButton:pressed {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pbtn_shanchu">
+                 <widget class="QPushButton" name="pbtn_cancel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                     <horstretch>0</horstretch>
@@ -1457,9 +1457,9 @@ QPushButton:pressed {
     padding: 6px 14px;
     border: 2px solid #CCC;
     border-radius: 4px;
-    background-color: rgb(162, 162, 162);
+    background-color: rgb(239, 239, 239);
     color: #444;
-    font-size: 15px; 
+    font-size: 13px; 
 }
 
 QPushButton:hover {
@@ -1473,7 +1473,7 @@ QPushButton:pressed {
 }</string>
                   </property>
                   <property name="text">
-                   <string>←</string>
+                   <string>Cancle</string>
                   </property>
                  </widget>
                 </item>
