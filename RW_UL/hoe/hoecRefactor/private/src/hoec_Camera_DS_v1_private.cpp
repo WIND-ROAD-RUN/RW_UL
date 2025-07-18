@@ -600,22 +600,31 @@ namespace rw
 				break;
 			case 2:
 				line = dvpLine::LINE_2;
+				break;
 			case 3:
 				line = dvpLine::LINE_3;
+				break;
 			case 4:
 				line = dvpLine::LINE_4;
+				break;
 			case 5:
 				line = dvpLine::LINE_5;
+				break;
 			case 6:
 				line = dvpLine::LINE_6;
+				break;
 			case 7:
 				line = dvpLine::LINE_7;
+				break;
 			case 8:
 				line = dvpLine::LINE_8;
+				break;
 			case 9:
 				line = dvpLine::LINE_9;
+				break;
 			case 10:
 				line = dvpLine::LINE_10;
+				break;
 			case 11:
 				line = dvpLine::LINE_11;
 				break;
@@ -640,22 +649,31 @@ namespace rw
 				break;
 			case 2:
 				line = dvpLine::LINE_2;
+				break;
 			case 3:
 				line = dvpLine::LINE_3;
+				break;
 			case 4:
 				line = dvpLine::LINE_4;
+				break;
 			case 5:
 				line = dvpLine::LINE_5;
+				break;
 			case 6:
 				line = dvpLine::LINE_6;
+				break;
 			case 7:
 				line = dvpLine::LINE_7;
+				break;
 			case 8:
 				line = dvpLine::LINE_8;
+				break;
 			case 9:
 				line = dvpLine::LINE_9;
+				break;
 			case 10:
 				line = dvpLine::LINE_10;
+				break;
 			case 11:
 				line = dvpLine::LINE_11;
 				break;
@@ -680,22 +698,31 @@ namespace rw
 				break;
 			case 2:
 				line = dvpLine::LINE_2;
+				break;
 			case 3:
 				line = dvpLine::LINE_3;
+				break;
 			case 4:
 				line = dvpLine::LINE_4;
+				break;
 			case 5:
 				line = dvpLine::LINE_5;
+				break;
 			case 6:
 				line = dvpLine::LINE_6;
+				break;
 			case 7:
 				line = dvpLine::LINE_7;
+				break;
 			case 8:
 				line = dvpLine::LINE_8;
+				break;
 			case 9:
 				line = dvpLine::LINE_9;
+				break;
 			case 10:
 				line = dvpLine::LINE_10;
+				break;
 			case 11:
 				line = dvpLine::LINE_11;
 				break;
