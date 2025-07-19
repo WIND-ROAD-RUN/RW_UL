@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
-
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeCahceIni.cmake)
+
+if(BUILD_WITH_CUDA)
+	project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
+else()
+	project(RW_UL VERSION 0.1 LANGUAGES CXX)
+endif()
 
 # 检查当前 CMakeLists 是否为根 CMakeLists
 #如果是根 CMakeLists，则设置不构建测试
