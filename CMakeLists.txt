@@ -21,6 +21,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator/cmake")
     include(SerializedCodeGenerator)
 
+	include(./cmake/CMakeCahceIni.cmake)
     include(./cmake/func.cmake)
     include(./cmake/EnvironmetIni.cmake)
 	include(./cmake/PackageFind.cmake)
