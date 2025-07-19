@@ -1,5 +1,10 @@
-add_subdirectory(hoec)
-add_subdirectory(hoecRefactor)
+if(BUILD_WITH_MVS)
+	if(BUILD_WITH_DS)
+		add_subdirectory(hoec)
+		add_subdirectory(hoecRefactor)
+	endif()
+endif()
+
 add_subdirectory(hoes)
 add_subdirectory(utilty)
 add_subdirectory(hoei)

@@ -1,5 +1,7 @@
-add_subdirectory(AutomaticAnnotation)
-add_subdirectory(ModelConverter)
+if(BUILD_WITH_CUDA)
+	add_subdirectory(AutomaticAnnotation)
+	add_subdirectory(ModelConverter)
+endif()
 
 if(CONFIG_TEST)
     add_subdirectory(demo)

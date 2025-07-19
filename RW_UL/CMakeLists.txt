@@ -1,4 +1,7 @@
-add_subdirectory(ime)
+if(BUILD_WITH_CUDA)
+	add_subdirectory(ime)
+endif()
+
 add_subdirectory(oso)
 add_subdirectory(hoe)
 add_subdirectory(dsl)

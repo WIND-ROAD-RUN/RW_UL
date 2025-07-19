@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RW_UL VERSION 0.1 LANGUAGES CXX CUDA)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeCahceIni.cmake)
+
 # 检查当前 CMakeLists 是否为根 CMakeLists
 #如果是根 CMakeLists，则设置不构建测试
 set(CONFIG_TEST false)
@@ -20,8 +22,6 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(SerializedCodeGeneratorCmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator/cmake")
     include(SerializedCodeGenerator)
-
-	include(./cmake/CMakeCahceIni.cmake)
     include(./cmake/func.cmake)
     include(./cmake/EnvironmetIni.cmake)
 	include(./cmake/PackageFind.cmake)
