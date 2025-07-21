@@ -25,8 +25,17 @@ namespace rw
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
-						painterConfig.text =
-							processTextPre + " : " + QString::number(item.score, 'f', 1);
+						if (config.isDisScoreText)
+						{
+							painterConfig.text =
+								processTextPre + " : " + QString::number(item.score, 'f', 1);
+						}
+						if (config.isDisAreaText)
+						{
+							painterConfig.text =
+								painterConfig.text + " , " + QString::number(item.area, 'f', 2);
+						}
+						
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
@@ -43,8 +52,16 @@ namespace rw
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
-						painterConfig.text =
-							processTextPre + " : " + QString::number(item.score, 'f', 1);
+						if (config.isDisScoreText)
+						{
+							painterConfig.text =
+								processTextPre + " : " + QString::number(item.score, 'f', 2);
+						}
+						if (config.isDisAreaText)
+						{
+							painterConfig.text =
+								painterConfig.text + " , " + QString::number(item.area, 'f', 1);
+						}
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
