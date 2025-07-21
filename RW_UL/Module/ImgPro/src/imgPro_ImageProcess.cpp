@@ -89,6 +89,33 @@ namespace rw
 			_context.runTextConfig.operatorTimeText = QString::number(_operatorTime)+" ms";
 			_context.runTextConfig.processImgTimeText = QString::number(_processImgTime) + " ms";
 
+			auto & errorRecs = _defectResultInfo.defects;
+
+			QVector<QString> errors;
+			for ( auto & pairs: errorRecs)
+			{
+				QString processTextPre = (_context.defectDrawCfg.classIdNameMap.find(pairs.first) != _context.defectDrawCfg.classIdNameMap.end()) ?
+					_context.defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
+				auto currentIdCfg = _context.eliminationCfg[pairs.first];
+				for (const auto& item : pairs.second)
+				{
+					if (currentIdCfg.isUsingArea)
+					{
+						errors.push_back(processTextPre + " : " +
+							QString::number(item.area, 'f', 1)+ " "+ 
+							QString::number(currentIdCfg.areaRange.first, 'f', 1)+" ~ " + 
+							QString::number(currentIdCfg.areaRange.second, 'f', 1));
+					}
+					if (currentIdCfg.isUsingScore)
+					{
+						errors.push_back(processTextPre + " : " +
+							QString::number(item.score, 'f', 1) + " " +
+							QString::number(currentIdCfg.scoreRange.first, 'f', 1) + " ~ " +
+							QString::number(currentIdCfg.scoreRange.second, 'f', 1));
+					}
+				}
+			}
+			_context.runTextConfig.extraTexts = errors;
 			rw::imgPro::DefectDrawFunc::drawRunText(img, _context.runTextConfig);
 
 			return img;
