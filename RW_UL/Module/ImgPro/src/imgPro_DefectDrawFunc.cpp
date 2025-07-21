@@ -21,7 +21,8 @@ namespace rw
 					rw::rqw::ImagePainter::PainterConfig painterConfig;
 					painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 					painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-					painterConfig.text= config.classIdNameMap.find(pairs.first) ?
+					painterConfig.text =
+						(config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
@@ -37,7 +38,8 @@ namespace rw
 					rw::rqw::ImagePainter::PainterConfig painterConfig;
 					painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
 					painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-					painterConfig.text = config.classIdNameMap.find(pairs.first) ?
+					painterConfig.text =
+						(config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
