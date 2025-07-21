@@ -51,7 +51,6 @@ namespace rw
 				//如果为false，则score范围内的物体会被剔除
 				//如果为true，则score范围内的物体会被保留
 				bool scoreIsUsingComplementarySet{ false };
-				bool scoreIsUsingComplementarySetForBad{ false };
 
 				ScoreRange scoreRange{ negativeInfinity, positiveInfinity };//置信度范围，设置时应为正值
 

@@ -16,16 +16,17 @@ namespace rw
 
 			if (config.isDrawDefects)
 			{
+				rw::rqw::ImagePainter::PainterConfig painterConfig;
+				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 				for (const auto& pairs : info.defects)
 				{
-					rw::rqw::ImagePainter::PainterConfig painterConfig;
-					painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-					painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-					painterConfig.text =
-						(config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
+					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
+						painterConfig.text =
+							processTextPre + " : " + QString::number(item.score, 'f', 1);
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
@@ -33,16 +34,17 @@ namespace rw
 
 			if (config.isDrawDisableDefects)
 			{
+				rw::rqw::ImagePainter::PainterConfig painterConfig;
+				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
 				for (const auto& pairs : info.disableDefects)
 				{
-					rw::rqw::ImagePainter::PainterConfig painterConfig;
-					painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-					painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-					painterConfig.text =
-						(config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
+					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
 						config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 					for (const auto& item : pairs.second)
 					{
+						painterConfig.text =
+							processTextPre + " : " + QString::number(item.score, 'f', 1);
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
