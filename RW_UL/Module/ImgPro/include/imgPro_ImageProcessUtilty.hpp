@@ -16,6 +16,7 @@ namespace rw
 		using ProcessResultIndex = size_t;
 		using ProcessResultIndexMap = std::unordered_map<ClassId, std::set<ProcessResultIndex>>;
 		using ClassIdName = QString;
+		using RunTime = unsigned long long;
 
 	}
 }

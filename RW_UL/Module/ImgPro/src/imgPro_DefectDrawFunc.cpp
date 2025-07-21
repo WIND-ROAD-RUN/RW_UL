@@ -68,5 +68,36 @@ namespace rw
 			}
 
 		}
+
+		void DefectDrawFunc::drawRunText(QImage& img, const RunTextConfig& config)
+		{
+			QVector<QString> textList;
+			std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
+			rw::rqw::ImagePainter::PainterConfig painterConfig;
+			painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+			if (config.isDisOperatorTime)
+			{
+				configList.push_back(painterConfig);
+				textList.push_back(config.operatorTimeText);
+			}
+			if (config.isDisProcessImgTime)
+			{
+				configList.push_back(painterConfig);
+				textList.push_back(config.processImgTimeText);
+			}
+
+
+			if (config.isDrawExtraText)
+			{
+				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+				configList.push_back(painterConfig);
+				for (const auto& item : config.extraTexts)
+				{
+					textList.push_back(item);
+				}
+			}
+
+			rw::rqw::ImagePainter::drawTextOnImage(img, textList, configList);
+		}
 	}
 }

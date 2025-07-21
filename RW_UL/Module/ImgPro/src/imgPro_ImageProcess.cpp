@@ -3,6 +3,8 @@
 #include "imgPro_IndexFunc.hpp"
 #include "rqw_CameraObjectCore.hpp"
 
+#include <chrono> 
+
 namespace rw
 {
 	namespace imgPro
@@ -27,7 +29,15 @@ namespace rw
 			if (!_engine) {
 				throw std::runtime_error("Model engine is not initialized.");
 			}
+
+			auto start = std::chrono::high_resolution_clock::now();
+
 			auto processResult = _engine->processImg(mat);
+
+			auto end = std::chrono::high_resolution_clock::now();
+
+			_processImgTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
 			_processResult = processResult;
 			return _processResult;
 		}
@@ -58,16 +68,29 @@ namespace rw
 
 		void ImageProcess::operator()(const cv::Mat& mat)
 		{
+
+			auto start = std::chrono::high_resolution_clock::now();
+
 			processImg(mat);
 			getIndex(_processResult);
 			getEliminationInfo(_processResult, _processResultIndexMap, _context.eliminationCfg);
 			getDefectResultInfo(_eliminationInfo, _context.defectCfg);
+
+			auto end = std::chrono::high_resolution_clock::now();
+
+			_operatorTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		}
 
-		QImage ImageProcess::getMaskImg(const cv::Mat& mat) const
+		QImage ImageProcess::getMaskImg(const cv::Mat& mat)
 		{
 			auto img = rw::rqw::cvMatToQImage(mat);
 			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, _defectResultInfo, _processResult, _context.defectDrawCfg);
+
+			_context.runTextConfig.operatorTimeText = QString::number(_operatorTime)+" ms";
+			_context.runTextConfig.processImgTimeText = QString::number(_processImgTime) + " ms";
+
+			rw::imgPro::DefectDrawFunc::drawRunText(img, _context.runTextConfig);
+
 			return img;
 		}
 	}

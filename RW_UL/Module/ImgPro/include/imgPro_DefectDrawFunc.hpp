@@ -22,9 +22,22 @@ namespace rw
 				bool isDisScoreText{true};
 				bool isDisAreaText{ true };
 			};
+
+			struct RunTextConfig
+			{
+			public:
+				bool isDrawExtraText{ true };
+				QVector<QString> extraTexts{};
+			public:
+				bool isDisProcessImgTime{ true };
+				QString processImgTimeText{};
+			public:
+				bool isDisOperatorTime{ true };
+				QString operatorTimeText{};
+			};
 		public:
 			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const DefectDrawConfig& config);
-
+			static void drawRunText(QImage& img,const RunTextConfig & config);
 		};
 	}
 }

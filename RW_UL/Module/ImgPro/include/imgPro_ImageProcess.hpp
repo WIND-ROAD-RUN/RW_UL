@@ -14,9 +14,10 @@ namespace rw
 		struct ImageProcessContext
 		{
 		public:
-			EliminationInfoFunc::ClassIdWithConfigMap eliminationCfg;
-			DefectResultInfoFunc::ClassIdWithConfigMap defectCfg;
-			DefectDrawFunc::DefectDrawConfig defectDrawCfg;
+			EliminationInfoFunc::ClassIdWithConfigMap eliminationCfg{};
+			DefectResultInfoFunc::ClassIdWithConfigMap defectCfg{};
+			DefectDrawFunc::DefectDrawConfig defectDrawCfg{};
+			DefectDrawFunc::RunTextConfig runTextConfig{};
 		};
 
 		class ImageProcess
@@ -35,6 +36,9 @@ namespace rw
 			std::unique_ptr<rw::ModelEngine> _engine = nullptr;
 		public:
 			std::unique_ptr<rw::ModelEngine>& getModelEngine();
+		private:
+			RunTime _processImgTime{};
+			RunTime _operatorTime{};
 		public:
 			ProcessResult processImg(const cv::Mat & mat);
 			ProcessResultIndexMap getIndex(const ProcessResult & processResult);
@@ -42,7 +46,7 @@ namespace rw
 			DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs);
 		public:
 			void operator()(const cv::Mat& mat);
-			QImage getMaskImg(const cv::Mat& mat) const;
+			QImage getMaskImg(const cv::Mat& mat);
 		private:
 			ProcessResultIndexMap _processResultIndexMap{};
 			ProcessResult _processResult{};
