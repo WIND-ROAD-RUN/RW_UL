@@ -1,9 +1,11 @@
 #pragma once
 
 #include <any>
+#include <QString>
 
 #include"ime_utilty.hpp"
 #include <unordered_map>
+
 
 namespace rw
 {
@@ -13,6 +15,7 @@ namespace rw
 		using ProcessResult = std::vector<rw::DetectionRectangleInfo>;
 		using ProcessResultIndex = size_t;
 		using ProcessResultIndexMap = std::unordered_map<ClassId, std::set<ProcessResultIndex>>;
+		using ClassIdName = QString;
 
 	}
 }
