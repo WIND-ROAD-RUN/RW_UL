@@ -1,0 +1,65 @@
+#pragma once
+
+#include"imgPro_ImageProcessUtilty.hpp"
+
+namespace rw
+{
+	namespace imgPro
+	{
+		struct EliminationItem
+		{
+			double score = 0;//置信度
+			double area = 0;//面积
+			ClassId index = -1;//类别索引
+			bool isBad = false;//满足剔除条件
+			std::unordered_map<std::string, std::any> customFields;//自定义字段
+		};
+
+		struct EliminationInfo
+		{
+			std::unordered_map<ClassId, std::vector<EliminationItem>> defectItems;
+
+		};
+
+		struct EliminationInfoFunc
+		{
+		public:
+			struct EliminationInfoGetConfig
+			{
+			public:
+				using MinArea = double;
+				using MaxArea = double;
+				using AreaRange = std::pair<MinArea, MaxArea>;
+				using MinScore = double;
+				using MaxScore = double;
+				using ScoreRange = std::pair<MinScore, MaxScore>;
+				static constexpr double negativeInfinity = -1;
+				static constexpr double positiveInfinity = -1;
+			public:
+				bool isUsingArea = true;
+				bool isUsingScore = true;
+			public:
+				//被剔除的项isBad设置为会被设置true
+
+				double areaFactor{ 1 };//面积系数,可用于缩放面积
+				double scoreFactor{ 1 };//置信度系数,可用于缩放置信度，用于百分制，还是万分制
+				AreaRange areaRange{ negativeInfinity, positiveInfinity };//面积范围,设置时应为正值
+				//如果为true，则area范围内的物体会被剔除
+				//如果为false，则area范围内的物体会被保留
+				//面积范围是否使用补集
+				bool areaIsUsingComplementarySet{ false };
+				//如果为false，则score范围内的物体会被剔除
+				//如果为true，则score范围内的物体会被保留
+				bool scoreIsUsingComplementarySet{ false };
+				bool scoreIsUsingComplementarySetForBad{ false };
+
+				ScoreRange scoreRange{ negativeInfinity, positiveInfinity };//置信度范围，设置时应为正值
+
+
+			};
+			using ClassIdWithConfigMap = std::unordered_map<ClassId, EliminationInfoGetConfig>;
+		public:
+			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config);
+		};
+	}
+}
