@@ -1,13 +1,2 @@
-if(BUILD_WITH_CUDA)
-	add_subdirectory(ime)
-endif()
-
-add_subdirectory(oso)
-add_subdirectory(hoe)
-add_subdirectory(dsl)
-add_subdirectory(utilty)
-add_subdirectory(rqw)
-add_subdirectory(scc)
-add_subdirectory(cla)
-
-
+add_subdirectory(fundation)
+add_subdirectory(Module)
