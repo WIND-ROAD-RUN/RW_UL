@@ -7,6 +7,8 @@
 
 #include<QImage>
 
+#include "imgPro_ImagePainter.hpp"
+
 
 namespace rw
 {
@@ -26,13 +28,15 @@ namespace rw
 				bool isDisScoreText{true};
 				bool isDisAreaText{ true };
 			public:
-				std::unordered_map<ClassId, rw::rqw::RQWColor> classIdWithColorWhichIsGood;
-				std::unordered_map<ClassId, rw::rqw::RQWColor> classIdWithColorWhichIsBad;
+				std::unordered_map<ClassId, Color> classIdWithColorWhichIsGood;
+				std::unordered_map<ClassId, Color> classIdWithColorWhichIsBad;
 			public:
-				void setAllIdsWithSameColor(const std::vector<ClassId>& ids,rw::rqw::RQWColor color,bool isGood);
+				void setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color,bool isGood);
 			public:
 				int fontSize{ 30 };
 				int thickness{3};
+			public:
+				ConfigDrawRect::TextLocate textLocate{ ConfigDrawRect::TextLocate::LeftTopOut };
 			};
 
 			struct RunTextConfig
@@ -40,15 +44,15 @@ namespace rw
 			public:
 				bool isDrawExtraText{ true };
 				QVector<QString> extraTexts{};
-				rw::rqw::RQWColor extraTextColor{ rw::rqw::RQWColor::Red };
+				Color extraTextColor{ Color::Red };
 			public:
 				bool isDisProcessImgTime{ true };
 				QString processImgTimeText{};
-				rw::rqw::RQWColor processImgTimeTextColor{ rw::rqw::RQWColor::Blue };
+				Color processImgTimeTextColor{ Color::Blue };
 			public:
 				bool isDisOperatorTime{ true };
 				QString operatorTimeText{};
-				rw::rqw::RQWColor operatorTimeTextColor{ rw::rqw::RQWColor::Green };
+				Color operatorTimeTextColor{ Color::Green };
 			public:
 				double runTextProportion = 0.06;
 			};

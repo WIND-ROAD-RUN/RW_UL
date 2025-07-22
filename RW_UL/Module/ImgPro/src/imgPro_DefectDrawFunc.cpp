@@ -1,13 +1,13 @@
 #include"imgPro_DefectDrawFunc.hpp"
 
 #include "imgPro_DefectResultInfoFunc.hpp"
-#include "rqw_ImagePainter.h"
+#include"imgPro_ImagePainter.hpp"
 
 namespace rw
 {
 	namespace imgPro
 	{
-		void DefectDrawFunc::DefectDrawConfig::setAllIdsWithSameColor(const std::vector<ClassId>& ids, rw::rqw::RQWColor color,
+		void DefectDrawFunc::DefectDrawConfig::setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color,
 			bool isGood)
 		{
 			for (const auto& id : ids)
@@ -30,13 +30,14 @@ namespace rw
 				return; // 无效图像或结果
 			}
 
+			rw::imgPro::ConfigDrawRect painterConfig;
+			painterConfig.fontSize = config.fontSize;
+			painterConfig.thickness = config.thickness;
+			painterConfig.textLocate = config.textLocate;
 			if (config.isDrawDefects)
 			{
-				rw::rqw::ImagePainter::PainterConfig painterConfig;
-				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
-				painterConfig.fontSize = config.fontSize;
-				painterConfig.thickness = config.thickness;
+				painterConfig.rectColor = Color::Red;
+				painterConfig.textColor = Color::Red;
 				for (const auto& pairs : info.defects)
 				{
 					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
@@ -57,23 +58,20 @@ namespace rw
 						auto findColor = config.classIdWithColorWhichIsBad.find(pairs.first);
 						if (findColor!= config.classIdWithColorWhichIsBad.end())
 						{
-							auto color = rqw::RQWColorToQColor(findColor->second);
-							painterConfig.color = color;
-							painterConfig.textColor = color;
+							painterConfig.rectColor = findColor->second;
+							painterConfig.textColor = findColor->second;
 						}
 						
-						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
+						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
 			}
 
 			if (config.isDrawDisableDefects)
 			{
-				rw::rqw::ImagePainter::PainterConfig painterConfig;
-				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
-				painterConfig.fontSize = config.fontSize;
-				painterConfig.thickness = config.thickness;
+				painterConfig.rectColor = Color::Green;
+				painterConfig.textColor = Color::Green;
+
 				for (const auto& pairs : info.disableDefects)
 				{
 					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
@@ -94,12 +92,11 @@ namespace rw
 						auto findColor = config.classIdWithColorWhichIsGood.find(pairs.first);
 						if (findColor != config.classIdWithColorWhichIsGood.end())
 						{
-							auto color = rqw::RQWColorToQColor(findColor->second);
-							painterConfig.color = color;
-							painterConfig.textColor = color;
+							painterConfig.rectColor = findColor->second;
+							painterConfig.textColor = findColor->second;
 						}
 
-						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
+						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
 			}
@@ -109,33 +106,32 @@ namespace rw
 		void DefectDrawFunc::drawRunText(QImage& img, const RunTextConfig& config)
 		{
 			QVector<QString> textList;
-			std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
-			rw::rqw::ImagePainter::PainterConfig painterConfig;
-			painterConfig.textColor = rqw::RQWColorToQColor(config.operatorTimeTextColor);
+			std::vector<Color> configList;
+			auto textColor = config.operatorTimeTextColor;
 			if (config.isDisOperatorTime)
 			{
-				configList.push_back(painterConfig);
+				configList.push_back(textColor);
 				textList.push_back(config.operatorTimeText);
 			}
-			painterConfig.textColor =rqw::RQWColorToQColor(config.processImgTimeTextColor);
+			textColor =config.processImgTimeTextColor;
 			if (config.isDisProcessImgTime)
 			{
-				configList.push_back(painterConfig);
+				configList.push_back(textColor);
 				textList.push_back(config.processImgTimeText);
 			}
 
 
 			if (config.isDrawExtraText)
 			{
-				painterConfig.textColor = rqw::RQWColorToQColor(config.extraTextColor);
-				configList.push_back(painterConfig);
+				textColor = config.extraTextColor;
+				configList.push_back(textColor);
 				for (const auto& item : config.extraTexts)
 				{
 					textList.push_back(item);
 				}
 			}
 
-			rw::rqw::ImagePainter::drawTextOnImage(img, textList, configList,config.runTextProportion);
+			rw::imgPro::ImagePainter::drawTextOnImage(img, textList, configList,config.runTextProportion);
 		}
 	}
 }

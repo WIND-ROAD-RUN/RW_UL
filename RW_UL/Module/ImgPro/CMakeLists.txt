@@ -25,7 +25,6 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt6::Core Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
-	PUBLIC rqwime
 	PUBLIC ime
 	PUBLIC rqwutilty
 )
