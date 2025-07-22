@@ -35,6 +35,8 @@ namespace rw
 				rw::rqw::ImagePainter::PainterConfig painterConfig;
 				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
 				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+				painterConfig.fontSize = config.fontSize;
+				painterConfig.thickness = config.thickness;
 				for (const auto& pairs : info.defects)
 				{
 					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
@@ -70,6 +72,8 @@ namespace rw
 				rw::rqw::ImagePainter::PainterConfig painterConfig;
 				painterConfig.color = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
 				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+				painterConfig.fontSize = config.fontSize;
+				painterConfig.thickness = config.thickness;
 				for (const auto& pairs : info.disableDefects)
 				{
 					QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?

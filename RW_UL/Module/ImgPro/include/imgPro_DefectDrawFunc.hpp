@@ -30,6 +30,9 @@ namespace rw
 				std::unordered_map<ClassId, rw::rqw::RQWColor> classIdWithColorWhichIsBad;
 			public:
 				void setAllIdsWithSameColor(const std::vector<ClassId>& ids,rw::rqw::RQWColor color,bool isGood);
+			public:
+				int fontSize{ 30 };
+				int thickness{3};
 			};
 
 			struct RunTextConfig
