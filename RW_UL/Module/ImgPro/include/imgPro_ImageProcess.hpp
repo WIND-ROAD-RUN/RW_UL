@@ -20,6 +20,7 @@ namespace rw
 			DefectDrawFunc::DefectDrawConfig defectDrawCfg{};
 			DefectDrawFunc::RunTextConfig runTextConfig{};
 			IndexGetContext indexGetContext{};
+			EliminationInfoGetContext eliminationInfoGetContext{};
 		};
 
 		class ImageProcess

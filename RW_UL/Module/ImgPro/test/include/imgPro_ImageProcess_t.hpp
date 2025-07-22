@@ -16,6 +16,7 @@ protected:
 		createImgPro();
 		iniGetIndexContext();
 		iniEliminationInfoGetConfig();
+		iniEliminationContext();
 		iniDefectResultGetConfig();
 		iniDefectDrawConfig();
 	}
@@ -26,6 +27,34 @@ protected:
 		engine = rw::ModelEngineFactory::createModelEngine(
 			config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
+	}
+
+	void iniEliminationContext()
+	{
+		auto& context = imgProcess->getContext();
+		//context.indexGetContext.removeIndicesIf = [](rw::imgPro::ClassId classId, rw::imgPro::ProcessResultIndex index) {
+		//	return classId == 1;
+		//	};
+
+
+		context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator = [this](rw::imgPro::EliminationItem& item,
+			const rw::DetectionRectangleInfo& info,
+			const rw::imgPro::EliminationInfoGetConfig& cfg) {
+				item.customFields["location"] = 180;
+				item.customFields["descrption"] = "asdwa";
+				item.customFields["cout"] = 18.5f;
+				auto c = item.customFields["cout"];
+			if (c.has_value())
+			{
+				const auto& coutValue = std::any_cast<float>(c);
+			}
+			
+			if (info.width>10000)
+			{
+				item.isBad = true;
+			}
+
+			};
 	}
 
 	void iniGetIndexContext(){
@@ -43,12 +72,12 @@ protected:
 	void iniEliminationInfoGetConfig()
 	{
 		auto& context = imgProcess->getContext();
-		rw::imgPro::EliminationInfoFunc::EliminationInfoGetConfig eliminationInfoGetConfig;
+		rw::imgPro::EliminationInfoGetConfig eliminationInfoGetConfig;
 		eliminationInfoGetConfig.areaFactor = 0.00157;
 		eliminationInfoGetConfig.scoreFactor = 100;
 		eliminationInfoGetConfig.isUsingArea = false;
 		eliminationInfoGetConfig.isUsingScore = true;
-		eliminationInfoGetConfig.scoreRange = { 0,50 };
+		eliminationInfoGetConfig.scoreRange = { 0,100 };
 		eliminationInfoGetConfig.scoreIsUsingComplementarySet = false;
 		eliminationInfoGetConfigs[0] = eliminationInfoGetConfig;
 		eliminationInfoGetConfigs[1] = eliminationInfoGetConfig;

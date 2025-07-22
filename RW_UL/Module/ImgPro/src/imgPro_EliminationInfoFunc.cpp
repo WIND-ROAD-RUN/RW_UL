@@ -7,6 +7,14 @@ namespace rw
 		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
 			const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config)
 		{
+			
+			return getEliminationInfo(info, index, config, GetEliminationItemSpecialOperate{});
+		}
+
+		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
+			const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
+			const GetEliminationItemSpecialOperate& specialPrepare)
+		{
 			EliminationInfo result;
 
 			for (const auto& kv : index)
@@ -66,6 +74,11 @@ namespace rw
 					item.area = area;
 					item.index = idx;
 					item.isBad = isBad;
+
+					if (specialPrepare)
+					{
+						specialPrepare(item, det, cfg);
+					}
 
 					items.push_back(std::move(item));
 				}

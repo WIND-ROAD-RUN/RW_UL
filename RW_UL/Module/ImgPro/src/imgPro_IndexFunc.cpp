@@ -17,7 +17,7 @@ namespace rw
 		}
 
 		std::vector<ProcessResultIndex> IndexFunc::removeIndicesIf(ProcessResultIndexMap& indexMap,
-			const std::function<bool(ClassId, ProcessResultIndex)>& predicate)
+			const RemoveIndicesIf& predicate)
 		{
 			std::vector<ProcessResultIndex> removed;
 			for (auto& kv : indexMap)
@@ -41,7 +41,7 @@ namespace rw
 
 		std::vector<ProcessResultIndex> IndexFunc::removeIndicesIfByInfo(ProcessResultIndexMap& indexMap,
 			const ProcessResult& info,
-			const std::function<bool(const rw::DetectionRectangleInfo&)>& predicate)
+			const RemoveIndicesIfByInfo& predicate)
 		{
 			std::vector<ProcessResultIndex> removed;
 			for (auto& kv : indexMap)

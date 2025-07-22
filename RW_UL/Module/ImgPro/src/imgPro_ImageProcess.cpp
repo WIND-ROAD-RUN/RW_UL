@@ -50,11 +50,15 @@ namespace rw
 
 			if (indexGetContext.removeIndicesIf)
 			{
-				indexGetContext.removedIndices=rw::imgPro::IndexFunc::removeIndicesIf(indexMap, indexGetContext.removeIndicesIf);
+				indexGetContext.removedIndices=
+					rw::imgPro::IndexFunc::removeIndicesIf(
+						indexMap, indexGetContext.removeIndicesIf);
 			}
 			if (indexGetContext.removeIndicesIfByInfo)
 			{
-				indexGetContext.removedIndicesByInfo = rw::imgPro::IndexFunc::removeIndicesIfByInfo(indexMap,_processResult,indexGetContext.removeIndicesIfByInfo);
+				indexGetContext.removedIndicesByInfo = 
+					rw::imgPro::IndexFunc::removeIndicesIfByInfo(
+						indexMap,_processResult,indexGetContext.removeIndicesIfByInfo);
 			}
 
 			_processResultIndexMap = indexMap;
@@ -65,7 +69,9 @@ namespace rw
 			const ProcessResultIndexMap& indexMap,
 			const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs)
 		{
-			auto eliminationInfo = rw::imgPro::EliminationInfoFunc::getEliminationInfo(processResult, indexMap, configs);
+			auto eliminationInfo =
+				rw::imgPro::EliminationInfoFunc::getEliminationInfo(
+					processResult, indexMap, configs, _context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator);
 			_eliminationInfo = eliminationInfo;
 			return _eliminationInfo;
 		}
