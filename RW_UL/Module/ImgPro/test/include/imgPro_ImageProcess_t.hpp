@@ -14,6 +14,7 @@ class ImageProcessTest : public ::testing::Test {
 protected:
 	void SetUp() override {
 		createImgPro();
+		iniGetIndexContext();
 		iniEliminationInfoGetConfig();
 		iniDefectResultGetConfig();
 		iniDefectDrawConfig();
@@ -26,6 +27,19 @@ protected:
 			config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
 	}
+
+	void iniGetIndexContext(){
+		auto& context = imgProcess->getContext();
+		//context.indexGetContext.removeIndicesIf = [](rw::imgPro::ClassId classId, rw::imgPro::ProcessResultIndex index) {
+		//	return classId == 1;
+		//	};
+
+
+		context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info) {
+			return false;
+			};
+	}
+
 	void iniEliminationInfoGetConfig()
 	{
 		auto& context = imgProcess->getContext();
@@ -78,6 +92,8 @@ protected:
 		context.runTextConfig.isDisProcessImgTime = true;
 	}
 public:
+	int left = 100;
+	int right = 300;
 	rw::ModelEngineConfig config;
 	std::unique_ptr<rw::ModelEngine> engine;
 	std::unique_ptr<rw::imgPro::ImageProcess> imgProcess;

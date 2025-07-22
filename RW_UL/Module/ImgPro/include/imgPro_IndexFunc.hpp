@@ -6,6 +6,16 @@ namespace rw
 {
 	namespace imgPro
 	{
+		struct IndexGetContext
+		{
+		public:
+			std::function<bool(const rw::DetectionRectangleInfo&)> removeIndicesIfByInfo;
+			std::function<bool(ClassId, ProcessResultIndex)>  removeIndicesIf;
+		public:
+			std::vector<ProcessResultIndex> removedIndices;
+			std::vector<ProcessResultIndex> removedIndicesByInfo;
+		};
+
 		struct IndexFunc
 		{
 			static ProcessResultIndexMap getIndex(const ProcessResult& info);

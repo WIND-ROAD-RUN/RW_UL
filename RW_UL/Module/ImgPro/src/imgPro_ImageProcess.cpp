@@ -45,6 +45,18 @@ namespace rw
 		ProcessResultIndexMap ImageProcess::getIndex(const ProcessResult& processResult)
 		{
 			auto indexMap = rw::imgPro::IndexFunc::getIndex(processResult);
+
+			auto& indexGetContext = _context.indexGetContext;
+
+			if (indexGetContext.removeIndicesIf)
+			{
+				indexGetContext.removedIndices=rw::imgPro::IndexFunc::removeIndicesIf(indexMap, indexGetContext.removeIndicesIf);
+			}
+			if (indexGetContext.removeIndicesIfByInfo)
+			{
+				indexGetContext.removedIndicesByInfo = rw::imgPro::IndexFunc::removeIndicesIfByInfo(indexMap,_processResult,indexGetContext.removeIndicesIfByInfo);
+			}
+
 			_processResultIndexMap = indexMap;
 			return _processResultIndexMap;
 		}

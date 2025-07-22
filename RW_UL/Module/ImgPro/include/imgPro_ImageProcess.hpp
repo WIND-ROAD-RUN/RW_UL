@@ -4,6 +4,7 @@
 #include "imgPro_DefectDrawFunc.hpp"
 #include "imgPro_DefectResultInfoFunc.hpp"
 #include "imgPro_EliminationInfoFunc.hpp"
+#include "imgPro_IndexFunc.hpp"
 
 namespace rw
 {
@@ -18,6 +19,7 @@ namespace rw
 			DefectResultInfoFunc::ClassIdWithConfigMap defectCfg{};
 			DefectDrawFunc::DefectDrawConfig defectDrawCfg{};
 			DefectDrawFunc::RunTextConfig runTextConfig{};
+			IndexGetContext indexGetContext{};
 		};
 
 		class ImageProcess
