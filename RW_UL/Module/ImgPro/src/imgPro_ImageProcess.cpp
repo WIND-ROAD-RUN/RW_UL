@@ -1,9 +1,10 @@
 #include"imgPro_ImageProcess.hpp"
 
 #include "imgPro_IndexFunc.hpp"
-#include "rqw_CameraObjectCore.hpp"
 
 #include <chrono> 
+
+#include "rqw_ImgConvert.hpp"
 
 namespace rw
 {
@@ -111,7 +112,7 @@ namespace rw
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat)
 		{
-			auto img = rw::rqw::cvMatToQImage(mat);
+			auto img = rw::CvMatToQImage(mat);
 			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, _defectResultInfo, _processResult, _context.defectDrawCfg);
 
 			_context.runTextConfig.operatorTimeText = QString::number(_operatorTime)+" ms";
