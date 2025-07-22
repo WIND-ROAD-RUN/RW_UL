@@ -3,6 +3,7 @@
 #include <QImage>
 
 #include "ime_utilty.hpp"
+#include "imgPro_ImageProcessUtilty.hpp"
 #include"rqw_rqwColor.hpp"
 
 namespace rw
@@ -13,16 +14,16 @@ namespace rw
 		{
 			int position = 0;
 			int thickness = 1;
-			rw::rqw::RQWColor color = rw::rqw::RQWColor::Red;
+			Color color = Color::Red;
 		};
 
 		struct ConfigDrawRect
 		{
 		public:
 			int thickness = 1;
-			rw::rqw::RQWColor rectColor = rw::rqw::RQWColor::Red;
+			Color rectColor = Color::Red;
 			QString text;
-			rw::rqw::RQWColor textColor= rw::rqw::RQWColor::Red;
+			Color textColor= Color::Red;
 			int fontSize = 3;
 		public:
 			enum class TextLocate
@@ -48,7 +49,7 @@ namespace rw
 
 			static void drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawRect & cfg);
 			
-			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<rw::rqw::RQWColor>& colorList, double proportion);
+			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, double proportion);
 			
 		};
 	}

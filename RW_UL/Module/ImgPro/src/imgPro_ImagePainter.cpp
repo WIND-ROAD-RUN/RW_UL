@@ -78,7 +78,7 @@ namespace rw
 		}
 
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
-			const std::vector<rw::rqw::RQWColor>& colorList, double proportion)
+			const std::vector<Color>& colorList, double proportion)
 		{
             if (texts.empty() || proportion <= 0.0 || proportion > 1.0) {
                 return;
