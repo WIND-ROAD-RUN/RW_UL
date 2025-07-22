@@ -28,12 +28,12 @@ protected:
 		auto& context = imgProcess->getContext();
 
 		context.runTextConfig.isDrawExtraText = true;
-		context.runTextConfig.isDisOperatorTime = false;
+		context.runTextConfig.isDisOperatorTime = true;
 		context.runTextConfig.isDisProcessImgTime = true;
 		context.runTextConfig.extraTextColor = rw::rqw::RQWColor::Orange;
 		context.runTextConfig.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
 		context.runTextConfig.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
-		context.runTextConfig.runTextProportion = 0.08;
+		context.runTextConfig.runTextProportion = 0.02;
 	}
 
 	void createImgPro()
@@ -107,7 +107,7 @@ protected:
 		eliminationInfoGetConfig.scoreFactor = 100;
 		eliminationInfoGetConfig.isUsingArea = false;
 		eliminationInfoGetConfig.isUsingScore = true;
-		eliminationInfoGetConfig.scoreRange = { 0,80 };
+		eliminationInfoGetConfig.scoreRange = { 0,10 };
 		eliminationInfoGetConfig.scoreIsUsingComplementarySet = false;
 		eliminationInfoGetConfig.customFields["someValueWillBeUsed"] = (int)(100);
 		eliminationInfoGetConfigs[0] = eliminationInfoGetConfig;
@@ -145,12 +145,17 @@ protected:
 		rw::imgPro::DefectDrawFunc::DefectDrawConfig drawConfig;
 		drawConfig.isDrawDefects = true;
 		drawConfig.isDrawDisableDefects = true;
-		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Brown, true);
-		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Blue, false);
-		drawConfig.classIdWithColorWhichIsGood[2] = rw::rqw::RQWColor::Green;
+		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Green, true);
+		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Red, false);
+		//drawConfig.classIdWithColorWhichIsBad[2] = rw::rqw::RQWColor::Green;
 		drawConfig.thickness = 3;
 		drawConfig.fontSize = 20;
+		drawConfig.classIdNameMap[0] = "Body";
+		drawConfig.classIdNameMap[1] = "Hole";
+		drawConfig.isDisAreaText = false;
+		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::CenterIn;
 		context.defectDrawCfg = drawConfig;
+		
 	}
 public:
 	int left = 100;
