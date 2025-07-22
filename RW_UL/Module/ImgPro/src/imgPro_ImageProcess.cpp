@@ -115,8 +115,8 @@ namespace rw
 			auto img = rw::CvMatToQImage(mat);
 			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, _defectResultInfo, _processResult, _context.defectDrawCfg);
 
-			_context.runTextConfig.operatorTimeText = QString::number(_operatorTime)+" ms";
-			_context.runTextConfig.processImgTimeText = QString::number(_processImgTime) + " ms";
+			_context.runTextCfg.operatorTimeText = QString::number(_operatorTime)+" ms";
+			_context.runTextCfg.processImgTimeText = QString::number(_processImgTime) + " ms";
 
 			auto & errorRecs = _defectResultInfo.defects;
 
@@ -144,8 +144,8 @@ namespace rw
 					}
 				}
 			}
-			_context.runTextConfig.extraTexts = errors;
-			rw::imgPro::DefectDrawFunc::drawRunText(img, _context.runTextConfig);
+			_context.runTextCfg.extraTexts = errors;
+			rw::imgPro::DefectDrawFunc::drawRunText(img, _context.runTextCfg);
 
 			return img;
 		}

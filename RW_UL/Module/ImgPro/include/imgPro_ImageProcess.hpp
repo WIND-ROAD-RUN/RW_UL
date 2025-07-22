@@ -24,7 +24,7 @@ namespace rw
 			DefectResultGetContext defectResultGetContext{};
 		public:
 			DefectDrawFunc::DefectDrawConfig defectDrawCfg{};
-			DefectDrawFunc::RunTextConfig runTextConfig{};
+			DefectDrawFunc::RunTextConfig runTextCfg{};
 		};
 
 		class ImageProcess

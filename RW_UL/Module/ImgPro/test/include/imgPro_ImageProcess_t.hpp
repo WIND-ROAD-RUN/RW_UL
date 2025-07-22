@@ -27,13 +27,13 @@ protected:
 	{
 		auto& context = imgProcess->getContext();
 
-		context.runTextConfig.isDrawExtraText = true;
-		context.runTextConfig.isDisOperatorTime = true;
-		context.runTextConfig.isDisProcessImgTime = true;
-		context.runTextConfig.extraTextColor = rw::rqw::RQWColor::Orange;
-		context.runTextConfig.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
-		context.runTextConfig.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
-		context.runTextConfig.runTextProportion = 0.02;
+		context.runTextCfg.isDrawExtraText = true;
+		context.runTextCfg.isDisOperatorTime = true;
+		context.runTextCfg.isDisProcessImgTime = true;
+		context.runTextCfg.extraTextColor = rw::rqw::RQWColor::Orange;
+		context.runTextCfg.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
+		context.runTextCfg.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
+		context.runTextCfg.runTextProportion = 0.02;
 	}
 
 	void createImgPro()
