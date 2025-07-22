@@ -50,8 +50,8 @@ namespace rw
 			bool scoreIsUsingComplementarySet{ false };
 
 			ScoreRange scoreRange{ negativeInfinity, positiveInfinity };//置信度范围，设置时应为正值
-
-
+		public:
+			std::unordered_map<std::string, std::any> customFields;//自定义字段，可以用于存储额外信息
 		};
 
 		using GetEliminationItemSpecialOperate = std::function<void(
