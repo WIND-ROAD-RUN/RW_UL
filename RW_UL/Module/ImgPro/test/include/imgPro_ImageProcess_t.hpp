@@ -18,6 +18,7 @@ protected:
 		iniEliminationInfoGetConfig();
 		iniEliminationContext();
 		iniDefectResultGetConfig();
+		iniDefectResultContext();
 		iniDefectDrawConfig();
 	}
 
@@ -27,6 +28,26 @@ protected:
 		engine = rw::ModelEngineFactory::createModelEngine(
 			config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
+	}
+
+	void iniDefectResultContext()
+	{
+		auto& context = imgProcess->getContext();
+		context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item) {
+			auto find = item.customFields.find("someValueWillBeUsed");
+			if (find!=item.customFields.end())
+			{
+				std::cout << "someValueWillBeUsed :"<<std::any_cast<int>(find->second)<<"score is:"<<item.score<<std::endl;
+			}
+			};
+		context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item) {
+			auto find = item.customFields.find("someValueWillBeUsed");
+			if (find != item.customFields.end())
+			{
+
+				std::cout << "It 's no ,someValueWillBeUsed :" << std::any_cast<int>(find->second)-100 << "score is:" << item.score << std::endl;
+			}
+			};
 	}
 
 	void iniEliminationContext()
@@ -40,19 +61,14 @@ protected:
 		context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator = [this](rw::imgPro::EliminationItem& item,
 			const rw::DetectionRectangleInfo& info,
 			const rw::imgPro::EliminationInfoGetConfig& cfg) {
-				item.customFields["location"] = 180;
-				item.customFields["descrption"] = "asdwa";
-				item.customFields["cout"] = 18.5f;
-				auto c = item.customFields["cout"];
-			if (c.has_value())
+				auto find = cfg.customFields.find("someValueWillBeUsed");
+			if (find!= cfg.customFields.end())
 			{
-				const auto& coutValue = std::any_cast<float>(c);
+				auto value = std::any_cast<int>(find->second) + 100;
+				item.customFields["someValueWillBeUsed"] = value;
 			}
-			
-			if (info.width>10000)
-			{
-				item.isBad = true;
-			}
+				
+
 
 			};
 	}
@@ -77,8 +93,9 @@ protected:
 		eliminationInfoGetConfig.scoreFactor = 100;
 		eliminationInfoGetConfig.isUsingArea = false;
 		eliminationInfoGetConfig.isUsingScore = true;
-		eliminationInfoGetConfig.scoreRange = { 0,100 };
+		eliminationInfoGetConfig.scoreRange = { 0,80 };
 		eliminationInfoGetConfig.scoreIsUsingComplementarySet = false;
+		eliminationInfoGetConfig.customFields["someValueWillBeUsed"] = (int)(100);
 		eliminationInfoGetConfigs[0] = eliminationInfoGetConfig;
 		eliminationInfoGetConfigs[1] = eliminationInfoGetConfig;
 		eliminationInfoGetConfigs[2] = eliminationInfoGetConfig;
