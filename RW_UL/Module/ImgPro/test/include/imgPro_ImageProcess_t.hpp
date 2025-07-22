@@ -133,7 +133,7 @@ protected:
 		drawConfig.isDrawDisableDefects = true;
 		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Brown, true);
 		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Blue, false);
-
+		drawConfig.classIdWithColorWhichIsGood[2] = rw::rqw::RQWColor::Green;
 		context.defectDrawCfg = drawConfig;
 
 		context.runTextConfig.isDrawExtraText = true;
