@@ -22,14 +22,14 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
+target_link_libraries(${PROJECT_NAME} PUBLIC Qt6::Core Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
-	PRIVATE rqwime
-	PRIVATE ime
-	PRIVATE rqwhoec
+	PUBLIC rqwime
+	PUBLIC ime
+	PUBLIC rqwhoec
 )
 
-#if(CONFIG_TEST)
-#    add_subdirectory(./test)
-#endif()
+if(CONFIG_TEST)
+    add_subdirectory(./test)
+endif()
