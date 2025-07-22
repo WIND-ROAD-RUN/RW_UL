@@ -6,6 +6,14 @@ namespace rw
 		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const EliminationInfo& eliminationInfo,
 			const ClassIdWithConfigMap& config)
 		{
+			return getDefectResultInfo(eliminationInfo, config, GetDefectResultExtraOperateWhichIsDefects{}, GetDefectResultExtraOperateWhichIsDisableDefects{});
+		}
+
+		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const EliminationInfo& eliminationInfo,
+		                                                           const ClassIdWithConfigMap& config, const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+		                                                           const GetDefectResultExtraOperateWhichIsDisableDefects&getDefectResultExtraOperateDisable
+		)
+		{
 			DefectResultInfo result;
 			result.isBad = false;
 
@@ -26,15 +34,27 @@ namespace rw
 							if (item.isBad)
 							{
 								result.isBad = true;
+								if (getDefectResultExtraOperate)
+								{
+									getDefectResultExtraOperate(item);
+								}
 								result.defects[classId].push_back(item);
 							}
 							else
 							{
+								if (getDefectResultExtraOperateDisable)
+								{
+									getDefectResultExtraOperateDisable(item);
+								}
 								result.disableDefects[classId].push_back(item);
 							}
 						}
 						else
 						{
+							if (getDefectResultExtraOperateDisable)
+							{
+								getDefectResultExtraOperateDisable(item);
+							}
 							result.disableDefects[classId].push_back(item);
 						}
 					}

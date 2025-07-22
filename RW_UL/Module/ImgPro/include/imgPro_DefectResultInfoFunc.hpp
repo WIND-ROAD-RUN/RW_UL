@@ -16,6 +16,17 @@ namespace rw
 			std::unordered_map<ClassId, std::vector<EliminationItem>> disableDefects;
 		};
 
+
+		using GetDefectResultExtraOperateWhichIsDefects = std::function<void(const EliminationItem &)>;
+		using GetDefectResultExtraOperateWhichIsDisableDefects = std::function<void(const EliminationItem&)>;
+
+		struct DefectResultGetContext
+		{
+		public:
+			GetDefectResultExtraOperateWhichIsDefects getDefectResultExtraOperate{};
+			GetDefectResultExtraOperateWhichIsDisableDefects getDefectResultExtraOperateDisable{};
+		};
+
 		struct DefectResultInfoFunc
 		{
 		public:
@@ -27,6 +38,14 @@ namespace rw
 			using ClassIdWithConfigMap = std::unordered_map<ClassId, DefectResultGetConfig>;
 		public:
 			static DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const ClassIdWithConfigMap& config);
+
+			static DefectResultInfo getDefectResultInfo(
+				const EliminationInfo& eliminationInfo,
+				const ClassIdWithConfigMap& config,
+				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+				const GetDefectResultExtraOperateWhichIsDisableDefects&
+				getDefectResultExtraOperateDisable
+			);
 		};
 	}
 }

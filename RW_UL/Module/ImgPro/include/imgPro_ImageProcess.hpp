@@ -15,12 +15,16 @@ namespace rw
 		struct ImageProcessContext
 		{
 		public:
+			IndexGetContext indexGetContext{};
+		public:
 			EliminationInfoFunc::ClassIdWithConfigMap eliminationCfg{};
+			EliminationInfoGetContext eliminationInfoGetContext{};
+		public:
 			DefectResultInfoFunc::ClassIdWithConfigMap defectCfg{};
+			DefectResultGetContext defectResultGetContext{};
+		public:
 			DefectDrawFunc::DefectDrawConfig defectDrawCfg{};
 			DefectDrawFunc::RunTextConfig runTextConfig{};
-			IndexGetContext indexGetContext{};
-			EliminationInfoGetContext eliminationInfoGetContext{};
 		};
 
 		class ImageProcess

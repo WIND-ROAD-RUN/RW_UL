@@ -71,7 +71,11 @@ namespace rw
 		{
 			auto eliminationInfo =
 				rw::imgPro::EliminationInfoFunc::getEliminationInfo(
-					processResult, indexMap, configs, _context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator);
+					processResult, 
+					indexMap, 
+					configs, 
+					_context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator
+				);
 			_eliminationInfo = eliminationInfo;
 			return _eliminationInfo;
 		}
@@ -79,7 +83,13 @@ namespace rw
 		DefectResultInfo ImageProcess::getDefectResultInfo(const EliminationInfo& eliminationInfo,
 			const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs)
 		{
-			auto defectResultInfo = rw::imgPro::DefectResultInfoFunc::getDefectResultInfo(eliminationInfo, configs);
+			auto defectResultInfo = 
+				rw::imgPro::DefectResultInfoFunc::getDefectResultInfo(
+					eliminationInfo, 
+					configs,
+					_context.defectResultGetContext.getDefectResultExtraOperate,
+					_context.defectResultGetContext.getDefectResultExtraOperateDisable
+				);
 			_defectResultInfo = defectResultInfo;
 			return _defectResultInfo;
 		}
