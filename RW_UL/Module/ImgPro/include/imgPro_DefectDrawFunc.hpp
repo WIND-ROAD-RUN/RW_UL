@@ -2,7 +2,11 @@
 
 #include "imgPro_DefectResultInfoFunc.hpp"
 #include"imgPro_ImageProcessUtilty.hpp"
+
+#include"rqw_rqwColor.hpp"
+
 #include<QImage>
+
 
 namespace rw
 {
@@ -21,6 +25,11 @@ namespace rw
 			public:
 				bool isDisScoreText{true};
 				bool isDisAreaText{ true };
+			public:
+				std::unordered_map<ClassId, rw::rqw::RQWColor> classIdWithColorWhichIsGood;
+				std::unordered_map<ClassId, rw::rqw::RQWColor> classIdWithColorWhichIsBad;
+			public:
+				void setAllIdsWithSameColor(const std::vector<ClassId>& ids,rw::rqw::RQWColor color,bool isGood);
 			};
 
 			struct RunTextConfig

@@ -7,8 +7,24 @@ namespace rw
 {
 	namespace imgPro
 	{
+		void DefectDrawFunc::DefectDrawConfig::setAllIdsWithSameColor(const std::vector<ClassId>& ids, rw::rqw::RQWColor color,
+			bool isGood)
+		{
+			for (const auto& id : ids)
+			{
+				if (isGood)
+				{
+					classIdWithColorWhichIsGood[id] = color;
+				}
+				else
+				{
+					classIdWithColorWhichIsBad[id] = color;
+				}
+			}
+		}
+
 		void DefectDrawFunc::drawDefectRecs(QImage& img, const DefectResultInfo& info,
-			const ProcessResult& processResult, const DefectDrawConfig& config)
+		                                    const ProcessResult& processResult, const DefectDrawConfig& config)
 		{
 			if (img.isNull() || processResult.empty()) {
 				return; // 无效图像或结果
@@ -34,6 +50,15 @@ namespace rw
 						{
 							painterConfig.text =
 								painterConfig.text + " , " + QString::number(item.area, 'f', 2);
+						}
+
+						auto findColor = config.classIdWithColorWhichIsBad.find(pairs.first);
+						if (findColor!= config.classIdWithColorWhichIsBad.end())
+						{
+							auto [r, g, b] = rw::rqw::RQWColorToRGB(findColor->second);
+							auto color = QColor(r, g, b);
+							painterConfig.color = color;
+							painterConfig.textColor = color;
 						}
 						
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
@@ -62,6 +87,16 @@ namespace rw
 							painterConfig.text =
 								painterConfig.text + " , " + QString::number(item.area, 'f', 1);
 						}
+
+						auto findColor = config.classIdWithColorWhichIsGood.find(pairs.first);
+						if (findColor != config.classIdWithColorWhichIsGood.end())
+						{
+							auto [r, g, b] = rw::rqw::RQWColorToRGB(findColor->second);
+							auto color = QColor(r, g, b);
+							painterConfig.color = color;
+							painterConfig.textColor = color;
+						}
+
 						rw::rqw::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
