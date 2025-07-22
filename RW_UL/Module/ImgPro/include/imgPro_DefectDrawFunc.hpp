@@ -37,12 +37,15 @@ namespace rw
 			public:
 				bool isDrawExtraText{ true };
 				QVector<QString> extraTexts{};
+				rw::rqw::RQWColor extraTextColor{ rw::rqw::RQWColor::Red };
 			public:
 				bool isDisProcessImgTime{ true };
 				QString processImgTimeText{};
+				rw::rqw::RQWColor processImgTimeTextColor{ rw::rqw::RQWColor::Blue };
 			public:
 				bool isDisOperatorTime{ true };
 				QString operatorTimeText{};
+				rw::rqw::RQWColor operatorTimeTextColor{ rw::rqw::RQWColor::Green };
 			};
 		public:
 			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const DefectDrawConfig& config);

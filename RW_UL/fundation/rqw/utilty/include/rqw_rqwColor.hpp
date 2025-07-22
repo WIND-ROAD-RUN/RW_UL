@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include<QColor>
 
 namespace rw
 {
@@ -23,6 +24,7 @@ namespace rw
         };
 
         std::tuple<int, int, int> RQWColorToRGB(RQWColor color);
+        QColor RQWColorToQColor(RQWColor color);
 	}
 
 }

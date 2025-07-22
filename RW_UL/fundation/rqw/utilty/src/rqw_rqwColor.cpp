@@ -42,5 +42,11 @@ namespace rw
                 throw std::invalid_argument("Unsupported color value.");
             }
 		}
+
+		QColor RQWColorToQColor(RQWColor color)
+		{
+            auto [r, g, b] = RQWColorToRGB(color);
+			return QColor(r, g, b);
+		}
 	}
 }

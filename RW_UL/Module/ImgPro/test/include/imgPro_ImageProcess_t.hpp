@@ -139,6 +139,9 @@ protected:
 		context.runTextConfig.isDrawExtraText = true;
 		context.runTextConfig.isDisOperatorTime = false;
 		context.runTextConfig.isDisProcessImgTime = true;
+		context.runTextConfig.extraTextColor = rw::rqw::RQWColor::Orange;
+		context.runTextConfig.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
+		context.runTextConfig.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
 	}
 public:
 	int left = 100;

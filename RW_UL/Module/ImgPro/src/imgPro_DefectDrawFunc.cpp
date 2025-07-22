@@ -55,8 +55,7 @@ namespace rw
 						auto findColor = config.classIdWithColorWhichIsBad.find(pairs.first);
 						if (findColor!= config.classIdWithColorWhichIsBad.end())
 						{
-							auto [r, g, b] = rw::rqw::RQWColorToRGB(findColor->second);
-							auto color = QColor(r, g, b);
+							auto color = rqw::RQWColorToQColor(findColor->second);
 							painterConfig.color = color;
 							painterConfig.textColor = color;
 						}
@@ -91,8 +90,7 @@ namespace rw
 						auto findColor = config.classIdWithColorWhichIsGood.find(pairs.first);
 						if (findColor != config.classIdWithColorWhichIsGood.end())
 						{
-							auto [r, g, b] = rw::rqw::RQWColorToRGB(findColor->second);
-							auto color = QColor(r, g, b);
+							auto color = rqw::RQWColorToQColor(findColor->second);
 							painterConfig.color = color;
 							painterConfig.textColor = color;
 						}
@@ -109,12 +107,13 @@ namespace rw
 			QVector<QString> textList;
 			std::vector<rw::rqw::ImagePainter::PainterConfig> configList;
 			rw::rqw::ImagePainter::PainterConfig painterConfig;
-			painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Green);
+			painterConfig.textColor = rqw::RQWColorToQColor(config.operatorTimeTextColor);
 			if (config.isDisOperatorTime)
 			{
 				configList.push_back(painterConfig);
 				textList.push_back(config.operatorTimeText);
 			}
+			painterConfig.textColor =rqw::RQWColorToQColor(config.processImgTimeTextColor);
 			if (config.isDisProcessImgTime)
 			{
 				configList.push_back(painterConfig);
@@ -124,7 +123,7 @@ namespace rw
 
 			if (config.isDrawExtraText)
 			{
-				painterConfig.textColor = rw::rqw::ImagePainter::toQColor(rw::rqw::ImagePainter::BasicColor::Red);
+				painterConfig.textColor = rqw::RQWColorToQColor(config.extraTextColor);
 				configList.push_back(painterConfig);
 				for (const auto& item : config.extraTexts)
 				{
