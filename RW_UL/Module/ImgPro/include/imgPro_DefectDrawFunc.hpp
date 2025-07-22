@@ -49,6 +49,8 @@ namespace rw
 				bool isDisOperatorTime{ true };
 				QString operatorTimeText{};
 				rw::rqw::RQWColor operatorTimeTextColor{ rw::rqw::RQWColor::Green };
+			public:
+				double runTextProportion = 0.06;
 			};
 		public:
 			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const DefectDrawConfig& config);

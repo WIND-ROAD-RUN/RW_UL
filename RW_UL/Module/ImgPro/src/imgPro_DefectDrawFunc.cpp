@@ -135,7 +135,7 @@ namespace rw
 				}
 			}
 
-			rw::rqw::ImagePainter::drawTextOnImage(img, textList, configList);
+			rw::rqw::ImagePainter::drawTextOnImage(img, textList, configList,config.runTextProportion);
 		}
 	}
 }

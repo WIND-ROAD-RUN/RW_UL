@@ -20,6 +20,20 @@ protected:
 		iniDefectResultGetConfig();
 		iniDefectResultContext();
 		iniDefectDrawConfig();
+		iniRunTextConfig();
+	}
+
+	void iniRunTextConfig()
+	{
+		auto& context = imgProcess->getContext();
+
+		context.runTextConfig.isDrawExtraText = true;
+		context.runTextConfig.isDisOperatorTime = false;
+		context.runTextConfig.isDisProcessImgTime = true;
+		context.runTextConfig.extraTextColor = rw::rqw::RQWColor::Orange;
+		context.runTextConfig.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
+		context.runTextConfig.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
+		context.runTextConfig.runTextProportion = 0.08;
 	}
 
 	void createImgPro()
@@ -134,14 +148,9 @@ protected:
 		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Brown, true);
 		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Blue, false);
 		drawConfig.classIdWithColorWhichIsGood[2] = rw::rqw::RQWColor::Green;
+		drawConfig.thickness = 20;
+		drawConfig.fontSize = 20;
 		context.defectDrawCfg = drawConfig;
-
-		context.runTextConfig.isDrawExtraText = true;
-		context.runTextConfig.isDisOperatorTime = false;
-		context.runTextConfig.isDisProcessImgTime = true;
-		context.runTextConfig.extraTextColor = rw::rqw::RQWColor::Orange;
-		context.runTextConfig.operatorTimeTextColor = rw::rqw::RQWColor::Gray;
-		context.runTextConfig.processImgTimeTextColor = rw::rqw::RQWColor::Cyan;
 	}
 public:
 	int left = 100;
