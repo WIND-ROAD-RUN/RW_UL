@@ -8,7 +8,6 @@
 #include "PicturesPainter_SetAspectRatio.h"
 #include <QTreeWidgetItem>
 
-
 PicturesPainter::PicturesPainter(QWidget* parent)
 	: QDialog(parent),
 	ui(new Ui::PicturesPainterClass())
@@ -18,7 +17,7 @@ PicturesPainter::PicturesPainter(QWidget* parent)
 	build_connect();
 
 	drawLabel = qobject_cast<DrawLabel*>(ui->label_imgDisplay);
-	drawLabel->setFixedSize(640,494);
+	drawLabel->setFixedSize(640, 494);
 }
 
 PicturesPainter::~PicturesPainter()
@@ -120,7 +119,7 @@ QColor PicturesPainter::getColorByClassId(size_t size)
 {
 	if (!_configs.empty())
 	{
-		for(const auto& item : _configs)
+		for (const auto& item : _configs)
 		{
 			if (item.classid == size)
 			{
@@ -269,7 +268,6 @@ void PicturesPainter::btn_draw_clicked()
 		ui->btn_draw->setText("开始绘画");
 	}
 }
-
 
 void PicturesPainter::pbtn_ok_clicked()
 {
@@ -550,5 +548,3 @@ void PicturesPainter::updateDrawLabel()
 		Qt::SmoothTransformation
 	));
 }
-
-

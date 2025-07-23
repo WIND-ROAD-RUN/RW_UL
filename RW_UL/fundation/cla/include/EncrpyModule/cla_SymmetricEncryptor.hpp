@@ -38,8 +38,6 @@ namespace rw
 
 			SymmetricEncryptorContext& context() { return _context; }
 			const SymmetricEncryptorContext& context() const { return _context; }
-
-
 		};
 	}
 }

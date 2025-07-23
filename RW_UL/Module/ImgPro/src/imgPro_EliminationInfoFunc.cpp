@@ -7,7 +7,6 @@ namespace rw
 		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
 			const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config)
 		{
-			
 			return getEliminationInfo(info, index, config, GetEliminationItemSpecialOperate{});
 		}
 
@@ -60,7 +59,7 @@ namespace rw
 						scoreInRange = !scoreInRange;
 					}
 
-					bool temp{true};
+					bool temp{ true };
 					if (cfg.isUsingArea)
 					{
 						temp = temp && !areaInRange;

@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <vector>
 #include <cstdint>
@@ -33,74 +33,74 @@ namespace rw
 
 		enum class ModbusI
 		{
-			X00=0,
-			X01=1,
-			X02=2,
-			X03=3,
-			X04=4,
-			X05=5,
-			X06=6,
-			X07=7,
-			X08=8,
-			X09=9,
-			X0A=10,
-			X0B=11,
-			X0C=12,
-			X0D=13,
-			X0E=14,
-			X0F=15,
-			X10=16,
-			X11=17,
-			X12=18,
-			X13=19,
-			X14=20,
-			X15=21,
-			X16=22,
-			X17=23,
-			X18=24,
-			X19=25,
-			X1A=26,
-			X1B=27,
-			X1C=28,
-			X1D=29,
-			X1E=30,
-			X1F=31
+			X00 = 0,
+			X01 = 1,
+			X02 = 2,
+			X03 = 3,
+			X04 = 4,
+			X05 = 5,
+			X06 = 6,
+			X07 = 7,
+			X08 = 8,
+			X09 = 9,
+			X0A = 10,
+			X0B = 11,
+			X0C = 12,
+			X0D = 13,
+			X0E = 14,
+			X0F = 15,
+			X10 = 16,
+			X11 = 17,
+			X12 = 18,
+			X13 = 19,
+			X14 = 20,
+			X15 = 21,
+			X16 = 22,
+			X17 = 23,
+			X18 = 24,
+			X19 = 25,
+			X1A = 26,
+			X1B = 27,
+			X1C = 28,
+			X1D = 29,
+			X1E = 30,
+			X1F = 31
 		};
 
 		enum class ModbusO
 		{
-			Y00=0,
-			Y01=1,
-			Y02=2,
-			Y03=3,
-			Y04=4,
-			Y05=5,
-			Y06=6,
-			Y07=7,
-			Y08=8,
-			Y09=9,
-			Y0A=10,
-			Y0B=11,
-			Y0C=12,
-			Y0D=13,
-			Y0E=14,
-			Y0F=15,
-			Y10=16,
-			Y11=17,
-			Y12=18,
-			Y13=19,
-			Y14=20,
-			Y15=21,
-			Y16=22,
-			Y17=23,
-			Y18=24,
-			Y19=25,
-			Y1A=26,
-			Y1B=27,
-			Y1C=28,
-			Y1D=29,
-			Y1E=30,
-			Y1F=31
+			Y00 = 0,
+			Y01 = 1,
+			Y02 = 2,
+			Y03 = 3,
+			Y04 = 4,
+			Y05 = 5,
+			Y06 = 6,
+			Y07 = 7,
+			Y08 = 8,
+			Y09 = 9,
+			Y0A = 10,
+			Y0B = 11,
+			Y0C = 12,
+			Y0D = 13,
+			Y0E = 14,
+			Y0F = 15,
+			Y10 = 16,
+			Y11 = 17,
+			Y12 = 18,
+			Y13 = 19,
+			Y14 = 20,
+			Y15 = 21,
+			Y16 = 22,
+			Y17 = 23,
+			Y18 = 24,
+			Y19 = 25,
+			Y1A = 26,
+			Y1B = 27,
+			Y1C = 28,
+			Y1D = 29,
+			Y1E = 30,
+			Y1F = 31
 		};
 
 		inline int32_t swapEndian(int32_t value)
@@ -131,7 +131,6 @@ namespace rw
 			return value; // 小端表示直接返回
 		}
 
-
 		inline std::vector<RegisterValue> toRegisterValues(ModbusI i, Endianness endianness)
 		{
 			int32_t value = static_cast<int32_t>(i);
@@ -143,12 +142,12 @@ namespace rw
 			if (endianness == Endianness::BigEndian)
 			{
 				result.push_back(high);
-				result.push_back(low); 
+				result.push_back(low);
 			}
 			else // LittleEndian
 			{
-				result.push_back(low);  
-				result.push_back(high); 
+				result.push_back(low);
+				result.push_back(high);
 			}
 
 			return result;
@@ -164,8 +163,8 @@ namespace rw
 			std::vector<RegisterValue> result;
 			if (endianness == Endianness::BigEndian)
 			{
-				result.push_back(high); 
-				result.push_back(low); 
+				result.push_back(high);
+				result.push_back(low);
 			}
 			else // LittleEndian
 			{
@@ -198,14 +197,12 @@ namespace rw
 
 		inline ModbusI fromRegisterValuesToModbusI(const std::vector<RegisterValue>& values, Endianness endianness)
 		{
-
-			return static_cast<ModbusI>(fromRegisterValuesToInt32(values,endianness));
+			return static_cast<ModbusI>(fromRegisterValuesToInt32(values, endianness));
 		}
 
 		inline ModbusO fromRegisterValuesToModbusO(const std::vector<RegisterValue>& values, Endianness endianness)
 		{
 			return static_cast<ModbusO>(fromRegisterValuesToInt32(values, endianness));
-
 		}
 	}
 }

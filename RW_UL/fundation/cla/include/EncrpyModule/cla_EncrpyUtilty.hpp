@@ -16,7 +16,6 @@ namespace rw {
 		public:
 			//注意这里的密钥最好是32位的字符串，AES-256需要32字节的密钥
 			std::string key{};
-
 		};
 
 		class KeyGenerator {

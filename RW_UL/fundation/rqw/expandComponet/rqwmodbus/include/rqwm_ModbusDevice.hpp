@@ -16,8 +16,8 @@ namespace rw
 		{
 			Q_OBJECT
 		public:
-			explicit ModbusDevice(const ModbusType & type,const ModbusConfig& config, QObject* parent = nullptr);
-			~ModbusDevice()override  =default ;
+			explicit ModbusDevice(const ModbusType& type, const ModbusConfig& config, QObject* parent = nullptr);
+			~ModbusDevice()override = default;
 		private:
 			std::unique_ptr<hoem::IModbusDevice> _device;
 		public:

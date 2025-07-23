@@ -44,9 +44,8 @@ namespace  hoec_Camera_DS
 			/*passive.setIoOut(4, true);
 
 			 passive.setIoOut(5,true);*/
-			 bool state = false;
-			 passive.getIOIn(6, state);
-
+			bool state = false;
+			passive.getIOIn(6, state);
 
 			ASSERT_EQ(isStartMonitor, true);
 
@@ -165,5 +164,4 @@ namespace  hoec_Camera_DS
 			std::this_thread::sleep_for(std::chrono::seconds(300));
 		}
 	}
-
 }

@@ -6,7 +6,7 @@
 
 #include"opencv2/opencv.hpp"
 
-Demo::Demo(QWidget *parent)
+Demo::Demo(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::DemoClass())
 {
@@ -35,7 +35,6 @@ void Demo::build_connect()
 
 void Demo::ini()
 {
-  
 	/*HalconCpp::ReadImage(&image, "C:/Users/rw/Desktop/temp/4be85a13-4196-4ae1-bb3c-ccea8d1d27fa.png");
 	Rgb1ToGray(image, &image);*/
 
@@ -45,9 +44,9 @@ void Demo::ini()
 	rw::rqw::HalconWidgetObject object(image);
 	object.isShow = true;
 	object.id = 0;
-	auto a=object.has_value();
-    halconWidget->appendHObject(object);
-	auto id=halconWidget->getVailidAppendId();
+	auto a = object.has_value();
+	halconWidget->appendHObject(object);
+	auto id = halconWidget->getVailidAppendId();
 	rw::rqw::PainterConfig config;
 	config.color = rw::rqw::RQWColor::Green;
 	halconWidget->appendHorizontalLine(halconWidget->height() / 2, config);
@@ -58,20 +57,18 @@ void Demo::ini()
 
 void Demo::resizeEvent(QResizeEvent* event)
 {
-
 	QMainWindow::resizeEvent(event);
 }
 
 void Demo::pushButton_clicked()
 {
 	rw::rqw::PainterConfig config;
-	auto rec=halconWidget->drawRect(config);
+	auto rec = halconWidget->drawRect(config);
 	auto id = halconWidget->createShapeXLDModel({ rec });
 	rw::rqw::HalconShapeXLDFindConfig config1;
 	rw::rqw::PainterConfig config2;
 	config2.color = rw::rqw::RQWColor::Red;
 	halconWidget->findShapeModel(id, config1, config2);
-
 }
 
 void Demo::closeEvent(QCloseEvent* event)
@@ -82,4 +79,3 @@ void Demo::closeEvent(QCloseEvent* event)
 		return;
 	}
 }
-

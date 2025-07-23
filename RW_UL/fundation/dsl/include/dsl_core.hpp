@@ -36,7 +36,6 @@ namespace rw {
 			return std::make_shared<T>(std::forward<Args>(args)...);
 		}
 
-
 		enum class PriorityQueueType
 		{
 			DHeap,

@@ -16,8 +16,7 @@ namespace rw
 			std::unordered_map<ClassId, std::vector<EliminationItem>> disableDefects;
 		};
 
-
-		using GetDefectResultExtraOperateWhichIsDefects = std::function<void(const EliminationItem &)>;
+		using GetDefectResultExtraOperateWhichIsDefects = std::function<void(const EliminationItem&)>;
 		using GetDefectResultExtraOperateWhichIsDisableDefects = std::function<void(const EliminationItem&)>;
 
 		struct DefectResultGetContext

@@ -16,6 +16,5 @@ namespace rw
 		using ModbusI = rw::hoem::ModbusI;
 		using ModbusO = rw::hoem::ModbusO;
 		using ModbusConfig = rw::hoem::ModbusConfig;
-
 	}
 }

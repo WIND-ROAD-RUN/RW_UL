@@ -2,7 +2,7 @@
 
 #include "imgPro_IndexFunc.hpp"
 
-#include <chrono> 
+#include <chrono>
 
 #include "rqw_ImgConvert.hpp"
 
@@ -51,15 +51,15 @@ namespace rw
 
 			if (indexGetContext.removeIndicesIf)
 			{
-				indexGetContext.removedIndices=
+				indexGetContext.removedIndices =
 					rw::imgPro::IndexFunc::removeIndicesIf(
 						indexMap, indexGetContext.removeIndicesIf);
 			}
 			if (indexGetContext.removeIndicesIfByInfo)
 			{
-				indexGetContext.removedIndicesByInfo = 
+				indexGetContext.removedIndicesByInfo =
 					rw::imgPro::IndexFunc::removeIndicesIfByInfo(
-						indexMap,_processResult,indexGetContext.removeIndicesIfByInfo);
+						indexMap, _processResult, indexGetContext.removeIndicesIfByInfo);
 			}
 
 			_processResultIndexMap = indexMap;
@@ -72,9 +72,9 @@ namespace rw
 		{
 			auto eliminationInfo =
 				rw::imgPro::EliminationInfoFunc::getEliminationInfo(
-					processResult, 
-					indexMap, 
-					configs, 
+					processResult,
+					indexMap,
+					configs,
 					_context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator
 				);
 			_eliminationInfo = eliminationInfo;
@@ -84,9 +84,9 @@ namespace rw
 		DefectResultInfo ImageProcess::getDefectResultInfo(const EliminationInfo& eliminationInfo,
 			const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs)
 		{
-			auto defectResultInfo = 
+			auto defectResultInfo =
 				rw::imgPro::DefectResultInfoFunc::getDefectResultInfo(
-					eliminationInfo, 
+					eliminationInfo,
 					configs,
 					_context.defectResultGetContext.getDefectResultExtraOperate,
 					_context.defectResultGetContext.getDefectResultExtraOperateDisable
@@ -97,7 +97,6 @@ namespace rw
 
 		void ImageProcess::operator()(const cv::Mat& mat)
 		{
-
 			auto start = std::chrono::high_resolution_clock::now();
 
 			processImg(mat);
@@ -120,7 +119,7 @@ namespace rw
 			RunTime processImgTime)
 		{
 			auto img = rw::CvMatToQImage(mat);
-			getMaskImg(img,defectResultInfo,processResult,context,operatorTime,processImgTime);
+			getMaskImg(img, defectResultInfo, processResult, context, operatorTime, processImgTime);
 			return img;
 		}
 

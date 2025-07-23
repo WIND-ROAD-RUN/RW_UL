@@ -12,9 +12,9 @@ class Demo : public QMainWindow
 {
 	Q_OBJECT
 public:
-	rw::rqw::HalconWidget *halconWidget;
+	rw::rqw::HalconWidget* halconWidget;
 public:
-	Demo(QWidget *parent = nullptr);
+	Demo(QWidget* parent = nullptr);
 	~Demo() override;
 public:
 	void build_ui();
@@ -27,12 +27,10 @@ protected:
 	void resizeEvent(QResizeEvent* event) override;
 
 private:
-	Ui::DemoClass *ui;
+	Ui::DemoClass* ui;
 public slots:
 	void pushButton_clicked();
 
 protected:
 	void closeEvent(QCloseEvent* event) override;
 };
-
-

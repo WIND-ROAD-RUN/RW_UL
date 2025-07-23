@@ -2,7 +2,6 @@
 #include "dsl_DHeap_t.hpp"
 
 namespace dsl_PriorityQueue {
-
 	/**
  * @brief Test the top method can throw exception when the heap is empty
  *

@@ -13,7 +13,6 @@ namespace HalconCpp
 	class HImage;
 }
 
-
 namespace rw {
 	namespace rqw {
 		class HalconShapeModel;
@@ -26,28 +25,28 @@ namespace rw {
 		HalconCpp::HImage CvMatToHImage(const cv::Mat& mat);
 		HalconCpp::HImage QPixmapToHImage(const QPixmap& pixmap);
 
-        struct PainterConfig
-        {
-        public:
-            PainterConfig() = default;
+		struct PainterConfig
+		{
+		public:
+			PainterConfig() = default;
 
-            PainterConfig(const RQWColor& color, int thickness)
-                : color(color), thickness(thickness) {
-            }
+			PainterConfig(const RQWColor& color, int thickness)
+				: color(color), thickness(thickness) {
+			}
 
-            PainterConfig(const PainterConfig& other) = default;
+			PainterConfig(const PainterConfig& other) = default;
 
-            PainterConfig(PainterConfig&& other) noexcept = default;
+			PainterConfig(PainterConfig&& other) noexcept = default;
 
-            PainterConfig& operator=(const PainterConfig& other) = default;
+			PainterConfig& operator=(const PainterConfig& other) = default;
 
-            PainterConfig& operator=(PainterConfig&& other) noexcept = default;
+			PainterConfig& operator=(PainterConfig&& other) noexcept = default;
 
-            ~PainterConfig() = default;
-        public:
-            RQWColor color{ RQWColor::Black };
-            int thickness{ 3 };
-        };
+			~PainterConfig() = default;
+		public:
+			RQWColor color{ RQWColor::Black };
+			int thickness{ 3 };
+		};
 
 		class GlobalHalconData
 		{

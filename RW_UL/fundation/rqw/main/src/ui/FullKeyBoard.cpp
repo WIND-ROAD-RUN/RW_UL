@@ -339,7 +339,6 @@ void FullKeyBoard::updateButtonTexts()
 	}
 }
 
-
 // 事件过滤器实现
 bool FullKeyBoard::eventFilter(QObject* obj, QEvent* event)
 {
@@ -398,4 +397,3 @@ void FullKeyBoard::handleButtonClicked()
 		appendCharacter(button);
 	}
 }
-

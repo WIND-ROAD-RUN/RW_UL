@@ -76,7 +76,7 @@ public:
 	void setRectangleConfigs(const std::vector<RectangeConfig>& configs);
 	void setDrawnRectangles(const std::vector<PainterRectangleInfo>& Rectangles);
 	void setImage(const QImage& qImage);
-	void setAspectRatio(double width,double height);
+	void setAspectRatio(double width, double height);
 
 	QColor getColorByClassId(size_t size);
 	QString getNameByClassId(size_t size);
@@ -127,6 +127,5 @@ private:
 	bool isSetAspectRatio{ false };
 	bool isSetQImage{ false };
 
-	QImage _qImage{nullptr};
+	QImage _qImage{ nullptr };
 };
-

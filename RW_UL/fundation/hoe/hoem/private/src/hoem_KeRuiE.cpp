@@ -16,12 +16,11 @@ namespace rw {
 
 		KeRuiE::KeRuiE(ModbusDevice* modbusDevice)
 			: _modbusDevice(modbusDevice) {
-			for (int i=0;i< 16;i++)
+			for (int i = 0; i < 16; i++)
 			{
 				_ioOutState.push_back(false);
 				_ioInState.push_back(false);
 			}
-			
 		}
 
 		KeRuiE::~KeRuiE()
@@ -71,10 +70,9 @@ namespace rw {
 
 			uint16_t number = static_cast<uint16_t>(data[0]);
 
-
 			bool isTriggered = (number & (1 << index)) != 0;
 
-			return isTriggered; 
+			return isTriggered;
 		}
 
 		bool KeRuiE::getOState(ModbusO locate) const

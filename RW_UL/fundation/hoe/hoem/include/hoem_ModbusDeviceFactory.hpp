@@ -8,7 +8,7 @@ namespace rw {
 		class ModbusDeviceFactory
 		{
 		public:
-			static std::unique_ptr<IModbusDevice> createDevice(const ModbusDeviceName & type, const ModbusConfig& config);
+			static std::unique_ptr<IModbusDevice> createDevice(const ModbusDeviceName& type, const ModbusConfig& config);
 		};
 	}
 }

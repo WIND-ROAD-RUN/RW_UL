@@ -632,7 +632,6 @@ namespace rw
 
 			auto result = dvpSetLineInverter(m_cameraHandle, line, state);
 			return result == DVP_STATUS_OK;
-
 		}
 
 		bool Camera_DS::getIOIn(int line_index, bool& state)
@@ -737,7 +736,6 @@ namespace rw
 		{
 			return false;
 		}
-
 
 		Camera_DS_Active::Camera_DS_Active()
 		{

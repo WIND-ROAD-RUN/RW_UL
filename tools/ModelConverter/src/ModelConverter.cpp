@@ -121,9 +121,8 @@ void ModelConverter::pbtn_startConvert_clicked()
 	ui->pbtn_tab1Exit->setEnabled(false);
 	ui->pbtn_preStep->setEnabled(false);
 
-
-	auto currentText=ui->comboBox->currentText();
-	if (currentText=="default")
+	auto currentText = ui->comboBox->currentText();
+	if (currentText == "default")
 	{
 		_converter->_convertPolicy = ConvertPolicy::defaultPolicy;
 	}

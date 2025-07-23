@@ -29,7 +29,6 @@ namespace rw
 				//format == QImage::Format_ARGB32_Premultiplied
 				)
 			{
-	
 				hImage.GenImageInterleaved(
 					const_cast<void*>(static_cast<const void*>(qImage.bits())), // PixelPointer
 					"bgrx",                                                    // ColorFormat

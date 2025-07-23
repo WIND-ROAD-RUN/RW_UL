@@ -8,7 +8,7 @@ namespace rw
 {
 	namespace hoem
 	{
-		class ModbusDevice{
+		class ModbusDevice {
 		private:
 			modbus_t* _modbusContext = nullptr;
 			std::string _ip;
@@ -18,19 +18,19 @@ namespace rw
 			ModbusDevice(const std::string& ip, int port, Address baseAddress = 0);
 			~ModbusDevice();
 		public:
-			bool connect() ;
-			bool disconnect() ;
-			bool isConnected() const ;
+			bool connect();
+			bool disconnect();
+			bool isConnected() const;
 			bool reconnect();
-			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data) ;
-			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data) ;
-			bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data) ;
-			bool writeCoil(Address address, bool state) ;
-			bool writeCoils(Address startAddress, const std::vector<bool>& states) ;
-			bool setBasedAddress(Address basedAddress) ;
-			Address getBasedAddress() const ;
-			bool readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data) ;
-			bool writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data) ;
+			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data);
+			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data);
+			bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data);
+			bool writeCoil(Address address, bool state);
+			bool writeCoils(Address startAddress, const std::vector<bool>& states);
+			bool setBasedAddress(Address basedAddress);
+			Address getBasedAddress() const;
+			bool readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data);
+			bool writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data);
 		};
 	}
 }

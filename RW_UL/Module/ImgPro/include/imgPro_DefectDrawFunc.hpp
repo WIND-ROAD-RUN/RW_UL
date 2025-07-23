@@ -9,7 +9,6 @@
 
 #include "imgPro_ImagePainter.hpp"
 
-
 namespace rw
 {
 	namespace imgPro
@@ -25,16 +24,16 @@ namespace rw
 			public:
 				std::unordered_map<ClassId, ClassIdName> classIdNameMap;
 			public:
-				bool isDisScoreText{true};
+				bool isDisScoreText{ true };
 				bool isDisAreaText{ true };
 			public:
 				std::unordered_map<ClassId, Color> classIdWithColorWhichIsGood;
 				std::unordered_map<ClassId, Color> classIdWithColorWhichIsBad;
 			public:
-				void setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color,bool isGood);
+				void setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color, bool isGood);
 			public:
 				int fontSize{ 30 };
-				int thickness{3};
+				int thickness{ 3 };
 			public:
 				ConfigDrawRect::TextLocate textLocate{ ConfigDrawRect::TextLocate::LeftTopOut };
 			};
@@ -58,7 +57,7 @@ namespace rw
 			};
 		public:
 			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const DefectDrawConfig& config);
-			static void drawRunText(QImage& img,const RunTextConfig & config);
+			static void drawRunText(QImage& img, const RunTextConfig& config);
 		};
 	}
 }

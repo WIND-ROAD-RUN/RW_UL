@@ -14,7 +14,6 @@ namespace rw
 			cv::Mat colorMat;
 			cv::cvtColor(mat, colorMat, cv::COLOR_GRAY2BGR);
 			result = QImage(colorMat.data, colorMat.cols, colorMat.rows, colorMat.step[0], QImage::Format_RGB888).rgbSwapped();
-
 		}
 		else if (type == CV_8UC3) {
 			result = QImage(mat.data, mat.cols, mat.rows, mat.step[0], QImage::Format_RGB888).rgbSwapped();

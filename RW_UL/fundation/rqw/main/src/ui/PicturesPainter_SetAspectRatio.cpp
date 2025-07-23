@@ -4,7 +4,7 @@
 
 #include "ui_PicturesPainter_SetAspectRatio.h"
 
-PicturesPainterSetAspectRatio::PicturesPainterSetAspectRatio(QWidget *parent)
+PicturesPainterSetAspectRatio::PicturesPainterSetAspectRatio(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::PicturesPainterSetAspectRatioClass())
 {
@@ -90,4 +90,3 @@ void PicturesPainterSetAspectRatio::btn_exit_clicked()
 {
 	this->reject();
 }
-

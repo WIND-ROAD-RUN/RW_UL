@@ -126,7 +126,7 @@ namespace rw {
 			}
 
 			// 保存图片
-			if (!image.image.save(fileName,"jpg",saveImgQuality)) {
+			if (!image.image.save(fileName, "jpg", saveImgQuality)) {
 				std::cerr << "Failed to save image: " << fileName.toStdString() << std::endl;
 			}
 		}

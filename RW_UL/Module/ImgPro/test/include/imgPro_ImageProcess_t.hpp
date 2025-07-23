@@ -9,7 +9,6 @@
 #include "imgPro_ImageProcess.hpp"
 #include "imgPro_ImageProcessUtilty.hpp"
 
-
 class ImageProcessTest : public ::testing::Test {
 protected:
 	void SetUp() override {
@@ -49,17 +48,16 @@ protected:
 		auto& context = imgProcess->context();
 		context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item) {
 			auto find = item.customFields.find("someValueWillBeUsed");
-			if (find!=item.customFields.end())
+			if (find != item.customFields.end())
 			{
-				std::cout << "someValueWillBeUsed :"<<std::any_cast<int>(find->second)<<"score is:"<<item.score<<std::endl;
+				std::cout << "someValueWillBeUsed :" << std::any_cast<int>(find->second) << "score is:" << item.score << std::endl;
 			}
 			};
 		context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item) {
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find != item.customFields.end())
 			{
-
-				std::cout << "It 's no ,someValueWillBeUsed :" << std::any_cast<int>(find->second)-100 << "score is:" << item.score << std::endl;
+				std::cout << "It 's no ,someValueWillBeUsed :" << std::any_cast<int>(find->second) - 100 << "score is:" << item.score << std::endl;
 			}
 			};
 	}
@@ -71,28 +69,23 @@ protected:
 		//	return classId == 1;
 		//	};
 
-
 		context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator = [this](rw::imgPro::EliminationItem& item,
 			const rw::DetectionRectangleInfo& info,
 			const rw::imgPro::EliminationInfoGetConfig& cfg) {
 				auto find = cfg.customFields.find("someValueWillBeUsed");
-			if (find!= cfg.customFields.end())
-			{
-				auto value = std::any_cast<int>(find->second) + 100;
-				item.customFields["someValueWillBeUsed"] = value;
-			}
-				
-
-
+				if (find != cfg.customFields.end())
+				{
+					auto value = std::any_cast<int>(find->second) + 100;
+					item.customFields["someValueWillBeUsed"] = value;
+				}
 			};
 	}
 
-	void iniGetIndexContext(){
+	void iniGetIndexContext() {
 		auto& context = imgProcess->context();
 		//context.indexGetContext.removeIndicesIf = [](rw::imgPro::ClassId classId, rw::imgPro::ProcessResultIndex index) {
 		//	return classId == 1;
 		//	};
-
 
 		context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info) {
 			return false;
@@ -137,7 +130,6 @@ protected:
 		defectConfigs[8] = defectConfig;
 		defectConfigs[9] = defectConfig;
 		context.defectCfg = defectConfigs;
-
 	}
 	void iniDefectDrawConfig()
 	{
@@ -155,7 +147,6 @@ protected:
 		drawConfig.isDisAreaText = false;
 		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::CenterIn;
 		context.defectDrawCfg = drawConfig;
-		
 	}
 public:
 	int left = 100;

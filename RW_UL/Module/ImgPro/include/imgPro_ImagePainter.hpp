@@ -23,7 +23,7 @@ namespace rw
 			int thickness = 1;
 			Color rectColor = Color::Red;
 			QString text;
-			Color textColor= Color::Red;
+			Color textColor = Color::Red;
 			int fontSize = 3;
 		public:
 			enum class TextLocate
@@ -38,19 +38,18 @@ namespace rw
 				RightBottomOut,
 				CenterIn,
 			};
-			TextLocate textLocate= TextLocate::LeftTopOut;
+			TextLocate textLocate = TextLocate::LeftTopOut;
 		};
 
 		struct ImagePainter
 		{
 		public:
-			static void drawVerticalLine(QImage& image, const ConfigDrawLine & cfg);
+			static void drawVerticalLine(QImage& image, const ConfigDrawLine& cfg);
 			static void drawHorizontalLine(QImage& image, const ConfigDrawLine& cfg);
 
-			static void drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawRect & cfg);
-			
+			static void drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawRect& cfg);
+
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, double proportion);
-			
 		};
 	}
 }

@@ -61,7 +61,6 @@ namespace rw {
 			public:
 				//The location of the text relative to the shape
 				TextLocate textLocate{ TextLocate::LeftTopOut };
-	
 			};
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<PainterConfig>& colorList, double proportion = 0.06);

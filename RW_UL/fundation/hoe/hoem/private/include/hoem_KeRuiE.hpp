@@ -11,7 +11,7 @@ namespace rw {
 			Address switchAddress(ModbusI locate);
 			Address switchAddress(ModbusO locate);
 		private:
-			ModbusDevice * _modbusDevice;
+			ModbusDevice* _modbusDevice;
 		public:
 			KeRuiE(ModbusDevice* modbusDevice);
 			~KeRuiE() override;

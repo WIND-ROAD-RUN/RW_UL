@@ -28,7 +28,8 @@ namespace rw {
 				/*cv::Mat center_crop_image = PreProcess::centerCrop(mat, input_w, input_h, config.centerCropColor, &_centerCropParams);
 				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
 				(cudaMemcpy(gpu_buffers[0], infer_image.data, input_w * input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
-			*/}
+			*/
+			}
 			else
 			{
 				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(input_w, input_h), cv::Scalar(0, 0, 0), true);
@@ -126,8 +127,6 @@ namespace rw {
 			return result;
 		}
 
-
-
 		void ModelEngine_Yolov11_seg_with_mask::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(enginePath, std::ios::binary);
@@ -223,21 +222,20 @@ namespace rw {
 				bbox.height = static_cast<int>(bbox.height * scaleY);
 
 				DetectionRectangleInfo resultItem;
-				resultItem.width = bbox.width ;
+				resultItem.width = bbox.width;
 				resultItem.height = bbox.height;
 				resultItem.leftTop.first = bbox.x;
 				resultItem.leftTop.second = bbox.y;
-				resultItem.rightTop.first = bbox.x  + bbox.width;
-				resultItem.rightTop.second = bbox.y ;
-				resultItem.leftBottom.first = bbox.x ;
-				resultItem.leftBottom.second = bbox.y  + bbox.height ;
-				resultItem.rightBottom.first = bbox.x  + bbox.width ;
-				resultItem.rightBottom.second = bbox.y  + bbox.height ;
+				resultItem.rightTop.first = bbox.x + bbox.width;
+				resultItem.rightTop.second = bbox.y;
+				resultItem.leftBottom.first = bbox.x;
+				resultItem.leftBottom.second = bbox.y + bbox.height;
+				resultItem.rightBottom.first = bbox.x + bbox.width;
+				resultItem.rightBottom.second = bbox.y + bbox.height;
 				resultItem.center_x = bbox.x + bbox.width / 2;
 				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
-
 
 				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
 				cv::Rect roi = bbox & img_rect;
@@ -281,8 +279,8 @@ namespace rw {
 				cv::Rect bbox = item.bbox;
 				bbox.x = item.bbox.x + params.crop_x - params.pad_left;
 				bbox.y = item.bbox.y + params.crop_y - params.pad_top;
-				bbox.width = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left- bbox.x;
-				bbox.height = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top- bbox.y;
+				bbox.width = item.bbox.x + item.bbox.width + params.crop_x - params.pad_left - bbox.x;
+				bbox.height = item.bbox.y + item.bbox.height + params.crop_y - params.pad_top - bbox.y;
 
 				DetectionRectangleInfo resultItem;
 				resultItem.width = bbox.width;
@@ -299,7 +297,6 @@ namespace rw {
 				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
-
 
 				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
 				cv::Rect roi = bbox & img_rect;
@@ -351,9 +348,8 @@ namespace rw {
 				cv::Rect bbox = item.bbox;
 				bbox.x = (item.bbox.x - dw) / scale;
 				bbox.y = (item.bbox.y - dh) / scale;
-				bbox.width = (item.bbox.x + item.bbox.width - dw) / scale- bbox.x;
-				bbox.height = (item.bbox.y + item.bbox.height - dh) / scale- bbox.y;
-
+				bbox.width = (item.bbox.x + item.bbox.width - dw) / scale - bbox.x;
+				bbox.height = (item.bbox.y + item.bbox.height - dh) / scale - bbox.y;
 
 				DetectionRectangleInfo resultItem;
 				resultItem.width = bbox.width;
@@ -370,7 +366,6 @@ namespace rw {
 				resultItem.center_y = bbox.y + bbox.height / 2;
 				resultItem.classId = item.class_id;
 				resultItem.score = item.conf;
-
 
 				cv::Rect img_rect(0, 0, _sourceWidth, _sourceHeight);
 				cv::Rect roi = bbox & img_rect;
@@ -415,7 +410,7 @@ namespace rw {
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
-		
+
 				int blue = (item.classId * 37) % 256;  // 37 是一个随机质数，用于生成分布均匀的值
 				int green = (item.classId * 73) % 256; // 73 是另一个随机质数
 				int red = (item.classId * 109) % 256;  // 109 是另一个随机质数
@@ -423,16 +418,9 @@ namespace rw {
 				config.color = cv::Scalar(blue, green, red); // BGR 格式
 				config.alpha = 10;
 				ImagePainter::drawMaskOnSourceImg(result, item, config);
-				
-
-
-
 			}
 
 			return result;
 		}
-
-
-
 	}
 }

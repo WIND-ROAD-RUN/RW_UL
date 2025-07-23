@@ -18,7 +18,6 @@ namespace rw
 		struct EliminationInfo
 		{
 			std::unordered_map<ClassId, std::vector<EliminationItem>> defectItems;
-
 		};
 
 		struct EliminationInfoGetConfig
@@ -55,27 +54,24 @@ namespace rw
 		};
 
 		using GetEliminationItemSpecialOperate = std::function<void(
-			rw::imgPro::EliminationItem &,
+			rw::imgPro::EliminationItem&,
 			const rw::DetectionRectangleInfo&,
 			const rw::imgPro::EliminationInfoGetConfig&
-		)>;
+			)>;
 
 		struct EliminationInfoGetContext {
 		public:
 			GetEliminationItemSpecialOperate getEliminationItemFuncSpecialOperator;
 		};
 
-
 		struct EliminationInfoFunc
 		{
 		public:
-			
+
 			using ClassIdWithConfigMap = std::unordered_map<ClassId, EliminationInfoGetConfig>;
 		public:
 			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config);
-			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,const GetEliminationItemSpecialOperate & specialPrepare);
-
+			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialPrepare);
 		};
-
 	}
 }

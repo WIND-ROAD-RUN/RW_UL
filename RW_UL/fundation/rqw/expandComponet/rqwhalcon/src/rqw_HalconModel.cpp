@@ -40,13 +40,12 @@ namespace rw
 
 		HalconShapeId HalconShapeXLDModel::createXLD(const HalconWidgetObject* img, const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config)
 		{
-			bool isCreate{false};
-			return createXLD(img,recs,config,isCreate);
-
+			bool isCreate{ false };
+			return createXLD(img, recs, config, isCreate);
 		}
 
 		HalconShapeId HalconShapeXLDModel::createXLD(const HalconWidgetObject* img,
-		                                             const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config, bool& isCreate)
+			const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config, bool& isCreate)
 		{
 			HalconCpp::HObject  ho_TemplateRegion;
 			HalconCpp::HTuple hv_ModelID;
@@ -74,9 +73,7 @@ namespace rw
 				mergedRegion = temp;
 			}
 
-
 			HalconCpp::ReduceDomain(grayImage, mergedRegion, &ho_TemplateRegion);
-
 
 			// 边缘提取
 			HalconCpp::HObject ho_Border;
@@ -113,9 +110,6 @@ namespace rw
 				return HalconShapeId();
 			}
 			return hv_ModelID;
-
-
-
 		}
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id,
@@ -127,7 +121,6 @@ namespace rw
 
 		std::vector<HalconWidgetTemplateResult> HalconShapeXLDModel::findShapeModel(const HalconShapeId& id, const HalconWidgetObject* img, const HalconShapeXLDFindConfig& halconShapeXldFindConfig, const PainterConfig& painterConfig)
 		{
-
 			if (!img)
 			{
 				return std::vector<HalconWidgetTemplateResult>();
@@ -318,13 +311,13 @@ namespace rw
 		}
 
 		HalconShapeId HalconShapeXLDModel::createXLD(const HalconWidgetObject& img,
-		                                             const std::vector<HalconWidgetObject>& recs, bool& isCreate)
+			const std::vector<HalconWidgetObject>& recs, bool& isCreate)
 		{
-			return createXLD(&img,recs, HalconShapeXLDConfig(),isCreate);
+			return createXLD(&img, recs, HalconShapeXLDConfig(), isCreate);
 		}
 
 		HalconShapeId HalconShapeXLDModel::createXLD(const HalconWidgetObject& img,
-		                                             const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config)
+			const std::vector<HalconWidgetObject>& recs, const HalconShapeXLDConfig& config)
 		{
 			bool isCreate{ false };
 			return createXLD(&img, recs, config, isCreate);

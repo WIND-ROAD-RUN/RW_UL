@@ -33,7 +33,6 @@ namespace rw {
 					push_down(0); // 调整堆以保持堆性质
 				}
 				return top_element; // 返回堆顶元素
-
 			}
 
 			T peek() override
@@ -175,8 +174,5 @@ namespace rw {
 			std::function<bool(const T&, const T&)> _compareNodeEqual;
 			std::function<bool(const Priority&, const Priority&)> _compareNodePriority;
 		};
-	
-	
 	}
-
 }

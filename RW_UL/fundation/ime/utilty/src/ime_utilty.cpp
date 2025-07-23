@@ -159,7 +159,6 @@ namespace rw
 		cv::Mat mask_3channel;
 		cv::merge(mask_channels, mask_3channel);
 
-
 		if (color_mask.type() != img_roi.type()) {
 			color_mask.convertTo(color_mask, img_roi.type());
 		}
@@ -168,7 +167,6 @@ namespace rw
 		}
 
 		cv::addWeighted(img_roi, 1.0, color_mask.mul(mask_3channel), config.alpha, 0, img_roi);
-
 	}
 
 	void ImagePainter::drawVerticalLine(cv::Mat& image, int position, const ImagePainter::PainterConfig& config)
@@ -206,13 +204,13 @@ namespace rw
 	DetectionRectangleInfo::DetectionRectangleInfo(const DetectionRectangleInfo& other)
 		: leftTop(other.leftTop), rightTop(other.rightTop), leftBottom(other.leftBottom), rightBottom(other.rightBottom),
 		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
-		classId(other.classId), score(other.score), mask_roi(other.mask_roi.clone()),roi(other.roi) {
+		classId(other.classId), score(other.score), mask_roi(other.mask_roi.clone()), roi(other.roi) {
 	}
 
 	DetectionRectangleInfo::DetectionRectangleInfo(DetectionRectangleInfo&& other) noexcept
 		: leftTop(std::move(other.leftTop)), rightTop(std::move(other.rightTop)), leftBottom(std::move(other.leftBottom)), rightBottom(std::move(other.rightBottom)),
 		center_x(other.center_x), center_y(other.center_y), width(other.width), height(other.height), area(other.area),
-		classId(other.classId), score(other.score), mask_roi(std::move(other.mask_roi)),roi(std::move(other.roi)) {
+		classId(other.classId), score(other.score), mask_roi(std::move(other.mask_roi)), roi(std::move(other.roi)) {
 	}
 
 	DetectionRectangleInfo& DetectionRectangleInfo::operator=(const DetectionRectangleInfo& other)

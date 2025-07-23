@@ -33,6 +33,5 @@ namespace rw
 				const ProcessResult& info,
 				const RemoveIndicesIfByInfo& predicate);
 		};
-
 	}
 }

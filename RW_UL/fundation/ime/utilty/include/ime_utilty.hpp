@@ -41,7 +41,7 @@ namespace rw {
 		cv::Mat mask_roi;//if it is seg
 		cv::Rect roi;
 	public:
-		bool segMaskValid{false};
+		bool segMaskValid{ false };
 	public:
 		DetectionRectangleInfo() = default;
 
@@ -120,8 +120,8 @@ namespace rw {
 		public:
 			//For mask painter
 			double alpha{ 0.3 };
-			double thresh{0.5};
-			double maxVal{1.0};
+			double thresh{ 0.5 };
+			double maxVal{ 1.0 };
 		};
 
 		/**

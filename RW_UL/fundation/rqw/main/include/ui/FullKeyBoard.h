@@ -25,7 +25,7 @@ class FullKeyBoard : public QDialog
 	Q_OBJECT
 
 public:
-	FullKeyBoard(QWidget *parent = nullptr);
+	FullKeyBoard(QWidget* parent = nullptr);
 	~FullKeyBoard();
 private:
 	QString value;
@@ -72,9 +72,6 @@ private slots:
 	void pbtn_you_clicked();
 	void pbtn_shanchu_clicked();
 
-	
-
 private:
-	Ui::FullKeyBoardClass *ui;
+	Ui::FullKeyBoardClass* ui;
 };
-

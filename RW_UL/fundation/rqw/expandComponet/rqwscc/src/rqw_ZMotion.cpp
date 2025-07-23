@@ -257,7 +257,7 @@ namespace rw
 				return false;
 			}
 
-			return _zMotion->SetModbus(adress,num,value);
+			return _zMotion->SetModbus(adress, num, value);
 		}
 
 		float ZMotion::getModbus(int adress, int num, bool& isGet)
@@ -269,15 +269,15 @@ namespace rw
 			}
 			isGet = true;
 
-			float result=0;
-			isGet=_zMotion->GetModbus(adress, num, result);
+			float result = 0;
+			isGet = _zMotion->GetModbus(adress, num, result);
 			return result;
 		}
 
 		float ZMotion::getModbus(int adress, int num)
 		{
 			bool isGet{ false };
-			return getModbus(adress,num, isGet);
+			return getModbus(adress, num, isGet);
 		}
 
 		bool ZMotion::setAxisType(int axis, int value)
@@ -287,7 +287,7 @@ namespace rw
 				return false;
 			}
 
-			return _zMotion->SetAxisType(axis,value);
+			return _zMotion->SetAxisType(axis, value);
 		}
 	}
 }

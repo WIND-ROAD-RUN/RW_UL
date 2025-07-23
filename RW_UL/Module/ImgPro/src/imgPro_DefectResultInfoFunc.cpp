@@ -10,8 +10,8 @@ namespace rw
 		}
 
 		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const EliminationInfo& eliminationInfo,
-		                                                           const ClassIdWithConfigMap& config, const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
-		                                                           const GetDefectResultExtraOperateWhichIsDisableDefects&getDefectResultExtraOperateDisable
+			const ClassIdWithConfigMap& config, const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable
 		)
 		{
 			DefectResultInfo result;

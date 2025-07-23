@@ -4,7 +4,7 @@ namespace rw
 {
 	namespace rqwm
 	{
-		ModbusDevice::ModbusDevice(const ModbusType& type, const ModbusConfig& config,QObject* parent )
+		ModbusDevice::ModbusDevice(const ModbusType& type, const ModbusConfig& config, QObject* parent)
 			: QObject(parent)
 		{
 			_device = hoem::ModbusDeviceFactory::createDevice(type, config);

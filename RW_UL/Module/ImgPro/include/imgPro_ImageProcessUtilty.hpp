@@ -8,7 +8,6 @@
 
 #include "rqw_rqwColor.hpp"
 
-
 namespace rw
 {
 	namespace imgPro

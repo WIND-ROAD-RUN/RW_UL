@@ -3,7 +3,6 @@
 #include <QDialog>
 #include "NumberKeyboard.h"
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class PicturesPainterSetAspectRatioClass; };
 QT_END_NAMESPACE
@@ -13,7 +12,7 @@ class PicturesPainterSetAspectRatio : public QDialog
 	Q_OBJECT
 
 public:
-	PicturesPainterSetAspectRatio(QWidget *parent = nullptr);
+	PicturesPainterSetAspectRatio(QWidget* parent = nullptr);
 	~PicturesPainterSetAspectRatio();
 public:
 	double getImageWidth() const;
@@ -29,6 +28,5 @@ private slots:
 	void btn_exit_clicked();
 
 private:
-	Ui::PicturesPainterSetAspectRatioClass *ui;
+	Ui::PicturesPainterSetAspectRatioClass* ui;
 };
-

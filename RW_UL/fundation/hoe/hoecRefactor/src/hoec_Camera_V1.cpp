@@ -225,7 +225,7 @@ namespace rw
 
 		bool CameraActive::getIOOut(int line_index, bool& state)
 		{
-			return _camera -> getIOOut(line_index, state);
+			return _camera->getIOOut(line_index, state);
 		}
 
 		bool CameraActive::softwareTrigger()

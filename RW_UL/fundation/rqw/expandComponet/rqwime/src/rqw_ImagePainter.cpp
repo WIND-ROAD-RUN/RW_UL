@@ -312,7 +312,7 @@ namespace rw
 			textPainter.setFont(font);
 
 			QPointF textPosition;
-			int offset = config.fontSize ; // 动态计算偏移量，基于字体大小的一半
+			int offset = config.fontSize; // 动态计算偏移量，基于字体大小的一半
 			switch (config.textLocate) {
 			case PainterConfig::TextLocate::LeftTopIn:
 				textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
@@ -324,7 +324,7 @@ namespace rw
 				textPosition = QPointF(rectInfo.rightTop.first - offset * config.text.size() / 1.5, rectInfo.rightTop.second + offset);
 				break;
 			case PainterConfig::TextLocate::RightTopOut:
-				textPosition = QPointF(rectInfo.rightTop.first- offset*config.text.size()/1.5, rectInfo.rightTop.second - 10);
+				textPosition = QPointF(rectInfo.rightTop.first - offset * config.text.size() / 1.5, rectInfo.rightTop.second - 10);
 				break;
 			case PainterConfig::TextLocate::LeftBottomIn:
 				textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
@@ -336,7 +336,7 @@ namespace rw
 				textPosition = QPointF(rectInfo.rightBottom.first - offset * config.text.size() / 1.5, rectInfo.rightBottom.second - 10);
 				break;
 			case PainterConfig::TextLocate::RightBottomOut:
-				textPosition = QPointF(rectInfo.rightBottom.first- offset * config.text.size() / 1.5, rectInfo.rightBottom.second + offset);
+				textPosition = QPointF(rectInfo.rightBottom.first - offset * config.text.size() / 1.5, rectInfo.rightBottom.second + offset);
 				break;
 			case PainterConfig::TextLocate::CenterIn:
 				textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);

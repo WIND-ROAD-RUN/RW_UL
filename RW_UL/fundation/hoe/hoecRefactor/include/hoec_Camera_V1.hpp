@@ -221,6 +221,5 @@ namespace rw
 			bool getIOOut(int line_index, bool& state) override;
 			bool softwareTrigger() override;
 		};
-
 	}
 }

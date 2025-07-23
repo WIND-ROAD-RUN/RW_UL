@@ -24,7 +24,7 @@ namespace rw
 		}
 
 		void DefectDrawFunc::drawDefectRecs(QImage& img, const DefectResultInfo& info,
-		                                    const ProcessResult& processResult, const DefectDrawConfig& config)
+			const ProcessResult& processResult, const DefectDrawConfig& config)
 		{
 			if (img.isNull() || processResult.empty()) {
 				return; // 无效图像或结果
@@ -56,12 +56,12 @@ namespace rw
 						}
 
 						auto findColor = config.classIdWithColorWhichIsBad.find(pairs.first);
-						if (findColor!= config.classIdWithColorWhichIsBad.end())
+						if (findColor != config.classIdWithColorWhichIsBad.end())
 						{
 							painterConfig.rectColor = findColor->second;
 							painterConfig.textColor = findColor->second;
 						}
-						
+
 						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
 					}
 				}
@@ -100,7 +100,6 @@ namespace rw
 					}
 				}
 			}
-
 		}
 
 		void DefectDrawFunc::drawRunText(QImage& img, const RunTextConfig& config)
@@ -113,13 +112,12 @@ namespace rw
 				configList.push_back(textColor);
 				textList.push_back(config.operatorTimeText);
 			}
-			textColor =config.processImgTimeTextColor;
+			textColor = config.processImgTimeTextColor;
 			if (config.isDisProcessImgTime)
 			{
 				configList.push_back(textColor);
 				textList.push_back(config.processImgTimeText);
 			}
-
 
 			if (config.isDrawExtraText)
 			{
@@ -131,7 +129,7 @@ namespace rw
 				}
 			}
 
-			rw::imgPro::ImagePainter::drawTextOnImage(img, textList, configList,config.runTextProportion);
+			rw::imgPro::ImagePainter::drawTextOnImage(img, textList, configList, config.runTextProportion);
 		}
 	}
 }

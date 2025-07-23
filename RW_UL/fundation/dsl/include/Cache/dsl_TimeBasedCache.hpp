@@ -560,7 +560,7 @@ namespace rw {
 				return std::nullopt; // 未找到返回空值
 			}
 
-			void clear()  {
+			void clear() {
 				std::lock_guard<std::mutex> lock(_mutex);
 				_cache = std::deque<std::pair<Time, T>>();
 			}

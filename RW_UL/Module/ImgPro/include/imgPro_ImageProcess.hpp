@@ -61,8 +61,8 @@ namespace rw
 				return _operatorTime;
 			}
 		public:
-			ProcessResult processImg(const cv::Mat & mat);
-			ProcessResultIndexMap getIndex(const ProcessResult & processResult);
+			ProcessResult processImg(const cv::Mat& mat);
+			ProcessResultIndexMap getIndex(const ProcessResult& processResult);
 			EliminationInfo getEliminationInfo(const ProcessResult& processResult, const ProcessResultIndexMap& indexMap, const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs);
 			DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs);
 		public:
@@ -105,19 +105,19 @@ namespace rw
 				return _defectResultInfo;
 			}
 
-			ProcessResultIndexMap& processResultIndexMap() 
+			ProcessResultIndexMap& processResultIndexMap()
 			{
 				return _processResultIndexMap;
 			}
-			ProcessResult& processResult() 
+			ProcessResult& processResult()
 			{
 				return _processResult;
 			}
-			EliminationInfo& eliminationInfo() 
+			EliminationInfo& eliminationInfo()
 			{
 				return _eliminationInfo;
 			}
-			DefectResultInfo& defectResultInfo() 
+			DefectResultInfo& defectResultInfo()
 			{
 				return _defectResultInfo;
 			}

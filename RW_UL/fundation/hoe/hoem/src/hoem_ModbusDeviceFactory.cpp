@@ -13,7 +13,7 @@ namespace rw
 			switch (type)
 			{
 			case ModbusDeviceName::keRuiE:
-				return createKeRuiE(type,config);
+				return createKeRuiE(type, config);
 			default:
 				throw std::runtime_error("Unsupported Modbus device type");
 			}
