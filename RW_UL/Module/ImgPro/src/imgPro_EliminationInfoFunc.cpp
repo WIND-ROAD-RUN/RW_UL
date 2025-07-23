@@ -60,14 +60,17 @@ namespace rw
 						scoreInRange = !scoreInRange;
 					}
 
+					bool temp{true};
 					if (cfg.isUsingArea)
 					{
-						isBad = isBad || !areaInRange;
+						temp = temp && !areaInRange;
 					}
 					if (cfg.isUsingScore)
 					{
-						isBad = isBad || !scoreInRange;
+						temp = temp && !scoreInRange;
 					}
+
+					isBad = isBad || temp;
 
 					EliminationItem item;
 					item.score = score;
