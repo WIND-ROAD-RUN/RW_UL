@@ -54,6 +54,13 @@ namespace rw
 		public:
 			void operator()(const cv::Mat& mat);
 			QImage getMaskImg(const cv::Mat& mat);
+			static QImage getMaskImg(const cv::Mat& mat,
+				const DefectResultInfo& defectResultInfo,
+				const ProcessResult& processResult,
+				ImageProcessContext& context,
+				RunTime operatorTime,
+				RunTime processImgTime
+			);
 		private:
 			ProcessResultIndexMap _processResultIndexMap{};
 			ProcessResult _processResult{};

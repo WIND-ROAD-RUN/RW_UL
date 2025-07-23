@@ -112,27 +112,31 @@ namespace rw
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat)
 		{
+			return getMaskImg(mat, _defectResultInfo, _processResult, _context, _operatorTime, _processImgTime);
+		}
+
+		QImage ImageProcess::getMaskImg(const cv::Mat& mat, const DefectResultInfo& defectResultInfo,
+			const ProcessResult& processResult, ImageProcessContext& context, RunTime operatorTime,
+			RunTime processImgTime)
+		{
 			auto img = rw::CvMatToQImage(mat);
-			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, _defectResultInfo, _processResult, _context.defectDrawCfg);
-
-			_context.runTextCfg.operatorTimeText = QString::number(_operatorTime)+" ms";
-			_context.runTextCfg.processImgTimeText = QString::number(_processImgTime) + " ms";
-
-			auto & errorRecs = _defectResultInfo.defects;
-
+			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, context.defectDrawCfg);
+			context.runTextCfg.operatorTimeText = QString::number(operatorTime) + " ms";
+			context.runTextCfg.processImgTimeText = QString::number(processImgTime) + " ms";
+			auto& errorRecs = defectResultInfo.defects;
 			QVector<QString> errors;
-			for ( auto & pairs: errorRecs)
+			for (auto& pairs : errorRecs)
 			{
-				QString processTextPre = (_context.defectDrawCfg.classIdNameMap.find(pairs.first) != _context.defectDrawCfg.classIdNameMap.end()) ?
-					_context.defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
-				auto currentIdCfg = _context.eliminationCfg[pairs.first];
+				QString processTextPre = (context.defectDrawCfg.classIdNameMap.find(pairs.first) != context.defectDrawCfg.classIdNameMap.end()) ?
+					context.defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
+				auto currentIdCfg = context.eliminationCfg[pairs.first];
 				for (const auto& item : pairs.second)
 				{
 					if (currentIdCfg.isUsingArea)
 					{
 						errors.push_back(processTextPre + " : " +
-							QString::number(item.area, 'f', 1)+ " "+ 
-							QString::number(currentIdCfg.areaRange.first, 'f', 1)+" ~ " + 
+							QString::number(item.area, 'f', 1) + " " +
+							QString::number(currentIdCfg.areaRange.first, 'f', 1) + " ~ " +
 							QString::number(currentIdCfg.areaRange.second, 'f', 1));
 					}
 					if (currentIdCfg.isUsingScore)
@@ -144,9 +148,8 @@ namespace rw
 					}
 				}
 			}
-			_context.runTextCfg.extraTexts = errors;
-			rw::imgPro::DefectDrawFunc::drawRunText(img, _context.runTextCfg);
-
+			context.runTextCfg.extraTexts = errors;
+			rw::imgPro::DefectDrawFunc::drawRunText(img, context.runTextCfg);
 			return img;
 		}
 	}
