@@ -47,6 +47,15 @@ namespace rw
 			RunTime _processImgTime{};
 			RunTime _operatorTime{};
 		public:
+			RunTime getProcessImgTime() const
+			{
+				return _processImgTime;
+			}
+			RunTime getOperatorTime() const
+			{
+				return _operatorTime;
+			}
+		public:
 			ProcessResult processImg(const cv::Mat & mat);
 			ProcessResultIndexMap getIndex(const ProcessResult & processResult);
 			EliminationInfo getEliminationInfo(const ProcessResult& processResult, const ProcessResultIndexMap& indexMap, const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs);
