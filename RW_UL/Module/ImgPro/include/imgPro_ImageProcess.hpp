@@ -35,7 +35,12 @@ namespace rw
 		private:
 			ImageProcessContext _context{};
 		public:
-			ImageProcessContext& getContext()
+			const ImageProcessContext& getContext() const
+			{
+				return _context;
+			}
+
+			ImageProcessContext& context()
 			{
 				return _context;
 			}
@@ -89,6 +94,23 @@ namespace rw
 				return _eliminationInfo;
 			}
 			const DefectResultInfo& getDefectResultInfo() const
+			{
+				return _defectResultInfo;
+			}
+
+			ProcessResultIndexMap& processResultIndexMap() 
+			{
+				return _processResultIndexMap;
+			}
+			ProcessResult& processResult() 
+			{
+				return _processResult;
+			}
+			EliminationInfo& eliminationInfo() 
+			{
+				return _eliminationInfo;
+			}
+			DefectResultInfo& defectResultInfo() 
 			{
 				return _defectResultInfo;
 			}
