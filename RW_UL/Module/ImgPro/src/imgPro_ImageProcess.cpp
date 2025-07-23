@@ -120,6 +120,14 @@ namespace rw
 			RunTime processImgTime)
 		{
 			auto img = rw::CvMatToQImage(mat);
+			getMaskImg(img,defectResultInfo,processResult,context,operatorTime,processImgTime);
+			return img;
+		}
+
+		void ImageProcess::getMaskImg(QImage& img, const DefectResultInfo& defectResultInfo,
+			const ProcessResult& processResult, ImageProcessContext& context, RunTime operatorTime,
+			RunTime processImgTime)
+		{
 			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, context.defectDrawCfg);
 			context.runTextCfg.operatorTimeText = QString::number(operatorTime) + " ms";
 			context.runTextCfg.processImgTimeText = QString::number(processImgTime) + " ms";
@@ -150,7 +158,6 @@ namespace rw
 			}
 			context.runTextCfg.extraTexts = errors;
 			rw::imgPro::DefectDrawFunc::drawRunText(img, context.runTextCfg);
-			return img;
 		}
 	}
 }

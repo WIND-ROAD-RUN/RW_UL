@@ -25,7 +25,7 @@ protected:
 
 	void iniRunTextConfig()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 
 		context.runTextCfg.isDrawExtraText = true;
 		context.runTextCfg.isDisOperatorTime = true;
@@ -46,7 +46,7 @@ protected:
 
 	void iniDefectResultContext()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item) {
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find!=item.customFields.end())
@@ -66,7 +66,7 @@ protected:
 
 	void iniEliminationContext()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		//context.indexGetContext.removeIndicesIf = [](rw::imgPro::ClassId classId, rw::imgPro::ProcessResultIndex index) {
 		//	return classId == 1;
 		//	};
@@ -88,7 +88,7 @@ protected:
 	}
 
 	void iniGetIndexContext(){
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		//context.indexGetContext.removeIndicesIf = [](rw::imgPro::ClassId classId, rw::imgPro::ProcessResultIndex index) {
 		//	return classId == 1;
 		//	};
@@ -101,7 +101,7 @@ protected:
 
 	void iniEliminationInfoGetConfig()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		rw::imgPro::EliminationInfoGetConfig eliminationInfoGetConfig;
 		eliminationInfoGetConfig.areaFactor = 0.00157;
 		eliminationInfoGetConfig.scoreFactor = 100;
@@ -122,7 +122,7 @@ protected:
 	}
 	void iniDefectResultGetConfig()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		rw::imgPro::DefectResultInfoFunc::DefectResultGetConfig defectConfig;
 		defectConfig.isEnable = false;
 		defectConfigs[0] = defectConfig;
@@ -141,7 +141,7 @@ protected:
 	}
 	void iniDefectDrawConfig()
 	{
-		auto& context = imgProcess->getContext();
+		auto& context = imgProcess->context();
 		rw::imgPro::DefectDrawFunc::DefectDrawConfig drawConfig;
 		drawConfig.isDrawDefects = true;
 		drawConfig.isDrawDisableDefects = true;
