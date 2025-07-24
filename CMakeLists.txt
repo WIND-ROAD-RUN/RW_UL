@@ -32,9 +32,11 @@ else()
 endif()
     include(./cmake/EnvironmetIni.cmake)
 
-include(./cmake/PackageIni.cmake)
-include(./cmake/ComplierIni.cmake)
-include(./cmake/PackageFind.cmake)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+	include(./cmake/PackageIni.cmake)
+	include(./cmake/ComplierIni.cmake)
+	include(./cmake/PackageFind.cmake)
+endif()
 
 find_package(gtest REQUIRED CONFIG)
 
