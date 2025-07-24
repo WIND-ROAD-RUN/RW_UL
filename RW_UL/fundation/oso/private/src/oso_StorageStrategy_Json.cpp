@@ -7,14 +7,15 @@
 
 namespace rw {
 	namespace oso {
-		void StorageStrategy_Json::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) {
+		bool StorageStrategy_Json::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) {
 			auto jsonString = getFormatString(assembly);
 			std::ofstream file(fileName);
 			if (!file.is_open()) {
-				throw std::runtime_error("Failed to open file for writing");
+				return false;
 			}
 			file << jsonString;
 			file.close();
+			return true;
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Json::load(const std::filesystem::path& fileName) {

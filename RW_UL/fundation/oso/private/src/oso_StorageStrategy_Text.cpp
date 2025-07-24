@@ -7,15 +7,17 @@ namespace rw
 {
 	namespace oso
 	{
-		void StorageStrategy_Text::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName)
+		bool StorageStrategy_Text::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName)
 		{
 			auto txtString = getFormatString(assembly);
 			std::ofstream outFile(fileName);
 			if (!outFile)
 			{
-				throw std::runtime_error("Failed to open file for writing");
+				return false;
 			}
 			outFile << txtString;
+
+			return true;
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Text::load(const std::filesystem::path& fileName)

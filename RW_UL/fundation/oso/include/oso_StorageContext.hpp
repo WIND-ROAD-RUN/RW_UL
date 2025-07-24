@@ -40,8 +40,8 @@ namespace rw
 		public:
 			explicit StorageContext(StorageType type);
 		public:
-			void save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
-			void save(const ObjectStoreAssembly& assembly, const std::string& fileName) const;
+			bool save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
+			bool save(const ObjectStoreAssembly& assembly, const std::string& fileName) const;
 
 			[[nodiscard]] std::shared_ptr<ObjectStoreAssembly> load(const std::filesystem::path& fileName) const;
 			[[nodiscard]] std::shared_ptr<ObjectStoreAssembly> load(const std::string& fileName) const;

@@ -18,7 +18,7 @@ namespace rw
 			: public IStorageStrategy
 		{
 		public:
-			void save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) override;
+			bool save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) override;
 			std::shared_ptr<ObjectStoreAssembly> load(const std::filesystem::path& fileName) override;
 			std::string getFormatString(const ObjectStoreAssembly& assembly) override;
 		private:

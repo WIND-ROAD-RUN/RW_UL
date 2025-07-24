@@ -5,10 +5,10 @@
 
 namespace rw {
 	namespace oso {
-		void StorageStrategy_Sqlite::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) {
+		bool StorageStrategy_Sqlite::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) {
 			sqlite3* db;
 			if (sqlite3_open(fileName.string().c_str(), &db) != SQLITE_OK) {
-				throw std::runtime_error("Failed to open database");
+				return false;
 			}
 
 			const char* createTableSQL = R"(
@@ -22,12 +22,13 @@ namespace rw {
             )";
 			if (sqlite3_exec(db, createTableSQL, nullptr, nullptr, nullptr) != SQLITE_OK) {
 				sqlite3_close(db);
-				throw std::runtime_error("Failed to create table");
+				return false;
 			}
 
 			saveAssembly(db, std::make_shared<ObjectStoreAssembly>(assembly), 0);
 
 			sqlite3_close(db);
+			return true;
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Sqlite::load(const std::filesystem::path& fileName) {

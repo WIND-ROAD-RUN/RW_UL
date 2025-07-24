@@ -8,16 +8,17 @@ namespace rw
 {
 	namespace oso
 	{
-		void StorageStrategy_Xml::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName)
+		bool StorageStrategy_Xml::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName)
 		{
 			auto xmlString = getFormatString(assembly);
 			pugi::xml_document doc;
 			if (auto loadResult = doc.load_string(xmlString.c_str()); !loadResult) {
-				throw std::runtime_error("Failed to load string to xml document");
+				return false;
 			}
 			if (auto saveResult = doc.save_file(fileName.c_str()); !saveResult) {
-				throw std::runtime_error("Failed to save xml document to file");
+				return false;
 			}
+			return true;
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Xml::load(const std::filesystem::path& fileName)

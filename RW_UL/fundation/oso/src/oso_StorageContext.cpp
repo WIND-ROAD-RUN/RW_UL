@@ -31,14 +31,14 @@ namespace rw
 			}
 		}
 
-		void StorageContext::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const
+		bool StorageContext::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const
 		{
-			_strategy->save(assembly, fileName);
+			return _strategy->save(assembly, fileName);
 		}
 
-		void StorageContext::save(const ObjectStoreAssembly& assembly, const std::string& fileName) const
+		bool StorageContext::save(const ObjectStoreAssembly& assembly, const std::string& fileName) const
 		{
-			_strategy->save(assembly, fileName);
+			return _strategy->save(assembly, fileName);
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageContext::load(const std::filesystem::path& fileName) const
