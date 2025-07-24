@@ -53,6 +53,7 @@ namespace rw
 			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName, FileReadResult & readResult);
 			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName);
 		public:
+			bool ensureFileExistsSafe(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 			bool ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 		public:
 			bool save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;

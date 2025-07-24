@@ -90,6 +90,37 @@ namespace rw
 			return loadSafe(fileName, readResult);
 		}
 
+		bool StorageContext::ensureFileExistsSafe(const std::filesystem::path& fileName,
+			const ObjectStoreAssembly& assembly) const
+		{
+			std::filesystem::path bakFile = fileName;
+			bakFile += ".bak";
+
+			bool fileExists = std::filesystem::exists(fileName);
+			bool bakExists = std::filesystem::exists(bakFile);
+
+			std::error_code ec;
+
+			if (fileExists && bakExists) {
+				return true;
+			}
+			else if (!fileExists && bakExists) {
+				std::filesystem::copy_file(bakFile, fileName, std::filesystem::copy_options::overwrite_existing, ec);
+				return !ec;
+			}
+			else if (fileExists && !bakExists) {
+				std::filesystem::copy_file(fileName, bakFile, std::filesystem::copy_options::overwrite_existing, ec);
+				return !ec;
+			}
+			else {
+				if (!saveSafe(assembly, fileName)) {
+					return false;
+				}
+				std::filesystem::copy_file(fileName, bakFile, std::filesystem::copy_options::overwrite_existing, ec);
+				return !ec;
+			}
+		}
+
 		bool StorageContext::ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const
 		{
 			if (std::filesystem::exists(fileName)) {
