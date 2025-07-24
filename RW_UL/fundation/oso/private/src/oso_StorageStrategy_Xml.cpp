@@ -10,30 +10,53 @@ namespace rw
 	{
 		bool StorageStrategy_Xml::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName)
 		{
-			auto xmlString = getFormatString(assembly);
-			pugi::xml_document doc;
-			if (auto loadResult = doc.load_string(xmlString.c_str()); !loadResult) {
+			try
+			{
+				auto xmlString = getFormatString(assembly);
+				pugi::xml_document doc;
+				if (auto loadResult = doc.load_string(xmlString.c_str()); !loadResult) {
+					return false;
+				}
+				if (auto saveResult = doc.save_file(fileName.c_str()); !saveResult) {
+					return false;
+				}
+				return true;
+			}
+			catch (std::runtime_error & e)
+			{
 				return false;
 			}
-			if (auto saveResult = doc.save_file(fileName.c_str()); !saveResult) {
-				return false;
+			catch (...)
+			{
+				return nullptr;
 			}
-			return true;
+			
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Xml::load(const std::filesystem::path& fileName)
 		{
-			pugi::xml_document doc;
-			auto loadResult = doc.load_file(fileName.string().c_str());
-			if (!loadResult) {
+			try
+			{
+				pugi::xml_document doc;
+				auto loadResult = doc.load_file(fileName.string().c_str());
+				if (!loadResult) {
+					return nullptr;
+				}
+				auto root = doc.root();
+				std::ostringstream oss;
+				root.print(oss);
+				std::string str = oss.str();
+				auto assembly = getStoreAssemblyFromString(str);
+				return assembly;
+			}
+			catch (std::runtime_error & e)
+			{
 				return nullptr;
 			}
-			auto root = doc.root();
-			std::ostringstream oss;
-			root.print(oss);
-			std::string str = oss.str();
-			auto assembly = getStoreAssemblyFromString(str);
-			return assembly;
+			catch (...)
+			{
+				return nullptr;
+			}
 		}
 
 		std::string StorageStrategy_Xml::getFormatString(const ObjectStoreAssembly& assembly)

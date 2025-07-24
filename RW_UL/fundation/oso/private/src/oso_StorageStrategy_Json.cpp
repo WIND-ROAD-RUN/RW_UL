@@ -8,26 +8,48 @@
 namespace rw {
 	namespace oso {
 		bool StorageStrategy_Json::save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) {
-			auto jsonString = getFormatString(assembly);
-			std::ofstream file(fileName);
-			if (!file.is_open()) {
+			try
+			{
+				auto jsonString = getFormatString(assembly);
+				std::ofstream file(fileName);
+				if (!file.is_open()) {
+					return false;
+				}
+				file << jsonString;
+				file.close();
+				return true;
+			}
+			catch (std::runtime_error & e)
+			{
 				return false;
 			}
-			file << jsonString;
-			file.close();
-			return true;
+			catch (...) {
+				return false;
+			}
+
+			
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageStrategy_Json::load(const std::filesystem::path& fileName) {
-			std::ifstream file(fileName);
-			if (!file.is_open()) {
+			try
+			{
+				std::ifstream file(fileName);
+				if (!file.is_open()) {
+					return nullptr;
+				}
+				std::stringstream buffer;
+				buffer << file.rdbuf();
+				file.close();
+				auto assembly = getStoreAssemblyFromString(buffer.str());
+				return assembly;
+			}
+			catch (std::runtime_error & e)
+			{
 				return nullptr;
 			}
-			std::stringstream buffer;
-			buffer << file.rdbuf();
-			file.close();
-			auto assembly = getStoreAssemblyFromString(buffer.str());
-			return assembly;
+			catch (...) {
+				return nullptr;
+			}
 		}
 
 		std::string StorageStrategy_Json::getFormatString(const ObjectStoreAssembly& assembly) {
