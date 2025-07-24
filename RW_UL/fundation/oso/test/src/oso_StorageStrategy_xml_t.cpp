@@ -47,45 +47,22 @@ namespace oso_StorageStraegy_xml
 	}
 
 	TEST_F(StorageStrategy_xmlTest, apiSave) {
-		try
-		{
-			testObj.save(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData, "./apiSave.xml");
-		}
-		catch (...)
-		{
-			FAIL();
-		}
-		SUCCEED();
+		EXPECT_TRUE(testObj.save(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData, "./apiSave.xml"));
 	}
 
 	TEST_F(StorageStrategy_xmlTest, apiLoad) {
-		try
-		{
-			testObj.save(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData, "./apiSave.xml");
-			auto result = testObj.load("./apiSave.xml");
-			auto isEqual = (*result) == _OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData;
-			EXPECT_EQ(isEqual, true);
-		}
-		catch (...)
-		{
-			FAIL();
-		}
-		SUCCEED();
+		EXPECT_TRUE(testObj.save(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData, "./apiSave.xml"));
+		auto result = testObj.load("./apiSave.xml");
+		ASSERT_TRUE(result != nullptr);
+		auto isEqual = (*result) == _OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData;
+		EXPECT_TRUE(isEqual);
 	}
 
 	TEST_F(StorageStrategy_xmlTest, apiGetFormatString) {
-		try
-		{
-			auto str = testObj.getFormatString(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData);
-			auto standardString = _assemblyStandardString;
-			standardString = removeNewlinesAndTabs(standardString);
-			str = removeNewlinesAndTabs(str);
-			EXPECT_EQ(str, standardString);
-		}
-		catch (...)
-		{
-			FAIL();
-		}
-		SUCCEED();
+		auto str = testObj.getFormatString(_OsoOrganizeStructureDataXmlStoreFormatAssemblySampleData);
+		auto standardString = _assemblyStandardString;
+		standardString = removeNewlinesAndTabs(standardString);
+		str = removeNewlinesAndTabs(str);
+		EXPECT_EQ(str, standardString);
 	}
 }

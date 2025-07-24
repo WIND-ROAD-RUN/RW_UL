@@ -35,10 +35,24 @@ namespace rw
 			S3
 		};
 
+		enum FileReadResult
+		{
+			Success,
+			BackupUsed,
+			NotFound,
+			Failed
+		};
+
 		class StorageContext
 		{
 		public:
 			explicit StorageContext(StorageType type);
+		public:
+			bool saveSafe(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
+			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName, FileReadResult & readResult);
+			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName);
+		public:
+			bool ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 		public:
 			bool save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
 			bool save(const ObjectStoreAssembly& assembly, const std::string& fileName) const;
