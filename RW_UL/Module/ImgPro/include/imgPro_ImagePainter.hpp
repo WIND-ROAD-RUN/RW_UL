@@ -50,6 +50,7 @@ namespace rw
 			static void drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawRect& cfg);
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, double proportion);
+			static void drawTextOnImageWithFontSize(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, int fontSize);
 		};
 	}
 }

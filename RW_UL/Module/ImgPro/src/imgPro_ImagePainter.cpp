@@ -110,5 +110,34 @@ namespace rw
 
 			painter.end();
 		}
+
+		void ImagePainter::drawTextOnImageWithFontSize(QImage& image, const QVector<QString>& texts,
+			const std::vector<Color>& colorList, int fontSize)
+		{
+			if (texts.empty() || fontSize <= 0) {
+				return;
+			}
+
+			QPainter painter(&image);
+			painter.setRenderHint(QPainter::Antialiasing);
+
+			QFont font = painter.font();
+			font.setPixelSize(fontSize);
+			painter.setFont(font);
+
+			int x = 0;
+			int y = fontSize;
+
+			for (int i = 0; i < texts.size(); ++i) {
+				QColor color = (i < static_cast<int>(colorList.size())) ? rw::rqw::RQWColorToQColor(colorList[i]) : rw::rqw::RQWColorToQColor(colorList.back());
+				painter.setPen(color);
+
+				painter.drawText(x, y, texts[i]);
+
+				y += fontSize;
+			}
+
+			painter.end();
+		}
 	}
 }
