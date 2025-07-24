@@ -203,13 +203,13 @@ namespace rw
 			pugi::xml_document doc;
 			auto loadResult = doc.load_string(source.c_str());
 			if (!loadResult) {
-				throw std::runtime_error("Failed to load string to xml document");
+				return nullptr;
 			}
 
 			auto result = std::make_shared<ObjectStoreAssembly>();
 			auto root = doc.child("ObjectStoreAssembly");
 			if (!root) {
-				throw std::runtime_error("Failed to find root node");
+				return nullptr;
 			}
 
 			appendObjectStoreAssemblyFromXmlNode(result, root);

@@ -11,6 +11,7 @@ namespace rw
 	{
 		class IStorageStrategy;
 
+		//请使用Xml和Json作为存储格式其他的还未完全实现
 		enum class StorageType
 		{
 			Sqlite,

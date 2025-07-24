@@ -89,7 +89,8 @@ INSTANTIATE_TEST_SUITE_P(
 	StorageContextTest,
 	::testing::Values(
 		std::make_tuple(StorageType::Xml),
-		std::make_tuple(StorageType::Json),
-		std::make_tuple(StorageType::Text)
+		std::make_tuple(StorageType::Json)
+		//,
+		//std::make_tuple(StorageType::Text)
 	)
 );

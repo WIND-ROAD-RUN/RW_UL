@@ -170,7 +170,7 @@ namespace rw {
 			std::istringstream iss(source);
 			std::string errs;
 			if (!Json::parseFromStream(reader, iss, &root, &errs)) {
-				throw std::runtime_error("Failed to parse JSON string");
+				return nullptr;
 			}
 			auto result = std::make_shared<ObjectStoreAssembly>();
 			appendObjectStoreAssemblyFromJsonValue(result, root);
