@@ -204,7 +204,7 @@ namespace rw
 			}
 
 			// 5. 构造彩色遮罩
-			QColor color = rw::rqw::RQWColorToQColor(cfg.color);
+			QColor color = rw::rqw::RQWColorToQColor(cfg.maskColor);
 			QImage colorMask(maskImg.size(), QImage::Format_ARGB32);
 			colorMask.fill(Qt::transparent);
 			for (int y = 0; y < maskImg.height(); ++y) {
@@ -221,7 +221,15 @@ namespace rw
 			QPainter painter(&image);
 			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 			painter.drawImage(roi.topLeft(), colorMask);
+
 			painter.end();
+
+			if (cfg.hasFrame)
+			{
+				drawShapesOnSourceImg(image, rectInfo, cfg.rectCfg);
+			}
+
+
 		}
 	}
 }

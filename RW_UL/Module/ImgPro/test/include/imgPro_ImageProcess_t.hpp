@@ -147,6 +147,7 @@ protected:
 		drawConfig.isDisAreaText = false;
 		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopIn;
 		drawConfig.isDrawMask = true;
+		drawConfig.hasFrame = false;
 		context.defectDrawCfg = drawConfig;
 	}
 public:

@@ -17,15 +17,6 @@ namespace rw
 			Color color = Color::Red;
 		};
 
-		struct ConfigDrawMask
-		{
-			rw::rqw::RQWColor color = rw::rqw::RQWColor::Red;
-			double alpha{ 0.3 };
-			double thresh{ 0.5 };
-			double maxVal{ 1.0 };
-			bool hasFrame{ true };
-		};
-
 		struct ConfigDrawRect
 		{
 		public:
@@ -54,6 +45,18 @@ namespace rw
 			double thresh{ 0.5 };
 			double maxVal{ 1.0 };
 			bool hasFrame{ true };
+		};
+
+		struct ConfigDrawMask
+		{
+		public:
+			rw::rqw::RQWColor maskColor = rw::rqw::RQWColor::Red;
+			double alpha{ 0.3 };
+			double thresh{ 0.5 };
+			double maxVal{ 1.0 };
+			bool hasFrame{ true };
+		public:
+			ConfigDrawRect rectCfg;
 		};
 
 		struct ImagePainter
