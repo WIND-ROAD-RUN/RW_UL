@@ -4,7 +4,7 @@
 #include<QVector>
 #include <opencv2/core/mat.hpp>
 #include<QImage>
-
+#include"hoec_Camera_utilty_V1.hpp"
 namespace rw {
 	namespace hoec
 	{
@@ -13,6 +13,7 @@ namespace rw {
 
 	namespace rqw {
 		QImage cvMatToQImage(const cv::Mat& mat);
+		using TriggerSource = hoec_v1::TriggerSource;
 
 		struct OutTriggerConfig
 		{

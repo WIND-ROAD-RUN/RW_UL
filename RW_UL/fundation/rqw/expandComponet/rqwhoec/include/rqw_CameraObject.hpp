@@ -82,6 +82,9 @@ namespace rw {
 			bool getIOOut(int line_index, bool& state);
 			//MVS
 			bool softwareTrigger();
+		public:
+			bool setTriggerState(bool state) const;
+			bool setTriggerSource(TriggerSource triggerSource);
 		signals:
 			void frameCaptured(cv::Mat frame);
 		};

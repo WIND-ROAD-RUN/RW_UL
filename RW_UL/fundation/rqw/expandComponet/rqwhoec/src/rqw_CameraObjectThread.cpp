@@ -320,6 +320,24 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveThread::setTriggerState(bool state) const
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setTriggerState(state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveThread::setTriggerSource(TriggerSource triggerSource)
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->setTriggerSource(triggerSource);
+			}
+			return false;
+		}
+
 		size_t CameraPassiveThread::getExposureTime() const
 		{
 			if (_cameraObject)

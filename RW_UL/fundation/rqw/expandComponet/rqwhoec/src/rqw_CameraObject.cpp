@@ -70,57 +70,104 @@ namespace rw
 
 		bool CameraPassiveObject::setTriggerLine(size_t lineIndex) const
 		{
-			return _cameraPassive->setInTriggerLine(lineIndex);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setInTriggerLine(lineIndex);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::setLineHeight(size_t number)
 		{
-			return _cameraPassive->setLineHeight(number);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setLineHeight(number);
+			}
+			return false;
 		}
 
 		size_t CameraPassiveObject::getLineHeight(bool& isGet)
 		{
-			return _cameraPassive->getLineHeight(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getLineHeight(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		bool CameraPassiveObject::setFrameTriggered(bool state)
 		{
-			return _cameraPassive->setFrameTriggered(state);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setFrameTriggered(state);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::getFrameTriggered(bool& isGet)
 		{
-			return _cameraPassive->getFrameTriggered(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getFrameTriggered(isGet);
+			}
+			isGet = false;
+			return false;
 		}
 
 		bool CameraPassiveObject::setLineTriggered(bool state)
 		{
-			return _cameraPassive->setLineTriggered(state);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setLineTriggered(state);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::getLineTriggered(bool& isGet)
 		{
-			return _cameraPassive->getLineTriggered(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getLineTriggered(isGet);
+			}
+			isGet = false;
+			return false;
 		}
 
 		bool CameraPassiveObject::setPreDivider(size_t number)
 		{
-			return _cameraPassive->setPreDivider(number);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setPreDivider(number);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::setMultiplier(size_t number)
 		{
-			return _cameraPassive->setMultiplier(number);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setMultiplier(number);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::setPostDivider(size_t number)
 		{
-			return _cameraPassive->setPostDivider(number);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setPostDivider(number);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::getEncoderNumber(double& number)
 		{
-			return _cameraPassive->getEncoderNumber(number);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getEncoderNumber(number);
+			}
+			return false;
 		}
 
 		bool CameraPassiveObject::setIOOut(int line_index, bool state)
@@ -159,14 +206,42 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveObject::setTriggerState(bool state) const
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setTriggerState(state);
+			}
+			return false;
+		}
+
+		bool CameraPassiveObject::setTriggerSource(TriggerSource triggerSource)
+		{
+			if (_cameraPassive)
+			{
+				return _cameraPassive->setTriggerSource(triggerSource);
+			}
+			return false;
+		}
+
 		size_t CameraPassiveObject::getExposureTime(bool& isGet) const
 		{
-			return _cameraPassive->getExposureTime(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getExposureTime(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		size_t CameraPassiveObject::getGain(bool& isGet) const
 		{
-			return _cameraPassive->getGain(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getGain(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		CameraObjectTrigger CameraPassiveObject::getMonitorMode(bool& isGet) const
@@ -184,31 +259,54 @@ namespace rw
 
 		size_t CameraPassiveObject::getTriggerLine(bool& isGet) const
 		{
-			return _cameraPassive->getTriggerLine(isGet);
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getTriggerLine(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		size_t CameraPassiveObject::getHeartbeatTime() const
 		{
-			bool isGet = false;
-			return _cameraPassive->getHeartbeatTime(isGet);
+			bool isGet{false};
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getHeartbeatTime(isGet);
+			}
+			return 0;
 		}
 
 		float CameraPassiveObject::getFrameRate() const
 		{
-			bool isGet = false;
-			return _cameraPassive->getFrameRate(isGet);
+			bool isGet{false};
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getFrameRate(isGet);
+			}
+			return 0.0f;
 		}
 
 		size_t CameraPassiveObject::getExposureTime() const
 		{
-			bool isGet = false;
-			return _cameraPassive->getExposureTime(isGet);
+			bool isGet{false};
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getExposureTime(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		size_t CameraPassiveObject::getGain() const
 		{
-			bool isGet = false;
-			return _cameraPassive->getGain(isGet);
+			bool isGet{false};
+			if (_cameraPassive)
+			{
+				return _cameraPassive->getGain(isGet);
+			}
+			isGet = false;
+			return 0;
 		}
 
 		CameraObjectTrigger CameraPassiveObject::getMonitorMode() const
