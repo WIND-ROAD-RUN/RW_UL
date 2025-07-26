@@ -2,6 +2,8 @@
 
 #include <QPainter>
 
+#include "rqw_ImgConvert.hpp"
+
 namespace rw
 {
 	namespace imgPro
@@ -138,6 +140,82 @@ namespace rw
 			}
 
 			painter.end();
+		}
+
+		void ImagePainter::drawMaskOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,
+			const ConfigDrawMask& cfg)
+		{
+			// 1. 检查 mask 是否为空
+			if (rectInfo.mask_roi.empty()) {
+				return;
+			}
+
+			// 2. 获取 ROI 区域
+			QRect roi(rectInfo.roi.x, rectInfo.roi.y, rectInfo.roi.width, rectInfo.roi.height);
+			if (!image.rect().contains(roi)) {
+				return;
+			}
+
+			// 3. 将 mask_roi 转为 QImage
+			QImage maskImg = rw::CvMatToQImage(rectInfo.mask_roi);
+
+			// 4. 阈值处理
+			for (int y = 0; y < maskImg.height(); ++y) {
+				uchar* line = maskImg.scanLine(y);
+				for (int x = 0; x < maskImg.width(); ++x) {
+					line[x] = (line[x] > cfg.thresh) ? static_cast<uchar>(cfg.maxVal) : 0;
+				}
+			}
+
+			// 5. 构造彩色遮罩
+			QColor color = rw::rqw::RQWColorToQColor(cfg.color);
+			QImage colorMask(maskImg.size(), QImage::Format_ARGB32);
+			colorMask.fill(Qt::transparent);
+			for (int y = 0; y < maskImg.height(); ++y) {
+				const uchar* maskLine = maskImg.constScanLine(y);
+				QRgb* colorLine = reinterpret_cast<QRgb*>(colorMask.scanLine(y));
+				for (int x = 0; x < maskImg.width(); ++x) {
+					if (maskLine[x]) {
+						colorLine[x] = QColor(color.red(), color.green(), color.blue(), static_cast<int>(cfg.alpha * 255)).rgba();
+					}
+				}
+			}
+
+			// 6. 叠加到原图 ROI 区域
+			QPainter painter(&image);
+			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter.drawImage(roi.topLeft(), colorMask);
+			painter.end();
+		}
+
+		void ImagePainter::drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo,
+			const ConfigDrawMask& cfg)
+		{
+			if (rectInfo.mask_roi.empty())
+			{
+				return;
+			}
+
+			cv::Mat img_roi = image(rectInfo.roi);
+
+			auto [r,g,b] = rw::rqw::RQWColorToRGB(cfg.color);
+			cv::Scalar color(b,g,r);
+			cv::Mat color_mask(img_roi.size(), img_roi.type(), color);
+
+			cv::Mat mask;
+			cv::threshold(rectInfo.mask_roi, mask, cfg.thresh, cfg.maxVal, cv::THRESH_BINARY);
+			std::vector<cv::Mat> mask_channels(3, mask);
+			cv::Mat mask_3channel;
+			cv::merge(mask_channels, mask_3channel);
+
+			if (color_mask.type() != img_roi.type()) {
+				color_mask.convertTo(color_mask, img_roi.type());
+			}
+			if (mask_3channel.type() != img_roi.type()) {
+				mask_3channel.convertTo(mask_3channel, img_roi.type());
+			}
+
+			cv::addWeighted(img_roi, 1.0, color_mask.mul(mask_3channel), cfg.alpha, 0, img_roi);
 		}
 	}
 }

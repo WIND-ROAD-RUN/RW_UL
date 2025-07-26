@@ -39,7 +39,7 @@ protected:
 	{
 		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
 		engine = rw::ModelEngineFactory::createModelEngine(
-			config, rw::ModelType::Yolov11_Seg, rw::ModelEngineDeployType::TensorRT);
+			config, rw::ModelType::Yolov11_Seg_with_mask, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
 	}
 

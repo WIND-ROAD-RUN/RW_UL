@@ -17,6 +17,14 @@ namespace rw
 			Color color = Color::Red;
 		};
 
+		struct ConfigDrawMask
+		{
+			rw::rqw::RQWColor color = rw::rqw::RQWColor::Red;
+			double alpha{ 0.3 };
+			double thresh{ 0.5 };
+			double maxVal{ 1.0 };
+		};
+
 		struct ConfigDrawRect
 		{
 		public:
@@ -51,6 +59,9 @@ namespace rw
 
 			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, double proportion);
 			static void drawTextOnImageWithFontSize(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, int fontSize);
+		public:
+			static void drawMaskOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawMask& cfg);
+			static void drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawMask& cfg);
 		};
 	}
 }

@@ -27,6 +27,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC ime
 	PUBLIC rqwutilty
+	PUBLIC rqw
 )
 
 if(CONFIG_TEST)
