@@ -37,9 +37,9 @@ protected:
 
 	void createImgPro()
 	{
-		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
+		config.modelPath = R"(C:\Users\rw\Desktop\models\dundai.engine)";
 		engine = rw::ModelEngineFactory::createModelEngine(
-			config, rw::ModelType::Yolov11_Seg_with_mask, rw::ModelEngineDeployType::TensorRT);
+			config, rw::ModelType::Yolov11_Det, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
 	}
 
@@ -145,9 +145,11 @@ protected:
 		drawConfig.classIdNameMap[0] = "Body";
 		drawConfig.classIdNameMap[1] = "Hole";
 		drawConfig.isDisAreaText = false;
-		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopIn;
+		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopOut;
 		drawConfig.isDrawMask = true;
 		drawConfig.hasFrame = false;
+		drawConfig.thresh = 0.9;
+		drawConfig.maxVal = 1;
 		context.defectDrawCfg = drawConfig;
 	}
 public:

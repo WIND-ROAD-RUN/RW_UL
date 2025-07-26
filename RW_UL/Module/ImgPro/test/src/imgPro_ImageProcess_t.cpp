@@ -10,7 +10,7 @@ TEST_F(ImageProcessTest, ImageProcess)
 	char* argv[] = { nullptr };
 	QApplication app(argc, argv);
 
-	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
+	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\2025-06-17_11-10-55-776.jpg)");
 	(*imgProcess)(image);
 	auto maskImg = imgProcess->getMaskImg(image);
 

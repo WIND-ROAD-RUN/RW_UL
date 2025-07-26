@@ -64,6 +64,17 @@ namespace rw
 		public:
 			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const DefectDrawConfig& config);
 			static void drawRunText(QImage& img, const RunTextConfig& config);
+		private:
+			static void drawDefectGroup(
+				QImage& img,
+				const std::unordered_map<ClassId, std::vector<EliminationItem>>& group,
+				const ProcessResult& processResult,
+				const DefectDrawFunc::DefectDrawConfig& config,
+				const std::unordered_map<ClassId, Color>& colorMap,
+				Color defaultColor,
+				int scorePrecision,
+				int areaPrecision);
+            
 		};
 	}
 }
