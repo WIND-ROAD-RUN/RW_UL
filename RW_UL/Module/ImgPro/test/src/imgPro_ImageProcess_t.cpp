@@ -12,7 +12,7 @@ TEST_F(ImageProcessTest, ImageProcess)
 
 	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
 	(*imgProcess)(image);
-	//auto maskImg = imgProcess->getMaskImg(image);
+	auto maskImg = imgProcess->getMaskImg(image);
 
 	//rw::imgPro::ConfigDrawMask cfg;
 	//cfg.color = rw::rqw::RQWColor::Red;
@@ -65,31 +65,32 @@ TEST_F(ImageProcessTest, ImageProcess)
 	//}
 
 
-	rw::imgPro::ConfigDrawRect cfg;
-	cfg.rectColor = rw::rqw::RQWColor::Red;
-	cfg.isRegion = true;
-	cfg.hasFrame = false;
-	auto maskImg = rw::CvMatToQImage(image);
-	for (const auto& item : imgProcess->getProcessResult())
-	{
-		rw::ImagePainter::PainterConfig config;
+	//rw::imgPro::ConfigDrawRect cfg;
+	//cfg.rectColor = rw::rqw::RQWColor::Red;
+	//cfg.isRegion = true;
+	//cfg.hasFrame = false;
+	//cfg.alpha = 0.5;
+	//auto maskImg = rw::CvMatToQImage(image);
+	//for (const auto& item : imgProcess->getProcessResult())
+	//{
+	//	rw::ImagePainter::PainterConfig config;
 
-		if (item.classId == 0)
-		{
-			cfg.rectColor = rw::rqw::RQWColor::Green;
-		}
-		if (item.classId == 1)
-		{
-			cfg.rectColor = rw::rqw::RQWColor::Red;
-		}
-		if (item.classId == 2)
-		{
-			cfg.rectColor = rw::rqw::RQWColor::Blue;
-		}
+	//	if (item.classId == 0)
+	//	{
+	//		cfg.rectColor = rw::rqw::RQWColor::Green;
+	//	}
+	//	if (item.classId == 1)
+	//	{
+	//		cfg.rectColor = rw::rqw::RQWColor::Red;
+	//	}
+	//	if (item.classId == 2)
+	//	{
+	//		cfg.rectColor = rw::rqw::RQWColor::Blue;
+	//	}
 
-		//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
-		rw::imgPro::ImagePainter::drawShapesOnSourceImg(maskImg, item, cfg);
-	}
+	//	//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
+	//	rw::imgPro::ImagePainter::drawShapesOnSourceImg(maskImg, item, cfg);
+	//}
 
 
 

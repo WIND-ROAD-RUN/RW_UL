@@ -23,6 +23,7 @@ namespace rw
 			double alpha{ 0.3 };
 			double thresh{ 0.5 };
 			double maxVal{ 1.0 };
+			bool hasFrame{ true };
 		};
 
 		struct ConfigDrawRect
@@ -67,7 +68,6 @@ namespace rw
 			static void drawTextOnImageWithFontSize(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, int fontSize);
 		public:
 			static void drawMaskOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawMask& cfg);
-			static void drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawMask& cfg);
 		};
 	}
 }

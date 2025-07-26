@@ -25,9 +25,11 @@ namespace rw
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,
 			const ConfigDrawRect& cfg)
 		{
+			QPainter painter(&image);
+
 			if (cfg.isRegion)
 			{
-				QPainter painter(&image);
+
 				painter.setRenderHint(QPainter::Antialiasing);
 				painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
@@ -54,7 +56,6 @@ namespace rw
 			}
 			else
 			{
-				QPainter painter(&image);
 				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
 
 				QPolygonF obbPolygon;
@@ -65,48 +66,53 @@ namespace rw
 
 				painter.drawPolygon(obbPolygon);
 
-				// 直接用同一个 painter 画文字
-				painter.setPen(rw::rqw::RQWColorToQColor(cfg.textColor));
-				QFont font = painter.font();
-				font.setPixelSize(cfg.fontSize);
-				painter.setFont(font);
-
-				QPointF textPosition;
-				int offset = cfg.fontSize;
-				switch (cfg.textLocate) {
-				case ConfigDrawRect::TextLocate::LeftTopIn:
-					textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
-					break;
-				case ConfigDrawRect::TextLocate::LeftTopOut:
-					textPosition = QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10);
-					break;
-				case ConfigDrawRect::TextLocate::RightTopIn:
-					textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second + offset);
-					break;
-				case ConfigDrawRect::TextLocate::RightTopOut:
-					textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second - 10);
-					break;
-				case ConfigDrawRect::TextLocate::LeftBottomIn:
-					textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
-					break;
-				case ConfigDrawRect::TextLocate::LeftBottomOut:
-					textPosition = QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second + offset);
-					break;
-				case ConfigDrawRect::TextLocate::RightBottomIn:
-					textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second - 10);
-					break;
-				case ConfigDrawRect::TextLocate::RightBottomOut:
-					textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second + offset);
-					break;
-				case ConfigDrawRect::TextLocate::CenterIn:
-					textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);
-					break;
-				default:
-					throw std::invalid_argument("Unsupported TextLocate type.");
-				}
-
-				painter.drawText(textPosition, cfg.text);
 			}
+
+			if (cfg.text.isEmpty())
+			{
+				return;
+			}
+
+			painter.setPen(rw::rqw::RQWColorToQColor(cfg.textColor));
+			QFont font = painter.font();
+			font.setPixelSize(cfg.fontSize);
+			painter.setFont(font);
+
+			QPointF textPosition;
+			int offset = cfg.fontSize;
+			switch (cfg.textLocate) {
+			case ConfigDrawRect::TextLocate::LeftTopIn:
+				textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
+				break;
+			case ConfigDrawRect::TextLocate::LeftTopOut:
+				textPosition = QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10);
+				break;
+			case ConfigDrawRect::TextLocate::RightTopIn:
+				textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second + offset);
+				break;
+			case ConfigDrawRect::TextLocate::RightTopOut:
+				textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second - 10);
+				break;
+			case ConfigDrawRect::TextLocate::LeftBottomIn:
+				textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
+				break;
+			case ConfigDrawRect::TextLocate::LeftBottomOut:
+				textPosition = QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second + offset);
+				break;
+			case ConfigDrawRect::TextLocate::RightBottomIn:
+				textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second - 10);
+				break;
+			case ConfigDrawRect::TextLocate::RightBottomOut:
+				textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second + offset);
+				break;
+			case ConfigDrawRect::TextLocate::CenterIn:
+				textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);
+				break;
+			default:
+				throw std::invalid_argument("Unsupported TextLocate type.");
+			}
+
+			painter.drawText(textPosition, cfg.text);
 		}
 
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
@@ -216,36 +222,6 @@ namespace rw
 			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 			painter.drawImage(roi.topLeft(), colorMask);
 			painter.end();
-		}
-
-		void ImagePainter::drawMaskOnSourceImg(cv::Mat& image, const DetectionRectangleInfo& rectInfo,
-			const ConfigDrawMask& cfg)
-		{
-			if (rectInfo.mask_roi.empty())
-			{
-				return;
-			}
-
-			cv::Mat img_roi = image(rectInfo.roi);
-
-			auto [r,g,b] = rw::rqw::RQWColorToRGB(cfg.color);
-			cv::Scalar color(b,g,r);
-			cv::Mat color_mask(img_roi.size(), img_roi.type(), color);
-
-			cv::Mat mask;
-			cv::threshold(rectInfo.mask_roi, mask, cfg.thresh, cfg.maxVal, cv::THRESH_BINARY);
-			std::vector<cv::Mat> mask_channels(3, mask);
-			cv::Mat mask_3channel;
-			cv::merge(mask_channels, mask_3channel);
-
-			if (color_mask.type() != img_roi.type()) {
-				color_mask.convertTo(color_mask, img_roi.type());
-			}
-			if (mask_3channel.type() != img_roi.type()) {
-				mask_3channel.convertTo(mask_3channel, img_roi.type());
-			}
-
-			cv::addWeighted(img_roi, 1.0, color_mask.mul(mask_3channel), cfg.alpha, 0, img_roi);
 		}
 	}
 }

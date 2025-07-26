@@ -34,6 +34,11 @@ namespace rw
 			painterConfig.fontSize = config.fontSize;
 			painterConfig.thickness = config.thickness;
 			painterConfig.textLocate = config.textLocate;
+			painterConfig.isRegion = config.isDrawMask;
+			painterConfig.alpha = config.alpha;
+			painterConfig.thresh = config.thresh;
+			painterConfig.maxVal = config.maxVal;
+			painterConfig.hasFrame = config.hasFrame;
 			if (config.isDrawDefects)
 			{
 				painterConfig.rectColor = Color::Red;
@@ -62,7 +67,21 @@ namespace rw
 							painterConfig.textColor = findColor->second;
 						}
 
-						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
+						auto & proResult = processResult[item.index];
+
+						if (proResult.segMaskValid&& config.isDrawMask)
+						{
+							rw::imgPro::ConfigDrawMask maskCfg;
+							maskCfg.alpha = config.alpha;
+							maskCfg.thresh = config.thresh;
+							maskCfg.maxVal = config.maxVal;
+							maskCfg.color = findColor->second;
+							rw::imgPro::ImagePainter::drawMaskOnSourceImg(img, proResult, maskCfg);
+						}
+						else
+						{
+							rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, proResult, painterConfig);
+						}
 					}
 				}
 			}
@@ -96,7 +115,21 @@ namespace rw
 							painterConfig.textColor = findColor->second;
 						}
 
-						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, processResult[item.index], painterConfig);
+						auto& proResult = processResult[item.index];
+
+						if (proResult.segMaskValid && config.isDrawMask)
+						{
+							rw::imgPro::ConfigDrawMask maskCfg;
+							maskCfg.alpha = config.alpha;
+							maskCfg.thresh = config.thresh;
+							maskCfg.maxVal = config.maxVal;
+							maskCfg.color = findColor->second;
+							rw::imgPro::ImagePainter::drawMaskOnSourceImg(img, proResult, maskCfg);
+						}
+						else
+						{
+							rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, proResult, painterConfig);
+						}
 					}
 				}
 			}

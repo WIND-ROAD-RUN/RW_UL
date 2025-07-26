@@ -145,7 +145,8 @@ protected:
 		drawConfig.classIdNameMap[0] = "Body";
 		drawConfig.classIdNameMap[1] = "Hole";
 		drawConfig.isDisAreaText = false;
-		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopOut;
+		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopIn;
+		drawConfig.isDrawMask = true;
 		context.defectDrawCfg = drawConfig;
 	}
 public:

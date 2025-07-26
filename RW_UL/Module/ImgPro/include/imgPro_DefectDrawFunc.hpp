@@ -36,6 +36,12 @@ namespace rw
 				int thickness{ 3 };
 			public:
 				ConfigDrawRect::TextLocate textLocate{ ConfigDrawRect::TextLocate::LeftTopOut };
+			public:
+				bool isDrawMask{ false };
+				double alpha{ 0.3 };
+				double thresh{ 0.5 };
+				double maxVal{ 1.0 };
+				bool hasFrame{ true };
 			};
 
 			struct RunTextConfig
