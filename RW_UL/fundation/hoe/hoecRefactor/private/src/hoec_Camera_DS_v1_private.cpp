@@ -737,6 +737,40 @@ namespace rw
 			return false;
 		}
 
+		bool Camera_DS::setTriggerState(bool state) const
+		{
+			if (!m_cameraHandle) {
+				return false;
+			}
+			dvpStatus status = dvpSetTriggerState(m_cameraHandle, state);
+			return status == DVP_STATUS_OK;
+		}
+
+		bool Camera_DS::setTriggerSource(TriggerSource triggerSource)
+		{
+			if (!m_cameraHandle) {
+				return false;
+			}
+			dvpTriggerSource dvpSource = dvpTriggerSource::TRIGGER_SOURCE_SOFTWARE;
+			switch (triggerSource)
+			{
+			case TriggerSource::SoftwareTrigger:
+				dvpSource = dvpTriggerSource::TRIGGER_SOURCE_SOFTWARE;
+				break;
+			case TriggerSource::Line1:
+				dvpSource = dvpTriggerSource::TRIGGER_SOURCE_LINE1;
+				break;
+			case TriggerSource::Line2:
+				dvpSource = dvpTriggerSource::TRIGGER_SOURCE_LINE2;
+				break;
+			case TriggerSource::Line3:
+				dvpSource = dvpTriggerSource::TRIGGER_SOURCE_LINE3;
+				break;
+			}
+			auto status = dvpSetTriggerSource(m_cameraHandle, dvpSource);
+			return status == DVP_STATUS_OK;
+		}
+
 		Camera_DS_Active::Camera_DS_Active()
 		{
 		}

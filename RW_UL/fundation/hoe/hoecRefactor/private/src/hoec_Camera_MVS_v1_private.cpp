@@ -597,6 +597,58 @@ namespace rw
 			}
 		}
 
+		bool Camera_MVS::setTriggerState(bool state) const
+		{
+			if (!m_cameraHandle)
+			{
+				return false;
+			}
+
+
+			int result{0};
+			if (state)
+			{
+				result = MV_CC_SetTriggerMode(m_cameraHandle, 1);
+			}
+			else
+			{
+				result = MV_CC_SetTriggerMode(m_cameraHandle, 0);
+			}
+			return result==MV_OK;
+		}
+
+		bool Camera_MVS::setTriggerSource(TriggerSource triggerSource)
+		{
+			if (!m_cameraHandle)
+			{
+				return false;
+			}
+			unsigned int sourceValue;
+			switch (triggerSource)
+			{
+			case TriggerSource::SoftwareTrigger:
+				sourceValue = MV_TRIGGER_SOURCE_SOFTWARE;
+				break;
+			case TriggerSource::Line0:
+				sourceValue = MV_TRIGGER_SOURCE_LINE0;
+				break;
+			case TriggerSource::Line1:
+				sourceValue = MV_TRIGGER_SOURCE_LINE1;
+				break;
+			case TriggerSource::Line2:
+				sourceValue = MV_TRIGGER_SOURCE_LINE2;
+				break;
+			case TriggerSource::Line3:
+				sourceValue = MV_TRIGGER_SOURCE_LINE3;
+				break;
+			default:
+				std::cerr << "Invalid trigger source" << std::endl;
+				return false;
+			}
+			auto result = MV_CC_SetEnumValue(m_cameraHandle, "TriggerSource", sourceValue);
+			return result == MV_OK;
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

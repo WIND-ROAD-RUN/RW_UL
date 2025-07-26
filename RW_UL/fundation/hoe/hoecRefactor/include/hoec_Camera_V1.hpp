@@ -69,6 +69,9 @@ namespace rw
 			//MVS
 			virtual bool softwareTrigger() = 0;
 		public:
+			virtual bool setTriggerState(bool state) const = 0;
+			virtual bool setTriggerSource(TriggerSource triggerSource) = 0;
+		public:
 			[[nodiscard]] virtual size_t getExposureTime(bool& isGet) = 0;
 			[[nodiscard]] virtual size_t getGain(bool& isGet) = 0;
 			[[nodiscard]] virtual CameraTriggerMode getMonitorMode(bool& isGet) = 0;
@@ -159,6 +162,8 @@ namespace rw
 			bool getIOIn(int line_index, bool& state) override;
 			bool getIOOut(int line_index, bool& state) override;
 			bool softwareTrigger() override;
+			bool setTriggerState(bool state) const override;
+			bool setTriggerSource(TriggerSource triggerSource) override;
 		};
 
 		class CameraPassive
@@ -220,6 +225,8 @@ namespace rw
 			bool getIOIn(int line_index, bool& state) override;
 			bool getIOOut(int line_index, bool& state) override;
 			bool softwareTrigger() override;
+			bool setTriggerState(bool state) const override;
+			bool setTriggerSource(TriggerSource triggerSource) override;
 		};
 	}
 }

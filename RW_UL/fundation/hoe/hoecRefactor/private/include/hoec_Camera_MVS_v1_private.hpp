@@ -69,7 +69,9 @@ namespace rw
 			bool getIOIn(int line_index, bool& state) override;
 			bool getIOOut(int line_index, bool& state) override;
 			bool softwareTrigger() override;
-
+		public:
+			bool setTriggerState(bool state) const override;
+			bool setTriggerSource(TriggerSource triggerSource) override;
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

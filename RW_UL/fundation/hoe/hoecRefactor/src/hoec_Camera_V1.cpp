@@ -233,6 +233,16 @@ namespace rw
 			return _camera->softwareTrigger();
 		}
 
+		bool CameraActive::setTriggerState(bool state) const
+		{
+			return _camera->setTriggerState(state);
+		}
+
+		bool CameraActive::setTriggerSource(TriggerSource triggerSource)
+		{
+			return _camera->setTriggerSource(triggerSource);
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -435,6 +445,16 @@ namespace rw
 		bool CameraPassive::softwareTrigger()
 		{
 			return _camera->softwareTrigger();
+		}
+
+		bool CameraPassive::setTriggerState(bool state) const
+		{
+			return _camera->setTriggerState(state);
+		}
+
+		bool CameraPassive::setTriggerSource(TriggerSource triggerSource)
+		{
+			return _camera->setTriggerSource(triggerSource);
 		}
 	}
 }

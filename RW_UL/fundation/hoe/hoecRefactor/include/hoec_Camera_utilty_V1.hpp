@@ -52,6 +52,15 @@ namespace rw
 			HardwareTriggered,
 		};
 
+		enum TriggerSource
+		{
+			SoftwareTrigger = 0,
+			Line0,
+			Line1,
+			Line2,
+			Line3
+		};
+
 		inline const char* to_string(CameraTriggerMode e)
 		{
 			switch (e)
