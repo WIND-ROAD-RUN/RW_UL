@@ -40,8 +40,35 @@ TEST_F(ImageProcessTest, ImageProcess)
 
 
 
-	rw::imgPro::ConfigDrawMask cfg;
-	cfg.color = rw::rqw::RQWColor::Red;
+	//rw::imgPro::ConfigDrawMask cfg;
+	//cfg.color = rw::rqw::RQWColor::Red;
+	//auto maskImg = rw::CvMatToQImage(image);
+	//for (const auto& item : imgProcess->getProcessResult())
+	//{
+	//	rw::ImagePainter::PainterConfig config;
+
+	//	if (item.classId == 0)
+	//	{
+	//		cfg.color = rw::rqw::RQWColor::Green;
+	//	}
+	//	if (item.classId == 1)
+	//	{
+	//		cfg.color = rw::rqw::RQWColor::Red;
+	//	}
+	//	if (item.classId == 2)
+	//	{
+	//		cfg.color = rw::rqw::RQWColor::Blue;
+	//	}
+
+	//	//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
+	//	rw::imgPro::ImagePainter::drawMaskOnSourceImg(maskImg, item, cfg);
+	//}
+
+
+	rw::imgPro::ConfigDrawRect cfg;
+	cfg.rectColor = rw::rqw::RQWColor::Red;
+	cfg.isRegion = true;
+	cfg.hasFrame = false;
 	auto maskImg = rw::CvMatToQImage(image);
 	for (const auto& item : imgProcess->getProcessResult())
 	{
@@ -49,23 +76,20 @@ TEST_F(ImageProcessTest, ImageProcess)
 
 		if (item.classId == 0)
 		{
-			cfg.color = rw::rqw::RQWColor::Green;
+			cfg.rectColor = rw::rqw::RQWColor::Green;
 		}
 		if (item.classId == 1)
 		{
-			cfg.color = rw::rqw::RQWColor::Red;
+			cfg.rectColor = rw::rqw::RQWColor::Red;
 		}
 		if (item.classId == 2)
 		{
-			cfg.color = rw::rqw::RQWColor::Blue;
+			cfg.rectColor = rw::rqw::RQWColor::Blue;
 		}
 
 		//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
-		rw::imgPro::ImagePainter::drawMaskOnSourceImg(maskImg, item, cfg);
+		rw::imgPro::ImagePainter::drawShapesOnSourceImg(maskImg, item, cfg);
 	}
-
-
-
 
 
 

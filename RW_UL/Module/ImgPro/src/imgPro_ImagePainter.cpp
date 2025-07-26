@@ -25,58 +25,88 @@ namespace rw
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,
 			const ConfigDrawRect& cfg)
 		{
-			QPainter painter(&image);
-			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
+			if (cfg.isRegion)
+			{
+				QPainter painter(&image);
+				painter.setRenderHint(QPainter::Antialiasing);
+				painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-			QPolygonF obbPolygon;
-			obbPolygon << QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second)
-				<< QPointF(rectInfo.rightTop.first, rectInfo.rightTop.second)
-				<< QPointF(rectInfo.rightBottom.first, rectInfo.rightBottom.second)
-				<< QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second);
+				// 构造多边形区域
+				QPolygonF regionPolygon;
+				regionPolygon << QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second)
+					<< QPointF(rectInfo.rightTop.first, rectInfo.rightTop.second)
+					<< QPointF(rectInfo.rightBottom.first, rectInfo.rightBottom.second)
+					<< QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second);
 
-			painter.drawPolygon(obbPolygon);
+				QColor fillColor = rw::rqw::RQWColorToQColor(cfg.rectColor);
+				fillColor.setAlphaF(cfg.alpha); // alpha为0~1
 
-			// 直接用同一个 painter 画文字
-			painter.setPen(rw::rqw::RQWColorToQColor(cfg.textColor));
-			QFont font = painter.font();
-			font.setPixelSize(cfg.fontSize);
-			painter.setFont(font);
+				painter.setPen(Qt::NoPen);
+				painter.setBrush(QBrush(fillColor));
+				painter.drawPolygon(regionPolygon);
 
-			QPointF textPosition;
-			int offset = cfg.fontSize;
-			switch (cfg.textLocate) {
-			case ConfigDrawRect::TextLocate::LeftTopIn:
-				textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
-				break;
-			case ConfigDrawRect::TextLocate::LeftTopOut:
-				textPosition = QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10);
-				break;
-			case ConfigDrawRect::TextLocate::RightTopIn:
-				textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second + offset);
-				break;
-			case ConfigDrawRect::TextLocate::RightTopOut:
-				textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second - 10);
-				break;
-			case ConfigDrawRect::TextLocate::LeftBottomIn:
-				textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
-				break;
-			case ConfigDrawRect::TextLocate::LeftBottomOut:
-				textPosition = QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second + offset);
-				break;
-			case ConfigDrawRect::TextLocate::RightBottomIn:
-				textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second - 10);
-				break;
-			case ConfigDrawRect::TextLocate::RightBottomOut:
-				textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second + offset);
-				break;
-			case ConfigDrawRect::TextLocate::CenterIn:
-				textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);
-				break;
-			default:
-				throw std::invalid_argument("Unsupported TextLocate type.");
+				if (cfg.hasFrame)
+				{
+					painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
+					painter.setBrush(Qt::NoBrush);
+					painter.drawPolygon(regionPolygon);
+				}
 			}
+			else
+			{
+				QPainter painter(&image);
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
 
-			painter.drawText(textPosition, cfg.text);
+				QPolygonF obbPolygon;
+				obbPolygon << QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second)
+					<< QPointF(rectInfo.rightTop.first, rectInfo.rightTop.second)
+					<< QPointF(rectInfo.rightBottom.first, rectInfo.rightBottom.second)
+					<< QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second);
+
+				painter.drawPolygon(obbPolygon);
+
+				// 直接用同一个 painter 画文字
+				painter.setPen(rw::rqw::RQWColorToQColor(cfg.textColor));
+				QFont font = painter.font();
+				font.setPixelSize(cfg.fontSize);
+				painter.setFont(font);
+
+				QPointF textPosition;
+				int offset = cfg.fontSize;
+				switch (cfg.textLocate) {
+				case ConfigDrawRect::TextLocate::LeftTopIn:
+					textPosition = QPointF(rectInfo.leftTop.first + 10, rectInfo.leftTop.second + offset);
+					break;
+				case ConfigDrawRect::TextLocate::LeftTopOut:
+					textPosition = QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second - 10);
+					break;
+				case ConfigDrawRect::TextLocate::RightTopIn:
+					textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second + offset);
+					break;
+				case ConfigDrawRect::TextLocate::RightTopOut:
+					textPosition = QPointF(rectInfo.rightTop.first - offset * cfg.text.size() / 1.5, rectInfo.rightTop.second - 10);
+					break;
+				case ConfigDrawRect::TextLocate::LeftBottomIn:
+					textPosition = QPointF(rectInfo.leftBottom.first + 10, rectInfo.leftBottom.second - 10);
+					break;
+				case ConfigDrawRect::TextLocate::LeftBottomOut:
+					textPosition = QPointF(rectInfo.leftBottom.first, rectInfo.leftBottom.second + offset);
+					break;
+				case ConfigDrawRect::TextLocate::RightBottomIn:
+					textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second - 10);
+					break;
+				case ConfigDrawRect::TextLocate::RightBottomOut:
+					textPosition = QPointF(rectInfo.rightBottom.first - offset * cfg.text.size() / 1.5, rectInfo.rightBottom.second + offset);
+					break;
+				case ConfigDrawRect::TextLocate::CenterIn:
+					textPosition = QPointF(rectInfo.center_x, rectInfo.center_y);
+					break;
+				default:
+					throw std::invalid_argument("Unsupported TextLocate type.");
+				}
+
+				painter.drawText(textPosition, cfg.text);
+			}
 		}
 
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,

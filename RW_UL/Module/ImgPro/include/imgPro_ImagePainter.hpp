@@ -47,6 +47,12 @@ namespace rw
 				CenterIn,
 			};
 			TextLocate textLocate = TextLocate::LeftTopOut;
+		public:
+			bool isRegion{false};
+			double alpha{ 0.3 };
+			double thresh{ 0.5 };
+			double maxVal{ 1.0 };
+			bool hasFrame{ true };
 		};
 
 		struct ImagePainter
