@@ -3,6 +3,7 @@
 #include <QPainter>
 
 #include "rqw_ImgConvert.hpp"
+#include"PicturesPainterUtilty.h"
 
 namespace rw
 {
@@ -113,8 +114,27 @@ namespace rw
 
 		}
 
+		void ImagePainter::drawShapesOnSourceImg(QImage& image, const rqw::PainterRectangleInfo& rectInfo,
+			const ConfigDrawRect& cfg)
+		{
+			DetectionRectangleInfo info;
+			info.leftTop = { static_cast<int>(rectInfo.leftTop.first)* image.width(), static_cast<int>(rectInfo.leftTop.second)*image.height() };
+			info.rightTop = { static_cast<int>(rectInfo.rightTop.first) * image.width(), static_cast<int>(rectInfo.rightTop.second) * image.height() };
+			info.leftBottom = { static_cast<int>(rectInfo.leftBottom.first) * image.width(), static_cast<int>(rectInfo.leftBottom.second) * image.height() };
+			info.rightBottom = { static_cast<int>(rectInfo.rightBottom.first) * image.width(), static_cast<int>(rectInfo.rightBottom.second) * image.height() };
+			info.center_x = rectInfo.center_x * image.width();
+			info.center_y = rectInfo.center_y * image.height();
+			info.width = rectInfo.width * image.width();
+			info.height = rectInfo.height * image.height();
+			info.area = static_cast<long>(rectInfo.area);
+			info.classId = rectInfo.classId;
+			info.score = rectInfo.score;
+			info.segMaskValid = false;
+			drawShapesOnSourceImg(image, info, cfg);
+		}
+
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
-			const std::vector<Color>& colorList, double proportion)
+		                                   const std::vector<Color>& colorList, double proportion)
 		{
 			if (texts.empty() || proportion <= 0.0 || proportion > 1.0) {
 				return;
