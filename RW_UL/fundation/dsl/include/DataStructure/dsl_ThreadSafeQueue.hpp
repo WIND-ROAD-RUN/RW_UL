@@ -51,6 +51,13 @@ namespace rw
 				return _queue.back();
 			}
 
+			void clear()
+			{
+				std::lock_guard<std::mutex> lock(_mutex);
+				std::queue<T> empty;
+				std::swap(_queue, empty);
+			}
+
 		private:
 			mutable std::mutex _mutex;
 			std::queue<T> _queue;
