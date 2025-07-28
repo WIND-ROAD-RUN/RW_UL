@@ -11,10 +11,10 @@ namespace rw
 		class ImageProcessFragmentation
 		{
 		public:
-			explicit ImageProcessFragmentation(ImageProcess & imageProcess);
+			explicit ImageProcessFragmentation(ImageProcess * imageProcess);
 			~ImageProcessFragmentation();
 		private:
-			ImageProcess & _imageProcess;
+			std::shared_ptr<ImageProcess> _imageProcess;
 		public:
 			const ImageProcessContext& getContext() const;
 

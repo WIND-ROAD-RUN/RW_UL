@@ -4,7 +4,7 @@ namespace rw
 {
 	namespace imgPro
 	{
-		ImageProcessFragmentation::ImageProcessFragmentation(ImageProcess& imageProcess)
+		ImageProcessFragmentation::ImageProcessFragmentation(ImageProcess* imageProcess)
 			:_imageProcess(imageProcess)
 		{
 		}
@@ -16,49 +16,49 @@ namespace rw
 
 		const ImageProcessContext& ImageProcessFragmentation::getContext() const
 		{
-			return _imageProcess.getContext();
+			return _imageProcess->getContext();
 		}
 
 		ImageProcessContext& ImageProcessFragmentation::context()
 		{
-			return _imageProcess.context();
+			return _imageProcess->context();
 		}
 
 		std::unique_ptr<rw::ModelEngine>& ImageProcessFragmentation::getModelEngine()
 		{
-			return _imageProcess.getModelEngine();
+			return _imageProcess->getModelEngine();
 		}
 
 		RunTime ImageProcessFragmentation::getProcessImgTime()
 		{
-			return _imageProcess.getProcessImgTime();
+			return _imageProcess->getProcessImgTime();
 		}
 
 		RunTime ImageProcessFragmentation::getOperatorTime()
 		{
-			return _imageProcess.getOperatorTime();
+			return _imageProcess->getOperatorTime();
 		}
 
 		ProcessResult ImageProcessFragmentation::processImg(const cv::Mat& mat)
 		{
-			return _imageProcess.processImg(mat);
+			return _imageProcess->processImg(mat);
 		}
 
 		ProcessResultIndexMap ImageProcessFragmentation::getIndex(const ProcessResult& processResult)
 		{
-			return _imageProcess.getIndex(processResult);
+			return _imageProcess->getIndex(processResult);
 		}
 
 		EliminationInfo ImageProcessFragmentation::getEliminationInfo(const ProcessResult& processResult,
 			const ProcessResultIndexMap& indexMap, const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs)
 		{
-			return _imageProcess.getEliminationInfo(processResult, indexMap, configs);
+			return _imageProcess->getEliminationInfo(processResult, indexMap, configs);
 		}
 
 		DefectResultInfo ImageProcessFragmentation::getDefectResultInfo(const EliminationInfo& eliminationInfo,
 			const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs)
 		{
-			return _imageProcess.getDefectResultInfo(eliminationInfo, configs);
+			return _imageProcess->getDefectResultInfo(eliminationInfo, configs);
 		}
 
 		cv::Mat ImageProcessFragmentation::collageFragmentationMat()
@@ -101,12 +101,12 @@ namespace rw
 
 		void ImageProcessFragmentation::operator()()
 		{
-			_imageProcess(collageFragmentationMat());
+			(*_imageProcess)(collageFragmentationMat());
 		}
 
 		QImage ImageProcessFragmentation::getMaskImg(const cv::Mat& mat)
 		{
-			return _imageProcess.getMaskImg(mat);
+			return _imageProcess->getMaskImg(mat);
 		}
 
 		QImage ImageProcessFragmentation::getMaskImg(const cv::Mat& mat, const DefectResultInfo& defectResultInfo,
@@ -125,42 +125,42 @@ namespace rw
 
 		const ProcessResultIndexMap& ImageProcessFragmentation::getProcessResultIndexMap() const
 		{
-			return _imageProcess.getProcessResultIndexMap();
+			return _imageProcess->getProcessResultIndexMap();
 		}
 
 		const ProcessResult& ImageProcessFragmentation::getProcessResult() const
 		{
-			return _imageProcess.getProcessResult();
+			return _imageProcess->getProcessResult();
 		}
 
 		const EliminationInfo& ImageProcessFragmentation::getEliminationInfo() const
 		{
-			return _imageProcess.getEliminationInfo();
+			return _imageProcess->getEliminationInfo();
 		}
 
 		const DefectResultInfo& ImageProcessFragmentation::getDefectResultInfo() const
 		{
-			return _imageProcess.getDefectResultInfo();
+			return _imageProcess->getDefectResultInfo();
 		}
 
 		ProcessResultIndexMap& ImageProcessFragmentation::processResultIndexMap()
 		{
-			return _imageProcess.processResultIndexMap();
+			return _imageProcess->processResultIndexMap();
 		}
 
 		ProcessResult& ImageProcessFragmentation::processResult()
 		{
-			return _imageProcess.processResult();
+			return _imageProcess->processResult();
 		}
 
 		EliminationInfo& ImageProcessFragmentation::eliminationInfo()
 		{
-			return _imageProcess.eliminationInfo();
+			return _imageProcess->eliminationInfo();
 		}
 
 		DefectResultInfo& ImageProcessFragmentation::defectResultInfo()
 		{
-			return _imageProcess.defectResultInfo();
+			return _imageProcess->defectResultInfo();
 		}
 	}
 }
