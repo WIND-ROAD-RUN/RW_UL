@@ -25,17 +25,17 @@ PicturesPainter::~PicturesPainter()
 	delete ui;
 }
 
-void PicturesPainter::setRectangleConfigs(const std::vector<RectangeConfig>& configs)
+void PicturesPainter::setRectangleConfigs(const std::vector<rw::rqw::RectangeConfig>& configs)
 {
 	_configs = configs;
 }
 
-std::vector<PicturesPainter::PainterRectangleInfo> PicturesPainter::getRectangleConfigs()
+std::vector<rw::rqw::PainterRectangleInfo> PicturesPainter::getRectangleConfigs()
 {
 	return _drawnRectangles;
 }
 
-void PicturesPainter::setDrawnRectangles(const std::vector<PainterRectangleInfo>& Rectangles)
+void PicturesPainter::setDrawnRectangles(const std::vector<rw::rqw::PainterRectangleInfo>& Rectangles)
 {
 	if (Rectangles.empty())
 	{
@@ -405,7 +405,7 @@ void PicturesPainter::onRectSelected(const QRectF& rect)
 	drawLabel->setPixmap(pix);
 
 	// 5. 记录 PainterRectangleInfo
-	PainterRectangleInfo info;
+	rw::rqw::PainterRectangleInfo info;
 	info.leftTop = { double(drawRect.left()) / w, double(drawRect.top()) / h };
 	info.rightTop = { double(drawRect.right()) / w, double(drawRect.top()) / h };
 	info.leftBottom = { double(drawRect.left()) / w, double(drawRect.bottom()) / h };

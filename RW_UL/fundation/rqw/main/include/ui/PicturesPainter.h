@@ -1,20 +1,14 @@
 #pragma once
 
 #include <QDialog>
-#include <QLabel>
 #include <QStandardItemModel>
+#include <QLabel>
+
+#include "PicturesPainterUtilty.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PicturesPainterClass; };
 QT_END_NAMESPACE
-
-struct RectangeConfig
-{
-	int classid;		//框的id
-	QColor color;		//绘画框的颜色
-	QString name;		//会话框的名字
-	QString descrption;	//会话框的描述
-};
 
 // 绘画类
 class DrawLabel : public QLabel
@@ -40,6 +34,8 @@ private:
 	bool m_drawingEnabled = false; // 是否允许绘画
 };
 
+
+
 class PicturesPainter : public QDialog
 {
 	Q_OBJECT
@@ -50,37 +46,14 @@ public:
 
 	// 绘画信息结构体
 public:
-	struct PainterRectangleInfo
-	{
-	public:
-		using Point = std::pair<double, double>;
-	public:
-		Point leftTop{};
-		Point rightTop{};
-		Point leftBottom{};
-		Point rightBottom{};
-	public:
-		double center_x{ -1 };
-		double center_y{ -1 };
-	public:
-		double width{ -1 };
-		double height{ -1 };
-	public:
-		long area{ -1 };
-	public:
-		size_t classId{ 0 };
-		double score{ -1 };
-	};
-
-public:
-	void setRectangleConfigs(const std::vector<RectangeConfig>& configs);
-	void setDrawnRectangles(const std::vector<PainterRectangleInfo>& Rectangles);
+	void setRectangleConfigs(const std::vector<rw::rqw::RectangeConfig>& configs);
+	void setDrawnRectangles(const std::vector<rw::rqw::PainterRectangleInfo>& Rectangles);
 	void setImage(const QImage& qImage);
 	void setAspectRatio(double width, double height);
 
 	QColor getColorByClassId(size_t size);
 	QString getNameByClassId(size_t size);
-	std::vector<PainterRectangleInfo> getRectangleConfigs();
+	std::vector<rw::rqw::PainterRectangleInfo> getRectangleConfigs();
 
 private:
 	void build_ui();
@@ -112,8 +85,8 @@ private:
 	double img_Width{ 0 };
 	double img_Height{ 0 };
 
-	std::vector<RectangeConfig> _configs{};
-	std::vector<PainterRectangleInfo> _drawnRectangles{};
+	std::vector<rw::rqw::RectangeConfig> _configs{};
+	std::vector<rw::rqw::PainterRectangleInfo> _drawnRectangles{};
 
 	QStandardItemModel* m_listModel = nullptr;   // 对应ListView
 	QStandardItemModel* m_tableModel = nullptr;  // 对应TableView
