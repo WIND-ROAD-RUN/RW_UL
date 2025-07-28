@@ -12,14 +12,29 @@ namespace rw
 		void ImagePainter::drawVerticalLine(QImage& image, const ConfigDrawLine& cfg)
 		{
 			QPainter painter(&image);
-			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			if (cfg.isDashed)
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness, Qt::DashLine));
+			}
+			else
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			}
+			
 			painter.drawLine(cfg.position, 0, cfg.position, image.height());
 		}
 
 		void ImagePainter::drawHorizontalLine(QImage& image, const ConfigDrawLine& cfg)
 		{
 			QPainter painter(&image);
-			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			if (cfg.isDashed)
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness, Qt::DashLine));
+			}
+			else
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			}
 			painter.drawLine(0, cfg.position, image.width(), cfg.position);
 		}
 
@@ -53,7 +68,14 @@ namespace rw
 
 			if (cfg.hasFrame)
 			{
-				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
+				if (cfg.isDashed)
+				{
+					painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness, Qt::DashLine));
+				}
+				else
+				{
+					painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.rectColor), cfg.thickness));
+				}
 
 				QPolygonF obbPolygon;
 				obbPolygon << QPointF(rectInfo.leftTop.first, rectInfo.leftTop.second)
@@ -118,14 +140,14 @@ namespace rw
 			const ConfigDrawRect& cfg)
 		{
 			DetectionRectangleInfo info;
-			info.leftTop = { static_cast<int>(rectInfo.leftTop.first)* image.width(), static_cast<int>(rectInfo.leftTop.second)*image.height() };
-			info.rightTop = { static_cast<int>(rectInfo.rightTop.first) * image.width(), static_cast<int>(rectInfo.rightTop.second) * image.height() };
-			info.leftBottom = { static_cast<int>(rectInfo.leftBottom.first) * image.width(), static_cast<int>(rectInfo.leftBottom.second) * image.height() };
-			info.rightBottom = { static_cast<int>(rectInfo.rightBottom.first) * image.width(), static_cast<int>(rectInfo.rightBottom.second) * image.height() };
+			info.leftTop = { (rectInfo.leftTop.first) * image.width(),(rectInfo.leftTop.second) * image.height() };
+			info.rightTop = { (rectInfo.rightTop.first) * image.width(), (rectInfo.rightTop.second) * image.height() };
+			info.leftBottom = { (rectInfo.leftBottom.first) * image.width(), (rectInfo.leftBottom.second) * image.height() };
+			info.rightBottom = { (rectInfo.rightBottom.first) * image.width(), (rectInfo.rightBottom.second) * image.height() };
 			info.center_x = rectInfo.center_x * image.width();
 			info.center_y = rectInfo.center_y * image.height();
-			info.width = rectInfo.width * image.width();
-			info.height = rectInfo.height * image.height();
+			info.width = std::abs(info.leftTop.first - info.rightTop.first);
+			info.height = std::abs(info.leftTop.second - info.rightTop.second);
 			info.area = static_cast<long>(rectInfo.area);
 			info.classId = rectInfo.classId;
 			info.score = rectInfo.score;
@@ -134,7 +156,7 @@ namespace rw
 		}
 
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
-		                                   const std::vector<Color>& colorList, double proportion)
+			const std::vector<Color>& colorList, double proportion)
 		{
 			if (texts.empty() || proportion <= 0.0 || proportion > 1.0) {
 				return;

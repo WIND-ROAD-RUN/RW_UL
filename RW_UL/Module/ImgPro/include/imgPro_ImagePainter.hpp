@@ -20,6 +20,7 @@ namespace rw
 			int position = 0;
 			int thickness = 1;
 			Color color = Color::Red;
+			bool isDashed{ false };
 		};
 
 		struct ConfigDrawRect
@@ -50,6 +51,7 @@ namespace rw
 			double thresh{ 0.5 };
 			double maxVal{ 1.0 };
 			bool hasFrame{ true };
+			bool isDashed{false};
 		};
 
 		struct ConfigDrawMask
