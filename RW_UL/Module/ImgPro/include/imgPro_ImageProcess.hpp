@@ -10,8 +10,6 @@ namespace rw
 {
 	namespace imgPro
 	{
-		using ClassIds = std::vector<ClassId>;
-
 		struct ImageProcessContext
 		{
 		public:

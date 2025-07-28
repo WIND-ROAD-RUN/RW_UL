@@ -13,6 +13,7 @@ namespace rw
 	namespace imgPro
 	{
 		using ClassId = size_t;
+		using ClassIds = std::vector<ClassId>;
 		using ProcessResult = std::vector<rw::DetectionRectangleInfo>;
 		using ProcessResultIndex = size_t;
 		using ProcessResultIndexMap = std::unordered_map<ClassId, std::set<ProcessResultIndex>>;
