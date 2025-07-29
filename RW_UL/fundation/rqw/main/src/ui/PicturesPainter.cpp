@@ -410,8 +410,8 @@ void PicturesPainter::onRectSelected(const QRectF& rect)
 	info.rightTop = { double(drawRect.right()) / w, double(drawRect.top()) / h };
 	info.leftBottom = { double(drawRect.left()) / w, double(drawRect.bottom()) / h };
 	info.rightBottom = { double(drawRect.right()) / w, double(drawRect.bottom()) / h };
-	info.width = drawRect.width();
-	info.height = drawRect.height();
+	info.width = double(drawRect.width()) / w;
+	info.height = double(drawRect.height()) / h;
 	info.center_x = double(drawRect.center().x()) / w;
 	info.center_y = double(drawRect.center().y()) / h;
 	info.area = drawRect.width() * drawRect.height();
