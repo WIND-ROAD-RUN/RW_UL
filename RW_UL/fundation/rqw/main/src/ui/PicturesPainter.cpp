@@ -17,7 +17,6 @@ PicturesPainter::PicturesPainter(QWidget* parent)
 	build_connect();
 
 	drawLabel = qobject_cast<DrawLabel*>(ui->label_imgDisplay);
-	//drawLabel->setFixedSize(640, 494);
 }
 
 PicturesPainter::~PicturesPainter()
@@ -54,8 +53,10 @@ void PicturesPainter::setImage(const QImage& qImage)
 		img_Height = _qImage.height();
 		img_Width = _qImage.width();
 		isSetQImage = true;
-
-		drawLabel->setFixedSize(_qImage.width(), _qImage.height());
+		if (drawLabel) {
+			drawLabel->setImage(qImage);
+			drawLabel->update();
+		}
 	}
 }
 
@@ -180,19 +181,24 @@ void PicturesPainter::showEvent(QShowEvent* event)
 		// 2. 遍历所有绘画框
 		for (const auto& info : _drawnRectangles)
 		{
-			QColor color = getColorByClassId(info.classId); // 你需要提供这个函数或用info里已有的color
-			QString name = getNameByClassId(info.classId);  // 你需要提供这个函数或info有name
+			QColor color = getColorByClassId(info.classId);
+			QString name = getNameByClassId(info.classId);
 
-			QRect rect(static_cast<int>(info.leftTop.first),
-				static_cast<int>(info.leftTop.second),
-				static_cast<int>(info.width),
-				static_cast<int>(info.height));
+			int imgW = drawLabel->width();
+			int imgH = drawLabel->height();
+
+			QRect rect(
+				static_cast<int>(info.leftTop.first * imgW),
+				static_cast<int>(info.leftTop.second * imgH),
+				static_cast<int>(info.width * imgW),
+				static_cast<int>(info.height * imgH)
+			);
 
 			painter.setPen(QPen(color, 2));
 			painter.drawRect(rect);
 
 			QFont font = painter.font();
-			font.setPointSize(16); // 你的字号设置
+			font.setPointSize(16);
 			painter.setFont(font);
 			painter.setPen(color);
 			painter.drawText(rect.topLeft() + QPoint(3, 15), name);
@@ -440,6 +446,21 @@ QRectF DrawLabel::getNormalizedRect() const
 		rect.width() / static_cast<float>(width()),
 		rect.height() / static_cast<float>(height())
 	);
+}
+
+void DrawLabel::setImage(const QImage& img)
+{
+	m_srcImage = img;
+	setFixedSize(img.size()); // 固定label大小为图片原始大小
+	setPixmap(QPixmap::fromImage(m_srcImage));
+}
+
+void DrawLabel::resizeEvent(QResizeEvent* event)
+{
+	QLabel::resizeEvent(event);
+	/*if (!m_srcImage.isNull()) {
+		setPixmap(QPixmap::fromImage(m_srcImage).scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+	}*/
 }
 
 void DrawLabel::mousePressEvent(QMouseEvent* event)

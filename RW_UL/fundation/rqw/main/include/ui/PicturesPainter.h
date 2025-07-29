@@ -17,6 +17,11 @@ class DrawLabel : public QLabel
 public:
 	explicit DrawLabel(QWidget* parent = nullptr);
 	QRectF getNormalizedRect() const;
+	void setImage(const QImage& img); // 新增
+protected:
+	void resizeEvent(QResizeEvent* event) override;
+private:
+	QImage m_srcImage; // 新增，保存原始图片
 signals:
 	void rectSelected(const QRectF& normalizedRect);
 protected:
