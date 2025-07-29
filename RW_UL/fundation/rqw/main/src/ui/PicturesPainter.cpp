@@ -17,7 +17,7 @@ PicturesPainter::PicturesPainter(QWidget* parent)
 	build_connect();
 
 	drawLabel = qobject_cast<DrawLabel*>(ui->label_imgDisplay);
-	drawLabel->setFixedSize(640, 494);
+	//drawLabel->setFixedSize(640, 494);
 }
 
 PicturesPainter::~PicturesPainter()
@@ -54,6 +54,8 @@ void PicturesPainter::setImage(const QImage& qImage)
 		img_Height = _qImage.height();
 		img_Width = _qImage.width();
 		isSetQImage = true;
+
+		drawLabel->setFixedSize(_qImage.width(), _qImage.height());
 	}
 }
 
