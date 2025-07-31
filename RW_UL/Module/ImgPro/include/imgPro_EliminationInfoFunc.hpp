@@ -70,6 +70,7 @@ namespace rw
 		struct EliminationInfoGetContext {
 		public:
 			GetEliminationItemSpecialOperate getEliminationItemFuncSpecialOperator;
+			GetEliminationItemPostOperate getEliminationItemPostOperator;
 		};
 
 		struct EliminationInfoFunc
