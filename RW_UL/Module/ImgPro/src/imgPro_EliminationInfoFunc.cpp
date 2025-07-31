@@ -11,8 +11,15 @@ namespace rw
 		}
 
 		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
+		                                                        const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
+		                                                        const GetEliminationItemSpecialOperate& specialOperate)
+		{
+			return getEliminationInfo(info, index, config, GetEliminationItemSpecialOperate{}, GetEliminationItemPostOperate{});
+		}
+
+		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
 			const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
-			const GetEliminationItemSpecialOperate& specialPrepare)
+			const GetEliminationItemSpecialOperate& specialOperate, const GetEliminationItemPostOperate& postOperate)
 		{
 			EliminationInfo result;
 
@@ -77,15 +84,20 @@ namespace rw
 					item.index = idx;
 					item.isBad = isBad;
 
-					if (specialPrepare)
+					if (specialOperate)
 					{
-						specialPrepare(item, det, cfg);
+						specialOperate(item, det, cfg);
 					}
 
 					items.push_back(std::move(item));
 				}
 
 				result.defectItems[classId] = std::move(items);
+			}
+
+			if (postOperate)
+			{
+				postOperate(info, index, config);
 			}
 
 			return result;

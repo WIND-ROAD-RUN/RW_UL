@@ -75,7 +75,8 @@ namespace rw
 					processResult,
 					indexMap,
 					configs,
-					_context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator
+					_context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator,
+					_context.eliminationInfoGetContext.getEliminationItemPostOperator
 				);
 			_eliminationInfo = eliminationInfo;
 			return _eliminationInfo;
