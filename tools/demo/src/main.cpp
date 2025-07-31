@@ -6,39 +6,24 @@
 #include"LicenseValidation.h"
 #include"rqwm_ModbusDeviceThread.hpp"
 
-void performRandomIO(rw::rqwm::ModbusDeviceThreadSafe& modbusDeviceThread, int threadId) {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0, 4);
-
-	for (int i = 0; i < 3000; ++i) { // 每个线程执行 30 次操作
-		int operation = dist(gen);
-		std::cout << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y03) << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 模拟 I/O 操作的延迟
-	}
-}
+//void performRandomIO(rw::rqwm::ModbusDeviceThreadSafe& modbusDeviceThread, int threadId) {
+//	std::random_device rd;
+//	std::mt19937 gen(rd());
+//	std::uniform_int_distribution<> dist(0, 4);
+//
+//	for (int i = 0; i < 3000; ++i) { // 每个线程执行 30 次操作
+//		int operation = dist(gen);
+//		std::cout << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y03) << std::endl;
+//		std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 模拟 I/O 操作的延迟
+//	}
+//}
 
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	rw::rqwm::ModbusConfig config;
-	config.ip = "192.168.1.199";
-	config.port = 502;
-	rw::rqwm::ModbusDeviceThreadSafe modbusDeviceThread(rw::rqwm::ModbusType::keRuiE, config);
-
-	modbusDeviceThread.connect();
-	modbusDeviceThread.setOState(rw::rqwm::ModbusO::Y03, true);
-	// 创建 10 个线程
-	std::vector<std::thread> threads;
-	for (int i = 0; i < 10; ++i) {
-		threads.emplace_back(performRandomIO, std::ref(modbusDeviceThread), i);
-	}
-
-	// 等待所有线程完成
-	for (auto& thread : threads) {
-		thread.join();
-	}
+	PicturesPainter painter;
+	painter.show();
 
 	return a.exec();
 }
