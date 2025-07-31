@@ -59,6 +59,14 @@ namespace rw
 			const rw::imgPro::EliminationInfoGetConfig&
 			)>;
 
+		using ClassIdWithEliminationInfoConfigMap = std::unordered_map<ClassId, EliminationInfoGetConfig>;
+
+		using GetEliminationItemPostOperate = std::function<void(
+			const ProcessResult&, 
+			const ProcessResultIndexMap&, 
+			const ClassIdWithEliminationInfoConfigMap&
+			)>;
+
 		struct EliminationInfoGetContext {
 		public:
 			GetEliminationItemSpecialOperate getEliminationItemFuncSpecialOperator;
@@ -67,11 +75,12 @@ namespace rw
 		struct EliminationInfoFunc
 		{
 		public:
-
-			using ClassIdWithConfigMap = std::unordered_map<ClassId, EliminationInfoGetConfig>;
+			using ClassIdWithConfigMap = ClassIdWithEliminationInfoConfigMap;
 		public:
 			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config);
-			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialPrepare);
+			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialOperate);
+			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialOperate, const GetEliminationItemPostOperate & postOperate);
+
 		};
 	}
 }
