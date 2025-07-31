@@ -25,6 +25,8 @@ public:
 	void initWorkStationTitleMap(const std::map<int, QString>& map);
 	void initWorkStationTitleMap(const QMap<int, QString>& map);
 public:
+	void setNum(int number);
+public:
 	void setMonitorValue(bool* isShow);
 	void setMonitorDisImgIndex(int* index);
 public:
