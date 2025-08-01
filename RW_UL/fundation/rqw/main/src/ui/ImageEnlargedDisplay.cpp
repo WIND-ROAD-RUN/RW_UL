@@ -44,6 +44,14 @@ void ImageEnlargedDisplay::initWorkStationTitleMap(const QMap<int, QString>& map
 	}
 }
 
+void ImageEnlargedDisplay::setNum(int number)
+{
+	if (number > 0)
+	{
+		num = number;
+	}
+}
+
 void ImageEnlargedDisplay::setMonitorValue(bool* isShow)
 {
 	if (!isShow)
