@@ -64,13 +64,35 @@ namespace rw
 			return result;
 		}
 
-		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const ProcessResult& processResult,
+		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(
+			const ProcessResult& processResult,
 			const ClassIdWithEliminationInfoConfigMap& classIdWithEliminationInfoConfigMap,
 			const EliminationInfo& eliminationInfo, 
 			const ClassIdWithConfigMap& config,
 			const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
 			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
 			const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo)
+		{
+			return getDefectResultInfo(
+				processResult,
+				classIdWithEliminationInfoConfigMap,
+				eliminationInfo,
+				config,
+				getDefectResultExtraOperate,
+				getDefectResultExtraOperateDisable,
+				getDefectResultExtraOperateWithFullInfo,
+				GetDefectResultExtraPostOperate{}
+			);
+		}
+
+		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const ProcessResult& processResult,
+			const ClassIdWithEliminationInfoConfigMap& classIdWithEliminationInfoConfigMap,
+			const EliminationInfo& eliminationInfo, 
+			const ClassIdWithConfigMap& config,
+			const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
+			const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo,
+			const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate)
 		{
 			DefectResultInfo result;
 			result.isBad = false;
@@ -117,7 +139,7 @@ namespace rw
 							result.disableDefects[classId].push_back(item);
 						}
 
-						if (itEliCfg!= classIdWithEliminationInfoConfigMap.end())
+						if (itEliCfg != classIdWithEliminationInfoConfigMap.end())
 						{
 							if (getDefectResultExtraOperateWithFullInfo)
 							{
@@ -131,6 +153,16 @@ namespace rw
 						}
 					}
 				}
+			}
+
+			if (getDefectResultExtraPostOperate)
+			{
+				getDefectResultExtraPostOperate(
+					processResult,
+					classIdWithEliminationInfoConfigMap,
+					eliminationInfo,
+					config
+				);
 			}
 
 			return result;

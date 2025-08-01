@@ -97,7 +97,8 @@ namespace rw
 					configs,
 					_context.defectResultGetContext.getDefectResultExtraOperate,
 					_context.defectResultGetContext.getDefectResultExtraOperateDisable,
-					_context.defectResultGetContext.getDefectResultExtraOperateWithFullInfo
+					_context.defectResultGetContext.getDefectResultExtraOperateWithFullInfo,
+					_context.defectResultGetContext.getDefectResultExtraPostOperate
 				);
 			_defectResultInfo = defectResultInfo;
 			return _defectResultInfo;

@@ -40,12 +40,23 @@ namespace rw
 			const DefectResultGetConfig&
 			)>;
 
+		using ClassIdWithDefectResultInfoFuncConfigMap= std::unordered_map<ClassId, DefectResultGetConfig>;
+
+		using GetDefectResultExtraPostOperate =
+			std::function<void(
+				const ProcessResult&,
+				const ClassIdWithEliminationInfoConfigMap&,
+				const EliminationInfo&,
+				const ClassIdWithDefectResultInfoFuncConfigMap&
+				)>;
+
 		struct DefectResultGetContext
 		{
 		public:
 			GetDefectResultExtraOperateWhichIsDefects getDefectResultExtraOperate{};
 			GetDefectResultExtraOperateWhichIsDisableDefects getDefectResultExtraOperateDisable{};
 			GetDefectResultExtraOperateWithFullInfo getDefectResultExtraOperateWithFullInfo{};
+			GetDefectResultExtraPostOperate getDefectResultExtraPostOperate{};
 		};
 
 
@@ -53,7 +64,7 @@ namespace rw
 		{
 		public:
 			using Config = DefectResultGetConfig;
-			using ClassIdWithConfigMap = std::unordered_map<ClassId, Config>;
+			using ClassIdWithConfigMap = ClassIdWithDefectResultInfoFuncConfigMap;
 		public:
 			static DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const ClassIdWithConfigMap& config);
 
@@ -73,6 +84,17 @@ namespace rw
 				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
 				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
 				const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo
+			);
+
+			static DefectResultInfo getDefectResultInfo(
+				const ProcessResult& processResult,
+				const ClassIdWithEliminationInfoConfigMap& classIdWithEliminationInfoConfigMap,
+				const EliminationInfo& eliminationInfo,
+				const ClassIdWithConfigMap& config,
+				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
+				const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo,
+				const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate
 			);
 		};
 	}
