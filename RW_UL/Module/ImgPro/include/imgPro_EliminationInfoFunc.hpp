@@ -79,9 +79,24 @@ namespace rw
 			using Config = EliminationInfoGetConfig;
 			using ClassIdWithConfigMap = ClassIdWithEliminationInfoConfigMap;
 		public:
-			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config);
-			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialOperate);
-			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config, const GetEliminationItemSpecialOperate& specialOperate, const GetEliminationItemPostOperate & postOperate);
+			static EliminationInfo getEliminationInfo(
+				const ProcessResult& info, 
+				const ProcessResultIndexMap& index,
+				const ClassIdWithConfigMap& config
+			);
+			static EliminationInfo getEliminationInfo(
+				const ProcessResult& info, 
+				const ProcessResultIndexMap& index,
+				const ClassIdWithConfigMap& config,
+				const GetEliminationItemSpecialOperate& specialOperate
+			);
+			static EliminationInfo getEliminationInfo(
+				const ProcessResult& info, 
+				const ProcessResultIndexMap& index,
+				const ClassIdWithConfigMap& config,
+				const GetEliminationItemSpecialOperate& specialOperate,
+				const GetEliminationItemPostOperate & postOperate
+			);
 
 		};
 	}

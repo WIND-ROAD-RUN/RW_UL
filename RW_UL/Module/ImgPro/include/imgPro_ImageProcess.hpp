@@ -67,8 +67,10 @@ namespace rw
 				const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs
 			);
 			DefectResultInfo getDefectResultInfo(
+				const ProcessResult& processResult,
 				const EliminationInfo& eliminationInfo, 
-				const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs
+				const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs,
+				const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& eliConfigs
 			);
 		public:
 			void operator()(const cv::Mat& mat);

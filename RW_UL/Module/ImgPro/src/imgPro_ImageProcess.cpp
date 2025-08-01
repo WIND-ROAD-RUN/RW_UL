@@ -82,15 +82,22 @@ namespace rw
 			return _eliminationInfo;
 		}
 
-		DefectResultInfo ImageProcess::getDefectResultInfo(const EliminationInfo& eliminationInfo,
-			const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs)
+		DefectResultInfo ImageProcess::getDefectResultInfo(
+			const ProcessResult& processResult,
+			const EliminationInfo& eliminationInfo,
+			const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs,
+			const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& eliConfigs
+		)
 		{
 			auto defectResultInfo =
 				rw::imgPro::DefectResultInfoFunc::getDefectResultInfo(
+					processResult,
+					eliConfigs,
 					eliminationInfo,
 					configs,
 					_context.defectResultGetContext.getDefectResultExtraOperate,
-					_context.defectResultGetContext.getDefectResultExtraOperateDisable
+					_context.defectResultGetContext.getDefectResultExtraOperateDisable,
+					_context.defectResultGetContext.getDefectResultExtraOperateWithFullInfo
 				);
 			_defectResultInfo = defectResultInfo;
 			return _defectResultInfo;
@@ -103,7 +110,7 @@ namespace rw
 			processImg(mat);
 			getIndex(_processResult);
 			getEliminationInfo(_processResult, _processResultIndexMap, _context.eliminationCfg);
-			getDefectResultInfo(_eliminationInfo, _context.defectCfg);
+			getDefectResultInfo(_processResult,_eliminationInfo, _context.defectCfg, _context.eliminationCfg);
 
 			auto end = std::chrono::high_resolution_clock::now();
 

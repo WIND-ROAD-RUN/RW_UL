@@ -45,6 +45,7 @@ namespace rw
 		public:
 			GetDefectResultExtraOperateWhichIsDefects getDefectResultExtraOperate{};
 			GetDefectResultExtraOperateWhichIsDisableDefects getDefectResultExtraOperateDisable{};
+			GetDefectResultExtraOperateWithFullInfo getDefectResultExtraOperateWithFullInfo{};
 		};
 
 
@@ -60,8 +61,18 @@ namespace rw
 				const EliminationInfo& eliminationInfo,
 				const ClassIdWithConfigMap& config,
 				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
-				const GetDefectResultExtraOperateWhichIsDisableDefects&
-				getDefectResultExtraOperateDisable
+				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable
+			);
+
+			//Extra operate with full info
+			static DefectResultInfo getDefectResultInfo(
+				const ProcessResult& processResult,
+				const ClassIdWithEliminationInfoConfigMap& classIdWithEliminationInfoConfigMap,
+				const EliminationInfo& eliminationInfo,
+				const ClassIdWithConfigMap& config,
+				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
+				const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo
 			);
 		};
 	}
