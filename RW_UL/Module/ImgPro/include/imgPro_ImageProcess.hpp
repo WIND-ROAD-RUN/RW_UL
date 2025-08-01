@@ -61,8 +61,15 @@ namespace rw
 		public:
 			ProcessResult processImg(const cv::Mat& mat);
 			ProcessResultIndexMap getIndex(const ProcessResult& processResult);
-			EliminationInfo getEliminationInfo(const ProcessResult& processResult, const ProcessResultIndexMap& indexMap, const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs);
-			DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs);
+			EliminationInfo getEliminationInfo(
+				const ProcessResult& processResult, 
+				const ProcessResultIndexMap& indexMap,
+				const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs
+			);
+			DefectResultInfo getDefectResultInfo(
+				const EliminationInfo& eliminationInfo, 
+				const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs
+			);
 		public:
 			void operator()(const cv::Mat& mat);
 			QImage getMaskImg(const cv::Mat& mat);

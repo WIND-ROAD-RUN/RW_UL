@@ -27,8 +27,15 @@ namespace rw
 		public:
 			ProcessResult processImg(const cv::Mat& mat);
 			ProcessResultIndexMap getIndex(const ProcessResult& processResult);
-			EliminationInfo getEliminationInfo(const ProcessResult& processResult, const ProcessResultIndexMap& indexMap, const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs);
-			DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs);
+			EliminationInfo getEliminationInfo(
+				const ProcessResult& processResult,
+				const ProcessResultIndexMap& indexMap, 
+				const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& configs
+			);
+			DefectResultInfo getDefectResultInfo(
+				const EliminationInfo& eliminationInfo, 
+				const rw::imgPro::DefectResultInfoFunc::ClassIdWithConfigMap& configs
+			);
 		private:
 			std::vector<cv::Mat> _matFragmentation{};
 			mutable std::shared_mutex _mutex; 
@@ -38,7 +45,8 @@ namespace rw
 		public:
 			void operator()();
 			QImage getMaskImg(const cv::Mat& mat);
-			static QImage getMaskImg(const cv::Mat& mat,
+			static QImage getMaskImg(
+				const cv::Mat& mat,
 				const DefectResultInfo& defectResultInfo,
 				const ProcessResult& processResult,
 				ImageProcessContext& context,

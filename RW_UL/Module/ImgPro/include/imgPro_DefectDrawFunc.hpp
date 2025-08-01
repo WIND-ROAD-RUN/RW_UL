@@ -27,7 +27,11 @@ namespace rw
 			std::unordered_map<ClassId, Color> classIdWithColorWhichIsGood;
 			std::unordered_map<ClassId, Color> classIdWithColorWhichIsBad;
 		public:
-			void setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color, bool isGood);
+			void setAllIdsWithSameColor(
+				const std::vector<ClassId>& ids,
+				Color color, 
+				bool isGood
+			);
 		public:
 			int fontSize{ 30 };
 			int thickness{ 3 };
@@ -65,8 +69,17 @@ namespace rw
 			using ConfigDefectDraw = DefectDrawConfig;
 			using ConfigRunText = RunTextConfig;
 		public:
-			static void drawDefectRecs(QImage& img, const DefectResultInfo& info, const ProcessResult& processResult, const ConfigDefectDraw& config);
-			static void drawRunText(QImage& img, const ConfigRunText& config);
+			static void drawDefectRecs(
+				QImage& img,
+				const DefectResultInfo& info, 
+				const ProcessResult& processResult, 
+				const ConfigDefectDraw& config
+			);
+
+			static void drawRunText(
+				QImage& img, 
+				const ConfigRunText& config
+			);
 		private:
 			static void drawDefectGroup(
 				QImage& img,

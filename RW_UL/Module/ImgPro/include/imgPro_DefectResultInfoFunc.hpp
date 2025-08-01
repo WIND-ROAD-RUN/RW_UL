@@ -2,7 +2,6 @@
 
 #include "imgPro_EliminationInfoFunc.hpp"
 #include"imgPro_ImageProcessUtilty.hpp"
-#include"imgPro_DefectResultInfoFunc.hpp"
 
 namespace rw
 {
@@ -23,14 +22,22 @@ namespace rw
 			bool isEnable{ false };
 		};
 
-		using GetDefectResultExtraOperateWhichIsDefects = std::function<void(const EliminationItem&)>;
-		using GetDefectResultExtraOperateWhichIsDisableDefects = std::function<void(const EliminationItem&)>;
-		using GetDefectResultExtraOperateWhichIsDefectsWithFullInfo
-		= std::function<void(
+		using GetDefectResultExtraOperateWhichIsDefects = 
+			std::function<void(
+				const EliminationItem&
+				)>;
+
+		using GetDefectResultExtraOperateWhichIsDisableDefects = 
+			std::function<void(
+			const EliminationItem&
+			)>;
+
+		using GetDefectResultExtraOperateWithFullInfo = 
+			std::function<void(
+			const rw::DetectionRectangleInfo&,
+			const EliminationInfoGetConfig &,
 			const EliminationItem&,
-			const EliminationInfo&,
-			const DefectResultGetConfig&,
-			const ProcessResult &
+			const DefectResultGetConfig&
 			)>;
 
 		struct DefectResultGetContext

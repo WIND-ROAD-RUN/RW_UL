@@ -69,16 +69,44 @@ namespace rw
 		struct ImagePainter
 		{
 		public:
-			static void drawVerticalLine(QImage& image, const ConfigDrawLine& cfg);
-			static void drawHorizontalLine(QImage& image, const ConfigDrawLine& cfg);
+			static void drawVerticalLine(
+				QImage& image, 
+				const ConfigDrawLine& cfg
+			);
+			static void drawHorizontalLine(
+				QImage& image,
+				const ConfigDrawLine& cfg
+			);
 
-			static void drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawRect& cfg);
-			static void drawShapesOnSourceImg(QImage& image, const rqw::PainterRectangleInfo& rectInfo, const ConfigDrawRect& cfg);
+			static void drawShapesOnSourceImg(
+				QImage& image, 
+				const DetectionRectangleInfo& rectInfo,
+				const ConfigDrawRect& cfg
+			);
+			static void drawShapesOnSourceImg(
+				QImage& image, 
+				const rqw::PainterRectangleInfo& rectInfo,
+				const ConfigDrawRect& cfg
+			);
 
-			static void drawTextOnImage(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, double proportion);
-			static void drawTextOnImageWithFontSize(QImage& image, const QVector<QString>& texts, const std::vector<Color>& colorList, int fontSize);
+			static void drawTextOnImage(
+				QImage& image, 
+				const QVector<QString>& texts,
+				const std::vector<Color>& colorList,
+				double proportion
+			);
+			static void drawTextOnImageWithFontSize(
+				QImage& image, 
+				const QVector<QString>& texts,
+				const std::vector<Color>& colorList,
+				int fontSize
+			);
 		public:
-			static void drawMaskOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo, const ConfigDrawMask& cfg);
+			static void drawMaskOnSourceImg(
+				QImage& image, 
+				const DetectionRectangleInfo& rectInfo,
+				const ConfigDrawMask& cfg
+			);
 		};
 	}
 }
