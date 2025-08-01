@@ -20,7 +20,7 @@ namespace rw
 			for (const auto& kv : config)
 			{
 				ClassId classId = kv.first;
-				const DefectResultGetConfig& cfg = kv.second;
+				const Config& cfg = kv.second;
 
 				auto it = eliminationInfo.defectItems.find(classId);
 				if (it != eliminationInfo.defectItems.end())

@@ -76,6 +76,7 @@ namespace rw
 		struct EliminationInfoFunc
 		{
 		public:
+			using Config = EliminationInfoGetConfig;
 			using ClassIdWithConfigMap = ClassIdWithEliminationInfoConfigMap;
 		public:
 			static EliminationInfo getEliminationInfo(const ProcessResult& info, const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config);

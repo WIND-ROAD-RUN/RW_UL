@@ -116,7 +116,7 @@ protected:
 	void iniDefectResultGetConfig()
 	{
 		auto& context = imgProcess->context();
-		rw::imgPro::DefectResultInfoFunc::DefectResultGetConfig defectConfig;
+		rw::imgPro::DefectResultInfoFunc::Config defectConfig;
 		defectConfig.isEnable = false;
 		defectConfigs[0] = defectConfig;
 		defectConfig.isEnable = true;
@@ -134,7 +134,7 @@ protected:
 	void iniDefectDrawConfig()
 	{
 		auto& context = imgProcess->context();
-		rw::imgPro::DefectDrawFunc::DefectDrawConfig drawConfig;
+		rw::imgPro::DefectDrawFunc::ConfigDefectDraw drawConfig;
 		drawConfig.isDrawDefects = true;
 		drawConfig.isDrawDisableDefects = true;
 		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Green, true);

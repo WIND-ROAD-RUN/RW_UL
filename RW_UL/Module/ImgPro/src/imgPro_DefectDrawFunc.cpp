@@ -7,7 +7,7 @@ namespace rw
 {
 	namespace imgPro
 	{
-		void DefectDrawFunc::DefectDrawConfig::setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color,
+		void DefectDrawFunc::ConfigDefectDraw::setAllIdsWithSameColor(const std::vector<ClassId>& ids, Color color,
 			bool isGood)
 		{
 			for (const auto& id : ids)
@@ -24,7 +24,7 @@ namespace rw
 		}
 
 		void DefectDrawFunc::drawDefectRecs(QImage& img, const DefectResultInfo& info,
-			const ProcessResult& processResult, const DefectDrawConfig& config)
+			const ProcessResult& processResult, const ConfigDefectDraw& config)
 		{
 			if (img.isNull() || processResult.empty()) {
 				return; 
@@ -59,7 +59,7 @@ namespace rw
 			}
 		}
 
-		void DefectDrawFunc::drawRunText(QImage& img, const RunTextConfig& config)
+		void DefectDrawFunc::drawRunText(QImage& img, const ConfigRunText& config)
 		{
 			QVector<QString> textList;
 			std::vector<Color> configList;
@@ -91,7 +91,7 @@ namespace rw
 
 		void DefectDrawFunc::drawDefectGroup(QImage& img,
 			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group, const ProcessResult& processResult,
-			const DefectDrawFunc::DefectDrawConfig& config, const std::unordered_map<ClassId, Color>& colorMap,
+			const DefectDrawFunc::ConfigDefectDraw& config, const std::unordered_map<ClassId, Color>& colorMap,
 			Color defaultColor, int scorePrecision, int areaPrecision)
 		{
 			rw::imgPro::ConfigDrawRect recCfg;

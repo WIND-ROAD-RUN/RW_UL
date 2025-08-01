@@ -2,6 +2,7 @@
 
 #include "imgPro_EliminationInfoFunc.hpp"
 #include"imgPro_ImageProcessUtilty.hpp"
+#include"imgPro_DefectResultInfoFunc.hpp"
 
 namespace rw
 {
@@ -16,8 +17,21 @@ namespace rw
 			std::unordered_map<ClassId, std::vector<EliminationItem>> disableDefects;
 		};
 
+		struct DefectResultGetConfig
+		{
+		public:
+			bool isEnable{ false };
+		};
+
 		using GetDefectResultExtraOperateWhichIsDefects = std::function<void(const EliminationItem&)>;
 		using GetDefectResultExtraOperateWhichIsDisableDefects = std::function<void(const EliminationItem&)>;
+		using GetDefectResultExtraOperateWhichIsDefectsWithFullInfo
+		= std::function<void(
+			const EliminationItem&,
+			const EliminationInfo&,
+			const DefectResultGetConfig&,
+			const ProcessResult &
+			)>;
 
 		struct DefectResultGetContext
 		{
@@ -26,15 +40,12 @@ namespace rw
 			GetDefectResultExtraOperateWhichIsDisableDefects getDefectResultExtraOperateDisable{};
 		};
 
+
 		struct DefectResultInfoFunc
 		{
 		public:
-			struct DefectResultGetConfig
-			{
-			public:
-				bool isEnable{ false };
-			};
-			using ClassIdWithConfigMap = std::unordered_map<ClassId, DefectResultGetConfig>;
+			using Config = DefectResultGetConfig;
+			using ClassIdWithConfigMap = std::unordered_map<ClassId, Config>;
 		public:
 			static DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const ClassIdWithConfigMap& config);
 
