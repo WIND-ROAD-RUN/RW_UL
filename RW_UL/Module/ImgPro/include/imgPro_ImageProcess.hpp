@@ -23,6 +23,8 @@ namespace rw
 		public:
 			DefectDrawFunc::ConfigDefectDraw defectDrawCfg{};
 			DefectDrawFunc::ConfigRunText runTextCfg{};
+		public:
+			DefectDrawFuncContext defectDrawFuncContext{};
 		};
 
 		class ImageProcess

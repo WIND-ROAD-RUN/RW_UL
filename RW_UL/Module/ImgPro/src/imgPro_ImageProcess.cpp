@@ -166,6 +166,11 @@ namespace rw
 			}
 			context.runTextCfg.extraTexts = errors;
 			rw::imgPro::DefectDrawFunc::drawRunText(img, context.runTextCfg);
+
+			if (context.defectDrawFuncContext.postOperateFunc)
+			{
+				context.defectDrawFuncContext.postOperateFunc(img);
+			}
 		}
 	}
 }
