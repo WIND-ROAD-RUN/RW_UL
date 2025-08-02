@@ -2,6 +2,9 @@
 
 #include"cuda_device_runtime_api.h"
 
+#include"imet_PreProcess.cuh"
+
+
 #include<fstream>
 #include<memory>
 #include <iomanip>
@@ -146,9 +149,43 @@ namespace rw
 			}
 			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
-				cv::Mat letterbox_image = PreProcess::letterbox(mat, _input_w, _input_h, _config.letterBoxColor, letterBoxScale, letterBoxdw, letterBoxdh);
-				auto infer_image = cv::dnn::blobFromImage(letterbox_image, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
-				(cudaMemcpy(_gpu_buffers[0], infer_image.data, _input_w * _input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
+				/*cv::Mat mat_continuous = mat.isContinuous() ? mat : mat.clone();*/
+			/*	unsigned char* d_src;
+				size_t src_bytes = mat.rows * mat.cols * mat.elemSize();
+				cudaMalloc((void**)&d_src, src_bytes);
+				cudaMemcpy(d_src, mat_continuous.data, src_bytes, cudaMemcpyHostToDevice);
+
+				float scale = std::min(_input_w / (float)mat.cols, _input_h / (float)mat.rows);
+				int new_w = int(mat.cols * scale);
+				int new_h = int(mat.rows * scale);
+				int pad_w = (_input_w - new_w) / 2;
+				int pad_h = (_input_h - new_h) / 2;*/
+
+				unsigned char pad_b = static_cast<unsigned char>(_config.letterBoxColor[0]);
+				unsigned char pad_g = static_cast<unsigned char>(_config.letterBoxColor[1]);
+				unsigned char pad_r = static_cast<unsigned char>(_config.letterBoxColor[2]);
+
+				/*launch_letterbox_kernel(
+					d_src, mat.cols, mat.rows, mat.step,
+					(float*)_gpu_buffers[0], _input_w, _input_h,
+					scale, pad_w, pad_h,
+					pad_b, pad_g, pad_r
+				);
+				cudaDeviceSynchronize();
+				cudaFree(d_src);*/
+
+				LetterBoxConfig cfg;
+				cfg.dstDevData = (float*)_gpu_buffers[0];
+				cfg.dstHeight = _input_h;
+				cfg.dstWidth = _input_w;
+				cfg.pad_b = pad_b;
+				cfg.pad_g = pad_g;
+				cfg.pad_r = pad_r;
+				auto info=ImgPreprocess::LetterBox(mat, cfg);
+
+				letterBoxScale = info.letterBoxScale;
+				letterBoxdw = info.pad_w;
+				letterBoxdh = info.pad_h;
 			}
 			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
 			{

@@ -27,6 +27,16 @@ function(find_sources_and_headers result_var)
     set(${result_var} ${sources_and_headers} PARENT_SCOPE)
 endfunction()
 
+function(find_cu_and_headers result_var)
+    set(sources_and_headers)
+    foreach(path IN LISTS ARGN)
+    file(GLOB_RECURSE headers "${path}/*.h" "${path}/*.hpp" "${path}/*.cuh")
+        file(GLOB_RECURSE sources "${path}/*.cu")
+        list(APPEND sources_and_headers ${headers} ${sources})
+    endforeach()
+    set(${result_var} ${sources_and_headers} PARENT_SCOPE)
+endfunction()
+
 # Utility function to find all sources and headers in a list of directories and group them
 function(group_sources_and_headers group_name)
     set(SOURCESFILES)

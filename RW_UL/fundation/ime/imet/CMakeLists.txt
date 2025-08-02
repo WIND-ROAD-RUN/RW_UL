@@ -14,7 +14,12 @@ FIND_SOURCES_AND_HEADERS(SRC_LIST
 	${IMET_PRIVATE_PATH}/src
 )
 
-add_library(${PROJECT_NAME}  ${SRC_LIST} ${UTILTY_SRC_LIST} ${UTILTY_SRC_LIST_PRIVATE})
+FIND_CU_AND_HEADERS(CU_SRC_LIST
+	${IMET_PRIVATE_PATH}/cuda/include
+	${IMET_PRIVATE_PATH}/cuda/src
+)
+
+add_library(${PROJECT_NAME}  ${SRC_LIST} ${UTILTY_SRC_LIST} ${UTILTY_SRC_LIST_PRIVATE} ${CU_SRC_LIST})
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -29,6 +34,7 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC ${OpenCV_INCLUDE_DIRS}
 	PUBLIC ${TensorRT_include}
     PUBLIC ${CUDAToolkit_INCLUDE_DIRS}
+	PUBLIC ${IMET_PRIVATE_PATH}/cuda/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
