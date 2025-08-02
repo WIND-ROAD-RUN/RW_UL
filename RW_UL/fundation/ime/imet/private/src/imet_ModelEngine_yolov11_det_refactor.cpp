@@ -149,30 +149,9 @@ namespace rw
 			}
 			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
 			{
-				/*cv::Mat mat_continuous = mat.isContinuous() ? mat : mat.clone();*/
-			/*	unsigned char* d_src;
-				size_t src_bytes = mat.rows * mat.cols * mat.elemSize();
-				cudaMalloc((void**)&d_src, src_bytes);
-				cudaMemcpy(d_src, mat_continuous.data, src_bytes, cudaMemcpyHostToDevice);
-
-				float scale = std::min(_input_w / (float)mat.cols, _input_h / (float)mat.rows);
-				int new_w = int(mat.cols * scale);
-				int new_h = int(mat.rows * scale);
-				int pad_w = (_input_w - new_w) / 2;
-				int pad_h = (_input_h - new_h) / 2;*/
-
 				unsigned char pad_b = static_cast<unsigned char>(_config.letterBoxColor[0]);
 				unsigned char pad_g = static_cast<unsigned char>(_config.letterBoxColor[1]);
 				unsigned char pad_r = static_cast<unsigned char>(_config.letterBoxColor[2]);
-
-				/*launch_letterbox_kernel(
-					d_src, mat.cols, mat.rows, mat.step,
-					(float*)_gpu_buffers[0], _input_w, _input_h,
-					scale, pad_w, pad_h,
-					pad_b, pad_g, pad_r
-				);
-				cudaDeviceSynchronize();
-				cudaFree(d_src);*/
 
 				LetterBoxConfig cfg;
 				cfg.dstDevData = (float*)_gpu_buffers[0];
