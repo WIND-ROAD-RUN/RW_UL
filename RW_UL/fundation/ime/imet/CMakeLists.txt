@@ -2,8 +2,11 @@ project(imet VERSION 0.1 LANGUAGES CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 17)
 
+
 find_package(OpenCV REQUIRED)
 find_package(CUDAToolkit REQUIRED)
+
+set(CMAKE_CUDA_ARCHITECTURES 89)
 
 set(IMET_PRIVATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/private/)
 
