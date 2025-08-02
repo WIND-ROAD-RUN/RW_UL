@@ -13,7 +13,7 @@ int main() {
 	rw::ModelEngineConfig config;
 	config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
 	auto modelEngine = rw::imet::ModelEngineFactory_TensorRT::createModelEngine(config, rw::ModelType::Yolov11_Seg_with_mask);
-	auto mat = cv::imread(R"(C:\Users\rw\Desktop\c3a0dd3937b5a61270469cb21491d6a7.jpg)");
+	auto mat = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
 
 	// 开始计时
 	auto start = std::chrono::high_resolution_clock::now();
