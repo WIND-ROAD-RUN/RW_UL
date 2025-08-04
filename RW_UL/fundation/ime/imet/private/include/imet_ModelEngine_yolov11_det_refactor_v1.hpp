@@ -19,13 +19,6 @@ namespace rw
 			: public ModelEngine
 		{
 		public:
-			struct Detection
-			{
-			public:
-				float conf;
-				int class_id;
-				cv::Rect rect;
-			};
 		public:
 			ModelEngine_yolov11_det_refactor_v1(const std::string& modelPath, nvinfer1::ILogger& logger);
 			~ModelEngine_yolov11_det_refactor_v1() override;
@@ -81,6 +74,9 @@ namespace rw
 			void preprocess(const cv::Mat& mat) override;
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
+
+		public:
+			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		};
 	}
 }

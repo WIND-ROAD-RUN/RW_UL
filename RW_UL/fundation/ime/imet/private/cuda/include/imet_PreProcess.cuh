@@ -24,6 +24,10 @@ namespace rw
 			float letterBoxScale{};
 			int pad_w{};
 			int pad_h{};
+			int sourceHeight;
+			int sourceWidth;
+			int inputHeight{};
+			int inputWidth{};
 		};
 
 		struct LetterBoxConfig
@@ -36,11 +40,20 @@ namespace rw
 			unsigned char pad_r;
 		};
 
+		struct Detection
+		{
+		public:
+			float bbox[4];
+			float conf;
+			int classId;
+		};
+
 		struct ImgPreprocess
 		{
 		public:
 			static LetterBoxInfo LetterBox(const cv::Mat& srcImg, LetterBoxConfig& cfg, cudaStream_t stream);
 			static LetterBoxInfo LetterBox(const cv::Mat& srcImg, LetterBoxConfig& cfg);
+			static void scale_bbox(Detection & det,const LetterBoxInfo & info);
 		};
 	}
 }

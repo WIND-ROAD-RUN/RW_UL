@@ -32,7 +32,7 @@ namespace rw
 			init_shapeInfo();
 			init_buffer();
 			ini_cfg();
-			warm_up();
+			//warm_up();
 		}
 
 		void ModelEngine_yolov11_det_refactor_v1::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
@@ -129,6 +129,8 @@ namespace rw
 
 		void ModelEngine_yolov11_det_refactor_v1::preprocess(const cv::Mat& mat)
 		{
+			//cv::imshow("as", mat);
+			//cv::waitKey((0));
 			_sourceImgWidth = mat.cols;
 			_sourceImgHeight = mat.rows;
 
@@ -147,7 +149,7 @@ namespace rw
 
 			//testCode
 			{
-				//// 1. 分配主机内存
+			//	// 1. 分配主机内存
 			//std::vector<float> cpuInput(_inputSize);
 			//cudaMemcpy(cpuInput.data(), _deviceInputBuffer, _inputSize * sizeof(float), cudaMemcpyDeviceToHost);
 
@@ -191,102 +193,64 @@ namespace rw
 				kNumBoxElement,
 				_stream);
 
-			{
-				float* hostDecodeBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
-				cudaMemcpy(hostDecodeBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost);
-				int num = std::min((int)hostDecodeBuffer[0], kMaxNumOutputBbox);
-				std::vector<std::vector<float>> decodeVec;
-				decodeVec.reserve(num);
-
-				for (int i = 0; i < num; ++i) {
-					float* item = hostDecodeBuffer + 1 + i * kNumBoxElement;
-					std::vector<float> row(item, item + kNumBoxElement);
-					decodeVec.push_back(std::move(row));
-				}
-
-			}
 
 			Utility::nms(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
 			cudaMemcpyAsync(_hostOutputBuffer1, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
 			cudaStreamSynchronize(_stream);
-
-
-			{
-				std::vector<DetectionRectangleInfo> ret;
-				std::vector<Detection> vDetections;
-				int count = std::min((int)_hostOutputBuffer1[0], kMaxNumOutputBbox);
-				/*for (int i = 0; i < count; i++) {
-					int pos = 1 + i * kNumBoxElement;
-					int keepFlag = (int)outputData[pos + 6];
-					if (keepFlag == 1) {
-						Detection det;
-						memcpy(det.bbox, &outputData[pos], 4 * sizeof(float));
-						det.conf = outputData[pos + 4];
-						det.classId = (int)outputData[pos + 5];
-
-						vDetections.emplace_back(det);
-					}
-				}*/
-			}
-
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor_v1::postProcess()
 		{
-			std::vector<Detection> output;
-			(cudaMemcpy(_hostOutputBuffer, _deviceOutputBuffer, _outputSize * sizeof(float), cudaMemcpyDeviceToHost));
-			std::vector<cv::Rect> boxes;
-			std::vector<int> class_ids;
-			std::vector<float> confidences;
+			std::vector<DetectionRectangleInfo> ret;
+			std::vector<Detection> vDetections;
+			int count = std::min((int)_hostOutputBuffer1[0], kMaxNumOutputBbox);
+			for (int i = 0; i < count; i++) {
+				int pos = 1 + i * kNumBoxElement;
+				int keepFlag = (int)_hostOutputBuffer1[pos + 6];
+				if (keepFlag == 1) {
+					Detection det;
+					memcpy(det.bbox, &_hostOutputBuffer1[pos], 4 * sizeof(float));
+					det.conf = _hostOutputBuffer1[pos + 4];
+					det.classId = (int)_hostOutputBuffer1[pos + 5];
 
-
-			const cv::Mat det_output(_classNum + 4, _detectionsNum, CV_32F, _hostOutputBuffer);
-			
-
-			for (int i = 0; i < det_output.cols; ++i) {
-				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + _classNum);
-				cv::Point class_id_point;
-				double score;
-				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
-
-				if (score > _config.conf_threshold) {
-					const float cx = det_output.at<float>(0, i);
-					const float cy = det_output.at<float>(1, i);
-					const float ow = det_output.at<float>(2, i);
-					const float oh = det_output.at<float>(3, i);
-					cv::Rect box;
-					box.x = static_cast<int>((cx - 0.5 * ow));
-					box.y = static_cast<int>((cy - 0.5 * oh));
-					box.width = static_cast<int>(ow);
-					box.height = static_cast<int>(oh);
-
-					boxes.push_back(box);
-					class_ids.push_back(class_id_point.y);
-					confidences.push_back(score);
+					vDetections.emplace_back(det);
 				}
 			}
 
-			std::vector<int> nms_result = nmsWithKeepClass(
-				boxes, class_ids, confidences, _config.conf_threshold, _config.nms_threshold, _config.classids_nms_together);
+			for (size_t j = 0; j < vDetections.size(); j++) {
+				ImgPreprocess::scale_bbox(vDetections[j], _letterBoxInfo);
+				DetectionRectangleInfo det_r;
+				det_r.center_x = (vDetections[j].bbox[0] + vDetections[j].bbox[2]) / 2;
+				det_r.center_y = (vDetections[j].bbox[1] + vDetections[j].bbox[3]) / 2;
+				det_r.classId = vDetections[j].classId;
+				det_r.score = vDetections[j].conf;
+				det_r.width = vDetections[j].bbox[2] - vDetections[j].bbox[0];
+				det_r.height = vDetections[j].bbox[3] - vDetections[j].bbox[1];
+				det_r.leftTop = { static_cast<int>(vDetections[j].bbox[0]), static_cast<int>(vDetections[j].bbox[1]) };
+				det_r.rightTop = { static_cast<int>(vDetections[j].bbox[2]), static_cast<int>(vDetections[j].bbox[1]) };
+				det_r.leftBottom = { static_cast<int>(vDetections[j].bbox[0]), static_cast<int>(vDetections[j].bbox[3]) };
+				det_r.rightBottom = { static_cast<int>(vDetections[j].bbox[2]), static_cast<int>(vDetections[j].bbox[3]) };
+				det_r.area = det_r.width * det_r.height;
+				ret.emplace_back(det_r);
+			}
 
-			for (int i = 0; i < nms_result.size(); i++)
+
+			return ret;
+		}
+
+		cv::Mat ModelEngine_yolov11_det_refactor_v1::draw(const cv::Mat& mat,
+			const std::vector<DetectionRectangleInfo>& infoList)
+		{
+			cv::Mat result = mat.clone();
+			ImagePainter::PainterConfig config;
+			for (const auto& item : infoList)
 			{
-				Detection result;
-				int idx = nms_result[i];
-				result.class_id = class_ids[idx];
-				result.conf = confidences[idx];
-				result.rect = boxes[idx];
-				output.push_back(result);
+				std::ostringstream oss;
+				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
+				config.text = oss.str();
+				ImagePainter::drawShapesOnSourceImg(result, item, config);
 			}
-			auto size = output.size();
-			if (size == 0) {
-				return {};
-			}
-
-			std::cout << "size:" << size << std::endl;
-			//auto result = convertDetectionToDetectionRectangleInfo(output);
-
-			return std::vector<DetectionRectangleInfo>();
+			return result;
 		}
 	}
 }
