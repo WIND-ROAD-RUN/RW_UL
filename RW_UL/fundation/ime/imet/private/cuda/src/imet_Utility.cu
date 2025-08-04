@@ -5,23 +5,20 @@ namespace rw
 	namespace imet
 	{
 		// CUDA kernel for transpose [attr, num] -> [num, attr]
-		__global__ void transpose_kernel(const float* src, float* dst, int num, int attr, int total)
+		__global__ void transpose_kernel(const float* input, float* output, int numRows, int numCols, int totalElements)
 		{
-			int idx = blockIdx.x * blockDim.x + threadIdx.x;
-			if (idx >= total) return;
-			// src: [attr, num], dst: [num, attr]
-			int i = idx % num;    // column index in src
-			int j = idx / num;    // row index in src
-			dst[i * attr + j] = src[j * num + i];
+			int position = blockDim.x * blockIdx.x + threadIdx.x;
+			if (position >= totalElements) return;
+
+			output[position] = input[(position % numCols) * numRows + position / numCols];
 		}
 
-		void Utility::transpose(const float* src, float* dst, int num, int attr, cudaStream_t stream)
+		void Utility::transpose(const float* input, float* output, int numRows, int numCols, cudaStream_t stream)
 		{
-			int total = num * attr;
-			int block = 256;
-			int grid = (total + block - 1) / block;
-			transpose_kernel << <grid, block, 0, stream >> > (src, dst, num, attr, total);
-
+			int totalElements = numRows * numCols;
+			int blockSize = 256;
+			int gridSize = (totalElements + blockSize - 1) / blockSize;
+			transpose_kernel << <gridSize, blockSize, 0, stream >> > (input, output, numRows, numCols, totalElements);
 		}
 
 		__global__ void decode_kernel(

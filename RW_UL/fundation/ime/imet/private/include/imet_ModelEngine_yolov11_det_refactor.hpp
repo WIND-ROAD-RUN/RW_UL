@@ -70,6 +70,8 @@ namespace rw
 			int letterBoxdh{};
 		private:
 			PreProcess::CenterCropParams _centerCropParams;
+		public:
+			cudaStream_t   stream;
 		};
 	}
 }

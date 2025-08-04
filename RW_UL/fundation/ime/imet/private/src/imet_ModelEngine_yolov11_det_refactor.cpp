@@ -32,6 +32,8 @@ namespace rw
 
 		void ModelEngine_yolov11_det_refactor::init(std::string enginePath, nvinfer1::ILogger& logger)
 		{
+			cudaStreamCreate(&stream);
+
 			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
 			const size_t modelSize = engineStream.tellg();
@@ -65,7 +67,7 @@ namespace rw
 		{
 			this->_context->setInputTensorAddress(_engine->getIOTensorName(0), _gpu_buffers[0]);
 			this->_context->setOutputTensorAddress(_engine->getIOTensorName(1), _gpu_buffers[1]);
-			this->_context->enqueueV3(NULL);
+			this->_context->enqueueV3(stream);
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor::postProcess()
@@ -142,41 +144,22 @@ namespace rw
 			_sourceWidth = mat.cols;
 			_sourceHeight = mat.rows;
 
-			if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
-			{
-				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
-				(cudaMemcpy(_gpu_buffers[0], infer_image.data, _input_w * _input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
-			}
-			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::LetterBox)
-			{
-				unsigned char pad_b = static_cast<unsigned char>(_config.letterBoxColor[0]);
-				unsigned char pad_g = static_cast<unsigned char>(_config.letterBoxColor[1]);
-				unsigned char pad_r = static_cast<unsigned char>(_config.letterBoxColor[2]);
+			unsigned char pad_b = static_cast<unsigned char>(_config.letterBoxColor[0]);
+			unsigned char pad_g = static_cast<unsigned char>(_config.letterBoxColor[1]);
+			unsigned char pad_r = static_cast<unsigned char>(_config.letterBoxColor[2]);
 
-				LetterBoxConfig cfg;
-				cfg.dstDevData = (float*)_gpu_buffers[0];
-				cfg.dstHeight = _input_h;
-				cfg.dstWidth = _input_w;
-				cfg.pad_b = pad_b;
-				cfg.pad_g = pad_g;
-				cfg.pad_r = pad_r;
-				auto info=ImgPreprocess::LetterBox(mat, cfg);
+			LetterBoxConfig cfg;
+			cfg.dstDevData = (float*)_gpu_buffers[0];
+			cfg.dstHeight = _input_h;
+			cfg.dstWidth = _input_w;
+			cfg.pad_b = pad_b;
+			cfg.pad_g = pad_g;
+			cfg.pad_r = pad_r;
+			auto info = ImgPreprocess::LetterBox(mat, cfg, stream);
 
-				letterBoxScale = info.letterBoxScale;
-				letterBoxdw = info.pad_w;
-				letterBoxdh = info.pad_h;
-			}
-			else if (_config.imagePretreatmentPolicy == ImagePretreatmentPolicy::CenterCrop)
-			{
-				cv::Mat center_crop_image = PreProcess::centerCrop(mat, _input_w, _input_h, _config.centerCropColor, &_centerCropParams);
-				auto infer_image = cv::dnn::blobFromImage(center_crop_image, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
-				(cudaMemcpy(_gpu_buffers[0], infer_image.data, _input_w * _input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
-			}
-			else
-			{
-				auto infer_image = cv::dnn::blobFromImage(mat, 1.f / 255.f, cv::Size(_input_w, _input_h), cv::Scalar(0, 0, 0), true);
-				(cudaMemcpy(_gpu_buffers[0], infer_image.data, _input_w * _input_h * mat.channels() * sizeof(float), cudaMemcpyHostToDevice));
-			}
+			letterBoxScale = info.letterBoxScale;
+			letterBoxdw = info.pad_w;
+			letterBoxdh = info.pad_h;
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor::convertDetectionToDetectionRectangleInfo(
