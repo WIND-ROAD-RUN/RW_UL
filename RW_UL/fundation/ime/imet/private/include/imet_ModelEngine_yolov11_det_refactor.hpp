@@ -37,11 +37,12 @@ namespace rw
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		private:
-			float* _gpu_buffers[2];               //!< The vector of device buffers needed for engine execution
+			float* _gpu_buffers[2];              
 			float* _cpu_output_buffer;
-			nvinfer1::IRuntime* _runtime;                 //!< The TensorRT runtime used to deserialize the engine
-			nvinfer1::ICudaEngine* _engine;               //!< The TensorRT engine used to run the network
-			nvinfer1::IExecutionContext* _context;        //!< The context for executing inference using an ICudaEngine
+			float* _transposeDevice;
+			nvinfer1::IRuntime* _runtime;                 
+			nvinfer1::ICudaEngine* _engine;               
+			nvinfer1::IExecutionContext* _context;        
 
 			// Model parameters
 			int _input_w;

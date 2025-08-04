@@ -23,7 +23,10 @@ namespace rw
 		ModelEngine_yolov11_det_refactor::~ModelEngine_yolov11_det_refactor()
 		{
 			for (int i = 0; i < 2; i++)
+			{
 				(cudaFree(_gpu_buffers[i]));
+			}
+			cudaFree(_transposeDevice);
 			delete[] _cpu_output_buffer;
 			delete _context;
 			delete _engine;
@@ -54,8 +57,8 @@ namespace rw
 
 			_cpu_output_buffer = new float[_num_detections * _detection_attribute_size];
 			(cudaMalloc((void**)&_gpu_buffers[0], 3 * _input_w * _input_h * sizeof(float)));
-
 			(cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float)));
+			(cudaMalloc((void**)&_transposeDevice, _detection_attribute_size * _num_detections * sizeof(float)));
 
 			for (int i = 0; i < 10; i++) {
 				this->infer();
@@ -68,6 +71,9 @@ namespace rw
 			this->_context->setInputTensorAddress(_engine->getIOTensorName(0), _gpu_buffers[0]);
 			this->_context->setOutputTensorAddress(_engine->getIOTensorName(1), _gpu_buffers[1]);
 			this->_context->enqueueV3(stream);
+			cudaStreamSynchronize(stream);
+
+			Utility::transpose(_gpu_buffers[1], _transposeDevice, _num_detections, _num_classes + 4, stream);
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor::postProcess()
@@ -77,6 +83,9 @@ namespace rw
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
+
+
+
 
 			const cv::Mat det_output(_detection_attribute_size, _num_detections, CV_32F, _cpu_output_buffer);
 

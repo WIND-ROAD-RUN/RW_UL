@@ -10,7 +10,14 @@ namespace rw
 			int position = blockDim.x * blockIdx.x + threadIdx.x;
 			if (position >= totalElements) return;
 
-			output[position] = input[(position % numCols) * numRows + position / numCols];
+			int r = position / numCols;
+			int c = position % numCols; 
+			output[c * numRows + r] = input[r * numCols + c];
+
+			/*int position = blockDim.x * blockIdx.x + threadIdx.x;
+			if (position >= totalElements) return;
+
+			output[position] = input[(position % numCols) * numRows + position / numCols];*/
 		}
 
 		void Utility::transpose(const float* input, float* output, int numRows, int numCols, cudaStream_t stream)
