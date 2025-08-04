@@ -37,9 +37,15 @@ namespace rw
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		private:
+			const int kMaxNumOutputBbox = 1000;  // assume the box outputs no more than kMaxNumOutputBbox boxes that conf >= kNmsThresh;
+			const int kNumBoxElement = 7;  // left, top, right, bottom, confidence, class, keepflag(whether drop when NMS)
+		private:
 			float* _gpu_buffers[2];              
 			float* _cpu_output_buffer;
 			float* _transposeDevice;
+			float* _decodeDevice;
+			size_t* _id_data;
+			float* _outputData;
 			nvinfer1::IRuntime* _runtime;                 
 			nvinfer1::ICudaEngine* _engine;               
 			nvinfer1::IExecutionContext* _context;        
@@ -50,6 +56,7 @@ namespace rw
 			int _num_detections;
 			int _detection_attribute_size;
 			int _num_classes = 80;
+
 
 			ModelEngineConfig _config;
 		public:

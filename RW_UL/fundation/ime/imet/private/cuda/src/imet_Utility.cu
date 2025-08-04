@@ -11,7 +11,7 @@ namespace rw
 			if (position >= totalElements) return;
 
 			int r = position / numCols;
-			int c = position % numCols; 
+			int c = position % numCols;
 			output[c * numRows + r] = input[r * numCols + c];
 
 			/*int position = blockDim.x * blockIdx.x + threadIdx.x;
@@ -20,113 +20,123 @@ namespace rw
 			output[position] = input[(position % numCols) * numRows + position / numCols];*/
 		}
 
-		void Utility::transpose(const float* input, float* output, int numRows, int numCols, cudaStream_t stream)
+		void Utility::transpose(float* src, float* dst, int numBboxes, int numElements, cudaStream_t stream)
 		{
-			int totalElements = numRows * numCols;
+			int edge = numBboxes * numElements;
 			int blockSize = 256;
-			int gridSize = (totalElements + blockSize - 1) / blockSize;
-			transpose_kernel << <gridSize, blockSize, 0, stream >> > (input, output, numRows, numCols, totalElements);
+			int gridSize = (edge + blockSize - 1) / blockSize;
+			transpose_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numElements, edge);
 		}
 
-		__global__ void decode_kernel(
-			const float* src, // [num, 4+num_classes]
-			float* dst,       // [max_output, box_element]
-			int num, int num_classes, float conf_thresh, int max_output, int box_element)
-		{
-			int idx = blockIdx.x * blockDim.x + threadIdx.x;
-			if (idx >= num) return;
+		__global__ void decode_kernel(float* src, float* dst, int numBboxes, int numClasses, float confThresh, int maxObjects, int numBoxElement) {
+			int position = blockDim.x * blockIdx.x + threadIdx.x;
+			if (position >= numBboxes) return;
 
-			const float* cur = src + idx * (4 + num_classes);
-
-			float max_score = -1e10f;
-			int max_class = -1;
-			for (int c = 0; c < num_classes; ++c) {
-				float score = cur[4 + c];
-				if (score > max_score) {
-					max_score = score;
-					max_class = c;
+			float* pitem = src + (4 + numClasses) * position;
+			float* classConf = pitem + 4;
+			float confidence = 0;
+			int label = 0;
+			for (int i = 0; i < numClasses; i++) {
+				if (classConf[i] > confidence) {
+					confidence = classConf[i];
+					label = i;
 				}
 			}
 
-			if (max_score < conf_thresh) return;
+			if (confidence < confThresh) return;
 
-			if (idx < max_output) {
-				float* out = dst + idx * box_element;
-				out[0] = cur[0]; // x1
-				out[1] = cur[1]; // y1
-				out[2] = cur[2]; // x2
-				out[3] = cur[3]; // y2
-				out[4] = max_score; // conf
-				out[5] = static_cast<float>(max_class); 
-				out[6] = 1.0f; // keepflag, 1=keep, 0=ignore
-			}
+			int index = (int)atomicAdd(dst, 1);
+			if (index >= maxObjects) return;
+
+			float cx = pitem[0];
+			float cy = pitem[1];
+			float width = pitem[2];
+			float height = pitem[3];
+
+			float left = cx - width * 0.5f;
+			float top = cy - height * 0.5f;
+			float right = cx + width * 0.5f;
+			float bottom = cy + height * 0.5f;
+
+			float* pout_item = dst + 1 + index * numBoxElement;
+			pout_item[0] = left;
+			pout_item[1] = top;
+			pout_item[2] = right;
+			pout_item[3] = bottom;
+			pout_item[4] = confidence;
+			pout_item[5] = label;
+			pout_item[6] = 1;  // 1 = keep, 0 = ignore
 		}
 
-		void Utility::decode(const float* src, float* dst, int num, int num_classes, float conf_thresh, int max_output,
-			int box_element, cudaStream_t stream)
+		void Utility::decode(float* src, float* dst, int numBboxes, int numClasses, float confThresh, int maxObjects, int numBoxElement, cudaStream_t stream)
 		{
-			int block = 256;
-			int grid = (num + block - 1) / block;
-			decode_kernel << <grid, block, 0, stream >> > (src, dst, num, num_classes, conf_thresh, max_output, box_element);
+			cudaMemsetAsync(dst, 0, sizeof(int), stream);
+			int blockSize = 256;
+			int gridSize = (numBboxes + blockSize - 1) / blockSize;
+			decode_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
 		}
 
-		__device__ float iou(const float* a, const float* b) {
-			float x1 = fmaxf(a[0], b[0]);
-			float y1 = fmaxf(a[1], b[1]);
-			float x2 = fminf(a[2], b[2]);
-			float y2 = fminf(a[3], b[3]);
-			float w = fmaxf(0.0f, x2 - x1);
-			float h = fmaxf(0.0f, y2 - y1);
-			float inter = w * h;
-			float area_a = fmaxf(0.0f, a[2] - a[0]) * fmaxf(0.0f, a[3] - a[1]);
-			float area_b = fmaxf(0.0f, b[2] - b[0]) * fmaxf(0.0f, b[3] - b[1]);
-			return inter / (area_a + area_b - inter + 1e-6f);
+		__device__ float box_iou(
+			float aleft, float atop, float aright, float abottom,
+			float bleft, float btop, float bright, float bbottom
+		) {
+			float cleft = max(aleft, bleft);
+			float ctop = max(atop, btop);
+			float cright = min(aright, bright);
+			float cbottom = min(abottom, bbottom);
+
+			float c_area = max(cright - cleft, 0.0f) * max(cbottom - ctop, 0.0f);
+			if (c_area == 0.0f) return 0.0f;
+
+			float a_area = max(0.0f, aright - aleft) * max(0.0f, abottom - atop);
+			float b_area = max(0.0f, bright - bleft) * max(0.0f, bbottom - btop);
+			return c_area / (a_area + b_area - c_area);
 		}
 
-		__global__ void nms_kernel(const float* boxes, float nms_thresh, int max_output, int box_element, int* keep_flag)
-		{
-			int idx = blockIdx.x * blockDim.x + threadIdx.x;
-			if (idx >= max_output) return;
+		__global__ void nms_kernel(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* ids, int id_nums) {
+			int position = blockDim.x * blockIdx.x + threadIdx.x;
+			int count = min((int)data[0], maxObjects);
+			if (position >= count) return;
 
-			const float* cur = boxes + idx * box_element;
-			if (cur[4] == 0) { // 置信度为0的box直接跳过
-				keep_flag[idx] = 0;
-				return;
+			// left, top, right, bottom, confidence, class, keepflag
+			float* pcurrent = data + 1 + position * numBoxElement;
+			int flag = 0;
+			for (int tt = 0; tt < id_nums; tt++)
+			{
+				if (pcurrent[5] == ids[tt])
+				{
+					flag = 1;
+				}
 			}
-			keep_flag[idx] = 1; // 先假设保留
+			float* pitem;
+			for (int i = 0; i < count; i++) {
+				pitem = data + 1 + i * numBoxElement;
 
-			for (int i = 0; i < max_output; ++i) {
-				if (i == idx) continue;
-				const float* cmp = boxes + i * box_element;
-				if (cmp[4] == 0) continue;
-				// 只抑制同类别
-				if (cur[5] == cmp[5] && cmp[4] > cur[4]) {
-					if (iou(cur, cmp) > nms_thresh) {
-						keep_flag[idx] = 0;
+				if (i == position || (flag == 0 && pcurrent[5] != pitem[5]))
+					continue;
+
+				if (pitem[4] >= pcurrent[4]) {
+					if (pitem[4] == pcurrent[4] && i < position) continue;
+
+					float iou = box_iou(
+						pcurrent[0], pcurrent[1], pcurrent[2], pcurrent[3],
+						pitem[0], pitem[1], pitem[2], pitem[3]
+					);
+
+					if (iou > kNmsThresh) {
+						pcurrent[6] = 0;  // 1 = keep, 0 = ignore
 						return;
 					}
 				}
 			}
 		}
 
-		__global__ void count_keep_kernel(const int* keep_flag, int max_output, int* keep_num)
-		{
-			int count = 0;
-			for (int i = 0; i < max_output; ++i) {
-				if (keep_flag[i]) ++count;
-			}
-			*keep_num = count;
-		}
 
-
-		void Utility::nms(const float* src, float nms_thresh, int max_output, int box_element, int* keep_flag,
-			int* keep_num, cudaStream_t stream)
+		void Utility::nms(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data, int id_nums, cudaStream_t stream)
 		{
-			int block = 256;
-			int grid = (max_output + block - 1) / block;
-			nms_kernel << <grid, block, 0, stream >> > (src, nms_thresh, max_output, box_element, keep_flag);
-			// 统计保留数量（可用thrust::reduce优化，这里用简单kernel）
-			count_keep_kernel << <1, 1, 0, stream >> > (keep_flag, max_output, keep_num);
+			int blockSize = maxObjects < 256 ? maxObjects : 256;
+			int gridSize = (maxObjects + blockSize - 1) / blockSize;
+			nms_kernel << <gridSize, blockSize, 0, stream >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
 		}
 	}
 }

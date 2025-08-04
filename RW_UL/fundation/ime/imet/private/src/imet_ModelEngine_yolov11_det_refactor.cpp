@@ -27,7 +27,9 @@ namespace rw
 				(cudaFree(_gpu_buffers[i]));
 			}
 			cudaFree(_transposeDevice);
+			cudaFree(_decodeDevice);
 			delete[] _cpu_output_buffer;
+			delete[] _outputData;
 			delete _context;
 			delete _engine;
 			delete _runtime;
@@ -56,15 +58,20 @@ namespace rw
 			_num_classes = _detection_attribute_size - 4;
 
 			_cpu_output_buffer = new float[_num_detections * _detection_attribute_size];
-			(cudaMalloc((void**)&_gpu_buffers[0], 3 * _input_w * _input_h * sizeof(float)));
-			(cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float)));
-			(cudaMalloc((void**)&_transposeDevice, _detection_attribute_size * _num_detections * sizeof(float)));
-
+			cudaMalloc((void**)&_gpu_buffers[0], 3 * _input_w * _input_h * sizeof(float));
+			cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float));
+			cudaMalloc((void**)&_transposeDevice, _detection_attribute_size * _num_detections * sizeof(float));
+			cudaMalloc((void**)&_decodeDevice, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
+			cudaMalloc((void**)&_id_data, _config.classids_nms_together.size() * sizeof(size_t));
+			_outputData = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
+			cudaMemcpy(_id_data, _config.classids_nms_together.data(), _config.classids_nms_together.size() * sizeof(size_t), cudaMemcpyHostToDevice);
 			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
 			cudaDeviceSynchronize();
 		}
+
+
 
 		void ModelEngine_yolov11_det_refactor::infer()
 		{
@@ -74,6 +81,23 @@ namespace rw
 			cudaStreamSynchronize(stream);
 
 			Utility::transpose(_gpu_buffers[1], _transposeDevice, _num_detections, _num_classes + 4, stream);
+			Utility::decode(_transposeDevice,_decodeDevice, _num_detections, _num_classes,_config.conf_threshold,kMaxNumOutputBbox,kNumBoxElement,stream);
+			Utility::nms(_transposeDevice, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _id_data, _config.classids_nms_together.size(), stream);
+			cudaMemcpyAsync(_outputData, _decodeDevice, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, stream);
+			cudaStreamSynchronize(stream);
+
+			std::vector<std::vector<float>> result;
+			int num = static_cast<int>(_outputData[0]);
+			for (int i = 1; i < num; ++i)
+			{
+				std::vector<float> box;
+				for (int j = 0; j < kNumBoxElement; ++j)
+					box.push_back(_outputData[1 + i * kNumBoxElement + j]);
+				{
+				}
+				result.push_back(std::move(box));
+			}
+
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor::postProcess()
