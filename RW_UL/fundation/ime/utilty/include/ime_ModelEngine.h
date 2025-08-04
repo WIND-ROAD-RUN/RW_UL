@@ -8,6 +8,8 @@
 
 namespace rw
 {
+	constexpr int InputShapeIndexForYolov11 = 0;
+	constexpr int OutputShapeIndexForYolov11 = 1;
 	class ModelEngine
 	{
 	private:

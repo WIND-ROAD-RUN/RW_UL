@@ -5,27 +5,23 @@ namespace rw
 	namespace imet
 	{
 		// CUDA kernel for transpose [attr, num] -> [num, attr]
-		__global__ void transpose_kernel(const float* input, float* output, int numRows, int numCols, int totalElements)
+		__global__ void transpose_kernel(const float* input, float* output, int rows, int cols, int totalElements)
 		{
-			int position = blockDim.x * blockIdx.x + threadIdx.x;
-			if (position >= totalElements) return;
-
-			int r = position / numCols;
-			int c = position % numCols;
-			output[c * numRows + r] = input[r * numCols + c];
-
-			/*int position = blockDim.x * blockIdx.x + threadIdx.x;
-			if (position >= totalElements) return;
-
-			output[position] = input[(position % numCols) * numRows + position / numCols];*/
+			int row = blockIdx.y * blockDim.y + threadIdx.y;
+			int col = blockIdx.x * blockDim.x + threadIdx.x;
+			if (row < rows && col < cols) {
+				int in_idx = row * cols + col;
+				int out_idx = col * rows + row;
+				output[out_idx] = input[in_idx];
+			}
 		}
 
-		void Utility::transpose(float* src, float* dst, int numBboxes, int numElements, cudaStream_t stream)
+		void Utility::transpose(float* src, float* dst, int rows, int cols, cudaStream_t stream)
 		{
-			int edge = numBboxes * numElements;
-			int blockSize = 256;
-			int gridSize = (edge + blockSize - 1) / blockSize;
-			transpose_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numElements, edge);
+			dim3 block(16, 16);
+			dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
+			int totalElements = rows * cols;
+			transpose_kernel << <grid, block, 0, stream >> > (src, dst, rows, cols, totalElements);
 		}
 
 		__global__ void decode_kernel(float* src, float* dst, int numBboxes, int numClasses, float confThresh, int maxObjects, int numBoxElement) {
