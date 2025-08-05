@@ -6,10 +6,10 @@
 #include"imet_ModelEngine_yolov11_det.hpp"
 #include<string>
 
-#include "imet_ModelEngine_yolov11_det_refactor.hpp"
 #include <filesystem>
 
-#include "imet_ModelEngine_yolov11_det_refactor_v1.hpp"
+#include "imet_ModelEngine_yolov11_det_cuda_acc.hpp"
+
 namespace fs = std::filesystem;
 using namespace std;
 using namespace cv;
@@ -22,7 +22,7 @@ class Logger : public nvinfer1::ILogger {
 int main() {
     rw::ModelEngineConfig config;
     config.modelPath = R"(C:\Users\rw\Desktop\models\niukou_det.engine)";
-    rw::imet::ModelEngine_yolov11_det_refactor_v1 modelEngine(config.modelPath, logger);
+    rw::imet::ModelEngine_yolov11_det_cuda_acc modelEngine(config.modelPath, logger);
 
     cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
     auto result = modelEngine.processImg(mat);

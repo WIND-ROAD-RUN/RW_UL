@@ -1,4 +1,4 @@
-#include"imet_ModelEngine_yolov11_det_refactor_v1.hpp"
+#include"imet_ModelEngine_yolov11_det_cuda_acc.hpp"
 
 #include"cuda_device_runtime_api.h"
 
@@ -13,20 +13,20 @@ namespace rw
 {
 	namespace imet
 	{
-		ModelEngine_yolov11_det_refactor_v1::ModelEngine_yolov11_det_refactor_v1(const std::string& modelPath,
+		ModelEngine_yolov11_det_cuda_acc::ModelEngine_yolov11_det_cuda_acc(const std::string& modelPath,
 			nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
 
-		ModelEngine_yolov11_det_refactor_v1::~ModelEngine_yolov11_det_refactor_v1()
+		ModelEngine_yolov11_det_cuda_acc::~ModelEngine_yolov11_det_cuda_acc()
 		{
 			destroy_engineRuntime();
 			destroy_buffer();
 			destroy_cfg();
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::init(const std::string& enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_yolov11_det_cuda_acc::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			init_engineRuntime(enginePath, logger);
 			init_shapeInfo();
@@ -35,7 +35,7 @@ namespace rw
 			//warm_up();
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_yolov11_det_cuda_acc::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			// Load the engine from the file
 			std::ifstream engineStream(enginePath, std::ios::binary);
@@ -52,7 +52,7 @@ namespace rw
 			cudaStreamCreate(&_stream);
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::destroy_engineRuntime()
+		void ModelEngine_yolov11_det_cuda_acc::destroy_engineRuntime()
 		{
 			delete _context;
 			delete _engine;
@@ -60,7 +60,7 @@ namespace rw
 			cudaStreamDestroy(_stream);
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::init_shapeInfo()
+		void ModelEngine_yolov11_det_cuda_acc::init_shapeInfo()
 		{
 			_inputShape = _engine->getTensorShape(_engine->getIOTensorName(InputShapeIndexForYolov11));
 			_outputShape = _engine->getTensorShape(_engine->getIOTensorName(OutputShapeIndexForYolov11));
@@ -85,7 +85,7 @@ namespace rw
 
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::init_buffer()
+		void ModelEngine_yolov11_det_cuda_acc::init_buffer()
 		{
 			_hostOutputBuffer= new float[_outputSize];
 			cudaMalloc(reinterpret_cast<void**>(&_deviceInputBuffer), _inputSize * sizeof(float));
@@ -98,7 +98,7 @@ namespace rw
 
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::destroy_buffer()
+		void ModelEngine_yolov11_det_cuda_acc::destroy_buffer()
 		{
 			delete[] _hostOutputBuffer;
 			delete[] _hostOutputBuffer1;
@@ -108,17 +108,17 @@ namespace rw
 			cudaFree(_deviceDecodeBuffer);
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::ini_cfg()
+		void ModelEngine_yolov11_det_cuda_acc::ini_cfg()
 		{
 			cudaMalloc((void**)&_deviceClassIdNmsTogether, _config.classids_nms_together.size() * sizeof(size_t));
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::destroy_cfg()
+		void ModelEngine_yolov11_det_cuda_acc::destroy_cfg()
 		{
 			cudaFree(_deviceClassIdNmsTogether);
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::warm_up()
+		void ModelEngine_yolov11_det_cuda_acc::warm_up()
 		{
 			for (int i=0;i<20;i++)
 			{
@@ -127,7 +127,7 @@ namespace rw
 			cudaDeviceSynchronize();
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::preprocess(const cv::Mat& mat)
+		void ModelEngine_yolov11_det_cuda_acc::preprocess(const cv::Mat& mat)
 		{
 			//cv::imshow("as", mat);
 			//cv::waitKey((0));
@@ -179,7 +179,7 @@ namespace rw
 			}
 		}
 
-		void ModelEngine_yolov11_det_refactor_v1::infer()
+		void ModelEngine_yolov11_det_cuda_acc::infer()
 		{
 			this->_context->enqueueV3(_stream);
 			Utility::transpose(_deviceOutputBuffer, _deviceTransposeBuffer, _outputShape.d[1], _outputShape.d[2], _stream);
@@ -199,7 +199,7 @@ namespace rw
 			cudaStreamSynchronize(_stream);
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_refactor_v1::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_det_cuda_acc::postProcess()
 		{
 			std::vector<DetectionRectangleInfo> ret;
 			std::vector<Detection> vDetections;
@@ -238,7 +238,7 @@ namespace rw
 			return ret;
 		}
 
-		cv::Mat ModelEngine_yolov11_det_refactor_v1::draw(const cv::Mat& mat,
+		cv::Mat ModelEngine_yolov11_det_cuda_acc::draw(const cv::Mat& mat,
 			const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
