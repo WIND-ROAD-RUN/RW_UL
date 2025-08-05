@@ -14,7 +14,7 @@ int main() {
 	config.modelPath = R"(C:\Users\rw\Desktop\models\niukou_det.engine)";
 	config.classids_nms_together = { 0,1 };
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
-	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det_Cuda_Acc, rw::ModelEngineDeployType::TensorRT);
+	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det_CudaAcc, rw::ModelEngineDeployType::TensorRT);
 
 	const string path{ R"(C:\Users\rw\Desktop\temp\niukou.png)" };
 

@@ -71,13 +71,14 @@ namespace rw
 		void ModelEngine_yolov11_seg_cudaAcc::init_shapeInfo()
 		{
 			_inputShape = _engine->getTensorShape(_engine->getIOTensorName(InputShapeIndexForYolov11));
-			_outputShape = _engine->getTensorShape(_engine->getIOTensorName(OutputShapeIndexForYolov11));
-			_classNum = _outputShape.d[1] - 4-MaskCoefficientNum;
-			_detectionsNum = _outputShape.d[2];
+			_outputShape1 = _engine->getTensorShape(_engine->getIOTensorName(OutputShapeIndexForYolov11));
+			_outputShape2 = _engine->getTensorShape(_engine->getIOTensorName(OutputShapeIndexForYolov11 + 1));
+			_classNum = _outputShape1.d[1] - 4-MaskCoefficientNum;
+			_detectionsNum = _outputShape1.d[2];
 			_inputHeight = _inputShape.d[2];
 			_inputWidth = _inputShape.d[3];
 			_channelsNum = _inputShape.d[1];
-			_detRows = _outputShape.d[1] - MaskCoefficientNum;
+			_detRows = _outputShape1.d[1] - MaskCoefficientNum;
 			_detOutPutSize = _detectionsNum * _detRows;
 			size_t input = 1;
 			for (int i = 0; i < _inputShape.nbDims; i++)
@@ -87,35 +88,43 @@ namespace rw
 			_inputSize = input;
 
 			size_t outPut = 1;
-			for (int i = 0; i < _outputShape.nbDims; i++)
+			for (int i = 0; i < _outputShape1.nbDims; i++)
 			{
-				outPut *= _outputShape.d[i];
+				outPut *= _outputShape1.d[i];
 			}
-			_outputSize = outPut;
+			_outputSize1 = outPut;
 
+			size_t outPut2 = 1;
+			for (int i = 0; i < _outputShape2.nbDims; i++)
+			{
+				outPut2 *= _outputShape2.d[i];
+			}
+			_outputSize1 = outPut;
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::init_buffer()
 		{
 			cudaMalloc(reinterpret_cast<void**>(&_deviceInputBuffer), _inputSize * sizeof(float));
-			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer), _outputSize * sizeof(float));
+			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer1), _outputSize1 * sizeof(float));
+			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer2), _outputSize2 * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDetSubmatrixBuffer), _detOutPutSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _detOutPutSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
 			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
-			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer);
+			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer1);
+			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11 + 1), _deviceOutputBuffer2);
 			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
-
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::destroy_buffer()
 		{
 			delete[] _hostOutputBuffer;
 			cudaFree(_deviceInputBuffer);
-			cudaFree(_deviceOutputBuffer);
+			cudaFree(_deviceOutputBuffer1);
 			cudaFree(_deviceTransposeBuffer);
 			cudaFree(_deviceDecodeBuffer);
 			cudaFree(_deviceDetSubmatrixBuffer);
+			cudaFree(_deviceOutputBuffer2);
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::ini_cfg()
@@ -157,14 +166,14 @@ namespace rw
 		{
 			this->_context->enqueueV3(_stream);
 			Utility::copy_submatrix(
-				_deviceOutputBuffer,
+				_deviceOutputBuffer1,
 				_deviceDetSubmatrixBuffer,
-				_outputShape.d[0],
-				_outputShape.d[1],
+				_outputShape1.d[0],
+				_outputShape1.d[1],
 				_classNum+4,
-				_outputShape.d[2],
+				_outputShape1.d[2],
 				_stream);
-			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape.d[1]-MaskCoefficientNum, _outputShape.d[2], _stream);
+			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape1.d[1]-MaskCoefficientNum, _outputShape1.d[2], _stream);
 			PostProcess::decode_det(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer,

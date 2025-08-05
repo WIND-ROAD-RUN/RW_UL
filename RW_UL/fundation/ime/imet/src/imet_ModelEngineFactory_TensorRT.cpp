@@ -4,6 +4,7 @@
 #include "imet_ModelEngine_yolov11_det_cudaAcc.hpp"
 #include"imet_ModelEngine_yolov11_seg.hpp"
 #include"imet_ModelEngine_yolov11_obb.hpp"
+#include "imet_ModelEngine_yolov11_seg_cudaAcc.hpp"
 #include "imet_ModelEngine_yolov11_seg_with_mask.hpp"
 
 class Logger : public nvinfer1::ILogger {
@@ -16,6 +17,7 @@ namespace rw {
 		static ModelEngine_Yolov11_det* createModelEngine_Yolov11_det(const ModelEngineConfig& config);
 		static ModelEngine_yolov11_det_cudaAcc* createModelEngine_Yolov11_det_cuda_acc(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg* createModelEngine_Yolov11_seg(const ModelEngineConfig& config);
+		static ModelEngine_yolov11_seg_cudaAcc* createModelEngine_yolov11_seg_cudaAcc(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg_with_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config);
 
@@ -28,13 +30,15 @@ namespace rw {
 			{
 			case ModelType::Yolov11_Det:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_det(config));
-			case ModelType::Yolov11_Det_Cuda_Acc:
+			case ModelType::Yolov11_Det_CudaAcc:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_det_cuda_acc(config));
 			case ModelType::Yolov11_Seg:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg(config));
+			case ModelType::Yolov11_Seg_CudaAcc:
+				return std::unique_ptr<ModelEngine>(createModelEngine_yolov11_seg_cudaAcc(config));
 			case ModelType::Yolov11_Obb:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_obb(config));
-			case ModelType::Yolov11_Seg_with_mask:
+			case ModelType::Yolov11_Seg_Mask:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg_with_mask(config));
 			default:
 				return nullptr;
@@ -68,6 +72,15 @@ namespace rw {
 				return nullptr;
 			}
 			modelEngine->setConfig(config);
+			return modelEngine;
+		}
+
+		ModelEngine_yolov11_seg_cudaAcc* createModelEngine_yolov11_seg_cudaAcc(const ModelEngineConfig& config)
+		{
+			ModelEngine_yolov11_seg_cudaAcc* modelEngine = new ModelEngine_yolov11_seg_cudaAcc(config, logger);
+			if (!modelEngine) {
+				return nullptr;
+			}
 			return modelEngine;
 		}
 

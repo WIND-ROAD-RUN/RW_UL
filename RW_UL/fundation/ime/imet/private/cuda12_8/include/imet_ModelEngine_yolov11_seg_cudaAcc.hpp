@@ -35,7 +35,8 @@ namespace rw
 			void destroy_engineRuntime();
 		private:
 			nvinfer1::Dims _inputShape;
-			nvinfer1::Dims _outputShape;
+			nvinfer1::Dims _outputShape1;
+			nvinfer1::Dims _outputShape2;
 			void init_shapeInfo();
 			size_t _classNum;
 			size_t _detectionsNum;
@@ -43,7 +44,8 @@ namespace rw
 			size_t _inputWidth;
 			size_t _channelsNum;
 			size_t _inputSize{ 1 };
-			size_t _outputSize{ 1 };
+			size_t _outputSize1{ 1 };
+			size_t _outputSize2{ 1 };
 			size_t _detRows{};
 			size_t _detOutPutSize{};
 		private:
@@ -52,7 +54,8 @@ namespace rw
 		private:
 			float* _hostOutputBuffer = nullptr;
 			float* _deviceInputBuffer = nullptr;
-			float* _deviceOutputBuffer = nullptr;
+			float* _deviceOutputBuffer1 = nullptr;
+			float* _deviceOutputBuffer2 = nullptr;
 			float* _deviceDetSubmatrixBuffer = nullptr;
 			float* _deviceTransposeBuffer = nullptr;
 			float* _deviceDecodeBuffer = nullptr;

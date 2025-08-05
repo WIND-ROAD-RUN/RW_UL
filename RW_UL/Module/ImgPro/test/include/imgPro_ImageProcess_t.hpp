@@ -37,9 +37,9 @@ protected:
 
 	void createImgPro()
 	{
-		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou_det.engine)";
+		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
 		engine = rw::ModelEngineFactory::createModelEngine(
-			config, rw::ModelType::Yolov11_Det_Cuda_Acc, rw::ModelEngineDeployType::TensorRT);
+			config, rw::ModelType::Yolov11_Seg_CudaAcc, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
 	}
 
