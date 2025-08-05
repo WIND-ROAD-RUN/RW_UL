@@ -80,7 +80,7 @@ namespace rw
 		}
 
 
-		void Utility::nms(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data, int id_nums, cudaStream_t stream)
+		void Utility::nms_det(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data, int id_nums, cudaStream_t stream)
 		{
 			int blockSize = maxObjects < 256 ? maxObjects : 256;
 			int gridSize = (maxObjects + blockSize - 1) / blockSize;
