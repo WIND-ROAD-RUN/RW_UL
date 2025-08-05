@@ -71,7 +71,7 @@ namespace rw
 		{
 			_inputShape = _engine->getTensorShape(_engine->getIOTensorName(InputShapeIndexForYolov11));
 			_outputShape = _engine->getTensorShape(_engine->getIOTensorName(OutputShapeIndexForYolov11));
-			_classNum = _outputShape.d[1] - 4;
+			_classNum = _outputShape.d[1] - 4-MaskCoefficientNum;
 			_detectionsNum = _outputShape.d[2];
 			_inputHeight = _inputShape.d[2];
 			_inputWidth = _inputShape.d[3];
