@@ -19,14 +19,10 @@ namespace rw
 			: public ModelEngine
 		{
 		public:
-		public:
 			ModelEngine_yolov11_det_refactor_v1(const std::string& modelPath, nvinfer1::ILogger& logger);
 			~ModelEngine_yolov11_det_refactor_v1() override;
 		private:
 			ModelEngineConfig _config;
-			float letterBoxScale{};
-			int letterBoxdw{};
-			int letterBoxdh{};
 		private:
 			void init(const std::string & enginePath, nvinfer1::ILogger& logger);
 		private:
@@ -74,7 +70,6 @@ namespace rw
 			void preprocess(const cv::Mat& mat) override;
 			void infer() override;
 			std::vector<DetectionRectangleInfo> postProcess() override;
-
 		public:
 			cv::Mat draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList) override;
 		};
