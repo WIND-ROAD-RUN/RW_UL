@@ -10,6 +10,7 @@
 
 #include "imet_ModelEngine_yolov11_det_cudaAcc.hpp"
 #include "imet_ModelEngine_yolov11_seg_cudaAcc.hpp"
+#include "imet_ModelEngine_yolov11_seg_mask_cudaAcc.hpp"
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -23,7 +24,7 @@ class Logger : public nvinfer1::ILogger {
 int main() {
     rw::ModelEngineConfig config;
     config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
-    rw::imet::ModelEngine_yolov11_seg_cudaAcc modelEngine(config, logger);
+    rw::imet::ModelEngine_yolov11_seg_mask_cudaAcc modelEngine(config, logger);
 
     cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
     auto result = modelEngine.processImg(mat);
