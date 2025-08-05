@@ -19,6 +19,13 @@ namespace rw
 			init(modelPath, logger);
 		}
 
+		ModelEngine_yolov11_det_cuda_acc::ModelEngine_yolov11_det_cuda_acc(const ModelEngineConfig& modelCfg,
+			nvinfer1::ILogger& logger)
+		{
+			_config = modelCfg;
+			init(modelCfg.modelPath, logger);
+		}
+
 		ModelEngine_yolov11_det_cuda_acc::~ModelEngine_yolov11_det_cuda_acc()
 		{
 			destroy_engineRuntime();

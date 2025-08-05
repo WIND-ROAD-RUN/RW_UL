@@ -20,6 +20,7 @@ namespace rw
 		{
 		public:
 			ModelEngine_yolov11_det_cuda_acc(const std::string& modelPath, nvinfer1::ILogger& logger);
+			ModelEngine_yolov11_det_cuda_acc(const ModelEngineConfig& modelCfg, nvinfer1::ILogger& logger);
 			~ModelEngine_yolov11_det_cuda_acc() override;
 		private:
 			ModelEngineConfig _config;
