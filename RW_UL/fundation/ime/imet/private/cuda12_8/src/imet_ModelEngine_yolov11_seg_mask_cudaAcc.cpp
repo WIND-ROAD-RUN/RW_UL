@@ -174,7 +174,7 @@ namespace rw
 				_outputShape1.d[2],
 				_stream);
 			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape1.d[1] - MaskCoefficientNum, _outputShape1.d[2], _stream);
-			PostProcess::decode_det(
+			PostProcess::decode_seg(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer,
 				_detectionsNum,

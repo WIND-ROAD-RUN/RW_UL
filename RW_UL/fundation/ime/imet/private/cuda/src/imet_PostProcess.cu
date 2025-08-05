@@ -55,42 +55,14 @@ namespace rw
 			decode_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
 		}
 
-		__global__ void remove_mask_coeff_kernel(
-			const float* src, float* dst, int numBboxes, int detElementNum, int srcElementNum)
-		{
-			int idx = blockIdx.x * blockDim.x + threadIdx.x;
-			if (idx < numBboxes) {
-				const float* srcPtr = src + idx * srcElementNum;
-				float* dstPtr = dst + idx * detElementNum;
-				// 只拷贝det相关部分
-				for (int i = 0; i < detElementNum; ++i) {
-					dstPtr[i] = srcPtr[i];
-				}
-			}
-		}
-
 		void PostProcess::decode_seg(float* src, float* dst, int numBboxes, int numClasses, float confThresh,
 			int maxObjects, int numBoxElement, cudaStream_t stream)
 		{
-			// 计算每个bbox的有效元素数量（去除mask系数）
-			int detElementNum = 4  + numClasses; // 4 bbox + 1 conf + numClasses
-			int srcElementNum = detElementNum + MaskCoefficientNum;
-
-			// 分配临时buffer用于存放去除mask后的数据
-			float* detBuffer = nullptr;
-			cudaMalloc(&detBuffer, numBboxes * detElementNum * sizeof(float));
-
-			// 调用kernel去除mask系数
+			cudaMemsetAsync(dst, 0, sizeof(int), stream);
 			int blockSize = 256;
 			int gridSize = (numBboxes + blockSize - 1) / blockSize;
-			remove_mask_coeff_kernel << <gridSize, blockSize, 0, stream >> > (
-				src, detBuffer, numBboxes, detElementNum, srcElementNum);
+			decode_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
 
-			// 复用det的decode核心逻辑
-			decode_kernel << <gridSize, blockSize, 0, stream >> > (
-				detBuffer, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
-
-			cudaFree(detBuffer);
 		}
 	}
 }

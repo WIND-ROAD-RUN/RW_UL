@@ -7,7 +7,7 @@
 
 namespace rw {
 	namespace imet {
-		void ModelEngine_Yolov11_seg_with_mask::preprocess(const cv::Mat& mat)
+		void ModelEngine_Yolov11_seg_mask::preprocess(const cv::Mat& mat)
 		{
 			_sourceWidth = mat.cols;
 			_sourceHeight = mat.rows;
@@ -37,7 +37,7 @@ namespace rw {
 			}
 		}
 
-		void ModelEngine_Yolov11_seg_with_mask::infer()
+		void ModelEngine_Yolov11_seg_mask::infer()
 		{
 			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
 			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
@@ -45,7 +45,7 @@ namespace rw {
 			this->context->enqueueV3(NULL);
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::postProcess()
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::postProcess()
 		{
 			std::vector<DetectionSeg> output;
 
@@ -127,7 +127,7 @@ namespace rw {
 			return result;
 		}
 
-		void ModelEngine_Yolov11_seg_with_mask::init(const std::string& enginePath, nvinfer1::ILogger& logger)
+		void ModelEngine_Yolov11_seg_mask::init(const std::string& enginePath, nvinfer1::ILogger& logger)
 		{
 			std::ifstream engineStream(enginePath, std::ios::binary);
 			engineStream.seekg(0, std::ios::end);
@@ -168,13 +168,13 @@ namespace rw {
 			cudaDeviceSynchronize();
 		}
 
-		ModelEngine_Yolov11_seg_with_mask::ModelEngine_Yolov11_seg_with_mask(const std::string& modelPath,
+		ModelEngine_Yolov11_seg_mask::ModelEngine_Yolov11_seg_mask(const std::string& modelPath,
 			nvinfer1::ILogger& logger)
 		{
 			init(modelPath, logger);
 		}
 
-		ModelEngine_Yolov11_seg_with_mask::~ModelEngine_Yolov11_seg_with_mask()
+		ModelEngine_Yolov11_seg_mask::~ModelEngine_Yolov11_seg_mask()
 		{
 			for (int i = 0; i < 2; i++)
 				(cudaFree(gpu_buffers[i]));
@@ -185,7 +185,7 @@ namespace rw {
 			delete runtime;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::convertToDetectionRectangleInfo(const std::vector<DetectionSeg>& detections)
 		{
 			if (config.imagePretreatmentPolicy == ImagePretreatmentPolicy::Resize)
 			{
@@ -205,7 +205,7 @@ namespace rw {
 			}
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenResize(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::convertWhenResize(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -260,7 +260,7 @@ namespace rw {
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenCentralCrop(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::convertWhenCentralCrop(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -333,7 +333,7 @@ namespace rw {
 			return result;
 		}
 
-		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_with_mask::convertWhenLetterBox(
+		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::convertWhenLetterBox(
 			const std::vector<DetectionSeg>& detections)
 		{
 			std::vector<DetectionRectangleInfo> result;
@@ -400,7 +400,7 @@ namespace rw {
 			return result;
 		}
 
-		cv::Mat ModelEngine_Yolov11_seg_with_mask::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
+		cv::Mat ModelEngine_Yolov11_seg_mask::draw(const cv::Mat& mat, const std::vector<DetectionRectangleInfo>& infoList)
 		{
 			cv::Mat result = mat.clone();
 			ImagePainter::PainterConfig config;

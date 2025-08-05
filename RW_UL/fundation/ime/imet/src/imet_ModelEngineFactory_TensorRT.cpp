@@ -19,7 +19,7 @@ namespace rw {
 		static ModelEngine_Yolov11_seg* createModelEngine_Yolov11_seg(const ModelEngineConfig& config);
 		static ModelEngine_yolov11_seg_cudaAcc* createModelEngine_yolov11_seg_cudaAcc(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config);
-		static ModelEngine_Yolov11_seg_with_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config);
+		static ModelEngine_Yolov11_seg_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config);
 
 		std::unique_ptr<ModelEngine>
 			ModelEngineFactory_TensorRT::createModelEngine
@@ -94,9 +94,9 @@ namespace rw {
 			return modelEngine;
 		}
 
-		ModelEngine_Yolov11_seg_with_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config)
+		ModelEngine_Yolov11_seg_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config)
 		{
-			ModelEngine_Yolov11_seg_with_mask* modelEngine = new ModelEngine_Yolov11_seg_with_mask(config.modelPath, logger);
+			ModelEngine_Yolov11_seg_mask* modelEngine = new ModelEngine_Yolov11_seg_mask(config.modelPath, logger);
 			if (!modelEngine) {
 				return nullptr;
 			}
