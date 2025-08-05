@@ -87,6 +87,75 @@ namespace rw
 			nms_kernel << <gridSize, blockSize, 0, stream >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
 		}
 
+		__device__ float box_iou_seg(
+			float aleft, float atop, float aright, float abottom,
+			float bleft, float btop, float bright, float bbottom)
+		{
+			float cleft = max(aleft, bleft);
+			float ctop = max(atop, btop);
+			float cright = min(aright, bright);
+			float cbottom = min(abottom, bbottom);
+
+			float c_area = max(cright - cleft, 0.0f) * max(cbottom - ctop, 0.0f);
+			if (c_area == 0.0f)
+				return 0.0f;
+
+			float a_area = max(0.0f, aright - aleft) * max(0.0f, abottom - atop);
+			float b_area = max(0.0f, bright - bleft) * max(0.0f, bbottom - btop);
+			return c_area / (a_area + b_area - c_area);
+		}
+
+		__global__ void nms_kernel_seg(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* ids, int id_nums)
+		{
+			int position = blockDim.x * blockIdx.x + threadIdx.x;
+			int count = min((int)data[0], maxObjects);
+			if (position >= count)
+				return;
+
+			// left, top, right, bottom, confidence, class, keepflag
+			float* pcurrent = data + 1 + position * numBoxElement;
+			int flag = 0;
+			for (int tt = 0; tt < id_nums; tt++)
+			{
+				if (pcurrent[5] == ids[tt])
+				{
+					flag = 1;
+				}
+			}
+			float* pitem;
+			for (int i = 0; i < count; i++)
+			{
+				pitem = data + 1 + i * numBoxElement;
+				if (i == position || (flag == 0 && pcurrent[5] != pitem[5]))
+					continue;
+
+				if (pitem[4] >= pcurrent[4])
+				{
+					if (pitem[4] == pcurrent[4] && i < position)
+						continue;
+
+					float iou = box_iou_seg(
+						pcurrent[0], pcurrent[1], pcurrent[2], pcurrent[3],
+						pitem[0], pitem[1], pitem[2], pitem[3]);
+
+					if (iou > kNmsThresh)
+					{
+						pcurrent[6] = 0; // 1 = keep, 0 = ignore
+						return;
+					}
+				}
+			}
+		}
+
+		void Utility::nms_seg(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data,
+			int id_nums, cudaStream_t stream)
+		{
+			int blockSize = maxObjects < 256 ? maxObjects : 256;
+			int gridSize = (maxObjects + blockSize - 1) / blockSize;
+			nms_kernel_seg << <gridSize, blockSize, 0, stream >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
+
+		}
+
 		// CUDA kernel: 拷贝子矩阵
 		__global__ void copy_submatrix_kernel(
 			const float* src, float* dst,
