@@ -56,6 +56,8 @@ namespace rw {
 	{
 		//Yolov11 Detection model
 		Yolov11_Det,
+		//Yolov11 Detection model with CUDA acceleration
+		Yolov11_Det_Cuda_Acc,
 		//Yolov11 Segmentation model
 		Yolov11_Seg,
 		//Yolov11 Oriented Bounding Box model

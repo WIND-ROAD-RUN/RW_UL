@@ -15,13 +15,13 @@ namespace rw
 {
 	namespace imet
 	{
-		class ModelEngine_yolov11_det_cuda_acc
+		class ModelEngine_yolov11_det_cudaAcc
 			: public ModelEngine
 		{
 		public:
-			ModelEngine_yolov11_det_cuda_acc(const std::string& modelPath, nvinfer1::ILogger& logger);
-			ModelEngine_yolov11_det_cuda_acc(const ModelEngineConfig& modelCfg, nvinfer1::ILogger& logger);
-			~ModelEngine_yolov11_det_cuda_acc() override;
+			ModelEngine_yolov11_det_cudaAcc(const std::string& modelPath, nvinfer1::ILogger& logger);
+			ModelEngine_yolov11_det_cudaAcc(const ModelEngineConfig& modelCfg, nvinfer1::ILogger& logger);
+			~ModelEngine_yolov11_det_cudaAcc() override;
 		private:
 			ModelEngineConfig _config;
 		private:

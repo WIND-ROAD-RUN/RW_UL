@@ -1,4 +1,4 @@
-﻿#include"opencv2/opencv.hpp"
+#include"opencv2/opencv.hpp"
 
 #include"NvInfer.h"
 #include"ime_ModelEngineFactory.h"
@@ -11,11 +11,12 @@ int main() {
 	rw::ModelEngineConfig config;
 	config.conf_threshold = 0.2f;
 	config.nms_threshold = 0.1f;
-	config.modelPath = R"(C:\Users\rw\Desktop\models\fakoudai.engine)";
+	config.modelPath = R"(C:\Users\rw\Desktop\models\niukou_det.engine)";
+	config.classids_nms_together = { 0,1 };
 	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
-	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Obb, rw::ModelEngineDeployType::TensorRT);
+	auto model_engine = rw::ModelEngineFactory::createModelEngine(config, rw::ModelType::Yolov11_Det_Cuda_Acc, rw::ModelEngineDeployType::TensorRT);
 
-	const string path{ R"(C:\Users\rw\Desktop\temp2\20250221080238888.jpg)" };
+	const string path{ R"(C:\Users\rw\Desktop\temp\niukou.png)" };
 
 	Mat image = imread(path);
 	if (image.empty())
