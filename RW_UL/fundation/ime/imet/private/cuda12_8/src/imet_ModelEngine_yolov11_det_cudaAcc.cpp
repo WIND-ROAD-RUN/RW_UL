@@ -155,7 +155,7 @@ namespace rw
 		{
 			this->_context->enqueueV3(_stream);
 			Utility::transpose(_deviceOutputBuffer, _deviceTransposeBuffer, _outputShape.d[1], _outputShape.d[2], _stream);
-			PostProcess::decode(
+			PostProcess::decode_det(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer, 
 				_detectionsNum, 

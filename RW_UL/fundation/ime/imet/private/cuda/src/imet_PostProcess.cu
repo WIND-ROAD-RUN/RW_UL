@@ -45,7 +45,16 @@ namespace rw
 			pout_item[6] = 1;  // 1 = keep, 0 = ignore
 		}
 
-		void PostProcess::decode(float* src, float* dst, int numBboxes, int numClasses, float confThresh, int maxObjects, int numBoxElement, cudaStream_t stream)
+		void PostProcess::decode_det(float* src, float* dst, int numBboxes, int numClasses, float confThresh, int maxObjects, int numBoxElement, cudaStream_t stream)
+		{
+			cudaMemsetAsync(dst, 0, sizeof(int), stream);
+			int blockSize = 256;
+			int gridSize = (numBboxes + blockSize - 1) / blockSize;
+			decode_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
+		}
+
+		void PostProcess::decode_seg(float* src, float* dst, int numBboxes, int numClasses, float confThresh,
+			int maxObjects, int numBoxElement, cudaStream_t stream)
 		{
 			cudaMemsetAsync(dst, 0, sizeof(int), stream);
 			int blockSize = 256;
