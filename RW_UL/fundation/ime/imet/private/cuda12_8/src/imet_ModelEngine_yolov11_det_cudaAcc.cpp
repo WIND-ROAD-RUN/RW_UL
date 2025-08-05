@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "imet_PostProcess.cuh"
 #include "imet_PreProcess.cuh"
 
 namespace rw
@@ -39,7 +40,7 @@ namespace rw
 			init_shapeInfo();
 			init_buffer();
 			ini_cfg();
-			//warm_up();
+			warm_up();
 		}
 
 		void ModelEngine_yolov11_det_cudaAcc::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
@@ -136,11 +137,6 @@ namespace rw
 
 		void ModelEngine_yolov11_det_cudaAcc::preprocess(const cv::Mat& mat)
 		{
-			//cv::imshow("as", mat);
-			//cv::waitKey((0));
-			_sourceImgWidth = mat.cols;
-			_sourceImgHeight = mat.rows;
-
 			unsigned char pad_b = static_cast<unsigned char>(_config.letterBoxColor[0]);
 			unsigned char pad_g = static_cast<unsigned char>(_config.letterBoxColor[1]);
 			unsigned char pad_r = static_cast<unsigned char>(_config.letterBoxColor[2]);
@@ -153,44 +149,13 @@ namespace rw
 			cfg.pad_g = pad_g;
 			cfg.pad_r = pad_r;
 			_letterBoxInfo = ImgPreprocess::LetterBox(mat, cfg, _stream);
-
-			//testCode
-			{
-			//	// 1. 分配主机内存
-			//std::vector<float> cpuInput(_inputSize);
-			//cudaMemcpy(cpuInput.data(), _deviceInputBuffer, _inputSize * sizeof(float), cudaMemcpyDeviceToHost);
-
-			//// 2. 转换为Mat（假设为BGR、float、NCHW）
-			//int channels = _channelsNum;
-			//int height = _inputHeight;
-			//int width = _inputWidth;
-
-			//// 3. NCHW -> HWC
-			//cv::Mat img(height, width, CV_32FC3);
-			//for (int c = 0; c < channels; ++c) {
-			//	for (int h = 0; h < height; ++h) {
-			//		for (int w = 0; w < width; ++w) {
-			//			img.at<cv::Vec3f>(h, w)[c] = cpuInput[c * height * width + h * width + w];
-			//		}
-			//	}
-			//}
-
-			//// 4. 若有归一化，反归一化
-			//img *= 255.0f;
-			//img.convertTo(img, CV_8UC3);
-
-			//// 5. 显示或保存
-			//cv::imshow("cuda_preprocessed", img);
-			//cv::waitKey(0);
-			//// 或 cv::imwrite("cuda_preprocessed.jpg", img);
-			}
 		}
 
 		void ModelEngine_yolov11_det_cudaAcc::infer()
 		{
 			this->_context->enqueueV3(_stream);
 			Utility::transpose(_deviceOutputBuffer, _deviceTransposeBuffer, _outputShape.d[1], _outputShape.d[2], _stream);
-			Utility::decode(
+			PostProcess::decode(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer, 
 				_detectionsNum, 

@@ -63,9 +63,6 @@ namespace rw
 		private:
 			void warm_up();
 		private:
-			size_t _sourceImgHeight{};
-			size_t _sourceImgWidth{};
-		private:
 			LetterBoxInfo _letterBoxInfo;
 		private:
 			void preprocess(const cv::Mat& mat) override;
