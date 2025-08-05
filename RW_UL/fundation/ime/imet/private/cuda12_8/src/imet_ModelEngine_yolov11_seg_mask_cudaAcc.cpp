@@ -78,8 +78,6 @@ namespace rw
 			_inputHeight = _inputShape.d[2];
 			_inputWidth = _inputShape.d[3];
 			_channelsNum = _inputShape.d[1];
-			_detRows = _outputShape1.d[1] - MaskCoefficientNum;
-			_detOutPutSize = _detectionsNum * _detRows;
 			size_t input = 1;
 			for (int i = 0; i < _inputShape.nbDims; i++)
 			{
@@ -99,7 +97,7 @@ namespace rw
 			{
 				outPut2 *= _outputShape2.d[i];
 			}
-			_outputSize1 = outPut;
+			_outputSize2 = outPut;
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::init_buffer()
@@ -107,8 +105,7 @@ namespace rw
 			cudaMalloc(reinterpret_cast<void**>(&_deviceInputBuffer), _inputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer1), _outputSize1 * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer2), _outputSize2 * sizeof(float));
-			cudaMalloc(reinterpret_cast<void**>(&_deviceDetSubmatrixBuffer), _detOutPutSize * sizeof(float));
-			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _detOutPutSize * sizeof(float));
+			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _outputSize1 * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
 			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
 			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer1);
@@ -123,18 +120,90 @@ namespace rw
 			cudaFree(_deviceOutputBuffer1);
 			cudaFree(_deviceTransposeBuffer);
 			cudaFree(_deviceDecodeBuffer);
-			cudaFree(_deviceDetSubmatrixBuffer);
 			cudaFree(_deviceOutputBuffer2);
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::ini_cfg()
 		{
 			cudaMalloc((void**)&_deviceClassIdNmsTogether, _config.classids_nms_together.size() * sizeof(size_t));
+			cudaMemcpy(_deviceClassIdNmsTogether, _config.classids_nms_together.data(), _config.classids_nms_together.size() * sizeof(size_t), cudaMemcpyHostToDevice);
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::destroy_cfg()
 		{
 			cudaFree(_deviceClassIdNmsTogether);
+		}
+
+		void ModelEngine_yolov11_seg_mask_cudaAcc::process_mask(float* protoDevice, nvinfer1::Dims protoOutDims,
+		                                                        std::vector<Detection_seg>& vDetections, int kInputH, int kInputW, cudaStream_t stream, int sourceHeight, int
+		                                                        souceWidth)
+		{
+			int protoC = protoOutDims.d[1];  // default 32
+			int protoH = protoOutDims.d[2];  // default 160
+			int protoW = protoOutDims.d[3];  // default 160
+
+			int n = vDetections.size();  // number of bboxes
+			if (n == 0) return;
+
+			// prepare n x 32 length mask coef space on device
+			float* maskCoefDevice = nullptr;
+			(cudaMalloc(&maskCoefDevice, n * protoC * sizeof(float)));
+			// prepare n x 160 x 160 mask space on device
+			float* maskDevice = nullptr;
+			(cudaMalloc(&maskDevice, n * protoH * protoW * sizeof(float)));
+
+			float* bboxDevice = nullptr;  // x1,y1,x2,y2,x1,y1,x2,y2,...x1,y1,x2,y2
+			(cudaMalloc(&bboxDevice, n * 4 * sizeof(float)));
+
+			for (size_t i = 0; i < n; i++) {
+				(cudaMemcpyAsync(&maskCoefDevice[i * protoC], vDetections[i].mask, protoC * sizeof(float), cudaMemcpyHostToDevice, stream));
+				(cudaMemcpyAsync(&bboxDevice[i * 4], vDetections[i].det.bbox, 4 * sizeof(float), cudaMemcpyHostToDevice, stream));
+			}
+
+			// mask = sigmoid(mask coef x proto)
+			PostProcess::matrix_multiply(maskCoefDevice, n, protoC, protoDevice, protoC, protoH * protoW, maskDevice, stream, true);
+
+			// down sample bbox from 640x640 to 160x160
+			float heightRatio = (float)protoH / (float)kInputH;  // 160 / 640 = 0.25
+			float widthRatio = (float)protoW / (float)kInputW;  // 160 / 640 = 0.25
+			PostProcess::downsample_bbox(bboxDevice, n * 4, heightRatio, widthRatio, stream);
+
+			// set 0 where mask out of bbox
+			PostProcess::crop_mask(maskDevice, n, protoH, protoW, bboxDevice, stream);
+
+			// scale mask from 160x160 to original resolution
+			// 1. cut mask
+			float r_w = protoW / (souceWidth * 1.0);
+			float r_h = protoH / (sourceHeight * 1.0);
+			float r = std::min(r_w, r_h);
+			float pad_h = (protoH - r * sourceHeight) / 2;
+			float pad_w = (protoW - r * souceWidth) / 2;
+			int cutMaskLeft = (int)pad_w;
+			int cutMaskTop = (int)pad_h;
+			int cutMaskRight = (int)(protoW - pad_w);
+			int cutMaskBottom = (int)(protoH - pad_h);
+			int cutMaskWidth = cutMaskRight - cutMaskLeft;
+			int cutMaskHeight = cutMaskBottom - cutMaskTop;
+			float* cutMaskDevice = nullptr;
+			(cudaMalloc(&cutMaskDevice, n * cutMaskHeight * cutMaskWidth * sizeof(float)));
+			PostProcess::cut_mask(maskDevice, n, protoH, protoW, cutMaskDevice, cutMaskTop, cutMaskLeft, cutMaskHeight, cutMaskWidth, stream);
+
+			// 2. bilinear resize mask
+			float* scaledMaskDevice = nullptr;
+			cudaMalloc(&scaledMaskDevice, n * sourceHeight * souceWidth * sizeof(float));
+			PostProcess::resize(cutMaskDevice, n, cutMaskHeight, cutMaskWidth, scaledMaskDevice, sourceHeight, souceWidth, stream);
+
+			for (size_t i = 0; i < n; i++) {
+				vDetections[i].maskMatrix.resize(sourceHeight * souceWidth);
+				(cudaMemcpyAsync(vDetections[i].maskMatrix.data(), &scaledMaskDevice[i * sourceHeight * souceWidth], sourceHeight * souceWidth * sizeof(float), cudaMemcpyDeviceToHost, stream));
+				cudaDeviceSynchronize();
+			}
+
+			(cudaFree(maskCoefDevice));
+			(cudaFree(maskDevice));
+			(cudaFree(bboxDevice));
+			(cudaFree(cutMaskDevice));
+			(cudaFree(scaledMaskDevice));
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::warm_up()
@@ -165,66 +234,111 @@ namespace rw
 		void ModelEngine_yolov11_seg_mask_cudaAcc::infer()
 		{
 			this->_context->enqueueV3(_stream);
-			Utility::copy_submatrix(
+			Utility::transpose(
 				_deviceOutputBuffer1,
-				_deviceDetSubmatrixBuffer,
-				_outputShape1.d[0],
+				_deviceTransposeBuffer,
 				_outputShape1.d[1],
-				_classNum + 4,
 				_outputShape1.d[2],
-				_stream);
-			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape1.d[1] - MaskCoefficientNum, _outputShape1.d[2], _stream);
+				_stream
+			);
+
 			PostProcess::decode_seg(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer,
 				_detectionsNum,
 				_classNum,
+				MaskCoefficientNum,
 				_config.conf_threshold,
 				kMaxNumOutputBbox,
 				kNumBoxElement,
-				_stream);
+				_stream
+			);
 
+			Utility::nms_seg(
+				_deviceDecodeBuffer, 
+				_config.nms_threshold,
+				kMaxNumOutputBbox,
+				kNumBoxElement, 
+				_deviceClassIdNmsTogether,
+				_config.classids_nms_together.size(),
+				_stream
+			);
 
-			Utility::nms_det(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
-			cudaMemcpyAsync(_hostOutputBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
+			cudaMemcpyAsync(
+				_hostOutputBuffer, 
+				_deviceDecodeBuffer, 
+				(1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), 
+				cudaMemcpyDeviceToHost, 
+				_stream
+			);
+
 			cudaStreamSynchronize(_stream);
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_yolov11_seg_mask_cudaAcc::postProcess()
 		{
 			std::vector<DetectionRectangleInfo> ret;
-			std::vector<Detection> vDetections;
+			std::vector<Detection_seg> vDetections;
 			int count = std::min((int)_hostOutputBuffer[0], kMaxNumOutputBbox);
 			for (int i = 0; i < count; i++) {
 				int pos = 1 + i * kNumBoxElement;
 				int keepFlag = (int)_hostOutputBuffer[pos + 6];
 				if (keepFlag == 1) {
-					Detection det;
-					memcpy(det.bbox, &_hostOutputBuffer[pos], 4 * sizeof(float));
-					det.conf = _hostOutputBuffer[pos + 4];
-					det.classId = (int)_hostOutputBuffer[pos + 5];
-
+					Detection_seg det;
+					memcpy(det.det.bbox, &_hostOutputBuffer[pos], 4 * sizeof(float));
+					det.det.conf = _hostOutputBuffer[pos + 4];
+					det.det.classId = (int)_hostOutputBuffer[pos + 5];
+					memcpy(det.mask, &_hostOutputBuffer[pos + 7], 32 * sizeof(float));
 					vDetections.emplace_back(det);
 				}
 			}
-
+			process_mask(_deviceOutputBuffer2, _outputShape2, vDetections, _inputHeight, _inputWidth, _stream, _letterBoxInfo.sourceHeight, _letterBoxInfo.sourceWidth);
 			for (size_t j = 0; j < vDetections.size(); j++) {
-				ImgPreprocess::scale_bbox(vDetections[j], _letterBoxInfo);
+				ImgPreprocess::scale_bbox(vDetections[j].det, _letterBoxInfo);
 				DetectionRectangleInfo det_r;
-				det_r.center_x = (vDetections[j].bbox[0] + vDetections[j].bbox[2]) / 2;
-				det_r.center_y = (vDetections[j].bbox[1] + vDetections[j].bbox[3]) / 2;
-				det_r.classId = vDetections[j].classId;
-				det_r.score = vDetections[j].conf;
-				det_r.width = vDetections[j].bbox[2] - vDetections[j].bbox[0];
-				det_r.height = vDetections[j].bbox[3] - vDetections[j].bbox[1];
-				det_r.leftTop = { static_cast<int>(vDetections[j].bbox[0]), static_cast<int>(vDetections[j].bbox[1]) };
-				det_r.rightTop = { static_cast<int>(vDetections[j].bbox[2]), static_cast<int>(vDetections[j].bbox[1]) };
-				det_r.leftBottom = { static_cast<int>(vDetections[j].bbox[0]), static_cast<int>(vDetections[j].bbox[3]) };
-				det_r.rightBottom = { static_cast<int>(vDetections[j].bbox[2]), static_cast<int>(vDetections[j].bbox[3]) };
-				det_r.area = det_r.width * det_r.height;
+				det_r.center_x = (vDetections[j].det.bbox[0] + vDetections[j].det.bbox[2]) / 2;
+				det_r.center_y = (vDetections[j].det.bbox[1] + vDetections[j].det.bbox[3]) / 2;
+				det_r.classId = vDetections[j].det.classId;
+				det_r.score = vDetections[j].det.conf;
+				det_r.width = vDetections[j].det.bbox[2] - vDetections[j].det.bbox[0];
+				det_r.height = vDetections[j].det.bbox[3] - vDetections[j].det.bbox[1];
+				det_r.leftTop = { static_cast<int>(vDetections[j].det.bbox[0]), static_cast<int>(vDetections[j].det.bbox[1]) };
+				det_r.rightTop = { static_cast<int>(vDetections[j].det.bbox[2]), static_cast<int>(vDetections[j].det.bbox[1]) };
+				det_r.leftBottom = { static_cast<int>(vDetections[j].det.bbox[0]), static_cast<int>(vDetections[j].det.bbox[3]) };
+				det_r.rightBottom = { static_cast<int>(vDetections[j].det.bbox[2]), static_cast<int>(vDetections[j].det.bbox[3]) };
+				det_r.segMaskValid = true;
+				// 构造全图mask
+				cv::Mat full_mask(_letterBoxInfo.sourceHeight, _letterBoxInfo.sourceWidth, CV_32FC1, vDetections[j].maskMatrix.data());
+				// 计算ROI并防止越界
+				cv::Rect roi(
+					round(vDetections[j].det.bbox[0]),
+					round(vDetections[j].det.bbox[1]),
+					round(det_r.width),
+					round(det_r.height)
+				);
+				roi = roi & cv::Rect(0, 0, full_mask.cols, full_mask.rows);
+				det_r.roi = roi;
+
+				// 只取ROI区域
+				cv::Mat mask_roi = full_mask(roi).clone();
+
+				// 归一化到0~1（如果需要）
+				double minVal, maxVal;
+				cv::minMaxLoc(mask_roi, &minVal, &maxVal);
+				if (maxVal > 1.0) {
+					mask_roi = mask_roi / 255.0;
+				}
+
+				// 只统计ROI区域的目标像素（大于0.5视为前景）
+				cv::Mat mask_bin;
+				cv::threshold(mask_roi, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
+				det_r.area = cv::countNonZero(mask_bin);
+
+				// 保存mask_roi（float类型，0~1）
+				det_r.mask_roi = mask_roi;
+
 				ret.emplace_back(det_r);
 			}
-
 
 			return ret;
 		}
@@ -240,7 +354,16 @@ namespace rw
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
 				ImagePainter::drawShapesOnSourceImg(result, item, config);
+
+				int blue = (item.classId * 37) % 256;  // 37 是一个随机质数，用于生成分布均匀的值
+				int green = (item.classId * 73) % 256; // 73 是另一个随机质数
+				int red = (item.classId * 109) % 256;  // 109 是另一个随机质数
+
+				config.color = cv::Scalar(blue, green, red); // BGR 格式
+				config.alpha = 10;
+				ImagePainter::drawMaskOnSourceImg(result, item, config);
 			}
+
 			return result;
 		}
 	}

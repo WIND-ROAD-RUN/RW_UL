@@ -46,17 +46,14 @@ namespace rw
 			size_t _inputSize{ 1 };
 			size_t _outputSize1{ 1 };
 			size_t _outputSize2{ 1 };
-			size_t _detRows{};
-			size_t _detOutPutSize{};
 		private:
 			const int kMaxNumOutputBbox = 1000;  // assume the box outputs no more than kMaxNumOutputBbox boxes that conf >= kNmsThresh;
-			const int kNumBoxElement = 7;  // left, top, right, bottom, confidence, class, keepflag(whether drop when NMS)
+			const int kNumBoxElement = 39;  // left, top, right, bottom, confidence, class, keepflag(whether drop when NMS)
 		private:
 			float* _hostOutputBuffer = nullptr;
 			float* _deviceInputBuffer = nullptr;
 			float* _deviceOutputBuffer1 = nullptr;
 			float* _deviceOutputBuffer2 = nullptr;
-			float* _deviceDetSubmatrixBuffer = nullptr;
 			float* _deviceTransposeBuffer = nullptr;
 			float* _deviceDecodeBuffer = nullptr;
 			void init_buffer();
@@ -65,6 +62,11 @@ namespace rw
 			size_t* _deviceClassIdNmsTogether = nullptr;
 			void ini_cfg();
 			void destroy_cfg();
+		private:
+			void process_mask(
+				float* protoDevice, nvinfer1::Dims protoOutDims, std::vector<Detection_seg>& vDetections,
+				int kInputH, int kInputW, cudaStream_t stream, int sourceHeight, int souceWidth
+			);
 		private:
 			void warm_up();
 		private:

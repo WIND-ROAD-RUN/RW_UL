@@ -65,6 +65,7 @@ namespace rw {
 		//Yolov11 Oriented Bounding Box model
 		Yolov11_Obb,
 		Yolov11_Seg_Mask,
+		Yolov11_Seg_Mask_CudaAcc
 	};
 
 	inline const char* to_string(ModelType e)

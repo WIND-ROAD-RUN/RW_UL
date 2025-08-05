@@ -40,7 +40,7 @@ namespace rw
 			init_shapeInfo();
 			init_buffer();
 			ini_cfg();
-			//warm_up();
+			warm_up();
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
@@ -99,7 +99,7 @@ namespace rw
 			{
 				outPut2 *= _outputShape2.d[i];
 			}
-			_outputSize1 = outPut;
+			_outputSize2 = outPut2;
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::init_buffer()
@@ -130,6 +130,7 @@ namespace rw
 		void ModelEngine_yolov11_seg_cudaAcc::ini_cfg()
 		{
 			cudaMalloc((void**)&_deviceClassIdNmsTogether, _config.classids_nms_together.size() * sizeof(size_t));
+			cudaMemcpy(_deviceClassIdNmsTogether, _config.classids_nms_together.data(), _config.classids_nms_together.size() * sizeof(size_t), cudaMemcpyHostToDevice);
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::destroy_cfg()

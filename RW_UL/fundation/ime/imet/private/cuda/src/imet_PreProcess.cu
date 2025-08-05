@@ -170,6 +170,20 @@ namespace rw
             bbox[2] = (bbox[2] - pad_w) / r;
             bbox[3] = (bbox[3] - pad_h) / r;
         }
+
+        void ImgPreprocess::scale_bbox(Detection_seg& det, const LetterBoxInfo& info)
+        {
+            auto& bbox = det.det.bbox;
+            auto& r = info.letterBoxScale;
+            auto r_w = info.inputWidth / (info.sourceWidth * 1.0);
+            auto r_h = info.inputHeight / (info.sourceHeight * 1.0);
+            float pad_h = (info.inputHeight - r * info.sourceHeight) / 2;
+            float pad_w = (info.inputWidth - r * info.sourceWidth) / 2;
+            bbox[0] = (bbox[0] - pad_w) / r;
+            bbox[1] = (bbox[1] - pad_h) / r;
+            bbox[2] = (bbox[2] - pad_w) / r;
+			bbox[3] = (bbox[3] - pad_h) / r;
+        }
 	}
     
 }

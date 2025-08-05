@@ -39,7 +39,7 @@ protected:
 	{
 		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
 		engine = rw::ModelEngineFactory::createModelEngine(
-			config, rw::ModelType::Yolov11_Seg_CudaAcc, rw::ModelEngineDeployType::TensorRT);
+			config, rw::ModelType::Yolov11_Seg_Mask_CudaAcc, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
 	}
 
@@ -146,7 +146,7 @@ protected:
 		drawConfig.classIdNameMap[1] = "Hole";
 		drawConfig.isDisAreaText = false;
 		drawConfig.textLocate = rw::imgPro::ConfigDrawRect::TextLocate::LeftTopOut;
-		drawConfig.isDrawMask = false;
+		drawConfig.isDrawMask = true;
 		drawConfig.hasFrame = true;
 		drawConfig.thresh = 0.9;
 		drawConfig.maxVal = 1;

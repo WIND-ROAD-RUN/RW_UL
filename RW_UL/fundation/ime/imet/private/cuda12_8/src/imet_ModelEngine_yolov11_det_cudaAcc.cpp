@@ -117,6 +117,7 @@ namespace rw
 		void ModelEngine_yolov11_det_cudaAcc::ini_cfg()
 		{
 			cudaMalloc((void**)&_deviceClassIdNmsTogether, _config.classids_nms_together.size() * sizeof(size_t));
+			cudaMemcpy(_deviceClassIdNmsTogether, _config.classids_nms_together.data(), _config.classids_nms_together.size() * sizeof(size_t), cudaMemcpyHostToDevice);
 		}
 
 		void ModelEngine_yolov11_det_cudaAcc::destroy_cfg()

@@ -6,6 +6,7 @@
 #include"imet_ModelEngine_yolov11_obb.hpp"
 #include "imet_ModelEngine_yolov11_seg_cudaAcc.hpp"
 #include "imet_ModelEngine_yolov11_seg_mask.hpp"
+#include "imet_ModelEngine_yolov11_seg_mask_cudaAcc.hpp"
 
 class Logger : public nvinfer1::ILogger {
 	void log(Severity severity, const char* msg) noexcept override {
@@ -20,6 +21,7 @@ namespace rw {
 		static ModelEngine_yolov11_seg_cudaAcc* createModelEngine_yolov11_seg_cudaAcc(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_obb* createModelEngine_Yolov11_obb(const ModelEngineConfig& config);
 		static ModelEngine_Yolov11_seg_mask* createModelEngine_Yolov11_seg_with_mask(const ModelEngineConfig& config);
+		static ModelEngine_yolov11_seg_mask_cudaAcc* createModelEngine_Yolov11_seg_with_mask_cudaAcc(const ModelEngineConfig& config);
 
 		std::unique_ptr<ModelEngine>
 			ModelEngineFactory_TensorRT::createModelEngine
@@ -40,6 +42,8 @@ namespace rw {
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_obb(config));
 			case ModelType::Yolov11_Seg_Mask:
 				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg_with_mask(config));
+			case ModelType::Yolov11_Seg_Mask_CudaAcc:
+				return std::unique_ptr<ModelEngine>(createModelEngine_Yolov11_seg_with_mask_cudaAcc(config));
 			default:
 				return nullptr;
 			}
@@ -101,6 +105,16 @@ namespace rw {
 				return nullptr;
 			}
 			modelEngine->setConfig(config);
+			return modelEngine;
+		}
+
+		ModelEngine_yolov11_seg_mask_cudaAcc* createModelEngine_Yolov11_seg_with_mask_cudaAcc(
+			const ModelEngineConfig& config)
+		{
+			ModelEngine_yolov11_seg_mask_cudaAcc* modelEngine = new ModelEngine_yolov11_seg_mask_cudaAcc(config, logger);
+			if (!modelEngine) {
+				return nullptr;
+			}
 			return modelEngine;
 		}
 	}
