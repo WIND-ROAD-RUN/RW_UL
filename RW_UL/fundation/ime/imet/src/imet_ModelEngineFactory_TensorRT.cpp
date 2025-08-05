@@ -5,7 +5,7 @@
 #include"imet_ModelEngine_yolov11_seg.hpp"
 #include"imet_ModelEngine_yolov11_obb.hpp"
 #include "imet_ModelEngine_yolov11_seg_cudaAcc.hpp"
-#include "imet_ModelEngine_yolov11_seg_with_mask.hpp"
+#include "imet_ModelEngine_yolov11_seg_mask.hpp"
 
 class Logger : public nvinfer1::ILogger {
 	void log(Severity severity, const char* msg) noexcept override {
