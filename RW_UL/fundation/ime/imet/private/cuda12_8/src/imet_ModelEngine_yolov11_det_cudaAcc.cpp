@@ -95,21 +95,19 @@ namespace rw
 
 		void ModelEngine_yolov11_det_cudaAcc::init_buffer()
 		{
-			_hostOutputBuffer= new float[_outputSize];
 			cudaMalloc(reinterpret_cast<void**>(&_deviceInputBuffer), _inputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer), _outputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _outputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
 			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
 			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer);
-			_hostOutputBuffer1 = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
+			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
 
 		}
 
 		void ModelEngine_yolov11_det_cudaAcc::destroy_buffer()
 		{
 			delete[] _hostOutputBuffer;
-			delete[] _hostOutputBuffer1;
 			cudaFree(_deviceInputBuffer);
 			cudaFree(_deviceOutputBuffer);
 			cudaFree(_deviceTransposeBuffer);
@@ -167,7 +165,7 @@ namespace rw
 
 
 			Utility::nms(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
-			cudaMemcpyAsync(_hostOutputBuffer1, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
+			cudaMemcpyAsync(_hostOutputBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
 			cudaStreamSynchronize(_stream);
 		}
 
@@ -175,15 +173,15 @@ namespace rw
 		{
 			std::vector<DetectionRectangleInfo> ret;
 			std::vector<Detection> vDetections;
-			int count = std::min((int)_hostOutputBuffer1[0], kMaxNumOutputBbox);
+			int count = std::min((int)_hostOutputBuffer[0], kMaxNumOutputBbox);
 			for (int i = 0; i < count; i++) {
 				int pos = 1 + i * kNumBoxElement;
-				int keepFlag = (int)_hostOutputBuffer1[pos + 6];
+				int keepFlag = (int)_hostOutputBuffer[pos + 6];
 				if (keepFlag == 1) {
 					Detection det;
-					memcpy(det.bbox, &_hostOutputBuffer1[pos], 4 * sizeof(float));
-					det.conf = _hostOutputBuffer1[pos + 4];
-					det.classId = (int)_hostOutputBuffer1[pos + 5];
+					memcpy(det.bbox, &_hostOutputBuffer[pos], 4 * sizeof(float));
+					det.conf = _hostOutputBuffer[pos + 4];
+					det.classId = (int)_hostOutputBuffer[pos + 5];
 
 					vDetections.emplace_back(det);
 				}

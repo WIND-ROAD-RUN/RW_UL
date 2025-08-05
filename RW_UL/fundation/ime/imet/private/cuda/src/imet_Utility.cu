@@ -86,5 +86,33 @@ namespace rw
 			int gridSize = (maxObjects + blockSize - 1) / blockSize;
 			nms_kernel << <gridSize, blockSize, 0, stream >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
 		}
+
+		// CUDA kernel: 拷贝子矩阵
+		__global__ void copy_submatrix_kernel(
+			const float* src, float* dst,
+			int batch, int src_rows, int dst_rows, int cols)
+		{
+			int b = blockIdx.z;
+			int r = blockIdx.y * blockDim.y + threadIdx.y;
+			int c = blockIdx.x * blockDim.x + threadIdx.x;
+
+			if (b < batch && r < dst_rows && c < cols) {
+				int src_idx = b * src_rows * cols + r * cols + c;
+				int dst_idx = b * dst_rows * cols + r * cols + c;
+				dst[dst_idx] = src[src_idx];
+			}
+		}
+
+		void Utility::copy_submatrix(const float* src, float* dst, int batch, int src_rows, int dst_rows, int cols,
+			cudaStream_t stream)
+		{
+			dim3 block(32, 8, 1);
+			dim3 grid(
+				(cols + block.x - 1) / block.x,
+				(dst_rows + block.y - 1) / block.y,
+				batch
+			);
+			copy_submatrix_kernel << <grid, block, 0, stream >> > (src, dst, batch, src_rows, dst_rows, cols);
+		}
 	}
 }

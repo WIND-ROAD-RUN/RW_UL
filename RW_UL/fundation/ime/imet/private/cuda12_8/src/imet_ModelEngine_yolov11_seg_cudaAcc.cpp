@@ -77,6 +77,8 @@ namespace rw
 			_inputHeight = _inputShape.d[2];
 			_inputWidth = _inputShape.d[3];
 			_channelsNum = _inputShape.d[1];
+			_detRows = _outputShape.d[1] - MaskCoefficientNum;
+			_detOutPutSize = _detectionsNum * _detRows;
 			size_t input = 1;
 			for (int i = 0; i < _inputShape.nbDims; i++)
 			{
@@ -95,25 +97,25 @@ namespace rw
 
 		void ModelEngine_yolov11_seg_cudaAcc::init_buffer()
 		{
-			_hostOutputBuffer = new float[_outputSize];
 			cudaMalloc(reinterpret_cast<void**>(&_deviceInputBuffer), _inputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer), _outputSize * sizeof(float));
-			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _outputSize * sizeof(float));
+			cudaMalloc(reinterpret_cast<void**>(&_deviceDetSubmatrixBuffer), _detOutPutSize * sizeof(float));
+			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _detOutPutSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
 			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
 			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer);
-			_hostOutputBuffer1 = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
+			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
 
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::destroy_buffer()
 		{
 			delete[] _hostOutputBuffer;
-			delete[] _hostOutputBuffer1;
 			cudaFree(_deviceInputBuffer);
 			cudaFree(_deviceOutputBuffer);
 			cudaFree(_deviceTransposeBuffer);
 			cudaFree(_deviceDecodeBuffer);
+			cudaFree(_deviceDetSubmatrixBuffer);
 		}
 
 		void ModelEngine_yolov11_seg_cudaAcc::ini_cfg()
@@ -154,7 +156,15 @@ namespace rw
 		void ModelEngine_yolov11_seg_cudaAcc::infer()
 		{
 			this->_context->enqueueV3(_stream);
-			Utility::transpose(_deviceOutputBuffer, _deviceTransposeBuffer, _outputShape.d[1], _outputShape.d[2], _stream);
+			Utility::copy_submatrix(
+				_deviceOutputBuffer,
+				_deviceDetSubmatrixBuffer,
+				_outputShape.d[0],
+				_outputShape.d[1],
+				_classNum+4,
+				_outputShape.d[2],
+				_stream);
+			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape.d[1]-MaskCoefficientNum, _outputShape.d[2], _stream);
 			PostProcess::decode_det(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer,
@@ -167,7 +177,7 @@ namespace rw
 
 
 			Utility::nms(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
-			cudaMemcpyAsync(_hostOutputBuffer1, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
+			cudaMemcpyAsync(_hostOutputBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
 			cudaStreamSynchronize(_stream);
 		}
 
@@ -175,15 +185,15 @@ namespace rw
 		{
 			std::vector<DetectionRectangleInfo> ret;
 			std::vector<Detection> vDetections;
-			int count = std::min((int)_hostOutputBuffer1[0], kMaxNumOutputBbox);
+			int count = std::min((int)_hostOutputBuffer[0], kMaxNumOutputBbox);
 			for (int i = 0; i < count; i++) {
 				int pos = 1 + i * kNumBoxElement;
-				int keepFlag = (int)_hostOutputBuffer1[pos + 6];
+				int keepFlag = (int)_hostOutputBuffer[pos + 6];
 				if (keepFlag == 1) {
 					Detection det;
-					memcpy(det.bbox, &_hostOutputBuffer1[pos], 4 * sizeof(float));
-					det.conf = _hostOutputBuffer1[pos + 4];
-					det.classId = (int)_hostOutputBuffer1[pos + 5];
+					memcpy(det.bbox, &_hostOutputBuffer[pos], 4 * sizeof(float));
+					det.conf = _hostOutputBuffer[pos + 4];
+					det.classId = (int)_hostOutputBuffer[pos + 5];
 
 					vDetections.emplace_back(det);
 				}

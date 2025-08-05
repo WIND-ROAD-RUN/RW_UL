@@ -44,14 +44,16 @@ namespace rw
 			size_t _channelsNum;
 			size_t _inputSize{ 1 };
 			size_t _outputSize{ 1 };
+			size_t _detRows{};
+			size_t _detOutPutSize{};
 		private:
 			const int kMaxNumOutputBbox = 1000;  // assume the box outputs no more than kMaxNumOutputBbox boxes that conf >= kNmsThresh;
 			const int kNumBoxElement = 7;  // left, top, right, bottom, confidence, class, keepflag(whether drop when NMS)
 		private:
 			float* _hostOutputBuffer = nullptr;
-			float* _hostOutputBuffer1 = nullptr;
 			float* _deviceInputBuffer = nullptr;
 			float* _deviceOutputBuffer = nullptr;
+			float* _deviceDetSubmatrixBuffer = nullptr;
 			float* _deviceTransposeBuffer = nullptr;
 			float* _deviceDecodeBuffer = nullptr;
 			void init_buffer();

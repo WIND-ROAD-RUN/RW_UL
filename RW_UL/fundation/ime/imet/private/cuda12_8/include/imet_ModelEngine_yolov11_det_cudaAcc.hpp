@@ -49,7 +49,6 @@ namespace rw
 			const int kNumBoxElement = 7;  // left, top, right, bottom, confidence, class, keepflag(whether drop when NMS)
 		private:
 			float* _hostOutputBuffer = nullptr;
-			float* _hostOutputBuffer1 = nullptr;
 			float* _deviceInputBuffer = nullptr;
 			float* _deviceOutputBuffer = nullptr;
 			float* _deviceTransposeBuffer = nullptr;
