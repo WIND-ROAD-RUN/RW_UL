@@ -50,6 +50,7 @@ int main() {
 
         auto start = std::chrono::high_resolution_clock::now();
         auto result = modelEngine.processImg(mat);
+        auto img = modelEngine.draw(mat, result);
         auto end = std::chrono::high_resolution_clock::now();
 
         std::chrono::duration<double, std::milli> elapsed = end - start;

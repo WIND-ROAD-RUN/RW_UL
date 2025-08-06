@@ -40,7 +40,7 @@ namespace rw
 			init_shapeInfo();
 			init_buffer();
 			ini_cfg();
-			//warm_up();
+			warm_up();
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::init_engineRuntime(const std::string& enginePath, nvinfer1::ILogger& logger)
@@ -147,17 +147,17 @@ namespace rw
 
 			// prepare n x 32 length mask coef space on device
 			float* maskCoefDevice = nullptr;
-			(cudaMalloc(&maskCoefDevice, n * protoC * sizeof(float)));
+			cudaMalloc(&maskCoefDevice, n * protoC * sizeof(float));
 			// prepare n x 160 x 160 mask space on device
 			float* maskDevice = nullptr;
-			(cudaMalloc(&maskDevice, n * protoH * protoW * sizeof(float)));
+			cudaMalloc(&maskDevice, n * protoH * protoW * sizeof(float));
 
 			float* bboxDevice = nullptr;  // x1,y1,x2,y2,x1,y1,x2,y2,...x1,y1,x2,y2
-			(cudaMalloc(&bboxDevice, n * 4 * sizeof(float)));
+			cudaMalloc(&bboxDevice, n * 4 * sizeof(float));
 
 			for (size_t i = 0; i < n; i++) {
-				(cudaMemcpyAsync(&maskCoefDevice[i * protoC], vDetections[i].mask, protoC * sizeof(float), cudaMemcpyHostToDevice, stream));
-				(cudaMemcpyAsync(&bboxDevice[i * 4], vDetections[i].det.bbox, 4 * sizeof(float), cudaMemcpyHostToDevice, stream));
+				cudaMemcpyAsync(&maskCoefDevice[i * protoC], vDetections[i].mask, protoC * sizeof(float), cudaMemcpyHostToDevice, stream);
+				cudaMemcpyAsync(&bboxDevice[i * 4], vDetections[i].det.bbox, 4 * sizeof(float), cudaMemcpyHostToDevice, stream);
 			}
 
 			// mask = sigmoid(mask coef x proto)
@@ -173,11 +173,13 @@ namespace rw
 
 			// scale mask from 160x160 to original resolution
 			// 1. cut mask
-			float r_w = protoW / (souceWidth * 1.0);
-			float r_h = protoH / (sourceHeight * 1.0);
+			auto cols = souceWidth;
+			int rows = sourceHeight;
+			float r_w = protoW / (cols * 1.0);
+			float r_h = protoH / (rows * 1.0);
 			float r = std::min(r_w, r_h);
-			float pad_h = (protoH - r * sourceHeight) / 2;
-			float pad_w = (protoW - r * souceWidth) / 2;
+			float pad_h = (protoH - r * rows) / 2;
+			float pad_w = (protoW - r * cols) / 2;
 			int cutMaskLeft = (int)pad_w;
 			int cutMaskTop = (int)pad_h;
 			int cutMaskRight = (int)(protoW - pad_w);
@@ -185,25 +187,26 @@ namespace rw
 			int cutMaskWidth = cutMaskRight - cutMaskLeft;
 			int cutMaskHeight = cutMaskBottom - cutMaskTop;
 			float* cutMaskDevice = nullptr;
-			(cudaMalloc(&cutMaskDevice, n * cutMaskHeight * cutMaskWidth * sizeof(float)));
-			PostProcess::cut_mask(maskDevice, n, protoH, protoW, cutMaskDevice, cutMaskTop, cutMaskLeft, cutMaskHeight, cutMaskWidth, stream);
+			cudaMalloc(&cutMaskDevice, n * cutMaskHeight * cutMaskWidth * sizeof(float));
+			PostProcess::cut_mask(maskDevice, n, protoH, protoW, cutMaskDevice, cutMaskTop , cutMaskLeft, cutMaskHeight,
+			                      cutMaskWidth, stream);
 
 			// 2. bilinear resize mask
 			float* scaledMaskDevice = nullptr;
-			cudaMalloc(&scaledMaskDevice, n * sourceHeight * souceWidth * sizeof(float));
-			PostProcess::resize(cutMaskDevice, n, cutMaskHeight, cutMaskWidth, scaledMaskDevice, sourceHeight, souceWidth, stream);
+			cudaMalloc(&scaledMaskDevice, n * rows * cols * sizeof(float));
+			PostProcess::resize(cutMaskDevice, n, cutMaskHeight, cutMaskWidth, scaledMaskDevice, rows, cols, stream);
 
 			for (size_t i = 0; i < n; i++) {
-				vDetections[i].maskMatrix.resize(sourceHeight * souceWidth);
-				(cudaMemcpyAsync(vDetections[i].maskMatrix.data(), &scaledMaskDevice[i * sourceHeight * souceWidth], sourceHeight * souceWidth * sizeof(float), cudaMemcpyDeviceToHost, stream));
+				vDetections[i].maskMatrix.resize(rows * cols);
+				cudaMemcpyAsync(vDetections[i].maskMatrix.data(), &scaledMaskDevice[i * rows * cols], rows * cols * sizeof(float), cudaMemcpyDeviceToHost, stream);
 				cudaDeviceSynchronize();
 			}
 
-			(cudaFree(maskCoefDevice));
-			(cudaFree(maskDevice));
-			(cudaFree(bboxDevice));
-			(cudaFree(cutMaskDevice));
-			(cudaFree(scaledMaskDevice));
+			cudaFree(maskCoefDevice);
+			cudaFree(maskDevice);
+			cudaFree(bboxDevice);
+			cudaFree(cutMaskDevice);
+			cudaFree(scaledMaskDevice);
 		}
 
 		void ModelEngine_yolov11_seg_mask_cudaAcc::warm_up()
@@ -307,36 +310,34 @@ namespace rw
 				det_r.leftBottom = { static_cast<int>(vDetections[j].det.bbox[0]), static_cast<int>(vDetections[j].det.bbox[3]) };
 				det_r.rightBottom = { static_cast<int>(vDetections[j].det.bbox[2]), static_cast<int>(vDetections[j].det.bbox[3]) };
 				det_r.segMaskValid = true;
-				// 构造全图mask
+
+
+				/*det_r.mask_roi = cv::Mat(_letterBoxInfo.sourceHeight, _letterBoxInfo.sourceWidth, CV_32FC1, vDetections[j].maskMatrix.data());
+				int x = std::max(0, static_cast<int>(vDetections[j].det.bbox[0]));
+				int y = std::max(0, static_cast<int>(vDetections[j].det.bbox[1]));
+				int w = std::min(static_cast<int>(det_r.width), _letterBoxInfo.sourceWidth - x);
+				int h = std::min(static_cast<int>(det_r.height), _letterBoxInfo.sourceHeight - y);
+				det_r.roi = cv::Rect(x, y, w, h);*/
+
+
 				cv::Mat full_mask(_letterBoxInfo.sourceHeight, _letterBoxInfo.sourceWidth, CV_32FC1, vDetections[j].maskMatrix.data());
-				// 计算ROI并防止越界
-				cv::Rect roi(
-					round(vDetections[j].det.bbox[0]),
-					round(vDetections[j].det.bbox[1]),
-					round(det_r.width),
-					round(det_r.height)
-				);
-				roi = roi & cv::Rect(0, 0, full_mask.cols, full_mask.rows);
-				det_r.roi = roi;
 
-				// 只取ROI区域
-				cv::Mat mask_roi = full_mask(roi).clone();
+	
+				int x = std::max(0, static_cast<int>(vDetections[j].det.bbox[0]));
+				int y = std::max(0, static_cast<int>(vDetections[j].det.bbox[1]));
+				int w = std::min(static_cast<int>(det_r.width), _letterBoxInfo.sourceWidth - x);
+				int h = std::min(static_cast<int>(det_r.height), _letterBoxInfo.sourceHeight - y);
+				det_r.roi = cv::Rect(x, y, w, h);
 
-				// 归一化到0~1（如果需要）
-				double minVal, maxVal;
-				cv::minMaxLoc(mask_roi, &minVal, &maxVal);
-				if (maxVal > 1.0) {
-					mask_roi = mask_roi / 255.0;
+
+				if (w > 0 && h > 0 && x + w <= full_mask.cols && y + h <= full_mask.rows) {
+					det_r.mask_roi = full_mask(det_r.roi).clone();
+				}
+				else {
+					det_r.mask_roi = cv::Mat(); 
 				}
 
-				// 只统计ROI区域的目标像素（大于0.5视为前景）
-				cv::Mat mask_bin;
-				cv::threshold(mask_roi, mask_bin, 0.5, 1.0, cv::THRESH_BINARY);
-				det_r.area = cv::countNonZero(mask_bin);
-
-				// 保存mask_roi（float类型，0~1）
-				det_r.mask_roi = mask_roi;
-
+				det_r.area = cv::countNonZero(det_r.mask_roi);
 				ret.emplace_back(det_r);
 			}
 
@@ -353,17 +354,14 @@ namespace rw
 				std::ostringstream oss;
 				oss << "classId:" << item.classId << " score:" << std::fixed << std::setprecision(2) << item.score;
 				config.text = oss.str();
-				ImagePainter::drawShapesOnSourceImg(result, item, config);
-
-				int blue = (item.classId * 37) % 256;  // 37 是一个随机质数，用于生成分布均匀的值
-				int green = (item.classId * 73) % 256; // 73 是另一个随机质数
-				int red = (item.classId * 109) % 256;  // 109 是另一个随机质数
-
-				config.color = cv::Scalar(blue, green, red); // BGR 格式
-				config.alpha = 10;
 				ImagePainter::drawMaskOnSourceImg(result, item, config);
 			}
 
+			//// draw mask
+			//for (size_t i = 0; i < infoList.size(); i++) {
+			//	float* masks = (float*)infoList[i].mask_roi.data;
+			//	Utility::draw_mask(result, masks);
+			//}
 			return result;
 		}
 	}

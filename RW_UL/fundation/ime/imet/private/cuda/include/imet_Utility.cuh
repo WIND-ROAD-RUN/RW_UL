@@ -44,6 +44,8 @@ namespace rw
 				int cols, 
 				cudaStream_t stream
 			);
+
+			static void draw_mask(cv::Mat& img, float* mask);
 		};
 	}
 }
