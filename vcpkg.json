@@ -1,0 +1,19 @@
+{
+  "name": "cmakeproject1",
+  "version": "1.0.0",
+  "description": "CMakeProject1 with vcpkg integration",
+  "dependencies": [
+    "nlohmann-json",
+    "opencv",
+    "pugixml",
+    "jsoncpp",
+    "sqlite3",
+    "gtest",
+    "spdlog",
+    "hwloc",
+    "pkgconf",
+    "cryptopp",
+    "openssl",
+    "libmodbus"
+  ]
+}
