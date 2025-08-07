@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.17)
 
 project(rqw_test VERSION 0.1 LANGUAGES CXX)
 
