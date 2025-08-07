@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+find_package(libzip CONFIG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Concurrent)
 
 file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/ui/*.ui")
@@ -41,6 +42,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Concurrent)
 target_link_libraries(${PROJECT_NAME} 
 	PRIVATE ${OpenCV_LIBS}
+	PRIVATE libzip::zip
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -48,6 +50,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE ime
 	PRIVATE rqwm
     PRIVATE rqwime
+	PRIVATE imgPro
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -67,12 +70,12 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
-# ╟╡в╟©иж╢ппнд╪Ч
+# Е╝┴Хё┘Е▐╞Ф┴╖Х║▄Ф√┤Д╩╤
 install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # ©иж╢ппнд╪Ч╟╡в╟╣╫ bin д©б╪
+    RUNTIME DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} # Е▐╞Ф┴╖Х║▄Ф√┤Д╩╤Е╝┴Хё┘Е┬╟ bin Г⌡╝Е╫∙
 )
 
-# ╟╡в╟рюю╣╣д DLL нд╪Ч
+# Е╝┴Хё┘Д╬²Х╣√Г └ DLL Ф√┤Д╩╤
 install(FILES ${TensorRT_dlls} ${ZMotionRutime_dlls} ${OnnxRuntime_dlls}
     DESTINATION ${INSTALL_PATH}/${PROJECT_NAME} 
 )

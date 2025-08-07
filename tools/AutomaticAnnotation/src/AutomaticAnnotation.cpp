@@ -73,6 +73,7 @@ void AutomaticAnnotation::build_ui()
 	ui->cBox_checkModelType->addItem("Yolov11_det");
 	ui->cBox_checkModelType->addItem("Yolov11_seg");
 	ui->cBox_checkModelType->addItem("Yolov11_obb");
+	ui->cBox_checkModelType->addItem("Yolov11_segWithMask");
 	ui->cBox_checkModelType->setCurrentIndex(0);
 
 	ui->cBox_exportLabelType->addItem("Detection");
@@ -85,10 +86,8 @@ void AutomaticAnnotation::build_connect()
 {
 	QObject::connect(ui->pbtn_setImageInput, &QPushButton::clicked
 		, this, &AutomaticAnnotation::pbtn_setImageInput_clicked);
-	QObject::connect(ui->pbtn_setLabelOutput, &QPushButton::clicked
-		, this, &AutomaticAnnotation::pbtn_setLabelOutput_clicked);
-	QObject::connect(ui->pbtn_setImageOutput, &QPushButton::clicked
-		, this, &AutomaticAnnotation::pbtn_setImageOutput_clicked);
+	QObject::connect(ui->pbtn_setAllOutput, &QPushButton::clicked
+		, this, &AutomaticAnnotation::pbtn_setAllOutput_clicked);
 	QObject::connect(ui->pbtn_setModelPath, &QPushButton::clicked
 		, this, &AutomaticAnnotation::pbtn_setModelPath_clicked);
 	QObject::connect(ui->pbtn_setWorkers, &QPushButton::clicked
@@ -110,8 +109,9 @@ void AutomaticAnnotation::iniThread()
 	auto currentDeployType = ui->cBox_checkDeployType->currentText();
 	auto currentModelType = ui->cBox_checkModelType->currentText();
 	auto imageInput = ui->lineEdit_ImageInput->text();
-	auto labelOutput = ui->lineEdit_labelOutput->text();
-	auto imageOutput = ui->lineEdit_ImageOutput->text();
+	auto allOutPut = ui->lineEdit_AllOutput->text();
+	auto labelOutput = labelOutPut;
+	auto imageOutput = imageOutPut;
 	auto modelPath = ui->lineEdit_modelPath->text();
 	auto workers = ui->pbtn_setWorkers->text().toInt();
 	auto confThreshold = ui->pbtn_setConfThreshold->text();
@@ -155,6 +155,8 @@ void AutomaticAnnotation::iniThread()
 			thread->config = config;
 			thread->labelOutput = labelOutput;
 			thread->imageOutput = imageOutput;
+			thread->isAutoZip = ui->ckb_autoZip->isChecked();
+			thread->rootOutPutPath = allOutPut;
 			thread->deployType = deployType;
 			thread->labelList = labelList;
 			threads.push_back(thread);
@@ -176,8 +178,6 @@ void AutomaticAnnotation::pbtn_setImageInput_clicked()
 	if (!folderPath.isEmpty())
 	{
 		ui->lineEdit_ImageInput->setText(folderPath);
-		ui->lineEdit_ImageOutput->setText(folderPath + R"(/images)");
-		ui->lineEdit_labelOutput->setText(folderPath + R"(/labels)");
 	}
 	else
 	{
@@ -185,29 +185,20 @@ void AutomaticAnnotation::pbtn_setImageInput_clicked()
 	}
 }
 
-void AutomaticAnnotation::pbtn_setLabelOutput_clicked()
+void AutomaticAnnotation::pbtn_setAllOutput_clicked()
 {
 	QString folderPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "");
 	if (!folderPath.isEmpty())
 	{
-		ui->lineEdit_labelOutput->setText(folderPath);
+		ui->lineEdit_AllOutput->setText(folderPath);
+		imageOutPut = folderPath + R"(/images/train)";
+		labelOutPut = folderPath + R"(/labels/train)";
 	}
 	else
 	{
-		ui->lineEdit_labelOutput->clear();
-	}
-}
-
-void AutomaticAnnotation::pbtn_setImageOutput_clicked()
-{
-	QString folderPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "");
-	if (!folderPath.isEmpty())
-	{
-		ui->lineEdit_ImageOutput->setText(folderPath);
-	}
-	else
-	{
-		ui->lineEdit_ImageOutput->clear();
+		ui->lineEdit_AllOutput->clear();
+		imageOutPut.clear();
+		labelOutPut.clear();
 	}
 }
 
@@ -278,14 +269,9 @@ void AutomaticAnnotation::pbtn_next_clicked()
 		QMessageBox::warning(this, "Warning", QString("请设置图像输入路径"));
 		return;
 	}
-	if (ui->lineEdit_labelOutput->text().isEmpty())
+	if (ui->lineEdit_AllOutput->text().isEmpty())
 	{
-		QMessageBox::warning(this, "Warning", QString("请设置标签输出路径"));
-		return;
-	}
-	if (ui->lineEdit_ImageOutput->text().isEmpty())
-	{
-		QMessageBox::warning(this, "Warning", QString("请设置图像输出路径"));
+		QMessageBox::warning(this, "Warning", QString("请设置输出路径"));
 		return;
 	}
 	if (ui->lineEdit_modelPath->text().isEmpty())
@@ -347,19 +333,23 @@ rw::ModelType AutomaticAnnotation::getModelType()
 	auto currentModelType = ui->cBox_checkModelType->currentText();
 	if (currentModelType == "Yolov11_seg")
 	{
-		return rw::ModelType::Yolov11_Seg;
+		return rw::ModelType::Yolov11_Seg_CudaAcc;
 	}
 	else if (currentModelType == "Yolov11_det")
 	{
-		return rw::ModelType::Yolov11_Det;
+		return rw::ModelType::Yolov11_Det_CudaAcc;
 	}
 	else if (currentModelType == "Yolov11_obb")
 	{
 		return rw::ModelType::Yolov11_Obb;
 	}
+	else if (currentModelType == "Yolov11_segWithMask")
+	{
+		return rw::ModelType::Yolov11_Seg_Mask;
+	}
 	else
 	{
-		return rw::ModelType::Yolov11_Det;
+		return rw::ModelType::Yolov11_Det_CudaAcc;
 	}
 }
 

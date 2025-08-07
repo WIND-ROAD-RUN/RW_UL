@@ -22,6 +22,8 @@ private:
 public:
 	int size{ 0 };
 	int complete{ 0 };
+	QString imageOutPut{};
+	QString labelOutPut{};
 public:
 	void build_ui();
 	void build_connect();
@@ -32,8 +34,7 @@ private:
 
 private slots:
 	void pbtn_setImageInput_clicked();
-	void pbtn_setLabelOutput_clicked();
-	void pbtn_setImageOutput_clicked();
+	void pbtn_setAllOutput_clicked();
 	void pbtn_setModelPath_clicked();
 	void pbtn_setWorkers_clicked();
 	void pbtn_setConfThreshold_clicked();

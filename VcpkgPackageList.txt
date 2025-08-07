@@ -7,3 +7,4 @@ spdlog
 cryptopp
 openssl
 libmodbus
+libzip

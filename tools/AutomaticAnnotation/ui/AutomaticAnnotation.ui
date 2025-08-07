@@ -58,16 +58,16 @@
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QPushButton" name="pbtn_setLabelOutput">
+                <widget class="QPushButton" name="pbtn_setAllOutput">
                  <property name="text">
-                  <string>选择标签输出路径:</string>
+                  <string>选择输出路径:</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_labelOutput">
+                <widget class="QLineEdit" name="lineEdit_AllOutput">
                  <property name="text">
                   <string/>
                  </property>
@@ -76,18 +76,11 @@
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
                <item>
-                <widget class="QPushButton" name="pbtn_setImageOutput">
+                <widget class="QCheckBox" name="ckb_autoZip">
                  <property name="text">
-                  <string>选择图片输出路径:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lineEdit_ImageOutput">
-                 <property name="text">
-                  <string/>
+                  <string>是否自动压缩</string>
                  </property>
                 </widget>
                </item>

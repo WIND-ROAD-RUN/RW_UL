@@ -6,7 +6,14 @@
 #include<QFile>
 #include<QFileInfo>
 #include<QDir>
+#include <QDirIterator>
 #include <QSet>
+#include "zip.h"
+
+#include "imgPro_ImagePainter.hpp"
+#include "imgPro_ImageProcessUtilty.hpp"
+#include "rqw_CameraObjectCore.hpp"
+
 static std::vector<rw::DetectionRectangleInfo> filterByLabelList(
 	const std::vector<rw::DetectionRectangleInfo>& input,
 	const QVector<int>& labelList)
@@ -40,7 +47,7 @@ QString AutomaticAnnotationThread::getObjectDetectionDataSetItem(const std::vect
 
 		auto textStr = id + " " +
 			std::to_string(norCenterX) + " " + std::to_string(norCenterY) + " "
-			+ std::to_string(norWidth) + " " + std::to_string(norHeight) + "\n"; // Ìí¼Ó»»ĞĞ·û
+			+ std::to_string(norWidth) + " " + std::to_string(norHeight) + "\n"; // æ·»åŠ æ¢è¡Œç¬¦
 
 		result.append(QString::fromStdString(textStr));
 	}
@@ -54,50 +61,61 @@ QString AutomaticAnnotationThread::getObjectSegmentDataSetItem(
 
 	for (const auto& item : annotationDataSet)
 	{
+		if (!item.segMaskValid || item.mask_roi.empty())
+			continue;
+
 		std::string id = std::to_string(item.classId);
 
-		// ¹éÒ»»¯ÖĞĞÄµãºÍ¿í¸ß
-		double norCenterX = static_cast<double>(item.center_x) / static_cast<double>(width);
-		double norCenterY = static_cast<double>(item.center_y) / static_cast<double>(height);
-		double norWidth;
-		double norHeight;
-		if (item.width < item.height)
-		{
-			norWidth = static_cast<double>(item.width) / static_cast<double>(width);
-			norHeight = static_cast<double>(item.width) / static_cast<double>(height);
+		cv::Mat mask;
+		if (item.mask_roi.channels() != 1) {
+			cv::cvtColor(item.mask_roi, mask, cv::COLOR_BGR2GRAY);
 		}
-		else
-		{
-			norWidth = static_cast<double>(item.height) / static_cast<double>(width);
-			norHeight = static_cast<double>(item.height) / static_cast<double>(height);
+		else {
+			mask = item.mask_roi;
 		}
 
-		// ¼ÆËãÍÖÔ²ÉÏµÄ 30 ¸öµã
-		constexpr int numPoints = 30;
+		// é’ˆå¯¹CV_32FC1ç±»å‹çš„æ©ç ï¼Œå…ˆå½’ä¸€åŒ–åˆ°0~255
+		if (mask.type() == CV_32FC1) {
+			cv::Mat normMask;
+			// å‡è®¾maskå€¼åŸŸåœ¨0~1
+			mask.convertTo(normMask, CV_8UC1, 255.0);
+			mask = normMask;
+		}
+		else if (mask.type() != CV_8UC1) {
+			mask.convertTo(mask, CV_8UC1);
+		}
+
+		// äºŒå€¼åŒ–
+		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
+
+		std::vector<std::vector<cv::Point>> contours;
+		cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+		size_t maxContourIdx = 0;
+		size_t maxPoints = 0;
+		for (size_t i = 0; i < contours.size(); ++i) {
+			if (contours[i].size() > maxPoints) {
+				maxPoints = contours[i].size();
+				maxContourIdx = i;
+			}
+		}
+
 		std::string pointsStr;
-		for (int i = 0; i < numPoints; ++i)
-		{
-			// ¼ÆËã½Ç¶È£¨¾ùÔÈ·Ö²¼ÔÚ 0 µ½ 2¦Ğ Ö®¼ä£©
-			double angle = 2.0 * M_PI * i / numPoints;
-
-			// ÍÖÔ²¹«Ê½£ºx = centerX + a * cos(angle), y = centerY + b * sin(angle)
-			double x = norCenterX + (norWidth / 2.0) * std::cos(angle);
-			double y = norCenterY + (norHeight / 2.0) * std::sin(angle);
-
-			// ½«µãÌí¼Óµ½×Ö·û´®ÖĞ
-			pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
+		if (!contours.empty()) {
+			for (const auto& pt : contours[maxContourIdx]) {
+				// å±€éƒ¨åæ ‡ + ROIåç§» = åŸå›¾åæ ‡
+				double x = static_cast<double>(pt.x + item.roi.x) / static_cast<double>(width);
+				double y = static_cast<double>(pt.y + item.roi.y) / static_cast<double>(height);
+				pointsStr += " " + std::to_string(x) + " " + std::to_string(y);
+			}
 		}
 
-		// ×éºÏ×îÖÕµÄ±ê×¢×Ö·û´®
 		auto textStr = id + pointsStr + "\n";
-
-		// Ìí¼Óµ½½á¹û¼¯
 		result.append(QString::fromStdString(textStr));
 	}
 
 	return result;
 }
-
 QString AutomaticAnnotationThread::getOrientedBoundingBoxesDataSetItem(const std::vector<rw::DetectionRectangleInfo>& annotationDataSet, int width, int height)
 {
 	QString result;
@@ -125,6 +143,104 @@ QString AutomaticAnnotationThread::getOrientedBoundingBoxesDataSetItem(const std
 	return result;
 }
 
+void AutomaticAnnotationThread::generateTrainTxt(const QString& fileName)
+{
+	QString imagesDir = fileName + "/images/train";
+	QString outputTxt = fileName + "/train.txt";
+
+	QDir imgDir(imagesDir);
+	if (!imgDir.exists()) {
+		qDebug() << "æœªæ‰¾åˆ°å›¾ç‰‡æ–‡ä»¶å¤¹:" << imagesDir;
+		return;
+	}
+
+	QStringList imageExts = { "*.jpg", "*.jpeg", "*.png", "*.bmp" };
+	QStringList imageFiles = imgDir.entryList(imageExts, QDir::Files | QDir::NoSymLinks);
+
+	QStringList relPaths;
+	for (const QString& fname : imageFiles) {
+		QString relPath = "data/images/train/" + fname;
+		relPaths.append(relPath.replace("\\", "/"));
+	}
+
+	std::sort(relPaths.begin(), relPaths.end());
+
+	QFile outFile(outputTxt);
+	if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		qDebug() << "æ— æ³•å†™å…¥æ–‡ä»¶:" << outputTxt;
+		return;
+	}
+	QTextStream out(&outFile);
+	for (const QString& path : relPaths) {
+		out << path << "\n";
+	}
+	outFile.close();
+
+	qDebug() << "å·²ç”Ÿæˆ" << outputTxt << "å…±" << relPaths.size() << "å¼ å›¾ç‰‡ã€‚";
+}
+
+void AutomaticAnnotationThread::zipFolderToParentDir(const QString& folderPath)
+{
+	QFileInfo folderInfo(folderPath);
+	if (!folderInfo.exists() || !folderInfo.isDir()) {
+		qWarning() << "ç›®å½•ä¸å­˜åœ¨:" << folderPath;
+		return;
+	}
+
+	QString parentDir = folderInfo.dir().absolutePath();
+	QString zipFileName = parentDir + "/" + folderInfo.fileName() + ".zip";
+
+	int errorp;
+	zip_t* archive = zip_open(zipFileName.toUtf8().constData(), ZIP_CREATE | ZIP_TRUNCATE, &errorp);
+	if (!archive) {
+		qWarning() << "æ— æ³•åˆ›å»ºzipæ–‡ä»¶:" << zipFileName;
+		return;
+	}
+
+	// ç¼“å­˜æ‰€æœ‰æ–‡ä»¶å†…å®¹ï¼Œä¿è¯å†…å­˜æœ‰æ•ˆ
+	std::vector<QByteArray> fileBuffers;
+
+	QDirIterator it(folderPath, QDir::AllEntries | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+	while (it.hasNext()) {
+		QString entryPath = it.next();
+		QFileInfo entryInfo(entryPath);
+
+		QString relPath = QDir(folderPath).relativeFilePath(entryPath).replace("\\", "/");
+
+		if (entryInfo.isDir()) {
+			QDir dir(entryPath);
+			if (dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot).isEmpty()) {
+				if (zip_dir_add(archive, relPath.toUtf8().constData(), ZIP_FL_ENC_UTF_8) < 0) {
+					qWarning() << "æ— æ³•æ·»åŠ ç©ºç›®å½•åˆ°zip:" << relPath;
+				}
+			}
+			continue;
+		}
+
+		QFile file(entryPath);
+		if (!file.open(QIODevice::ReadOnly)) {
+			qWarning() << "æ— æ³•æ‰“å¼€æ–‡ä»¶:" << entryPath;
+			continue;
+		}
+		fileBuffers.emplace_back(file.readAll());
+		file.close();
+
+		QByteArray& fileData = fileBuffers.back();
+		zip_source_t* source = zip_source_buffer(archive, fileData.constData(), fileData.size(), 0);
+		if (!source) {
+			qWarning() << "æ— æ³•åˆ›å»ºzipæº:" << entryPath;
+			continue;
+		}
+		if (zip_file_add(archive, relPath.toUtf8().constData(), source, ZIP_FL_OVERWRITE | ZIP_FL_ENC_UTF_8) < 0) {
+			qWarning() << "æ— æ³•æ·»åŠ æ–‡ä»¶åˆ°zip:" << relPath;
+			zip_source_free(source);
+		}
+	}
+
+	zip_close(archive);
+	qDebug() << "å‹ç¼©å®Œæˆ:" << zipFileName;
+}
+
 void AutomaticAnnotationThread::saveLabels(const QString& label, const QString& fileName)
 {
 	QString labelPath = labelOutput + "/" + fileName + ".txt";
@@ -137,7 +253,7 @@ void AutomaticAnnotationThread::saveLabels(const QString& label, const QString& 
 	}
 
 	QFile file(labelPath);
-	// Ê¹ÓÃAppendÄ£Ê½×·¼ÓÄÚÈİ
+	// ä½¿ç”¨Appendæ¨¡å¼è¿½åŠ å†…å®¹
 	if (!file.open(QIODevice::Append | QIODevice::Text)) {
 		qDebug() << "Failed to open file for writing:" << labelPath;
 		return;
@@ -154,7 +270,7 @@ void AutomaticAnnotationThread::saveLabels_seg(const QString& label, const QStri
 
 void AutomaticAnnotationThread::saveImage(const QString& imagePath)
 {
-	// È·±£Ä¿±êÄ¿Â¼´æÔÚ
+	// ç¡®ä¿ç›®æ ‡ç›®å½•å­˜åœ¨
 	QDir dir;
 	if (!dir.exists(imageOutput)) {
 		if (!dir.mkpath(imageOutput)) {
@@ -163,13 +279,13 @@ void AutomaticAnnotationThread::saveImage(const QString& imagePath)
 		}
 	}
 
-	// »ñÈ¡Ô´ÎÄ¼şÃû
+	// è·å–æºæ–‡ä»¶å
 	QString fileName = QFileInfo(imagePath).fileName();
 
-	// ¹¹ÔìÄ¿±êÂ·¾¶
+	// æ„é€ ç›®æ ‡è·¯å¾„
 	QString targetPath = imageOutput + "/" + fileName;
 
-	// ¿½±´ÎÄ¼ş
+	// æ‹·è´æ–‡ä»¶
 	if (!QFile::copy(imagePath, targetPath)) {
 		qDebug() << "Failed to copy file from" << imagePath << "to" << targetPath;
 	}
@@ -214,12 +330,24 @@ void AutomaticAnnotationThread::run()
 		}
 		saveImage(path);
 
-		auto image = rw::rqw::ImagePainter::cvMatToQImage(mat);
+		auto image = rw::rqw::cvMatToQImage(mat);
 
-		rw::rqw::ImagePainter::drawShapesOnSourceImg(image, result);
+		rw::imgPro::ConfigDrawMask config;
+		config.rectCfg.fontSize = 30;
+
+		for (const auto& item : result)
+		{
+			config.rectCfg.text = QString::number(item.classId);
+			rw::imgPro::ImagePainter::drawMaskOnSourceImg(image, item, config);
+		}
 
 		QPixmap pixmap = QPixmap::fromImage(image);
 
 		emit imageProcessed(path, pixmap);
+	}
+	generateTrainTxt(rootOutPutPath);
+	if (isAutoZip)
+	{
+		zipFolderToParentDir(rootOutPutPath);
 	}
 }
