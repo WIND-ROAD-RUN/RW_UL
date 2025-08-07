@@ -6,7 +6,16 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(OpenCV REQUIRED)
 find_package(CUDAToolkit REQUIRED)
 
-set(CMAKE_CUDA_ARCHITECTURES 89)
+if(CUDA_IS_11)
+	message("-------------------------------")
+	set(CMAKE_CUDA_ARCHITECTURES 61;75;80;86)
+endif()
+
+if(CUDA_IS_12)
+	message("-------------------------------")
+	set(CMAKE_CUDA_ARCHITECTURES 61;75;80;86;89)
+endif()
+
 
 set(IMET_PRIVATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/private/)
 
