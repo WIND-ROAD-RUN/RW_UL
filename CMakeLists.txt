@@ -35,7 +35,7 @@ endif()
     include(./cmake/EnvironmetIni.cmake)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-	include(./cmake/PackageIni.cmake)
+	#include(./cmake/PackageIni.cmake)
 	include(./cmake/ComplierIni.cmake)
 	include(./cmake/PackageFind.cmake)
 endif()

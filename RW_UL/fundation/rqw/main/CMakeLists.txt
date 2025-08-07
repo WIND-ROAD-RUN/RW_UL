@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC dsl
 	PRIVATE cla
-	PRIVATE hoei
+	#PRIVATE hoei
 )
 
 if(CONFIG_TEST)
