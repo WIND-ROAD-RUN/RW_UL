@@ -1,6 +1,7 @@
 #include <QApplication>
 
 #include"ImageProcessTest.h"
+#include"rqw_StorageSense.hpp"
 
 int main(int argc, char* argv[])
 {
