@@ -28,6 +28,8 @@ void ImageProcessTest::ini()
 	_imageSaveEngine = new rw::rqw::ImageSaveEngine(this, 4);
 	_imageSaveEngine->setRootPath(R"(C:\Users\rw\Desktop\temp\tempImgs)");
 	_imageSaveEngine->setSavePolicy(rw::rqw::ImageSaveEnginePolicy::Normal);
+	_imageSaveEngine->setSaveImgFormat(rw::rqw::ImageSaveFormat::PNG);
+	_imageSaveEngine->setSaveImgQuality(100);
 	_imageSaveEngine->startEngine();
 }
 

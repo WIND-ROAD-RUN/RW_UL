@@ -19,6 +19,15 @@ namespace rw {
 			SaveAllImg
 		};
 
+		enum class ImageSaveFormat
+		{
+			JPEG,
+			PNG,
+			BMP
+		};
+
+		QString imageFormatToString(rw::rqw::ImageSaveFormat format);
+
 		struct ImageInfo
 		{
 		public:
@@ -43,29 +52,28 @@ namespace rw {
 
 			~ImageSaveEngine();
 
-			// 设置根路径
 			void setRootPath(const QString& rootPath);
 
 			QString getRootPath();
 
-			// 修改后的 pushImage 方法
 			void pushImage(const ImageInfo& image);
 
-			// 停止线程
 			void stop();
 
-			// 启动线程池
 			void startEngine();
 
-			// 设置存图策略
 			void setSavePolicy(ImageSaveEnginePolicy policy);
 
-			// 设置最大图片数量
 			void setMaxSaveImageNum(int maxNum);
 
-			void setSaveImgQuality(int quality);
 		private:
 			int saveImgQuality = 99;
+		public:
+			void setSaveImgQuality(int quality);
+		private:
+			ImageSaveFormat _saveImgFormat = ImageSaveFormat::JPEG;
+		public:
+			void setSaveImgFormat(ImageSaveFormat format);
 		protected:
 			void processImages();
 		public:
@@ -79,15 +87,14 @@ namespace rw {
 			QWaitCondition condition;
 			std::atomic<bool> stopFlag;
 
-			const int maxQueueSize = 80; // 队列最大容量
-			const int batchSize = 20;     // 每次批量保存的图片数量
-			int threadCount;              // 消费者线程数量
+			const int maxQueueSize = 80; 
+			const int batchSize = 20;     
+			int threadCount;             
 			std::vector<QThread*> workerThreads;
 
-			// 新增成员变量
-			ImageSaveEnginePolicy savePolicy = ImageSaveEnginePolicy::Normal; // 默认策略
-			int maxSaveImageNum = 50; // 默认最大图片数量
-			std::map<QString, std::vector<QString>> savedImages; // 存储已保存图片的路径
+			ImageSaveEnginePolicy savePolicy = ImageSaveEnginePolicy::Normal; 
+			int maxSaveImageNum = 50;
+			std::map<QString, std::vector<QString>> savedImages; 
 		};
 	}
 }

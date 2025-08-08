@@ -5,6 +5,16 @@
 
 namespace rw {
 	namespace rqw {
+		QString imageFormatToString(rw::rqw::ImageSaveFormat format)
+		{
+			switch (format) {
+			case rw::rqw::ImageSaveFormat::JPEG:  return "jpg";
+			case rw::rqw::ImageSaveFormat::PNG:   return "png";
+			case rw::rqw::ImageSaveFormat::BMP:   return "bmp";
+			default: return "jpg";
+			}
+		}
+
 		ImageSaveEngine::ImageSaveEngine(QObject* parent, int threadCount)
 			: QThread(parent), stopFlag(false), threadCount(threadCount) {
 		}
@@ -69,6 +79,11 @@ namespace rw {
 			}
 		}
 
+		void ImageSaveEngine::setSaveImgFormat(const ImageSaveFormat format)
+		{
+			_saveImgFormat = format; 
+		}
+
 		void ImageSaveEngine::processImages()
 		{
 			while (true) {
@@ -110,14 +125,16 @@ namespace rw {
 				dir.mkpath(".");
 			}
 
+			// 获取格式字符串
+			QString formatStr = imageFormatToString(_saveImgFormat);
+
 			// 构造文件名
-			QString fileName = dir.filePath(image.classify + image.time + ".jpg");
+			QString fileName = dir.filePath(image.classify + image.time + "." + formatStr);
 
 			// 检查策略
 			if (savePolicy == ImageSaveEnginePolicy::MaxSaveImageNum) {
 				auto& imageList = savedImages[image.classify];
 				if (imageList.size() >= maxSaveImageNum) {
-					// 删除最旧的图片
 					QString oldestFile = imageList.front();
 					imageList.erase(imageList.begin());
 					QFile::remove(oldestFile);
@@ -126,7 +143,7 @@ namespace rw {
 			}
 
 			// 保存图片
-			if (!image.image.save(fileName, "jpg", saveImgQuality)) {
+			if (!image.image.save(fileName, formatStr.toUtf8().constData(), saveImgQuality)) {
 				std::cerr << "Failed to save image: " << fileName.toStdString() << std::endl;
 			}
 		}
