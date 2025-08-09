@@ -5,7 +5,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "hwloc.h"
 
 namespace rw
 {

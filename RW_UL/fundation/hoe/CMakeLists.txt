@@ -6,6 +6,6 @@ if(BUILD_WITH_MVS)
 endif()
 
 add_subdirectory(hoes)
-#add_subdirectory(utilty)
-#add_subdirectory(hoei)
+add_subdirectory(utilty)
+add_subdirectory(hoei)
 add_subdirectory(hoem)

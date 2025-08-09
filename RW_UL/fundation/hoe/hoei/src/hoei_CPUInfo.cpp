@@ -1,7 +1,9 @@
 #include"hoei_CPUInfo.hpp"
 
-#include <hwloc.h>
 #include <intrin.h>
+#include <windows.h>
+#include <thread>
+#include <vector>
 
 namespace rw
 {
@@ -79,50 +81,37 @@ namespace rw
 		}
 
 		size_t CPUInfoFactory::GetCoreCount() {
-			// 初始化 hwloc 拓扑
-			hwloc_topology_t topology;
-			hwloc_topology_init(&topology);
-			hwloc_topology_load(topology);
+			SYSTEM_INFO sysInfo;
+			GetSystemInfo(&sysInfo);
 
-			// 获取物理核心数
-			int depth = hwloc_get_type_depth(topology, HWLOC_OBJ_CORE);
-			if (depth == HWLOC_TYPE_DEPTH_UNKNOWN) {
-				hwloc_topology_destroy(topology);
-				return 0; // 如果无法获取，返回 0
+			DWORD_PTR processAffinityMask = 0, systemAffinityMask = 0;
+			GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask, &systemAffinityMask);
+
+			// Windows 10+ 可用 GetLogicalProcessorInformationEx
+			DWORD len = 0;
+			GetLogicalProcessorInformation(nullptr, &len);
+			std::vector<BYTE> buffer(len);
+			PSYSTEM_LOGICAL_PROCESSOR_INFORMATION info = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION>(buffer.data());
+			if (GetLogicalProcessorInformation(info, &len)) {
+				size_t coreCount = 0;
+				DWORD count = len / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+				for (DWORD i = 0; i < count; ++i) {
+					if (info[i].Relationship == RelationProcessorCore)
+						++coreCount;
+				}
+				return coreCount;
 			}
-
-			size_t coreCount = hwloc_get_nbobjs_by_depth(topology, depth);
-
-			// 销毁 hwloc 拓扑
-			hwloc_topology_destroy(topology);
-
-			return coreCount;
+			return sysInfo.dwNumberOfProcessors; // 兜底返回逻辑处理器数
 		}
 
 		size_t CPUInfoFactory::GetLogicCount() {
-			// 初始化 hwloc 拓扑
-			hwloc_topology_t topology;
-			hwloc_topology_init(&topology);
-			hwloc_topology_load(topology);
-
-			// 获取逻辑处理器数
-			int depth = hwloc_get_type_depth(topology, HWLOC_OBJ_PU); // PU 表示处理单元
-			if (depth == HWLOC_TYPE_DEPTH_UNKNOWN) {
-				hwloc_topology_destroy(topology);
-				return 0; // 如果无法获取，返回 0
-			}
-
-			size_t logicCount = hwloc_get_nbobjs_by_depth(topology, depth);
-
-			// 销毁 hwloc 拓扑
-			hwloc_topology_destroy(topology);
-
-			return logicCount;
+			SYSTEM_INFO sysInfo;
+			GetSystemInfo(&sysInfo);
+			return sysInfo.dwNumberOfProcessors;
 		}
 
 		size_t CPUInfoFactory::GetThreadCount() {
-			// 使用 hwloc 获取逻辑处理器数作为线程数
-			return GetLogicCount();
+			return std::thread::hardware_concurrency();
 		}
 
 		double CPUInfoFactory::GetBaseClockSpeed()
@@ -131,7 +120,6 @@ namespace rw
 			DWORD data;
 			DWORD dataSize = sizeof(data);
 
-			// 打开注册表键以获取 CPU 基础频率
 			if (RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 				"Hardware\\Description\\System\\CentralProcessor\\0",
 				0, KEY_READ, &hKey) == ERROR_SUCCESS) {
@@ -141,39 +129,47 @@ namespace rw
 				}
 				RegCloseKey(hKey);
 			}
-			return 0.0; // 如果无法获取，返回 0.0
+			return 0.0;
 		}
 
 		std::vector<CPUInfo::Topology> CPUInfoFactory::GeyTopology()
 		{
 			std::vector<CPUInfo::Topology> topology;
 
-			// 初始化 hwloc 拓扑
-			hwloc_topology_t hwTopology;
-			hwloc_topology_init(&hwTopology);
-			hwloc_topology_load(hwTopology);
-
-			// 遍历所有对象
-			int depth = hwloc_topology_get_depth(hwTopology);
-			for (int d = 0; d < depth; ++d) {
-				int numObjects = hwloc_get_nbobjs_by_depth(hwTopology, d);
-				for (int i = 0; i < numObjects; ++i) {
-					hwloc_obj_t obj = hwloc_get_obj_by_depth(hwTopology, d, i);
-
+			DWORD len = 0;
+			GetLogicalProcessorInformation(nullptr, &len);
+			std::vector<BYTE> buffer(len);
+			PSYSTEM_LOGICAL_PROCESSOR_INFORMATION info = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION>(buffer.data());
+			if (GetLogicalProcessorInformation(info, &len)) {
+				DWORD count = len / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+				for (DWORD i = 0; i < count; ++i) {
 					CPUInfo::Topology topo;
-					topo.type = hwloc_obj_type_string(obj->type); // 获取类型名称
-					topo.depth = d;
+					switch (info[i].Relationship) {
+					case RelationProcessorCore:
+						topo.type = "Core";
+						break;
+					case RelationNumaNode:
+						topo.type = "NUMA Node";
+						break;
+					case RelationCache:
+						switch (info[i].Cache.Level) {
+						case 1: topo.type = "L1 Cache"; break;
+						case 2: topo.type = "L2 Cache"; break;
+						case 3: topo.type = "L3 Cache"; break;
+						default: topo.type = "Cache"; break;
+						}
+						topo.size = static_cast<double>(info[i].Cache.Size) / 1024.0;
+						break;
+					default:
+						topo.type = "Other";
+						break;
+					}
+					topo.depth = info[i].Relationship;
 					topo.index = i;
-					topo.size = obj->attr && obj->attr->cache.size ? static_cast<double>(obj->attr->cache.size) / 1024.0 : 0.0; // 缓存大小
-					topo.description = obj->name ? obj->name : ""; // 描述信息
-
+					topo.description = "";
 					topology.push_back(topo);
 				}
 			}
-
-			// 销毁 hwloc 拓扑
-			hwloc_topology_destroy(hwTopology);
-
 			return topology;
 		}
 	}
