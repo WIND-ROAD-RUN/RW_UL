@@ -55,6 +55,15 @@ namespace rw
 			decode_kernel << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
 		}
 
+		void PostProcess::decode_det(float* src, float* dst, int numBboxes, int numClasses, float confThresh,
+			int maxObjects, int numBoxElement)
+		{
+			cudaMemset(dst, 0, sizeof(int));
+			int blockSize = 256;
+			int gridSize = (numBboxes + blockSize - 1) / blockSize;
+			decode_kernel << <gridSize, blockSize >> > (src, dst, numBboxes, numClasses, confThresh, maxObjects, numBoxElement);
+		}
+
 
 		__global__ void decode_kernel_seg(float* src, float* dst, int numBboxes, int numClasses, int numMasks, float confThresh, int maxObjects, int numBoxElement)
 		{
@@ -114,6 +123,15 @@ namespace rw
 			int gridSize = (numBboxes + blockSize - 1) / blockSize;
 			decode_kernel_seg << <gridSize, blockSize, 0, stream >> > (src, dst, numBboxes, numClasses, numMasks, confThresh, maxObjects, numBoxElement);
 
+		}
+
+		void PostProcess::decode_seg(float* src, float* dst, int numBboxes, int numClasses, int numMasks,
+			float confThresh, int maxObjects, int numBoxElement)
+		{
+			cudaMemset(dst, 0, sizeof(int));
+			int blockSize = 256;
+			int gridSize = (numBboxes + blockSize - 1) / blockSize;
+			decode_kernel_seg << <gridSize, blockSize >> > (src, dst, numBboxes, numClasses, numMasks, confThresh, maxObjects, numBoxElement);
 		}
 
 		__device__ float sigmoid(float data)
