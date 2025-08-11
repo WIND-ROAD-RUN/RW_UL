@@ -24,6 +24,15 @@ namespace rw
 			transpose_kernel << <grid, block, 0, stream >> > (src, dst, rows, cols, totalElements);
 		}
 
+		void Utility::transpose(float* src, float* dst, int rows, int cols)
+		{
+			dim3 block(16, 16);
+			dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
+			int totalElements = rows * cols;
+			transpose_kernel << <grid, block >> > (src, dst, rows, cols, totalElements);
+			cudaDeviceSynchronize();
+		}
+
 		__device__ float box_iou(
 			float aleft, float atop, float aright, float abottom,
 			float bleft, float btop, float bright, float bbottom
@@ -85,6 +94,14 @@ namespace rw
 			int blockSize = maxObjects < 256 ? maxObjects : 256;
 			int gridSize = (maxObjects + blockSize - 1) / blockSize;
 			nms_kernel << <gridSize, blockSize, 0, stream >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
+		}
+
+		void Utility::nms_det(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data,
+			int id_nums)
+		{
+			int blockSize = maxObjects < 256 ? maxObjects : 256;
+			int gridSize = (maxObjects + blockSize - 1) / blockSize;
+			nms_kernel << <gridSize, blockSize >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
 		}
 
 		__device__ float box_iou_seg(
@@ -156,6 +173,14 @@ namespace rw
 
 		}
 
+		void Utility::nms_seg(float* data, float kNmsThresh, int maxObjects, int numBoxElement, size_t* id_data,
+			int id_nums)
+		{
+			int blockSize = maxObjects < 256 ? maxObjects : 256;
+			int gridSize = (maxObjects + blockSize - 1) / blockSize;
+			nms_kernel_seg << <gridSize, blockSize >> > (data, kNmsThresh, maxObjects, numBoxElement, id_data, id_nums);
+		}
+
 		// CUDA kernel: 拷贝子矩阵
 		__global__ void copy_submatrix_kernel(
 			const float* src, float* dst,
@@ -182,6 +207,17 @@ namespace rw
 				batch
 			);
 			copy_submatrix_kernel << <grid, block, 0, stream >> > (src, dst, batch, src_rows, dst_rows, cols);
+		}
+
+		void Utility::copy_submatrix(const float* src, float* dst, int batch, int src_rows, int dst_rows, int cols)
+		{
+			dim3 block(32, 8, 1);
+			dim3 grid(
+				(cols + block.x - 1) / block.x,
+				(dst_rows + block.y - 1) / block.y,
+				batch
+			);
+			copy_submatrix_kernel << <grid, block >> > (src, dst, batch, src_rows, dst_rows, cols);
 		}
 
 		__global__ void draw_mask_kernel(uchar* imgData, float* mask, int h, int w, int color_b, int color_g, int color_r) {
