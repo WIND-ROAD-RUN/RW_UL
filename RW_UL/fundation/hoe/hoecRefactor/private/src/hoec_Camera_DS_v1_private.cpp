@@ -126,6 +126,9 @@ namespace rw
 			_cameraInfo.name = info.FriendlyName;
 			_cameraInfo.mac = info.PortInfo;
 
+			//复位一些操作
+			dvpSetCommandValue(m_cameraHandle, "EncoderReset");
+
 			return true;
 		}
 
