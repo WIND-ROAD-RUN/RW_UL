@@ -66,6 +66,7 @@ namespace rw
 			virtual bool setIOOut(int line_index, bool state) = 0;
 			virtual bool getIOOut(int line_index, bool& state) = 0;
 			virtual bool getIOIn(int line_index, bool& state) = 0;
+			virtual bool encoderNumberReset()=0;
 			//MVS
 			virtual bool softwareTrigger() = 0;
 		public:
@@ -164,6 +165,7 @@ namespace rw
 			bool softwareTrigger() override;
 			bool setTriggerState(bool state) const override;
 			bool setTriggerSource(TriggerSource triggerSource) override;
+			bool encoderNumberReset() override;
 		};
 
 		class CameraPassive
@@ -227,6 +229,7 @@ namespace rw
 			bool softwareTrigger() override;
 			bool setTriggerState(bool state) const override;
 			bool setTriggerSource(TriggerSource triggerSource) override;
+			bool encoderNumberReset() override;
 		};
 	}
 }

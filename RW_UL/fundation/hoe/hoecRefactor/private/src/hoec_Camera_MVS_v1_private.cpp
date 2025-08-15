@@ -649,6 +649,11 @@ namespace rw
 			return result == MV_OK;
 		}
 
+		bool Camera_MVS::encoderNumberReset()
+		{
+			return false;
+		}
+
 		Camera_MVS_Active::Camera_MVS_Active()
 		{
 		}

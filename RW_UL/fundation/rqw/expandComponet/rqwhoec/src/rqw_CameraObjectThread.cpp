@@ -311,6 +311,15 @@ namespace rw
 			return false;
 		}
 
+		bool CameraPassiveThread::encoderNumberReset()
+		{
+			if (_cameraObject)
+			{
+				return _cameraObject->encoderNumberReset();
+			}
+			return false;
+		}
+
 		bool CameraPassiveThread::softwareTrigger()
 		{
 			if (_cameraObject)

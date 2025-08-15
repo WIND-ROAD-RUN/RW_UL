@@ -69,6 +69,7 @@ namespace rw
 			bool softwareTrigger() override;
 			bool setTriggerState(bool state) const override;
 			bool setTriggerSource(TriggerSource triggerSource) override;
+			bool encoderNumberReset() override;
 
 		protected:
 			dvpHandle m_cameraHandle{};

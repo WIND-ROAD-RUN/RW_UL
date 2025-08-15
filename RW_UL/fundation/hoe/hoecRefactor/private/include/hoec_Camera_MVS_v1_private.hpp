@@ -72,6 +72,8 @@ namespace rw
 		public:
 			bool setTriggerState(bool state) const override;
 			bool setTriggerSource(TriggerSource triggerSource) override;
+			bool encoderNumberReset() override;
+
 		protected:
 			void* m_cameraHandle{ nullptr };
 		protected:

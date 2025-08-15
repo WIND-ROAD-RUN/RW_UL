@@ -774,6 +774,13 @@ namespace rw
 			return status == DVP_STATUS_OK;
 		}
 
+		bool Camera_DS::encoderNumberReset()
+		{
+
+			auto status =dvpSetCommandValue(m_cameraHandle, "EncoderReset");
+			return status == DVP_STATUS_OK;
+		}
+
 		Camera_DS_Active::Camera_DS_Active()
 		{
 		}
