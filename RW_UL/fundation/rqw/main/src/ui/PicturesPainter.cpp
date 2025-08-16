@@ -104,6 +104,13 @@ void PicturesPainter::build_connect()
 		this, &PicturesPainter::btn_clear_clicked);
 }
 
+void PicturesPainter::hide_ui()
+{
+	ui->btn_set->setVisible(false);
+	ui->pbtn_setAspectRatio->setVisible(false);
+	ui->pbtn_openPicture->setVisible(false);
+}
+
 void PicturesPainter::showWhiteImageOnLabel(double width, double height)
 {
 	if (width <= 0 || height <= 0) return;
@@ -167,6 +174,7 @@ void PicturesPainter::showEvent(QShowEvent* event)
 			Qt::SmoothTransformation
 		));
 		release_ui();
+		hide_ui();
 	}
 	// 如果传入了绘画框
 	if (isSetDrawnRectangles)
