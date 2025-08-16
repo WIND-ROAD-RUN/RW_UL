@@ -261,15 +261,14 @@ void PicturesPainter::btn_set_clicked()
 
 void PicturesPainter::btn_draw_clicked()
 {
-	static bool isDrawing = false;
-	isDrawing = !isDrawing;
+	m_isDrawing = !m_isDrawing;
 
 	if (drawLabel) {
-		drawLabel->setDrawingEnabled(isDrawing);
+		drawLabel->setDrawingEnabled(m_isDrawing);
 	}
 
 	// 更新按钮文本
-	if (isDrawing) {
+	if (m_isDrawing) {
 		ui->btn_draw->setText("停止绘画");
 	}
 	else {
@@ -279,11 +278,19 @@ void PicturesPainter::btn_draw_clicked()
 
 void PicturesPainter::pbtn_ok_clicked()
 {
+	m_isDrawing = false;
+	if (drawLabel) {
+		drawLabel->setDrawingEnabled(false);
+	}
 	this->accept();
 }
 
 void PicturesPainter::pbtn_exit_clicked()
 {
+	m_isDrawing = false;
+	if (drawLabel) {
+		drawLabel->setDrawingEnabled(false);
+	}
 	this->reject();
 }
 

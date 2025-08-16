@@ -106,4 +106,6 @@ private:
 	bool isSetQImage{ false };
 
 	QImage _qImage{ nullptr };
+
+	bool m_isDrawing = false;
 };
