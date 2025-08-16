@@ -6,23 +6,14 @@
 #include"LicenseValidation.h"
 #include"rqwm_ModbusDeviceThread.hpp"
 
-//void performRandomIO(rw::rqwm::ModbusDeviceThreadSafe& modbusDeviceThread, int threadId) {
-//	std::random_device rd;
-//	std::mt19937 gen(rd());
-//	std::uniform_int_distribution<> dist(0, 4);
-//
-//	for (int i = 0; i < 3000; ++i) { // 每个线程执行 30 次操作
-//		int operation = dist(gen);
-//		std::cout << modbusDeviceThread.getOState(rw::rqwm::ModbusO::Y03) << std::endl;
-//		std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 模拟 I/O 操作的延迟
-//	}
-//}
-
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
 	PicturesPainter painter;
+	QImage image;
+	image.load(R"(C:\Users\zfkj4090\Desktop\temp\1.png)");
+	painter.setImage(image);
 	painter.show();
 
 	return a.exec();

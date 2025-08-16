@@ -64,7 +64,7 @@ private:
 	void build_ui();
 	void release_ui();
 	void build_connect();
-
+	void hide_ui();
 private:
 	void showWhiteImageOnLabel(double width, double height);
 
