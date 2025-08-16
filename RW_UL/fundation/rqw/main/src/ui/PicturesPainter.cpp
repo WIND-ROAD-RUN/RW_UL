@@ -282,6 +282,7 @@ void PicturesPainter::pbtn_ok_clicked()
 	if (drawLabel) {
 		drawLabel->setDrawingEnabled(false);
 	}
+	ui->btn_draw->setText("开始绘画");
 	this->accept();
 }
 
@@ -291,6 +292,7 @@ void PicturesPainter::pbtn_exit_clicked()
 	if (drawLabel) {
 		drawLabel->setDrawingEnabled(false);
 	}
+	ui->btn_draw->setText("开始绘画");
 	this->reject();
 }
 
