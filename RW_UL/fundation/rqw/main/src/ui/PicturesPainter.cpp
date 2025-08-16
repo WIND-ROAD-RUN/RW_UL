@@ -104,6 +104,13 @@ void PicturesPainter::build_connect()
 		this, &PicturesPainter::btn_clear_clicked);
 }
 
+void PicturesPainter::hide_ui()
+{
+	ui->btn_set->setVisible(false);
+	ui->pbtn_setAspectRatio->setVisible(false);
+	ui->pbtn_openPicture->setVisible(false);
+}
+
 void PicturesPainter::showWhiteImageOnLabel(double width, double height)
 {
 	if (width <= 0 || height <= 0) return;
@@ -167,6 +174,7 @@ void PicturesPainter::showEvent(QShowEvent* event)
 			Qt::SmoothTransformation
 		));
 		release_ui();
+		hide_ui();
 	}
 	// 如果传入了绘画框
 	if (isSetDrawnRectangles)
@@ -261,15 +269,14 @@ void PicturesPainter::btn_set_clicked()
 
 void PicturesPainter::btn_draw_clicked()
 {
-	static bool isDrawing = false;
-	isDrawing = !isDrawing;
+	m_isDrawing = !m_isDrawing;
 
 	if (drawLabel) {
-		drawLabel->setDrawingEnabled(isDrawing);
+		drawLabel->setDrawingEnabled(m_isDrawing);
 	}
 
 	// 更新按钮文本
-	if (isDrawing) {
+	if (m_isDrawing) {
 		ui->btn_draw->setText("停止绘画");
 	}
 	else {
@@ -279,11 +286,21 @@ void PicturesPainter::btn_draw_clicked()
 
 void PicturesPainter::pbtn_ok_clicked()
 {
+	m_isDrawing = false;
+	if (drawLabel) {
+		drawLabel->setDrawingEnabled(false);
+	}
+	ui->btn_draw->setText("开始绘画");
 	this->accept();
 }
 
 void PicturesPainter::pbtn_exit_clicked()
 {
+	m_isDrawing = false;
+	if (drawLabel) {
+		drawLabel->setDrawingEnabled(false);
+	}
+	ui->btn_draw->setText("开始绘画");
 	this->reject();
 }
 
