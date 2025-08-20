@@ -39,6 +39,7 @@ private slots:
 	void pbtn_ok_clicked();
 	void btn_close_clicked();
 	void btn_clear_clicked();
+	void btn_zhinengpingbi_clicked();
 
 	void onRectSelected(const QRectF& rect);
 	void updateDrawLabel();
@@ -49,9 +50,9 @@ private slots:
 	// 新增：显式点击（即使同一项重复点击也会触发一次“单次绘画”）
 	void onListViewItemClicked(const QModelIndex& index);
 
-private:
+public:
 	Ui::PicturesPainterVersionDunDaiClass *ui;
-
+private:
 	double img_Width{ 0 };
 	double img_Height{ 0 };
 

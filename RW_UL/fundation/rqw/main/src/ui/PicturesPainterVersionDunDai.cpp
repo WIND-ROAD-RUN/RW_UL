@@ -105,6 +105,8 @@ void PicturesPainterVersionDunDai::build_connect()
 		this, &PicturesPainterVersionDunDai::onRectSelected);
 	QObject::connect(ui->btn_clear, &QPushButton::clicked,
 		this, &PicturesPainterVersionDunDai::btn_clear_clicked);
+	QObject::connect(ui->btn_zhinengpingbi, &QPushButton::clicked,
+		this, &PicturesPainterVersionDunDai::btn_zhinengpingbi_clicked);
 }
 
 void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
@@ -230,6 +232,11 @@ void PicturesPainterVersionDunDai::btn_clear_clicked()
 {
 	_drawnRectangles.clear();
 	updateDrawLabel();
+}
+
+void PicturesPainterVersionDunDai::btn_zhinengpingbi_clicked()
+{
+
 }
 
 void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)

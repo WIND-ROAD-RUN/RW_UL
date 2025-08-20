@@ -25,7 +25,7 @@ static std::vector<rw::rqw::RectangeConfig> buildRandomConfigs(
         rw::rqw::RectangeConfig c;
         c.classid = i;                              // 顺序 id
         c.color = randomColor(rng);                 // 随机颜色
-        c.name = QString("Class_%1").arg(i);        // 名称
+        c.name = QString("Class123123_%1").arg(i);        // 名称
         c.descrption = QString("随机测试类别 %1").arg(i);
         cfgs.push_back(c);
     }
@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
 	QImage img;
 	img.load(R"(C:\Users\zfkj4090\Desktop\temp\total.png)");
 	painter.setImage(img);
-	// 仅生成 listView 选项（类别配置），不预先添加任何绘制框
+	// 仅生成 listView 选项（类别配置），不预先添加任何绘制框z
 	int configCount = 8; // 可根据需要调整或改为读取 argv
 	auto configs = buildRandomConfigs(configCount);
 	painter.setRectangleConfigs(configs);
 
-	painter.showFullScreen();
+	painter.show();
 
 	return a.exec();
 }
