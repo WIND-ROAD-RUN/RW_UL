@@ -3,7 +3,6 @@
 #include <QDialog>
 #include <QStandardItemModel>
 #include <QLabel>
-
 #include "PicturesPainterUtilty.h"
 
 QT_BEGIN_NAMESPACE

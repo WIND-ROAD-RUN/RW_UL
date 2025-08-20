@@ -451,7 +451,7 @@ void PicturesPainter::onRectSelected(const QRectF& rect)
 DrawLabel::DrawLabel(QWidget* parent)
 	: QLabel(parent) {
 	setMouseTracking(true);
-	setStyleSheet("border: 2px solid red;");
+	//setStyleSheet("border: 2px solid red;");
 }
 
 QRectF DrawLabel::getNormalizedRect() const
