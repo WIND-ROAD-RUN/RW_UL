@@ -18,6 +18,7 @@ public:
 	explicit DrawLabel(QWidget* parent = nullptr);
 	QRectF getNormalizedRect() const;
 	void setImage(const QImage& img); // 新增
+	void updateScaledPixmap();
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 private:

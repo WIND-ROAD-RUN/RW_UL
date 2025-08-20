@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 
 	PicturesPainter painter;
 	QImage image;
-	image.load(R"(C:\Users\zfkj4090\Desktop\temp\1.png)");
+	image.load(R"(C:\Users\zfkj4090\Desktop\temp\total.png)");
 	painter.setImage(image);
 	painter.show();
 
