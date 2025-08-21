@@ -37,6 +37,15 @@ void PicturesPainterVersionDunDai::setDrawnRectangles(const std::vector<rw::rqw:
 	isSetDrawnRectangles = true;
 }
 
+void PicturesPainterVersionDunDai::setSmartRectangles(const std::vector<rw::rqw::PainterRectangleInfo>& Rectangles)
+{
+	if (Rectangles.empty())
+	{
+		return;
+	}
+	_smartRectangles = Rectangles;
+}
+
 void PicturesPainterVersionDunDai::setImage(const QImage& qImage)
 {
 	if (!qImage.isNull())
@@ -85,6 +94,15 @@ std::vector<rw::rqw::PainterRectangleInfo> PicturesPainterVersionDunDai::getRect
 	return _drawnRectangles;
 }
 
+std::vector<rw::rqw::PainterRectangleInfo> PicturesPainterVersionDunDai::getSmartRectangleConfigs()
+{
+	if (isGenerateSmartRectangles)
+	{
+		return _smartRectangles;
+	}
+	return {};
+}
+
 void PicturesPainterVersionDunDai::build_ui()
 {
 	ui->pbtn_ok->setEnabled(false);
@@ -112,6 +130,7 @@ void PicturesPainterVersionDunDai::build_connect()
 void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 {
 	QDialog::showEvent(event);
+	isGenerateSmartRectangles = false;
 	// 设置UI为false
 	build_ui();
 
@@ -158,8 +177,10 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 			font.setPointSize(16);
 			painter.setFont(font);
 			painter.setPen(color);
-			painter.drawText(rect.topLeft() + QPoint(3, 15), name);
+			painter.drawText(rect.topLeft() + QPoint(3, 15), name+"绘制屏蔽");
 		}
+
+	
 		drawLabel->setPixmap(pix);
 	}
 	else
@@ -236,7 +257,40 @@ void PicturesPainterVersionDunDai::btn_clear_clicked()
 
 void PicturesPainterVersionDunDai::btn_zhinengpingbi_clicked()
 {
+	// 1. 检查pixmap
+	if (!drawLabel->pixmap()) return;
 
+	QPixmap origPix = drawLabel->pixmap().copy();
+	QPixmap pix = origPix.copy();
+	QPainter painter(&pix);
+
+	// 2. 遍历所有绘画框
+	for (const auto& info : _smartRectangles)
+	{
+		QColor color = getColorByClassId(info.classId);
+		QString name = getNameByClassId(info.classId);
+
+		int imgW = drawLabel->width();
+		int imgH = drawLabel->height();
+
+		QRect rect(
+			static_cast<int>(info.leftTop.first * imgW),
+			static_cast<int>(info.leftTop.second * imgH),
+			static_cast<int>(info.width * imgW),
+			static_cast<int>(info.height * imgH)
+		);
+
+		painter.setPen(QPen(color, 2));
+		painter.drawRect(rect);
+
+		QFont font = painter.font();
+		font.setPointSize(16);
+		painter.setFont(font);
+		painter.setPen(color);
+		painter.drawText(rect.topLeft() + QPoint(3, 15), name+"智能屏蔽");
+	}
+	isGenerateSmartRectangles = true;
+	drawLabel->setPixmap(pix);
 }
 
 void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
@@ -287,7 +341,7 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 	QFont font = painter.font();
 	font.setPointSize(16);
 	painter.setFont(font);
-	painter.drawText(drawRect.topLeft() + QPoint(3, 15), name);
+	painter.drawText(drawRect.topLeft() + QPoint(3, 15), name + "绘制屏蔽");
 
 	// 4. 展示到 DrawLabel
 	drawLabel->setPixmap(pix);
