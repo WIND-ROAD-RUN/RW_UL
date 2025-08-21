@@ -154,6 +154,7 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 	if (isDisSmartRectangleForFirstShow)
 	{
 		// 2. 遍历所有绘画框
+		isGenerateSmartRectangles = true;
 		for (const auto& info : _smartRectangles)
 		{
 			QColor color = getColorByClassId(info.classId);
