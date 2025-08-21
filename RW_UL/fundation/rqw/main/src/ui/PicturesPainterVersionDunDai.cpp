@@ -144,15 +144,46 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 		));
 		release_ui();
 	}
+	// 1. 检查pixmap
+	if (!drawLabel->pixmap()) return;
+
+	QPixmap origPix = drawLabel->pixmap().copy();
+	QPixmap pix = origPix.copy();
+	QPainter painter(&pix);
+
+	if (isDisSmartRectangleForFirstShow)
+	{
+		// 2. 遍历所有绘画框
+		for (const auto& info : _smartRectangles)
+		{
+			QColor color = getColorByClassId(info.classId);
+			QString name = getNameByClassId(info.classId);
+
+			int imgW = drawLabel->width();
+			int imgH = drawLabel->height();
+
+			QRect rect(
+				static_cast<int>(info.leftTop.first * imgW),
+				static_cast<int>(info.leftTop.second * imgH),
+				static_cast<int>(info.width * imgW),
+				static_cast<int>(info.height * imgH)
+			);
+
+			painter.setPen(QPen(color, 2));
+			painter.drawRect(rect);
+
+			QFont font = painter.font();
+			font.setPointSize(16);
+			painter.setFont(font);
+			painter.setPen(color);
+			painter.drawText(rect.topLeft() + QPoint(3, 15), name + "绘制屏蔽");
+		}
+	}
+
 	// 如果传入了绘画框
 	if (isSetDrawnRectangles)
 	{
-		// 1. 检查pixmap
-		if (!drawLabel->pixmap()) return;
-
-		QPixmap origPix = drawLabel->pixmap().copy();
-		QPixmap pix = origPix.copy();
-		QPainter painter(&pix);
+		
 
 		// 2. 遍历所有绘画框
 		for (const auto& info : _drawnRectangles)
@@ -179,15 +210,14 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 			painter.setPen(color);
 			painter.drawText(rect.topLeft() + QPoint(3, 15), name+"绘制屏蔽");
 		}
-
-	
-		drawLabel->setPixmap(pix);
 	}
 	else
 	{
 		// 初始化绘画框
 		_drawnRectangles.clear();
 	}
+
+	drawLabel->setPixmap(pix);
 
 	// 只初始化一次
 	if (!m_listModel) {
@@ -251,6 +281,7 @@ void PicturesPainterVersionDunDai::btn_close_clicked()
 
 void PicturesPainterVersionDunDai::btn_clear_clicked()
 {
+	isGenerateSmartRectangles = false;
 	_drawnRectangles.clear();
 	updateDrawLabel();
 }
@@ -405,6 +436,39 @@ void PicturesPainterVersionDunDai::updateDrawLabel()
 
 		painter.drawText(drawRect.topLeft() + QPoint(3, 15), name);
 	}
+
+	if (isGenerateSmartRectangles)
+	{
+		for (const auto& info : _smartRectangles) {
+			int imgW = pix.width();
+			int imgH = pix.height();
+
+			// 百分比转像素
+			QPoint lt(info.leftTop.first * imgW, info.leftTop.second * imgH);
+			int rectWidth = info.width * imgW;
+			int rectHeight = info.height * imgH;
+			QRect drawRect(lt, QSize(rectWidth, rectHeight));
+
+			// 设置画笔颜色和宽度
+			QColor color = Qt::red;
+			color = getColorByClassId(info.classId);
+
+			painter.setPen(QPen(color, 2));
+			painter.drawRect(drawRect);
+
+			// 绘制类别名，如果有的话
+			QString name = "";
+			name = getNameByClassId(info.classId);
+
+			painter.setPen(color);
+			QFont font = painter.font();
+			font.setPointSize(16);
+			painter.setFont(font);
+
+			painter.drawText(drawRect.topLeft() + QPoint(3, 15), name);
+		}
+	}
+
 	drawLabel->setPixmap(pix.scaled(
 		drawLabel->size(),
 		Qt::KeepAspectRatio,
