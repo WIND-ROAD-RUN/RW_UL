@@ -5,7 +5,7 @@
 
 #include "ui_PicturesPainterVersionDunDai.h"
 
-PicturesPainterVersionDunDai::PicturesPainterVersionDunDai(QWidget *parent)
+PicturesPainterVersionDunDai::PicturesPainterVersionDunDai(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::PicturesPainterVersionDunDaiClass())
 {
@@ -160,8 +160,8 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 			QColor color = getColorByClassId(info.classId);
 			QString name = getNameByClassId(info.classId);
 
-			int imgW = drawLabel->width();
-			int imgH = drawLabel->height();
+			int imgW = drawLabel->pixmap().width();
+			int imgH = drawLabel->pixmap().height();
 
 			QRect rect(
 				static_cast<int>(info.leftTop.first * imgW),
@@ -184,7 +184,7 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 	// 如果传入了绘画框
 	if (isSetDrawnRectangles)
 	{
-		
+
 
 		// 2. 遍历所有绘画框
 		for (const auto& info : _drawnRectangles)
@@ -192,8 +192,8 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 			QColor color = getColorByClassId(info.classId);
 			QString name = getNameByClassId(info.classId);
 
-			int imgW = drawLabel->width();
-			int imgH = drawLabel->height();
+			int imgW = drawLabel->pixmap().width();
+			int imgH = drawLabel->pixmap().height();
 
 			QRect rect(
 				static_cast<int>(info.leftTop.first * imgW),
@@ -209,7 +209,7 @@ void PicturesPainterVersionDunDai::showEvent(QShowEvent* event)
 			font.setPointSize(16);
 			painter.setFont(font);
 			painter.setPen(color);
-			painter.drawText(rect.topLeft() + QPoint(3, 15), name+"绘制屏蔽");
+			painter.drawText(rect.topLeft() + QPoint(3, 15), name + "绘制屏蔽");
 		}
 	}
 	else
@@ -302,8 +302,8 @@ void PicturesPainterVersionDunDai::btn_zhinengpingbi_clicked()
 		QColor color = getColorByClassId(info.classId);
 		QString name = getNameByClassId(info.classId);
 
-		int imgW = drawLabel->width();
-		int imgH = drawLabel->height();
+		int imgW = drawLabel->pixmap().width();
+		int imgH = drawLabel->pixmap().height();
 
 		QRect rect(
 			static_cast<int>(info.leftTop.first * imgW),
@@ -319,7 +319,7 @@ void PicturesPainterVersionDunDai::btn_zhinengpingbi_clicked()
 		font.setPointSize(16);
 		painter.setFont(font);
 		painter.setPen(color);
-		painter.drawText(rect.topLeft() + QPoint(3, 15), name+"智能屏蔽");
+		painter.drawText(rect.topLeft() + QPoint(3, 15), name + "智能屏蔽");
 	}
 	isGenerateSmartRectangles = true;
 	drawLabel->setPixmap(pix);
@@ -343,15 +343,27 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 	QColor color = qvariant_cast<QColor>(curIndex.data(Qt::UserRole + 2));
 	QString name = curIndex.data(Qt::DisplayRole).toString();
 
-	// 2. 用 DrawLabel 框选的区域，转换为像素坐标
+	auto imgW = drawLabel->pixmap().width();
+	auto imgH = drawLabel->pixmap().height();
 	int w = drawLabel->width();
 	int h = drawLabel->height();
 
+
+	auto scaleX = static_cast<double>(imgW) / w;
+	auto scaleY = static_cast<double>(imgH) / h;
+	QRectF scaledRect(
+		m_lastNormalizedRect.x() / scaleX,
+		m_lastNormalizedRect.y() / scaleY,
+		m_lastNormalizedRect.width() / scaleX,
+		m_lastNormalizedRect.height() / scaleY
+	);
+	m_lastNormalizedRect = scaledRect;
+
 	QRect drawRect(
-		int(rect.left() * w),
-		int(rect.top() * h),
-		int(rect.width() * w),
-		int(rect.height() * h)
+		int(m_lastNormalizedRect.left() * imgW),
+		int(m_lastNormalizedRect.top() * imgH),
+		int(m_lastNormalizedRect.width() * imgW),
+		int(m_lastNormalizedRect.height() * imgH)
 	);
 
 	if (drawRect.width() <= 0 || drawRect.height() <= 0) {
@@ -380,14 +392,14 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 
 	// 5. 记录 PainterRectangleInfo
 	rw::rqw::PainterRectangleInfo info;
-	info.leftTop = { double(drawRect.left()) / w, double(drawRect.top()) / h };
-	info.rightTop = { double(drawRect.right()) / w, double(drawRect.top()) / h };
-	info.leftBottom = { double(drawRect.left()) / w, double(drawRect.bottom()) / h };
-	info.rightBottom = { double(drawRect.right()) / w, double(drawRect.bottom()) / h };
-	info.width = double(drawRect.width()) / w;
-	info.height = double(drawRect.height()) / h;
-	info.center_x = double(drawRect.center().x()) / w;
-	info.center_y = double(drawRect.center().y()) / h;
+	info.leftTop = { double(drawRect.left()) / imgW, double(drawRect.top()) / imgH };
+	info.rightTop = { double(drawRect.right()) / imgW, double(drawRect.top()) / imgH };
+	info.leftBottom = { double(drawRect.left()) / imgW, double(drawRect.bottom()) / imgH };
+	info.rightBottom = { double(drawRect.right()) / imgW, double(drawRect.bottom()) / imgH };
+	info.width = double(drawRect.width()) / imgW;
+	info.height = double(drawRect.height()) / imgH;
+	info.center_x = double(drawRect.center().x()) / imgW;
+	info.center_y = double(drawRect.center().y()) / imgH;
 	info.area = drawRect.width() * drawRect.height();
 	info.classId = classid;
 	info.score = -1;
