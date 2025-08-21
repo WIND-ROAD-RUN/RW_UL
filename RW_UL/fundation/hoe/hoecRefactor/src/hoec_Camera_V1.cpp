@@ -243,6 +243,11 @@ namespace rw
 			return _camera->setTriggerSource(triggerSource);
 		}
 
+		bool CameraActive::encoderNumberReset()
+		{
+			return _camera->encoderNumberReset();
+		}
+
 		bool CameraPassive::connectCamera()
 		{
 			_camera->setIP(_ip);
@@ -455,6 +460,11 @@ namespace rw
 		bool CameraPassive::setTriggerSource(TriggerSource triggerSource)
 		{
 			return _camera->setTriggerSource(triggerSource);
+		}
+
+		bool CameraPassive::encoderNumberReset()
+		{
+			return _camera->encoderNumberReset();
 		}
 	}
 }
