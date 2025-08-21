@@ -21,12 +21,13 @@ public:
 public:
 	void setRectangleConfigs(const std::vector<rw::rqw::RectangeConfig>& configs);
 	void setDrawnRectangles(const std::vector<rw::rqw::PainterRectangleInfo>& Rectangles);
+	void setSmartRectangles(const std::vector<rw::rqw::PainterRectangleInfo>& Rectangles);
 	void setImage(const QImage& qImage);
 
 	QColor getColorByClassId(size_t size);
 	QString getNameByClassId(size_t size);
 	std::vector<rw::rqw::PainterRectangleInfo> getRectangleConfigs();
-
+	std::vector<rw::rqw::PainterRectangleInfo> getSmartRectangleConfigs();
 private:
 	void build_ui();
 	void release_ui();
@@ -44,10 +45,7 @@ private slots:
 	void onRectSelected(const QRectF& rect);
 	void updateDrawLabel();
 
-	// （保留）当前项变化（仅用于后续可能的显示刷新，不再触发绘画）
 	void onListViewCurrentChanged(const QModelIndex& current, const QModelIndex& previous = QModelIndex());
-
-	// 新增：显式点击（即使同一项重复点击也会触发一次“单次绘画”）
 	void onListViewItemClicked(const QModelIndex& index);
 
 public:
@@ -58,6 +56,8 @@ private:
 
 	std::vector<rw::rqw::RectangeConfig> _configs{};
 	std::vector<rw::rqw::PainterRectangleInfo> _drawnRectangles{};
+	bool isGenerateSmartRectangles{false};
+	std::vector<rw::rqw::PainterRectangleInfo> _smartRectangles{};
 
 	QStandardItemModel* m_listModel = nullptr;
 
