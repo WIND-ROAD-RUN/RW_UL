@@ -28,6 +28,9 @@ public:
 	QString getNameByClassId(size_t size);
 	std::vector<rw::rqw::PainterRectangleInfo> getRectangleConfigs();
 	std::vector<rw::rqw::PainterRectangleInfo> getSmartRectangleConfigs();
+
+	void setDisSmartRectangleForFirstShow(bool isShow) { isDisSmartRectangleForFirstShow = isShow; }
+	bool isDisSmartRectangleForFirstShow{false};
 private:
 	void build_ui();
 	void release_ui();
