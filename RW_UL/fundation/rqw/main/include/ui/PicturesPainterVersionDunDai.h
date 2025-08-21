@@ -15,7 +15,7 @@ class PicturesPainterVersionDunDai : public QDialog
 	Q_OBJECT
 
 public:
-	PicturesPainterVersionDunDai(QWidget *parent = nullptr);
+	PicturesPainterVersionDunDai(QWidget* parent = nullptr);
 	~PicturesPainterVersionDunDai();
 
 public:
@@ -30,7 +30,7 @@ public:
 	std::vector<rw::rqw::PainterRectangleInfo> getSmartRectangleConfigs();
 
 	void setDisSmartRectangleForFirstShow(bool isShow) { isDisSmartRectangleForFirstShow = isShow; }
-	bool isDisSmartRectangleForFirstShow{false};
+	bool isDisSmartRectangleForFirstShow{ false };
 private:
 	void build_ui();
 	void release_ui();
@@ -52,14 +52,14 @@ private slots:
 	void onListViewItemClicked(const QModelIndex& index);
 
 public:
-	Ui::PicturesPainterVersionDunDaiClass *ui;
+	Ui::PicturesPainterVersionDunDaiClass* ui;
 private:
 	double img_Width{ 0 };
 	double img_Height{ 0 };
 
 	std::vector<rw::rqw::RectangeConfig> _configs{};
 	std::vector<rw::rqw::PainterRectangleInfo> _drawnRectangles{};
-	bool isGenerateSmartRectangles{false};
+	bool isGenerateSmartRectangles{ false };
 	std::vector<rw::rqw::PainterRectangleInfo> _smartRectangles{};
 
 	QStandardItemModel* m_listModel = nullptr;
