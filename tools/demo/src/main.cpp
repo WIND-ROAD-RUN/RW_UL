@@ -2,18 +2,49 @@
 #include <QPainter>
 #include <random>
 #include <QtWidgets/QApplication>
-#include"PicturesPainter.h"
-#include"LicenseValidation.h"
-#include"rqwm_ModbusDeviceThread.hpp"
+#include"PicturesPainterVersionDunDai.h"
+
+// 生成随机颜色（避免过暗）
+static QColor randomColor(std::mt19937& rng)
+{
+    std::uniform_int_distribution<int> d(60, 220); // 适中亮度
+    return QColor(d(rng), d(rng), d(rng));
+}
+
+// 随机生成若干 RectangeConfig，只用于填充 listView
+static std::vector<rw::rqw::RectangeConfig> buildRandomConfigs(
+    int count,
+    unsigned seed = std::random_device{}())
+{
+    std::mt19937 rng(seed);
+    std::vector<rw::rqw::RectangeConfig> cfgs;
+    cfgs.reserve(count);
+
+    for (int i = 0; i < count; ++i)
+    {
+        rw::rqw::RectangeConfig c;
+        c.classid = i;                              // 顺序 id
+        c.color = randomColor(rng);                 // 随机颜色
+        c.name = QString("Class123123_%1").arg(i);        // 名称
+        c.descrption = QString("随机测试类别 %1").arg(i);
+        cfgs.push_back(c);
+    }
+    return cfgs;
+}
 
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-	PicturesPainter painter;
-	QImage image;
-	image.load(R"(C:\Users\zfkj4090\Desktop\temp\1.png)");
-	painter.setImage(image);
+	PicturesPainterVersionDunDai painter;
+	QImage img;
+	img.load(R"(C:\Users\zfkj4090\Desktop\temp\total.png)");
+	painter.setImage(img);
+	// 仅生成 listView 选项（类别配置），不预先添加任何绘制框z
+	int configCount = 8; // 可根据需要调整或改为读取 argv
+	auto configs = buildRandomConfigs(configCount);
+	painter.setRectangleConfigs(configs);
+
 	painter.show();
 
 	return a.exec();

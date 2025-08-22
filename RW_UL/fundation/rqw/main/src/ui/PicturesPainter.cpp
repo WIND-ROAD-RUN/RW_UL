@@ -54,9 +54,10 @@ void PicturesPainter::setImage(const QImage& qImage)
 		img_Width = _qImage.width();
 		isSetQImage = true;
 		if (drawLabel) {
-			drawLabel->setImage(qImage);
+			drawLabel->setImage(_qImage);
 			drawLabel->update();
 		}
+		hide_ui();
 	}
 }
 
@@ -174,7 +175,6 @@ void PicturesPainter::showEvent(QShowEvent* event)
 			Qt::SmoothTransformation
 		));
 		release_ui();
-		hide_ui();
 	}
 	// 如果传入了绘画框
 	if (isSetDrawnRectangles)
@@ -451,7 +451,7 @@ void PicturesPainter::onRectSelected(const QRectF& rect)
 DrawLabel::DrawLabel(QWidget* parent)
 	: QLabel(parent) {
 	setMouseTracking(true);
-	setStyleSheet("border: 2px solid red;");
+	//setStyleSheet("border: 2px solid red;");
 }
 
 QRectF DrawLabel::getNormalizedRect() const
@@ -468,16 +468,26 @@ QRectF DrawLabel::getNormalizedRect() const
 void DrawLabel::setImage(const QImage& img)
 {
 	m_srcImage = img;
-	setFixedSize(img.size()); // 固定label大小为图片原始大小
-	setPixmap(QPixmap::fromImage(m_srcImage));
+	//setFixedSize(img.size()); // 固定label大小为图片原始大小
+	updateScaledPixmap();
+}
+
+void DrawLabel::updateScaledPixmap()
+{
+	if (m_srcImage.isNull())
+		return;
+
+	QPixmap pix = QPixmap::fromImage(m_srcImage);
+
+	if (width() > 0 && height() > 0) {
+		pix = pix.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	setPixmap(pix);
 }
 
 void DrawLabel::resizeEvent(QResizeEvent* event)
 {
 	QLabel::resizeEvent(event);
-	/*if (!m_srcImage.isNull()) {
-		setPixmap(QPixmap::fromImage(m_srcImage).scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-	}*/
 }
 
 void DrawLabel::mousePressEvent(QMouseEvent* event)
