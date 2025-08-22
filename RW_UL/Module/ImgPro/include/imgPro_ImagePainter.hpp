@@ -19,14 +19,14 @@ namespace rw
 		{
 			int thickness = 1;
 			Color color = Color::Red;
-			QPoint center{ 0, 0 };
-			int radius = 0;
 		};
 
 		struct ConfigDrawCircleWithLocate
 		{
 			int thickness = 1;
 			Color color = Color::Red;
+			QPoint center{ 0, 0 };
+			int radius = 0;
 		};
 
 		struct ConfigDrawLine
@@ -108,9 +108,9 @@ namespace rw
 				const ConfigDrawCircle& cfg
 			);
 
-			static void ConfigDrawCircleWithLocate(
+			static void drawShapesOnSourceImg(
 				QImage& image,
-				const ConfigDrawCircle& cfg
+				const ConfigDrawCircleWithLocate& cfg
 			);
 
 			static void drawTextOnImage(

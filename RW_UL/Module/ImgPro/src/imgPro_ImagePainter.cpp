@@ -169,7 +169,7 @@ namespace rw
 			painter.end();
 		}
 
-		void ImagePainter::ConfigDrawCircleWithLocate(QImage& image, const ConfigDrawCircle& cfg)
+		void ImagePainter::drawShapesOnSourceImg(QImage& image, const ConfigDrawCircleWithLocate& cfg)
 		{
 			QPainter painter(&image);
 			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
