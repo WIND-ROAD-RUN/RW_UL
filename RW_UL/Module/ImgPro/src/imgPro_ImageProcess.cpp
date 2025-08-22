@@ -174,7 +174,7 @@ namespace rw
 
 			if (context.defectDrawFuncContext.postOperateFunc)
 			{
-				context.defectDrawFuncContext.postOperateFunc(img, context.defectDrawFuncContext);
+				context.defectDrawFuncContext.postOperateFunc(img, context);
 			}
 		}
 	}
