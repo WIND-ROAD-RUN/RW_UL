@@ -169,6 +169,14 @@ namespace rw
 			painter.end();
 		}
 
+		void ImagePainter::ConfigDrawCircleWithLocate(QImage& image, const ConfigDrawCircle& cfg)
+		{
+			QPainter painter(&image);
+			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			painter.drawEllipse(cfg.center, cfg.radius, cfg.radius);
+			painter.end();
+		}
+
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
 		                                   const std::vector<Color>& colorList, double proportion)
 		{
