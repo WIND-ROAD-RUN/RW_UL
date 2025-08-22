@@ -44,6 +44,8 @@ namespace rw
 			{
 				return _operatorTime;
 			}
+		public:
+			std::unordered_map<std::string, std::any> customFields;
 		};
 
 		class ImageProcess
