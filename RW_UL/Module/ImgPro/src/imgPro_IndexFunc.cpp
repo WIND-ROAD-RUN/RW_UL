@@ -17,7 +17,7 @@ namespace rw
 		}
 
 		std::vector<ProcessResultIndex> IndexFunc::removeIndicesIf(ProcessResultIndexMap& indexMap,
-			const RemoveIndicesIf& predicate)
+		                                                           const RemoveIndicesIf& predicate, ImageProcessContext& context)
 		{
 			std::vector<ProcessResultIndex> removed;
 			for (auto& kv : indexMap)
@@ -25,7 +25,7 @@ namespace rw
 				auto& indices = kv.second;
 				for (auto it = indices.begin(); it != indices.end(); )
 				{
-					if (predicate(kv.first, *it))
+					if (predicate(kv.first, *it, context))
 					{
 						removed.push_back(*it);
 						it = indices.erase(it);
@@ -40,8 +40,8 @@ namespace rw
 		}
 
 		std::vector<ProcessResultIndex> IndexFunc::removeIndicesIfByInfo(ProcessResultIndexMap& indexMap,
-			const ProcessResult& info,
-			const RemoveIndicesIfByInfo& predicate)
+		                                                                 const ProcessResult& info,
+		                                                                 const RemoveIndicesIfByInfo& predicate, ImageProcessContext& context)
 		{
 			std::vector<ProcessResultIndex> removed;
 			for (auto& kv : indexMap)
@@ -50,7 +50,7 @@ namespace rw
 				for (auto it = indices.begin(); it != indices.end(); )
 				{
 					ProcessResultIndex idx = *it;
-					if (idx < info.size() && predicate(info[idx]))
+					if (idx < info.size() && predicate(info[idx], context))
 					{
 						removed.push_back(idx);
 						it = indices.erase(it);

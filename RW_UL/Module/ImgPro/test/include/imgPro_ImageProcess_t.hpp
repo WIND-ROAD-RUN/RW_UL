@@ -87,7 +87,7 @@ protected:
 		//	return classId == 1;
 		//	};
 
-		context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info) {
+		context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info,rw::imgPro::ImageProcessContext & context) {
 			return false;
 			};
 	}

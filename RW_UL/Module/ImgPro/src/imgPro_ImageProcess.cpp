@@ -53,13 +53,13 @@ namespace rw
 			{
 				indexGetContext.removedIndices =
 					rw::imgPro::IndexFunc::removeIndicesIf(
-						indexMap, indexGetContext.removeIndicesIf);
+						indexMap, indexGetContext.removeIndicesIf, _context);
 			}
 			if (indexGetContext.removeIndicesIfByInfo)
 			{
 				indexGetContext.removedIndicesByInfo =
 					rw::imgPro::IndexFunc::removeIndicesIfByInfo(
-						indexMap, _context._processResult, indexGetContext.removeIndicesIfByInfo);
+						indexMap, _context._processResult, indexGetContext.removeIndicesIfByInfo, _context);
 			}
 
 			_processResultIndexMap = indexMap;
