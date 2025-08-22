@@ -29,6 +29,11 @@ namespace rw
 			DefectDrawFuncContext defectDrawFuncContext{};
 		private:
 			ProcessResult _processResult{};
+		public:
+			const ProcessResult& getProcessResult() const
+			{
+				return _processResult;
+			}
 		};
 
 		class ImageProcess
