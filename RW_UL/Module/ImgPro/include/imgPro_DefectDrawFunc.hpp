@@ -8,6 +8,7 @@
 #include<QImage>
 
 #include "imgPro_ImagePainter.hpp"
+#include<unordered_set>
 
 namespace rw
 {
@@ -43,6 +44,11 @@ namespace rw
 			double thresh{ 0.5 };
 			double maxVal{ 1.0 };
 			bool hasFrame{ true };
+		public:
+			int areaDisPrecision{1};
+			int scoreDisPrecision{ 1};
+		public:
+			std::unordered_set<ClassId> classIdIgnoreDrawSet{};
 		};
 
 		struct RunTextConfig
@@ -97,9 +103,8 @@ namespace rw
 				const ProcessResult& processResult,
 				const DefectDrawFunc::ConfigDefectDraw& config,
 				const std::unordered_map<ClassId, Color>& colorMap,
-				Color defaultColor,
-				int scorePrecision,
-				int areaPrecision);
+				Color defaultColor
+			);
             
 		};
 	}
