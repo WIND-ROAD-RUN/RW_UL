@@ -69,8 +69,11 @@ namespace rw
 			double runTextProportion = 0.06;
 		};
 
+		struct DefectDrawFuncContext;
+
 		using DefectDrawFuncPostOperate=std::function<void(
-			QImage& img
+			QImage& img,
+			DefectDrawFuncContext& defectDrawFuncContext
 			)>;
 
 		struct DefectDrawFuncContext
