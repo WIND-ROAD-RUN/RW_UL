@@ -155,8 +155,22 @@ namespace rw
 			drawShapesOnSourceImg(image, info, cfg);
 		}
 
+		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,
+			const ConfigDrawCircle& cfg)
+		{
+			QPainter painter(&image);
+			painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			int radius = std::min(rectInfo.width, rectInfo.height) / 2;
+			painter.drawEllipse(
+				QPointF(rectInfo.center_x, rectInfo.center_y),
+				radius,
+				radius
+			);
+			painter.end();
+		}
+
 		void ImagePainter::drawTextOnImage(QImage& image, const QVector<QString>& texts,
-			const std::vector<Color>& colorList, double proportion)
+		                                   const std::vector<Color>& colorList, double proportion)
 		{
 			if (texts.empty() || proportion <= 0.0 || proportion > 1.0) {
 				return;
