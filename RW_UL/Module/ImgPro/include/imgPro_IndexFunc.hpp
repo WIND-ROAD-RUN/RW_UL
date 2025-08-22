@@ -9,7 +9,7 @@ namespace rw
 		struct ImageProcessContext;
 		using RemoveIndicesIf = std::function<bool(ClassId, ProcessResultIndex, ImageProcessContext&)>;
 		using RemoveIndicesIfByInfo = std::function<bool(const rw::DetectionRectangleInfo&, ImageProcessContext &)>;
-		using RemoveIndicesPost= std::function<bool(ProcessResultIndexMap&, const ProcessResult&, ImageProcessContext&)>;
+		using RemoveIndicesPost= std::function<void(ProcessResultIndexMap&, const ProcessResult&, ImageProcessContext&)>;
 
 		struct IndexGetContext
 		{
