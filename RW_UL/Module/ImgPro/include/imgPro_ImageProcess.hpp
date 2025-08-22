@@ -25,6 +25,8 @@ namespace rw
 			DefectDrawFunc::ConfigRunText runTextCfg{};
 		public:
 			DefectDrawFuncContext defectDrawFuncContext{};
+		public:
+			ProcessResult processResult{};
 		};
 
 		class ImageProcess
@@ -93,7 +95,6 @@ namespace rw
 			);
 		private:
 			ProcessResultIndexMap _processResultIndexMap{};
-			ProcessResult _processResult{};
 			EliminationInfo _eliminationInfo{};
 			DefectResultInfo _defectResultInfo{};
 		public:
@@ -103,7 +104,7 @@ namespace rw
 			}
 			const ProcessResult& getProcessResult() const
 			{
-				return _processResult;
+				return _context.processResult;
 			}
 			const EliminationInfo& getEliminationInfo() const
 			{
@@ -120,7 +121,7 @@ namespace rw
 			}
 			ProcessResult& processResult()
 			{
-				return _processResult;
+				return _context.processResult;
 			}
 			EliminationInfo& eliminationInfo()
 			{
