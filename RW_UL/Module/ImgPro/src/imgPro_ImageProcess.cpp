@@ -106,6 +106,10 @@ namespace rw
 
 		void ImageProcess::operator()(const cv::Mat& mat)
 		{
+			if (_context.imageProcessPrepare)
+			{
+				_context.imageProcessPrepare(_context);
+			}
 			auto start = std::chrono::high_resolution_clock::now();
 
 			processImg(mat);
