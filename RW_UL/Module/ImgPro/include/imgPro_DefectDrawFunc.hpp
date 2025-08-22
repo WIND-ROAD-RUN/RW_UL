@@ -77,6 +77,8 @@ namespace rw
 		{
 		public:
 			DefectDrawFuncPostOperate postOperateFunc{ };
+		public:
+			std::unordered_map<ClassId, std::vector<EliminationItem>> ignoreItems{};
 		};
 
 		struct DefectDrawFunc
@@ -87,9 +89,9 @@ namespace rw
 		public:
 			static void drawDefectRecs(
 				QImage& img,
-				const DefectResultInfo& info, 
-				const ProcessResult& processResult, 
-				const ConfigDefectDraw& config
+				const DefectResultInfo& info,
+				const ProcessResult& processResult,
+				const ConfigDefectDraw& config, DefectDrawFuncContext& context
 			);
 
 			static void drawRunText(
@@ -103,7 +105,7 @@ namespace rw
 				const ProcessResult& processResult,
 				const DefectDrawFunc::ConfigDefectDraw& config,
 				const std::unordered_map<ClassId, Color>& colorMap,
-				Color defaultColor
+				Color defaultColor, DefectDrawFuncContext& context
 			);
             
 		};

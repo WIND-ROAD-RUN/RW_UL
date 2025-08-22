@@ -137,7 +137,7 @@ namespace rw
 			RunTime processImgTime)
 		{
 			auto  &defectDrawCfg = context.defectDrawCfg;
-			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, defectDrawCfg);
+			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, defectDrawCfg, context.defectDrawFuncContext);
 			context.runTextCfg.operatorTimeText = QString::number(operatorTime) + " ms";
 			context.runTextCfg.processImgTimeText = QString::number(processImgTime) + " ms";
 			auto& errorRecs = defectResultInfo.defects;
