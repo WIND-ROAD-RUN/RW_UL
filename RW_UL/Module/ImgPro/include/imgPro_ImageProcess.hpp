@@ -11,9 +11,15 @@ namespace rw
 	namespace imgPro
 	{
 		class ImageProcess;
+		struct ImageProcessContext;
+		using ImageProcessPrepare = std::function<void(ImageProcessContext&)>;
+		
+
 		struct ImageProcessContext
 		{
 			friend ImageProcess;
+		public:
+			ImageProcessPrepare imageProcessPrepare{};
 		public:
 			IndexGetContext indexGetContext{};
 		public:
