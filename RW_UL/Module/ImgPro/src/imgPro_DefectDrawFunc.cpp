@@ -23,8 +23,13 @@ namespace rw
 			}
 		}
 
-		void DefectDrawFunc::drawDefectRecs(QImage& img, const DefectResultInfo& info,
-			const ProcessResult& processResult, const ConfigDefectDraw& config)
+		void DefectDrawFunc::drawDefectRecs(
+			QImage& img, 
+			const DefectResultInfo& info,
+			const ProcessResult& processResult,
+			const ConfigDefectDraw& config, 
+			DefectDrawFuncContext& context
+		)
 		{
 			if (img.isNull() || processResult.empty()) {
 				return; 
@@ -38,7 +43,8 @@ namespace rw
 					processResult,
 					config,
 					config.classIdWithColorWhichIsBad,
-					Color::Red
+					Color::Red, 
+					context
 				);
 			}
 
@@ -50,7 +56,8 @@ namespace rw
 					processResult,
 					config,
 					config.classIdWithColorWhichIsGood,
-					Color::Green
+					Color::Green, 
+					context
 				);
 			}
 		}
@@ -87,11 +94,12 @@ namespace rw
 
 		void DefectDrawFunc::drawDefectGroup(
 			QImage& img,
-			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group, 
+			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group,
 			const ProcessResult& processResult,
-			const DefectDrawFunc::ConfigDefectDraw& config, 
+			const DefectDrawFunc::ConfigDefectDraw& config,
 			const std::unordered_map<ClassId, Color>& colorMap,
-			Color defaultColor
+			Color defaultColor, 
+			DefectDrawFuncContext& context
 		)
 		{
 			rw::imgPro::ConfigDrawRect recCfg;
@@ -110,6 +118,8 @@ namespace rw
 			{
 				if (config.classIdIgnoreDrawSet.find(pairs.first) != config.classIdIgnoreDrawSet.end())
 				{
+					auto& vec = context.ignoreItems[pairs.first];
+					vec.insert(vec.end(), pairs.second.begin(), pairs.second.end());
 					continue;
 				}
 				QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
