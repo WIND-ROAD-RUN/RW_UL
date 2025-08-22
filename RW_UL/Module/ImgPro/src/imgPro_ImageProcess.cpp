@@ -61,6 +61,10 @@ namespace rw
 					rw::imgPro::IndexFunc::removeIndicesIfByInfo(
 						indexMap, _context._processResult, indexGetContext.removeIndicesIfByInfo, _context);
 			}
+			if (indexGetContext.removeIndicesPost)
+			{
+				indexGetContext.removeIndicesPost(indexMap, _context._processResult, _context);
+			}
 
 			_processResultIndexMap = indexMap;
 			return _processResultIndexMap;
