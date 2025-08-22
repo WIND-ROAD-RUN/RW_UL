@@ -39,8 +39,8 @@ namespace rw
 
 			_processImgTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-			_processResult = processResult;
-			return _processResult;
+			_context.processResult = processResult;
+			return _context.processResult;
 		}
 
 		ProcessResultIndexMap ImageProcess::getIndex(const ProcessResult& processResult)
@@ -59,7 +59,7 @@ namespace rw
 			{
 				indexGetContext.removedIndicesByInfo =
 					rw::imgPro::IndexFunc::removeIndicesIfByInfo(
-						indexMap, _processResult, indexGetContext.removeIndicesIfByInfo);
+						indexMap, _context.processResult, indexGetContext.removeIndicesIfByInfo);
 			}
 
 			_processResultIndexMap = indexMap;
@@ -109,9 +109,9 @@ namespace rw
 			auto start = std::chrono::high_resolution_clock::now();
 
 			processImg(mat);
-			getIndex(_processResult);
-			getEliminationInfo(_processResult, _processResultIndexMap, _context.eliminationCfg);
-			getDefectResultInfo(_processResult,_eliminationInfo, _context.defectCfg, _context.eliminationCfg);
+			getIndex(_context.processResult);
+			getEliminationInfo(_context.processResult, _processResultIndexMap, _context.eliminationCfg);
+			getDefectResultInfo(_context.processResult,_eliminationInfo, _context.defectCfg, _context.eliminationCfg);
 
 			auto end = std::chrono::high_resolution_clock::now();
 
@@ -120,7 +120,7 @@ namespace rw
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat)
 		{
-			return getMaskImg(mat, _defectResultInfo, _processResult, _context, _operatorTime, _processImgTime);
+			return getMaskImg(mat, _defectResultInfo, _context.processResult, _context, _operatorTime, _processImgTime);
 		}
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat, const DefectResultInfo& defectResultInfo,
