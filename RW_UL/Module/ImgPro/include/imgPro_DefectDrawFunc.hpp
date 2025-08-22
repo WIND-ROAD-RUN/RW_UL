@@ -43,6 +43,9 @@ namespace rw
 			double thresh{ 0.5 };
 			double maxVal{ 1.0 };
 			bool hasFrame{ true };
+		public:
+			int areaDisPrecision{1};
+			int scoreDisPrecision{ 1};
 		};
 
 		struct RunTextConfig

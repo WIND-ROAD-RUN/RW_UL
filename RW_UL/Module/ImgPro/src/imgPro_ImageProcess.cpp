@@ -136,31 +136,32 @@ namespace rw
 			const ProcessResult& processResult, ImageProcessContext& context, RunTime operatorTime,
 			RunTime processImgTime)
 		{
-			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, context.defectDrawCfg);
+			auto  &defectDrawCfg = context.defectDrawCfg;
+			rw::imgPro::DefectDrawFunc::drawDefectRecs(img, defectResultInfo, processResult, defectDrawCfg);
 			context.runTextCfg.operatorTimeText = QString::number(operatorTime) + " ms";
 			context.runTextCfg.processImgTimeText = QString::number(processImgTime) + " ms";
 			auto& errorRecs = defectResultInfo.defects;
 			QVector<QString> errors;
 			for (auto& pairs : errorRecs)
 			{
-				QString processTextPre = (context.defectDrawCfg.classIdNameMap.find(pairs.first) != context.defectDrawCfg.classIdNameMap.end()) ?
-					context.defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
+				QString processTextPre = (defectDrawCfg.classIdNameMap.find(pairs.first) != defectDrawCfg.classIdNameMap.end()) ?
+					defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 				auto currentIdCfg = context.eliminationCfg[pairs.first];
 				for (const auto& item : pairs.second)
 				{
 					if (currentIdCfg.isUsingArea)
 					{
 						errors.push_back(processTextPre + " : " +
-							QString::number(item.area, 'f', 1) + " " +
-							QString::number(currentIdCfg.areaRange.first, 'f', 1) + " ~ " +
-							QString::number(currentIdCfg.areaRange.second, 'f', 1));
+							QString::number(item.area, 'f', defectDrawCfg.areaDisPrecision) + " " +
+							QString::number(currentIdCfg.areaRange.first, 'f', defectDrawCfg.areaDisPrecision) + " ~ " +
+							QString::number(currentIdCfg.areaRange.second, 'f', defectDrawCfg.areaDisPrecision));
 					}
 					if (currentIdCfg.isUsingScore)
 					{
 						errors.push_back(processTextPre + " : " +
-							QString::number(item.score, 'f', 1) + " " +
-							QString::number(currentIdCfg.scoreRange.first, 'f', 1) + " ~ " +
-							QString::number(currentIdCfg.scoreRange.second, 'f', 1));
+							QString::number(item.score, 'f', defectDrawCfg.scoreDisPrecision) + " " +
+							QString::number(currentIdCfg.scoreRange.first, 'f', defectDrawCfg.scoreDisPrecision) + " ~ " +
+							QString::number(currentIdCfg.scoreRange.second, 'f', defectDrawCfg.scoreDisPrecision));
 					}
 				}
 			}

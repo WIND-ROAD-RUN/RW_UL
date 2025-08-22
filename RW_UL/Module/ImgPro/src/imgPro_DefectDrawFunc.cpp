@@ -39,8 +39,8 @@ namespace rw
 					config,
 					config.classIdWithColorWhichIsBad,
 					Color::Red,
-					1, // score 精度
-					2  // area 精度
+					config.scoreDisPrecision,
+					config.areaDisPrecision  
 				);
 			}
 
@@ -53,8 +53,8 @@ namespace rw
 					config,
 					config.classIdWithColorWhichIsGood,
 					Color::Green,
-					2, // score 精度
-					1  // area 精度
+					config.scoreDisPrecision, 
+					config.areaDisPrecision 
 				);
 			}
 		}
