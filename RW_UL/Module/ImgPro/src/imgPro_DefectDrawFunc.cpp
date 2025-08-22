@@ -108,6 +108,10 @@ namespace rw
 
 			for (const auto& pairs : group)
 			{
+				if (config.classIdIgnoreDrawSet.find(pairs.first) != config.classIdIgnoreDrawSet.end())
+				{
+					continue;
+				}
 				QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
 					config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 

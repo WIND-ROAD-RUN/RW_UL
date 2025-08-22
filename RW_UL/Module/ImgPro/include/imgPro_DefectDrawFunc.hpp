@@ -8,6 +8,7 @@
 #include<QImage>
 
 #include "imgPro_ImagePainter.hpp"
+#include<unordered_set>
 
 namespace rw
 {
@@ -46,6 +47,8 @@ namespace rw
 		public:
 			int areaDisPrecision{1};
 			int scoreDisPrecision{ 1};
+		public:
+			std::unordered_set<ClassId> classIdIgnoreDrawSet{};
 		};
 
 		struct RunTextConfig

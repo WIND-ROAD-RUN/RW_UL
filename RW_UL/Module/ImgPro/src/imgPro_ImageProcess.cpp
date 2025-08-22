@@ -144,6 +144,10 @@ namespace rw
 			QVector<QString> errors;
 			for (auto& pairs : errorRecs)
 			{
+				if (defectDrawCfg.classIdIgnoreDrawSet.find(pairs.first) != defectDrawCfg.classIdIgnoreDrawSet.end())
+				{
+					continue;
+				}
 				QString processTextPre = (defectDrawCfg.classIdNameMap.find(pairs.first) != defectDrawCfg.classIdNameMap.end()) ?
 					defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
 				auto currentIdCfg = context.eliminationCfg[pairs.first];
