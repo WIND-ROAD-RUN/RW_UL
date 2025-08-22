@@ -100,9 +100,8 @@ namespace rw
 				const ProcessResult& processResult,
 				const DefectDrawFunc::ConfigDefectDraw& config,
 				const std::unordered_map<ClassId, Color>& colorMap,
-				Color defaultColor,
-				int scorePrecision,
-				int areaPrecision);
+				Color defaultColor
+			);
             
 		};
 	}

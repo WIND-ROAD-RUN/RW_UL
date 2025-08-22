@@ -38,9 +38,7 @@ namespace rw
 					processResult,
 					config,
 					config.classIdWithColorWhichIsBad,
-					Color::Red,
-					config.scoreDisPrecision,
-					config.areaDisPrecision  
+					Color::Red
 				);
 			}
 
@@ -52,9 +50,7 @@ namespace rw
 					processResult,
 					config,
 					config.classIdWithColorWhichIsGood,
-					Color::Green,
-					config.scoreDisPrecision, 
-					config.areaDisPrecision 
+					Color::Green
 				);
 			}
 		}
@@ -89,10 +85,14 @@ namespace rw
 			rw::imgPro::ImagePainter::drawTextOnImage(img, textList, configList, config.runTextProportion);
 		}
 
-		void DefectDrawFunc::drawDefectGroup(QImage& img,
-			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group, const ProcessResult& processResult,
-			const DefectDrawFunc::ConfigDefectDraw& config, const std::unordered_map<ClassId, Color>& colorMap,
-			Color defaultColor, int scorePrecision, int areaPrecision)
+		void DefectDrawFunc::drawDefectGroup(
+			QImage& img,
+			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group, 
+			const ProcessResult& processResult,
+			const DefectDrawFunc::ConfigDefectDraw& config, 
+			const std::unordered_map<ClassId, Color>& colorMap,
+			Color defaultColor
+		)
 		{
 			rw::imgPro::ConfigDrawRect recCfg;
 			recCfg.fontSize = config.fontSize;
@@ -116,11 +116,11 @@ namespace rw
 					recCfg.text.clear();
 					if (config.isDisScoreText)
 					{
-						recCfg.text = processTextPre + " : " + QString::number(item.score, 'f', scorePrecision);
+						recCfg.text = processTextPre + " : " + QString::number(item.score, 'f', config.scoreDisPrecision);
 					}
 					if (config.isDisAreaText)
 					{
-						recCfg.text = recCfg.text + " , " + QString::number(item.area, 'f', areaPrecision);
+						recCfg.text = recCfg.text + " , " + QString::number(item.area, 'f', config.areaDisPrecision);
 					}
 
 					auto findColor = colorMap.find(pairs.first);
