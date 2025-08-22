@@ -10,8 +10,10 @@ namespace rw
 {
 	namespace imgPro
 	{
+		class ImageProcess;
 		struct ImageProcessContext
 		{
+			friend ImageProcess;
 		public:
 			IndexGetContext indexGetContext{};
 		public:
@@ -25,8 +27,8 @@ namespace rw
 			DefectDrawFunc::ConfigRunText runTextCfg{};
 		public:
 			DefectDrawFuncContext defectDrawFuncContext{};
-		public:
-			ProcessResult processResult{};
+		private:
+			ProcessResult _processResult{};
 		};
 
 		class ImageProcess
@@ -104,7 +106,7 @@ namespace rw
 			}
 			const ProcessResult& getProcessResult() const
 			{
-				return _context.processResult;
+				return _context._processResult;
 			}
 			const EliminationInfo& getEliminationInfo() const
 			{
@@ -121,7 +123,7 @@ namespace rw
 			}
 			ProcessResult& processResult()
 			{
-				return _context.processResult;
+				return _context._processResult;
 			}
 			EliminationInfo& eliminationInfo()
 			{
