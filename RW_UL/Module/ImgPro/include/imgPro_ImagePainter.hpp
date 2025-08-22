@@ -15,6 +15,12 @@ namespace rw
 
 	namespace imgPro
 	{
+		struct ConfigDrawCircle
+		{
+			int thickness = 1;
+			Color color = Color::Red;
+		};
+
 		struct ConfigDrawLine
 		{
 			int position = 0;
@@ -87,6 +93,11 @@ namespace rw
 				QImage& image, 
 				const rqw::PainterRectangleInfo& rectInfo,
 				const ConfigDrawRect& cfg
+			);
+			static void drawShapesOnSourceImg(
+				QImage& image,
+				const DetectionRectangleInfo& rectInfo,
+				const ConfigDrawCircle& cfg
 			);
 
 			static void drawTextOnImage(
