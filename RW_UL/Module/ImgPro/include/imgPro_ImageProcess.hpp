@@ -29,11 +29,23 @@ namespace rw
 			DefectDrawFuncContext defectDrawFuncContext{};
 		private:
 			ProcessResult _processResult{};
+			RunTime _processImgTime{};
+			RunTime _operatorTime{};
 		public:
 			const ProcessResult& getProcessResult() const
 			{
 				return _processResult;
 			}
+			const RunTime & getProcessImgTime() const
+			{
+				return _processImgTime;
+			}
+			const RunTime & getOperatorTime() const
+			{
+				return _operatorTime;
+			}
+		public:
+			std::unordered_map<std::string, std::any> customFields;
 		};
 
 		class ImageProcess
@@ -57,17 +69,14 @@ namespace rw
 			std::unique_ptr<rw::ModelEngine> _engine = nullptr;
 		public:
 			std::unique_ptr<rw::ModelEngine>& getModelEngine();
-		private:
-			RunTime _processImgTime{};
-			RunTime _operatorTime{};
 		public:
 			RunTime getProcessImgTime() const
 			{
-				return _processImgTime;
+				return _context._processImgTime;
 			}
 			RunTime getOperatorTime() const
 			{
-				return _operatorTime;
+				return _context._operatorTime;
 			}
 		public:
 			ProcessResult processImg(const cv::Mat& mat);

@@ -37,7 +37,7 @@ namespace rw
 
 			auto end = std::chrono::high_resolution_clock::now();
 
-			_processImgTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+			_context._processImgTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
 			_context._processResult = processResult;
 			return _context._processResult;
@@ -115,12 +115,12 @@ namespace rw
 
 			auto end = std::chrono::high_resolution_clock::now();
 
-			_operatorTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+			_context._operatorTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		}
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat)
 		{
-			return getMaskImg(mat, _defectResultInfo, _context._processResult, _context, _operatorTime, _processImgTime);
+			return getMaskImg(mat, _defectResultInfo, _context._processResult, _context, _context._operatorTime, _context._processImgTime);
 		}
 
 		QImage ImageProcess::getMaskImg(const cv::Mat& mat, const DefectResultInfo& defectResultInfo,
