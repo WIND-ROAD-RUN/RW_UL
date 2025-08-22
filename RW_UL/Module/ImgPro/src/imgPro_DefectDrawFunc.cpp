@@ -35,6 +35,8 @@ namespace rw
 				return; 
 			}
 
+			context.ignoreItems.clear();
+
 			if (config.isDrawDefects)
 			{
 				drawDefectGroup(
