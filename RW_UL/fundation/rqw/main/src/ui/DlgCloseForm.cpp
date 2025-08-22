@@ -113,6 +113,6 @@ void DlgCloseForm::btn_yes_clicked()
 
 void DlgCloseForm::btn_no_clicked()
 {
-    this->close();
+    qApp->quit();
 }
 
