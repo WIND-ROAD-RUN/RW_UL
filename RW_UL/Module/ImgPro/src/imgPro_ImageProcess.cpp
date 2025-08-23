@@ -98,6 +98,7 @@ namespace rw
 			const rw::imgPro::EliminationInfoFunc::ClassIdWithConfigMap& eliConfigs
 		)
 		{
+			ImageProcessContext context{};
 			auto defectResultInfo =
 				rw::imgPro::DefectResultInfoFunc::getDefectResultInfo(
 					processResult,
@@ -107,7 +108,8 @@ namespace rw
 					_context.defectResultGetContext.getDefectResultExtraOperate,
 					_context.defectResultGetContext.getDefectResultExtraOperateDisable,
 					_context.defectResultGetContext.getDefectResultExtraOperateWithFullInfo,
-					_context.defectResultGetContext.getDefectResultExtraPostOperate
+					_context.defectResultGetContext.getDefectResultExtraPostOperate,
+					_context
 				);
 			_defectResultInfo = defectResultInfo;
 			return _defectResultInfo;

@@ -1,4 +1,7 @@
 #include"imgPro_DefectResultInfoFunc.hpp"
+
+#include "imgPro_ImageProcess.hpp"
+
 namespace rw
 {
 	namespace imgPro
@@ -73,6 +76,7 @@ namespace rw
 			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
 			const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo)
 		{
+			ImageProcessContext context{};
 			return getDefectResultInfo(
 				processResult,
 				classIdWithEliminationInfoConfigMap,
@@ -81,18 +85,19 @@ namespace rw
 				getDefectResultExtraOperate,
 				getDefectResultExtraOperateDisable,
 				getDefectResultExtraOperateWithFullInfo,
-				GetDefectResultExtraPostOperate{}
+				GetDefectResultExtraPostOperate{}, context
 			);
 		}
 
-		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const ProcessResult& processResult,
+		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(
+			const ProcessResult& processResult,
 			const ClassIdWithEliminationInfoConfigMap& classIdWithEliminationInfoConfigMap,
-			const EliminationInfo& eliminationInfo, 
+			const EliminationInfo& eliminationInfo,
 			const ClassIdWithConfigMap& config,
 			const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
 			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
 			const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo,
-			const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate)
+			const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate, ImageProcessContext& context)
 		{
 			DefectResultInfo result;
 			result.isBad = false;
@@ -161,7 +166,9 @@ namespace rw
 					processResult,
 					classIdWithEliminationInfoConfigMap,
 					eliminationInfo,
-					config
+					config, 
+					context
+
 				);
 			}
 
