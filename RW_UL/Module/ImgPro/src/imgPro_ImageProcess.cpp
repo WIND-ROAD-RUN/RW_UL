@@ -40,6 +40,10 @@ namespace rw
 			_context._processImgTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
 			_context._processResult = processResult;
+			if (_context.isUseCurrentMat)
+			{
+				_context.currentMat() = mat.clone();
+			}
 			return _context._processResult;
 		}
 
