@@ -52,6 +52,19 @@ namespace rw
 			}
 		public:
 			std::unordered_map<std::string, std::any> customFields;
+		private:
+			cv::Mat _currentMat;
+		public:
+			bool isUseCurrentMat{false};
+		public:
+			const cv::Mat& getCurrentMat() const
+			{
+				return _currentMat;
+			}
+			cv::Mat& currentMat()
+			{
+				return _currentMat;
+			}
 		};
 
 		class ImageProcess
