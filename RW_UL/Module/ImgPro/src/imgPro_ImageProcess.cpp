@@ -80,7 +80,8 @@ namespace rw
 					indexMap,
 					configs,
 					_context.eliminationInfoGetContext.getEliminationItemFuncSpecialOperator,
-					_context.eliminationInfoGetContext.getEliminationItemPostOperator
+					_context.eliminationInfoGetContext.getEliminationItemPostOperator,
+					_context
 				);
 			_eliminationInfo = eliminationInfo;
 			return _eliminationInfo;

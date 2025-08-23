@@ -6,6 +6,8 @@ namespace rw
 {
 	namespace imgPro
 	{
+		struct ImageProcessContext;
+
 		struct EliminationItem
 		{
 			double score = 0;//置信度
@@ -64,7 +66,8 @@ namespace rw
 		using GetEliminationItemPostOperate = std::function<void(
 			const ProcessResult&, 
 			const ProcessResultIndexMap&, 
-			const ClassIdWithEliminationInfoConfigMap&
+			const ClassIdWithEliminationInfoConfigMap&,
+			ImageProcessContext&
 			)>;
 
 		struct EliminationInfoGetContext {
@@ -91,11 +94,12 @@ namespace rw
 				const GetEliminationItemSpecialOperate& specialOperate
 			);
 			static EliminationInfo getEliminationInfo(
-				const ProcessResult& info, 
+				const ProcessResult& info,
 				const ProcessResultIndexMap& index,
 				const ClassIdWithConfigMap& config,
 				const GetEliminationItemSpecialOperate& specialOperate,
-				const GetEliminationItemPostOperate & postOperate
+				const GetEliminationItemPostOperate & postOperate,
+				ImageProcessContext& context
 			);
 
 		};

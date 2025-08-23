@@ -1,5 +1,7 @@
 #include"imgPro_EliminationInfoFunc.hpp"
 
+#include "imgPro_ImageProcess.hpp"
+
 namespace rw
 {
 	namespace imgPro
@@ -14,12 +16,14 @@ namespace rw
 		                                                        const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
 		                                                        const GetEliminationItemSpecialOperate& specialOperate)
 		{
-			return getEliminationInfo(info, index, config, GetEliminationItemSpecialOperate{}, GetEliminationItemPostOperate{});
+			ImageProcessContext context{};
+			return getEliminationInfo(info, index, config, GetEliminationItemSpecialOperate{}, GetEliminationItemPostOperate{}, context);
 		}
 
 		EliminationInfo EliminationInfoFunc::getEliminationInfo(const ProcessResult& info,
-			const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
-			const GetEliminationItemSpecialOperate& specialOperate, const GetEliminationItemPostOperate& postOperate)
+		                                                        const ProcessResultIndexMap& index, const ClassIdWithConfigMap& config,
+		                                                        const GetEliminationItemSpecialOperate& specialOperate, const GetEliminationItemPostOperate& postOperate, ImageProcessContext
+		                                                        & context)
 		{
 			EliminationInfo result;
 
@@ -97,7 +101,7 @@ namespace rw
 
 			if (postOperate)
 			{
-				postOperate(info, index, config);
+				postOperate(info, index, config,context);
 			}
 
 			return result;
