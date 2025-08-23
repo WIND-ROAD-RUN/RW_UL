@@ -166,7 +166,8 @@ namespace rw
 					processResult,
 					classIdWithEliminationInfoConfigMap,
 					eliminationInfo,
-					config, 
+					config,
+					result,
 					context
 
 				);
