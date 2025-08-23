@@ -47,7 +47,8 @@ namespace rw
 				const ProcessResult&,
 				const ClassIdWithEliminationInfoConfigMap&,
 				const EliminationInfo&,
-				const ClassIdWithDefectResultInfoFuncConfigMap&
+				const ClassIdWithDefectResultInfoFuncConfigMap&,
+				ImageProcessContext&
 				)>;
 
 		struct DefectResultGetContext
@@ -94,7 +95,7 @@ namespace rw
 				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
 				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable,
 				const GetDefectResultExtraOperateWithFullInfo& getDefectResultExtraOperateWithFullInfo,
-				const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate
+				const GetDefectResultExtraPostOperate& getDefectResultExtraPostOperate, ImageProcessContext& context
 			);
 		};
 	}
