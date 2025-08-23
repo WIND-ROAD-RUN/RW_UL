@@ -7,3 +7,5 @@ if(CONFIG_TEST)
     add_subdirectory(demo)
 	add_subdirectory(demoNoQt)
 endif()
+
+add_subdirectory(PackageTool)
