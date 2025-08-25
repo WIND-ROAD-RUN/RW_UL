@@ -7,14 +7,9 @@ namespace rw
 	namespace imgPro
 	{
 		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const EliminationInfo& eliminationInfo,
-			const ClassIdWithConfigMap& config)
-		{
-			return getDefectResultInfo(eliminationInfo, config, GetDefectResultExtraOperateWhichIsDefects{}, GetDefectResultExtraOperateWhichIsDisableDefects{});
-		}
-
-		DefectResultInfo DefectResultInfoFunc::getDefectResultInfo(const EliminationInfo& eliminationInfo,
-			const ClassIdWithConfigMap& config, const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
-			const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable
+		                                                           const ClassIdWithConfigMap& config, const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
+		                                                           const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable, const ProcessResult&
+		                                                           processResult
 		)
 		{
 			DefectResultInfo result;
@@ -39,7 +34,7 @@ namespace rw
 								result.isBad = true;
 								if (getDefectResultExtraOperate)
 								{
-									getDefectResultExtraOperate(item);
+									getDefectResultExtraOperate(item, processResult[item.index]);
 								}
 								result.defects[classId].push_back(item);
 							}
@@ -47,7 +42,7 @@ namespace rw
 							{
 								if (getDefectResultExtraOperateDisable)
 								{
-									getDefectResultExtraOperateDisable(item);
+									getDefectResultExtraOperateDisable(item, processResult[item.index]);
 								}
 								result.disableDefects[classId].push_back(item);
 							}
@@ -56,7 +51,7 @@ namespace rw
 						{
 							if (getDefectResultExtraOperateDisable)
 							{
-								getDefectResultExtraOperateDisable(item);
+								getDefectResultExtraOperateDisable(item, processResult[item.index]);
 							}
 							result.disableDefects[classId].push_back(item);
 						}
@@ -122,7 +117,7 @@ namespace rw
 								result.isBad = true;
 								if (getDefectResultExtraOperate)
 								{
-									getDefectResultExtraOperate(item);
+									getDefectResultExtraOperate(item, processResult[item.index]);
 								}
 								result.defects[classId].push_back(item);
 							}
@@ -130,7 +125,7 @@ namespace rw
 							{
 								if (getDefectResultExtraOperateDisable)
 								{
-									getDefectResultExtraOperateDisable(item);
+									getDefectResultExtraOperateDisable(item, processResult[item.index]);
 								}
 								result.disableDefects[classId].push_back(item);
 							}
@@ -139,7 +134,7 @@ namespace rw
 						{
 							if (getDefectResultExtraOperateDisable)
 							{
-								getDefectResultExtraOperateDisable(item);
+								getDefectResultExtraOperateDisable(item, processResult[item.index]);
 							}
 							result.disableDefects[classId].push_back(item);
 						}
@@ -152,7 +147,9 @@ namespace rw
 									processResult[item.index],
 									itEliCfg->second,
 									item,
-									cfg
+									cfg,
+									result,
+									context
 								);
 							}
 						}

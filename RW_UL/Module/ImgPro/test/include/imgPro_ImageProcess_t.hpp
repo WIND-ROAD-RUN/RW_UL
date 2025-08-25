@@ -46,14 +46,14 @@ protected:
 	void iniDefectResultContext()
 	{
 		auto& context = imgProcess->context();
-		context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item) {
+		context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item,const rw::DetectionRectangleInfo & info) {
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find != item.customFields.end())
 			{
 				std::cout << "someValueWillBeUsed :" << std::any_cast<int>(find->second) << "score is:" << item.score << std::endl;
 			}
 			};
-		context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item) {
+		context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item, const rw::DetectionRectangleInfo& info) {
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find != item.customFields.end())
 			{

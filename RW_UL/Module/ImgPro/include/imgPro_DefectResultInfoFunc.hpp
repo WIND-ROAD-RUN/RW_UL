@@ -24,12 +24,14 @@ namespace rw
 
 		using GetDefectResultExtraOperateWhichIsDefects = 
 			std::function<void(
-				const EliminationItem&
+				const EliminationItem&,
+				const rw::DetectionRectangleInfo&
 				)>;
 
 		using GetDefectResultExtraOperateWhichIsDisableDefects = 
 			std::function<void(
-			const EliminationItem&
+			const EliminationItem&,
+			const rw::DetectionRectangleInfo&
 			)>;
 
 		using GetDefectResultExtraOperateWithFullInfo = 
@@ -37,7 +39,9 @@ namespace rw
 			const rw::DetectionRectangleInfo&,
 			const EliminationInfoGetConfig &,
 			const EliminationItem&,
-			const DefectResultGetConfig&
+			const DefectResultGetConfig&,
+			DefectResultInfo&,
+			ImageProcessContext&
 			)>;
 
 		using ClassIdWithDefectResultInfoFuncConfigMap= std::unordered_map<ClassId, DefectResultGetConfig>;
@@ -68,13 +72,12 @@ namespace rw
 			using Config = DefectResultGetConfig;
 			using ClassIdWithConfigMap = ClassIdWithDefectResultInfoFuncConfigMap;
 		public:
-			static DefectResultInfo getDefectResultInfo(const EliminationInfo& eliminationInfo, const ClassIdWithConfigMap& config);
-
 			static DefectResultInfo getDefectResultInfo(
 				const EliminationInfo& eliminationInfo,
 				const ClassIdWithConfigMap& config,
 				const GetDefectResultExtraOperateWhichIsDefects& getDefectResultExtraOperate,
-				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable
+				const GetDefectResultExtraOperateWhichIsDisableDefects& getDefectResultExtraOperateDisable, const ProcessResult&
+				processResult
 			);
 
 			//Extra operate with full info
