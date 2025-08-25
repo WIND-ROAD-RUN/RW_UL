@@ -103,12 +103,14 @@ namespace rw {
 					while (!saveQueue.isEmpty() && tasks.size() < batchSize) {
 						tasks.append(saveQueue.dequeue());
 					}
+
+					// 保存图片
+					for (const auto& task : tasks) {
+						saveImage(task);
+					}
 				}
 
-				// 保存图片
-				for (const auto& task : tasks) {
-					saveImage(task);
-				}
+				
 			}
 		}
 
