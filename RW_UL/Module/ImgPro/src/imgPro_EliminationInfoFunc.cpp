@@ -87,6 +87,7 @@ namespace rw
 					item.area = area;
 					item.index = idx;
 					item.isBad = isBad;
+					item.classId = classId;
 
 					if (specialOperate)
 					{

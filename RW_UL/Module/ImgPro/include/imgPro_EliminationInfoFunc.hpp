@@ -12,7 +12,8 @@ namespace rw
 		{
 			double score = 0;//置信度
 			double area = 0;//面积
-			ClassId index = -1;//类别索引
+			ProcessResultIndex index = -1;
+			ClassId classId = 0;
 			bool isBad = false;//满足剔除条件
 			std::unordered_map<std::string, std::any> customFields;//自定义字段
 		};
