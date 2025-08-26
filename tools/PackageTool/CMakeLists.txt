@@ -12,7 +12,7 @@ set(CMAKE_AUTOUIC ON)   # 直接把 .ui 当普通源文件列入即可
 set(CMAKE_AUTORCC ON)
 
 # 找 Qt6；若 CMake 找不到，设置环境变量 Qt6_DIR 指向 .../lib/cmake/Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Concurrent SerialPort)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Concurrent)
 
 #（可选）如果以后需要 OpenCV 再打开
 # find_package(OpenCV REQUIRED)
@@ -53,7 +53,6 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Core
         Qt6::Widgets
         Qt6::Concurrent
-        Qt6::SerialPort
         # ${OpenCV_LIBS}    # 如果启用 OpenCV
 )
 
