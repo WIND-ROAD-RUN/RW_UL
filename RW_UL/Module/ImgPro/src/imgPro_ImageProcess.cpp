@@ -51,6 +51,17 @@ namespace rw
 		{
 			auto indexMap = rw::imgPro::IndexFunc::getIndex(processResult);
 
+			//确保eliminationCfg和defectCfg中classId都有对应的indexMap
+			auto classidNum = std::min(_context.eliminationCfg.size(), _context.defectCfg.size());
+			if (classidNum == 0)
+			{
+				throw std::runtime_error("Elimination config or defect config is empty.");
+			}
+			for (int i=0;i< classidNum;i++)
+			{
+				indexMap[i];
+			}
+
 			auto& indexGetContext = _context.indexGetContext;
 
 			if (indexGetContext.removeIndicesIf)
