@@ -1,58 +1,43 @@
-#include "rqw_ImageSaveEngineRefactor.hpp"
+#include "rqw_ImageSaveEngineV1.hpp"
 
 #include <iostream>
 #include <QDir>
 
 namespace rw {
 	namespace rqw {
-		QString imageFormatToString(rw::rqw::ImageSaveFormatRefactor format)
+		QString imageFormatToString(rw::rqw::ImageSaveFormatV1 format)
 		{
 			switch (format) {
-			case ImageSaveFormatRefactor::JPEG:
+			case ImageSaveFormatV1::JPEG:
 				return "jpg";
-			case ImageSaveFormatRefactor::PNG:
+			case ImageSaveFormatV1::PNG:
 				return "png";
-			case ImageSaveFormatRefactor::BMP:
+			case ImageSaveFormatV1::BMP:
 				return "bmp";
 			default:
 				return "jpg"; // 默认格式
 			}
 		}
 
-		ImageSaveEngineRefactor::ImageSaveEngineRefactor(QObject* parent, int threadCount)
+		ImageSaveEngineV1::ImageSaveEngineV1(QObject* parent, int threadCount)
 			: QObject(parent), stopFlag(false), threadCount(threadCount) {
 		}
 
-		ImageSaveEngineRefactor::~ImageSaveEngineRefactor()
+		ImageSaveEngineV1::~ImageSaveEngineV1()
 		{
 			stopEngine();
 		}
 
-		void ImageSaveEngineRefactor::setRootPath(const QString& rootPath)
+		void ImageSaveEngineV1::pushImage(const ImageSaveInfoV1& image)
 		{
-			QMutexLocker locker(&mutex);
-			this->rootPath = rootPath;
-			QDir dir(rootPath);
-			if (!dir.exists()) {
-				dir.mkpath(".");
+			if (image.saveDirectoryPath.isEmpty())
+			{
+				return;
 			}
-		}
 
-		QString ImageSaveEngineRefactor::getRootPath()
-		{
-			QMutexLocker locker(&mutex);
-			if (rootPath.isEmpty()) {
-				std::cerr << "Root path is not set." << std::endl;
-				return QString();
-			}
-			return rootPath;
-		}
-
-		void ImageSaveEngineRefactor::pushImage(const ImageSaveInfoRefactor& image)
-		{
 			QMutexLocker locker(&mutex);
 			// 如果策略为 SaveAllImg，则不限制队列大小
-			if (savePolicy != ImageSaveEnginePolicyRefactor::SaveAllImg && saveQueue.size() >= maxQueueSize) {
+			if (savePolicy != ImageSaveEnginePolicyV1::SaveAllImg && saveQueue.size() >= maxQueueSize) {
 				std::cerr << "Queue is full, dropping image." << std::endl;
 				return;
 			}
@@ -60,7 +45,7 @@ namespace rw {
 			condition.wakeOne();
 		}
 
-		void ImageSaveEngineRefactor::stopEngine()
+		void ImageSaveEngineV1::stopEngine()
 		{
 			{
 				QMutexLocker locker(&mutex);
@@ -74,7 +59,7 @@ namespace rw {
 			workerThreads.clear();
 		}
 
-		void ImageSaveEngineRefactor::startEngine()
+		void ImageSaveEngineV1::startEngine()
 		{
 			for (int i = 0; i < threadCount; ++i) {
 				QThread* worker = QThread::create([this]() { this->processImages(); });
@@ -83,15 +68,15 @@ namespace rw {
 			}
 		}
 
-		void ImageSaveEngineRefactor::setSaveImgFormat(const ImageSaveFormatRefactor format)
+		void ImageSaveEngineV1::setSaveImgFormat(const ImageSaveFormatV1 format)
 		{
 			_saveImgFormat = format;
 		}
 
-		void ImageSaveEngineRefactor::processImages()
+		void ImageSaveEngineV1::processImages()
 		{
 			while (true) {
-				QList<ImageSaveInfoRefactor> tasks;
+				QList<ImageSaveInfoV1> tasks;
 
 				{
 					QMutexLocker locker(&mutex);
@@ -118,15 +103,15 @@ namespace rw {
 			}
 		}
 
-		bool ImageSaveEngineRefactor::isAllImageSaved()
+		bool ImageSaveEngineV1::isAllImageSaved()
 		{
 			QMutexLocker locker(&mutex);
 			return saveQueue.isEmpty();
 		}
 
-		void ImageSaveEngineRefactor::saveImage(const ImageSaveInfoRefactor& image)
+		void ImageSaveEngineV1::saveImage(const ImageSaveInfoV1& image)
 		{
-			QDir dir(rootPath + "/" + image.classify);
+			QDir dir(image.saveDirectoryPath + "/");
 			if (!dir.exists()) {
 				dir.mkpath(".");
 			}
@@ -135,11 +120,11 @@ namespace rw {
 			QString formatStr = imageFormatToString(_saveImgFormat);
 
 			// 构造文件名
-			QString fileName = dir.filePath(image.classify + image.time + "." + formatStr);
+			QString fileName = dir.filePath( image.name + "." + formatStr);
 
 			// 检查策略
-			if (savePolicy == ImageSaveEnginePolicyRefactor::MaxSaveImageNum) {
-				auto& imageList = savedImages[image.classify];
+			if (savePolicy == ImageSaveEnginePolicyV1::MaxSaveImageNum) {
+				auto& imageList = savedImages[image.saveDirectoryPath];
 				if (imageList.size() >= maxSaveImageNum) {
 					QString oldestFile = imageList.front();
 					imageList.erase(imageList.begin());
@@ -154,19 +139,19 @@ namespace rw {
 			}
 		}
 
-		void ImageSaveEngineRefactor::setSavePolicy(ImageSaveEnginePolicyRefactor policy)
+		void ImageSaveEngineV1::setSavePolicy(ImageSaveEnginePolicyV1 policy)
 		{
 			QMutexLocker locker(&mutex);
 			savePolicy = policy;
 		}
 
-		void ImageSaveEngineRefactor::setMaxSaveImageNum(int maxNum)
+		void ImageSaveEngineV1::setMaxSaveImageNum(int maxNum)
 		{
 			QMutexLocker locker(&mutex);
 			maxSaveImageNum = maxNum;
 		}
 
-		void ImageSaveEngineRefactor::setSaveImgQuality(int quality)
+		void ImageSaveEngineV1::setSaveImgQuality(int quality)
 		{
 			QMutexLocker locker(&mutex);
 			saveImgQuality = quality;

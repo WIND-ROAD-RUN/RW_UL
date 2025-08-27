@@ -8,38 +8,44 @@ namespace rw
 {
 	namespace rqw
 	{
-		enum class ImageSaveEnginePolicyRefactor
+		enum class ImageSaveEnginePolicyV1
 		{
 			Normal,
 			MaxSaveImageNum,
 			SaveAllImg
 		};
 
-		enum class ImageSaveFormatRefactor
+		enum class ImageSaveFormatV1
 		{
 			JPEG,
 			PNG,
 			BMP
 		};
 
-		struct ImageSaveInfoRefactor
+		struct ImageSaveInfoV1
 		{
 		public:
 			QImage image;
-			QString classify;
 		public:
-			QString time;
+			QString name;
 			QString saveDirectoryPath{};
 		public:
-			ImageSaveInfoRefactor(const QImage& image)
+			ImageSaveInfoV1(const QImage& image)
 			{
 				this->image = image;
 				QDateTime currentTime = QDateTime::currentDateTime();
-				this->time = currentTime.toString("yyyyMMddhhmmsszzz");
+				this->name = currentTime.toString("yyyyMMddhhmmsszzz");
+			}
+
+			ImageSaveInfoV1(QImage&& image)
+			{
+				this->image = std::move(image);
+				QDateTime currentTime = QDateTime::currentDateTime();
+				this->name = currentTime.toString("yyyyMMddhhmmsszzz");
 			}
 		};
 
-		QString imageFormatToString(rw::rqw::ImageSaveFormatRefactor format);
+		QString imageFormatToString(rw::rqw::ImageSaveFormatV1 format);
 	}
 
 }

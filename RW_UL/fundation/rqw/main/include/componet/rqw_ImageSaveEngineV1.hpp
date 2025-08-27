@@ -15,25 +15,21 @@
 
 namespace rw {
 	namespace rqw {
-		class ImageSaveEngineRefactor : public QObject {
+		class ImageSaveEngineV1 : public QObject {
 			Q_OBJECT
 
 		public:
-			ImageSaveEngineRefactor(QObject* parent = nullptr, int threadCount = 4);
+			ImageSaveEngineV1(QObject* parent = nullptr, int threadCount = 4);
 
-			~ImageSaveEngineRefactor();
+			~ImageSaveEngineV1();
 
-			void setRootPath(const QString& rootPath);
-
-			QString getRootPath();
-
-			void pushImage(const ImageSaveInfoRefactor& image);
+			void pushImage(const ImageSaveInfoV1& image);
 
 			void stopEngine();
 
 			void startEngine();
 
-			void setSavePolicy(ImageSaveEnginePolicyRefactor policy);
+			void setSavePolicy(ImageSaveEnginePolicyV1 policy);
 
 			void setMaxSaveImageNum(int maxNum);
 
@@ -42,18 +38,17 @@ namespace rw {
 		public:
 			void setSaveImgQuality(int quality);
 		private:
-			ImageSaveFormatRefactor _saveImgFormat = ImageSaveFormatRefactor::JPEG;
+			ImageSaveFormatV1 _saveImgFormat = ImageSaveFormatV1::JPEG;
 		public:
-			void setSaveImgFormat(ImageSaveFormatRefactor format);
+			void setSaveImgFormat(ImageSaveFormatV1 format);
 		protected:
 			void processImages();
 		public:
 			bool isAllImageSaved();
 		private:
-			void saveImage(const ImageSaveInfoRefactor& image);
+			void saveImage(const ImageSaveInfoV1& image);
 
-			QString rootPath;
-			QQueue<ImageSaveInfoRefactor> saveQueue;
+			QQueue<ImageSaveInfoV1> saveQueue;
 			QMutex mutex;
 			QWaitCondition condition;
 			std::atomic<bool> stopFlag;
@@ -63,7 +58,7 @@ namespace rw {
 			int threadCount;
 			std::vector<QThread*> workerThreads;
 
-			ImageSaveEnginePolicyRefactor savePolicy = ImageSaveEnginePolicyRefactor::Normal;
+			ImageSaveEnginePolicyV1 savePolicy = ImageSaveEnginePolicyV1::Normal;
 			int maxSaveImageNum = 50;
 			std::map<QString, std::vector<QString>> savedImages;
 		};
