@@ -230,7 +230,7 @@ namespace rw
 			return _zMotion->Single_Move(axis, dir, speed, acc, dec, units);
 		}
 
-		bool ZMotion::SingleMove(int axis, double dir)
+		bool ZMotion::singleMove(int axis, double dir)
 		{
 			if (!_zMotion)
 			{

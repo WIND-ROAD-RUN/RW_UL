@@ -9,9 +9,6 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 
-
-	
-
 	rw::rqw::ImageSaveEngineV1 engine;
 	engine.startEngine();
 
