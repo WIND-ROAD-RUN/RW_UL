@@ -63,7 +63,7 @@ namespace rw
 
 			[[nodiscard]] bool singleMove(int axis, int dir, float speed = 20, float acc = 1000, float dec = 1000, float units = 0);
 
-			[[nodiscard]] bool SingleMove(int axis, double dir);
+			[[nodiscard]] bool singleMove(int axis, double dir);
 
 			[[nodiscard]] bool setLocationZero(int axis);
 

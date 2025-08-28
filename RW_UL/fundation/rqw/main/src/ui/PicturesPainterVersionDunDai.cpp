@@ -348,15 +348,72 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 	int w = drawLabel->width();
 	int h = drawLabel->height();
 
+	QRectF scaledRect;
 
 	auto scaleX = static_cast<double>(imgW) / w;
 	auto scaleY = static_cast<double>(imgH) / h;
-	QRectF scaledRect(
-		m_lastNormalizedRect.x() / scaleX,
-		m_lastNormalizedRect.y() / scaleY,
-		m_lastNormalizedRect.width() / scaleX,
-		m_lastNormalizedRect.height() / scaleY
-	);
+
+	if (imgW==w)
+	{
+		// 图片宽度与控件宽度一致，Y轴居中
+		int offsetY = (h - imgH) / 2;
+		// 注意：m_lastNormalizedRect 是控件坐标系下的归一化数据
+		// 需要先还原为控件像素坐标，再减去 offsetY，最后归一化到图片坐标系
+		double rectX = m_lastNormalizedRect.x() * w;
+		double rectY = m_lastNormalizedRect.y() * h - offsetY;
+		double rectWidth = m_lastNormalizedRect.width() * w;
+		double rectHeight = m_lastNormalizedRect.height() * h;
+
+		// 保证 Y 不越界
+		rectY = std::max(0.0, rectY);
+		if (rectY + rectHeight > imgH) {
+			rectHeight = imgH - rectY;
+		}
+
+		scaledRect = QRectF(
+			rectX / imgW,
+			rectY / imgH,
+			rectWidth / imgW,
+			rectHeight / imgH
+		);
+	}
+	else if (imgH == h)
+	{
+		// 图片高度与控件高度一致，图片靠左显示
+	// m_lastNormalizedRect 是控件坐标系下的归一化数据
+	// 直接映射到图片坐标系，但要做越界处理
+		double rectX = m_lastNormalizedRect.x() * w;
+		double rectY = m_lastNormalizedRect.y() * h;
+		double rectWidth = m_lastNormalizedRect.width() * w;
+		double rectHeight = m_lastNormalizedRect.height() * h;
+
+		// 保证 X 不越界
+		rectX = std::max(0.0, rectX);
+		if (rectX + rectWidth > imgW) {
+			rectWidth = imgW - rectX;
+		}
+
+		// 保证 Y 不越界
+		rectY = std::max(0.0, rectY);
+		if (rectY + rectHeight > imgH) {
+			rectHeight = imgH - rectY;
+		}
+
+		scaledRect = QRectF(
+			rectX / imgW,
+			rectY / imgH,
+			rectWidth / imgW,
+			rectHeight / imgH
+		);
+	}
+	else
+	{
+		scaledRect = rect;
+		
+	}
+
+
+
 	m_lastNormalizedRect = scaledRect;
 
 	QRect drawRect(
