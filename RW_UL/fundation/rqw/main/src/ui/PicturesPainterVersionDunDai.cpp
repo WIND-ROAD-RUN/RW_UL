@@ -357,37 +357,30 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 	{
 		// 图片宽度与控件宽度一致，Y轴居中
 		int offsetY = (h - imgH) / 2;
-		// 注意：m_lastNormalizedRect 是控件坐标系下的归一化数据
-		// 需要先还原为控件像素坐标，再减去 offsetY，最后归一化到图片坐标系
+		// 先还原为控件像素坐标，再减去 offsetY
 		double rectX = m_lastNormalizedRect.x() * w;
 		double rectY = m_lastNormalizedRect.y() * h - offsetY;
 		double rectWidth = m_lastNormalizedRect.width() * w;
 		double rectHeight = m_lastNormalizedRect.height() * h;
 
-		// 检查是否在图片外部
-		if (rectX >= imgW || rectX + rectWidth <= 0 ||
-			rectY >= imgH || rectY + rectHeight <= 0) {
+		// 构造原始框和图片区域
+		QRectF rect(rectX, rectY, rectWidth, rectHeight);
+		QRectF imgRect(0, 0, imgW, imgH);
+
+		// 取交集
+		QRectF intersectedRect = rect.intersected(imgRect);
+
+		if (intersectedRect.isEmpty()) {
 			QMessageBox::information(this, "提示", "框选区域在图片外部！");
 			return;
 		}
 
-		// 保证 Y 不越界
-		rectY = std::max(0.0, rectY);
-		if (rectY + rectHeight > imgH) {
-			rectHeight = imgH - rectY;
-		}
-
-		// 保证 X 不越界
-		rectX = std::max(0.0, rectX);
-		if (rectX + rectWidth > imgW) {
-			rectWidth = imgW - rectX;
-		}
-
+		// 转为归一化坐标
 		scaledRect = QRectF(
-			rectX / imgW,
-			rectY / imgH,
-			rectWidth / imgW,
-			rectHeight / imgH
+			intersectedRect.x() / imgW,
+			intersectedRect.y() / imgH,
+			intersectedRect.width() / imgW,
+			intersectedRect.height() / imgH
 		);
 	}
 	else if (imgH == h)
