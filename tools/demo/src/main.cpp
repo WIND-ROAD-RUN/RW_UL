@@ -25,8 +25,8 @@ int main(int argc, char* argv[])
 	engine.stopEngine();*/
 
 	PicturesPainterVersionDunDai painter;
-	QImage image(R"(C:\Users\rw\Desktop\temp\2025-06-17_11-10-55-662.jpg)");
-	//QImage image(R"(C:\Users\rw\Desktop\temp\total.png)");
+	//QImage image(R"(C:\Users\rw\Desktop\temp\2025-06-17_11-10-55-662.jpg)");
+	QImage image(R"(C:\Users\rw\Desktop\temp\total.png)");
 	std::vector<rw::rqw::RectangeConfig> cfgs;
 	rw::rqw::RectangeConfig config;
 	config.classid = 0;

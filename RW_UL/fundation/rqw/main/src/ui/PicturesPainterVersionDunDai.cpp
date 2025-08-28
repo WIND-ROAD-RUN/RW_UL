@@ -364,10 +364,23 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 		double rectWidth = m_lastNormalizedRect.width() * w;
 		double rectHeight = m_lastNormalizedRect.height() * h;
 
+		// 检查是否在图片外部
+		if (rectX >= imgW || rectX + rectWidth <= 0 ||
+			rectY >= imgH || rectY + rectHeight <= 0) {
+			QMessageBox::information(this, "提示", "框选区域在图片外部！");
+			return;
+		}
+
 		// 保证 Y 不越界
 		rectY = std::max(0.0, rectY);
 		if (rectY + rectHeight > imgH) {
 			rectHeight = imgH - rectY;
+		}
+
+		// 保证 X 不越界
+		rectX = std::max(0.0, rectX);
+		if (rectX + rectWidth > imgW) {
+			rectWidth = imgW - rectX;
 		}
 
 		scaledRect = QRectF(
@@ -380,12 +393,19 @@ void PicturesPainterVersionDunDai::onRectSelected(const QRectF& rect)
 	else if (imgH == h)
 	{
 		// 图片高度与控件高度一致，图片靠左显示
-	// m_lastNormalizedRect 是控件坐标系下的归一化数据
-	// 直接映射到图片坐标系，但要做越界处理
+// m_lastNormalizedRect 是控件坐标系下的归一化数据
+// 直接映射到图片坐标系，但要做越界处理
 		double rectX = m_lastNormalizedRect.x() * w;
 		double rectY = m_lastNormalizedRect.y() * h;
 		double rectWidth = m_lastNormalizedRect.width() * w;
 		double rectHeight = m_lastNormalizedRect.height() * h;
+
+		// 检查是否在图片外部
+		if (rectX >= imgW || rectX + rectWidth <= 0 ||
+			rectY >= imgH || rectY + rectHeight <= 0) {
+			QMessageBox::information(this, "提示", "框选区域在图片外部！");
+			return;
+		}
 
 		// 保证 X 不越界
 		rectX = std::max(0.0, rectX);
