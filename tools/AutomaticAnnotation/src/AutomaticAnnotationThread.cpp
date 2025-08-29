@@ -332,13 +332,27 @@ void AutomaticAnnotationThread::run()
 
 		auto image = rw::rqw::cvMatToQImage(mat);
 
-		rw::imgPro::ConfigDrawMask config;
-		config.rectCfg.fontSize = 30;
-
-		for (const auto& item : result)
+		if (labelType == R"(Segment)")
 		{
-			config.rectCfg.text = QString::number(item.classId);
-			rw::imgPro::ImagePainter::drawMaskOnSourceImg(image, item, config);
+			rw::imgPro::ConfigDrawMask config;
+			config.rectCfg.fontSize = 30;
+
+			for (const auto& item : result)
+			{
+				config.rectCfg.text = QString::number(item.classId);
+				rw::imgPro::ImagePainter::drawMaskOnSourceImg(image, item, config);
+			}
+		}
+		else
+		{
+			rw::imgPro::ConfigDrawRect configRect;
+			configRect.fontSize = std::max(14, image.height() / 25);
+			configRect.textColor = rw::imgPro::Color::Green;
+			for (const auto& item : result)
+			{
+				configRect.text = QString::number(item.classId);
+				rw::imgPro::ImagePainter::drawShapesOnSourceImg(image, item, configRect);
+			}
 		}
 
 		QPixmap pixmap = QPixmap::fromImage(image);
