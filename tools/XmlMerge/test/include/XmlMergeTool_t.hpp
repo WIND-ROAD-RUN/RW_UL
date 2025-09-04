@@ -1,4 +1,4 @@
 #pragma once
 
-#include"XmlMerge.hpp"
+#include "XmlMergeTool.hpp"
 #include"gtest/gtest.h"
