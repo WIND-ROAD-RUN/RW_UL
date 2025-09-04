@@ -9,3 +9,4 @@ if(CONFIG_TEST)
 endif()
 
 add_subdirectory(PackageTool)
+add_subdirectory(XmlMerge)
