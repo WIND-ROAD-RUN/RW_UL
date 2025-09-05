@@ -1,26 +1,25 @@
-#include "XmlMergeTool.hpp"
-#include <algorithm>
+#include"oso_func.hpp"
 
-namespace zzw
+namespace rw
 {
-	namespace XmlMerge
+	namespace oso
 	{
-		void XmlMergeTool::Merge(rw::oso::ObjectStoreAssembly& newAssembly,
+		void AssemblyMergeTool::Merge(rw::oso::ObjectStoreAssembly& targetAssembly,
 			const rw::oso::ObjectStoreAssembly& oldAssembly)
 		{
-			MergeAssembly(newAssembly, oldAssembly);
+			MergeAssembly(targetAssembly, oldAssembly);
 		}
 
-		rw::oso::ObjectStoreAssembly XmlMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
-			const rw::oso::ObjectStoreAssembly& oldAssembly)
+		rw::oso::ObjectStoreAssembly AssemblyMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
+		                                                      const rw::oso::ObjectStoreAssembly& oldAssembly)
 		{
 			rw::oso::ObjectStoreAssembly mergedAssembly = newAssembly;
 			MergeAssembly(mergedAssembly, oldAssembly);
 			return mergedAssembly;
 		}
 
-		rw::oso::ObjectStoreAssembly XmlMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
-			const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
+		rw::oso::ObjectStoreAssembly AssemblyMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
+		                                                      const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
 		{
 			rw::oso::ObjectStoreAssembly mergedAssembly = newAssembly;
 			isSuccess = true;
@@ -28,8 +27,8 @@ namespace zzw
 			return mergedAssembly;
 		}
 
-		void XmlMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
-		                                 const rw::oso::ObjectStoreAssembly& oldAssembly)
+		void AssemblyMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
+		                                      const rw::oso::ObjectStoreAssembly& oldAssembly)
 		{
 			if ("assembly" == newAssembly.getStoreType() &&
 				"assembly" == oldAssembly.getStoreType())
@@ -140,8 +139,8 @@ namespace zzw
 			}
 		}
 
-		void XmlMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
-			const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
+		void AssemblyMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
+		                                      const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
 		{
 			if ("assembly" == newAssembly.getStoreType() &&
 				"assembly" == oldAssembly.getStoreType())
@@ -264,4 +263,5 @@ namespace zzw
 			}
 		}
 	}
-} // namespace zzw::XmlMerge
+
+}
