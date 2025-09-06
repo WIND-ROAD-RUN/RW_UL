@@ -11,7 +11,7 @@ namespace rw
 		}
 
 		rw::oso::ObjectStoreAssembly AssemblyMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
-		                                                      const rw::oso::ObjectStoreAssembly& oldAssembly)
+			const rw::oso::ObjectStoreAssembly& oldAssembly)
 		{
 			rw::oso::ObjectStoreAssembly mergedAssembly = newAssembly;
 			MergeAssembly(mergedAssembly, oldAssembly);
@@ -19,7 +19,7 @@ namespace rw
 		}
 
 		rw::oso::ObjectStoreAssembly AssemblyMergeTool::Merge(const rw::oso::ObjectStoreAssembly& newAssembly,
-		                                                      const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
+			const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
 		{
 			rw::oso::ObjectStoreAssembly mergedAssembly = newAssembly;
 			isSuccess = true;
@@ -28,7 +28,7 @@ namespace rw
 		}
 
 		void AssemblyMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
-		                                      const rw::oso::ObjectStoreAssembly& oldAssembly)
+			const rw::oso::ObjectStoreAssembly& oldAssembly)
 		{
 			if ("assembly" == newAssembly.getStoreType() &&
 				"assembly" == oldAssembly.getStoreType())
@@ -38,12 +38,12 @@ namespace rw
 
 				for (auto& newCore : newCoreVector)
 				{
-					if ("core" == newCore->getStoreType())
+					if ("item" == newCore->getStoreType())
 					{
 						auto newCoreName = newCore->getName();
 						for (const auto& oldCore : oldCoreVector)
 						{
-							if ("core" == oldCore->getStoreType())
+							if ("item" == oldCore->getStoreType())
 							{
 								auto oldCoreName = oldCore->getName();
 
@@ -132,6 +132,54 @@ namespace rw
 										break;
 									}
 								}
+								else
+								{
+									auto newItem = rw::oso::ObjectStoreCoreToItem(newCore);
+
+									auto newItemType = newItem->getType();
+
+									switch (newItemType)
+									{
+									case Type::item_string:
+										if ("0" == newItem->getValueAsString())
+										{
+											newItem->setValueFromString("0");
+										}
+										break;
+									case Type::item_int:
+										if (0 == newItem->getValueAsInt())
+										{
+											newItem->setValueFromInt(0);
+										}
+										break;
+									case Type::item_float:
+										if (0 == newItem->getValueAsFloat())
+										{
+											newItem->setValueFromFloat(0);
+										}
+										break;
+									case Type::item_double:
+										if (0 == newItem->getValueAsDouble())
+										{
+											newItem->setValueFromDouble(0);
+										}
+										break;
+									case Type::item_bool:
+										if (0 == newItem->getValueAsBool())
+										{
+											newItem->setValueFromBool(false);
+										}
+										break;
+									case Type::item_long:
+										if (0 == newItem->getValueAsLong())
+										{
+											newItem->setValueFromLong(0);
+										}
+										break;
+									default:
+										break;
+									}
+								}
 							}
 						}
 					}
@@ -140,7 +188,7 @@ namespace rw
 		}
 
 		void AssemblyMergeTool::MergeAssembly(rw::oso::ObjectStoreAssembly& newAssembly,
-		                                      const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
+			const rw::oso::ObjectStoreAssembly& oldAssembly, bool& isSuccess)
 		{
 			if ("assembly" == newAssembly.getStoreType() &&
 				"assembly" == oldAssembly.getStoreType())
@@ -150,12 +198,12 @@ namespace rw
 
 				for (auto& newCore : newCoreVector)
 				{
-					if ("core" == newCore->getStoreType())
+					if ("item" == newCore->getStoreType())
 					{
 						auto newCoreName = newCore->getName();
 						for (const auto& oldCore : oldCoreVector)
 						{
-							if ("core" == oldCore->getStoreType())
+							if ("item" == oldCore->getStoreType())
 							{
 								auto oldCoreName = oldCore->getName();
 
@@ -246,6 +294,54 @@ namespace rw
 									else
 									{
 										isSuccess = false;
+									}
+								}
+								else
+								{
+									auto newItem = rw::oso::ObjectStoreCoreToItem(newCore);
+
+									auto newItemType = newItem->getType();
+
+									switch (newItemType)
+									{
+									case Type::item_string:
+										if ("0" == newItem->getValueAsString())
+										{
+											newItem->setValueFromString("0");
+										}
+										break;
+									case Type::item_int:
+										if (0 == newItem->getValueAsInt())
+										{
+											newItem->setValueFromInt(0);
+										}
+										break;
+									case Type::item_float:
+										if (0 == newItem->getValueAsFloat())
+										{
+											newItem->setValueFromFloat(0);
+										}
+										break;
+									case Type::item_double:
+										if (0 == newItem->getValueAsDouble())
+										{
+											newItem->setValueFromDouble(0);
+										}
+										break;
+									case Type::item_bool:
+										if (0 == newItem->getValueAsBool())
+										{
+											newItem->setValueFromBool(false);
+										}
+										break;
+									case Type::item_long:
+										if (0 == newItem->getValueAsLong())
+										{
+											newItem->setValueFromLong(0);
+										}
+										break;
+									default:
+										break;
 									}
 								}
 							}
