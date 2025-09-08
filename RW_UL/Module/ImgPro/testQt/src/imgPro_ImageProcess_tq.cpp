@@ -35,14 +35,14 @@ void ImgPro_ImageProcess_tq::iniDefectResultContext()
 
 {
 	auto& context = _imgProcess->context();
-	context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item) {
+	context.defectResultGetContext.getDefectResultExtraOperate = [this](const rw::imgPro::EliminationItem& item, const rw::DetectionRectangleInfo&) {
 		auto find = item.customFields.find("someValueWillBeUsed");
 		if (find != item.customFields.end())
 		{
 			//std::cout << "someValueWillBeUsed :" << std::any_cast<int>(find->second) << "score is:" << item.score << std::endl;
 		}
 		};
-	context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item) {
+	context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item, const rw::DetectionRectangleInfo&) {
 		auto find = item.customFields.find("someValueWillBeUsed");
 		if (find != item.customFields.end())
 		{
@@ -78,7 +78,7 @@ void ImgPro_ImageProcess_tq::iniGetIndexContext()
 	//	return classId == 1;
 	//	};
 
-	context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info) {
+	context.indexGetContext.removeIndicesIfByInfo = [this](const rw::DetectionRectangleInfo& info, const rw::imgPro::ImageProcessContext&) {
 		return false;
 		};
 }
