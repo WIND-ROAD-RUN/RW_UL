@@ -243,7 +243,11 @@ namespace zwy {
 			}
 			if (g_handle != nullptr)
 			{
-				ZAux_Direct_Single_Cancel(g_handle, 0, 2);
+				for (int i=0;i<8;i++)
+				{
+					ZAux_Direct_Single_Cancel(g_handle, i, 2);
+				}
+			
 				return true;
 			}
 		}
