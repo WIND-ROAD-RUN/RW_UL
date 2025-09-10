@@ -51,6 +51,11 @@ namespace rw
 			{
 				return _operatorTime;
 			}
+
+			const ProcessResultIndexMap& getProcessResultIndexMap() const
+			{
+				return _processResultIndexMap;
+			}
 		public:
 			std::unordered_map<std::string, std::any> customFields;
 		private:
