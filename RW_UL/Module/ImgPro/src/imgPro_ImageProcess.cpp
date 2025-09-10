@@ -81,8 +81,8 @@ namespace rw
 				indexGetContext.removeIndicesPost(indexMap, _context._processResult, _context);
 			}
 
-			_processResultIndexMap = indexMap;
-			return _processResultIndexMap;
+			_context._processResultIndexMap = indexMap;
+			return _context._processResultIndexMap;
 		}
 
 		EliminationInfo ImageProcess::getEliminationInfo(const ProcessResult& processResult,
@@ -136,7 +136,7 @@ namespace rw
 
 			processImg(mat);
 			getIndex(_context._processResult);
-			getEliminationInfo(_context._processResult, _processResultIndexMap, _context.eliminationCfg);
+			getEliminationInfo(_context._processResult, _context._processResultIndexMap, _context.eliminationCfg);
 			getDefectResultInfo(_context._processResult,_eliminationInfo, _context.defectCfg, _context.eliminationCfg);
 
 			auto end = std::chrono::high_resolution_clock::now();
