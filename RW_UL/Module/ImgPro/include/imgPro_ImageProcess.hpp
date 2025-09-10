@@ -37,6 +37,7 @@ namespace rw
 			ProcessResult _processResult{};
 			RunTime _processImgTime{};
 			RunTime _operatorTime{};
+			ProcessResultIndexMap _processResultIndexMap{};
 		public:
 			const ProcessResult& getProcessResult() const
 			{
@@ -129,13 +130,12 @@ namespace rw
 				RunTime processImgTime
 			);
 		private:
-			ProcessResultIndexMap _processResultIndexMap{};
 			EliminationInfo _eliminationInfo{};
 			DefectResultInfo _defectResultInfo{};
 		public:
 			const ProcessResultIndexMap& getProcessResultIndexMap() const
 			{
-				return _processResultIndexMap;
+				return _context._processResultIndexMap;
 			}
 			const ProcessResult& getProcessResult() const
 			{
@@ -152,7 +152,7 @@ namespace rw
 
 			ProcessResultIndexMap& processResultIndexMap()
 			{
-				return _processResultIndexMap;
+				return _context._processResultIndexMap;
 			}
 			ProcessResult& processResult()
 			{
