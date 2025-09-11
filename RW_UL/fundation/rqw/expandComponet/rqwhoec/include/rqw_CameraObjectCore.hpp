@@ -5,6 +5,7 @@
 #include <opencv2/core/mat.hpp>
 #include<QImage>
 #include"hoec_Camera_utilty_V1.hpp"
+
 namespace rw {
 	namespace hoec
 	{
@@ -26,6 +27,8 @@ namespace rw {
 			size_t preDelayValue{ 0 };
 			bool strobeEnable = false;
 		};
+
+		using CallBackForImgReadyBefore = rw::hoec_v1::UserToCallBackPre;
 
 		struct CameraMetaData
 		{

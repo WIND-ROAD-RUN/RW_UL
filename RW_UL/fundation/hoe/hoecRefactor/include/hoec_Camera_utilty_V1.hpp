@@ -11,6 +11,7 @@ namespace rw
 {
 	namespace hoec_v1
 	{
+		using UserToCallBackPre = std::function<void()>;
 		struct OutTriggerConfig
 		{
 		public:

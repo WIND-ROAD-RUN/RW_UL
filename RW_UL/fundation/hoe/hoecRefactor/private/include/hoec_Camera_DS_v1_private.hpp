@@ -92,6 +92,7 @@ namespace rw
 			:public Camera_DS, public ICameraPassive {
 		private:
 			UserToCallBack _userToCallBack;
+			UserToCallBackPre _userToCallBackPre;
 		public:
 			Camera_DS_Passive(UserToCallBack userToCallback = [](cv::Mat mat) {
 				std::cout << "No callback function" << std::endl;
@@ -108,6 +109,7 @@ namespace rw
 				void* pContext,
 				dvpFrame* pFrame,
 				void* pBuffer);
+			void setUserToCallBackPre(UserToCallBackPre userToCallBackPre) override;
 		};
 	}
 }

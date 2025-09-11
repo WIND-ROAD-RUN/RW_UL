@@ -30,15 +30,15 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE modbus
 )
 
-target_include_directories(${PROJECT_NAME}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
-    PRIVATE $ENV{CUDA_PATH}/include
-)
-
-# 添加 CUDA 库目录（如需链接 CUDA 库时使用）
-target_link_directories(${PROJECT_NAME}
-    PRIVATE $ENV{CUDA_PATH}/lib/x64
-)
+#target_include_directories(${PROJECT_NAME}
+#    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+#    PRIVATE $ENV{CUDA_PATH}/include
+#)
+#
+## 添加 CUDA 库目录（如需链接 CUDA 库时使用）
+#target_link_directories(${PROJECT_NAME}
+#    PRIVATE $ENV{CUDA_PATH}/lib/x64
+#)
 
 
 

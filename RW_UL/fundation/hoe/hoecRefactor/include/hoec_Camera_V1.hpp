@@ -98,7 +98,7 @@ namespace rw
 			using UserToCallBack = std::function<void(cv::Mat)>;
 		public:
 			virtual ~ICameraPassive() = default;
-
+			virtual void setUserToCallBackPre(UserToCallBackPre userToCallBackPre)=0;
 		public:
 			using UserToCallBack = std::function<void(cv::Mat)>;
 		public:
@@ -174,6 +174,7 @@ namespace rw
 			friend class CameraFactory;
 		public:
 			UserToCallBack _userToCallBack;
+			UserToCallBackPre _userToCallBackPre;
 		protected:
 			bool connectCamera() override;
 		public:
@@ -205,6 +206,7 @@ namespace rw
 			ICameraPassive* _cameraPassive{ nullptr };
 		public:
 			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack);
+			CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack, UserToCallBackPre userToCallBackPre);
 		public:
 			~CameraPassive() override;
 		public:
@@ -230,6 +232,7 @@ namespace rw
 			bool setTriggerState(bool state) const override;
 			bool setTriggerSource(TriggerSource triggerSource) override;
 			bool encoderNumberReset() override;
+			void setUserToCallBackPre(UserToCallBackPre userToCallBackPre) override;
 		};
 	}
 }

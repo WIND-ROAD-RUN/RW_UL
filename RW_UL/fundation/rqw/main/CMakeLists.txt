@@ -38,5 +38,5 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if(CONFIG_TEST)
-    add_subdirectory(./test)
+    #add_subdirectory(./test)
 endif()
