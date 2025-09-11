@@ -25,9 +25,9 @@ namespace rw {
 
 			void pushImage(const ImageSaveInfoV1& image);
 
-			void stopEngine();
+			void stopCom();
 
-			void startEngine();
+			void buildCom();
 
 			void setSavePolicy(ImageSaveEnginePolicyV1 policy);
 

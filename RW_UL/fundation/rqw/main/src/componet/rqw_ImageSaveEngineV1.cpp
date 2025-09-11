@@ -25,7 +25,7 @@ namespace rw {
 
 		ImageSaveEngineV1::~ImageSaveEngineV1()
 		{
-			stopEngine();
+			stopCom();
 		}
 
 		void ImageSaveEngineV1::pushImage(const ImageSaveInfoV1& image)
@@ -45,7 +45,7 @@ namespace rw {
 			condition.wakeOne();
 		}
 
-		void ImageSaveEngineV1::stopEngine()
+		void ImageSaveEngineV1::stopCom()
 		{
 			{
 				QMutexLocker locker(&mutex);
@@ -59,7 +59,7 @@ namespace rw {
 			workerThreads.clear();
 		}
 
-		void ImageSaveEngineV1::startEngine()
+		void ImageSaveEngineV1::buildCom()
 		{
 			for (int i = 0; i < threadCount; ++i) {
 				QThread* worker = QThread::create([this]() { this->processImages(); });
