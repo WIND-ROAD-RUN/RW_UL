@@ -37,6 +37,10 @@ namespace rw
 			if (!_cameraObject)
 			{
 				_cameraObject = new rw::rqw::CameraPassiveObject();
+				if (callBackForImgReadyBefore)
+				{
+					_cameraObject->callBackForImgReadyBefore=callBackForImgReadyBefore;
+				}
 				connect(_cameraObject, &rw::rqw::CameraPassiveObject::frameCaptured, this, &CameraPassiveThread::onFrameCaptured, Qt::DirectConnection);
 				_cameraObject->initCamera(cameraMetaData, triggerMode);
 			}

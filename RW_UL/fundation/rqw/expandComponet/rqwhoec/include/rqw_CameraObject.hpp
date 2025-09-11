@@ -22,6 +22,8 @@ namespace rw {
 			std::unique_ptr<hoec_v1::CameraPassive> _cameraPassive;
 			CameraMetaData _cameraMetaData;
 		public:
+			CallBackForImgReadyBefore callBackForImgReadyBefore;
+		public:
 			CameraPassiveObject(const CameraPassiveObject&) = delete;
 			CameraPassiveObject& operator=(const CameraPassiveObject&) = delete;
 			CameraPassiveObject(CameraPassiveObject&&) = delete;

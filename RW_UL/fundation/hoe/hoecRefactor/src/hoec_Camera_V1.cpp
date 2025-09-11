@@ -352,6 +352,15 @@ namespace rw
 			_userToCallBack = userToCallBack;
 		}
 
+		CameraPassive::CameraPassive(ICamera* camera, ICameraPassive* cameraPassive, UserToCallBack userToCallBack,
+			UserToCallBackPre userToCallBackPre)
+		{
+			_camera = camera;
+			_cameraPassive = cameraPassive;
+			_userToCallBack = userToCallBack;
+			_userToCallBackPre = userToCallBackPre;
+		}
+
 		CameraPassive::~CameraPassive()
 		{
 			if (_camera)
@@ -465,6 +474,11 @@ namespace rw
 		bool CameraPassive::encoderNumberReset()
 		{
 			return _camera->encoderNumberReset();
+		}
+
+		void CameraPassive::setUserToCallBackPre(UserToCallBackPre userToCallBackPre)
+		{
+			_cameraPassive->setUserToCallBackPre(userToCallBackPre);
 		}
 	}
 }

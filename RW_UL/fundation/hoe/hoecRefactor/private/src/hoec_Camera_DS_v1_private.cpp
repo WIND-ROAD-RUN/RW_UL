@@ -835,6 +835,11 @@ namespace rw
 				return 0;
 			}
 
+			if (pThis->_userToCallBackPre)
+			{
+				pThis->_userToCallBackPre();
+			}
+
 			cv::Mat mat = ImageFrameConvert::DS_ConvertFrameToMat(*pFrame, pBuffer);
 
 			if (!mat.empty() && pThis->_userToCallBack) {
@@ -842,6 +847,11 @@ namespace rw
 			}
 
 			return 0;
+		}
+
+		void Camera_DS_Passive::setUserToCallBackPre(UserToCallBackPre userToCallBackPre)
+		{
+			_userToCallBackPre = userToCallBackPre;
 		}
 	}
 }
