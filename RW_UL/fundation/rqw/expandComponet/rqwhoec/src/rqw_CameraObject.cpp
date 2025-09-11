@@ -345,10 +345,6 @@ namespace rw
 			hoecCameraIp.ip = cameraMetaData.ip.toStdString();
 			hoecCameraIp.provider = hoec_v1::from_string(cameraMetaData.provider.toStdString());
 
-			if (callBackForImgReadyBefore)
-			{
-				_cameraPassive->setUserToCallBackPre(callBackForImgReadyBefore);
-			}
 			if (hoecCameraIp.provider == hoec_v1::CameraProvider::MVS)
 			{
 				hoec_v1::CameraTriggerMode hoecTrigger;
@@ -372,6 +368,11 @@ namespace rw
 					{
 						emit frameCaptured(std::move(mat));
 					});
+			}
+
+			if (callBackForImgReadyBefore)
+			{
+				_cameraPassive->setUserToCallBackPre(callBackForImgReadyBefore);
 			}
 
 			_cameraPassive->RegisterCallBackFunc();
