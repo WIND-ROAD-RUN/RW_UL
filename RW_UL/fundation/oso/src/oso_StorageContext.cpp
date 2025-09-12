@@ -57,7 +57,7 @@ namespace rw
 		}
 
 		std::shared_ptr<ObjectStoreAssembly> StorageContext::loadSafe(const std::filesystem::path& fileName,
-			FileReadResult& readResult)
+			FileReadResult& readResult) const
 		{
 			auto result = _strategy->load(fileName);
 			if (result) {
@@ -84,7 +84,7 @@ namespace rw
 			return nullptr;
 		}
 
-		std::shared_ptr<ObjectStoreAssembly> StorageContext::loadSafe(const std::filesystem::path& fileName)
+		std::shared_ptr<ObjectStoreAssembly> StorageContext::loadSafe(const std::filesystem::path& fileName) const
 		{
 			FileReadResult readResult;
 			return loadSafe(fileName, readResult);

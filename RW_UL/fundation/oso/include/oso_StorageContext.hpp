@@ -50,11 +50,11 @@ namespace rw
 			explicit StorageContext(StorageType type);
 		public:
 			bool saveSafe(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
-			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName, FileReadResult & readResult);
-			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName);
+			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName, FileReadResult & readResult)const;
+			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName)const;
 
 			template<class TypeCanToAssembly>
-			TypeCanToAssembly loadSafeToType(const std::filesystem::path& fileName,bool & isLoad);
+			TypeCanToAssembly loadSafeToType(const std::filesystem::path& fileName,bool & isLoad)const;
 		public:
 			bool ensureFileExistsSafe(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 			bool ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
@@ -63,7 +63,7 @@ namespace rw
 
 			[[nodiscard]] std::shared_ptr<ObjectStoreAssembly> load(const std::filesystem::path& fileName) const;
 			template<class TypeCanToAssembly>
-			TypeCanToAssembly loadToType(const std::filesystem::path& fileName, bool& isLoad);
+			TypeCanToAssembly loadToType(const std::filesystem::path& fileName, bool& isLoad)const;
 
 			[[nodiscard]] std::string getFormatString(const ObjectStoreAssembly& assembly) const;
 		private:
@@ -71,7 +71,7 @@ namespace rw
 		};
 
 		template <class TypeCanToAssembly>
-		TypeCanToAssembly StorageContext::loadSafeToType(const std::filesystem::path& fileName, bool& isLoad)
+		TypeCanToAssembly StorageContext::loadSafeToType(const std::filesystem::path& fileName, bool& isLoad)const
 		{
 			try{
 				auto assembly = loadSafe(fileName);
@@ -90,7 +90,7 @@ namespace rw
 		}
 
 		template <class TypeCanToAssembly>
-		TypeCanToAssembly StorageContext::loadToType(const std::filesystem::path& fileName, bool& isLoad)
+		TypeCanToAssembly StorageContext::loadToType(const std::filesystem::path& fileName, bool& isLoad)const
 		{
 			try {
 				auto assembly = load(fileName);
