@@ -52,6 +52,9 @@ namespace rw
 			bool saveSafe(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
 			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName, FileReadResult & readResult);
 			std::shared_ptr<ObjectStoreAssembly> loadSafe(const std::filesystem::path& fileName);
+
+			template<class TypeCanToAssembly>
+			TypeCanToAssembly loadSafeToType(const std::filesystem::path& fileName,bool & isLoad);
 		public:
 			bool ensureFileExistsSafe(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 			bool ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
@@ -66,5 +69,24 @@ namespace rw
 		private:
 			std::shared_ptr<IStorageStrategy> _strategy;
 		};
+
+		template <class TypeCanToAssembly>
+		TypeCanToAssembly StorageContext::loadSafeToType(const std::filesystem::path& fileName, bool& isLoad)
+		{
+			try{
+				auto assembly = loadSafe(fileName);
+				if (!assembly) {
+					isLoad = false;
+					return TypeCanToAssembly();
+				}
+				isLoad = false;
+				return TypeCanToAssembly(*assembly);
+			}
+			catch (...)
+			{
+				isLoad = true;
+				return TypeCanToAssembly();
+			}
+		}
 	} // namespace oso
 } // namespace rw
