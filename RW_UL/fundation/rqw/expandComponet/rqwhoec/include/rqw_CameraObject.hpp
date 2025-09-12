@@ -89,7 +89,7 @@ namespace rw {
 			bool setTriggerState(bool state) const;
 			bool setTriggerSource(TriggerSource triggerSource);
 		signals:
-			void frameCaptured(cv::Mat frame);
+			void frameCaptured(MatInfo frame);
 		};
 	} // namespace rqw
 } // namespace rw

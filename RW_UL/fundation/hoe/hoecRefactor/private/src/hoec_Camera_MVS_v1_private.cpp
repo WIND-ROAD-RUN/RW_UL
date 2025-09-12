@@ -737,13 +737,15 @@ namespace rw
 			Camera_MVS_Passive* pThis = static_cast<Camera_MVS_Passive*>(pUser);
 			if (pFrameInfo)
 			{
+				MatInfo info;
 				if (pThis->_userToCallBackPre)
 				{
-					pThis->_userToCallBackPre();
+					pThis->_userToCallBackPre(info);
 				}
-				auto image = ImageFrameConvert::MVS_ConvertFrameToMat(*pFrameInfo, pData);
+				info.mat = ImageFrameConvert::MVS_ConvertFrameToMat(*pFrameInfo, pData);
+				
 				if (pThis) {
-					pThis->_userToCallBack(std::move(image));
+					pThis->_userToCallBack(std::move(info));
 				}
 			}
 		}

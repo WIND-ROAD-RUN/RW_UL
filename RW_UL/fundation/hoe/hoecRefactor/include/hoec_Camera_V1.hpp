@@ -95,12 +95,10 @@ namespace rw
 		class ICameraPassive
 		{
 		public:
-			using UserToCallBack = std::function<void(cv::Mat)>;
+			using UserToCallBack = std::function<void(MatInfo &)>;
 		public:
 			virtual ~ICameraPassive() = default;
 			virtual void setUserToCallBackPre(UserToCallBackPre userToCallBackPre)=0;
-		public:
-			using UserToCallBack = std::function<void(cv::Mat)>;
 		public:
 			virtual bool RegisterCallBackFunc() = 0;
 		};

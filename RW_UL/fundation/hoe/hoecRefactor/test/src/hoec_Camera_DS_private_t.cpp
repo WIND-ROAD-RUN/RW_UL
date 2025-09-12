@@ -128,8 +128,8 @@ namespace  hoec_Camera_DS
 		}
 
 		{
-			Camera_DS_Passive passive([](cv::Mat mat) {
-				std::cout << mat.size << std::endl;
+			Camera_DS_Passive passive([](MatInfo mat) {
+				std::cout << mat.mat.size << std::endl;
 				return;
 				});
 

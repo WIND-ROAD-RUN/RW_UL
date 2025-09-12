@@ -835,15 +835,15 @@ namespace rw
 				return 0;
 			}
 
+			MatInfo info;
 			if (pThis->_userToCallBackPre)
 			{
-				pThis->_userToCallBackPre();
+				pThis->_userToCallBackPre(info);
 			}
 
-			cv::Mat mat = ImageFrameConvert::DS_ConvertFrameToMat(*pFrame, pBuffer);
-
-			if (!mat.empty() && pThis->_userToCallBack) {
-				pThis->_userToCallBack(mat);
+			info.mat = ImageFrameConvert::DS_ConvertFrameToMat(*pFrame, pBuffer);
+			if (!info.mat.empty() && pThis->_userToCallBack) {
+				pThis->_userToCallBack(info);
 			}
 
 			return 0;

@@ -1,17 +1,54 @@
 #pragma once
 
+#include <any>
 #include <string>
 #include<functional>
-
-namespace cv {
-	class Mat;
-}
+#include"opencv2/opencv.hpp"
 
 namespace rw
 {
 	namespace hoec_v1
 	{
-		using UserToCallBackPre = std::function<void()>;
+		struct MatInfo
+		{
+			cv::Mat mat;
+			std::map<std::string, std::any> customField;
+
+			// 默认构造
+			MatInfo() = default;
+
+			// 拷贝构造
+			MatInfo(const MatInfo& other)
+				: mat(other.mat.clone()), customField(other.customField) {
+			}
+
+			// 拷贝赋值
+			MatInfo& operator=(const MatInfo& other)
+			{
+				if (this != &other) {
+					mat = other.mat.clone();
+					customField = other.customField;
+				}
+				return *this;
+			}
+
+			// 移动构造
+			MatInfo(MatInfo&& other) noexcept
+				: mat(std::move(other.mat)), customField(std::move(other.customField)) {
+			}
+
+			// 移动赋值
+			MatInfo& operator=(MatInfo&& other) noexcept
+			{
+				if (this != &other) {
+					mat = std::move(other.mat);
+					customField = std::move(other.customField);
+				}
+				return *this;
+			}
+		};
+
+		using UserToCallBackPre = std::function<void(MatInfo &)>;
 		struct OutTriggerConfig
 		{
 		public:
