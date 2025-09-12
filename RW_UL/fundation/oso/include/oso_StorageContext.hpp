@@ -60,10 +60,10 @@ namespace rw
 			bool ensureFileExists(const std::filesystem::path& fileName, const ObjectStoreAssembly& assembly) const;
 		public:
 			bool save(const ObjectStoreAssembly& assembly, const std::filesystem::path& fileName) const;
-			bool save(const ObjectStoreAssembly& assembly, const std::string& fileName) const;
 
 			[[nodiscard]] std::shared_ptr<ObjectStoreAssembly> load(const std::filesystem::path& fileName) const;
-			[[nodiscard]] std::shared_ptr<ObjectStoreAssembly> load(const std::string& fileName) const;
+			template<class TypeCanToAssembly>
+			TypeCanToAssembly loadToType(const std::filesystem::path& fileName, bool& isLoad);
 
 			[[nodiscard]] std::string getFormatString(const ObjectStoreAssembly& assembly) const;
 		private:
@@ -79,12 +79,31 @@ namespace rw
 					isLoad = false;
 					return TypeCanToAssembly();
 				}
-				isLoad = false;
+				isLoad = true;
 				return TypeCanToAssembly(*assembly);
 			}
 			catch (...)
 			{
+				isLoad = false;
+				return TypeCanToAssembly();
+			}
+		}
+
+		template <class TypeCanToAssembly>
+		TypeCanToAssembly StorageContext::loadToType(const std::filesystem::path& fileName, bool& isLoad)
+		{
+			try {
+				auto assembly = load(fileName);
+				if (!assembly) {
+					isLoad = false;
+					return TypeCanToAssembly();
+				}
 				isLoad = true;
+				return TypeCanToAssembly(*assembly);
+			}
+			catch (...)
+			{
+				isLoad = false;
 				return TypeCanToAssembly();
 			}
 		}
