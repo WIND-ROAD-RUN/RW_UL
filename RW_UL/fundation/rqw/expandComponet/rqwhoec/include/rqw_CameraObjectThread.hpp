@@ -78,14 +78,14 @@ namespace rw {
 			bool setTriggerState(bool state) const;
 			bool setTriggerSource(TriggerSource triggerSource);
 		signals:
-			void frameCaptured(cv::Mat frame, size_t index);
+			void frameCaptured(MatInfo frame, size_t index);
 		protected:
 			void run() override;
 
 		private:
 			CameraPassiveObject* _cameraObject;
 		private slots:
-			void onFrameCaptured(cv::Mat frame);
+			void onFrameCaptured(MatInfo frame);
 		public:
 			bool setOutTriggerConfig(const OutTriggerConfig& config);
 			bool outTrigger();

@@ -357,14 +357,14 @@ namespace rw
 					hoecTrigger = hoec_v1::CameraTriggerMode::SoftwareTriggered;
 				}
 
-				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCamera(hoecCameraIp, hoecTrigger, [this](cv::Mat  mat)
+				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCamera(hoecCameraIp, hoecTrigger, [this](MatInfo mat)
 					{
 						emit frameCaptured(std::move(mat));
 					});
 			}
 			else if (hoecCameraIp.provider == hoec_v1::CameraProvider::DS)
 			{
-				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCameraDS(hoecCameraIp, [this](cv::Mat  mat)
+				_cameraPassive = hoec_v1::CameraFactory::CreatePassiveCameraDS(hoecCameraIp, [this](MatInfo  mat)
 					{
 						emit frameCaptured(std::move(mat));
 					});

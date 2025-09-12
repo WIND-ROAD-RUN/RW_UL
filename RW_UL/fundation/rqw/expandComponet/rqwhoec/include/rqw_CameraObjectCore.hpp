@@ -15,6 +15,7 @@ namespace rw {
 	namespace rqw {
 		QImage cvMatToQImage(const cv::Mat& mat);
 		using TriggerSource = hoec_v1::TriggerSource;
+		using MatInfo = hoec_v1::MatInfo;
 
 		struct OutTriggerConfig
 		{

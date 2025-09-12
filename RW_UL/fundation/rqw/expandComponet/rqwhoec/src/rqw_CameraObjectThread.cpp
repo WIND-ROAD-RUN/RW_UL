@@ -392,7 +392,7 @@ namespace rw
 			exec();
 		}
 
-		void CameraPassiveThread::onFrameCaptured(cv::Mat frame)
+		void CameraPassiveThread::onFrameCaptured(MatInfo frame)
 		{
 			emit frameCaptured(std::move(frame), cameraIndex);
 		}

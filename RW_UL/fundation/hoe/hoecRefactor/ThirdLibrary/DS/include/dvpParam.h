@@ -1,102 +1,102 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-// »ù±¾²É¼¯
+// åŸºæœ¬é‡‡é›†
 
-//Ö¡ÂÊµ÷½ÚÊ¹ÄÜ
+//å¸§ç‡è°ƒèŠ‚ä½¿èƒ½
 #define V_ACQ_FRAME_RATE_ENABLE_B           "AcquisitionFrameRateEnable"
 
-//Ö¡ÂÊµ÷½Ú
+//å¸§ç‡è°ƒèŠ‚
 #define V_ACQ_FRAME_RATE_F                  "AcquisitionFrameRate"
 
-//ÏñËØ¸ñÊ½(Ô´¸ñÊ½)
+//åƒç´ æ ¼å¼(æºæ ¼å¼)
 #define V_PIXEL_FORMAT_E                    "PixelFormat"
 
-//ÆØ¹âÊ±¼ä 
+//æ›å…‰æ—¶é—´ 
 #define V_EXPOSURE_TIME_F                   "ExposureTime"
 
-//ÏßÉ¨´¥·¢Ê¹ÄÜ
+//çº¿æ‰«è§¦å‘ä½¿èƒ½
 #define V_LINE_TRIG_ENABLE_B                "LineTrigEnable"
 
-//´¥·¢Ê¹ÄÜ
+//è§¦å‘ä½¿èƒ½
 #define V_TRIGGER_MODE_B                    "TriggerMode"
 
-//ÔöÒæ
+//å¢ç›Š
 #define V_GAIN_F                            "Gain"
 
-//¶Ô±È¶È
+//å¯¹æ¯”åº¦
 #define V_CONTRAST_I                        "Contrast"
 
-//Ù¤Âí
+//ä¼½é©¬
 #define V_GAMMA_F                           "Gamma" 
 
-//²É¼¯Ä£Ê½
+//é‡‡é›†æ¨¡å¼
 #define V_ACQUISITION_MODE_E                "AcquisitionMode"
 
-//¶àÖ¡²É¼¯Ä£Ê½ÏÂÒª²É¼¯µÄÖ¡Êı
+//å¤šå¸§é‡‡é›†æ¨¡å¼ä¸‹è¦é‡‡é›†çš„å¸§æ•°
 #define V_ACQUISITION_FRAME_COUNT_I         "AcquisitionFrameCount"
 
-//·Ö±æÂÊÄ£Ê½
+//åˆ†è¾¨ç‡æ¨¡å¼
 #define V_RESOLUTION_MODE_E                 "ResolutionMode"
 
-//ÏñËØËÙÂÊ
+//åƒç´ é€Ÿç‡
 #define V_PIXEL_RATE_E                      "PixelRate"
 
-//ÆØ¹âÄ£Ê½
+//æ›å…‰æ¨¡å¼
 #define V_EXPOSURE_MODE_E                   "ExposureMode"
 
-//×Ô¶¯ÆØ¹â²Ù×÷
+//è‡ªåŠ¨æ›å…‰æ“ä½œ
 #define V_EXPOSURE_AUTO_E                   "ExposureAuto"
 
-//¿¹ÆµÉÁ
+//æŠ—é¢‘é—ª
 #define V_ANTI_FLICK_E                      "AntiFlick"
 
-//×Ô¶¯ÔöÒæÄ£Ê½
+//è‡ªåŠ¨å¢ç›Šæ¨¡å¼
 #define V_GAIN_AUTO_E                       "GainAuto"
 
-//ºÚµçÆ½
+//é»‘ç”µå¹³
 #define V_BLACK_LEVEL_F                     "BlackLevel"
 
-//Í¼Ïñ½µÔë
+//å›¾åƒé™å™ª
 #define V_NOISE_REDUCT_I                    "NoiseReduct"
 
-//Æ½³¡Ê¹ÄÜ
+//å¹³åœºä½¿èƒ½
 #define V_FLAT_FIELD_ENABLE_B               "FlatFieldEnable"
 
-//Æ½³¡Ä£Ê½Ñ¡Ôñ
+//å¹³åœºæ¨¡å¼é€‰æ‹©
 #define V_FLAT_FIELD_MODE_SEL_E             "FlatFieldModeSel"
 
-//FRNUCÄ£Ê½Ñ¡Ôñ
+//FRNUCæ¨¡å¼é€‰æ‹©
 #define V_FRNUC_SELECTOR_E                  "FRNUCSelector"
 
-//LSCÑ¡Ôñ  
+//LSCé€‰æ‹©  
 #define V_LSC_SELECTOR_E                    "LSCSelector"
 
-//FPNCÊ¹ÄÜ
+//FPNCä½¿èƒ½
 #define V_FPNC_ENABLE_B                     "FPNCEnable"
 
-//FPNCÄ£Ê½Ñ¡Ôñ
+//FPNCæ¨¡å¼é€‰æ‹©
 #define V_FPNC_SELECTOR_E                   "FPNCSelector"
 
-//ÓÃ»§ÅäÖÃÑ¡Ôñ
+//ç”¨æˆ·é…ç½®é€‰æ‹©
 #define V_USER_SET_SELECTOR_E               "UserSetSelector"
 
-//ÁÁ¶È
+//äº®åº¦
 #define V_BRIGHTNESS_I                      "Brightness"
 
-//¶Ô±È¶È
+//å¯¹æ¯”åº¦
 #define V_SATURATION_F                      "Saturation"
 
-//°×Æ½ºâ 
+//ç™½å¹³è¡¡ 
 #define V_AWB_E                             "BalanceWhiteAuto"
 
-//Ä¿±ê¸ñÊ½
+//ç›®æ ‡æ ¼å¼
 #define V_TARGET_FORMAT_E                   "TargetFormat"
 
-//´¹Ö±¾µÏñ
+//å‚ç›´é•œåƒ
 #define V_VFLIP_B                           "Vflip"
 
-//Ë®Æ½¾µÏñ
+//æ°´å¹³é•œåƒ
 #define V_HFLIP_B                           "Hflip"
 
 //ROI X
@@ -123,223 +123,223 @@
 //ROI Height Min 
 #define V_HEIGHT_MIN_I                      "HeightMin"
 
-//Ë®·½Ïò·­×ª
+//æ°´æ–¹å‘ç¿»è½¬
 #define V_REVERSE_X_B                       "ReverseX"
 
-//2D½µÔë
+//2Dé™å™ª
 #define V_NOISE_REDUCT_2D_I                 "NoiseReduct2D"
 
-//2D½µÔëÊ¹ÄÜ
+//2Dé™å™ªä½¿èƒ½
 #define V_NOISE_REDUCT_2D_ENABLE_B          "NoiseReduct2DEnable"
 
-//3D½µÔë
+//3Dé™å™ª
 #define V_NOISE_REDUCT_3D_I                 "NoiseReduct3D"
 
-//3D½µÔëÊ¹ÄÜ
+//3Dé™å™ªä½¿èƒ½
 #define V_NOISE_REDUCT_3D_ENABLE_B          "NoiseReduct3DEnable"
 
-//Èñ¶È
+//é”åº¦
 #define V_SHARPNESS_I                       "Sharpness"
 
-//Èñ¶ÈÊ¹ÄÜ
+//é”åº¦ä½¿èƒ½
 #define V_SHARPNESS_ENABLE_B                "SharpnessEnable"
 
 #define V_FORCED_SHORT_FRAME_B              "ForcedShortFrame"
 
 ////////////////////////////////////////////////////////////////////////////////
-// ´¥·¢Ïà¹Ø
+// è§¦å‘ç›¸å…³
 
-//´¥·¢Ê¹ÄÜ
+//è§¦å‘ä½¿èƒ½
 #define V_TRIGGER_MODE_B                    "TriggerMode"
 
-//Ã¿´Î´¥·¢µÄÖ¡Êı
+//æ¯æ¬¡è§¦å‘çš„å¸§æ•°
 #define V_ACQ_BURST_FRAME_COUNT_I           "AcquisitionBurstFrameCount"
 
-//´¥·¢ÀàĞÍÑ¡Ôñ
+//è§¦å‘ç±»å‹é€‰æ‹©
 #define V_TRIGGER_SELECTOR_E                "TriggerSelector"
 
-//Ã¿´Î´¥·¢Ö¡Êı
+//æ¯æ¬¡è§¦å‘å¸§æ•°
 #define V_TRIGGER_COUNT_I                   "TriggerCount"
 
-//´¥·¢Ïû¶¶
+//è§¦å‘æ¶ˆæŠ–
 #define V_TRIGGER_DEBOUNCER_I               "TriggerDebouncer"
 
-//´¥·¢ÑÓÊ±
+//è§¦å‘å»¶æ—¶
 #define V_TRIGGER_DELAY_I                   "TriggerDelay"
 
-//´¥·¢Ô´
+//è§¦å‘æº
 #define V_TRIGGER_SOURCE_E                  "TriggerSource"
 
-//´¥·¢Æô¶¯·½Ê½
+//è§¦å‘å¯åŠ¨æ–¹å¼
 #define V_TRIGGER_ACTIVATION_E              "TriggerActivation"
 
-//StrobeĞÅºÅÔ´
+//Strobeä¿¡å·æº
 #define V_STROBE_SOURCE_E                   "StrobeSource"
 
-//StrobeĞÅºÅÑÓ³Ù
+//Strobeä¿¡å·å»¶è¿Ÿ
 #define V_STROBE_DELAY_I                    "StrobeDelay"
 
-//StrobeĞÅºÅ³ÖĞøÊ±¼ä
+//Strobeä¿¡å·æŒç»­æ—¶é—´
 #define V_STROBE_DURATION_I                 "StrobeDuration"
 
-//StrobeĞÅºÅÊä³öÊ¹ÄÜ
+//Strobeä¿¡å·è¾“å‡ºä½¿èƒ½
 #define V_STROBE_OUTPUT_E                   "StrobeOutput"
 
-//Ö¡ÈÚºÏ¿ªÆô
+//å¸§èåˆå¼€å¯
 #define V_FRAMES_MERGE_B                    "FramesMerge"
 
-//´¥·¢»º´æÆôÓÃ
+//è§¦å‘ç¼“å­˜å¯ç”¨
 #define V_TRIGGER_CACHE_ENABLE_B            "TriggerCache"
 
-//¶àÆØ¹â
+//å¤šæ›å…‰
 #define V_MULTI_EXPOSURE_ENABLE_E           "MultiExposureEnable"
 
-//¶àÆØ¹âÆµÉÁ×Ô¶¯¿ØÖÆÆôÓÃ
+//å¤šæ›å…‰é¢‘é—ªè‡ªåŠ¨æ§åˆ¶å¯ç”¨
 #define V_MULTI_EXPOSURE_STROBE_AUTO_B      "MultiExposureStrobeAuto"
 
-//Exp0ÑÓÊ±
+//Exp0å»¶æ—¶
 #define V_EXP0_DELAY_F                      "Exp0_Delay"
 
-//Exp0ÆØ¹â
+//Exp0æ›å…‰
 #define V_EXP0_EXPOSURE_F                   "Exp0_Exposure"
 
-//Exp0ÆµÉÁÑÓ³Ù
+//Exp0é¢‘é—ªå»¶è¿Ÿ
 #define V_EXP0_STROBE_DELAY_F               "Exp0_StrobeDelay"
 
-//Exp0ÆµÉÁÖÜÆÚ
+//Exp0é¢‘é—ªå‘¨æœŸ
 #define V_EXP0_STROBE_DURATION_F            "Exp0_StrobeDuration"
 
-//Exp1ÑÓÊ±
+//Exp1å»¶æ—¶
 #define V_EXP1_DELAY_F                      "Exp1_Delay"
 
-//Exp1ÆØ¹â
+//Exp1æ›å…‰
 #define V_EXP1_EXPOSURE_F                   "Exp1_Exposure"
 
-//Exp1ÆµÉÁÑÓ³Ù
+//Exp1é¢‘é—ªå»¶è¿Ÿ
 #define V_EXP1_STROBE_DELAY_F               "Exp1_StrobeDelay"
 
-//Exp1ÆµÉÁÖÜÆÚ
+//Exp1é¢‘é—ªå‘¨æœŸ
 #define V_EXP1_STROBE_DURATION_F            "Exp1_StrobeDuration"
 
-//Exp2ÑÓÊ±
+//Exp2å»¶æ—¶
 #define V_EXP2_DELAY_F                      "Exp2_Delay"
 
-//Exp2ÆØ¹â
+//Exp2æ›å…‰
 #define V_EXP2_EXPOSURE_F                   "Exp2_Exposure"
 
-//Exp2ÆµÉÁÑÓ³Ù
+//Exp2é¢‘é—ªå»¶è¿Ÿ
 #define V_EXP2_STROBEDELAY_F                "Exp2_StrobeDelay"
 
-//Exp2ÆµÉÁÖÜÆÚ
+//Exp2é¢‘é—ªå‘¨æœŸ
 #define V_EXP2_STROBEDURATION_F             "Exp2_StrobeDuration"
 
-//Òı½ÅÑ¡Ôñ
+//å¼•è„šé€‰æ‹©
 #define V_LINE_SELECTOR_E                   "LineSelector"
 
-//Òı½ÅÄ£Ê½ 
+//å¼•è„šæ¨¡å¼ 
 #define V_LINE_MODE_E                       "LineMode"
 
-//Òı½ÅĞÅºÅ·´×ª
+//å¼•è„šä¿¡å·åè½¬
 #define V_LINE_INVERTER_B                   "LineInverter"
 
-//Òı½Å×´Ì¬
+//å¼•è„šçŠ¶æ€
 #define V_LINE_STATUS_B                     "LineStatus"
 
-//ËùÓĞ¿ÉÓÃÏßµÄµ±Ç°×´Ì¬
+//æ‰€æœ‰å¯ç”¨çº¿çš„å½“å‰çŠ¶æ€
 #define V_LINE_STATUS_ALL_I                 "LineStatusAll"
 
-//Òı½ÅĞÅºÅÔ´
+//å¼•è„šä¿¡å·æº
 #define V_LINE_SOURCE_E                     "LineSource"
 
-//ÓÃ»§Êä³öĞÅºÅ×´Ì¬
+//ç”¨æˆ·è¾“å‡ºä¿¡å·çŠ¶æ€
 #define V_USER_OUTPUT_VALUE_B               "UserOutputValue"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ÏßÉ¨Ïà¹Ø
+// çº¿æ‰«ç›¸å…³
 
-//ÏßÉ¨´¥·¢Ô´ 
+//çº¿æ‰«è§¦å‘æº 
 #define V_LINE_TRIG_SOURCE_E                "LineTrigSource"
 
-//ÏßÉ¨´¥·¢¹ıÂË
+//çº¿æ‰«è§¦å‘è¿‡æ»¤
 #define V_LINE_TRIG_FILTER_F                "LineTrigFilter"
 
-//ÏßÉ¨´¥·¢±ßÑØÑ¡Ôñ
+//çº¿æ‰«è§¦å‘è¾¹æ²¿é€‰æ‹©
 #define V_LINE_TRIG_EDGE_SEL_E              "LineTrigEdgeSel"
 
-//ÏßÉ¨ĞĞ´¥·¢ÑÓÊ±
+//çº¿æ‰«è¡Œè§¦å‘å»¶æ—¶
 #define V_LINE_TRIG_DELAY_F                 "LineTrigDelay"
 
-//ÏßÉ¨ĞĞ´¥·¢Ïû¶¶
+//çº¿æ‰«è¡Œè§¦å‘æ¶ˆæŠ–
 #define V_LINE_TRIG_DEBOUNCER_F             "LineTrigDebouncer"
 
-//ÏßÉ¨´¥·¢Ô¤·ÖÆµ
+//çº¿æ‰«è§¦å‘é¢„åˆ†é¢‘
 #define V_LINE_TRIG_FREQ_PRE_DIV_I          "LineTrigFreqPreDiv"
 
-//ÏßÉ¨´¥·¢±¶Æµ 
+//çº¿æ‰«è§¦å‘å€é¢‘ 
 #define V_LINE_TRIG_FREQ_MULT_I             "LineTrigFreqMult"
 
-//ÏßÉ¨´¥·¢·ÖÆµ
+//çº¿æ‰«è§¦å‘åˆ†é¢‘
 #define V_LINE_TRIG_FREQ_DIV_I              "LineTrigFreqDiv"
 
-//Ö¡³¬Ê±
+//å¸§è¶…æ—¶
 #define V_FRAME_TIMEOUT_I                   "FrameTimeout"
 
-//ÏßÉ¨ĞĞÆµ
+//çº¿æ‰«è¡Œé¢‘
 #define V_LINE_RATE_I                       "LineRate"
 
-//É¨Ãè·½Ïò
+//æ‰«ææ–¹å‘
 #define V_REVERSE_SCAN_DIRECTION_B          "ReverseScanDirection"
 
-//ÕıÏò±àÂëÆ÷
+//æ­£å‘ç¼–ç å™¨
 #define V_ENCODER_FORWARD_COUNTER_I         "EncoderForwardCounter"
 
-//·´Ïò±àÂëÆ÷
+//åå‘ç¼–ç å™¨
 #define V_ENCODER_BACKWARD_COUNTER_I        "EncoderBackwardCounter"
 
 //TDI
 #define V_TDI_E                             "TDI"
 
-//±àÂëÆ÷AÊäÈëµÄĞÅºÅÔ´
+//ç¼–ç å™¨Aè¾“å…¥çš„ä¿¡å·æº
 #define V_ENCODER_SOURCE_A_E                "EncoderSourceA"
 
-//±àÂëÆ÷BÊäÈëµÄĞÅºÅÔ´
+//ç¼–ç å™¨Bè¾“å…¥çš„ä¿¡å·æº
 #define V_ENCODER_SOURCE_B_E                "EncoderSourceB"
 
-//±àÂëÆ÷AÊäÈëµÄĞÅºÅÔ´
+//ç¼–ç å™¨Aè¾“å…¥çš„ä¿¡å·æº
 #define V_ENCODER_SOURCE_A_E                "EncoderSourceA"
 
-//±àÂëÆ÷·½ÏòĞÅºÅÔ´
+//ç¼–ç å™¨æ–¹å‘ä¿¡å·æº
 #define V_ENCODER_DIR_SOURCE_E              "EncoderDirSource"
 
-//É¨Ãè·½ÏòÑ¡Ôñ£¬ÕıÏò£¬·´Ïò£¬Ë«Ïò 
+//æ‰«ææ–¹å‘é€‰æ‹©ï¼Œæ­£å‘ï¼Œåå‘ï¼ŒåŒå‘ 
 #define V_ENCODER_DIRECTION_E               "EncoderDirection"
 
-//±àÂëÆ÷´¥·¢ÆµÂÊ
+//ç¼–ç å™¨è§¦å‘é¢‘ç‡
 #define V_ENCODER_TRIGGER_FREQ_E            "EncoderTriggerFreq"
 
-//ÄÚ²¿´¥·¢ÊäÈëËÙÂÊ
+//å†…éƒ¨è§¦å‘è¾“å…¥é€Ÿç‡
 #define V_INPUT_LINE_RATE_I                 "InputLineRate"          
 
-//ÄÚ²¿´¥·¢Êä³öËÙÂÊ
+//å†…éƒ¨è§¦å‘è¾“å‡ºé€Ÿç‡
 #define V_RESULTING_LINE_RATE_I             "ResultingLineRate"
 
-//±àÂëÆ÷»Ø¹öºó»Ö¸´×ª¶¯Ê±Ìø³ıÖØ¸´µÄĞĞ
+//ç¼–ç å™¨å›æ»šåæ¢å¤è½¬åŠ¨æ—¶è·³é™¤é‡å¤çš„è¡Œ
 #define V_ROLLBACK_SKIP_B                   "RollBackSkip"
 
-//±àÂëÆ÷»Ø¹öºó»Ö¸´×ª¶¯Ê±¶îÍâ²¹³¥µÄ²½Êı
+//ç¼–ç å™¨å›æ»šåæ¢å¤è½¬åŠ¨æ—¶é¢å¤–è¡¥å¿çš„æ­¥æ•°
 #define V_ROLLBACK_EXTRA_I                  "RollBackExtra"
 
-//°ëÖ¡Ìá½»Ä£Ê½
+//åŠå¸§æäº¤æ¨¡å¼
 #define V_PARTIAL_FRAME_SUBMIT_MODE_E       "PartialFrameSubmitMode" 
 
-//Ö¡´¥·¢Ç¿ÖÆÌá½»
+//å¸§è§¦å‘å¼ºåˆ¶æäº¤
 #define V_FRAME_END_BY_TRIGGER_B            "FrameEndByTrigger"
 
-//´¥·¢ºöÂÔĞĞÊı
+//è§¦å‘å¿½ç•¥è¡Œæ•°
 #define V_TRIG_SKIP_LINES_I                 "TrigSkipLines"
 
-//¶àĞĞ³éÍ¼ºÏ²¢
+//å¤šè¡ŒæŠ½å›¾åˆå¹¶
 #define V_MULTI_LINES_SPLIT_B               "MultiLinesSplit"
 
 
@@ -347,56 +347,56 @@
 /////////////////////////////////////////////////////////////////////
 // GigE Vision
 
-//ÓĞĞ§¸ºÔØÊı¾İµÄ´óĞ¡
+//æœ‰æ•ˆè´Ÿè½½æ•°æ®çš„å¤§å°
 #define V_PAYLOAD_SIZE_I                    "PayloadSize"
 
-//Ö÷Òª°æ±¾
+//ä¸»è¦ç‰ˆæœ¬
 #define V_GEVVERSIONMAJOR_I                 "GevVersionMajor"
 
-//´ÎÒª°æ±¾
+//æ¬¡è¦ç‰ˆæœ¬
 #define V_GEVVERSIONMINOR_I                 "GevVersionMinor"
 
-//¾²Ì¬IPÅäÖÃÆôÓÃ
+//é™æ€IPé…ç½®å¯ç”¨
 #define V_PERSISTENT_IP_B                   "GevCurrentIPConfigurationPersistentIP"
 
-//IPµØÖ·
+//IPåœ°å€
 #define V_IPADDRESS_I                       "GevCurrentIPAddress"
 
-//×ÓÍøÑÚÂë
+//å­ç½‘æ©ç 
 #define V_SUBNETMASK_I                      "GevCurrentSubnetMask"
 
-//Ä¬ÈÏÍø¹Ø
+//é»˜è®¤ç½‘å…³
 #define V_DEFAULT_GATEWAY_I                 "GevCurrentDefaultGateway"
 
-//µ±Ç°IPÅäÖÃ×´Ì¬
+//å½“å‰IPé…ç½®çŠ¶æ€
 #define V_IP_CONFIG_E                       "GevIPConfigurationStatus"
 
-//¾²Ì¬IPµØÖ·
+//é™æ€IPåœ°å€
 #define V_PERSISTENT_IP_ADDRESS_I           "GevPersistentIPAddress"
 
-//¾²Ì¬×ÓÍøÑÚÂë
+//é™æ€å­ç½‘æ©ç 
 #define V_PERSISTENT_SUB_NETMASK_I          "GevPersistentSubnetMask"
 
-//¾²Ì¬Ä¬ÈÏÍø¹Ø
+//é™æ€é»˜è®¤ç½‘å…³
 #define V_PERSISTENT_DEFAULT_GATEWAY_I      "GevPersistentDefaultGateway"
 
-//ÍøÂç´«ÊäËÙ¶È
+//ç½‘ç»œä¼ è¾“é€Ÿåº¦
 #define V_LINK_SPEED_I                      "GevLinkSpeed"
 
-//ĞÄÌø³¬Ê±
+//å¿ƒè·³è¶…æ—¶
 #define V_HEARTBEAT_TIMEOUT_I               "GevHeartbeatTimeout"
 
-//GVCPĞÄÌø°üÆôÓÃ
+//GVCPå¿ƒè·³åŒ…å¯ç”¨
 #define V_GVCP_HEARTBEAT_DISABLE_B          "GevGVCPHeartbeatDisable"
 
-//Éè±¸·ÃÎÊÈ¨ÏŞ
+//è®¾å¤‡è®¿é—®æƒé™
 #define V_CCP_E                             "GevCCP"
 
-//ÈıÍ¨µÀRÔöÒæ
+//ä¸‰é€šé“Rå¢ç›Š
 #define V_GAIN_R_F                          "GainR"
 
-//ÈıÍ¨µÀGÔöÒæ
+//ä¸‰é€šé“Gå¢ç›Š
 #define V_GAIN_G_F                          "GainG"
 
-//ÈıÍ¨µÀBÔöÒæ
+//ä¸‰é€šé“Bå¢ç›Š
 #define V_GAIN_B_F                          "GainB"

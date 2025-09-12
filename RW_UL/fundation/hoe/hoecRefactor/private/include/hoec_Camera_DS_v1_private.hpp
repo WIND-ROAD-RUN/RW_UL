@@ -94,7 +94,7 @@ namespace rw
 			UserToCallBack _userToCallBack;
 			UserToCallBackPre _userToCallBackPre;
 		public:
-			Camera_DS_Passive(UserToCallBack userToCallback = [](cv::Mat mat) {
+			Camera_DS_Passive(UserToCallBack userToCallback = [](MatInfo mat) {
 				std::cout << "No callback function" << std::endl;
 				return;
 				});
