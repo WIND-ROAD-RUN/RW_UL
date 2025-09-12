@@ -134,17 +134,7 @@ namespace rw
 			return _strategy->save(assembly, fileName);
 		}
 
-		bool StorageContext::save(const ObjectStoreAssembly& assembly, const std::string& fileName) const
-		{
-			return _strategy->save(assembly, fileName);
-		}
-
 		std::shared_ptr<ObjectStoreAssembly> StorageContext::load(const std::filesystem::path& fileName) const
-		{
-			return _strategy->load(fileName);
-		}
-
-		std::shared_ptr<ObjectStoreAssembly> StorageContext::load(const std::string& fileName) const
 		{
 			return _strategy->load(fileName);
 		}
