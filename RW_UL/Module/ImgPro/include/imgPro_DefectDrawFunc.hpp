@@ -35,8 +35,8 @@ namespace rw
 			int fontSize{ 30 };
 			int thickness{ 3 };
 		public:
-			Color defectColorGood{};
-			Color defectColorBad{};
+			Color defectColorGood{Color::Green};
+			Color defectColorBad{ Color::Red };
 		};
 
 		struct DefectDrawConfig

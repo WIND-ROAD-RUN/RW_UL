@@ -153,8 +153,8 @@ namespace rw
 					}
 					else
 					{
-						tempCfg.rectColor = idCfg.defectColorBad;
-						tempCfg.textColor = idCfg.defectColorBad;
+						tempCfg.rectColor = idCfg.defectColorGood;
+						tempCfg.textColor = idCfg.defectColorGood;
 					}
 
 					cfg.isDisAreaText = idCfg.isDisAreaText;
