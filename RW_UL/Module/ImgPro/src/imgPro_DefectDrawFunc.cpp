@@ -187,11 +187,11 @@ namespace rw
 					tempCfg.text.clear();
 					if (cfg.isDisName)
 					{
-						tempCfg.text = processTextPre+ " : ";
+						tempCfg.text = processTextPre;
 					}
 					if (cfg.isDisScoreText)
 					{
-						tempCfg.text = tempCfg.text + QString::number(item.score, 'f', cfg.scoreDisPrecision);
+						tempCfg.text = tempCfg.text + " : " + QString::number(item.score, 'f', cfg.scoreDisPrecision);
 					}
 					if (cfg.isDisAreaText)
 					{
