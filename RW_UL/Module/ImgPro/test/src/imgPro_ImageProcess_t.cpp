@@ -4,104 +4,52 @@
 #include "ime_utilty.hpp"
 
 
-TEST_F(ImageProcessTest, ImageProcess)
+//TEST_F(ImageProcessTest, ImageProcess)
+//{
+//	int argc = 0;
+//	char* argv[] = { nullptr };
+//	QApplication app(argc, argv);
+//
+//	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
+//
+//
+//	for (int i=0;i<50;i++)
+//	{
+//		(*imgProcess)(image);
+//	}
+//	auto maskImg = imgProcess->getMaskImg(image);
+//
+//	QLabel label;
+//	label.setPixmap(QPixmap::fromImage(maskImg));
+//	label.show();
+//
+//	app.exec();
+//}
+
+
+void func(int id) {
+	std::cout << "id: " << id << " is running\n";
+}
+
+TEST_F(ImageProcessTest, ImageProcessMutiThread)
 {
-	int argc = 0;
-	char* argv[] = { nullptr };
-	QApplication app(argc, argv);
+    int argc = 0;
+    char* argv[] = { nullptr };
+    QApplication app(argc, argv);
 
-	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
+    cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
 
+    const int threadCount = 8;
+    std::vector<std::thread> threads;
 
-	for (int i=0;i<50;i++)
-	{
-		(*imgProcess)(image);
-	}
-	auto maskImg = imgProcess->getMaskImg(image);
+    for (int i = 0; i < threadCount; ++i) {
+        threads.emplace_back([this, &image]() {
+            (*imgProcess)(image);
+            std::cout << imgProcess->getProcessResult().size() + "\n";
+            });
+    }
 
-	//rw::imgPro::ConfigDrawMask cfg;
-	//cfg.color = rw::rqw::RQWColor::Red;
-	//for (const auto & item: imgProcess->getProcessResult())
-	//{
-	//	rw::ImagePainter::PainterConfig config;
-	//	
-	//	if (item.classId==0)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Green;
-	//	}
-	//	if (item.classId == 1)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Red;
-	//	}
-	//	if (item.classId == 2)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Blue;
-	//	}
+    for (auto& t : threads) t.join();
 
-	//	//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
-	//	rw::imgPro::ImagePainter::drawMaskOnSourceImg(image, item, cfg);
-	//}
-	//auto maskImg = rw::CvMatToQImage(image);
-
-
-
-	//rw::imgPro::ConfigDrawMask cfg;
-	//cfg.color = rw::rqw::RQWColor::Red;
-	//auto maskImg = rw::CvMatToQImage(image);
-	//for (const auto& item : imgProcess->getProcessResult())
-	//{
-	//	rw::ImagePainter::PainterConfig config;
-
-	//	if (item.classId == 0)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Green;
-	//	}
-	//	if (item.classId == 1)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Red;
-	//	}
-	//	if (item.classId == 2)
-	//	{
-	//		cfg.color = rw::rqw::RQWColor::Blue;
-	//	}
-
-	//	//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
-	//	rw::imgPro::ImagePainter::drawMaskOnSourceImg(maskImg, item, cfg);
-	//}
-
-
-	//rw::imgPro::ConfigDrawRect cfg;
-	//cfg.rectColor = rw::rqw::RQWColor::Red;
-	//cfg.isRegion = true;
-	//cfg.hasFrame = false;
-	//cfg.alpha = 0.5;
-	//auto maskImg = rw::CvMatToQImage(image);
-	//for (const auto& item : imgProcess->getProcessResult())
-	//{
-	//	rw::ImagePainter::PainterConfig config;
-
-	//	if (item.classId == 0)
-	//	{
-	//		cfg.rectColor = rw::rqw::RQWColor::Green;
-	//	}
-	//	if (item.classId == 1)
-	//	{
-	//		cfg.rectColor = rw::rqw::RQWColor::Red;
-	//	}
-	//	if (item.classId == 2)
-	//	{
-	//		cfg.rectColor = rw::rqw::RQWColor::Blue;
-	//	}
-
-	//	//rw::ImagePainter::drawMaskOnSourceImg(image,item, config);
-	//	rw::imgPro::ImagePainter::drawShapesOnSourceImg(maskImg, item, cfg);
-	//}
-
-
-
-	QLabel label;
-	label.setPixmap(QPixmap::fromImage(maskImg));
-	label.show();
-
-	app.exec();
+    app.exit();
 }

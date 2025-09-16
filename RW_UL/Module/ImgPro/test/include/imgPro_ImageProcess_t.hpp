@@ -50,14 +50,14 @@ protected:
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find != item.customFields.end())
 			{
-				std::cout << "someValueWillBeUsed :" << std::any_cast<int>(find->second) << "score is:" << item.score << std::endl;
+				//std::cout << "someValueWillBeUsed :" << std::any_cast<int>(find->second) << "score is:" << item.score << std::endl;
 			}
 			};
 		context.defectResultGetContext.getDefectResultExtraOperateDisable = [this](const rw::imgPro::EliminationItem& item, const rw::DetectionRectangleInfo& info) {
 			auto find = item.customFields.find("someValueWillBeUsed");
 			if (find != item.customFields.end())
 			{
-				std::cout << "It 's no ,someValueWillBeUsed :" << std::any_cast<int>(find->second) - 100 << "score is:" << item.score << std::endl;
+				//std::cout << "It 's no ,someValueWillBeUsed :" << std::any_cast<int>(find->second) - 100 << "score is:" << item.score << std::endl;
 			}
 			};
 	}

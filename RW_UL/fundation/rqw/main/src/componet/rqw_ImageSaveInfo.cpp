@@ -5,12 +5,12 @@ namespace rw
 {
 	namespace rqw
 	{
-		QString imageFormatToString(rw::rqw::ImageSaveFormatV1 format)
+		QString imageFormatToString(rw::rqw::ImageSaveComFormat format)
 		{
 			switch (format) {
-			case rw::rqw::ImageSaveFormatV1::JPEG:  return "jpg";
-			case rw::rqw::ImageSaveFormatV1::PNG:   return "png";
-			case rw::rqw::ImageSaveFormatV1::BMP:   return "bmp";
+			case rw::rqw::ImageSaveComFormat::JPEG:  return "jpg";
+			case rw::rqw::ImageSaveComFormat::PNG:   return "png";
+			case rw::rqw::ImageSaveComFormat::BMP:   return "bmp";
 			default: return "jpg";
 			}
 		}
