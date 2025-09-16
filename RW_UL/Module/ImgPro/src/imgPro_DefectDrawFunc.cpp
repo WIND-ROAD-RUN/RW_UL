@@ -12,14 +12,18 @@ namespace rw
 		{
 			for (const auto& id : ids)
 			{
-				if (isGood)
+				if (classIdWithConfigMap.find(id)!= classIdWithConfigMap.end())
 				{
-					classIdWithColorWhichIsGood[id] = color;
+					if (isGood)
+					{
+						classIdWithConfigMap[id].defectColorGood = color;
+					}
+					else
+					{
+						classIdWithConfigMap[id].defectColorBad = color;
+					}
 				}
-				else
-				{
-					classIdWithColorWhichIsBad[id] = color;
-				}
+				
 			}
 		}
 
@@ -44,9 +48,9 @@ namespace rw
 					info.defects,
 					processResult,
 					config,
-					config.classIdWithColorWhichIsBad,
-					Color::Red, 
-					context
+					Color::Red,
+					context, 
+					true
 				);
 			}
 
@@ -57,9 +61,9 @@ namespace rw
 					info.disableDefects,
 					processResult,
 					config,
-					config.classIdWithColorWhichIsGood,
-					Color::Green, 
-					context
+					Color::Green,
+					context, 
+					false
 				);
 			}
 		}
@@ -99,76 +103,113 @@ namespace rw
 			const std::unordered_map<ClassId, std::vector<EliminationItem>>& group,
 			const ProcessResult& processResult,
 			const DefectDrawFunc::ConfigDefectDraw& config,
-			const std::unordered_map<ClassId, Color>& colorMap,
-			Color defaultColor, 
-			DefectDrawFuncContext& context
+			Color defaultColor,
+			DefectDrawFuncContext& context, bool isDefect
 		)
 		{
+			DefectDrawFunc::ConfigDefectDraw cfg = config;
+
 			rw::imgPro::ConfigDrawRect recCfg;
-			recCfg.fontSize = config.fontSize;
-			recCfg.thickness = config.thickness;
-			recCfg.textLocate = config.textLocate;
-			recCfg.isRegion = config.isDrawMask;
-			recCfg.alpha = config.alpha;
-			recCfg.thresh = config.thresh;
-			recCfg.maxVal = config.maxVal;
-			recCfg.hasFrame = config.hasFrame;
+			recCfg.fontSize = cfg.fontSize;
+			recCfg.thickness = cfg.thickness;
+			recCfg.textLocate = cfg.textLocate;
+			recCfg.isRegion = cfg.isDrawMask;
+			recCfg.alpha = cfg.alpha;
+			recCfg.thresh = cfg.thresh;
+			recCfg.maxVal = cfg.maxVal;
+			recCfg.hasFrame = cfg.hasFrame;
 			recCfg.rectColor = defaultColor;
 			recCfg.textColor = defaultColor;
 
 			for (const auto& pairs : group)
 			{
-				if (config.classIdIgnoreDrawSet.find(pairs.first) != config.classIdIgnoreDrawSet.end())
+				auto& classId = pairs.first;
+
+				if (cfg.classIdIgnoreDrawSet.find(classId) != cfg.classIdIgnoreDrawSet.end())
 				{
-					auto& vec = context.ignoreItems[pairs.first];
+					auto& vec = context.ignoreItems[classId];
 					vec.insert(vec.end(), pairs.second.begin(), pairs.second.end());
 					continue;
 				}
-				QString processTextPre = (config.classIdNameMap.find(pairs.first) != config.classIdNameMap.end()) ?
-					config.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
+				QString processTextPre = (cfg.classIdNameMap.find(classId) != cfg.classIdNameMap.end()) ?
+					cfg.classIdNameMap.at(classId) : QString::number(classId);
 
-				for (const auto& item : pairs.second)
+				rw::imgPro::ConfigDrawRect tempCfg = recCfg;
+				if (cfg.classIdWithConfigMap.find(classId) != cfg.classIdWithConfigMap.end())
 				{
-					recCfg.text.clear();
-					if (config.isDisScoreText)
+					auto& idCfg = cfg.classIdWithConfigMap.at(classId);
+					tempCfg.alpha = idCfg.alpha;
+					tempCfg.thresh = idCfg.thresh;
+					tempCfg.maxVal = idCfg.maxVal;
+					tempCfg.hasFrame = idCfg.hasFrame;
+					tempCfg.fontSize = idCfg.fontSize;
+					tempCfg.thickness = idCfg.thickness;
+					tempCfg.textLocate = idCfg.textLocate;
+					tempCfg.isRegion = idCfg.isDrawMask;
+					if (isDefect)
 					{
-						recCfg.text = processTextPre + " : " + QString::number(item.score, 'f', config.scoreDisPrecision);
-					}
-					if (config.isDisAreaText)
-					{
-						recCfg.text = recCfg.text + " , " + QString::number(item.area, 'f', config.areaDisPrecision);
-					}
-
-					auto findColor = colorMap.find(pairs.first);
-					if (findColor != colorMap.end())
-					{
-						recCfg.rectColor = findColor->second;
-						recCfg.textColor = findColor->second;
+						tempCfg.rectColor = idCfg.defectColorBad;
+						tempCfg.textColor = idCfg.defectColorBad;
 					}
 					else
 					{
-						recCfg.rectColor = defaultColor;
-						recCfg.textColor = defaultColor;
+						tempCfg.rectColor = idCfg.defectColorBad;
+						tempCfg.textColor = idCfg.defectColorBad;
+					}
+
+					cfg.isDisAreaText = idCfg.isDisAreaText;
+					cfg.isDisScoreText = idCfg.isDisScoreText;
+					cfg.areaDisPrecision = idCfg.areaDisPrecision;
+					cfg.scoreDisPrecision = idCfg.scoreDisPrecision;
+					cfg.alpha = idCfg.alpha;
+					cfg.thresh = idCfg.thresh;
+					cfg.maxVal = idCfg.maxVal;
+					cfg.hasFrame = idCfg.hasFrame;
+					cfg.isDrawMask = idCfg.isDrawMask;
+				}
+				else
+				{
+					cfg.isDisAreaText = config.isDisAreaText;
+					cfg.isDisScoreText = config.isDisScoreText;
+					cfg.areaDisPrecision = config.areaDisPrecision;
+					cfg.scoreDisPrecision = config.scoreDisPrecision;
+					cfg.alpha = config.alpha;
+					cfg.thresh = config.thresh;
+					cfg.maxVal = config.maxVal;
+					cfg.hasFrame = config.hasFrame;
+					cfg.isDrawMask = config.isDrawMask;
+				}
+
+				for (const auto& item : pairs.second)
+				{
+					tempCfg.text.clear();
+					if (cfg.isDisScoreText)
+					{
+						tempCfg.text = processTextPre + " : " + QString::number(item.score, 'f', cfg.scoreDisPrecision);
+					}
+					if (cfg.isDisAreaText)
+					{
+						tempCfg.text = tempCfg.text + " , " + QString::number(item.area, 'f', cfg.areaDisPrecision);
 					}
 
 					auto& proResult = processResult[item.index];
 
-					if (proResult.segMaskValid && config.isDrawMask)
+					if (proResult.segMaskValid && cfg.isDrawMask)
 					{
 						rw::imgPro::ConfigDrawMask maskCfg;
-						maskCfg.alpha = config.alpha;
-						maskCfg.thresh = config.thresh;
-						maskCfg.maxVal = config.maxVal;
-						maskCfg.maskColor = recCfg.rectColor;
-						maskCfg.hasFrame = config.hasFrame;
-						maskCfg.rectCfg = recCfg;
-						maskCfg.rectCfg.rectColor = recCfg.rectColor;
+						maskCfg.alpha = cfg.alpha;
+						maskCfg.thresh = cfg.thresh;
+						maskCfg.maxVal = cfg.maxVal;
+						maskCfg.maskColor = tempCfg.rectColor;
+						maskCfg.hasFrame = cfg.hasFrame;
+						maskCfg.rectCfg = tempCfg;
+						maskCfg.rectCfg.rectColor = tempCfg.rectColor;
 						maskCfg.rectCfg.isRegion = false;
 						rw::imgPro::ImagePainter::drawMaskOnSourceImg(img, proResult, maskCfg);
 					}
 					else
 					{
-						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, proResult, recCfg);
+						rw::imgPro::ImagePainter::drawShapesOnSourceImg(img, proResult, tempCfg);
 					}
 				}
 			}

@@ -170,13 +170,14 @@ namespace rw
 			QVector<QString> errors;
 			for (auto& pairs : errorRecs)
 			{
-				if (defectDrawCfg.classIdIgnoreDrawSet.find(pairs.first) != defectDrawCfg.classIdIgnoreDrawSet.end())
+				auto& classId = pairs.first;
+				if (defectDrawCfg.classIdIgnoreDrawSet.find(classId) != defectDrawCfg.classIdIgnoreDrawSet.end())
 				{
 					continue;
 				}
-				QString processTextPre = (defectDrawCfg.classIdNameMap.find(pairs.first) != defectDrawCfg.classIdNameMap.end()) ?
-					defectDrawCfg.classIdNameMap.at(pairs.first) : QString::number(pairs.first);
-				auto currentIdCfg = context.eliminationCfg[pairs.first];
+				QString processTextPre = (defectDrawCfg.classIdNameMap.find(classId) != defectDrawCfg.classIdNameMap.end()) ?
+					defectDrawCfg.classIdNameMap.at(classId) : QString::number(classId);
+				auto currentIdCfg = context.eliminationCfg[classId];
 				for (const auto& item : pairs.second)
 				{
 					if (currentIdCfg.isUsingArea)
