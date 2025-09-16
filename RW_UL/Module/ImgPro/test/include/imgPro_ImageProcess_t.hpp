@@ -152,6 +152,7 @@ protected:
 		drawConfig.maxVal = 1;
 		drawConfig.classIdWithConfigMap[0].isDrawMask = false;
 		drawConfig.classIdWithConfigMap[0].isDisAreaText = false;
+		drawConfig.classIdWithConfigMap[0].isDisName = false;
 		drawConfig.classIdWithConfigMap[1].isDrawMask = false;
 
 

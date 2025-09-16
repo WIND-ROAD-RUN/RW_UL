@@ -18,6 +18,7 @@ namespace rw
 		struct DefectDrawConfigItem
 		{
 		public:
+			bool isDisName{true};
 			bool isDisScoreText{ true };
 			bool isDisAreaText{ true };
 		public:
@@ -42,6 +43,7 @@ namespace rw
 		struct DefectDrawConfig
 		{
 		public:
+			bool isDisName{ true };
 			bool isDrawDefects{ true };
 			bool isDrawDisableDefects{ true };
 		public:
