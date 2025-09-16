@@ -14,6 +14,31 @@ namespace rw
 {
 	namespace imgPro
 	{
+
+		struct DefectDrawConfigItem
+		{
+		public:
+			bool isDisScoreText{ true };
+			bool isDisAreaText{ true };
+		public:
+			bool isDrawMask{ false };
+			double alpha{ 0.3 };
+			double thresh{ 0.5 };
+			double maxVal{ 1.0 };
+			bool hasFrame{ true };
+		public:
+			int areaDisPrecision{ 1 };
+			int scoreDisPrecision{ 1 };
+		public:
+			ConfigDrawRect::TextLocate textLocate{ ConfigDrawRect::TextLocate::LeftTopOut };
+		public:
+			int fontSize{ 30 };
+			int thickness{ 3 };
+		public:
+			Color defectColorGood{Color::Green};
+			Color defectColorBad{ Color::Red };
+		};
+
 		struct DefectDrawConfig
 		{
 		public:
@@ -25,14 +50,13 @@ namespace rw
 			bool isDisScoreText{ true };
 			bool isDisAreaText{ true };
 		public:
-			std::unordered_map<ClassId, Color> classIdWithColorWhichIsGood;
-			std::unordered_map<ClassId, Color> classIdWithColorWhichIsBad;
-		public:
 			void setAllIdsWithSameColor(
 				const std::vector<ClassId>& ids,
 				Color color, 
 				bool isGood
 			);
+		public:
+			std::unordered_map<ClassId, DefectDrawConfigItem> classIdWithConfigMap;
 		public:
 			int fontSize{ 30 };
 			int thickness{ 3 };
@@ -107,8 +131,7 @@ namespace rw
 				const std::unordered_map<ClassId, std::vector<EliminationItem>>& group,
 				const ProcessResult& processResult,
 				const DefectDrawFunc::ConfigDefectDraw& config,
-				const std::unordered_map<ClassId, Color>& colorMap,
-				Color defaultColor, DefectDrawFuncContext& context
+				Color defaultColor, DefectDrawFuncContext& context, bool isDefect
 			);
             
 		};

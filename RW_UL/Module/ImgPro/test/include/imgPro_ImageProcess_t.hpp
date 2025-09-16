@@ -137,8 +137,8 @@ protected:
 		rw::imgPro::DefectDrawFunc::ConfigDefectDraw drawConfig;
 		drawConfig.isDrawDefects = true;
 		drawConfig.isDrawDisableDefects = true;
-		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Green, true);
-		drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Red, false);
+		//drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Green, true);
+		//drawConfig.setAllIdsWithSameColor({ 0,1,2,3,4,5,6 }, rw::rqw::RQWColor::Red, false);
 		//drawConfig.classIdWithColorWhichIsBad[2] = rw::rqw::RQWColor::Green;
 		drawConfig.thickness = 3;
 		drawConfig.fontSize = 20;
@@ -150,7 +150,13 @@ protected:
 		drawConfig.hasFrame = true;
 		drawConfig.thresh = 0.9;
 		drawConfig.maxVal = 1;
+		drawConfig.classIdWithConfigMap[0].isDrawMask = false;
+		drawConfig.classIdWithConfigMap[0].isDisAreaText = false;
+		drawConfig.classIdWithConfigMap[1].isDrawMask = false;
+
+
 		context.defectDrawCfg = drawConfig;
+		
 	}
 public:
 	int left = 100;
