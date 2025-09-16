@@ -295,4 +295,74 @@ namespace rw
 
 		return bodyIndexVector.begin() + maxIndex;
 	}
+
+	bool DetectionRectangleInfo::findDetIsInOtherDet(const DetectionRectangleInfo& obj,
+		const DetectionRectangleInfo& region, int deviation)
+	{
+		auto tempRegion = region;
+		if (tempRegion.leftTop.first -= deviation < 0)
+		{
+			tempRegion.leftTop.first = 0;
+		}
+		if (tempRegion.leftTop.second -= deviation < 0)
+		{
+			tempRegion.leftTop.second = 0;
+		}
+
+		tempRegion.rightBottom.first += deviation;
+		tempRegion.rightBottom.second += deviation;
+
+		auto leftTopResult = getPointRelativePositionByOther(obj.leftTop, region.leftTop);
+		auto rightBottomResult = getPointRelativePositionByOther(obj.rightBottom, region.rightBottom);
+
+		if (PointRelativePosition::RightBottom == leftTopResult &&
+			PointRelativePosition::LeftTop == rightBottomResult)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
+	DetectionRectangleInfo::PointRelativePosition DetectionRectangleInfo::getPointRelativePositionByOther(
+		const Point& first, const Point& other)
+	{
+		if (first.first == other.first && first.second == other.second)
+		{
+			return Overlap;
+		}
+		else if (first.first <= other.first && first.second <= other.second)
+		{
+			return LeftTop;
+		}
+		else if (first.first >= other.first && first.second <= other.second)
+		{
+			return RightTop;
+		}
+		else if (first.first <= other.first && first.second >= other.second)
+		{
+			return LeftBottom;
+		}
+		else if (first.first >= other.first && first.second >= other.second)
+		{
+			return RightBottom;
+		}
+		else if (first.first == other.first && first.second < other.second)
+		{
+			return Top;
+		}
+		else if (first.first > other.first && first.second == other.second)
+		{
+			return Right;
+		}
+		else if (first.first == other.first && first.second > other.second)
+		{
+			return Bottom;
+		}
+		else if (first.first < other.first && first.second == other.second)
+		{
+			return Left;
+		}
+	}
 }
