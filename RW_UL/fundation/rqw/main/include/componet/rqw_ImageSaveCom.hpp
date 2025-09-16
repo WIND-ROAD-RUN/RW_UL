@@ -15,21 +15,25 @@
 
 namespace rw {
 	namespace rqw {
-		class ImageSaveEngineV1 : public QObject {
+		class ImageSaveCom : public QObject {
 			Q_OBJECT
 
 		public:
-			ImageSaveEngineV1(QObject* parent = nullptr, int threadCount = 4);
+			ImageSaveCom(QObject* parent = nullptr, int threadCount = 4);
 
-			~ImageSaveEngineV1();
+			~ImageSaveCom();
 
-			void pushImage(const ImageSaveInfoV1& image);
+			void pushImage(const ImageSaveComInfo& image);
 
-			void stopCom();
+			void destroyCom();
 
 			void buildCom();
 
-			void setSavePolicy(ImageSaveEnginePolicyV1 policy);
+			void startCom();
+
+			void stopCom();
+
+			void setSavePolicy(ImageSaveComPolicy policy);
 
 			void setMaxSaveImageNum(int maxNum);
 
@@ -38,27 +42,28 @@ namespace rw {
 		public:
 			void setSaveImgQuality(int quality);
 		private:
-			ImageSaveFormatV1 _saveImgFormat = ImageSaveFormatV1::JPEG;
+			ImageSaveComFormat _saveImgFormat = ImageSaveComFormat::JPEG;
 		public:
-			void setSaveImgFormat(ImageSaveFormatV1 format);
+			void setSaveImgFormat(ImageSaveComFormat format);
 		protected:
 			void processImages();
 		public:
 			bool isAllImageSaved();
 		private:
-			void saveImage(const ImageSaveInfoV1& image);
+			void saveImage(const ImageSaveComInfo& image);
 
-			QQueue<ImageSaveInfoV1> saveQueue;
+			QQueue<ImageSaveComInfo> saveQueue;
 			QMutex mutex;
 			QWaitCondition condition;
-			std::atomic<bool> stopFlag;
+			std::atomic<bool> destroyFlag {false};
+			std::atomic<bool> stopFlag{false};
 
 			const int maxQueueSize = 80;
 			const int batchSize = 20;
 			int threadCount;
 			std::vector<QThread*> workerThreads;
 
-			ImageSaveEnginePolicyV1 savePolicy = ImageSaveEnginePolicyV1::Normal;
+			ImageSaveComPolicy savePolicy = ImageSaveComPolicy::Normal;
 			int maxSaveImageNum = 50;
 			std::map<QString, std::vector<QString>> savedImages;
 		};
