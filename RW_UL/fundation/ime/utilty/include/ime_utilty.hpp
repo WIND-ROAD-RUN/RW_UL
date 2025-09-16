@@ -73,6 +73,26 @@ namespace rw {
 		 */
 		static std::vector<rw::DetectionRectangleInfo>::const_iterator getMaxAreaRectangleIterator(
 			const std::vector<rw::DetectionRectangleInfo>& bodyIndexVector, const std::vector<size_t>& index);
+
+		static bool findDetIsInOtherDet(
+			const DetectionRectangleInfo& obj,
+				const DetectionRectangleInfo& region,	
+			int deviation
+		);
+	public:
+		enum PointRelativePosition
+		{
+			LeftTop,
+			RightTop,
+			LeftBottom,
+			RightBottom,
+			Top,
+			Right,
+			Bottom,
+			Left,
+			Overlap
+		};
+		static PointRelativePosition getPointRelativePositionByOther(const Point& first, const Point& other);
 	};
 
 	struct ImagePainter
