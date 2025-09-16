@@ -166,6 +166,7 @@ namespace rw
 					cfg.maxVal = idCfg.maxVal;
 					cfg.hasFrame = idCfg.hasFrame;
 					cfg.isDrawMask = idCfg.isDrawMask;
+					cfg.isDisName = idCfg.isDisName;
 				}
 				else
 				{
@@ -178,14 +179,19 @@ namespace rw
 					cfg.maxVal = config.maxVal;
 					cfg.hasFrame = config.hasFrame;
 					cfg.isDrawMask = config.isDrawMask;
+					cfg.isDisName = config.isDisName;
 				}
 
 				for (const auto& item : pairs.second)
 				{
 					tempCfg.text.clear();
+					if (cfg.isDisName)
+					{
+						tempCfg.text = processTextPre+ " : ";
+					}
 					if (cfg.isDisScoreText)
 					{
-						tempCfg.text = processTextPre + " : " + QString::number(item.score, 'f', cfg.scoreDisPrecision);
+						tempCfg.text = tempCfg.text + QString::number(item.score, 'f', cfg.scoreDisPrecision);
 					}
 					if (cfg.isDisAreaText)
 					{
