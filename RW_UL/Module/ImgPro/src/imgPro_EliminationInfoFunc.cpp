@@ -102,7 +102,7 @@ namespace rw
 
 			if (postOperate)
 			{
-				postOperate(info, index, config,context);
+				postOperate(info, index, config,context, result);
 			}
 
 			return result;

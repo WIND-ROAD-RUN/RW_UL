@@ -68,7 +68,8 @@ namespace rw
 			const ProcessResult&, 
 			const ProcessResultIndexMap&, 
 			const ClassIdWithEliminationInfoConfigMap&,
-			ImageProcessContext&
+			ImageProcessContext&,
+			EliminationInfo &
 			)>;
 
 		struct EliminationInfoGetContext {
