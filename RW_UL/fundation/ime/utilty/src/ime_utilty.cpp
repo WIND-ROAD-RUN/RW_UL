@@ -330,6 +330,42 @@ namespace rw
 		return false;
 	}
 
+	 bool DetectionRectangleInfo::findPointIsInOtherDet(
+		const Point& point,
+		const DetectionRectangleInfo& region,
+		int deviation
+	) {
+		auto tempRegion = region;
+		if (tempRegion.leftTop.first - deviation < 0)
+		{
+			tempRegion.leftTop.first = 0;
+		}
+		else {
+			tempRegion.leftTop.first = tempRegion.leftTop.first - deviation;
+		}
+		if (tempRegion.leftTop.second - deviation < 0)
+		{
+			tempRegion.leftTop.second = 0;
+		}
+		else {
+			tempRegion.leftTop.second = tempRegion.leftTop.second - deviation;
+		}
+
+		tempRegion.rightBottom.first += deviation;
+		tempRegion.rightBottom.second += deviation;
+
+		auto leftTopResult = getPointRelativePositionByOther(point, region.leftTop);
+		auto rightBottomResult = getPointRelativePositionByOther(point, region.rightBottom);
+
+		if (PointRelativePosition::RightBottom == leftTopResult &&
+			PointRelativePosition::LeftTop == rightBottomResult)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 
 	DetectionRectangleInfo::PointRelativePosition DetectionRectangleInfo::getPointRelativePositionByOther(
 		const Point& first, const Point& other)
