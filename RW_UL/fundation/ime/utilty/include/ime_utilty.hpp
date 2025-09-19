@@ -79,6 +79,12 @@ namespace rw {
 				const DetectionRectangleInfo& region,	
 			int deviation
 		);
+
+		static bool findPointIsInOtherDet(
+			const Point& point,
+			const DetectionRectangleInfo& region,
+			int deviation
+		);
 	public:
 		enum PointRelativePosition
 		{
