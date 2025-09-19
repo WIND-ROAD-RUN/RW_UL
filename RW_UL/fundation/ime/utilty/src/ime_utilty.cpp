@@ -300,13 +300,19 @@ namespace rw
 		const DetectionRectangleInfo& region, int deviation)
 	{
 		auto tempRegion = region;
-		if (tempRegion.leftTop.first -= deviation < 0)
+		if (tempRegion.leftTop.first - deviation < 0)
 		{
 			tempRegion.leftTop.first = 0;
 		}
-		if (tempRegion.leftTop.second -= deviation < 0)
+		else {
+			tempRegion.leftTop.first = tempRegion.leftTop.first - deviation;
+		}
+		if (tempRegion.leftTop.second - deviation < 0)
 		{
 			tempRegion.leftTop.second = 0;
+		}
+		else {
+			tempRegion.leftTop.second = tempRegion.leftTop.second - deviation;
 		}
 
 		tempRegion.rightBottom.first += deviation;
