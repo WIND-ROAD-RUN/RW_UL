@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+find_package(OpenCV CONFIG REQUIRED)
 find_package(libzip CONFIG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Concurrent)
 
