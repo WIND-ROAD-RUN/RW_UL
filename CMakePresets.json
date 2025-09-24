@@ -12,6 +12,13 @@
       "architecture": "x64",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "vs2019",
+      "generator": "Visual Studio 16 2019",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     }
   ],
   "buildPresets": [
@@ -24,6 +31,18 @@
     {
       "name": "vs2022-release",
       "configurePreset": "vs2022",
+      "configuration": "Release",
+      "jobs": 8
+    },
+    {
+      "name": "vs2019-debug",
+      "configurePreset": "vs2019",
+      "configuration": "Debug",
+      "jobs": 8
+    },
+    {
+      "name": "vs2019-release",
+      "configurePreset": "vs2019",
       "configuration": "Release",
       "jobs": 8
     }
