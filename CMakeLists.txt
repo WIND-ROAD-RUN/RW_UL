@@ -12,13 +12,6 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 
 	find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-	# 设置vcpkg工具链文件（如果未通过命令行指定）
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{VCPKG_ROOT})
-	message("------------------------")
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "")
-endif()
-
     set(SerializedCodeGeneratorCmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SerializedCodeGenerator/cmake")
     include(SerializedCodeGenerator)
@@ -35,7 +28,6 @@ endif()
     include(./cmake/EnvironmetIni.cmake)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-	#include(./cmake/PackageIni.cmake)
 	include(./cmake/ComplierIni.cmake)
 	include(./cmake/PackageFind.cmake)
 endif()
