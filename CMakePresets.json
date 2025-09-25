@@ -7,18 +7,21 @@
   },
   "configurePresets": [
     {
-      "name": "vs2022",
-      "generator": "Visual Studio 17 2022",
+      "name": "windows-base",
+      "hidden": true,
       "architecture": "x64",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     },
     {
+      "name": "vs2022",
+      "generator": "Visual Studio 17 2022",
+      "inherits": "windows-base"
+    },
+    {
       "name": "vs2019",
       "generator": "Visual Studio 16 2019",
-      "architecture": "x64",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      "inherits": "windows-base"
     }
   ],
   "buildPresets": [
