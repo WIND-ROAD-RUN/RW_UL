@@ -6,6 +6,7 @@
 #include<cassert>
 #include <mutex>
 #include<iostream>
+#include <cmath>
 
 namespace rw {
 	constexpr bool gThreadSafe = true;
