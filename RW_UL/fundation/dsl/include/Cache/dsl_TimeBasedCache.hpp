@@ -562,7 +562,7 @@ namespace rw {
 
 			void clear() {
 				std::lock_guard<std::mutex> lock(_mutex);
-				_cache = std::deque<std::pair<Time, T>>();
+				_cache = std::deque<std::pair<std::chrono::system_clock::time_point, T>>();
 			}
 		private:
 			mutable std::mutex _mutex;

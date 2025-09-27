@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <queue>
+#include <stdexcept>
 
 namespace rw
 {

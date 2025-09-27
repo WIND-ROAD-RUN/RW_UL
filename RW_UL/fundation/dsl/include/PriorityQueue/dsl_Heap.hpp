@@ -3,6 +3,7 @@
 #include <shared_mutex>
 #include <algorithm>
 #include <optional>
+#include <mutex>
 
 namespace rw {
 	namespace dsl {

@@ -10,7 +10,7 @@ namespace rw {
 		class CacheLMRU final
 			:public ICache<Key, Value> {
 			MAKE_FRIEND_TEST_CLASS(CacheLRU_Test)
-				MAKE_FRIEND_TEST_CLASS(CacheMRU_Test_Api)
+			MAKE_FRIEND_TEST_CLASS(CacheMRU_Test_Api)
 		public:
 			explicit CacheLMRU(size_t capacity)
 				: ICache<Key, Value>(capacity) {
@@ -81,7 +81,7 @@ namespace rw {
 				_list.clear();
 				_cache.clear();
 			}
-		private:
+		public:
 			std::list<std::pair<Key, Value>> _list;
 			std::unordered_map<Key, typename std::list<std::pair<Key, Value>>::iterator> _cache;
 		};

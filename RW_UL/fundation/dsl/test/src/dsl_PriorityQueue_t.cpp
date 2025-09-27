@@ -4,13 +4,15 @@
 
 namespace dsl_PriorityQueue
 {
-	auto compareNodeEqual = [](const int& a, const int& b) -> bool {
-		return a == b;
-		};
+	namespace {
+		auto compareNodeEqual = [](const int& a, const int& b) -> bool {
+			return a == b;
+			};
 
-	auto compareNodePriority = [](const size_t& a, const size_t& b) -> bool {
-		return a < b; // 优先级较大的元素优先
-		};
+		auto compareNodePriority = [](const size_t& a, const size_t& b) -> bool {
+			return a < b; // 优先级较大的元素优先
+			};
+	}
 
 	TEST(PriorityQueueFactoryTest, CreateDHeap) {
 		auto queue = rw::dsl::PriorityQueueFactory<int, size_t>::createPriorityQueue(
