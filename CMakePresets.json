@@ -11,7 +11,43 @@
       "hidden": true,
       "architecture": "x64",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-gcc-debug",
+      "generator": "Ninja",
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-gcc-release",
+      "generator": "Ninja",
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     },
     {
       "name": "vs2022",
