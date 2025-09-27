@@ -1,4 +1,4 @@
-#include"oso_StorageStrategy_xml.hpp"
+#include"oso_StorageStrategy_Xml.hpp"
 
 #include"pugixml.hpp"
 
@@ -28,7 +28,7 @@ namespace rw
 			}
 			catch (...)
 			{
-				return nullptr;
+				return false;
 			}
 			
 		}

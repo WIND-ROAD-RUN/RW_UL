@@ -32,9 +32,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 	include(./cmake/PackageFind.cmake)
 endif()
 
-find_package(gtest REQUIRED CONFIG)
+#find_package(gtest REQUIRED CONFIG)
 
 add_subdirectory(RW_UL)
-add_subdirectory(tools)
+#add_subdirectory(tools)
 
 enable_testing()
