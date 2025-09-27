@@ -5,7 +5,13 @@ if(DEFINED ENV{QT_ROOT})
     message("QT_ROOT：$ENV{QT_ROOT}")
 
     # 查找符合条件的Qt路径
-    file(GLOB QT_PATHS "$ENV{QT_ROOT}/[56]*/msvc2019_64/")
+    if(WIN32)
+        # Windows 下查找 Qt 路径
+        file(GLOB QT_PATHS "$ENV{QT_ROOT}/[56]*/msvc2019_64/")
+    elseif(UNIX)
+        # Linux 下查找 Qt 路径
+        file(GLOB QT_PATHS "$ENV{QT_ROOT}/[56]*/gcc_64/")
+    endif()
     if(QT_PATHS)
         list(GET QT_PATHS 0 QT_PATH) # 获取第一个匹配的路径
         set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${QT_PATH}") # 添加到CMAKE_PREFIX_PATH
