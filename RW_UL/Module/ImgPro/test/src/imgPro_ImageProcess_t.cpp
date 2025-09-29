@@ -10,7 +10,7 @@ TEST_F(ImageProcessTest, ImageProcess)
 	char* argv[] = { nullptr };
 	QApplication app(argc, argv);
 
-	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
+	cv::Mat image = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.jpg)");
 
 
 	for (int i=0;i<50;i++)
