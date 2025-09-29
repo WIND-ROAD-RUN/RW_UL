@@ -43,6 +43,10 @@ namespace rw
 			{
 				return _processResult;
 			}
+			ProcessResult& processResult()
+			{
+				return _processResult;
+			}
 			const RunTime & getProcessImgTime() const
 			{
 				return _processImgTime;

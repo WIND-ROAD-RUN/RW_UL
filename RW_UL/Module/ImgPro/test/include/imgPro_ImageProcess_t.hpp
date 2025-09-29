@@ -37,7 +37,7 @@ protected:
 
 	void createImgPro()
 	{
-		config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
+		config.modelPath = R"(C:\Users\rw\Desktop\models\niukouSeg.engine)";
 		engine = rw::ModelEngineFactory::createModelEngine(
 			config, rw::ModelType::Yolov11_Seg_Mask_CudaAcc, rw::ModelEngineDeployType::TensorRT);
 		imgProcess = std::make_unique<rw::imgPro::ImageProcess>(engine);
@@ -150,10 +150,6 @@ protected:
 		drawConfig.hasFrame = true;
 		drawConfig.thresh = 0.9;
 		drawConfig.maxVal = 1;
-		drawConfig.classIdWithConfigMap[0].isDrawMask = false;
-		drawConfig.classIdWithConfigMap[0].isDisAreaText = false;
-		drawConfig.classIdWithConfigMap[0].isDisName = false;
-		drawConfig.classIdWithConfigMap[1].isDrawMask = false;
 
 
 		context.defectDrawCfg = drawConfig;
