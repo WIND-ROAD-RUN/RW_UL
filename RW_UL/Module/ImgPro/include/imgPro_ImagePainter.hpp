@@ -15,6 +15,8 @@ namespace rw
 
 	namespace imgPro
 	{
+		using Point = std::pair<int, int>;
+
 		struct ConfigDrawCircle
 		{
 			int thickness = 1;
@@ -32,6 +34,15 @@ namespace rw
 		struct ConfigDrawLine
 		{
 			int position = 0;
+			int thickness = 1;
+			Color color = Color::Red;
+			bool isDashed{ false };
+		};
+
+		struct ConfigDrawSegment
+		{
+			Point startPoint{};
+			Point endPoint{};
 			int thickness = 1;
 			Color color = Color::Red;
 			bool isDashed{ false };
@@ -91,6 +102,11 @@ namespace rw
 				QImage& image,
 				const ConfigDrawLine& cfg
 			);
+
+			static void drawSegmentLine(
+				QImage& image,
+				const ConfigDrawSegment& cfg
+				);
 
 			static void drawShapesOnSourceImg(
 				QImage& image, 
