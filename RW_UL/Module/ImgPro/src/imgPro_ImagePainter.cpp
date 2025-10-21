@@ -38,8 +38,23 @@ namespace rw
 			painter.drawLine(0, cfg.position, image.width(), cfg.position);
 		}
 
+		void ImagePainter::drawSegmentLine(QImage& image, const ConfigDrawSegment& cfg)
+		{
+			QPainter painter(&image);
+			if (cfg.isDashed)
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness, Qt::DashLine));
+			}
+			else
+			{
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
+			}
+			painter.drawLine(cfg.startPoint.first, cfg.startPoint.second,
+				cfg.endPoint.first, cfg.endPoint.second);
+		}
+
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,
-			const ConfigDrawRect& cfg)
+		                                         const ConfigDrawRect& cfg)
 		{
 			QPainter painter(&image);
 
