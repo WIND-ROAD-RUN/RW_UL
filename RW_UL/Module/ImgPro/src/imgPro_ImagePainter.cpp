@@ -59,10 +59,9 @@ namespace rw
 			// 画文字（如果有）
 			if (!cfg.text.isEmpty())
 			{
-				// 默认字体与尺寸（可按需要调整或改为从 cfg 中读取）
+				// 字体大小：优先使用 cfg.fontSize（当 > 0 时），否则回退到基于线宽的默认值
 				QFont font = painter.font();
-				// 这里用基于线宽的简单映射设置字体大小，避免过大/过小
-				int fontSize = std::max(8, cfg.thickness * 4);
+				int fontSize = (cfg.fontSize > 0) ? cfg.fontSize : std::max(8, cfg.thickness * 4);
 				font.setPointSize(fontSize);
 				painter.setFont(font);
 
@@ -88,7 +87,6 @@ namespace rw
 				QPointF base;
 				auto locate = cfg.textLocate;
 
-				// 兼容性：若头文件未定义成员，上面的宏保持默认 Middle
 				switch (locate)
 				{
 				case ConfigDrawSegment::TextLocate::Left:
