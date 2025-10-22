@@ -55,6 +55,7 @@ namespace rw
 			bool isDashed{ false };
 			QString text{};
 			Color textColor = Color::Red;
+			int fontSize{3};
 			enum class TextLocate
 			{
 				Left,
