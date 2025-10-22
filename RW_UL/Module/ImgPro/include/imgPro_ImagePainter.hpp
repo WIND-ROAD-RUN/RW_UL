@@ -17,6 +17,13 @@ namespace rw
 	{
 		using Point = std::pair<int, int>;
 
+		inline double pointDistance(const Point& a, const Point& b) noexcept
+		{
+			const double dx = static_cast<double>(a.first) - static_cast<double>(b.first);
+			const double dy = static_cast<double>(a.second) - static_cast<double>(b.second);
+			return std::hypot(dx, dy);
+		}
+
 		struct ConfigDrawCircle
 		{
 			int thickness = 1;
