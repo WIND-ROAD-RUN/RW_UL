@@ -41,6 +41,9 @@ namespace rw
 		void ImagePainter::drawSegmentLine(QImage& image, const ConfigDrawSegment& cfg)
 		{
 			QPainter painter(&image);
+			painter.setRenderHint(QPainter::Antialiasing, true);
+
+			// 画线
 			if (cfg.isDashed)
 			{
 				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness, Qt::DashLine));
@@ -49,8 +52,67 @@ namespace rw
 			{
 				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.color), cfg.thickness));
 			}
-			painter.drawLine(cfg.startPoint.first, cfg.startPoint.second,
-				cfg.endPoint.first, cfg.endPoint.second);
+			QPoint p1(cfg.startPoint.first, cfg.startPoint.second);
+			QPoint p2(cfg.endPoint.first, cfg.endPoint.second);
+			painter.drawLine(p1, p2);
+
+			// 画文字（如果有）
+			if (!cfg.text.isEmpty())
+			{
+				// 默认字体与尺寸（可按需要调整或改为从 cfg 中读取）
+				QFont font = painter.font();
+				// 这里用基于线宽的简单映射设置字体大小，避免过大/过小
+				int fontSize = std::max(8, cfg.thickness * 4);
+				font.setPointSize(fontSize);
+				painter.setFont(font);
+
+				QFontMetrics fm(font);
+				int textW = fm.horizontalAdvance(cfg.text);
+				int textH = fm.height();
+
+				// 计算线段方向与垂直方向，用于将文字放在“线的上方”
+				const double dx = static_cast<double>(p2.x() - p1.x());
+				const double dy = static_cast<double>(p2.y() - p1.y());
+				const double segLen = std::hypot(dx, dy);
+				double ux = 0.0, uy = 0.0; // 单位方向向量
+				if (segLen > 1e-6) { ux = dx / segLen; uy = dy / segLen; }
+
+				// 垂直单元向量（朝上为负垂直）
+				double px = -uy;
+				double py = ux;
+
+				// 偏移距离：在垂直方向上偏离线，使文字不与线重叠
+				const double offset = std::max<double>(textH * 0.6, cfg.thickness + 4);
+
+				// 计算基点（线上的坐标），根据 TextLocate 放左/中/右
+				QPointF base;
+				auto locate = cfg.textLocate;
+
+				// 兼容性：若头文件未定义成员，上面的宏保持默认 Middle
+				switch (locate)
+				{
+				case ConfigDrawSegment::TextLocate::Left:
+					base = QPointF(p1) + QPointF(ux * std::min(10.0, segLen * 0.05), uy * std::min(10.0, segLen * 0.05));
+					break;
+				case ConfigDrawSegment::TextLocate::Right:
+					base = QPointF(p2) - QPointF(ux * std::min(10.0, segLen * 0.05), uy * std::min(10.0, segLen * 0.05));
+					break;
+				case ConfigDrawSegment::TextLocate::Middle:
+				default:
+					base = (QPointF(p1) + QPointF(p2)) * 0.5;
+					break;
+				}
+
+				// 将文字向“上方”偏移（使用垂直向量），注意 QImage 坐标系：y 向下为正，所以上方为负方向
+				QPointF textPos = base + QPointF(px * (-offset), py * (-offset));
+
+				// 将文字左上角调整，使文字居中于基点（横向居中，纵向以基点为基准向上偏移）
+				QPointF drawTopLeft(textPos.x() - textW / 2.0, textPos.y() - textH / 2.0);
+
+				// 设置文字颜色并绘制
+				painter.setPen(QPen(rw::rqw::RQWColorToQColor(cfg.textColor)));
+				painter.drawText(QRectF(drawTopLeft, QSizeF(textW, textH)), Qt::AlignCenter, cfg.text);
+			}
 		}
 
 		void ImagePainter::drawShapesOnSourceImg(QImage& image, const DetectionRectangleInfo& rectInfo,

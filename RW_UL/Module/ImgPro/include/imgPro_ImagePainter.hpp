@@ -46,6 +46,15 @@ namespace rw
 			int thickness = 1;
 			Color color = Color::Red;
 			bool isDashed{ false };
+			QString text{};
+			Color textColor = Color::Red;
+			enum class TextLocate
+			{
+				Left,
+				Middle,
+				Right
+			};
+			TextLocate textLocate = TextLocate::Middle;
 		};
 
 		struct ConfigDrawRect
