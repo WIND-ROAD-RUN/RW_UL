@@ -33,6 +33,8 @@ namespace rw {
 		int width{ -1 };
 		int height{ -1 };
 	public:
+		double angle{0};
+	public:
 		long area{ -1 };
 	public:
 		size_t classId{ 0 };

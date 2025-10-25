@@ -174,6 +174,7 @@ namespace rw
 				resultItem.area = static_cast<long>(std::round(w * h));
 				resultItem.classId = static_cast<size_t>(item.class_id);
 				resultItem.score = item.conf;
+				resultItem.angle = item.angle;
 
 				result.push_back(resultItem);
 			}
