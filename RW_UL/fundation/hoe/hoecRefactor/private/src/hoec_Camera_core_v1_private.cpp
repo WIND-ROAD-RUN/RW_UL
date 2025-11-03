@@ -105,6 +105,19 @@ namespace rw
 				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerRG2RGB);
 				return rgbImage;
 			}
+			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerGR8)
+			{
+				cv::Mat bayerImage(height, width, CV_8UC1, pData);
+				cv::Mat rgbImage;
+				cv::cvtColor(bayerImage, rgbImage, cv::COLOR_BayerGR2RGB);
+				return rgbImage;
+			}
+			else if (frameInfo.enPixelType == PixelType_Gvsp_Mono8)
+			{
+				// 单通道灰度图像
+				cv::Mat grayImage(height, width, CV_8UC1, pData);
+				return grayImage;
+			}
 			else if (frameInfo.enPixelType == PixelType_Gvsp_BayerRG10)
 			{
 				cv::Mat bayerImage(height, width, CV_16UC1, pData);
