@@ -3,6 +3,41 @@
 ## 介绍
 封装了若干个可复用的业务逻辑模块，提供给视觉检测项目、工业剔除项目使用。
 
+## 目录（Table of Contents）
+
+- [介绍](#介绍)
+- [目录结构](#目录结构)
+- [组件概览图](#组件概览图)
+- [组件说明](#组件说明)
+  - [IndexFunc 缺陷index字典化组件](#indexfunc-缺陷index字典化组件)
+    - [概要](#概要)
+    - [类 / 接口 示意图（类图风格）](#类--接口-示意图类图风格)
+    - [算法框架图（流程图）](#算法框架图流程图)
+    - [使用建议](#使用建议)
+  - [ImageProcessUtilty 图像处理工具组件](#imageprocessutilty-图像处理工具组件)
+  - [EliminationInfoFunc 剔除信息组件](#eliminationinfofunc-剔除信息组件)
+    - [概要](#概要-1)
+    - [类 / 接口 示意图（类图风格）](#类--接口-示意图类图风格-1)
+    - [算法框架图（流程图）](#算法框架图流程图-1)
+  - [DefectResultInfoFunc 缺陷结果组件](#defectresultinfofunc-缺陷结果组件)
+    - [概要](#概要-2)
+    - [类图（classDiagram）](#类图classdiagram)
+    - [算法框架图（flowchart TD）](#算法框架图flowchart-td)
+  - [DefectDrawFunc 缺陷绘画组件](#defectdrawfunc-缺陷绘画组件)
+    - [概要](#概要-3)
+    - [类图（classDiagram）](#类图classdiagram-1)
+    - [算法流程（flowchart TD）](#算法流程flowchart-td)
+  - [ImagePainter 图像绘画组件](#imagepainter-图像绘画组件)
+    - [概要](#概要-4)
+    - [类图（classDiagram）](#类图classdiagram-2)
+    - [关键实现要点](#关键实现要点)
+  - [ImageProcess 图像处理集合组件](#imageprocess-图像处理集合组件)
+    - [概要](#概要-5)
+    - [类图（classDiagram）](#类图classdiagram-3)
+    - [流程图（flowchart TD）](#流程图flowchart-td)
+- [使用示例与片段](#使用示例与片段)
+
+
 ## 目录结构
 ```
 ImgPro/
@@ -155,6 +190,24 @@ IndexFunc::removeIndicesPost(idxMap, processResult, ctx);
 
 ### ImageProcessUtilty 图像处理工具组件
 
+#### 概要
+`ImageProcessUtilty` 提供了本模块内通用的类型别名与轻量工具（类型转换、时间单位、颜色别名等），用以统一接口签名并降低各组件间耦合。核心在于把常用的基础类型集中定义，便于阅读、重构与测试。
+
+#### 主要别名（来自 `imgPro_ImageProcessUtilty.hpp`）
+- `ClassId` — 类型别名，代表缺陷类别 id（`size_t`）。  
+- `ClassIds` — 类 id 列表（`std::vector<ClassId>`）。  
+- `ProcessResult` — 检测结果序列（`std::vector<rw::DetectionRectangleInfo>`）。  
+- `ProcessResultIndex` — 检测项索引（`size_t`）。  
+- `ProcessResultIndexMap` — 按类分组的索引集合（`std::unordered_map<ClassId, std::set<ProcessResultIndex>>`）。  
+- `ClassIdName` — 类名字符串（`QString`）。  
+- `RunTime` — 运行时度量类型（`unsigned long long`），用于记录毫秒级耗时。  
+- `Color` — 颜色类型别名（`rw::rqw::RQWColor`）。
+
+#### 常见用法与建议
+- 类型统一：在模块外部使用 `ProcessResult` / `ProcessResultIndexMap` 等别名可以避免直接依赖内部实现容器，便于未来把 `std::set` 换为其他容器。  
+- 索引语义：`ProcessResultIndex` 与 `ProcessResult` 的长度紧耦合，使用前应验证索引是否越界。  
+- 线程与所有权：`ProcessResult` 为值语义（`vector`），在高并发场景下应避免不必要拷贝 — 可传 `const &` 或使用移动语义。`QImage` 与 GUI 绘制必须在主线程或已加锁的上下文中操作。  
+- 运行时单位：`RunTime` 用于毫秒计时，记录与展示要统一格式（见 `DefectDrawFunc::RunTextConfig` 用例）。
 
 ### EliminationInfoFunc 剔除信息组件
 
