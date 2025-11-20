@@ -51,6 +51,22 @@ namespace rw
 				return _queue.back();
 			}
 
+			T& front()
+			{
+				std::lock_guard<std::mutex> lock(_mutex);
+				if (_queue.empty())
+					throw std::out_of_range("ThreadSafeQueue::front() called on empty queue");
+				return _queue.front();
+			}
+
+			const T& front() const
+			{
+				std::lock_guard<std::mutex> lock(_mutex);
+				if (_queue.empty())
+					throw std::out_of_range("ThreadSafeQueue::front() called on empty queue");
+				return _queue.front();
+			}
+
 			void clear()
 			{
 				std::lock_guard<std::mutex> lock(_mutex);
