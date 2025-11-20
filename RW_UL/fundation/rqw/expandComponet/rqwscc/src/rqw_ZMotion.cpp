@@ -41,6 +41,12 @@ namespace rw
 			return _zMotion->OpenBoard(_ip.toStdString());
 		}
 
+		bool ZMotion::connectPcie(int type, const std::string& pconnectstring, unsigned int uims)
+		{
+			_zMotion = new zwy::scc::Motion;
+			return _zMotion->OpenBoardPcie(type, pconnectstring, uims);
+		}
+
 		bool ZMotion::getConnectState(bool& isGet)
 		{
 			if (!_zMotion)

@@ -28,9 +28,36 @@ namespace zwy {
 			}
 		}
 
+		bool Motion::OpenBoardPcie(int type, char* pconnectstring, uint32 uims)
+		{
+			// qDebug()<<"运行";
+			int ret = ZAux_FastOpen(type, pconnectstring, uims,&g_handle);
+			//qDebug()<<ipAdress;
+			if (ERR_SUCCESS != ret)
+			{
+				g_handle = nullptr;
+				//qDebug()<<"fale";
+				isOPen = false;
+				return false;
+			}
+			else
+			{
+				// qDebug()<<"success";
+				isOPen = true;
+				ZMC_SetTimeOut(g_handle, 100);
+
+				return true;
+			}
+		}
+
 		bool Motion::OpenBoard(const std::string& ipAdress)
 		{
 			return OpenBoard(const_cast<char*>(ipAdress.c_str()));
+		}
+
+		bool Motion::OpenBoardPcie(int type, const std::string& pconnectstring, uint32 uims)
+		{
+			return OpenBoardPcie(type, const_cast<char*>(pconnectstring.c_str()), uims);
 		}
 
 		bool Motion::CloseBoared()
