@@ -30,6 +30,8 @@ namespace rw
 		public:
 			[[nodiscard]] bool connect();
 
+			[[nodiscard]] bool connectPcie(int type, const std::string& pconnectstring, unsigned int uims);
+
 			[[nodiscard]] bool getConnectState(bool& isGet);
 			[[nodiscard]] bool getConnectState();
 

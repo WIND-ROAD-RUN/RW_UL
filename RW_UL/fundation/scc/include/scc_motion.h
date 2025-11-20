@@ -15,7 +15,9 @@ namespace zwy {
 
 			//打开控制器
 			bool OpenBoard(char* ipAdress);
+			bool OpenBoardPcie(int type,char * pconnectstring,uint32 uims);
 			bool OpenBoard(const std::string& ipAdress);
+			bool OpenBoardPcie(int type, const std::string& pconnectstring, uint32 uims);
 			//关闭板卡
 			bool CloseBoared();
 			//    //获取板卡连接状态
