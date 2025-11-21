@@ -295,5 +295,14 @@ namespace rw
 
 			return _zMotion->SetAxisType(axis, value);
 		}
+
+		bool ZMotion::switchOpen(int num, int enable, int axisnum, int outnum, int  outstate, float setpos, float resetpos) {
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->switchOpen(num, enable, axisnum, outnum, outstate, setpos, resetpos);
+		}
 	}
 }
