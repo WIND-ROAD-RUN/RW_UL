@@ -20,6 +20,38 @@ graph TD
     Module["Module"] --> fundation["fundation"]
   end
 
+  subgraph "ThirdLibrary"
+    MVSSDK["MVSSDK"]
+    DSSDK["DSSDK"]
+    HalconSDK["Halcon"]
+    Onnxruntime-gpu-1.12.0["Onnxruntime-gpu-1.12.0"]
+    subgraph "TensorRT"
+        TensorRT10.12-cuda12["TensorRT10.12-cuda12"]
+        TensorRT10.12-cuda11["TensorRT10.12-cuda11"]
+        TensorRT8.6-cuda11["TensorRT8.6-cuda11"]
+    end
+    VisionMasterSDK4.4.0["VisionMasterSDK4.4.0"]
+    ZMotionSDK["ZMotionSDK"]
+    opencv4["opencv4"]
+    pugixml["pugixml"]
+    jsoncpp["jsoncpp"]
+    sqlite3["sqlite3"]
+    gtest["gtest"]
+    spdlog["spdlog"]
+    cryptopp["cryptopp"]
+    openssl["openssl"]
+    libmodbus["libmodbus"]
+    libzip["libzip"]
+    std["std"]
+    WindowsAPI["WindowsAPI"]
+    LinuxAPI["LinuxAPI"]
+    serial["serial"]
+    Qt6["Qt6"]
+  end
+
+  RW_UL--> ThirdLibrary
+
+
   Note1["说明：Module 封装了若干个组件，提供复用化的业务逻辑。"] --> Module
 
   Note2["说明：fundation 负责提供基础功能函数与工具方法以及一些底层设施。"] --> fundation
