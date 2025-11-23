@@ -12,6 +12,7 @@ namespace rw
 		using Address = uint16_t;
 		using Quantity = uint16_t;
 		using RegisterValue = uint16_t;
+		using RegisterValue32 = uint32_t;
 
 		enum class ModbusDeviceName
 		{

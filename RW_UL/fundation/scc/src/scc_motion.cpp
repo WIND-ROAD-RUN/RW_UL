@@ -1,7 +1,11 @@
 #include "scc_Motion.h"
 
+#include<iostream>
+
 namespace zwy {
 	namespace scc {
+
+
 		Motion::Motion()
 		{
 		}
@@ -31,7 +35,7 @@ namespace zwy {
 		bool Motion::OpenBoardPcie(int type, char* pconnectstring, uint32 uims)
 		{
 			// qDebug()<<"运行";
-			int ret = ZAux_FastOpen(type, pconnectstring, uims,&g_handle);
+			int ret = ZAux_FastOpen(type, pconnectstring, uims, &g_handle);
 			//qDebug()<<ipAdress;
 			if (ERR_SUCCESS != ret)
 			{
@@ -270,11 +274,11 @@ namespace zwy {
 			}
 			if (g_handle != nullptr)
 			{
-				for (int i=0;i<8;i++)
+				for (int i = 0; i < 8; i++)
 				{
 					ZAux_Direct_Single_Cancel(g_handle, i, 2);
 				}
-			
+
 				return true;
 			}
 		}
@@ -419,6 +423,12 @@ namespace zwy {
 			// int ret = ZAux_Modbus_Set0x(g_handle, adress, num,  &v);
 			int ret = ZAux_Modbus_Get4x_Float(g_handle, adress, num, &v);
 			value = v;
+			return true;
+		}
+
+		bool Motion::switchOpen(int num, int enable, int axisnum, int outnum, int  outstate, float setpos, float resetpos) {
+			auto result = ZAux_Direct_Pswitch(g_handle, num, enable, axisnum, outnum, outstate, setpos, resetpos);
+
 			return true;
 		}
 	}

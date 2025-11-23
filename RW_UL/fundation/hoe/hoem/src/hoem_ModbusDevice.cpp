@@ -66,9 +66,9 @@ namespace rw
 
 		bool ModbusDevice::readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			data.resize(quantity);
 			int result = modbus_read_registers(_modbusContext, startAddress + _baseAddress, quantity, reinterpret_cast<uint16_t*>(data.data()));
 			uint16_t number = static_cast<uint16_t>(data[0]);
@@ -81,9 +81,9 @@ namespace rw
 
 		bool ModbusDevice::writeRegisters(Address startAddress, const std::vector<RegisterValue>& data)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			int result = modbus_write_registers(_modbusContext, startAddress + _baseAddress, data.size(), reinterpret_cast<const uint16_t*>(data.data()));
 			if (result < 0) {
 				return false;
@@ -91,11 +91,80 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data)
+		bool ModbusDevice::writeRegister(Address startAddress, RegisterValue32 data, Endianness byteOrder)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
+				return false;
+			}*/
+
+			// 将 32 位值拆分为两个 16 位寄存器（高 16 位和低 16 位）
+			uint16_t high = static_cast<uint16_t>((static_cast<uint32_t>(data) >> 16) & 0xFFFFu);
+			uint16_t low = static_cast<uint16_t>(static_cast<uint32_t>(data) & 0xFFFFu);
+
+			uint16_t regs[2];
+
+			// 根据字节序在两个寄存器之间安排顺序
+			// 常见约定：BigEndian - 高字在前；LittleEndian - 低字在前
+			switch (byteOrder) {
+			case Endianness::BigEndian:
+				regs[0] = high;
+				regs[1] = low;
+				break;
+			case Endianness::LittleEndian:
+				regs[0] = low;
+				regs[1] = high;
+				break;
+			default:
+				// 若有其他自定义字节序，回退为 BigEndian 行为
+				regs[0] = high;
+				regs[1] = low;
+				break;
+			}
+
+			int result = modbus_write_registers(_modbusContext, startAddress + _baseAddress, 2, regs);
+			if (result < 0) {
 				return false;
 			}
+			return true;
+		}
+
+		bool ModbusDevice::readRegister(Address startAddress, RegisterValue32& data, Endianness byteOrder)
+		{
+			/*if (!isConnected()) {
+		return false;
+	}*/
+
+			uint16_t regs[2] = { 0, 0 };
+			int result = modbus_read_registers(_modbusContext, startAddress + _baseAddress, 2, regs);
+			if (result < 0) {
+				return false;
+			}
+
+			uint32_t value = 0;
+			switch (byteOrder) {
+			case Endianness::BigEndian:
+				// regs[0] = high, regs[1] = low
+				value = (static_cast<uint32_t>(regs[0]) << 16) | static_cast<uint32_t>(regs[1]);
+				break;
+			case Endianness::LittleEndian:
+				// regs[0] = low, regs[1] = high
+				value = (static_cast<uint32_t>(regs[1]) << 16) | static_cast<uint32_t>(regs[0]);
+				break;
+			default:
+				// 回退为 BigEndian 行为
+				value = (static_cast<uint32_t>(regs[0]) << 16) | static_cast<uint32_t>(regs[1]);
+				break;
+			}
+
+			data = static_cast<RegisterValue32>(value);
+			return true;
+		}
+
+		bool ModbusDevice::readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data)
+		{
+			/*if (!isConnected()) {
+				return false;
+			}*/
 			data.resize(quantity);
 			uint8_t* coilData = new uint8_t[(quantity + 7) / 8];
 			int result = modbus_read_bits(_modbusContext, startAddress + _baseAddress, quantity, coilData);
@@ -112,9 +181,9 @@ namespace rw
 
 		bool ModbusDevice::writeCoil(Address address, bool state)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			int result = modbus_write_bit(_modbusContext, address + _baseAddress, state ? 1 : 0);
 			if (result < 0) {
 				return false;
@@ -124,9 +193,9 @@ namespace rw
 
 		bool ModbusDevice::writeCoils(Address startAddress, const std::vector<bool>& states)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			size_t numBytes = (states.size() + 7) / 8;
 			uint8_t* coilData = new uint8_t[numBytes]();
 			for (size_t i = 0; i < states.size(); ++i) {
@@ -155,9 +224,9 @@ namespace rw
 
 		bool ModbusDevice::readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			data.resize(quantity);
 			int result = modbus_read_registers(_modbusContext, address, quantity, reinterpret_cast<uint16_t*>(data.data()));
 			if (result < 0) {
@@ -168,9 +237,9 @@ namespace rw
 
 		bool ModbusDevice::writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data)
 		{
-			if (!isConnected()) {
+			/*if (!isConnected()) {
 				return false;
-			}
+			}*/
 			int result = modbus_write_registers(_modbusContext, address, data.size(), reinterpret_cast<const uint16_t*>(data.data()));
 			if (result < 0) {
 				return false;

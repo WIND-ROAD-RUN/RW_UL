@@ -15,7 +15,7 @@ namespace zwy {
 
 			//打开控制器
 			bool OpenBoard(char* ipAdress);
-			bool OpenBoardPcie(int type,char * pconnectstring,uint32 uims);
+			bool OpenBoardPcie(int type, char* pconnectstring, uint32 uims);
 			bool OpenBoard(const std::string& ipAdress);
 			bool OpenBoardPcie(int type, const std::string& pconnectstring, uint32 uims);
 			//关闭板卡
@@ -67,8 +67,8 @@ namespace zwy {
 
 			bool SetModbus(uint16 adress, uint16 num, float value);
 			bool GetModbus(uint16 adress, uint16 num, float& value);
-			bool isOPen;
-
+			bool switchOpen(int num, int enable, int axisnum, int outnum, int  outstate, float setpos, float resetpos);
+			bool isOPen{ false };
 		private:
 			ZMC_HANDLE g_handle = nullptr;
 		};
