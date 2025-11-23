@@ -128,7 +128,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeRegister(Address startAddress, const std::vector<RegisterValue32>& data,
+		bool ModbusDevice::writeRegisters(Address startAddress, const std::vector<RegisterValue32>& data,
 			Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
