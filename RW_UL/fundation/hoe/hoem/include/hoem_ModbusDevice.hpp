@@ -24,6 +24,8 @@ namespace rw
 			bool reconnect();
 			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data);
 			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data);
+			bool writeRegister(Address startAddress, RegisterValue32 data, Endianness byteOrder);
+			bool readRegister(Address startAddress, RegisterValue32 & data, Endianness byteOrder);
 			bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data);
 			bool writeCoil(Address address, bool state);
 			bool writeCoils(Address startAddress, const std::vector<bool>& states);
