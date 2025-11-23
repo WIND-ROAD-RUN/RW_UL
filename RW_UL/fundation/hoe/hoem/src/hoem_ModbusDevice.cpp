@@ -128,6 +128,49 @@ namespace rw
 			return true;
 		}
 
+		bool ModbusDevice::writeRegister(Address startAddress, const std::vector<RegisterValue32>& data,
+			Endianness byteOrder)
+		{
+			/*if (!isConnected()) {
+				return false;
+			}*/
+
+			if (data.empty()) {
+				return false;
+			}
+
+			const size_t count32 = data.size();
+			const size_t regCount = count32 * 2; // 每个 32 位值占用两个 16 位寄存器
+
+			std::vector<uint16_t> regs(regCount);
+
+			for (size_t i = 0; i < count32; ++i) {
+				uint32_t v = static_cast<uint32_t>(data[i]);
+				uint16_t high = static_cast<uint16_t>((v >> 16) & 0xFFFFu);
+				uint16_t low = static_cast<uint16_t>(v & 0xFFFFu);
+
+				if (byteOrder == Endianness::BigEndian) {
+					regs[i * 2] = high;
+					regs[i * 2 + 1] = low;
+				}
+				else if (byteOrder == Endianness::LittleEndian) {
+					regs[i * 2] = low;
+					regs[i * 2 + 1] = high;
+				}
+				else {
+					// 其它情况回退为 BigEndian 行为
+					regs[i * 2] = high;
+					regs[i * 2 + 1] = low;
+				}
+			}
+
+			int result = modbus_write_registers(_modbusContext, startAddress + _baseAddress, static_cast<int>(regCount), regs.data());
+			if (result < 0) {
+				return false;
+			}
+			return true;
+		}
+
 		bool ModbusDevice::readRegister(Address startAddress, RegisterValue32& data, Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
@@ -157,6 +200,52 @@ namespace rw
 			}
 
 			data = static_cast<RegisterValue32>(value);
+			return true;
+		}
+
+		bool ModbusDevice::readRegisters(Address startAddress, std::vector<RegisterValue32>& data, Endianness byteOrder)
+		{
+			/*if (!isConnected()) {
+				return false;
+			}*/
+
+			// 需要读取多少个 32 位值
+			if (data.empty()) {
+				return false;
+			}
+
+			const size_t count32 = data.size();
+			const size_t regCount = count32 * 2; // 每个 32 位值占用两个 16 位寄存器
+
+			std::vector<uint16_t> regs(regCount, 0);
+			int result = modbus_read_registers(_modbusContext, startAddress + _baseAddress, static_cast<int>(regCount), regs.data());
+			if (result < 0 || result != static_cast<int>(regCount)) {
+				return false;
+			}
+
+			for (size_t i = 0; i < count32; ++i) {
+				uint16_t r0 = regs[i * 2];
+				uint16_t r1 = regs[i * 2 + 1];
+				uint32_t value = 0;
+
+				switch (byteOrder) {
+				case Endianness::BigEndian:
+					// regs[0] = high, regs[1] = low
+					value = (static_cast<uint32_t>(r0) << 16) | static_cast<uint32_t>(r1);
+					break;
+				case Endianness::LittleEndian:
+					// regs[0] = low, regs[1] = high
+					value = (static_cast<uint32_t>(r1) << 16) | static_cast<uint32_t>(r0);
+					break;
+				default:
+					// 回退为 BigEndian 行为
+					value = (static_cast<uint32_t>(r0) << 16) | static_cast<uint32_t>(r1);
+					break;
+				}
+
+				data[i] = static_cast<RegisterValue32>(value);
+			}
+
 			return true;
 		}
 
