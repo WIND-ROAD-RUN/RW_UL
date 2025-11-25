@@ -8,6 +8,23 @@ namespace rw
 {
 	namespace hoem
 	{
+		struct ModbusDeviceTcpCfg
+		{
+			std::string& ip;
+			int port;
+			Address baseAddress = 0;
+		};
+
+		struct ModbusDeviceRtuCfg
+		{
+			std::string& device;
+			int baud;
+			char parity;
+			int dataBit;
+			int stopBit;
+			Address baseAddress = 0;
+		};
+
 		class ModbusDevice {
 		private:
 			modbus_t* _modbusContext = nullptr;
@@ -16,6 +33,8 @@ namespace rw
 			Address _baseAddress = 0;
 		public:
 			ModbusDevice(const std::string& ip, int port, Address baseAddress = 0);
+			ModbusDevice(const ModbusDeviceTcpCfg & cfg);
+			ModbusDevice(const ModbusDeviceRtuCfg& cfg);
 			~ModbusDevice();
 		public:
 			bool connect();

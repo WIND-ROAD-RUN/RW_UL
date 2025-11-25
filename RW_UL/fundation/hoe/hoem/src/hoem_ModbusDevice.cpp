@@ -18,6 +18,26 @@ namespace rw
 			modbus_set_slave(_modbusContext, 1); // 设置从站ID为1
 		}
 
+		ModbusDevice::ModbusDevice(const ModbusDeviceTcpCfg& cfg)
+		{
+			_ip = cfg.ip;
+			_modbusContext = modbus_new_tcp(cfg.ip.c_str(), cfg.port);
+			if (_modbusContext == nullptr) {
+				throw std::runtime_error("Failed to create Modbus context");
+			}
+			modbus_set_slave(_modbusContext, 1); // 设置从站ID为1
+		}
+
+		ModbusDevice::ModbusDevice(const ModbusDeviceRtuCfg& cfg)
+		{
+			_modbusContext = modbus_new_rtu(cfg.device.c_str(), cfg.baud, cfg.parity, cfg.dataBit, cfg.stopBit);
+			if (_modbusContext == nullptr) {
+				throw std::runtime_error("Failed to create Modbus RTU context");
+			}
+			modbus_set_slave(_modbusContext, 1); // 设置从站ID为1
+			_baseAddress = cfg.baseAddress;
+		}
+
 		ModbusDevice::~ModbusDevice()
 		{
 			ModbusDevice::disconnect();
