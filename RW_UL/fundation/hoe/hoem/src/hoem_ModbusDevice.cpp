@@ -9,9 +9,9 @@ namespace rw
 	namespace hoem
 	{
 		ModbusDevice::ModbusDevice(const std::string& ip, int port, Address baseAddress)
-			:_ip(ip), _port(port), _baseAddress(baseAddress)
+			: _baseAddress(baseAddress)
 		{
-			_modbusContext = modbus_new_tcp(_ip.c_str(), port);
+			_modbusContext = modbus_new_tcp(ip.c_str(), port);
 			if (_modbusContext == nullptr) {
 				throw std::runtime_error("Failed to create Modbus context");
 			}
@@ -20,7 +20,6 @@ namespace rw
 
 		ModbusDevice::ModbusDevice(const ModbusDeviceTcpCfg& cfg)
 		{
-			_ip = cfg.ip;
 			_modbusContext = modbus_new_tcp(cfg.ip.c_str(), cfg.port);
 			if (_modbusContext == nullptr) {
 				throw std::runtime_error("Failed to create Modbus context");
