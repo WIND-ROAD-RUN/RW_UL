@@ -27,12 +27,13 @@ QString LicenseValidation::getHWID() const
 void LicenseValidation::setHWID(const QString& value)
 {
 	hwid = value;
+	ui->label_seriaNumber->setText(hwid);
 }
 
 void LicenseValidation::build_ui()
 {
 	fullKeyBoard = new FullKeyBoard(this);
-	ui->label_seriaNumber->setText(hwid);
+
 }
 
 void LicenseValidation::build_connect()

@@ -13,7 +13,7 @@ namespace rw
 	{
 		class ActivationCrypto;
 
-		using InputActivationCodeFunc = std::function<std::string(bool&,std::string &)>;
+		using InputActivationCodeFunc = std::function<std::string(bool&, const std::string &)>;
 
 
 		struct ActivationCryptoContext
@@ -26,7 +26,7 @@ namespace rw
 			std::string hwid;
 
 		public:
-			InputActivationCodeFunc inputActivationCodeFunc{[](bool& isOk,std::string& hwid)
+			InputActivationCodeFunc inputActivationCodeFunc{[](bool& isOk,const std::string& hwid)
 			{
 				isOk = false;
 				return "";
