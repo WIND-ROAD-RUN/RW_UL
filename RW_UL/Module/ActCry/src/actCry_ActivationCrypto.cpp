@@ -93,6 +93,7 @@ namespace rw
 				cfg.name = _context.productName;
 				cfg.generateCodeKey = _context.key;
 				ActivationInfo::save(info, cfg);
+				_context.activationInfo = info;
 				return true;
 			}
 			else
@@ -104,12 +105,14 @@ namespace rw
 			
 		}
 
-		bool ActivationCrypto::operator()()
+		ActivationInfo ActivationCrypto::operator()()
 		{
+			ActivationInfo errrorResult;
+
 			auto hwidVerifyResult = hwidVerify();
 			if (!hwidVerifyResult)
 			{
-				return false;
+				return errrorResult;
 			}
 
 			auto activationInfo = checkActivationCodeValid();
@@ -119,15 +122,24 @@ namespace rw
 				auto inputActivationCodeResult = inputActivationCode();
 				if (!inputActivationCodeResult)
 				{
-					return false;
+					return errrorResult;
 				}
 				else
 				{
-					return checkInputActivationCode();
+					auto checkInput = checkInputActivationCode();
+
+					if (checkInput)
+					{
+						return _context.activationInfo;
+					}
+					else
+					{
+						return errrorResult;
+					}
 				}
 			}
 
-			return true;
+			return activationInfo;
 		}
 	}
 }
