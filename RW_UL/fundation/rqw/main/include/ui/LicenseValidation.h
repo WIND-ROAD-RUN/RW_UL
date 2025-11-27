@@ -20,6 +20,7 @@ private:
 public:
 	QString getHWID() const;
 	void setHWID(const QString& value);
+	QString getInputValue()const;
 private:
 	void build_ui();
 	void build_connect();
