@@ -28,8 +28,6 @@ namespace rw
 		class ModbusDevice {
 		private:
 			modbus_t* _modbusContext = nullptr;
-			std::string _ip;
-			int _port = 0;
 			Address _baseAddress = 0;
 		public:
 			ModbusDevice(const std::string& ip, int port, Address baseAddress = 0);
