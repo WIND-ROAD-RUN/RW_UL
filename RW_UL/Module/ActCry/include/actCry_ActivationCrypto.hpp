@@ -24,6 +24,7 @@ namespace rw
 			std::string key;
 		private:
 			std::string hwid;
+			ActivationInfo activationInfo{};
 
 		public:
 			InputActivationCodeFunc inputActivationCodeFunc{[](bool& isOk,const std::string& hwid)
@@ -56,7 +57,7 @@ namespace rw
 			bool inputActivationCode();
 			bool checkInputActivationCode();
 		public:
-			bool operator()();
+			ActivationInfo operator()();
 
 		};
 	}
