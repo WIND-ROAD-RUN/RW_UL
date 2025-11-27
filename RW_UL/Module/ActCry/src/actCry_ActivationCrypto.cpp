@@ -53,8 +53,13 @@ namespace rw
 
 		bool ActivationCrypto::inputActivationCode()
 		{
+			bool result{true};
+			if (_context.inputActivationCodeFunc)
+			{
+				_context.inputActivationCode = _context.inputActivationCodeFunc(result);
 
-			return true;
+			}
+			return result;
 		}
 
 		bool ActivationCrypto::operator()()
@@ -66,6 +71,7 @@ namespace rw
 			}
 
 			auto isActivationCodeValid = checkActivationCodeValid();
+
 			if (!isActivationCodeValid)
 			{
 				auto inputActivationCodeResult = inputActivationCode();

@@ -8,7 +8,7 @@ namespace actCryTest
 	TEST(ActivationCryptoClass,a)
 	{
 		rw::actCry::ActivationCrypto ac;
-		ac.context().productName = "";
+		ac.context().productName = "jkasjd";
 		auto result = ac();
 	}
 }

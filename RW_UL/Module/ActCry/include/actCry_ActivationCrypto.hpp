@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "actCry_utility.hpp"
 
 #include"actCry_HWID.hpp"
@@ -10,6 +12,9 @@ namespace rw
 	{
 		class ActivationCrypto;
 
+		using InputActivationCodeFunc = std::function<std::string(bool&)>;
+
+
 		struct ActivationCryptoContext
 		{
 			friend ActivationCrypto;
@@ -17,6 +22,10 @@ namespace rw
 			std::string productName;
 		private:
 			std::string hwid;
+
+		public:
+			InputActivationCodeFunc inputActivationCodeFunc{};
+			std::string inputActivationCode{};
 		};
 
 		class ActivationCrypto
