@@ -10,4 +10,8 @@ endif()
 
 add_subdirectory(PackageTool)
 add_subdirectory(XmlMerge)
-add_subdirectory(LicenseIssuance)
+
+
+if(CONFIG_TEST)
+    add_subdirectory(LicenseIssuance)
+endif()
