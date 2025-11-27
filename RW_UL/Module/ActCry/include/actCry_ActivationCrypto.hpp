@@ -26,7 +26,11 @@ namespace rw
 			std::string hwid;
 
 		public:
-			InputActivationCodeFunc inputActivationCodeFunc{};
+			InputActivationCodeFunc inputActivationCodeFunc{[](bool& isOk)
+			{
+				isOk = false;
+				return "";
+			}};
 			std::string inputActivationCode{};
 		};
 
@@ -50,6 +54,7 @@ namespace rw
 			bool hwidVerify();
 			ActivationInfo checkActivationCodeValid();
 			bool inputActivationCode();
+			bool checkInputActivationCode();
 		public:
 			bool operator()();
 

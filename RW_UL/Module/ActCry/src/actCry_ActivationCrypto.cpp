@@ -77,6 +77,33 @@ namespace rw
 			return result;
 		}
 
+		bool ActivationCrypto::checkInputActivationCode()
+		{
+			bool isParseOk{ false };
+			auto info = ActivationInfo::parseActivationCode(_context.inputActivationCode, _context.key, isParseOk);
+			if (!isParseOk)
+			{
+				return false;
+			}
+
+			auto isValid = info.isValid(_context.hwid);
+			if (isValid)
+			{
+				ActivationInfoRegistryCfg cfg;
+				cfg.name = _context.productName;
+				cfg.generateCodeKey = _context.key;
+				ActivationInfo::save(info, cfg);
+				return true;
+			}
+			else
+			{
+
+				return false;
+			}
+
+			
+		}
+
 		bool ActivationCrypto::operator()()
 		{
 			auto hwidVerifyResult = hwidVerify();
@@ -85,18 +112,22 @@ namespace rw
 				return false;
 			}
 
-			auto isActivationInfo = checkActivationCodeValid();
+			auto activationInfo = checkActivationCodeValid();
 
-			if (!isActivationInfo.isValid(_context.hwid))
+			if (!activationInfo.isValid(_context.hwid))
 			{
 				auto inputActivationCodeResult = inputActivationCode();
 				if (!inputActivationCodeResult)
 				{
 					return false;
 				}
+				else
+				{
+					return checkInputActivationCode();
+				}
 			}
 
-			return hwidVerifyResult;
+			return true;
 		}
 	}
 }
