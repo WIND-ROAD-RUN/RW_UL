@@ -3,6 +3,7 @@
 #include <iomanip>
 
 #include"cla_StrEncryption.hpp"
+#include"actCry_RegistryManager.hpp"
 
 
 namespace rw
@@ -19,11 +20,56 @@ namespace rw
 		}
 
 
-		bool ActivationInfo::save(const std::string& hwid, const ActivationInfo& info,
-			const ActivationInfoRegistryCfg& cfg)
+		bool ActivationInfo::isValid(const std::string& hwid) const
 		{
-			ActivationCode code = generateActivationCode(info, cfg.key);
+			auto now = std::chrono::system_clock::now();
+			if (hwid != this->hwid)
+			{
+				return false;
+			}
+			if (now < this->startTime || now > this->endTime)
+			{
+				return false;
+			}
+			return true;
+		}
 
+		bool ActivationInfo::save( const ActivationInfo& info,
+		                           const ActivationInfoRegistryCfg& cfg)
+		{
+			RegistryManager regMgr;
+			std::wstring keyPath = utf8_to_wstring(cfg.keyPath+cfg.name);
+			std::wstring valueName = utf8_to_wstring(cfg.valueName);
+			ActivationCode code = generateActivationCode(info, cfg.generateCodeKey);
+			std::wstring wvalue = utf8_to_wstring(code);
+			return regMgr.SetString(keyPath, valueName, wvalue);
+		}
+
+		ActivationInfo ActivationInfo::load(const ActivationInfoRegistryCfg& cfg)
+		{
+			bool isOK = false;
+			return load(cfg, isOK);
+		}
+
+		ActivationInfo ActivationInfo::load(const ActivationInfoRegistryCfg& cfg, bool& isOK)
+		{
+			RegistryManager regMgr;
+			std::wstring keyPath = utf8_to_wstring(cfg.keyPath + cfg.name);
+			std::wstring valueName = utf8_to_wstring(cfg.valueName);
+			std::wstring wvalue;
+			ActivationInfo result{};
+			isOK = false;
+			if (!regMgr.GetString(keyPath, valueName, wvalue))
+			{
+				return result;
+			}
+			std::string code = rw::actCry::wstring_to_utf8(wvalue);
+			result = parseActivationCode(code, cfg.generateCodeKey, isOK);
+			if (!isOK)
+			{
+				return ActivationInfo{};
+			}
+			return result;
 		}
 
 		ActivationCode ActivationInfo::generateActivationCode(const ActivationInfo& info, const std::string& key)

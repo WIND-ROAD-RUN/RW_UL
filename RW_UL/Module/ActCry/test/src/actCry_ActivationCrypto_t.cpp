@@ -9,6 +9,7 @@ namespace actCryTest
 	{
 		rw::actCry::ActivationCrypto ac;
 		ac.context().productName = "jkasjd";
+		ac.context().key = "asdkjasd";
 		auto result = ac();
 	}
 }
