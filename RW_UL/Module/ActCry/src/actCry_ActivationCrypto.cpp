@@ -71,7 +71,7 @@ namespace rw
 			bool result{true};
 			if (_context.inputActivationCodeFunc)
 			{
-				_context.inputActivationCode = _context.inputActivationCodeFunc(result);
+				_context.inputActivationCode = _context.inputActivationCodeFunc(result,_context.hwid);
 
 			}
 			return result;
