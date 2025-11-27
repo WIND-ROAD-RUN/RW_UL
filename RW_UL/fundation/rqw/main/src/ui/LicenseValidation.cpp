@@ -30,6 +30,11 @@ void LicenseValidation::setHWID(const QString& value)
 	ui->label_seriaNumber->setText(hwid);
 }
 
+QString LicenseValidation::getInputValue() const
+{
+	return ui->pbtn_activationCode->text();
+}
+
 void LicenseValidation::build_ui()
 {
 	fullKeyBoard = new FullKeyBoard(this);
