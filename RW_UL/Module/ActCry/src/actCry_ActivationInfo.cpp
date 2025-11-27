@@ -105,5 +105,12 @@ namespace rw
 			isOk = true;
 			return result;
 		}
+
+		ActivationInfoResult::ActivationInfoResult(const ActivationInfo& info, const std::string& hwid)
+		{
+			startTime = info.startTime;
+			endTime = info.endTime;
+			isValid = info.isValid(hwid);
+		}
 	}
 }

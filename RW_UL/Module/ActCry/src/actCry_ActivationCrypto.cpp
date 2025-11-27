@@ -105,14 +105,14 @@ namespace rw
 			
 		}
 
-		ActivationInfo ActivationCrypto::operator()()
+		ActivationInfoResult ActivationCrypto::operator()()
 		{
 			ActivationInfo errrorResult;
-
+			ActivationInfoResult errrorResultObj(errrorResult, _context.hwid);
 			auto hwidVerifyResult = hwidVerify();
 			if (!hwidVerifyResult)
 			{
-				return errrorResult;
+				return errrorResultObj;
 			}
 
 			auto activationInfo = checkActivationCodeValid();
@@ -122,7 +122,7 @@ namespace rw
 				auto inputActivationCodeResult = inputActivationCode();
 				if (!inputActivationCodeResult)
 				{
-					return errrorResult;
+					return errrorResultObj;
 				}
 				else
 				{
@@ -130,16 +130,16 @@ namespace rw
 
 					if (checkInput)
 					{
-						return _context.activationInfo;
+						return ActivationInfoResult(_context.activationInfo, _context.hwid);
 					}
 					else
 					{
-						return errrorResult;
+						return errrorResultObj;
 					}
 				}
 			}
 
-			return activationInfo;
+			return ActivationInfoResult(activationInfo, _context.hwid);
 		}
 	}
 }

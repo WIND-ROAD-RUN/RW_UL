@@ -57,7 +57,7 @@ namespace rw
 			bool inputActivationCode();
 			bool checkInputActivationCode();
 		public:
-			ActivationInfo operator()();
+			ActivationInfoResult operator()();
 
 		};
 	}
