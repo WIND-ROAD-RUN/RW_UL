@@ -36,6 +36,17 @@ namespace rw
 			static ActivationCode generateActivationCode(const ActivationInfo& info,const std::string & key);
 			static ActivationInfo parseActivationCode(const ActivationCode& code, const std::string& key,bool & isOk);
 		};
+
+		class ActivationInfoResult
+		{
+		public:
+			explicit ActivationInfoResult(const ActivationInfo& info, const std::string& hwid);
+		public:
+			std::chrono::system_clock::time_point startTime{};
+			std::chrono::system_clock::time_point endTime{};
+			bool isValid{ false };
+
+		};
 	}
 
 }
