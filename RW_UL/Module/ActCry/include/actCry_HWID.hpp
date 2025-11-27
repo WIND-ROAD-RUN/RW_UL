@@ -13,8 +13,9 @@ namespace rw
 
 		struct HWIDSaveRegistryCfg
 		{
-			std::string name;
-			std::string keyPath{"Software\\RW\\ActCry"};
+			std::string name{"actCry"};
+			std::string keyPath{"Software\\RW\\ActCry\\"};
+			std::string valueName{"HWID"};
 		};
 
 		class HWID
@@ -23,6 +24,7 @@ namespace rw
 			static std::string	generate(const HWIDGenerateCfg& cfg);
 			static bool save(const std::string & hwid,const HWIDSaveRegistryCfg & cfg);
 			static std::string load(const HWIDSaveRegistryCfg& cfg);
+			static std::string load(const HWIDSaveRegistryCfg& cfg,bool & isOk);
 
 		};
 

@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "actCry_ActivationInfo.hpp"
 #include "actCry_utility.hpp"
 
 #include"actCry_HWID.hpp"
@@ -20,6 +21,7 @@ namespace rw
 			friend ActivationCrypto;
 		public:
 			std::string productName;
+			std::string key;
 		private:
 			std::string hwid;
 
@@ -46,7 +48,7 @@ namespace rw
 			bool hwidVerify(const HWIDGenerateCfg & hwidCfg, const HWIDSaveRegistryCfg& cfg);
 		private:
 			bool hwidVerify();
-			bool checkActivationCodeValid();
+			ActivationInfo checkActivationCodeValid();
 			bool inputActivationCode();
 		public:
 			bool operator()();

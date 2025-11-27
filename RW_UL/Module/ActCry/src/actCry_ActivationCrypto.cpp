@@ -2,6 +2,8 @@
 
 #include<stdexcept>
 
+#include "actCry_ActivationInfo.hpp"
+
 namespace rw
 {
 	namespace actCry
@@ -46,9 +48,18 @@ namespace rw
 			return hwidVerifyResult;
 		}
 
-		bool ActivationCrypto::checkActivationCodeValid()
+		ActivationInfo ActivationCrypto::checkActivationCodeValid()
 		{
-			return false;
+			ActivationInfoRegistryCfg cfg;
+			cfg.name = _context.productName;
+			cfg.generateCodeKey = _context.key;
+			bool isOk{ false };
+			auto activationInfo = ActivationInfo::load(cfg, isOk);
+			if (!isOk)
+			{
+				return activationInfo;
+			}
+			return ActivationInfo();
 		}
 
 		bool ActivationCrypto::inputActivationCode()
@@ -70,9 +81,9 @@ namespace rw
 				return false;
 			}
 
-			auto isActivationCodeValid = checkActivationCodeValid();
+			auto isActivationInfo = checkActivationCodeValid();
 
-			if (!isActivationCodeValid)
+			if (!isActivationInfo.isValid(_context.hwid))
 			{
 				auto inputActivationCodeResult = inputActivationCode();
 				if (!inputActivationCodeResult)

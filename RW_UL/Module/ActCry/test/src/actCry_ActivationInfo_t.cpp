@@ -26,5 +26,26 @@ namespace ActivationInfo
 
 	}
 
+	TEST(ActivationInfoAPI, saveAndLoad)
+	{
+		rw::actCry::ActivationInfo info;
+		info.hwid = "TEST-HWID-890";
+		info.startTime = std::chrono::system_clock::from_time_t(1633046400); // 2021-10-01 00:00:00
+		info.endTime = std::chrono::system_clock::from_time_t(1664582400);   // 2022-10-01 00:00:00
+		rw::actCry::ActivationInfoRegistryCfg cfg;
+		cfg.name = "ActCryTest";
+		cfg.keyPath = "Software\\RW\\ActCry\\Test\\";
+		cfg.valueName = "ActivationInfo";
+
+		bool saveResult = rw::actCry::ActivationInfo::save( info, cfg);
+		EXPECT_TRUE(saveResult);
+		rw::actCry::ActivationInfo loadedInfo = rw::actCry::ActivationInfo::load(cfg);
+
+		EXPECT_EQ(loadedInfo.hwid, info.hwid);
+		EXPECT_EQ(loadedInfo.startTime, info.startTime);
+		EXPECT_EQ(loadedInfo.endTime, info.endTime);
+
+	}
+
 
 }
