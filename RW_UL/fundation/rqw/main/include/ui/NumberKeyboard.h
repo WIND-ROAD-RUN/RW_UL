@@ -29,7 +29,15 @@ public:
 		bool isUsingMax{true};
 		double max={0};
 	};
-	static bool inputDataOnQPushButton(QPushButton * button, QString & value,const InputDataConfig & cfg);
+
+	enum InputResult
+	{
+		Accept,
+		Reject,
+		Ignore
+	};
+
+	static InputResult inputDataOnQPushButton(QPushButton * button, QString & value,const InputDataConfig & cfg);
 private:
 	Ui::NumberKeyboardClass* ui;
 private slots:

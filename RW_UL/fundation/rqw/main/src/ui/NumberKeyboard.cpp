@@ -75,11 +75,11 @@ void NumberKeyboard::showEvent(QShowEvent* showEvent)
 	ui->lineEdit->clear();
 }
 
-bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value, const InputDataConfig& cfg)
+NumberKeyboard::InputResult NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString& value, const InputDataConfig& cfg)
 {
 	if (!button)
 	{
-		return false;
+		return InputResult::Ignore;
 	}
 
 	NumberKeyboard numKeyboard;
@@ -88,12 +88,12 @@ bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value
 	if (isAccept == QDialog::Accepted)
 	{
 		value = numKeyboard.getValue();
-		
-		if (cfg.isUsingMax&&cfg.isUsingMin)
+
+		if (cfg.isUsingMax && cfg.isUsingMin)
 		{
 			if (value.toDouble() < cfg.min || value.toDouble() > cfg.max)
 			{
-				return false;
+				return InputResult::Reject;
 			}
 		}
 
@@ -101,7 +101,7 @@ bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value
 		{
 			if (value.toDouble() > cfg.max)
 			{
-				return false;
+				return InputResult::Reject;
 			}
 		}
 
@@ -109,14 +109,14 @@ bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value
 		{
 			if (value.toDouble() < cfg.min)
 			{
-				return false;
+				return InputResult::Reject;
 			}
 		}
 
 		button->setText(value);
-		return true;
+		return InputResult::Accept;
 	}
-	return false;
+	return InputResult::Ignore;
 }
 
 void NumberKeyboard::pbtn_num1_clicked()
