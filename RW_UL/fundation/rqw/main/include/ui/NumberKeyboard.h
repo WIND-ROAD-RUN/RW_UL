@@ -21,7 +21,15 @@ private:
 	void build_connect();
 protected:
 	void showEvent(QShowEvent*) override;
-
+public:
+	struct InputDataConfig
+	{
+		bool isUsingMin{true};
+		double min={0};
+		bool isUsingMax{true};
+		double max={0};
+	};
+	static bool inputDataOnQPushButton(QPushButton * button, QString & value,const InputDataConfig & cfg);
 private:
 	Ui::NumberKeyboardClass* ui;
 private slots:
