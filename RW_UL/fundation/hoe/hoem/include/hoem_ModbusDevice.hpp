@@ -10,14 +10,14 @@ namespace rw
 	{
 		struct ModbusDeviceTcpCfg
 		{
-			std::string& ip;
+			std::string ip;
 			int port;
 			Address baseAddress = 0;
 		};
 
 		struct ModbusDeviceRtuCfg
 		{
-			std::string& device;
+			std::string device;
 			int baud;
 			char parity;
 			int dataBit;
