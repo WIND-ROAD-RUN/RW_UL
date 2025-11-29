@@ -75,6 +75,51 @@ void NumberKeyboard::showEvent(QShowEvent* showEvent)
 	ui->lineEdit->clear();
 }
 
+bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value, const InputDataConfig& cfg)
+{
+	if (!button)
+	{
+		return false;
+	}
+
+	NumberKeyboard numKeyboard;
+	numKeyboard.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+	auto isAccept = numKeyboard.exec();
+	if (isAccept == QDialog::Accepted)
+	{
+		value = numKeyboard.getValue();
+		
+		button->setText(value);
+		if (cfg.isUsingMax&&cfg.isUsingMin)
+		{
+			if (value.toDouble() < cfg.min || value.toDouble() > cfg.max)
+			{
+				return false;
+			}
+		}
+
+		if (cfg.isUsingMax && (!cfg.isUsingMin))
+		{
+			if (value.toDouble() > cfg.max)
+			{
+				return false;
+			}
+		}
+
+		if ((!cfg.isUsingMax) && cfg.isUsingMin)
+		{
+			if (value.toDouble() < cfg.min)
+			{
+				return false;
+			}
+		}
+
+		button->setText(value);
+		return true;
+	}
+	return false;
+}
+
 void NumberKeyboard::pbtn_num1_clicked()
 {
 	value.append("1");
