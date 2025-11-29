@@ -89,7 +89,6 @@ bool NumberKeyboard::inputDataOnQPushButton(QPushButton* button, QString & value
 	{
 		value = numKeyboard.getValue();
 		
-		button->setText(value);
 		if (cfg.isUsingMax&&cfg.isUsingMin)
 		{
 			if (value.toDouble() < cfg.min || value.toDouble() > cfg.max)
