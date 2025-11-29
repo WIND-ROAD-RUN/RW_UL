@@ -9,10 +9,10 @@ namespace rw
 {
 	namespace hoem
 	{
-		using Address = uint16_t;
+		using Address16 = uint16_t;
 		using Quantity = uint16_t;
-		using RegisterValue = uint16_t;
-		using RegisterValue32 = uint32_t;
+		using UInt16 = uint16_t;
+		using UInt32 = uint32_t;
 
 		enum class ModbusDeviceName
 		{
@@ -132,14 +132,14 @@ namespace rw
 			return value; // 小端表示直接返回
 		}
 
-		inline std::vector<RegisterValue> toRegisterValues(ModbusI i, Endianness endianness)
+		inline std::vector<UInt16> toRegisterValues(ModbusI i, Endianness endianness)
 		{
 			int32_t value = static_cast<int32_t>(i);
 
-			RegisterValue high = static_cast<RegisterValue>((value >> 16) & 0xFFFF); // 高16位
-			RegisterValue low = static_cast<RegisterValue>(value & 0xFFFF);         // 低16位
+			UInt16 high = static_cast<UInt16>((value >> 16) & 0xFFFF); // 高16位
+			UInt16 low = static_cast<UInt16>(value & 0xFFFF);         // 低16位
 
-			std::vector<RegisterValue> result;
+			std::vector<UInt16> result;
 			if (endianness == Endianness::BigEndian)
 			{
 				result.push_back(high);
@@ -154,14 +154,14 @@ namespace rw
 			return result;
 		}
 
-		inline std::vector<RegisterValue> toRegisterValues(ModbusO i, Endianness endianness)
+		inline std::vector<UInt16> toRegisterValues(ModbusO i, Endianness endianness)
 		{
 			int32_t value = static_cast<int32_t>(i);
 
-			RegisterValue high = static_cast<RegisterValue>((value >> 16) & 0xFFFF); // 高16位
-			RegisterValue low = static_cast<RegisterValue>(value & 0xFFFF);         // 低16位
+			UInt16 high = static_cast<UInt16>((value >> 16) & 0xFFFF); // 高16位
+			UInt16 low = static_cast<UInt16>(value & 0xFFFF);         // 低16位
 
-			std::vector<RegisterValue> result;
+			std::vector<UInt16> result;
 			if (endianness == Endianness::BigEndian)
 			{
 				result.push_back(high);
@@ -176,7 +176,7 @@ namespace rw
 			return result;
 		}
 
-		inline int32_t fromRegisterValuesToInt32(const std::vector<RegisterValue>& values, Endianness endianness)
+		inline int32_t fromRegisterValuesToInt32(const std::vector<UInt16>& values, Endianness endianness)
 		{
 			if (values.size() != 2)
 			{
@@ -196,12 +196,12 @@ namespace rw
 			return value;
 		}
 
-		inline ModbusI fromRegisterValuesToModbusI(const std::vector<RegisterValue>& values, Endianness endianness)
+		inline ModbusI fromRegisterValuesToModbusI(const std::vector<UInt16>& values, Endianness endianness)
 		{
 			return static_cast<ModbusI>(fromRegisterValuesToInt32(values, endianness));
 		}
 
-		inline ModbusO fromRegisterValuesToModbusO(const std::vector<RegisterValue>& values, Endianness endianness)
+		inline ModbusO fromRegisterValuesToModbusO(const std::vector<UInt16>& values, Endianness endianness)
 		{
 			return static_cast<ModbusO>(fromRegisterValuesToInt32(values, endianness));
 		}
