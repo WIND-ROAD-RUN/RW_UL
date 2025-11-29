@@ -8,7 +8,7 @@ namespace rw
 {
 	namespace hoem
 	{
-		ModbusDevice::ModbusDevice(const std::string& ip, int port, Address baseAddress)
+		ModbusDevice::ModbusDevice(const std::string& ip, int port, Address16 baseAddress)
 			: _baseAddress(baseAddress)
 		{
 			_modbusContext = modbus_new_tcp(ip.c_str(), port);
@@ -83,7 +83,7 @@ namespace rw
 			return false;
 		}
 
-		bool ModbusDevice::readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data)
+		bool ModbusDevice::readRegisters(Address16 startAddress, Quantity quantity, std::vector<UInt16>& data)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -98,7 +98,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeRegisters(Address startAddress, const std::vector<RegisterValue>& data)
+		bool ModbusDevice::writeRegisters(Address16 startAddress, const std::vector<UInt16>& data)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -110,7 +110,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeRegister(Address startAddress, RegisterValue32 data, Endianness byteOrder)
+		bool ModbusDevice::writeRegister(Address16 startAddress, UInt32 data, Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -147,7 +147,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeRegisters(Address startAddress, const std::vector<RegisterValue32>& data,
+		bool ModbusDevice::writeRegisters(Address16 startAddress, const std::vector<UInt32>& data,
 			Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
@@ -190,7 +190,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::readRegister(Address startAddress, RegisterValue32& data, Endianness byteOrder)
+		bool ModbusDevice::readRegister(Address16 startAddress, UInt32& data, Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
 		return false;
@@ -218,11 +218,11 @@ namespace rw
 				break;
 			}
 
-			data = static_cast<RegisterValue32>(value);
+			data = static_cast<UInt32>(value);
 			return true;
 		}
 
-		bool ModbusDevice::readRegisters(Address startAddress, std::vector<RegisterValue32>& data, Endianness byteOrder)
+		bool ModbusDevice::readRegisters(Address16 startAddress, std::vector<UInt32>& data, Endianness byteOrder)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -262,13 +262,13 @@ namespace rw
 					break;
 				}
 
-				data[i] = static_cast<RegisterValue32>(value);
+				data[i] = static_cast<UInt32>(value);
 			}
 
 			return true;
 		}
 
-		bool ModbusDevice::readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data)
+		bool ModbusDevice::readCoils(Address16 startAddress, Quantity quantity, std::vector<bool>& data)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -287,7 +287,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeCoil(Address address, bool state)
+		bool ModbusDevice::writeCoil(Address16 address, bool state)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -299,7 +299,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeCoils(Address startAddress, const std::vector<bool>& states)
+		bool ModbusDevice::writeCoils(Address16 startAddress, const std::vector<bool>& states)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -319,18 +319,18 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::setBasedAddress(Address basedAddress)
+		bool ModbusDevice::setBasedAddress(Address16 basedAddress)
 		{
 			_baseAddress = basedAddress;
 			return true;
 		}
 
-		Address ModbusDevice::getBasedAddress() const
+		Address16 ModbusDevice::getBasedAddress() const
 		{
 			return _baseAddress;
 		}
 
-		bool ModbusDevice::readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data)
+		bool ModbusDevice::readRegistersAbsolute(Address16 address, Quantity quantity, std::vector<UInt16>& data)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -343,7 +343,7 @@ namespace rw
 			return true;
 		}
 
-		bool ModbusDevice::writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data)
+		bool ModbusDevice::writeRegistersAbsolute(Address16 address, const std::vector<UInt16>& data)
 		{
 			/*if (!isConnected()) {
 				return false;
@@ -352,6 +352,58 @@ namespace rw
 			if (result < 0) {
 				return false;
 			}
+			return true;
+		}
+
+		static inline UInt32 floatToUInt32(float f)
+		{
+			UInt32 u{};
+			std::memcpy(&u, &f, sizeof(u));
+			return u;
+		}
+
+		static inline float uint32ToFloat(UInt32 u)
+		{
+			float f{};
+			std::memcpy(&f, &u, sizeof(f));
+			return f;
+		}
+
+		bool ModbusDevice::writeRegister(Address16 startAddress, float value, Endianness byteOrder)
+		{
+			UInt32 bits = floatToUInt32(value);
+			return writeRegister(startAddress, bits, byteOrder);
+		}
+
+		bool ModbusDevice::writeRegisters(Address16 startAddress, const std::vector<float>& data, Endianness byteOrder)
+		{
+			if (data.empty())
+				return true;
+			std::vector<UInt32> packed;
+			packed.reserve(data.size());
+			for (float f : data)
+				packed.push_back(floatToUInt32(f));
+			return writeRegisters(startAddress, packed, byteOrder);
+		}
+
+		bool ModbusDevice::readRegister(Address16 startAddress, float& value, Endianness byteOrder)
+		{
+			UInt32 bits{};
+			if (!readRegister(startAddress, bits, byteOrder))
+				return false;
+			value = uint32ToFloat(bits);
+			return true;
+		}
+
+		bool ModbusDevice::readRegisters(Address16 startAddress, std::vector<float>& values, Endianness byteOrder)
+		{
+			std::vector<UInt32> raw;
+			if (!readRegisters(startAddress, raw, byteOrder))
+				return false;
+			values.clear();
+			values.reserve(raw.size());
+			for (UInt32 b : raw)
+				values.push_back(uint32ToFloat(b));
 			return true;
 		}
 	}

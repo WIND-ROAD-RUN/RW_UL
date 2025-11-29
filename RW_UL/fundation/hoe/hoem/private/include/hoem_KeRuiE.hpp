@@ -8,8 +8,8 @@ namespace rw {
 	namespace hoem {
 		class KeRuiE : public IModbusDevice {
 		public:
-			Address switchAddress(ModbusI locate);
-			Address switchAddress(ModbusO locate);
+			Address16 switchAddress(ModbusI locate);
+			Address16 switchAddress(ModbusO locate);
 		private:
 			ModbusDevice* _modbusDevice;
 		public:
