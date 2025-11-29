@@ -26,6 +26,10 @@ namespace rw
 		};
 
 		class ModbusDevice {
+			//使用前请线了解了对应plc的modbus地址映射规则，以及物理寄存器的位数
+			//本类默认从站ID为1，如有需要请自行扩展
+			//Please understand the Modbus address mapping rules of the corresponding PLC and the number of physical registers before using it.
+			//This class defaults to slave ID 1, please extend it yourself if needed.
 		private:
 			modbus_t* _modbusContext = nullptr;
 			Address16 _baseAddress = 0;
@@ -54,6 +58,11 @@ namespace rw
 			Address16 getBasedAddress() const;
 			bool readRegistersAbsolute(Address16 address, Quantity quantity, std::vector<UInt16>& data);
 			bool writeRegistersAbsolute(Address16 address, const std::vector<UInt16>& data);
+
+			bool writeRegister(Address16 startAddress, float value, Endianness byteOrder);
+			bool writeRegisters(Address16 startAddress, const std::vector<float>& data, Endianness byteOrder);
+			bool readRegister(Address16 startAddress, float& value, Endianness byteOrder);
+			bool readRegisters(Address16 startAddress, std::vector<float>& values, Endianness byteOrder);
 		};
 	}
 }
