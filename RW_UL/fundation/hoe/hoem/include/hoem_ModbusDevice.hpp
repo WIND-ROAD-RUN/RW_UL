@@ -12,7 +12,7 @@ namespace rw
 		{
 			std::string ip;
 			int port;
-			Address baseAddress = 0;
+			Address16 baseAddress = 0;
 		};
 
 		struct ModbusDeviceRtuCfg
@@ -22,15 +22,15 @@ namespace rw
 			char parity;
 			int dataBit;
 			int stopBit;
-			Address baseAddress = 0;
+			Address16 baseAddress = 0;
 		};
 
 		class ModbusDevice {
 		private:
 			modbus_t* _modbusContext = nullptr;
-			Address _baseAddress = 0;
+			Address16 _baseAddress = 0;
 		public:
-			ModbusDevice(const std::string& ip, int port, Address baseAddress = 0);
+			ModbusDevice(const std::string& ip, int port, Address16 baseAddress = 0);
 			ModbusDevice(const ModbusDeviceTcpCfg & cfg);
 			ModbusDevice(const ModbusDeviceRtuCfg& cfg);
 			~ModbusDevice();
@@ -39,21 +39,21 @@ namespace rw
 			bool disconnect();
 			bool isConnected() const;
 			bool reconnect();
-			bool readRegisters(Address startAddress, Quantity quantity, std::vector<RegisterValue>& data);
-			bool readRegister(Address startAddress, RegisterValue32& data, Endianness byteOrder);
-			bool readRegisters(Address startAddress, std::vector<RegisterValue32>& data, Endianness byteOrder);
+			bool readRegisters(Address16 startAddress, Quantity quantity, std::vector<UInt16>& data);
+			bool readRegister(Address16 startAddress, UInt32& data, Endianness byteOrder);
+			bool readRegisters(Address16 startAddress, std::vector<UInt32>& data, Endianness byteOrder);
 
-			bool writeRegisters(Address startAddress, const std::vector<RegisterValue>& data);
-			bool writeRegister(Address startAddress, RegisterValue32 data, Endianness byteOrder);
-			bool writeRegisters(Address startAddress, const std::vector<RegisterValue32>& data, Endianness byteOrder);
+			bool writeRegisters(Address16 startAddress, const std::vector<UInt16>& data);
+			bool writeRegister(Address16 startAddress, UInt32 data, Endianness byteOrder);
+			bool writeRegisters(Address16 startAddress, const std::vector<UInt32>& data, Endianness byteOrder);
 
-			bool readCoils(Address startAddress, Quantity quantity, std::vector<bool>& data);
-			bool writeCoil(Address address, bool state);
-			bool writeCoils(Address startAddress, const std::vector<bool>& states);
-			bool setBasedAddress(Address basedAddress);
-			Address getBasedAddress() const;
-			bool readRegistersAbsolute(Address address, Quantity quantity, std::vector<RegisterValue>& data);
-			bool writeRegistersAbsolute(Address address, const std::vector<RegisterValue>& data);
+			bool readCoils(Address16 startAddress, Quantity quantity, std::vector<bool>& data);
+			bool writeCoil(Address16 address, bool state);
+			bool writeCoils(Address16 startAddress, const std::vector<bool>& states);
+			bool setBasedAddress(Address16 basedAddress);
+			Address16 getBasedAddress() const;
+			bool readRegistersAbsolute(Address16 address, Quantity quantity, std::vector<UInt16>& data);
+			bool writeRegistersAbsolute(Address16 address, const std::vector<UInt16>& data);
 		};
 	}
 }

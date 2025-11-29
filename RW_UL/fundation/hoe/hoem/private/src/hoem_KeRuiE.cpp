@@ -4,12 +4,12 @@
 
 namespace rw {
 	namespace hoem {
-		Address KeRuiE::switchAddress(ModbusI locate)
+		Address16 KeRuiE::switchAddress(ModbusI locate)
 		{
 			return 0;
 		}
 
-		Address KeRuiE::switchAddress(ModbusO locate)
+		Address16 KeRuiE::switchAddress(ModbusO locate)
 		{
 			return 0;
 		}
@@ -63,7 +63,7 @@ namespace rw {
 				return false;
 			}
 
-			std::vector<RegisterValue> data(1);
+			std::vector<UInt16> data(1);
 			if (!_modbusDevice->readRegisters(0x10, 2, data)) {
 				return false;
 			}
@@ -87,7 +87,7 @@ namespace rw {
 			}
 
 			uint16_t number = 0;
-			std::vector<RegisterValue> data(1);
+			std::vector<UInt16> data(1);
 			if (!_modbusDevice->readRegisters(0x20, 1, data)) {
 				return false;
 			}
