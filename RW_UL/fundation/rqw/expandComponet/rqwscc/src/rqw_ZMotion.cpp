@@ -41,6 +41,12 @@ namespace rw
 			return _zMotion->OpenBoard(_ip.toStdString());
 		}
 
+		bool ZMotion::connectPcie(int type, const std::string& pconnectstring, unsigned int uims)
+		{
+			_zMotion = new zwy::scc::Motion;
+			return _zMotion->OpenBoardPcie(type, pconnectstring, uims);
+		}
+
 		bool ZMotion::getConnectState(bool& isGet)
 		{
 			if (!_zMotion)
@@ -288,6 +294,15 @@ namespace rw
 			}
 
 			return _zMotion->SetAxisType(axis, value);
+		}
+
+		bool ZMotion::switchOpen(int num, int enable, int axisnum, int outnum, int  outstate, float setpos, float resetpos) {
+			if (!_zMotion)
+			{
+				return false;
+			}
+
+			return _zMotion->switchOpen(num, enable, axisnum, outnum, outstate, setpos, resetpos);
 		}
 	}
 }

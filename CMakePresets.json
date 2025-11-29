@@ -19,6 +19,17 @@
       }
     },
     {
+      "name": "windows-ninja-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
       "name": "linux-base",
       "hidden": true,
       "binaryDir": "${sourceDir}/out/build/${presetName}",
@@ -58,6 +69,22 @@
       "name": "vs2019",
       "generator": "Visual Studio 16 2019",
       "inherits": "windows-base"
+    },
+    {
+      "name": "windows-ninja-debug",
+      "generator": "Ninja",
+      "inherits": "windows-ninja-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-ninja-release",
+      "generator": "Ninja",
+      "inherits": "windows-ninja-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     }
   ],
   "buildPresets": [
@@ -83,6 +110,18 @@
       "name": "vs2019-release",
       "configurePreset": "vs2019",
       "configuration": "Release",
+      "jobs": 8
+    },
+    {
+      "name": "windows-ninja-debug-build",
+      "configurePreset": "windows-ninja-debug",
+      "description": "Build using Ninja (Debug) on Windows",
+      "jobs": 8
+    },
+    {
+      "name": "windows-ninja-release-build",
+      "configurePreset": "windows-ninja-release",
+      "description": "Build using Ninja (Release) on Windows",
       "jobs": 8
     }
   ],

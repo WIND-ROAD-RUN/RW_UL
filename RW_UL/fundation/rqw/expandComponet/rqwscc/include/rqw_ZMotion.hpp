@@ -30,6 +30,8 @@ namespace rw
 		public:
 			[[nodiscard]] bool connect();
 
+			[[nodiscard]] bool connectPcie(int type, const std::string& pconnectstring, unsigned int uims);
+
 			[[nodiscard]] bool getConnectState(bool& isGet);
 			[[nodiscard]] bool getConnectState();
 
@@ -73,6 +75,9 @@ namespace rw
 			[[nodiscard]] float getModbus(int adress, int num);
 
 			[[nodiscard]] bool setAxisType(int axis, int value);
+
+			bool switchOpen(int num, int enable, int axisnum, int outnum, int  outstate, float setpos, float resetpos);
+
 		};
 	}
 }
