@@ -6,6 +6,8 @@
 #include "imgPro_ImageProcessUtilty.hpp"
 #include"rqw_rqwColor.hpp"
 
+//TODO:拆分出一个独立的绘图模块使用Cmake配置
+
 namespace rw
 {
 	namespace rqw
