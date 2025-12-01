@@ -19,9 +19,16 @@ namespace hoem_ModbusDevice
 		EXPECT_EQ(connectResult, true);
 
 		rw::hoem::ModbusDeviceScheduler scheduler(sharedPtr);
-		auto writeResult= scheduler.writeRegisterFloatAsync(6000, 0.3598f, rw::hoem::Endianness::LittleEndian);
 
-		writeResult.wait();
+		for (int i=0;i<10000000;i++)
+		{
 
+			auto writeResult = scheduler.writeRegisterFloatAsync(6000, 0.0f+i, rw::hoem::Endianness::LittleEndian);
+			auto pendingCount=scheduler.getPendingCount();
+			std::cout << "Pending Count: " << pendingCount << std::endl;
+
+		}
+		
+		scheduler.wait();
 	}
 }

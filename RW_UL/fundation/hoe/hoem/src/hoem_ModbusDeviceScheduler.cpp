@@ -22,20 +22,37 @@ namespace rw
 				if (_worker.joinable())
 					_worker.join();
 
-				// 将未处理的任务标记为取消
 				std::vector<Request> leftovers;
+				size_t removed = 0;
 				{
 					std::lock_guard<std::mutex> lk(_mtx);
 					while (!_queue.empty()) {
 						leftovers.emplace_back(std::move(const_cast<Request&>(_queue.top())));
 						_queue.pop();
+						++removed;
+					}
+					if (removed > 0) {
+						_pending -= removed;
 					}
 				}
 				for (auto& r : leftovers) {
 					if (r.job)
 						r.job->cancelShutdown();
 				}
+				if (removed > 0) {
+					_cv.notify_all();
+				}
 			}
+		}
+
+		void ModbusDeviceScheduler::wait() {
+			std::unique_lock<std::mutex> lk(_mtx);
+			_cv.wait(lk, [this]() { return _pending == 0; });
+		}
+
+		size_t ModbusDeviceScheduler::getPendingCount() const {
+			std::lock_guard<std::mutex> lk(_mtx);
+			return _pending;
 		}
 
 		void ModbusDeviceScheduler::workerLoop() {
@@ -55,25 +72,31 @@ namespace rw
 					_queue.pop();
 				}
 
-				// Deadline 检查
+				bool done = false;
 				if (Clock::now() > req.deadline) {
 					if (req.job)
 						req.job->timeout();
-					continue;
+					done = true;
+				}
+				else {
+					try {
+						if (req.job)
+							req.job->run(*_device);
+					}
+					catch (...) {
+					}
+					done = true;
 				}
 
-				// 严格串行对 device 执行
-				try {
-					if (req.job)
-						req.job->run(*_device);
-				}
-				catch (...) {
-					// run 已捕获并设置 promise，这里仅兜底
+				if (done) {
+					std::lock_guard<std::mutex> lk(_mtx);
+					if (_pending > 0)
+						--_pending;
+					if (_pending == 0)
+						_cv.notify_all();
 				}
 			}
 		}
-
-		// ============== 便捷异步接口实现 ==============
 
 		std::future<std::vector<UInt16>> ModbusDeviceScheduler::readRegistersAsync(
 			Address16 startAddress, Quantity quantity, int prio, std::optional<std::chrono::milliseconds> timeout) {

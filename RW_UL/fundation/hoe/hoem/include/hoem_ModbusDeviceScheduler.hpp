@@ -25,7 +25,7 @@ namespace rw
 			using TimePoint = Clock::time_point;
 
 			explicit ModbusDeviceScheduler(std::shared_ptr<ModbusDevice> device);
-			explicit ModbusDeviceScheduler(const ModbusDevice & device)=delete;
+			explicit ModbusDeviceScheduler(const ModbusDevice& device) = delete;
 			explicit ModbusDeviceScheduler(ModbusDevice&& device) = delete;
 			~ModbusDeviceScheduler();
 
@@ -51,6 +51,12 @@ namespace rw
 				return invokeAsync(3, std::nullopt, std::forward<F>(fn));
 			}
 		public:
+			// 等待队列中所有任务完成（执行、超时或被停止取消）
+			void wait();
+
+			// 获取当前未完成任务数量（待处理 + 正在执行），线程安全
+			size_t getPendingCount() const;
+
 			std::future<std::vector<UInt16>> readRegistersAsync(Address16 startAddress, Quantity quantity,
 				int prio = 8, std::optional<std::chrono::milliseconds> timeout = std::nullopt);
 
@@ -152,7 +158,7 @@ namespace rw
 
 			struct Request {
 				uint64_t seq;
-				int prio; // 1~10，越大优先级越高
+				int prio;
 				TimePoint deadline;
 				std::unique_ptr<IJob> job;
 			};
@@ -160,10 +166,10 @@ namespace rw
 			struct RequestCmp {
 				bool operator()(Request const& a, Request const& b) const {
 					if (a.prio != b.prio)
-						return a.prio < b.prio; // 高优先级在前
+						return a.prio < b.prio;
 					if (a.deadline != b.deadline)
-						return a.deadline > b.deadline; // 截止时间早者在前
-					return a.seq > b.seq; // 先进先出
+						return a.deadline > b.deadline;
+					return a.seq > b.seq;
 				}
 			};
 
@@ -174,6 +180,7 @@ namespace rw
 
 				{
 					std::lock_guard<std::mutex> lk(_mtx);
+					++_pending;
 					_queue.push(Request{ ++_seq, prio, deadline, std::move(job) });
 				}
 				_cv.notify_one();
@@ -192,10 +199,11 @@ namespace rw
 			std::shared_ptr<ModbusDevice> _device;
 			std::priority_queue<Request, std::vector<Request>, RequestCmp> _queue;
 			std::thread _worker;
-			std::mutex _mtx;
+			mutable std::mutex _mtx;
 			std::condition_variable _cv;
 			std::atomic<bool> _running{ false };
 			uint64_t _seq = 0;
+			size_t _pending = 0;
 		};
 	}
 }
