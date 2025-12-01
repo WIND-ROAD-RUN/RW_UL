@@ -1,7 +1,7 @@
 #include "ImageEnlargedDisplay.h"
 #include "ui_rqw_ImageEnlargedDisplay.h"
 
-ImageEnlargedDisplay::ImageEnlargedDisplay(QWidget *parent)
+ImageEnlargedDisplay::ImageEnlargedDisplay(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::rqw_ImageEnlargedDisplayClass())
 {
@@ -41,6 +41,19 @@ void ImageEnlargedDisplay::initWorkStationTitleMap(const QMap<int, QString>& map
 	_workStationTitleMap.clear();
 	for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
 		_workStationTitleMap[it.key()] = it.value();
+	}
+}
+
+void ImageEnlargedDisplay::initWorkStationImageMap(const std::map<int, QPixmap>& map)
+{
+	_workStationImageMap = map;
+}
+
+void ImageEnlargedDisplay::initWorkStationImageMap(const QMap<int, QPixmap>& map)
+{
+	_workStationImageMap.clear();
+	for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+		_workStationImageMap[it.key()] = it.value();
 	}
 }
 
@@ -102,6 +115,14 @@ void ImageEnlargedDisplay::updateTitle(int index)
 	}
 }
 
+void ImageEnlargedDisplay::updateImage(int index)
+{
+	auto it = _workStationImageMap.find(index);
+	if (it != _workStationImageMap.end()) {
+		setShowImg(it->second);
+	}
+}
+
 void ImageEnlargedDisplay::pbtn_exit_clicked()
 {
 	if (_isShow)
@@ -121,6 +142,7 @@ void ImageEnlargedDisplay::pbtn_nextWork_clicked()
 	index += 1;
 	index = (index + num) % num;
 	updateTitle(index);
+	updateImage(index);
 	*_currentDisImgIndex = index;
 }
 
@@ -134,6 +156,7 @@ void ImageEnlargedDisplay::pbtn_preWork_clicked()
 	index -= 1;
 	index = (index + num) % num;
 	updateTitle(index);
+	updateImage(index);
 	*_currentDisImgIndex = index;
 }
 

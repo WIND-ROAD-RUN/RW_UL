@@ -3,7 +3,6 @@
 #include <random>
 #include <QtWidgets/QApplication>
 #include"DlgCloseForm.h"
-#include "rqw_ImageSaveEngineV1.hpp"
 #include"PicturesPainterVersionDunDai.h"
 
 int main(int argc, char* argv[])
