@@ -403,7 +403,6 @@ namespace rw
 			if (!readRegisters(startAddress, raw, byteOrder))
 				return false;
 			values.clear();
-			values.resize(raw.size());
 			for (UInt32 b : raw)
 				values.push_back(uint32ToFloat(b));
 			return true;
