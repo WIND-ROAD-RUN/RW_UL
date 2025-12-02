@@ -69,6 +69,9 @@ namespace rw
 			std::future<std::vector<bool>> readCoilsAsync(Address16 startAddress, Quantity quantity,
 				int prio = 8, std::optional<std::chrono::milliseconds> timeout = std::nullopt);
 
+			std::future<bool> readCoilAsync(Address16 startAddress,
+				int prio = 8, std::optional<std::chrono::milliseconds> timeout = std::nullopt);
+
 			std::future<float> readRegisterFloatAsync(Address16 startAddress, Endianness byteOrder,
 				int prio = 8, std::optional<std::chrono::milliseconds> timeout = std::nullopt);
 

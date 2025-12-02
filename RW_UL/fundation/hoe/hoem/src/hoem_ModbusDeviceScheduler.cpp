@@ -138,6 +138,17 @@ namespace rw
 				});
 		}
 
+		std::future<bool> ModbusDeviceScheduler::readCoilAsync(Address16 startAddress, int prio,
+			std::optional<std::chrono::milliseconds> timeout)
+		{
+			return invokeAsync(prio, timeout, [startAddress](ModbusDevice& dev) {
+				bool state{};
+				if (!dev.readCoil(startAddress, state))
+					throw std::runtime_error("readCoil failed");
+				return state;
+				});
+		}
+
 		std::future<float> ModbusDeviceScheduler::readRegisterFloatAsync(
 			Address16 startAddress, Endianness byteOrder, int prio, std::optional<std::chrono::milliseconds> timeout) {
 			return invokeAsync(prio, timeout, [startAddress, byteOrder](ModbusDevice& dev) {

@@ -287,6 +287,20 @@ namespace rw
 			return true;
 		}
 
+		bool ModbusDevice::readCoil(Address16 startAddress, bool& state)
+		{
+			/*if (!isConnected()) {
+				return false;
+			}*/
+			uint8_t coilData = 0;
+			int result = modbus_read_bits(_modbusContext, startAddress + _baseAddress, 1, &coilData);
+			if (result < 0) {
+				return false;
+			}
+			state = (coilData & 0x01) != 0;
+			return true;
+		}
+
 		bool ModbusDevice::writeCoil(Address16 address, bool state)
 		{
 			/*if (!isConnected()) {
