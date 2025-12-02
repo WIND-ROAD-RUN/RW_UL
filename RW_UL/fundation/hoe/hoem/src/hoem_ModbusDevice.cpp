@@ -398,6 +398,8 @@ namespace rw
 		bool ModbusDevice::readRegisters(Address16 startAddress, std::vector<float>& values, Endianness byteOrder)
 		{
 			std::vector<UInt32> raw;
+			raw.clear();
+			raw.resize(raw.size());
 			if (!readRegisters(startAddress, raw, byteOrder))
 				return false;
 			values.clear();
