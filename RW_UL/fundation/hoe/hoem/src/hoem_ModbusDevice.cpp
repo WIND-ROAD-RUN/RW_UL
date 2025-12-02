@@ -380,7 +380,7 @@ namespace rw
 			if (data.empty())
 				return true;
 			std::vector<UInt32> packed;
-			packed.reserve(data.size());
+			packed.resize(data.size());
 			for (float f : data)
 				packed.push_back(floatToUInt32(f));
 			return writeRegisters(startAddress, packed, byteOrder);
@@ -401,7 +401,7 @@ namespace rw
 			if (!readRegisters(startAddress, raw, byteOrder))
 				return false;
 			values.clear();
-			values.reserve(raw.size());
+			values.resize(raw.size());
 			for (UInt32 b : raw)
 				values.push_back(uint32ToFloat(b));
 			return true;
