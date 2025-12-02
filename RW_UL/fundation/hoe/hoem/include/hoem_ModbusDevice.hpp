@@ -69,6 +69,7 @@ namespace rw
 			bool writeRegisters(Address16 startAddress, const std::vector<UInt32>& data, Endianness byteOrder);
 
 			bool readCoils(Address16 startAddress, Quantity quantity, std::vector<bool>& data);
+			bool readCoil(Address16 startAddress, bool &state);
 			bool writeCoil(Address16 address, bool state);
 			bool writeCoils(Address16 startAddress, const std::vector<bool>& states);
 			bool setBasedAddress(Address16 basedAddress);
