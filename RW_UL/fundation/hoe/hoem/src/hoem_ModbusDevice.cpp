@@ -399,7 +399,7 @@ namespace rw
 		{
 			std::vector<UInt32> raw;
 			raw.clear();
-			raw.resize(raw.size());
+			raw.resize(values.size());
 			if (!readRegisters(startAddress, raw, byteOrder))
 				return false;
 			values.clear();
