@@ -122,7 +122,16 @@ namespace rw {
 
 		void ImageSaveEngine::saveImage(const ImageInfo& image)
 		{
-			QDir dir(rootPath + "/" + image.classify);
+			QString path{};
+			if (image.dirName.isEmpty())
+			{
+				path = rootPath + "/" + image.classify;
+			}
+			else
+			{
+				path = rootPath + "/" + image.dirName;
+			}
+			QDir dir(path);
 			if (!dir.exists()) {
 				dir.mkpath(".");
 			}
