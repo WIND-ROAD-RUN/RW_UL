@@ -44,10 +44,9 @@ void FullKeyBoard::build_ui()
 	ui->lineEdit->setFocus();
 	ui->lineEdit->setCursorPosition(value.length());
 
-	// 如果需要禁用鼠标事件，可以保留这行
-	ui->lineEdit->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-	// 确保焦点策略允许显示光标
-	ui->lineEdit->setFocusPolicy(Qt::StrongFocus); // 或 Qt::ClickFocus
+	// 移除输入限制,允许键盘输入和粘贴
+	// ui->lineEdit->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 已注释,允许鼠标操作
+	ui->lineEdit->setFocusPolicy(Qt::StrongFocus);
 	ui->lineEdit->installEventFilter(this);
 }
 
@@ -95,6 +94,8 @@ void FullKeyBoard::build_connect()
 	connect(ui->pbtn_you, &QPushButton::clicked, this, &FullKeyBoard::pbtn_you_clicked);
 	connect(ui->pbtn_shanchu, &QPushButton::clicked, this, &FullKeyBoard::pbtn_shanchu_clicked);
 	connect(ui->pbtn_daxie, &QPushButton::clicked, this, &FullKeyBoard::pbtn_daxie_clicked);
+
+	connect(ui->lineEdit, &QLineEdit::textChanged, this, &FullKeyBoard::onLineEditTextChanged);
 }
 
 void FullKeyBoard::showEvent(QShowEvent* show_event)
@@ -242,6 +243,11 @@ void FullKeyBoard::pbtn_shanchu_clicked()
 	}
 }
 
+void FullKeyBoard::onLineEditTextChanged(const QString& text)
+{
+	value = text;
+}
+
 void FullKeyBoard::pbtn_num1_clicked()
 {
 	appendCharacter("1");
@@ -342,10 +348,7 @@ void FullKeyBoard::updateButtonTexts()
 // 事件过滤器实现
 bool FullKeyBoard::eventFilter(QObject* obj, QEvent* event)
 {
-	if (obj == ui->lineEdit && event->type() == QEvent::MouseButtonPress) {
-		// 忽略鼠标点击事件
-		return true;
-	}
+	// 不再拦截任何事件,允许正常的键盘输入、粘贴等操作
 	return QWidget::eventFilter(obj, event);
 }
 
