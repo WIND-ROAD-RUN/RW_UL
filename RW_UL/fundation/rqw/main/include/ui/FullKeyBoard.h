@@ -72,6 +72,8 @@ private slots:
 	void pbtn_you_clicked();
 	void pbtn_shanchu_clicked();
 
+	void onLineEditTextChanged(const QString& text);
+
 private:
 	Ui::FullKeyBoardClass* ui;
 };
