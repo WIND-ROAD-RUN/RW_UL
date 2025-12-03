@@ -33,6 +33,7 @@ namespace rw {
 		public:
 			QImage image;
 			QString classify;
+			QString dirName{ "" }; //if empty, save to rootPath/classify else save to rootPath/dirName
 		public:
 			QString time;
 		public:
