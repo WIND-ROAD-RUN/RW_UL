@@ -8,3 +8,4 @@ cryptopp
 openssl
 libmodbus
 libzip
+cli11

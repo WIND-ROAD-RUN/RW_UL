@@ -10,6 +10,7 @@ endif()
 
 add_subdirectory(PackageTool)
 add_subdirectory(XmlMerge)
+add_subdirectory(DiskStorageManager)
 
 
 if(CONFIG_TEST)
