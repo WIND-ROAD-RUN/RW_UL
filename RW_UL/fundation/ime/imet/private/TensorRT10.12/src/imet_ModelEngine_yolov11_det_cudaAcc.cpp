@@ -99,10 +99,11 @@ namespace rw
 			cudaMalloc(reinterpret_cast<void**>(&_deviceOutputBuffer), _outputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _outputSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
-			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
-			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer);
-			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
 
+			// TensorRT 8.6 不使用 setInputTensorAddress/setOutputTensorAddress
+			// bindings 在 infer() 中设置
+
+			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
 		}
 
 		void ModelEngine_yolov11_det_cudaAcc::destroy_buffer()
@@ -152,18 +153,28 @@ namespace rw
 
 		void ModelEngine_yolov11_det_cudaAcc::infer()
 		{
-			this->_context->enqueueV3(_stream);
+			// TensorRT 8.6: 使用 enqueueV2 替代 enqueueV3
+			const int inputIndex = 0;
+			const int outputIndex = 1;
+
+			void* bindings[2];
+			bindings[inputIndex] = _deviceInputBuffer;
+			bindings[outputIndex] = _deviceOutputBuffer;
+
+			// 异步执行推理
+			_context->enqueueV2(bindings, _stream, nullptr);
+
+			// 后处理部分保持不变
 			Utility::transpose(_deviceOutputBuffer, _deviceTransposeBuffer, _outputShape.d[1], _outputShape.d[2], _stream);
 			PostProcess::decode_det(
 				_deviceTransposeBuffer,
-				_deviceDecodeBuffer, 
-				_detectionsNum, 
+				_deviceDecodeBuffer,
+				_detectionsNum,
 				_classNum,
-				_config.conf_threshold, 
+				_config.conf_threshold,
 				kMaxNumOutputBbox,
 				kNumBoxElement,
 				_stream);
-
 
 			Utility::nms_det(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
 			cudaMemcpyAsync(_hostOutputBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);

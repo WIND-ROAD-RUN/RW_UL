@@ -9,7 +9,10 @@
 #include <filesystem>
 
 #include "imet_ModelEngine_yolov11_det_cudaAcc.hpp"
+#include "imet_ModelEngine_yolov11_obb.hpp"
+#include "imet_ModelEngine_yolov11_seg.hpp"
 #include "imet_ModelEngine_yolov11_seg_cudaAcc.hpp"
+#include "imet_ModelEngine_yolov11_seg_mask.hpp"
 #include "imet_ModelEngine_yolov11_seg_mask_cudaAcc.hpp"
 
 namespace fs = std::filesystem;
@@ -22,67 +25,57 @@ class Logger : public nvinfer1::ILogger {
 }logger;
 
 int main() {
-    rw::ModelEngineConfig config;
-    config.modelPath = R"(C:\Users\rw\Desktop\models\niukou.engine)";
-    rw::imet::ModelEngine_yolov11_seg_mask_cudaAcc modelEngine(config, logger);
+	// ========== 配置模型和图片路径 ==========
+	std::string modelPath = R"(D:\zfkjDevelopment\ThirdLibrary\TensorRTs\cuda11\8.6\bin\KeyScanner-20251108.engine)";
+	std::string testImagePath = R"(C:\Users\zfkj4090\Downloads\3\images\train\OK20251114140111911.jpg)";
 
-    cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
-    auto result = modelEngine.processImg(mat);
-    auto img=modelEngine.draw(mat, result);
-    cv::imshow("testImg", img);
-    cv::waitKey(0);
+	// ========== 创建模型引擎 (TensorRT 8.6) ==========
+	rw::imet::ModelEngine_Yolov11_seg modelEngine(modelPath, logger);
 
-    // 读取图片文件夹下所有图片路径
-    std::vector<std::string> imagePaths;
-    std::string folder = R"(C:\Users\rw\Desktop\temp\images\train)";
-    for (const auto& entry : fs::directory_iterator(folder)) {
-        if (entry.is_regular_file()) {
-            imagePaths.push_back(entry.path().string());
-        }
-    }
+	// ========== 配置模型参数 ==========
+	rw::ModelEngineConfig config;
+	config.conf_threshold = 0.25f;
+	config.nms_threshold = 0.45f;
+	config.imagePretreatmentPolicy = rw::ImagePretreatmentPolicy::LetterBox;
+	config.letterBoxColor = cv::Scalar(114, 114, 114);
+	modelEngine.setConfig(config);
 
-    std::vector<double> times;
-    int count{ 0 };
-    for (const auto& imgPath : imagePaths) {
-        count++;
-        auto mat = cv::imread(imgPath);
-        if (mat.empty()) continue;
+	// ========== 单张图片测试 ==========
+	std::cout << "========== 单张图片测试 ==========" << std::endl;
+	cv::Mat testMat = cv::imread(testImagePath);
+	if (testMat.empty()) {
+		std::cerr << "无法读取测试图片: " << testImagePath << std::endl;
+		return -1;
+	}
 
-        auto start = std::chrono::high_resolution_clock::now();
-        auto result = modelEngine.processImg(mat);
-        auto img = modelEngine.draw(mat, result);
-        auto end = std::chrono::high_resolution_clock::now();
+	auto result = modelEngine.processImg(testMat);
+	auto drawImg = modelEngine.draw(testMat, result);
 
-        std::chrono::duration<double, std::milli> elapsed = end - start;
-        times.push_back(elapsed.count());
-		std::cout << count << std::endl;
-    }
+	std::cout << "检测到 " << result.size() << " 个目标" << std::endl;
+	for (size_t i = 0; i < result.size(); ++i) {
+		const auto& det = result[i];
+		std::cout << "  [" << i << "] classId=" << det.classId
+			<< " score=" << std::fixed << std::setprecision(3) << det.score
+			<< " center=(" << det.center_x << "," << det.center_y << ")"
+			<< " size=" << det.width << "x" << det.height << std::endl;
+	}
 
-    if (!times.empty()) {
-        double sum = std::accumulate(times.begin(), times.end(), 0.0);
-        double avg = sum / times.size();
-        double minTime = *std::min_element(times.begin(), times.end());
-        double maxTime = *std::max_element(times.begin(), times.end());
-        std::cout << "Total images: " << times.size() << std::endl;
-        std::cout << "Average processImg time: " << avg << " ms" << std::endl;
-        std::cout << "Min processImg time: " << minTime << " ms" << std::endl;
-        std::cout << "Max processImg time: " << maxTime << " ms" << std::endl;
-    }
-    else {
-        std::cout << "No valid images found." << std::endl;
-    }
+	cv::Mat displayImg;
+	int maxWidth = 1280;  // 最大宽度
+	int maxHeight = 720;  // 最大高度
 
-	/*rw::ModelEngineConfig config;
-	config.modelPath = R"(C:\Users\rw\Desktop\models\niukou_det.engine)";
-	rw::imet::ModelEngine_yolov11_det_refactor_v1 modelEngine(config.modelPath, logger);
-	cv::Mat mat = cv::imread(R"(C:\Users\rw\Desktop\temp\niukou.png)");
-	for (int i=0;i<10;i++)
-	{
-		auto result = modelEngine.processImg(mat);
-		auto a=modelEngine.draw(mat, result);
-		cv::imshow("a", a);
-		cv::waitKey(0);
-	}*/
+	double scaleW = static_cast<double>(maxWidth) / drawImg.cols;
+	double scaleH = static_cast<double>(maxHeight) / drawImg.rows;
+	double scale = std::min({ scaleW, scaleH, 1.0 }); // 取最小值,且不放大
+
+	if (scale < 1.0) {
+		cv::resize(drawImg, displayImg, cv::Size(), scale, scale, cv::INTER_AREA);
+		cv::imshow("Detection Result", displayImg);
+	}
+	else {
+		cv::imshow("Detection Result", drawImg);
+	}
+	cv::waitKey(0);
 
 
     return 0;

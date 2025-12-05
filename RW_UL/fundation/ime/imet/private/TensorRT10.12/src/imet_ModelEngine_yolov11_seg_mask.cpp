@@ -39,31 +39,47 @@ namespace rw {
 
 		void ModelEngine_Yolov11_seg_mask::infer()
 		{
-			this->context->setInputTensorAddress(engine->getIOTensorName(0), gpu_buffers[0]);
-			this->context->setOutputTensorAddress(engine->getIOTensorName(1), gpu_buffers[1]);
-			this->context->setOutputTensorAddress(engine->getIOTensorName(2), gpu_buffers[2]);
-			this->context->enqueueV3(NULL);
+			// 注意：张量顺序
+			// 0: images (INPUT)
+			// 1: output1 (掩膜原型) [1, 32, 160, 160]
+			// 2: output0 (检测结果) [1, 38, 8400]
+
+			const int inputIndex = 0;
+			const int outputMaskProtoIndex = 1;  // 掩膜原型
+			const int outputDetIndex = 2;        // 检测结果
+
+			void* bindings[3];
+			bindings[inputIndex] = gpu_buffers[0];
+			bindings[outputMaskProtoIndex] = gpu_buffers[1];  // 掩膜原型
+			bindings[outputDetIndex] = gpu_buffers[2];        // 检测结果
+
+			context->executeV2(bindings);
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_seg_mask::postProcess()
 		{
 			std::vector<DetectionSeg> output;
 
-			// 从 GPU 拷贝检测结果和掩膜原型到 CPU
-			(cudaMemcpy(cpu_output_buffer, gpu_buffers[1], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
-			(cudaMemcpy(cpu_output_buffer2, gpu_buffers[2], maskCoefficientNum * mask_h * mask_w * sizeof(float), cudaMemcpyDeviceToHost));
+			// 从 GPU 拷贝数据到 CPU
+			// gpu_buffers[1] -> 掩膜原型 [32, 160, 160]
+			// gpu_buffers[2] -> 检测结果 [38, 8400]
+			(cudaMemcpy(cpu_output_buffer2, gpu_buffers[1], maskCoefficientNum * mask_h * mask_w * sizeof(float), cudaMemcpyDeviceToHost));
+			(cudaMemcpy(cpu_output_buffer, gpu_buffers[2], num_detections * detection_attribute_size * sizeof(float), cudaMemcpyDeviceToHost));
 
 			std::vector<cv::Rect> boxes;
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
 			std::vector<cv::Mat> mask_sigmoids;
 
-			// 将检测结果和掩膜原型转换为 OpenCV 矩阵
+			// 将检测结果转换为 OpenCV 矩阵
+			// det_output: [38, 8400] 表示 8400 个检测框，每个有 38 个属性
 			const cv::Mat det_output(detection_attribute_size, num_detections, CV_32F, cpu_output_buffer);
+
+			// mask_protos: [32, 160*160] 表示 32 个掩膜原型
 			cv::Mat mask_protos(maskCoefficientNum, mask_h * mask_w, CV_32F, cpu_output_buffer2);
 
 			for (int i = 0; i < det_output.cols; ++i) {
-				// 提取类别分数
+				// 提取类别分数 (第4到第4+num_classes行)
 				const cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + num_classes);
 				cv::Point class_id_point;
 				double score;
@@ -85,7 +101,7 @@ namespace rw {
 					class_ids.push_back(class_id_point.y);
 					confidences.push_back(score);
 
-					// 提取掩膜系数
+					// 提取掩膜系数 (第4+num_classes到detection_attribute_size行)
 					const cv::Mat mask_coeffs = det_output.col(i).rowRange(4 + num_classes, detection_attribute_size);
 					if (mask_coeffs.rows != mask_protos.rows) {
 						throw std::runtime_error("Mismatch between mask_coeffs and mask_protos dimensions.");
@@ -141,27 +157,74 @@ namespace rw {
 			engine = runtime->deserializeCudaEngine(engineData.get(), modelSize);
 			context = engine->createExecutionContext();
 
+			// ========== 调试代码：打印所有张量信息 ==========
+			int nbTensors = engine->getNbIOTensors();
+			std::cout << "========== TensorRT 模型张量信息 ==========" << std::endl;
+			std::cout << "总张量数: " << nbTensors << std::endl;
+			for (int i = 0; i < nbTensors; i++) {
+				const char* name = engine->getIOTensorName(i);
+				auto dims = engine->getTensorShape(name);
+				auto ioMode = engine->getTensorIOMode(name);
+
+				std::cout << "张量[" << i << "]: " << name
+					<< " | " << (ioMode == nvinfer1::TensorIOMode::kINPUT ? "INPUT" : "OUTPUT")
+					<< " | Shape: [";
+				for (int j = 0; j < dims.nbDims; j++) {
+					std::cout << dims.d[j];
+					if (j < dims.nbDims - 1) std::cout << ", ";
+				}
+				std::cout << "]" << std::endl;
+			}
+			std::cout << "===========================================" << std::endl;
+
+			// 读取输入尺寸
 			input_h = engine->getTensorShape(engine->getIOTensorName(0)).d[2];
 			input_w = engine->getTensorShape(engine->getIOTensorName(0)).d[3];
-			maskCoefficientNum = engine->getTensorShape(engine->getIOTensorName(2)).d[1];
-			mask_h = engine->getTensorShape(engine->getIOTensorName(2)).d[2];
-			mask_w = engine->getTensorShape(engine->getIOTensorName(2)).d[3];
-			detection_attribute_size = engine->getTensorShape(engine->getIOTensorName(1)).d[1];
-			num_detections = engine->getTensorShape(engine->getIOTensorName(1)).d[2];
+
+			// ========== 修复：张量顺序颠倒了 ==========
+			// 张量1是掩膜原型 [1, 32, 160, 160]
+			// 张量2是检测输出 [1, 38, 8400]
+
+			// 读取掩膜原型张量 (output1)
+			auto proto_dims = engine->getTensorShape(engine->getIOTensorName(1));
+			maskCoefficientNum = proto_dims.d[1];  // 应该是 32
+			mask_h = proto_dims.d[2];              // 160
+			mask_w = proto_dims.d[3];              // 160
+
+			// 读取检测输出张量 (output0)
+			auto det_dims = engine->getTensorShape(engine->getIOTensorName(2));
+			detection_attribute_size = det_dims.d[1];  // 38
+			num_detections = det_dims.d[2];            // 8400
+
+			// 计算类别数: 38 - 4(bbox) - 32(mask_coeffs) = 2
 			num_classes = detection_attribute_size - 4 - maskCoefficientNum;
 
-			auto thirdOutputSize = engine->getTensorShape(engine->getIOTensorName(2)).d[1];
-			auto thirdOutputSize2 = engine->getTensorShape(engine->getIOTensorName(2)).d[2];
-			auto thirdOutputSize3 = engine->getTensorShape(engine->getIOTensorName(2)).d[3];
+			// ========== 参数验证 ==========
+			std::cout << "========== 模型参数验证 ==========" << std::endl;
+			std::cout << "input_w: " << input_w << ", input_h: " << input_h << std::endl;
+			std::cout << "detection_attribute_size: " << detection_attribute_size << std::endl;
+			std::cout << "num_detections: " << num_detections << std::endl;
+			std::cout << "maskCoefficientNum: " << maskCoefficientNum << std::endl;
+			std::cout << "num_classes: " << num_classes << std::endl;
+			std::cout << "mask_h: " << mask_h << ", mask_w: " << mask_w << std::endl;
 
+			if (num_classes <= 0) {
+				throw std::runtime_error("计算得到的 num_classes <= 0，模型结构可能不正确！");
+			}
+			if (maskCoefficientNum != 32) {
+				std::cerr << "警告：掩膜系数数量不是32，而是 " << maskCoefficientNum << std::endl;
+			}
+			std::cout << "===================================" << std::endl;
+
+			// 分配内存
 			cpu_output_buffer = new float[num_detections * detection_attribute_size];
+			cpu_output_buffer2 = new float[maskCoefficientNum * mask_h * mask_w];
+
 			(cudaMalloc((void**)&gpu_buffers[0], 3 * input_w * input_h * sizeof(float)));
+			(cudaMalloc((void**)&gpu_buffers[1], maskCoefficientNum * mask_h * mask_w * sizeof(float)));
+			(cudaMalloc((void**)&gpu_buffers[2], detection_attribute_size * num_detections * sizeof(float)));
 
-			(cudaMalloc((void**)&gpu_buffers[1], detection_attribute_size * num_detections * sizeof(float)));
-
-			cpu_output_buffer2 = new float[thirdOutputSize * thirdOutputSize2 * thirdOutputSize3];
-			(cudaMalloc((void**)&gpu_buffers[2], thirdOutputSize * thirdOutputSize2 * thirdOutputSize3 * sizeof(float)));
-
+			// 预热
 			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}

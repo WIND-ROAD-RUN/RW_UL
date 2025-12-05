@@ -1,6 +1,6 @@
 #include"imet_ModelEngine_yolov11_det.hpp"
 
-#include"cuda_device_runtime_api.h"
+#include <cuda_runtime.h>
 
 #include<fstream>
 #include<memory>
@@ -60,9 +60,21 @@ namespace rw
 
 		void ModelEngine_Yolov11_det::infer()
 		{
-			this->_context->setInputTensorAddress(_engine->getIOTensorName(0), _gpu_buffers[0]);
+			/*this->_context->setInputTensorAddress(_engine->getIOTensorName(0), _gpu_buffers[0]);
 			this->_context->setOutputTensorAddress(_engine->getIOTensorName(1), _gpu_buffers[1]);
-			this->_context->enqueueV3(NULL);
+			this->_context->enqueueV3(NULL);*/
+
+			// 获取binding索引
+			const int inputIndex = 0;  // 或使用 _engine->getBindingIndex("input_name")
+			const int outputIndex = 1; // 或使用 _engine->getBindingIndex("output_name")
+
+			// 创建bindings数组
+			void* bindings[2];
+			bindings[inputIndex] = _gpu_buffers[0];
+			bindings[outputIndex] = _gpu_buffers[1];
+
+			// 执行推理
+			_context->executeV2(bindings);
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::postProcess()

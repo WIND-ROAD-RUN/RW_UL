@@ -110,9 +110,9 @@ namespace rw
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDetSubmatrixBuffer), _detOutPutSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceTransposeBuffer), _detOutPutSize * sizeof(float));
 			cudaMalloc(reinterpret_cast<void**>(&_deviceDecodeBuffer), (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float));
-			_context->setInputTensorAddress(_engine->getIOTensorName(InputShapeIndexForYolov11), _deviceInputBuffer);
-			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11), _deviceOutputBuffer1);
-			_context->setOutputTensorAddress(_engine->getIOTensorName(OutputShapeIndexForYolov11 + 1), _deviceOutputBuffer2);
+
+			// TensorRT 8.6 不使用 setInputTensorAddress/setOutputTensorAddress
+
 			_hostOutputBuffer = new float[1 + kMaxNumOutputBbox * kNumBoxElement];
 		}
 
@@ -165,16 +165,29 @@ namespace rw
 
 		void ModelEngine_yolov11_seg_cudaAcc::infer()
 		{
-			this->_context->enqueueV3(_stream);
+			// TensorRT 8.6: 使用 enqueueV2
+			const int inputIndex = 0;
+			const int outputIndex1 = 1;
+			const int outputIndex2 = 2;
+
+			void* bindings[3];
+			bindings[inputIndex] = _deviceInputBuffer;
+			bindings[outputIndex1] = _deviceOutputBuffer1;
+			bindings[outputIndex2] = _deviceOutputBuffer2;
+
+			// 异步执行推理
+			_context->enqueueV2(bindings, _stream, nullptr);
+
+			// 后处理部分保持不变
 			Utility::copy_submatrix(
 				_deviceOutputBuffer1,
 				_deviceDetSubmatrixBuffer,
 				_outputShape1.d[0],
 				_outputShape1.d[1],
-				_classNum+4,
+				_classNum + 4,
 				_outputShape1.d[2],
 				_stream);
-			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape1.d[1]-MaskCoefficientNum, _outputShape1.d[2], _stream);
+			Utility::transpose(_deviceDetSubmatrixBuffer, _deviceTransposeBuffer, _outputShape1.d[1] - MaskCoefficientNum, _outputShape1.d[2], _stream);
 			PostProcess::decode_det(
 				_deviceTransposeBuffer,
 				_deviceDecodeBuffer,
@@ -184,7 +197,6 @@ namespace rw
 				kMaxNumOutputBbox,
 				kNumBoxElement,
 				_stream);
-
 
 			Utility::nms_det(_deviceDecodeBuffer, _config.nms_threshold, kMaxNumOutputBbox, kNumBoxElement, _deviceClassIdNmsTogether, _config.classids_nms_together.size(), _stream);
 			cudaMemcpyAsync(_hostOutputBuffer, _deviceDecodeBuffer, (1 + kMaxNumOutputBbox * kNumBoxElement) * sizeof(float), cudaMemcpyDeviceToHost, _stream);
