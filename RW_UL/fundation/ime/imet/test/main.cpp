@@ -30,8 +30,8 @@ int main() {
 	SetConsoleOutputCP(CP_UTF8);
 	setvbuf(stdout, nullptr, _IOFBF, 1000);
 	// ========== 配置模型和图片路径 ==========
-	std::string modelPath = R"(D:\zfkjDevelopment\ThirdLibrary\TensorRTs\cuda11\8.6\bin\HandleScanner.engine)";
-	std::string testImageFolder = R"(C:\Users\zfkj4090\Downloads\1\images\train)";
+	std::string modelPath = R"(D:\zfkjDevelopment\ThirdLibrary\TensorRTs\cuda11\8.6\bin\1xj-hl-1117.engine)";
+	std::string testImageFolder = R"(C:\Users\zfkj4090\Downloads\hl\images\train)";
 
 	// ========== 创建模型引擎 (TensorRT 8.6) ==========
 	rw::imet::ModelEngine_Yolov11_det modelEngine(modelPath, logger);

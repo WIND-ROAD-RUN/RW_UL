@@ -6,6 +6,7 @@
 #include<memory>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 
 namespace rw
 {
@@ -41,17 +42,128 @@ namespace rw
 			_engine = _runtime->deserializeCudaEngine(engineData.get(), modelSize);
 			_context = _engine->createExecutionContext();
 
+			// ========== 添加调试代码：打印所有张量信息 ==========
+			int nbTensors = _engine->getNbIOTensors();
+			std::cout << "========== TensorRT 模型张量信息 (det) ==========" << std::endl;
+			std::cout << "总张量数: " << nbTensors << std::endl;
+			for (int i = 0; i < nbTensors; i++) {
+				const char* name = _engine->getIOTensorName(i);
+				auto dims = _engine->getTensorShape(name);
+				auto ioMode = _engine->getTensorIOMode(name);
+
+				std::cout << "张量[" << i << "]: " << name
+					<< " | " << (ioMode == nvinfer1::TensorIOMode::kINPUT ? "INPUT" : "OUTPUT")
+					<< " | Shape: [";
+				for (int j = 0; j < dims.nbDims; j++) {
+					std::cout << dims.d[j];
+					if (j < dims.nbDims - 1) std::cout << ", ";
+				}
+				std::cout << "]" << std::endl;
+			}
+			std::cout << "===========================================" << std::endl;
+
+			// 读取输入尺寸
 			_input_h = _engine->getTensorShape(_engine->getIOTensorName(0)).d[2];
 			_input_w = _engine->getTensorShape(_engine->getIOTensorName(0)).d[3];
-			_detection_attribute_size = _engine->getTensorShape(_engine->getIOTensorName(1)).d[1];
-			_num_detections = _engine->getTensorShape(_engine->getIOTensorName(1)).d[2];
-			_num_classes = _detection_attribute_size - 4;
 
+			// ========== 根据张量数量判断模型类型 ==========
+			if (nbTensors == 2) {
+				// YOLOv11 标准检测模型：只有输入和检测输出
+				// 张量[1]: 检测输出 [1, detection_attribute_size, num_detections]
+				auto output_dims = _engine->getTensorShape(_engine->getIOTensorName(1));
+				_detection_attribute_size = output_dims.d[1];
+				_num_detections = output_dims.d[2];
+				_num_classes = _detection_attribute_size - 4;
+			}
+			else if (nbTensors == 3) {
+				// YOLOv11 分割模型：有输入、掩膜原型和检测输出
+				// 张量[1]: 掩膜原型 [1, 32, mask_h, mask_w]
+				// 张量[2]: 检测输出 [1, detection_attribute_size, num_detections]
+				auto det_dims = _engine->getTensorShape(_engine->getIOTensorName(2));
+				_detection_attribute_size = det_dims.d[1];
+				_num_detections = det_dims.d[2];
+				_num_classes = _detection_attribute_size - 4 - 32;  // 减去4个bbox + 32个mask系数
+			}
+			else if (nbTensors == 5) {
+				// 旧版 YOLO 格式（YOLOv5/v7/v8早期）：多尺度输出 + 合并输出
+				// 张量[1-3]: 多尺度输出 [1, 3, H, W, detection_attribute_size]
+				// 张量[4]: 合并输出 [1, num_detections, detection_attribute_size]
+				auto output_dims = _engine->getTensorShape(_engine->getIOTensorName(4));
+				
+				// 判断输出格式：[batch, num_detections, attrs] 或 [batch, attrs, num_detections]
+				if (output_dims.nbDims == 3) {
+					int dim1 = output_dims.d[1];
+					int dim2 = output_dims.d[2];
+					
+					// 通常 num_detections 会远大于 detection_attribute_size
+					if (dim1 > dim2) {
+						// [1, num_detections, detection_attribute_size] 格式
+						_num_detections = dim1;
+						_detection_attribute_size = dim2;
+					} else {
+						// [1, detection_attribute_size, num_detections] 格式
+						_detection_attribute_size = dim1;
+						_num_detections = dim2;
+					}
+				}
+				_num_classes = _detection_attribute_size - 4;
+			}
+			else {
+				// 尝试自动查找输出张量
+				std::cout << "警告：未知的模型结构（张量数=" << nbTensors << "），尝试自动查找输出张量..." << std::endl;
+				
+				bool found = false;
+				for (int i = nbTensors - 1; i >= 0; i--) {
+					auto ioMode = _engine->getTensorIOMode(_engine->getIOTensorName(i));
+					if (ioMode == nvinfer1::TensorIOMode::kOUTPUT) {
+						auto dims = _engine->getTensorShape(_engine->getIOTensorName(i));
+						
+						// 查找类似 [batch, num_detections, attrs] 或 [batch, attrs, num_detections] 的输出
+						if (dims.nbDims == 3) {
+							int dim1 = dims.d[1];
+							int dim2 = dims.d[2];
+							
+							if (dim1 > dim2) {
+								_num_detections = dim1;
+								_detection_attribute_size = dim2;
+							} else {
+								_detection_attribute_size = dim1;
+								_num_detections = dim2;
+							}
+							
+							_num_classes = _detection_attribute_size - 4;
+							if (_num_classes > 0) {
+								std::cout << "找到输出张量[" << i << "]: " << _engine->getIOTensorName(i) << std::endl;
+								found = true;
+								break;
+							}
+						}
+					}
+				}
+				
+				if (!found) {
+					throw std::runtime_error("无法识别的模型结构：张量数量 = " + std::to_string(nbTensors));
+				}
+			}
+
+			// ========== 参数验证 ==========
+			std::cout << "========== 模型参数验证 (det) ==========" << std::endl;
+			std::cout << "input_w: " << _input_w << ", input_h: " << _input_h << std::endl;
+			std::cout << "detection_attribute_size: " << _detection_attribute_size << std::endl;
+			std::cout << "num_detections: " << _num_detections << std::endl;
+			std::cout << "num_classes: " << _num_classes << std::endl;
+
+			if (_num_classes <= 0) {
+				throw std::runtime_error("计算得到的 num_classes <= 0，模型结构可能不正确！");
+			}
+			std::cout << "===================================" << std::endl;
+
+			// 分配内存
 			_cpu_output_buffer = new float[_num_detections * _detection_attribute_size];
 			(cudaMalloc((void**)&_gpu_buffers[0], 3 * _input_w * _input_h * sizeof(float)));
-
 			(cudaMalloc((void**)&_gpu_buffers[1], _detection_attribute_size * _num_detections * sizeof(float)));
 
+			// 预热
 			for (int i = 0; i < 10; i++) {
 				this->infer();
 			}
@@ -60,21 +172,57 @@ namespace rw
 
 		void ModelEngine_Yolov11_det::infer()
 		{
-			/*this->_context->setInputTensorAddress(_engine->getIOTensorName(0), _gpu_buffers[0]);
-			this->_context->setOutputTensorAddress(_engine->getIOTensorName(1), _gpu_buffers[1]);
-			this->_context->enqueueV3(NULL);*/
+			// 获取张量数量
+			int nbTensors = _engine->getNbIOTensors();
 
-			// 获取binding索引
-			const int inputIndex = 0;  // 或使用 _engine->getBindingIndex("input_name")
-			const int outputIndex = 1; // 或使用 _engine->getBindingIndex("output_name")
+			if (nbTensors == 2) {
+				// YOLOv11 标准检测模型
+				const int inputIndex = 0;
+				const int outputIndex = 1;
 
-			// 创建bindings数组
-			void* bindings[2];
-			bindings[inputIndex] = _gpu_buffers[0];
-			bindings[outputIndex] = _gpu_buffers[1];
+				void* bindings[2];
+				bindings[inputIndex] = _gpu_buffers[0];
+				bindings[outputIndex] = _gpu_buffers[1];
 
-			// 执行推理
-			_context->executeV2(bindings);
+				_context->executeV2(bindings);
+			}
+			else if (nbTensors == 3) {
+				// YOLOv11 分割模型（但 det 类只使用检测输出）
+				// 0: images (INPUT)
+				// 1: output1 (掩膜原型) - 不使用
+				// 2: output0 (检测结果)
+				const int inputIndex = 0;
+				const int outputDetIndex = 2;  // 检测输出在索引2
+
+				void* bindings[3];
+				bindings[inputIndex] = _gpu_buffers[0];
+				bindings[1] = nullptr;  // 掩膜原型不需要
+				bindings[outputDetIndex] = _gpu_buffers[1];
+
+				_context->executeV2(bindings);
+			}
+			else if (nbTensors == 5) {
+				// 旧版 YOLO 格式：使用最后一个输出（合并输出）
+				const int inputIndex = 0;
+				const int outputIndex = 4;  // 使用合并后的输出
+
+				void* bindings[5];
+				bindings[inputIndex] = _gpu_buffers[0];
+				bindings[1] = nullptr;  // 多尺度输出1 - 不使用
+				bindings[2] = nullptr;  // 多尺度输出2 - 不使用
+				bindings[3] = nullptr;  // 多尺度输出3 - 不使用
+				bindings[outputIndex] = _gpu_buffers[1];
+
+				_context->executeV2(bindings);
+			}
+			else {
+				// 通用处理：使用最后一个输出张量
+				std::vector<void*> bindings(nbTensors, nullptr);
+				bindings[0] = _gpu_buffers[0];  // 输入
+				bindings[nbTensors - 1] = _gpu_buffers[1];  // 最后一个输出
+
+				_context->executeV2(bindings.data());
+			}
 		}
 
 		std::vector<DetectionRectangleInfo> ModelEngine_Yolov11_det::postProcess()
@@ -85,10 +233,20 @@ namespace rw
 			std::vector<int> class_ids;
 			std::vector<float> confidences;
 
-			const cv::Mat det_output(_detection_attribute_size, _num_detections, CV_32F, _cpu_output_buffer);
+			// 判断数据布局：[num_detections, detection_attribute_size] 或 [detection_attribute_size, num_detections]
+			// 根据 _num_detections 和 _detection_attribute_size 的大小关系判断
+			cv::Mat det_output;
+			if (_num_detections > _detection_attribute_size) {
+				// 数据是 [num_detections, detection_attribute_size] 格式，需要转置
+				det_output = cv::Mat(_num_detections, _detection_attribute_size, CV_32F, _cpu_output_buffer);
+				det_output = det_output.t();  // 转置为 [detection_attribute_size, num_detections]
+			} else {
+				// 数据已经是 [detection_attribute_size, num_detections] 格式
+				det_output = cv::Mat(_detection_attribute_size, _num_detections, CV_32F, _cpu_output_buffer);
+			}
 
 			for (int i = 0; i < det_output.cols; ++i) {
-				const  cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + _num_classes);
+				const cv::Mat classes_scores = det_output.col(i).rowRange(4, 4 + _num_classes);
 				cv::Point class_id_point;
 				double score;
 				minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id_point);
